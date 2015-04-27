@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
+{% load i18n %}
 
 {% block content %}
 
@@ -7,7 +8,7 @@
     {% bootstrap_form forms.upload_form %}
     {% buttons %}
         <button type="submit" class="btn btn-primary">
-            Submit
+            {% trans 'Submit' %}
         </button>
     {% endbuttons %}
 </form>
@@ -15,7 +16,7 @@
     {% bootstrap_form forms.url_form %}
     {% buttons %}
         <button type="submit" class="btn btn-primary">
-            Submit
+            {% trans 'Submit' %}
         </button>
     {% endbuttons %}
 </form>

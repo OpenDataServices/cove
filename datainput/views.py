@@ -1,3 +1,4 @@
+from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render, redirect
 from django.forms import ModelForm
 from datainput.models import SuppliedData
@@ -9,11 +10,17 @@ class UploadForm(ModelForm):
      class Meta:
          model = SuppliedData
          fields = ['original_file']
+         labels = {
+            'original_file': _('Upload a file')
+         }
 
 class UrlForm(ModelForm):
      class Meta:
          model = SuppliedData
          fields = ['source_url']
+         labels = {
+            'source_url': _('Supply a URL')
+         }
 
 # Create your views here.
 input = CreateView.as_view(model=SuppliedData, fields=['original_data'])
