@@ -14,8 +14,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SuppliedData',
             fields=[
-                ('uuid', models.CharField(default=datainput.models.make_uuid, primary_key=True, editable=False, serialize=False, max_length=36)),
-                ('original_data', models.FileField(upload_to='')),
+                ('uuid', models.CharField(primary_key=True, default=datainput.models.make_uuid, editable=False, max_length=36, serialize=False)),
+                ('source_url', models.URLField(null=True)),
+                ('original_file', models.FileField(upload_to='')),
             ],
             options={
                 'abstract': False,

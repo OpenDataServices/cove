@@ -17,7 +17,7 @@ def explore(request, pk):
     os.makedirs(converted_dir)
     converted_path = os.path.join(converted_dir, 'flattened')
     flattentool.flatten(
-        data.original_data.file.name,
+        data.original_file.file.name,
         output_name=converted_path,
     )
     return render(request, 'explore.html', {

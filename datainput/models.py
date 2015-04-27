@@ -12,7 +12,8 @@ class UUIDModel(models.Model):
         abstract = True
 
 class SuppliedData(UUIDModel):
-    original_data = models.FileField()
+    source_url = models.URLField(null=True)
+    original_file = models.FileField()
 
     def get_absolute_url(self):
         return reverse('explore', args=(self.pk,))
