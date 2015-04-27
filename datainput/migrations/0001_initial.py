@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import datainput.models
 
 
 class Migration(migrations.Migration):
@@ -11,10 +12,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='UploadedData',
+            name='SuppliedData',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('uuid', models.CharField(default=datainput.models.make_uuid, primary_key=True, editable=False, serialize=False, max_length=36)),
                 ('original_data', models.FileField(upload_to='')),
             ],
+            options={
+                'abstract': False,
+            },
         ),
     ]
