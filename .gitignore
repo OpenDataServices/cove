@@ -1,0 +1,4 @@
+*.swp
+*~
+pyenv
+__pycache__
