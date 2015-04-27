@@ -1,0 +1,10 @@
+Django==1.8
+git+https://github.com/OpenDataServices/flatten-tool.git@910b0bc92c2576ec45783c92882f897d438b6499#egg=flattentool
+
+# Dependencies of flatten-tool
+jdcal==1.0
+jsonref==0.1
+openpyxl==2.1.5
+pytz==2015.2
+schema==0.3.1
+six==1.9.0
