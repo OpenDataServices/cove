@@ -1,19 +1,24 @@
 <!doctype html>
 {% load bootstrap3 %}
+{% load static from staticfiles %}
+{% load i18n %}
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/style.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'dataexplore/favicon.png' %}">
+  {% trans "Open Contracting Data Explorer" as application_name %}
+  <title>{% blocktrans %} {{ application_name }} {% endblocktrans %} {% block title %}{% endblock %}</title>
 </head>
 <body>
     <div class="container">
+    <h1>{% blocktrans %} {{ application_name }} {% endblocktrans %}</h1>
     {% block content %}
     {% endblock %}
     </div>
     
 
-
-{% load i18n %}
 <form action="{% url 'set_language' %}" method="post">
 {% csrf_token %}
 <input name="next" type="hidden" value="{{ redirect_to }}" />
