@@ -2,20 +2,22 @@
 {% block content %}
 
 {% load i18n %}
+{% trans 'Converted from Original' as converted %}
+{% trans 'Original' as original %}
 
 <!--Download Converted Files-->
 <div class="panel panel-success">
-  <div class="panel-heading"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Download Converted Files</div>
+  <div class="panel-heading"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Download Files</div>
   <div class="panel-body">
     {% if conversion == 'flatten' %}
       <ul>
-        <li><a href="{{converted_url}}.xlsx">XLSX</a></li>
-        <li><a href="{{original_file.url}}">JSON ({% trans 'Original' %})</a></li>
+        <li><a href="{{converted_url}}.xlsx">XLSX ({{ converted }})</a></li>
+        <li><a href="{{original_file.url}}">JSON ({{ original }})</a></li>
       </ul>    
     {% elif conversion == 'unflatten' %}
       <ul>
-        <li><a href="{{original_file.url}}">XLSX ({% trans 'Original' %})</a></li>
-        <li><a href="{{converted_url}}">JSON</a></li>
+        <li><a href="{{original_file.url}}">XLSX ({{ original }})</a></li>
+        <li><a href="{{converted_url}}">JSON ({{ converted }})</a></li>
       </ul>
     {% endif %}
   </div>
