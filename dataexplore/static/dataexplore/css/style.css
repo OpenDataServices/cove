@@ -10,3 +10,7 @@ h1.application-name {
 .language-select {
   margin: 10px 0;
 }
+
+.panel-title .glyphicon {
+padding-right:15px;
+} 
