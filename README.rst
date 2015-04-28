@@ -12,6 +12,7 @@ Steps to installation:
 * Activate the virtual environment
 * Install dependencies
 * Set up the database (sqlite3)
+* Compile the translations
 * Run the development server
 
 .. code:: bash
@@ -22,6 +23,18 @@ Steps to installation:
     source pyenv/bin/activate
     pip install -r requirements.txt
     python manage.py migrate
+    python manage.py compilemessages
     python manage.py runserver
 
 Follow the instructions in your terminal to open the aplication in your browser.
+
+Translations
+============
+
+For more information about Django's trnslation framework, see https://docs.djangoproject.com/en/1.8/topics/i18n/translation/
+
+If you add new text to the interface, ensure to wrap it in the relevant gettext blocks/functions, and then regnerate the .po files in the locale folder:
+
+.. code:: bash
+
+    python manage.py makemessages --ignore pyenv
