@@ -20,5 +20,13 @@
         </button>
     {% endbuttons %}
 </form>
+<form method="POST" action=".">{% csrf_token %}
+    {% bootstrap_form forms.text_form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% trans 'Submit' %}
+        </button>
+    {% endbuttons %}
+</form>
 
 {% endblock %}
