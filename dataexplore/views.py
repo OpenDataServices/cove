@@ -8,11 +8,17 @@ import json
 import flattentool
 import magic
 
+def get_releases_aggregates(json_data):
+    return {
+        'count': len(json_data['releases']) if 'releases' in json_data else 0
+    }
+
 def explore(request, pk):
     data = SuppliedData.objects.get(pk=pk)
     original_file = data.original_file
 
     mime = magic.Magic(mime=True)
+    print(original_file.file.name)
     mime_type = mime.from_file(original_file.file.name)
 
     converted_dir = os.path.join(settings.MEDIA_ROOT, 'converted', pk) 
@@ -31,6 +37,7 @@ def explore(request, pk):
             output_name=converted_path,
             main_sheet_name='releases'
         )
+        json_path = original_file.file.name
     elif mime_type == b'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
         converted_path = os.path.join(converted_dir, 'unflattened.json')
         converted_url = '{}converted/{}/unflattened.json'.format(settings.MEDIA_URL, pk)
@@ -41,10 +48,16 @@ def explore(request, pk):
             input_format='xlsx',
             main_sheet_name='releases'
         )
+        json_path = converted_path
     else:
         return render(request, 'error.html', {
             'msg': _('Unrecognised file type.'),
+            'mime_type': mime_type,
         })
+
+    with open(json_path) as fp:
+        json_data = json.load(fp)
+        releases_aggregates = get_releases_aggregates(json_data)
 
 
     return render(request, 'explore.html', {
@@ -52,4 +65,5 @@ def explore(request, pk):
         'original_file': original_file,
         'converted_url': converted_url,
         'mime_type': mime_type,
+        'releases_aggregates': releases_aggregates
     })
