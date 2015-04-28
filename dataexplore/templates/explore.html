@@ -3,14 +3,33 @@
 
 {% load i18n %}
 
-{% if conversion == 'flatten' %}
-    <a href="{{converted_url}}.xlsx">XLSX</a>
-    <a href="{{original_file.url}}">JSON ({% trans 'Original' %})</a>
-{% elif conversion == 'unflatten' %}
-    <a href="{{original_file.url}}">XLSX ({% trans 'Original' %})</a>
-    <a href="{{converted_url}}">JSON</a>
-{% endif %}
+<!--Download Converted Files-->
+<div class="panel panel-success">
+  <div class="panel-heading"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Download Converted Files</div>
+  <div class="panel-body">
+    {% if conversion == 'flatten' %}
+      <ul>
+        <li><a href="{{converted_url}}.xlsx">XLSX</a></li>
+        <li><a href="{{original_file.url}}">JSON ({% trans 'Original' %})</a></li>
+      </ul>    
+    {% elif conversion == 'unflatten' %}
+      <ul>
+        <li><a href="{{original_file.url}}">XLSX ({% trans 'Original' %})</a></li>
+        <li><a href="{{converted_url}}">JSON</a></li>
+      </ul>
+    {% endif %}
+  </div>
+</div>
 
-{{releases_aggregates.count}}
-
+<!-- Count of Releases -->
+<div class="row">
+  <div class="col-md-2">
+    <div class="panel panel-default">
+      <div class="panel-heading">Number of Releases</div>
+      <div class="panel-body">
+        {{releases_aggregates.count}}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
