@@ -117,6 +117,7 @@ STATIC_URL = '/static/'
 LANGUAGES = (
   ('fr', 'French'),
   ('en', 'English'),
+  ('es', 'Spanish'),
 )
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'), 
