@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import datainput.models
+import uuid
 
 
 class Migration(migrations.Migration):
@@ -14,12 +14,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SuppliedData',
             fields=[
-                ('uuid', models.CharField(primary_key=True, default=datainput.models.make_uuid, editable=False, max_length=36, serialize=False)),
+                ('id', models.UUIDField(serialize=False, editable=False, primary_key=True, default=uuid.uuid4)),
                 ('source_url', models.URLField(null=True)),
                 ('original_file', models.FileField(upload_to='')),
             ],
-            options={
-                'abstract': False,
-            },
         ),
     ]
