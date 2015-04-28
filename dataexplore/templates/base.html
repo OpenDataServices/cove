@@ -45,6 +45,16 @@
   
   {% block content %}
   {% endblock %}
+  </div><!-- /.container -->
+  
+  <div class="container">
+    
+  {% block aboveFooter %}
+    <div>
+      <h2><small>{% trans "How to use the" %} {{ application_name}}</small></h2>
+      <p>{% trans "The application only works with 'release' documents that conform to the Open Data Contracting Standard" %}</p>
+    </div>
+  {% endblock %}
     
   </div><!-- /.container -->
   
