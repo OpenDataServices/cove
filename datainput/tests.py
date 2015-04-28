@@ -1,3 +1,6 @@
-from django.test import TestCase
+import pytest
+import datainput.views as v
 
-# Create your tests here.
+@pytest.mark.django_db
+def test_input(rf):
+    resp = v.input(rf.get('/'))

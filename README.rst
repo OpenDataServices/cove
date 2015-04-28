@@ -28,6 +28,13 @@ Steps to installation:
 
 Follow the instructions in your terminal to open the aplication in your browser.
 
+Run tests
+=========
+
+.. code:: bash
+
+    py.test --ignore pyenv
+
 Translations
 ============
 
