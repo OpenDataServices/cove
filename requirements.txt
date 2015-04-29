@@ -9,7 +9,8 @@ dealer==2.0.4
 # Dependencies of flatten-tool
 jdcal==1.0
 jsonref==0.1
-openpyxl==2.1.5
+# flatten-tool currently requires openpyxl<2.2
+openpyxl==2.1.5 # rq.filter: <2.2
 pytz==2015.2
 schema==0.3.1
 six==1.9.0
