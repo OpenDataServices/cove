@@ -19,7 +19,7 @@ Steps to installation:
 
     git clone ...
     cd <hjekkjr>
-    virtualenv pyenv --python=/usr/bin/python3
+    virtualenv .ve --python=/usr/bin/python3
     source pyenv/bin/activate
     pip install -r requirements.txt
     python manage.py migrate
@@ -33,7 +33,7 @@ Run tests
 
 .. code:: bash
 
-    py.test --ignore pyenv
+    py.test
 
 Translations
 ============
@@ -44,4 +44,4 @@ If you add new text to the interface, ensure to wrap it in the relevant gettext 
 
 .. code:: bash
 
-    python manage.py makemessages --ignore pyenv
+    python manage.py makemessages

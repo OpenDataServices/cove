@@ -2,6 +2,6 @@
 *.swp
 *.mo
 *~
-pyenv
+.ve
 __pycache__
 media
