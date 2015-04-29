@@ -1,6 +1,22 @@
 Cove - COnvert Validate & Explore
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. image:: https://travis-ci.org/OpenDataServices/cove.svg?branch=master
+    :target: https://travis-ci.org/OpenDataServices/cove
+
+.. image:: https://requires.io/github/OpenDataServices/cove/requirements.svg?branch=master
+     :target: https://requires.io/github/OpenDataServices/cove/requirements/?branch=master
+     :alt: Requirements Status
+
+.. image:: https://coveralls.io/repos/OpenDataServices/cove/badge.png?branch=master
+    :target: https://coveralls.io/r/OpenDataServices/cove?branch=master
+
+.. image:: https://img.shields.io/badge/license-AGPLv3-blue.svg
+    :target: https://github.com/OpenDataServices/cove/blob/master/AGPLv3.txt
+
+Introduction
+============
+
 This application is currently in a pre-alpha state.
 
 Requirements
