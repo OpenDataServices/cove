@@ -4,6 +4,8 @@
 {% load i18n %}
 {% trans 'Converted from Original' as converted %}
 {% trans 'Original' as original %}
+{% trans 'Excel Spreadsheet (.xlsx)' as xlsx %} 
+{% trans 'JSON' as JSON %}
 
 <!--Download Converted Files-->
 <div class="panel panel-success">
@@ -16,13 +18,14 @@
   <div class="panel-body">
     {% if conversion == 'flatten' %}
       <ul>
-        <li><a href="{{converted_url}}.xlsx">XLSX ({{ converted }})</a></li>
-        <li><a href="{{original_file.url}}">JSON ({{ original }})</a></li>
+        <li><a href="{{converted_url}}.xlsx">{% blocktrans %}{{xlsx}} ({{ converted }}){% endblocktrans %}</a></li>
+        {# Translators: JSON probably does not need a transalation: http://www.json.org/ #}
+        <li><a href="{{original_file.url}}">{% blocktrans %}{{JSON}} ({{ original }}){% endblocktrans %}</a></li>
       </ul>    
     {% elif conversion == 'unflatten' %}
       <ul>
-        <li><a href="{{original_file.url}}">XLSX ({{ original }})</a></li>
-        <li><a href="{{converted_url}}">JSON ({{ converted }})</a></li>
+        <li><a href="{{original_file.url}}">{% blocktrans %}{{xlsx}} ({{ original }}){% endblocktrans %}</a></li>
+        <li><a href="{{converted_url}}">{% blocktrans %}{{JSON}} ({{ converted }}){% endblocktrans %}</a></li>
       </ul>
     {% endif %}
   </div>
