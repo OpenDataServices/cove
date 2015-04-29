@@ -4,7 +4,6 @@
 
 {% block content %}
 
-<div class=""></div>
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne">
@@ -35,7 +34,7 @@
         </a>
       </h4>
     </div>
-    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+    <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
       <div class="panel-body">
         <form method="POST" action=".">{% csrf_token %}
             {% bootstrap_form forms.url_form %}
@@ -56,7 +55,7 @@
         </a>
       </h4>
     </div>
-    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+    <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
       <div class="panel-body">
         <form method="POST" action=".">{% csrf_token %}
             {% bootstrap_form forms.text_form %}
@@ -66,12 +65,23 @@
                 </button>
             {% endbuttons %}
         </form>
-        </div>
       </div>
     </div>
   </div>
 </div>
 
+
 {% endblock %}
 
 
+
+{% block extrafooterscript %}
+ <script>
+  $('#collapseThree').collapse({
+  hide: true
+  })
+  $('#collapseTwo').collapse({
+  hide: true
+  })
+</script>
+{% endblock %}

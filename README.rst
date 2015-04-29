@@ -38,7 +38,7 @@ Run tests
 Translations
 ============
 
-For more information about Django's trnslation framework, see https://docs.djangoproject.com/en/1.8/topics/i18n/translation/
+For more information about Django's translation framework, see https://docs.djangoproject.com/en/1.8/topics/i18n/translation/
 
 If you add new text to the interface, ensure to wrap it in the relevant gettext blocks/functions, and then regnerate the .po files in the locale folder:
 
