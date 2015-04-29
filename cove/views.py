@@ -15,13 +15,25 @@ def get_releases_aggregates(json_data):
     }
 
 
+class UnrecognisedFileType(Exception):
+    pass
+
+
+def get_file_type(django_file):
+    buf = django_file.read(1024)
+    type_name = magic.from_buffer(buf).decode('utf8')
+    mime_type = magic.from_buffer(buf, mime=True).decode('utf8')
+    if mime_type == 'text/plain':
+        return 'json'
+    elif type_name in ['Microsoft OOXML', 'Microsoft Excel 2007+']:
+        return 'xlsx'
+    else:
+        raise UnrecognisedFileType
+
+
 def explore(request, pk):
     data = SuppliedData.objects.get(pk=pk)
     original_file = data.original_file
-
-    mime = magic.Magic(mime=True)
-    print(original_file.file.name)
-    mime_type = mime.from_file(original_file.file.name)
 
     converted_dir = os.path.join(settings.MEDIA_ROOT, 'converted', pk)
     try:
@@ -30,7 +42,13 @@ def explore(request, pk):
         pass
     os.makedirs(converted_dir)
     
-    if mime_type == b'text/plain':
+    try:
+        file_type = get_file_type(original_file)
+    except UnrecognisedFileType:
+        return render(request, 'error.html', {
+            'msg': _('Unrecognised file type.')
+        })
+    if file_type == 'json':
         converted_path = os.path.join(converted_dir, 'flattened')
         converted_url = '{}converted/{}/flattened'.format(settings.MEDIA_URL, pk)
         conversion = 'flatten'
@@ -40,22 +58,17 @@ def explore(request, pk):
             main_sheet_name='releases'
         )
         json_path = original_file.file.name
-    elif mime_type == b'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+    else:
         converted_path = os.path.join(converted_dir, 'unflattened.json')
         converted_url = '{}converted/{}/unflattened.json'.format(settings.MEDIA_URL, pk)
         conversion = 'unflatten'
         flattentool.unflatten(
             original_file.file.name,
             output_name=converted_path,
-            input_format='xlsx',
+            input_format=file_type,
             main_sheet_name='releases'
         )
         json_path = converted_path
-    else:
-        return render(request, 'error.html', {
-            'msg': _('Unrecognised file type.'),
-            'mime_type': mime_type,
-        })
 
     with open(json_path) as fp:
         json_data = json.load(fp)
@@ -65,6 +78,6 @@ def explore(request, pk):
         'conversion': conversion,
         'original_file': original_file,
         'converted_url': converted_url,
-        'mime_type': mime_type,
+        'file_type': file_type,
         'releases_aggregates': releases_aggregates
     })
