@@ -1,6 +1,7 @@
 import pytest
 from selenium import webdriver
 
+
 @pytest.fixture(scope="module")
 def browser(request):
     browser = webdriver.Firefox()

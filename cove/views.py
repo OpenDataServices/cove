@@ -8,10 +8,12 @@ import json
 import flattentool
 import magic
 
+
 def get_releases_aggregates(json_data):
     return {
         'count': len(json_data['releases']) if 'releases' in json_data else 0
     }
+
 
 def explore(request, pk):
     data = SuppliedData.objects.get(pk=pk)
@@ -21,7 +23,7 @@ def explore(request, pk):
     print(original_file.file.name)
     mime_type = mime.from_file(original_file.file.name)
 
-    converted_dir = os.path.join(settings.MEDIA_ROOT, 'converted', pk) 
+    converted_dir = os.path.join(settings.MEDIA_ROOT, 'converted', pk)
     try:
         shutil.rmtree(converted_dir)
     except FileNotFoundError:
@@ -58,7 +60,6 @@ def explore(request, pk):
     with open(json_path) as fp:
         json_data = json.load(fp)
         releases_aggregates = get_releases_aggregates(json_data)
-
 
     return render(request, 'explore.html', {
         'conversion': conversion,

@@ -2,6 +2,7 @@ from django.db import models
 import uuid
 from django.core.urlresolvers import reverse
 
+
 class SuppliedData(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     source_url = models.URLField(null=True)

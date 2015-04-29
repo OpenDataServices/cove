@@ -113,13 +113,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-
 LANGUAGES = (
-  ('fr', 'French'),
-  ('en', 'English'),
-  ('es', 'Spanish'),
+    ('fr', 'French'),
+    ('en', 'English'),
+    ('es', 'Spanish'),
 )
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale'), 
+    os.path.join(BASE_DIR, 'locale'),
 )
-

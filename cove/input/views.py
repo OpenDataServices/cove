@@ -2,31 +2,32 @@ from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render, redirect
 from django import forms
 from cove.input.models import SuppliedData
-from django.views.generic.edit import CreateView
 from django.core.files.base import ContentFile
 import requests
 
+
 class UploadForm(forms.ModelForm):
-     class Meta:
-         model = SuppliedData
-         fields = ['original_file']
-         labels = {
+    class Meta:
+        model = SuppliedData
+        fields = ['original_file']
+        labels = {
             'original_file': _('Upload a file')
-         }
+        }
+
 
 class UrlForm(forms.ModelForm):
-     class Meta:
-         model = SuppliedData
-         fields = ['source_url']
-         labels = {
+    class Meta:
+        model = SuppliedData
+        fields = ['source_url']
+        labels = {
             'source_url': _('Supply a URL')
-         }
+        }
+
 
 class TextForm(forms.Form):
     paste = forms.CharField(label=_('Paste'), widget=forms.Textarea)
 
-# Create your views here.
-input = CreateView.as_view(model=SuppliedData, fields=['original_data'])
+
 def input(request):
     form_classes = {
         'upload_form': UploadForm,
@@ -55,4 +56,4 @@ def input(request):
             elif form_name == 'text_form':
                 data.original_file.save('test.json', ContentFile(form['paste'].value()))
             return redirect(data.get_absolute_url())
-    return render(request, 'datainput/input.html', {'forms':forms})
+    return render(request, 'datainput/input.html', {'forms': forms})
