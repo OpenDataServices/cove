@@ -6,7 +6,6 @@ import os
 import shutil
 import json
 import flattentool
-import magic
 
 
 def get_releases_aggregates(json_data):
@@ -20,15 +19,16 @@ class UnrecognisedFileType(Exception):
 
 
 def get_file_type(django_file):
-    buf = django_file.read(1024)
-    type_name = magic.from_buffer(buf).decode('utf8')
-    mime_type = magic.from_buffer(buf, mime=True).decode('utf8')
-    if mime_type == 'text/plain':
+    if django_file.name.endswith('.json'):
         return 'json'
-    elif type_name in ['Microsoft OOXML', 'Microsoft Excel 2007+']:
+    elif django_file.name.endswith('.xlsx'):
         return 'xlsx'
     else:
-        raise UnrecognisedFileType
+        first_byte = django_file.read(1)
+        if first_byte in [b'{', b'[']:
+            return 'json'
+        else:
+            raise UnrecognisedFileType
 
 
 def explore(request, pk):

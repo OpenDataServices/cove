@@ -17,14 +17,23 @@ def test_get_releases_aggregates():
     }
 
 
-@pytest.mark.django_db
 def test_get_file_type_xlsx(rf):
     r = requests.get('https://raw.githubusercontent.com/OpenDataServices/flatten-tool/master/flattentool/tests/fixtures/xlsx/basic.xlsx')
-    assert v.get_file_type(ContentFile(r.content)) == 'xlsx'
+    django_file = ContentFile(r.content)
+    django_file.name = 'basic.xlsx'
+    assert v.get_file_type(django_file) == 'xlsx'
 
 
 def test_get_file_type_json(rf):
-    assert v.get_file_type(ContentFile(b'{}')) == 'json'
+    django_file = ContentFile(b'{}')
+    django_file.name = 'test.json'
+    assert v.get_file_type(django_file) == 'json'
+
+
+def test_get_file_type_json_noextension(rf):
+    django_file = ContentFile(b'{}')
+    django_file.name = 'test'
+    assert v.get_file_type(django_file) == 'json'
 
 
 @pytest.mark.django_db
