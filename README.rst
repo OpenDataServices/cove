@@ -72,3 +72,10 @@ If you add new text to the interface, ensure to wrap it in the relevant gettext 
 .. code:: bash
 
     python manage.py makemessages
+
+To check that all new text is written so that it is able to be translated you could install and run `django-template-i18n-lint`
+
+.. code:: bash
+
+    pip install django-template-i18n-lint
+    django-template-i18n-lint cove
