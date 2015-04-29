@@ -56,6 +56,12 @@ Run tests
 
     py.test
 
+To genreate a coverage report (in the htmlcov directory):
+
+.. code:: bash
+
+    py.test --cov cove --cov-report html
+
 Translations
 ============
 

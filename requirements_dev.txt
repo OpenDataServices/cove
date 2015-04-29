@@ -12,6 +12,14 @@ pyflakes==0.8.1
 py==1.4.26
 pytest==2.7.0
 pytest-django==2.8.0
+pytest-cov==1.8.1
+cov-core==1.15.0
+coverage==3.7.1
+
+# coveralls
+coveralls==0.5
+docopt==0.6.2
+PyYAML==3.11
 
 # selenium
 selenium==2.45.0

@@ -12,4 +12,6 @@ install:
 
 script:
     - "flake8 ."
-    - "py.test"
+    - "py.test --cov cove"
+
+after_success: coveralls
