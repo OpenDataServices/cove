@@ -1,5 +1,5 @@
 import pytest
-import datainput.views as v
+import cove.input.views as v
 
 @pytest.mark.django_db
 def test_input(rf):

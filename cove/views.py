@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render
-from datainput.models import SuppliedData
+from cove.input.models import SuppliedData
 from django.conf import settings
 import os
 import shutil

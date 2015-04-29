@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render, redirect
 from django import forms
-from datainput.models import SuppliedData
+from cove.input.models import SuppliedData
 from django.views.generic.edit import CreateView
 from django.core.files.base import ContentFile
 import requests

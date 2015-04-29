@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-28 13:11+0000\n"
+"POT-Creation-Date: 2015-04-29 09:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,53 +18,62 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: dataexplore/templates/base.html:11
-msgid "Open Contracting Data Explorer"
-msgstr "Abrir Contratante Data Explorer"
-
-#: dataexplore/templates/explore.html:5
-msgid "Converted from Original"
-msgstr "Convertido de original"
-
-#: dataexplore/templates/explore.html:6
-msgid "Original"
-msgstr "Original"
-
-#: dataexplore/templates/explore.html:10
-msgid "Download Files"
-msgstr "Bajar Archivos"
-
-#: dataexplore/templates/explore.html:30
-msgid "Number of Releases"
-msgstr "Número de Releases"
-
-#: dataexplore/views.py:54
-msgid "Unrecognised file type."
-msgstr "Tipo de archivo no reconocido."
-
-#: datainput/templates/datainput/input.html:13
+#: cove/input/templates/datainput/input.html:12
 msgid "Upload"
 msgstr "Subir"
 
-#: datainput/templates/datainput/input.html:23
-#: datainput/templates/datainput/input.html:44
-#: datainput/templates/datainput/input.html:65
+#: cove/input/templates/datainput/input.html:22
+#: cove/input/templates/datainput/input.html:43
+#: cove/input/templates/datainput/input.html:64
 msgid "Submit"
 msgstr "Presentar"
 
-#: datainput/templates/datainput/input.html:34
+#: cove/input/templates/datainput/input.html:33
 msgid "Link"
 msgstr "Enlace"
 
-#: datainput/templates/datainput/input.html:55 datainput/views.py:26
+#: cove/input/templates/datainput/input.html:54 cove/input/views.py:26
 msgid "Paste"
 msgstr "Pasta"
 
-#: datainput/views.py:14
+#: cove/input/views.py:14
 msgid "Upload a file"
 msgstr "Cargar un archivo"
 
-#: datainput/views.py:22
+#: cove/input/views.py:22
 msgid "Supply a URL"
 msgstr "Proporcione una dirección URL"
 
+#: cove/templates/base.html:11
+msgid "Open Contracting Data Explorer"
+msgstr "Abrir Contratante Data Explorer"
+
+#: cove/templates/base.html:54
+msgid "How to use the"
+msgstr ""
+
+#: cove/templates/base.html:55
+msgid ""
+"The application only works with 'release' documents that conform to the Open "
+"Data Contracting Standard"
+msgstr ""
+
+#: cove/templates/explore.html:5
+msgid "Converted from Original"
+msgstr "Convertido de original"
+
+#: cove/templates/explore.html:6
+msgid "Original"
+msgstr "Original"
+
+#: cove/templates/explore.html:10
+msgid "Download Files"
+msgstr "Bajar Archivos"
+
+#: cove/templates/explore.html:30
+msgid "Number of Releases"
+msgstr "Número de Releases"
+
+#: cove/views.py:54
+msgid "Unrecognised file type."
+msgstr "Tipo de archivo no reconocido."

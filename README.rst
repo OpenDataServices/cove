@@ -1,3 +1,8 @@
+Cove - COnvert Validate & Explore
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This application is currently in a pre-alpha state.
+
 Requirements
 ============
 This application is built using Django and python 3
@@ -20,8 +25,8 @@ Steps to installation:
     git clone ...
     cd <hjekkjr>
     virtualenv .ve --python=/usr/bin/python3
-    source pyenv/bin/activate
-    pip install -r requirements.txt
+    source .ve/bin/activate
+    pip install -r requirements_dev.txt
     python manage.py migrate
     python manage.py compilemessages
     python manage.py runserver
