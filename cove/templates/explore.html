@@ -5,6 +5,7 @@
 {% trans 'Converted from Original' as converted %}
 {% trans 'Original' as original %}
 {% trans 'Excel Spreadsheet (.xlsx)' as xlsx %} 
+{# Translators: JSON probably does not need a transalation: http://www.json.org/ #}
 {% trans 'JSON' as JSON %}
 
 <!--Download Converted Files-->
@@ -19,7 +20,6 @@
     {% if conversion == 'flatten' %}
       <ul>
         <li><a href="{{converted_url}}.xlsx">{% blocktrans %}{{xlsx}} ({{ converted }}){% endblocktrans %}</a></li>
-        {# Translators: JSON probably does not need a transalation: http://www.json.org/ #}
         <li><a href="{{original_file.url}}">{% blocktrans %}{{JSON}} ({{ original }}){% endblocktrans %}</a></li>
       </ul>    
     {% elif conversion == 'unflatten' %}

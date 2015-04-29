@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-29 09:57+0000\n"
+"POT-Creation-Date: 2015-04-29 16:58+0000\n"
 "PO-Revision-Date: 2015-04-27 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -34,7 +34,7 @@ msgstr "Soumettre"
 msgid "Link"
 msgstr ""
 
-#: cove/input/templates/datainput/input.html:54 cove/input/views.py:26
+#: cove/input/templates/datainput/input.html:54 cove/input/views.py:28
 msgid "Paste"
 msgstr ""
 
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Upload a file"
 msgstr "Télécharger un fichier"
 
-#: cove/input/views.py:22
+#: cove/input/views.py:23
 msgid "Supply a URL"
 msgstr "Fournir une URL"
 
@@ -50,14 +50,27 @@ msgstr "Fournir une URL"
 msgid "Open Contracting Data Explorer"
 msgstr "Le Open Contracting Data Explorer"
 
-#: cove/templates/base.html:54
-msgid "How to use the"
+#. Translators: Label of a button that triggers search
+#: cove/templates/base.html:39
+msgid "Go"
 msgstr ""
 
 #: cove/templates/base.html:55
+#, python-format
+msgid "How to use the %(application_name)s"
+msgstr ""
+
+#. Translators: Paragraph that describes the application
+#: cove/templates/base.html:57
 msgid ""
 "The application only works with 'release' documents that conform to the Open "
 "Data Contracting Standard"
+msgstr ""
+
+#. Translators: Provides information about the version of the code base that is being used
+#: cove/templates/base.html:66
+#, python-format
+msgid "Running version %(version)s."
 msgstr ""
 
 #: cove/templates/explore.html:5
@@ -68,14 +81,43 @@ msgstr ""
 msgid "Original"
 msgstr ""
 
-#: cove/templates/explore.html:10
+#: cove/templates/explore.html:7
+msgid "Excel Spreadsheet (.xlsx)"
+msgstr ""
+
+#: cove/templates/explore.html:8
+msgid "JSON"
+msgstr ""
+
+#: cove/templates/explore.html:14
 msgid "Download Files"
 msgstr ""
 
-#: cove/templates/explore.html:30
+#: cove/templates/explore.html:21
+#, python-format
+msgid "%(xlsx)s (%(converted)s)"
+msgstr ""
+
+#. Translators: JSON probably does not need a transalation: http://www.json.org/
+#: cove/templates/explore.html:23
+#, python-format
+msgid "%(JSON)s (%(original)s)"
+msgstr ""
+
+#: cove/templates/explore.html:27
+#, python-format
+msgid "%(xlsx)s (%(original)s)"
+msgstr ""
+
+#: cove/templates/explore.html:28
+#, python-format
+msgid "%(JSON)s (%(converted)s)"
+msgstr ""
+
+#: cove/templates/explore.html:39
 msgid "Number of Releases"
 msgstr ""
 
-#: cove/views.py:54
+#: cove/views.py:56
 msgid "Unrecognised file type."
 msgstr ""
