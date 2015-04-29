@@ -11,8 +11,16 @@ h1.application-name {
   margin: 10px 0;
 }
 
+#accordion .panel-heading {
+    cursor: pointer;
+}
+
+.panel-title a {
+  text-decoration:none;
+}
+
 .panel-title .glyphicon {
-padding-right:15px;
+  padding-right:15px;
 }
 
 #footer {
@@ -20,3 +28,7 @@ padding-right:15px;
   margin: 20px 0 40px;
   border-top: 1px solid #eee;
 } 
+
+show-open-if-noscript {
+display:block;
+}

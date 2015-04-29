@@ -6,9 +6,9 @@
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingOne">
+    <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
       <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        <a class="accordion-toggle">
           <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>{% trans "Upload" %}
         </a>
       </h4>
@@ -27,14 +27,14 @@
     </div>
   </div>
   <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingTwo">
+    <div class="panel-heading" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
       <h4 class="panel-title">
-        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        <a class="accordion-toggle">
           <span class="glyphicon glyphicon-link" aria-hidden="true"></span>{% trans "Link" %}
         </a>
       </h4>
     </div>
-    <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+    <div id="collapseTwo" class="panel-collapse show-open-if-noscript" role="tabpanel" aria-labelledby="headingTwo">
       <div class="panel-body">
         <form method="POST" action=".">{% csrf_token %}
             {% bootstrap_form forms.url_form %}
@@ -48,14 +48,14 @@
     </div>
   </div>
   <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingThree">
+    <div class="panel-heading" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
       <h4 class="panel-title">
-        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        <a class="accordion-toggle">
           <span class="glyphicon glyphicon-paste" aria-hidden="true"></span>{% trans "Paste" %}
         </a>
       </h4>
     </div>
-    <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+    <div id="collapseThree" class="panel-collapse show-open-if-noscript" role="tabpanel" aria-labelledby="headingThree">
       <div class="panel-body">
         <form method="POST" action=".">{% csrf_token %}
             {% bootstrap_form forms.text_form %}
@@ -77,11 +77,9 @@
 
 {% block extrafooterscript %}
  <script>
-  $('#collapseThree').collapse({
-  hide: true
-  })
-  $('#collapseTwo').collapse({
-  hide: true
-  })
+   //If javascript is off all pannels show.
+   //We use this to collapse pannels 2 and 3 if javascript is on.
+  $("#collapseTwo").attr('class', 'panel-collapse collapse');
+  $("#collapseThree").attr('class', 'panel-collapse collapse');
 </script>
 {% endblock %}
