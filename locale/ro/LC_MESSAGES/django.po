@@ -1,0 +1,107 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-30 10:08+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+
+#: cove/input/templates/datainput/input.html:12
+msgid "Upload"
+msgstr "Încărcați"
+
+#: cove/input/templates/datainput/input.html:22
+#: cove/input/templates/datainput/input.html:43
+#: cove/input/templates/datainput/input.html:64
+msgid "Submit"
+msgstr "Prezenta"
+
+#: cove/input/templates/datainput/input.html:33
+msgid "Link"
+msgstr "Legătură"
+
+#: cove/input/templates/datainput/input.html:54 cove/input/views.py:28
+msgid "Paste"
+msgstr "Pastă"
+
+#: cove/input/views.py:14
+msgid "Upload a file"
+msgstr "Încărcați un fișier"
+
+#: cove/input/views.py:23
+msgid "Supply a URL"
+msgstr "Furnizează o adresă URL"
+
+#: cove/templates/base.html:11
+msgid "Open Contracting Data Explorer"
+msgstr "Datele deschise Contractantă Explorer"
+
+#. Translators: Label of a button that triggers search
+#: cove/templates/base.html:39
+msgid "Go"
+msgstr "Merge"
+
+#: cove/templates/base.html:55
+#, python-format
+msgid "How to use the %(application_name)s"
+msgstr "Cum să utilizați %(application_name)s"
+
+#. Translators: Paragraph that describes the application
+#: cove/templates/base.html:57
+msgid "The application only works with 'release' documents that conform to the Open Data Contracting Standard"
+msgstr "Cererea funcționează numai cu documente 'eliberare', care sunt conforme cu datele deschise Standard contractante"
+
+#. Translators: Provides information about the version of the code base that is being used
+#: cove/templates/base.html:66
+#, python-format
+msgid "Running version %(version)s."
+msgstr "Rularea versiunea %(version)s."
+
+#: cove/templates/explore.html:5
+msgid "Converted from Original"
+msgstr "Convertit de la Original"
+
+#: cove/templates/explore.html:6
+msgid "Original"
+msgstr "Original"
+
+#: cove/templates/explore.html:7
+msgid "Excel Spreadsheet (.xlsx)"
+msgstr "Foaie de calcul Excel (.xlsx)"
+
+#. Translators: JSON probably does not need a transalation: http://www.json.org/
+#: cove/templates/explore.html:9
+msgid "JSON"
+msgstr "JSON"
+
+#: cove/templates/explore.html:15
+msgid "Download Files"
+msgstr "Descărca fișiere"
+
+#: cove/templates/explore.html:22 cove/templates/explore.html.py:23
+#: cove/templates/explore.html:27 cove/templates/explore.html.py:28
+#, python-format
+msgid "%(file_format)s (%(status)s)"
+msgstr "%(file_format)s (%(status)s)"
+
+#: cove/templates/explore.html:39
+msgid "Number of Releases"
+msgstr "Numărul de presă"
+
+#: cove/views.py:49
+msgid "Unrecognised file type."
+msgstr "Tip de fișier nerecunoscută."
+
