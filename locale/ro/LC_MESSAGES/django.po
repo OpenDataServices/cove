@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-30 10:08+0000\n"
+"POT-Creation-Date: 2015-04-30 14:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,14 +61,55 @@ msgstr "Cum să utilizați %(application_name)s"
 
 #. Translators: Paragraph that describes the application
 #: cove/templates/base.html:57
-msgid "The application only works with 'release' documents that conform to the Open Data Contracting Standard"
-msgstr "Cererea funcționează numai cu documente 'eliberare', care sunt conforme cu datele deschise Standard contractante"
+msgid ""
+"The application only works with 'release' documents that conform to the Open "
+"Data Contracting Standard"
+msgstr ""
+"Cererea funcționează numai cu documente 'eliberare', care sunt conforme cu "
+"datele deschise Standard contractante"
+
+#: cove/templates/base.html:67
+msgid "About"
+msgstr ""
+
+#: cove/templates/base.html:69
+msgid ""
+"Built by <a href=\"http://opendataservices.coop/\">Open Data Services Co-"
+"operative</a>"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid ""
+"The code for this site is available on<br>GitHub: <a href=\"https://github."
+"com/OpenDataServices/cove/\">Cove - COnvert Validate & Explore</"
+"a><br>Licence: <a href=\"https://www.gnu.org/licenses/agpl-3.0.html"
+"\">AGPLv3</a><br>Report/View issues: <a href=\"https://github.com/"
+"OpenDataServices/cove/issues\">Cove Issues</a>"
+msgstr ""
 
 #. Translators: Provides information about the version of the code base that is being used
-#: cove/templates/base.html:66
+#: cove/templates/base.html:74
 #, python-format
 msgid "Running version %(version)s."
 msgstr "Rularea versiunea %(version)s."
+
+#: cove/templates/base.html:77
+#, fuzzy
+#| msgid "Link"
+msgid "Links"
+msgstr "Legătură"
+
+#: cove/templates/base.html:79
+#, fuzzy
+#| msgid "Open Contracting Data Explorer"
+msgid "Open Contracting"
+msgstr "Datele deschise Contractantă Explorer"
+
+#: cove/templates/base.html:80
+#, fuzzy
+#| msgid "Open Contracting Data Explorer"
+msgid "Open Contracting Data Standard"
+msgstr "Datele deschise Contractantă Explorer"
 
 #: cove/templates/explore.html:5
 msgid "Converted from Original"
@@ -104,4 +145,3 @@ msgstr "Numărul de presă"
 #: cove/views.py:49
 msgid "Unrecognised file type."
 msgstr "Tip de fișier nerecunoscută."
-
