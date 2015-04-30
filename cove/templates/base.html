@@ -35,7 +35,8 @@
               {% endfor %}
               </select>
               <noscript>
-                <input type="submit" value="Go" />
+                {# Translators: Label of a button that triggers search #}
+                <input type="submit" value={% trans "Go" %} />
               </noscript>
             </form>
           </div><!--col-md-4-->
@@ -51,8 +52,9 @@
     
   {% block aboveFooter %}
     <div>
-      <h2><small>{% trans "How to use the" %} {{ application_name}}</small></h2>
-      <p>{% trans "The application only works with 'release' documents that conform to the Open Data Contracting Standard" %}</p>
+      <h2><small>{% blocktrans %}How to use the {{ application_name }}{% endblocktrans %}</small></h2>
+      {% comment %}Translators: Paragraph that describes the application{% endcomment %}
+      <p>{% blocktrans %}The application only works with 'release' documents that conform to the Open Data Contracting Standard{% endblocktrans %}</p>
     </div>
   {% endblock %}
     
@@ -60,7 +62,8 @@
   
   <div class="container">
     <div id="footer">
-      <p class="text-muted">Footer text here. Running version {{request.revision}}.</p>
+      {% comment %}Translators: Provides information about the version of the code base that is being used{% endcomment %}
+      <p class="text-muted">{% blocktrans with version=request.revision %}Running version {{version}}.{% endblocktrans %}</p>
       {% block extrafooter %}{% endblock %}
     </div><!-- end footer -->
   </div>

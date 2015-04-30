@@ -56,7 +56,7 @@ Run tests
 
     py.test
 
-To genreate a coverage report (in the htmlcov directory):
+To generate a coverage report (in the htmlcov directory):
 
 .. code:: bash
 
@@ -65,6 +65,16 @@ To genreate a coverage report (in the htmlcov directory):
 Translations
 ============
 
+| We use Django's transaltion framework to provide this application in different languages.
+| We have used Google Translate to perform initial translations from English, but expect those translations to be worked on by humans over time.
+
+Translations for Translators
+++++++++++++++++++++++++++++
+Translators can provide translations for this application by editing the django.po file for a particular language.
+These files are found in the `locale` directory
+
+Translations for Developers
++++++++++++++++++++++++++++
 For more information about Django's translation framework, see https://docs.djangoproject.com/en/1.8/topics/i18n/translation/
 
 If you add new text to the interface, ensure to wrap it in the relevant gettext blocks/functions, and then regnerate the .po files in the locale folder:
@@ -72,3 +82,10 @@ If you add new text to the interface, ensure to wrap it in the relevant gettext 
 .. code:: bash
 
     python manage.py makemessages
+
+To check that all new text is written so that it is able to be translated you could install and run `django-template-i18n-lint`
+
+.. code:: bash
+
+    pip install django-template-i18n-lint
+    django-template-i18n-lint cove
