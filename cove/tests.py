@@ -1,8 +1,9 @@
 import pytest
-import requests
 import cove.views as v
+import os
 from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 
 
 def test_get_releases_aggregates():
@@ -18,22 +19,21 @@ def test_get_releases_aggregates():
 
 
 def test_get_file_type_xlsx(rf):
-    r = requests.get('https://raw.githubusercontent.com/OpenDataServices/flatten-tool/master/flattentool/tests/fixtures/xlsx/basic.xlsx')
-    django_file = ContentFile(r.content)
-    django_file.name = 'basic.xlsx'
-    assert v.get_file_type(django_file) == 'xlsx'
+    with open(os.path.join('cove', 'fixtures', 'basic.xlsx')) as fp:
+        assert v.get_file_type(UploadedFile(fp, 'basic.xlsx')) == 'xlsx'
 
 
 def test_get_file_type_json(rf):
-    django_file = ContentFile(b'{}')
-    django_file.name = 'test.json'
-    assert v.get_file_type(django_file) == 'json'
+    assert v.get_file_type(SimpleUploadedFile('test.json', b'{}')) == 'json'
 
 
 def test_get_file_type_json_noextension(rf):
-    django_file = ContentFile(b'{}')
-    django_file.name = 'test'
-    assert v.get_file_type(django_file) == 'json'
+    assert v.get_file_type(SimpleUploadedFile('test', b'{}')) == 'json'
+
+
+def test_get_file_unrecognised_file_type(rf):
+    with pytest.raises(v.UnrecognisedFileType):
+        v.get_file_type(SimpleUploadedFile('test', b'test'))
 
 
 @pytest.mark.django_db
