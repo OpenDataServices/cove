@@ -40,3 +40,22 @@ def test_accordion(server_url, browser):
     browser.find_element_by_partial_link_text('Paste').click()
     time.sleep(0.5)
     assert buttons() == [False, False, True]
+    # Now test that the whole banner is clickable
+    browser.find_element_by_id('headingOne').click()
+    time.sleep(0.5)
+    assert buttons() == [True, False, False]
+    browser.find_element_by_id('headingTwo').click()
+    time.sleep(0.5)
+    assert buttons() == [False, True, False]
+    browser.find_element_by_id('headingThree').click()
+    time.sleep(0.5)
+    assert buttons() == [False, False, True]
+
+
+def test_URL_input_to_form(server_url, browser):
+    browser.get(server_url + '/')
+    browser.find_element_by_partial_link_text('Link').click()
+    time.sleep(0.5)
+    browser.find_element_by_id('id_source_url').send_keys("https://raw.githubusercontent.com/OpenDataServices/flatten-tool/master/flattentool/tests/fixtures/tenders_releases_2_releases.json")
+    browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+    assert 'Download Files' in browser.find_element_by_tag_name('body').text
