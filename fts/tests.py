@@ -40,6 +40,16 @@ def test_accordion(server_url, browser):
     browser.find_element_by_partial_link_text('Paste').click()
     time.sleep(0.5)
     assert buttons() == [False, False, True]
+    # Now test that the whole banner is clickable
+    browser.find_element_by_id('headingOne').click()
+    time.sleep(0.5)
+    assert buttons() == [True, False, False]
+    browser.find_element_by_id('headingTwo').click()
+    time.sleep(0.5)
+    assert buttons() == [False, True, False]
+    browser.find_element_by_id('headingThree').click()
+    time.sleep(0.5)
+    assert buttons() == [False, False, True]
 
 
 def test_URL_input_to_form(server_url, browser):
