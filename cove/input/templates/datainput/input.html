@@ -36,7 +36,7 @@
     </div>
     <div id="collapseTwo" class="panel-collapse show-open-if-noscript" role="tabpanel" aria-labelledby="headingTwo">
       <div class="panel-body">
-        <form method="POST" action=".">{% csrf_token %}
+        <form method="POST" action="." id="fetchURL">{% csrf_token %}
             {% bootstrap_form forms.url_form %}
             {% buttons %}
                 <button type="submit" class="btn btn-primary">
