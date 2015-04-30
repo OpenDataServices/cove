@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-30 14:28+0000\n"
+"POT-Creation-Date: 2015-04-30 14:50+0000\n"
 "PO-Revision-Date: 2015-04-27 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -47,8 +47,8 @@ msgid "Supply a URL"
 msgstr "Fournir une URL"
 
 #: cove/templates/base.html:11
-msgid "Open Contracting Data Explorer"
-msgstr "Le Open Contracting Data Explorer"
+msgid "Open Contracting Data Tool"
+msgstr ""
 
 #. Translators: Label of a button that triggers search
 #: cove/templates/base.html:39
@@ -62,9 +62,7 @@ msgstr ""
 
 #. Translators: Paragraph that describes the application
 #: cove/templates/base.html:57
-msgid ""
-"The application only works with 'release' documents that conform to the Open "
-"Data Contracting Standard"
+msgid "The application only works with 'release' documents that conform to the Open Data Contracting Standard"
 msgstr ""
 
 #: cove/templates/base.html:67
@@ -72,18 +70,39 @@ msgid "About"
 msgstr ""
 
 #: cove/templates/base.html:69
-msgid ""
-"Built by <a href=\"http://opendataservices.coop/\">Open Data Services Co-"
-"operative</a>"
+msgid "Built by"
+msgstr ""
+
+#: cove/templates/base.html:69
+msgid "Open Data Services Co-operative"
 msgstr ""
 
 #: cove/templates/base.html:70
-msgid ""
-"The code for this site is available on<br>GitHub: <a href=\"https://github."
-"com/OpenDataServices/cove/\">Cove - COnvert Validate & Explore</"
-"a><br>Licence: <a href=\"https://www.gnu.org/licenses/agpl-3.0.html"
-"\">AGPLv3</a><br>Report/View issues: <a href=\"https://github.com/"
-"OpenDataServices/cove/issues\">Cove Issues</a>"
+msgid "The code for this site is available on"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "GitHub"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "Cove - COnvert Validate & Explore"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "Licence"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "AGPLv3"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "Report/View issues"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "Cove Issues"
 msgstr ""
 
 #. Translators: Provides information about the version of the code base that is being used
@@ -97,16 +116,12 @@ msgid "Links"
 msgstr ""
 
 #: cove/templates/base.html:79
-#, fuzzy
-#| msgid "Open Contracting Data Explorer"
 msgid "Open Contracting"
-msgstr "Le Open Contracting Data Explorer"
+msgstr ""
 
 #: cove/templates/base.html:80
-#, fuzzy
-#| msgid "Open Contracting Data Explorer"
 msgid "Open Contracting Data Standard"
-msgstr "Le Open Contracting Data Explorer"
+msgstr ""
 
 #: cove/templates/explore.html:5
 msgid "Converted from Original"
