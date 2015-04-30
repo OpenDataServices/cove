@@ -18,26 +18,27 @@ def test_get_releases_aggregates():
     }
 
 
-def test_get_file_type_xlsx(rf):
+def test_get_file_type_xlsx():
     with open(os.path.join('cove', 'fixtures', 'basic.xlsx')) as fp:
         assert v.get_file_type(UploadedFile(fp, 'basic.xlsx')) == 'xlsx'
 
 
-def test_get_file_type_json(rf):
+def test_get_file_type_json():
     assert v.get_file_type(SimpleUploadedFile('test.json', b'{}')) == 'json'
 
 
-def test_get_file_type_json_noextension(rf):
+def test_get_file_type_json_noextension():
     assert v.get_file_type(SimpleUploadedFile('test', b'{}')) == 'json'
 
 
-def test_get_file_unrecognised_file_type(rf):
+def test_get_file_unrecognised_file_type():
     with pytest.raises(v.UnrecognisedFileType):
         v.get_file_type(SimpleUploadedFile('test', b'test'))
 
 
 @pytest.mark.django_db
-def test_input_post(rf):
+def test_explore_page(client):
     data = SuppliedData.objects.create()
     data.original_file.save('test.json', ContentFile('{}'))
-    v.explore(rf.get('/pk/{}'.format(data.pk)), str(data.pk))
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
