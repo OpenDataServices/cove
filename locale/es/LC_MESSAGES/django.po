@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-30 09:58+0000\n"
+"POT-Creation-Date: 2015-04-30 14:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,8 +45,8 @@ msgid "Supply a URL"
 msgstr "Proporcione una dirección URL"
 
 #: cove/templates/base.html:11
-msgid "Open Contracting Data Explorer"
-msgstr "Abrir Contratante Data Explorer"
+msgid "Open Contracting Data Tool"
+msgstr ""
 
 #. Translators: Label of a button that triggers search
 #: cove/templates/base.html:39
@@ -60,15 +60,67 @@ msgstr ""
 
 #. Translators: Paragraph that describes the application
 #: cove/templates/base.html:57
-msgid ""
-"The application only works with 'release' documents that conform to the Open "
-"Data Contracting Standard"
+msgid "The application only works with 'release' documents that conform to the Open Data Contracting Standard"
+msgstr ""
+
+#: cove/templates/base.html:67
+msgid "About"
+msgstr ""
+
+#: cove/templates/base.html:69
+msgid "Built by"
+msgstr ""
+
+#: cove/templates/base.html:69
+msgid "Open Data Services Co-operative"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "The code for this site is available on"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "GitHub"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "Cove - COnvert Validate & Explore"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "Licence"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "AGPLv3"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "Report/View issues"
+msgstr ""
+
+#: cove/templates/base.html:70
+msgid "Cove Issues"
 msgstr ""
 
 #. Translators: Provides information about the version of the code base that is being used
-#: cove/templates/base.html:66
+#: cove/templates/base.html:74
 #, python-format
 msgid "Running version %(version)s."
+msgstr ""
+
+#: cove/templates/base.html:77
+#, fuzzy
+#| msgid "Link"
+msgid "Links"
+msgstr "Enlace"
+
+#: cove/templates/base.html:79
+msgid "Open Contracting"
+msgstr ""
+
+#: cove/templates/base.html:80
+msgid "Open Contracting Data Standard"
 msgstr ""
 
 #: cove/templates/explore.html:5
@@ -102,6 +154,6 @@ msgstr ""
 msgid "Number of Releases"
 msgstr "Número de Releases"
 
-#: cove/views.py:56
+#: cove/views.py:49
 msgid "Unrecognised file type."
 msgstr "Tipo de archivo no reconocido."

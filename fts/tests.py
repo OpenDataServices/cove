@@ -22,7 +22,7 @@ def server_url(request, live_server):
 
 def test_index_page(server_url, browser):
     browser.get(server_url + '/')
-    assert 'Open Contracting Data Explorer' in browser.find_element_by_tag_name('body').text
+    assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
 
 
 def test_accordion(server_url, browser):
