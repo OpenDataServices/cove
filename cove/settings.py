@@ -12,8 +12,20 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+import environ
+env = environ.Env(  # set default values and casting
+    DEBUG=(bool, True),
+    PIWIK_URL=(str, ''),
+    PIWIK_SITE_ID=(str, '')
+)
+
+PIWIK = {
+    'url': env('PIWIK_URL'),
+    'site_id': env('PIWIK_SITE_ID'),
+}
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -28,7 +40,7 @@ DEALER_TYPE = 'git'
 SECRET_KEY = 'vank@j*7v8#%k6c-*tpsl1&z$!8qniq*@-q_&k1_^1jf5x6##n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -74,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cove.context_processors.piwik',
             ],
         },
     },

@@ -88,5 +88,22 @@
   <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
   {% bootstrap_javascript %}
   {% block extrafooterscript %}{% endblock %}
+  {% if piwik.url and piwik.site_id %}
+  <!-- Piwik -->
+  <script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="{{ piwik.url }}";
+      _paq.push(['setTrackerUrl', u+'piwik.php']);
+      _paq.push(['setSiteId', {{ piwik.site_id }}]);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    })();
+  </script>
+  <noscript><p><img src="{{ piwik.url }}/piwik.php?idsite={{PIWIK_SITE_ID}}" style="border:0;" alt="" /></p></noscript>
+  <!-- End Piwik Code -->
+  {% endif %}
 </body>
 </html>
