@@ -19,13 +19,13 @@
   <div class="panel-body">
     {% if conversion == 'flatten' %}
       <ul>
-        <li><a href="{{converted_url}}.xlsx">{% blocktrans %}{{xlsx}} ({{ converted }}){% endblocktrans %}</a></li>
-        <li><a href="{{original_file.url}}">{% blocktrans %}{{JSON}} ({{ original }}){% endblocktrans %}</a></li>
+        <li><a href="{{converted_url}}.xlsx">{% blocktrans with file_format=xlsx status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
+        <li><a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
       </ul>    
     {% elif conversion == 'unflatten' %}
       <ul>
-        <li><a href="{{original_file.url}}">{% blocktrans %}{{xlsx}} ({{ original }}){% endblocktrans %}</a></li>
-        <li><a href="{{converted_url}}">{% blocktrans %}{{JSON}} ({{ converted }}){% endblocktrans %}</a></li>
+        <li><a href="{{original_file.url}}">{% blocktrans with file_format=xlsx status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
+        <li><a href="{{converted_url}}">{% blocktrans with file_format=JSON status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
       </ul>
     {% endif %}
   </div>

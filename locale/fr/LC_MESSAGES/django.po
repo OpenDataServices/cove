@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-29 16:58+0000\n"
+"POT-Creation-Date: 2015-04-30 09:58+0000\n"
 "PO-Revision-Date: 2015-04-27 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -85,33 +85,19 @@ msgstr ""
 msgid "Excel Spreadsheet (.xlsx)"
 msgstr ""
 
-#: cove/templates/explore.html:8
+#. Translators: JSON probably does not need a transalation: http://www.json.org/
+#: cove/templates/explore.html:9
 msgid "JSON"
 msgstr ""
 
-#: cove/templates/explore.html:14
+#: cove/templates/explore.html:15
 msgid "Download Files"
 msgstr ""
 
-#: cove/templates/explore.html:21
+#: cove/templates/explore.html:22 cove/templates/explore.html.py:23
+#: cove/templates/explore.html:27 cove/templates/explore.html.py:28
 #, python-format
-msgid "%(xlsx)s (%(converted)s)"
-msgstr ""
-
-#. Translators: JSON probably does not need a transalation: http://www.json.org/
-#: cove/templates/explore.html:23
-#, python-format
-msgid "%(JSON)s (%(original)s)"
-msgstr ""
-
-#: cove/templates/explore.html:27
-#, python-format
-msgid "%(xlsx)s (%(original)s)"
-msgstr ""
-
-#: cove/templates/explore.html:28
-#, python-format
-msgid "%(JSON)s (%(converted)s)"
+msgid "%(file_format)s (%(status)s)"
 msgstr ""
 
 #: cove/templates/explore.html:39
