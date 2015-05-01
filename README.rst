@@ -62,6 +62,12 @@ To generate a coverage report (in the htmlcov directory):
 
     py.test --cov cove --cov-report html
 
+The tests include functional tests (actually interacting with the website in selenium). These can also be run against a deployed copy of the website:
+
+.. code:: bash
+
+    CUSTOM_SERVER_URL=http://dev.cove.opendataservices.coop py.test fts 
+
 Translations
 ============
 
