@@ -33,13 +33,29 @@
 
 <!-- Count of Releases -->
 <div class="row">
-  <div class="col-md-2">
+  <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">{% trans 'Number of Releases' %}</h4>
       </div>
       <div class="panel-body">
         {{releases_aggregates.count}}
+      </div>
+    </div>
+  </div>
+   <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          {% blocktrans with number_of_ocids=releases_aggregates.unique_ocids|length %}Unique OCIDs ({{number_of_ocids}}){% endblocktrans %}
+        </h4>
+      </div>
+      <div class="panel-body">
+        <ul>
+        {% for ocid in releases_aggregates.unique_ocids %}
+        <li>{{ocid}}</li>
+        {% endfor %}
+        </ul>
       </div>
     </div>
   </div>

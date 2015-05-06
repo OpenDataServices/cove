@@ -9,10 +9,23 @@ import flattentool
 
 
 def get_releases_aggregates(json_data):
+    # Unique ocids
+    ocids = []
+    if 'releases' in json_data:
+        for release in json_data['releases']:
+            ocids.append(release['ocid']) if 'ocid' in release else 0
+        unique_ocids = set(ocids)
+    else:
+        unique_ocids = ocids
+    
+    # Number of releases
+    count = len(json_data['releases']) if 'releases' in json_data else 0
+    
     return {
-        'count': len(json_data['releases']) if 'releases' in json_data else 0
+        'count': count,
+        'unique_ocids': unique_ocids
     }
-
+    
 
 class UnrecognisedFileType(Exception):
     pass

@@ -8,13 +8,16 @@ from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 
 def test_get_releases_aggregates():
     assert v.get_releases_aggregates({}) == {
-        'count': 0
+        'count': 0,
+        'unique_ocids': []
     }
     assert v.get_releases_aggregates({'releases': []}) == {
-        'count': 0
+        'count': 0,
+        'unique_ocids': set([])
     }
     assert v.get_releases_aggregates({'releases': [{}, {}, {}]}) == {
-        'count': 3
+        'count': 3,
+        'unique_ocids': set([])
     }
 
 
