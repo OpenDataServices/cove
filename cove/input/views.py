@@ -54,7 +54,7 @@ def input(request):
             if form_name == 'url_form':
                 r = requests.get(data.source_url)
                 data.original_file.save(
-                    data.source_url.split('/')[-1],
+                    r.url.split('/')[-1],
                     ContentFile(r.content))
             elif form_name == 'text_form':
                 data.original_file.save('test.json', ContentFile(form['paste'].value()))
