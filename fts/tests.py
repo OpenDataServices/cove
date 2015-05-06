@@ -52,11 +52,23 @@ def test_accordion(server_url, browser):
     assert buttons() == [False, False, True]
 
 
-def test_URL_input_to_form(server_url, browser):
+def test_URL_input_json(server_url, browser):
     browser.get(server_url + '/ocds/')
     browser.find_element_by_partial_link_text('Link').click()
     time.sleep(0.5)
     browser.find_element_by_id('id_source_url').send_keys("https://raw.githubusercontent.com/OpenDataServices/flatten-tool/master/flattentool/tests/fixtures/tenders_releases_2_releases.json")
+    browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+    assert 'Download Files' in browser.find_element_by_tag_name('body').text
+
+    # We should still be in the OCDS app
+    assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
+
+
+def test_URL_input_xlsx(server_url, browser):
+    browser.get(server_url + '/ocds/')
+    browser.find_element_by_partial_link_text('Link').click()
+    time.sleep(0.5)
+    browser.find_element_by_id('id_source_url').send_keys("https://github.com/OpenDataServices/cove/raw/master/cove/fixtures/tenders_releases_2_releases.xlsx")
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
     assert 'Download Files' in browser.find_element_by_tag_name('body').text
 
