@@ -50,6 +50,7 @@ def input(request):
             else:
                 data = form.save(commit=False)
             data.current_app = request.resolver_match.namespace
+            data.form_name = form_name
             data.save()
             if form_name == 'url_form':
                 r = requests.get(data.source_url)
