@@ -73,7 +73,7 @@ MIDDLEWARE_CLASSES = (
     'dealer.contrib.django.Middleware',
 )
 
-ROOT_URLCONF = 'cove.urls'
+ROOT_URLCONF = 'cove.urls_multi'
 
 TEMPLATES = [
     {
@@ -87,6 +87,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cove.context_processors.piwik',
+                'cove.context_processors.namespace_context',
             ],
         },
     },

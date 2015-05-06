@@ -46,9 +46,11 @@ def input(request):
         forms[form_name] = form
         if form.is_valid():
             if form_name == 'text_form':
-                data = SuppliedData.objects.create()
+                data = SuppliedData()
             else:
-                data = form.save()
+                data = form.save(commit=False)
+            data.current_app = request.resolver_match.namespace
+            data.save()
             if form_name == 'url_form':
                 r = requests.get(data.source_url)
                 # FIXME!!!! - test.json is a bad name, and this loads into memory

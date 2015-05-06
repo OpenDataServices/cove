@@ -1,0 +1,15 @@
+{% extends 'base_generic.html' %}
+{% load i18n %}
+
+{% block link %}
+<li><a href="http://www.open-contracting.org/">{% trans "Open Contracting" %}</a></li>
+<li><a href="http://standard.open-contracting.org/">{% trans "Open Contracting Data Standard" %}</a></li>
+{% endblock %}
+
+{% block aboveFooter %}
+<div>
+  <h2><small>{% blocktrans %}How to use the {{ application_name }}{% endblocktrans %}</small></h2>
+  {% comment %}Translators: Paragraph that describes the application{% endcomment %}
+  <p>{% blocktrans %}The application only works with 'release' documents that conform to the Open Data Contracting Standard{% endblocktrans %}</p>
+</div>
+{% endblock %}

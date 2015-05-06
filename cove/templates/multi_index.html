@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block h1 %}<h1 class="application-name"><a href="{% url 'multi_index' %}">{{ application_name }}</a></h1>{% endblock %}
+
+{% block content %}
+
+<h2><a href="{% url 'cove-ocds:index' %}">{% trans 'Open Contracting Data Tool' %}</a></h2>
+
+{% endblock %}
