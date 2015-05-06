@@ -9,21 +9,29 @@ import flattentool
 
 
 def get_releases_aggregates(json_data):
-    # Unique ocids
+    # Unique ocids & Release dates
     ocids = []
+    unique_ocids = []
+    release_dates = []
+    earliest_release_date = None
+    latest_release_date = None
     if 'releases' in json_data:
         for release in json_data['releases']:
             ocids.append(release['ocid']) if 'ocid' in release else 0
+            release_dates.append(release['date']) if 'date' in release else 0
         unique_ocids = set(ocids)
-    else:
-        unique_ocids = ocids
-    
+        if release_dates:
+            earliest_release_date = min(release_dates)
+            latest_release_date = max(release_dates)
+
     # Number of releases
     count = len(json_data['releases']) if 'releases' in json_data else 0
     
     return {
         'count': count,
-        'unique_ocids': unique_ocids
+        'unique_ocids': unique_ocids,
+        'earliest_release_date': earliest_release_date,
+        'latest_release_date': latest_release_date
     }
     
 

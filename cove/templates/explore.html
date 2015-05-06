@@ -43,7 +43,7 @@
       </div>
     </div>
   </div>
-   <div class="col-md-3">
+  <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
@@ -56,6 +56,20 @@
         <li>{{ocid}}</li>
         {% endfor %}
         </ul>
+      </div>
+    </div>
+  </div>
+    <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          {% trans "Release Dates" %}
+        </h4>
+      </div>
+      <div class="panel-body">
+        {% trans "Earliest:" %} {{releases_aggregates.earliest_release_date}}
+        <br>
+        {% trans "Latest:" %} {{releases_aggregates.latest_release_date}}
       </div>
     </div>
   </div>
