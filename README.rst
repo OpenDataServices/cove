@@ -1,4 +1,4 @@
-Cove - COnvert Validate & Explore
+CoVE - Convert Validate & Explore
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://travis-ci.org/OpenDataServices/cove.svg?branch=master
@@ -18,6 +18,24 @@ Introduction
 ============
 
 This application is currently in a pre-alpha state.
+
+The W3C `Data on the Web Best Practices <http://www.w3.org/TR/dwbp/>`_ recommend making open data available in a range of formats to meet the needs of different users. Developers may want JSON, researchers might prefer a spreadsheet format.
+
+CoVE manages the process of converting between JSON, Excel and CSV formats for structured data. 
+
+CoVE presents key validation information during the process, and can be configured to display information about the contents of a data file, so that it can be easily inspected.
+
+Supported formats
++++++++++++++++++
+
+CoVE currently supports conversion from: 
+
+ * JSON to multi-tabbed Excel files 
+ * Excel to JSON (it uses the `flatten-tool <(https://github.com/OpenDataServices/flatten-tool>`_ for conversion) 
+ 
+If a JSON schema is supplied, CoVE can use either field names, or user-friendly column titles. 
+
+Exploration views need to be developed, customised to the type of data being converted.
 
 Requirements
 ============
