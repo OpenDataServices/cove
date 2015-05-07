@@ -23,6 +23,8 @@ def server_url(request, live_server):
 def test_index_page(server_url, browser):
     browser.get(server_url + '/ocds/')
     assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
+    assert 'How to use the Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
+    assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
 
 
 def test_accordion(server_url, browser):
