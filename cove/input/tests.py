@@ -1,23 +1,26 @@
 import pytest
 import cove.input.views as v
 from cove.input.models import SuppliedData
-from django.core.urlresolvers import ResolverMatch
+from django.conf import settings
 
 
-def add_namespace(request):
-    request.resolver_match = ResolverMatch(None, None, None, app_name='cove', namespaces=['cove-test'])
+def fake_cove_middleware(request):
+    by_namespace = settings.COVE_CONFIG_BY_NAMESPACE
+    request.cove_config = {key: by_namespace[key]['default'] for key in by_namespace}
+
+    request.current_app = 'test'
     return request
 
 
 @pytest.mark.django_db
 def test_input(rf):
-    resp = v.input(add_namespace(rf.get('/')))
+    resp = v.input(fake_cove_middleware(rf.get('/')))
     assert resp.status_code == 200
 
 
 @pytest.mark.django_db
 def test_input_post(rf):
-    resp = v.input(add_namespace(rf.post('/', {
+    resp = v.input(fake_cove_middleware(rf.post('/', {
         'source_url': 'https://raw.githubusercontent.com/OpenDataServices/flatten-tool/master/flattentool/tests/fixtures/tenders_releases_2_releases.json'
     })))
     assert resp.status_code == 302

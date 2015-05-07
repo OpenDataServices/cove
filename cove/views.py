@@ -37,8 +37,8 @@ def get_releases_aggregates(json_data):
     }
 
 
-def get_schema_validation_errors(json_data):
-    schema = requests.get('http://ocds.open-contracting.org/standard/r/1__0__RC/release-package-schema.json').json()
+def get_schema_validation_errors(json_data, schema_url):
+    schema = requests.get(schema_url).json()
     validation_error_list = []
     for n, e in enumerate(validator(schema).iter_errors(json_data)):
         if n >= 100:
@@ -105,6 +105,7 @@ def explore(request, pk):
 
     with open(json_path) as fp:
         json_data = json.load(fp)
+        schema_url = request.cove_config['schema_url']
 
         return render(request, 'explore.html', {
             'conversion': conversion,
@@ -112,5 +113,6 @@ def explore(request, pk):
             'converted_url': converted_url,
             'file_type': file_type,
             'releases_aggregates': get_releases_aggregates(json_data),
-            'validation_error_list': get_schema_validation_errors(json_data)
+            'schema_url': schema_url,
+            'validation_error_list': get_schema_validation_errors(json_data, schema_url) if schema_url else None
         })

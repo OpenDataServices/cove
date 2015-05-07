@@ -49,7 +49,7 @@ def input(request):
                 data = SuppliedData()
             else:
                 data = form.save(commit=False)
-            data.current_app = request.resolver_match.namespace
+            data.current_app = request.current_app
             data.form_name = form_name
             data.save()
             if form_name == 'url_form':

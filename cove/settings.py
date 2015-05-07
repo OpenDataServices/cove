@@ -32,6 +32,24 @@ MEDIA_URL = '/media/'
 
 DEALER_TYPE = 'git'
 
+from django.utils.translation import ugettext_lazy as _
+COVE_CONFIG_BY_NAMESPACE = {
+    'base_template_name': {
+        'cove-ocds': 'base_ocds.html',
+        'cove-360': 'base_360.html',
+        'default': 'base_generic.html',
+    },
+    'application_name': {
+        'cove-ocds': _('Open Contracting Data Tool'),
+        'cove-360': _('360 Giving Data Tool'),
+        'default': _('Cove'),
+    },
+    'schema_url': {
+        'cove-ocds': 'http://ocds.open-contracting.org/standard/r/1__0__RC/release-package-schema.json',
+        'default': None
+    }
+}
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -71,6 +89,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'dealer.contrib.django.Middleware',
+    'cove.middleware.CoveConfigByNamespaceMiddleware',
 )
 
 ROOT_URLCONF = 'cove.urls_multi'
@@ -87,7 +106,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cove.context_processors.piwik',
-                'cove.context_processors.namespace_context',
+                'cove.context_processors.cove_namespace_context',
             ],
         },
     },
