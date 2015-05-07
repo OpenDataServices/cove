@@ -5,6 +5,7 @@ django-debug-toolbar==1.3.0
 requests==2.7.0
 dealer==2.0.4
 django-environ==0.3.0
+jsonschema==2.4.0
 
 # Dependencies of flatten-tool
 jdcal==1.0

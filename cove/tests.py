@@ -1,6 +1,7 @@
 import pytest
 import cove.views as v
 import os
+import json
 from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
@@ -43,6 +44,15 @@ def test_get_file_type_json_noextension():
 def test_get_file_unrecognised_file_type():
     with pytest.raises(v.UnrecognisedFileType):
         v.get_file_type(SimpleUploadedFile('test', b'test'))
+
+
+def test_get_schema_validationr_errors():
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
+        error_list = v.get_schema_validation_errors(json.load(fp))
+        assert len(error_list) == 0
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_invalid.json')) as fp:
+        error_list = v.get_schema_validation_errors(json.load(fp))
+        assert len(error_list) > 0
 
 
 @pytest.mark.django_db
