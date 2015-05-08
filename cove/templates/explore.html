@@ -34,6 +34,7 @@
 <!-- Count of Releases -->
 <div class="row">
   {% if schema_url %}
+
   <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -44,11 +45,15 @@
       </div>
     </div>
   </div>
+
   {% endif %}
+
+  {% if releases_aggregates %}
+
   <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4 class="panel-title">{% trans 'Number of Releases' %}</h4>
+        <h4 class="panel-title">{% trans 'Number of releases' %}</h4>
       </div>
       <div class="panel-body">
         {{releases_aggregates.count}}
@@ -85,5 +90,20 @@
       </div>
     </div>
   </div>
+
+  {% elif grants_aggregates %}
+
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">{% trans 'Number of grants' %}</h4>
+      </div>
+      <div class="panel-body">
+        {{grants_aggregates.count}}
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
 </div>
 {% endblock %}

@@ -37,6 +37,14 @@ def get_releases_aggregates(json_data):
     }
 
 
+def get_grants_aggregates(json_data):
+    count = len(json_data['grants']) if 'grants' in json_data else 0
+    
+    return {
+        'count': count,
+    }
+
+
 def get_schema_validation_errors(json_data, schema_url):
     schema = requests.get(schema_url).json()
     validation_error_list = []
@@ -88,7 +96,9 @@ def explore(request, pk):
         flattentool.flatten(
             original_file.file.name,
             output_name=converted_path,
-            main_sheet_name=request.cove_config['main_sheet_name']
+            main_sheet_name=request.cove_config['main_sheet_name'],
+            root_list_path=request.cove_config['main_sheet_name'],
+            root_id=request.cove_config['root_id'],
         )
         json_path = original_file.file.name
     else:
@@ -99,7 +109,8 @@ def explore(request, pk):
             original_file.file.name,
             output_name=converted_path,
             input_format=file_type,
-            main_sheet_name=request.cove_config['main_sheet_name']
+            main_sheet_name=request.cove_config['main_sheet_name'],
+            root_id=request.cove_config['root_id'],
         )
         json_path = converted_path
 
@@ -107,12 +118,18 @@ def explore(request, pk):
         json_data = json.load(fp)
         schema_url = request.cove_config['schema_url']
 
-        return render(request, 'explore.html', {
+        context = {
             'conversion': conversion,
             'original_file': original_file,
             'converted_url': converted_url,
             'file_type': file_type,
-            'releases_aggregates': get_releases_aggregates(json_data),
             'schema_url': schema_url,
             'validation_error_list': get_schema_validation_errors(json_data, schema_url) if schema_url else None
-        })
+        }
+
+        if request.current_app == 'cove-ocds':
+            context['releases_aggregates'] = get_releases_aggregates(json_data)
+        elif request.current_app == 'cove-360':
+            context['grants_aggregates'] = get_grants_aggregates(json_data)
+
+        return render(request, 'explore.html', context)

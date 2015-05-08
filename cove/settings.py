@@ -52,6 +52,10 @@ COVE_CONFIG_BY_NAMESPACE = {
         'cove-ocds': 'releases',
         'cove-360': 'grants',
         'default': None
+    },
+    'root_id': {
+        'cove-ocds': 'ocid',
+        'default': ''
     }
 }
 
