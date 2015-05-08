@@ -7,7 +7,6 @@ from django.conf import settings
 def fake_cove_middleware(request):
     by_namespace = settings.COVE_CONFIG_BY_NAMESPACE
     request.cove_config = {key: by_namespace[key]['default'] for key in by_namespace}
-
     request.current_app = 'test'
     return request
 

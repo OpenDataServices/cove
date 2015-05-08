@@ -88,7 +88,7 @@ def explore(request, pk):
         flattentool.flatten(
             original_file.file.name,
             output_name=converted_path,
-            main_sheet_name='releases'
+            main_sheet_name=request.cove_config['main_sheet_name']
         )
         json_path = original_file.file.name
     else:
@@ -99,7 +99,7 @@ def explore(request, pk):
             original_file.file.name,
             output_name=converted_path,
             input_format=file_type,
-            main_sheet_name='releases'
+            main_sheet_name=request.cove_config['main_sheet_name']
         )
         json_path = converted_path
 

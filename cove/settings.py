@@ -47,6 +47,11 @@ COVE_CONFIG_BY_NAMESPACE = {
     'schema_url': {
         'cove-ocds': 'http://ocds.open-contracting.org/standard/r/1__0__RC/release-package-schema.json',
         'default': None
+    },
+    'main_sheet_name': {
+        'cove-ocds': 'releases',
+        'cove-360': 'grants',
+        'default': None
     }
 }
 
