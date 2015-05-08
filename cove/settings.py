@@ -18,7 +18,8 @@ import environ
 env = environ.Env(  # set default values and casting
     DEBUG=(bool, True),
     PIWIK_URL=(str, ''),
-    PIWIK_SITE_ID=(str, '')
+    PIWIK_SITE_ID=(str, ''),
+    ALLOWED_HOSTS=(list, []),
 )
 
 PIWIK = {
@@ -69,7 +70,7 @@ SECRET_KEY = 'vank@j*7v8#%k6c-*tpsl1&z$!8qniq*@-q_&k1_^1jf5x6##n'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 
 # Application definition
