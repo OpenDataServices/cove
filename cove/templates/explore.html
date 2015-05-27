@@ -90,7 +90,29 @@
       </div>
     </div>
   </div>
-
+</div><!--End Row -->
+<div class="row"> <!--Start Row (Detail Table)-->
+  <div class="col-md-12">
+    <table class="table table-striped">
+      <caption>{% trans "Releases Table:" %}</caption>
+      <thead>
+        <tr>
+          <th>ocid</th>
+          <th>tender:items:0:description</th>
+          <th>buyer:name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key, value in releases_aggregates.table_data.items %}
+        <tr>
+          <td>{{ key }}</td>
+          <td>{{ value.description }}</td>
+          <td>{{ value.buyer }}</td>          
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% elif grants_aggregates %}
 
   <div class="col-md-3">
@@ -105,5 +127,5 @@
   </div>
 
   {% endif %}
-</div>
+</div><!--End Row-->
 {% endblock %}

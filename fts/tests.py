@@ -79,5 +79,7 @@ def test_URL_input_json(server_url, browser, source_url, prefix):
     # We should still be in the correct app
     if prefix == 'ocds':
         assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
+        # Look for Release Table
+        assert 'Release Table' in browser.find_element_by_tag_name('body').text
     elif prefix == '360':
         assert '360 Giving Data Tool' in browser.find_element_by_tag_name('body').text

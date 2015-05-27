@@ -12,19 +12,22 @@ def test_get_releases_aggregates():
         'count': 0,
         'unique_ocids': [],
         'earliest_release_date': None,
-        'latest_release_date': None
+        'latest_release_date': None,
+        'table_data': {}
     }
     assert v.get_releases_aggregates({'releases': []}) == {
         'count': 0,
         'unique_ocids': set([]),
         'earliest_release_date': None,
-        'latest_release_date': None
+        'latest_release_date': None,
+        'table_data': {}
     }
     assert v.get_releases_aggregates({'releases': [{}, {}, {}]}) == {
         'count': 3,
         'unique_ocids': set([]),
         'earliest_release_date': None,
-        'latest_release_date': None
+        'latest_release_date': None,
+        'table_data': {}
     }
 
 

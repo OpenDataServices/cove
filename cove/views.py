@@ -17,11 +17,31 @@ def get_releases_aggregates(json_data):
     release_dates = []
     earliest_release_date = None
     latest_release_date = None
+    table_data = {}
     if 'releases' in json_data:
         for release in json_data['releases']:
+            # Gather all the ocids
             ocids.append(release['ocid']) if 'ocid' in release else 0
+            
+            #Gather all the release dates
             release_dates.append(release['date']) if 'date' in release else 0
+            
+            # Some identifying data from a release that could be displayed in a table
+            generic_info = {}
+            if 'tender' in release:
+                if 'items' in release['tender']:
+                    if 'description' in release['tender']['items']:
+                        generic_info['description'] = release['tender']['items'][0]['description']
+            if 'buyer' in release:
+                if 'name' in release['buyer']:
+                    generic_info['buyer'] = release['buyer']['name']
+            if 'ocid' in release:
+                table_data[release['ocid']] = generic_info
+        
+        # Find unique ocid's
         unique_ocids = set(ocids)
+        
+        # Get the earliest and latest release dates found
         if release_dates:
             earliest_release_date = min(release_dates)
             latest_release_date = max(release_dates)
@@ -33,7 +53,8 @@ def get_releases_aggregates(json_data):
         'count': count,
         'unique_ocids': unique_ocids,
         'earliest_release_date': earliest_release_date,
-        'latest_release_date': latest_release_date
+        'latest_release_date': latest_release_date,
+        'table_data': table_data
     }
 
 

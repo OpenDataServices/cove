@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-30 14:50+0000\n"
+"POT-Creation-Date: 2015-05-27 19:34+0000\n"
 "PO-Revision-Date: 2015-04-27 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -46,81 +46,140 @@ msgstr "Télécharger un fichier"
 msgid "Supply a URL"
 msgstr "Fournir une URL"
 
-#: cove/templates/base.html:11
+#: cove/settings.py:44 cove/templates/multi_index.html:8
 msgid "Open Contracting Data Tool"
 msgstr ""
 
-#. Translators: Label of a button that triggers search
-#: cove/templates/base.html:39
-msgid "Go"
+#: cove/settings.py:45
+msgid "360 Giving Data Tool"
 msgstr ""
 
-#: cove/templates/base.html:55
+#: cove/settings.py:46
+msgid "Cove"
+msgstr ""
+
+#: cove/templates/base_360.html:5
+msgid "Three Sixty Degree Giving"
+msgstr ""
+
+#: cove/templates/base_360.html:6
+msgid "360 Giving Data Standard"
+msgstr ""
+
+#: cove/templates/base_360.html:11 cove/templates/base_ocds.html:11
 #, python-format
 msgid "How to use the %(application_name)s"
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove/templates/base.html:57
-msgid "The application only works with 'release' documents that conform to the Open Data Contracting Standard"
+#: cove/templates/base_360.html:13
+msgid ""
+"\n"
+"  Upload, paste or provide a link to data in the 360 Giving Data Standard "
+"format, and this application will convert between JSON, Excel and CSV "
+"formats, allowing you to download the original file, and the converted "
+"versions."
 msgstr ""
 
-#: cove/templates/base.html:67
+#: cove/templates/base_360.html:16 cove/templates/base_ocds.html:16
+msgid ""
+"You will also be able to inspect key information from the data that the "
+"application is able to find, so that you can check the data."
+msgstr ""
+
+#: cove/templates/base_360.html:18 cove/templates/base_ocds.html:20
+msgid "Why provide converted versions?"
+msgstr ""
+
+#: cove/templates/base_360.html:19 cove/templates/base_ocds.html:21
+msgid ""
+"\n"
+"  The W3C <a href=\"http://www.w3.org/TR/dwbp/\">Data on the Web Best "
+"Practices</a> recommend making open data available in a range of formats to "
+"meet the needs of different users, for example, developers may want JSON, "
+"researchers might prefer a spreadsheet format.\n"
+"  "
+msgstr ""
+
+#. Translators: Label of a button that triggers search
+#: cove/templates/base_generic.html:38
+msgid "Go"
+msgstr ""
+
+#: cove/templates/base_generic.html:61
 msgid "About"
 msgstr ""
 
-#: cove/templates/base.html:69
+#: cove/templates/base_generic.html:63
 msgid "Built by"
 msgstr ""
 
-#: cove/templates/base.html:69
+#: cove/templates/base_generic.html:63
 msgid "Open Data Services Co-operative"
 msgstr ""
 
-#: cove/templates/base.html:70
+#: cove/templates/base_generic.html:64
 msgid "The code for this site is available on"
 msgstr ""
 
-#: cove/templates/base.html:70
+#: cove/templates/base_generic.html:64
 msgid "GitHub"
 msgstr ""
 
-#: cove/templates/base.html:70
+#: cove/templates/base_generic.html:64
 msgid "Cove - COnvert Validate & Explore"
 msgstr ""
 
-#: cove/templates/base.html:70
+#: cove/templates/base_generic.html:64
 msgid "Licence"
 msgstr ""
 
-#: cove/templates/base.html:70
+#: cove/templates/base_generic.html:64
 msgid "AGPLv3"
 msgstr ""
 
-#: cove/templates/base.html:70
+#: cove/templates/base_generic.html:64
 msgid "Report/View issues"
 msgstr ""
 
-#: cove/templates/base.html:70
+#: cove/templates/base_generic.html:64
 msgid "Cove Issues"
 msgstr ""
 
 #. Translators: Provides information about the version of the code base that is being used
-#: cove/templates/base.html:74
+#: cove/templates/base_generic.html:68
 #, python-format
-msgid "Running version %(version)s."
+msgid ""
+"Running version <a href=\"https://github.com/OpenDataServices/cove/tree/"
+"%(version)s\">%(version)s</a>."
 msgstr ""
 
-#: cove/templates/base.html:77
+#: cove/templates/base_generic.html:71
 msgid "Links"
 msgstr ""
 
-#: cove/templates/base.html:79
+#: cove/templates/base_ocds.html:5
 msgid "Open Contracting"
 msgstr ""
 
-#: cove/templates/base.html:80
+#: cove/templates/base_ocds.html:6
 msgid "Open Contracting Data Standard"
+msgstr ""
+
+#. Translators: Paragraph that describes the application
+#: cove/templates/base_ocds.html:13
+msgid ""
+"\n"
+"  Upload, paste or provide a link to data in the Open Contracting Data "
+"Standard format, and this application will convert between JSON, Excel and "
+"CSV formats, allowing you to download the original file, and the converted "
+"versions."
+msgstr ""
+
+#: cove/templates/base_ocds.html:18
+msgid ""
+"The application only works with 'release' documents that conform to the Open "
+"Data Contracting Standard"
 msgstr ""
 
 #: cove/templates/explore.html:5
@@ -150,10 +209,39 @@ msgstr ""
 msgid "%(file_format)s (%(status)s)"
 msgstr ""
 
-#: cove/templates/explore.html:39
-msgid "Number of Releases"
+#: cove/templates/explore.html:41
+msgid "Validates against the schema?"
 msgstr ""
 
-#: cove/views.py:49
+#: cove/templates/explore.html:56
+msgid "Number of releases"
+msgstr ""
+
+#: cove/templates/explore.html:67
+#, python-format
+msgid "Unique OCIDs (%(number_of_ocids)s)"
+msgstr ""
+
+#: cove/templates/explore.html:83
+msgid "Release Dates"
+msgstr ""
+
+#: cove/templates/explore.html:87
+msgid "Earliest:"
+msgstr ""
+
+#: cove/templates/explore.html:89
+msgid "Latest:"
+msgstr ""
+
+#: cove/templates/explore.html:97
+msgid "Releases Table:"
+msgstr ""
+
+#: cove/templates/explore.html:121
+msgid "Number of grants"
+msgstr ""
+
+#: cove/views.py:111
 msgid "Unrecognised file type."
 msgstr ""
