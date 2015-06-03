@@ -49,7 +49,7 @@ def test_get_file_unrecognised_file_type():
         v.get_file_type(SimpleUploadedFile('test', b'test'))
 
 
-def test_get_schema_validationr_errors():
+def test_get_schema_validation_errors():
     schema_url = 'http://ocds.open-contracting.org/standard/r/1__0__RC/release-package-schema.json'
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
         error_list = v.get_schema_validation_errors(json.load(fp), schema_url)
@@ -65,3 +65,13 @@ def test_explore_page(client):
     data.original_file.save('test.json', ContentFile('{}'))
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
+
+
+@pytest.mark.django_db
+def test_explore_not_json(client):
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_not_json.json')) as fp:
+        data.original_file.save('test.json', UploadedFile(fp))
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
+    assert b'not well formed JSON' in resp.content

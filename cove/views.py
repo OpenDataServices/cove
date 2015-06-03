@@ -6,6 +6,7 @@ import os
 import shutil
 import json
 import flattentool
+from flattentool.json_input import BadlyFormedJSONError
 import requests
 from jsonschema.validators import Draft4Validator as validator
 
@@ -114,13 +115,18 @@ def explore(request, pk):
         converted_path = os.path.join(converted_dir, 'flattened')
         converted_url = '{}converted/{}/flattened'.format(settings.MEDIA_URL, pk)
         conversion = 'flatten'
-        flattentool.flatten(
-            original_file.file.name,
-            output_name=converted_path,
-            main_sheet_name=request.cove_config['main_sheet_name'],
-            root_list_path=request.cove_config['main_sheet_name'],
-            root_id=request.cove_config['root_id'],
-        )
+        try:
+            flattentool.flatten(
+                original_file.file.name,
+                output_name=converted_path,
+                main_sheet_name=request.cove_config['main_sheet_name'],
+                root_list_path=request.cove_config['main_sheet_name'],
+                root_id=request.cove_config['root_id'],
+            )
+        except BadlyFormedJSONError as err:
+            return render(request, 'error.html', {
+                'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\nError message: {}'.format(err))
+            })
         json_path = original_file.file.name
     else:
         converted_path = os.path.join(converted_dir, 'unflattened.json')
