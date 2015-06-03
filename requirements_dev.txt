@@ -1,16 +1,16 @@
 -r requirements.txt 
 
 # flake8 and dependencies
-flake8==2.4.0
+flake8==2.4.1
 mccabe==0.3
-# Flake8 2.4.0 uses pep8 < 1.6, see
+# Flake8 2.4.1 uses pep8 < 1.6, see
 # https://gitlab.com/pycqa/flake8/blob/ea628fa9d16b3adc6e15e6726439128d345d80d4/CHANGES.rst
 pep8==1.5.7 # rq.filter: <1.6
-pyflakes==0.8.1
+pyflakes==0.9.0
 
 # pytest and plugins
-py==1.4.26
-pytest==2.7.0
+py==1.4.28
+pytest==2.7.1
 pytest-django==2.8.0
 pytest-cov==1.8.1
 cov-core==1.15.0
