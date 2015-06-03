@@ -62,6 +62,10 @@ COVE_CONFIG_BY_NAMESPACE = {
     'root_id': {
         'cove-ocds': 'ocid',
         'default': ''
+    },
+    'convert_titles': {
+        'cove-360': True,
+        'default': False
     }
 }
 

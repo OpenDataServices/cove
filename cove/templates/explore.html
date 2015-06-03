@@ -5,6 +5,7 @@
 {% trans 'Converted from Original' as converted %}
 {% trans 'Original' as original %}
 {% trans 'Excel Spreadsheet (.xlsx)' as xlsx %} 
+{% trans 'Excel Spreadsheet (.xlsx) with titles' as xlsx_titles %} 
 {# Translators: JSON probably does not need a transalation: http://www.json.org/ #}
 {% trans 'JSON' as JSON %}
 
@@ -19,6 +20,7 @@
   <div class="panel-body">
     {% if conversion == 'flatten' %}
       <ul>
+        <li><a href="{{converted_url}}-titles.xlsx">{% blocktrans with file_format=xlsx_titles status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
         <li><a href="{{converted_url}}.xlsx">{% blocktrans with file_format=xlsx status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
         <li><a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
       </ul>    

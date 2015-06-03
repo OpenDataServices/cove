@@ -92,7 +92,7 @@ def get_file_type(django_file):
             raise UnrecognisedFileType
 
 
-def explore(request, pk):
+def explore(request, pk):  # NOQA # FIXME
     try:
         data = SuppliedData.objects.get(pk=pk)
         original_file = data.original_file
@@ -137,6 +137,16 @@ def explore(request, pk):
                 root_id=request.cove_config['root_id'],
                 schema=request.cove_config['item_schema_url'],
             )
+            if request.cove_config['convert_titles']:
+                flattentool.flatten(
+                    original_file.file.name,
+                    output_name=converted_path + '-titles',
+                    main_sheet_name=request.cove_config['main_sheet_name'],
+                    root_list_path=request.cove_config['main_sheet_name'],
+                    root_id=request.cove_config['root_id'],
+                    schema=request.cove_config['item_schema_url'],
+                    use_titles=True
+                )
         except BadlyFormedJSONError as err:
             return render(request, 'error.html', {
                 'sub_title': _("Sorry we can't process that data"),
@@ -156,6 +166,7 @@ def explore(request, pk):
             main_sheet_name=request.cove_config['main_sheet_name'],
             root_id=request.cove_config['root_id'],
             schema=request.cove_config['item_schema_url'],
+            convert_titles=True
         )
         json_path = converted_path
 
