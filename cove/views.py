@@ -1,9 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render
 from cove.input.models import SuppliedData
-from django.conf import settings
 import os
-import shutil
 import json
 import flattentool
 from flattentool.json_input import BadlyFormedJSONError
@@ -98,12 +96,12 @@ def explore(request, pk):
     data = SuppliedData.objects.get(pk=pk)
     original_file = data.original_file
 
-    converted_dir = os.path.join(settings.MEDIA_ROOT, 'converted', pk)
     try:
-        shutil.rmtree(converted_dir)
+        original_file.file.name
     except FileNotFoundError:
-        pass
-    os.makedirs(converted_dir)
+        return render(request, 'error.html', {
+            'msg': _('This file no longer exists. Uploaded data is automatically deleted after 7 days, see our terms of use for more information.')
+        }, status=404)
     
     try:
         file_type = get_file_type(original_file)
@@ -111,9 +109,10 @@ def explore(request, pk):
         return render(request, 'error.html', {
             'msg': _('Unrecognised file type.')
         })
+
     if file_type == 'json':
-        converted_path = os.path.join(converted_dir, 'flattened')
-        converted_url = '{}converted/{}/flattened'.format(settings.MEDIA_URL, pk)
+        converted_path = os.path.join(data.upload_dir(), 'flattened')
+        converted_url = '{}/flattened'.format(data.upload_url())
         conversion = 'flatten'
         try:
             flattentool.flatten(
@@ -129,8 +128,8 @@ def explore(request, pk):
             })
         json_path = original_file.file.name
     else:
-        converted_path = os.path.join(converted_dir, 'unflattened.json')
-        converted_url = '{}converted/{}/unflattened.json'.format(settings.MEDIA_URL, pk)
+        converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
+        converted_url = '{}/unflattened.json'.format(data.upload_url())
         conversion = 'unflatten'
         flattentool.unflatten(
             original_file.file.name,
