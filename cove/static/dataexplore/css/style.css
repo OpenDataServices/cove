@@ -23,7 +23,7 @@ h1.application-name {
   padding-right:15px;
 }
 
-#footer {
+#footer, .above-footer {
   padding-top: 9px;
   margin: 20px 0 40px;
   border-top: 1px solid #eee;
