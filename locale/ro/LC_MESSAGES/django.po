@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-04 13:45+0000\n"
+"POT-Creation-Date: 2015-06-04 14:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -315,6 +315,24 @@ msgstr ""
 #| msgid "Number of Releases"
 msgid "Number of grants"
 msgstr "Numărul de presă"
+
+#: cove/templates/explore.html:133
+msgid "Save or Share these results"
+msgstr ""
+
+#. Translators: Paragraph that describes the application
+#: cove/templates/explore.html:135
+msgid ""
+"These results will be available for 7 days from the day the data was first "
+"uploaded. You can revisit these results until then."
+msgstr ""
+
+#: cove/templates/explore.html:137
+msgid ""
+"After 7 days all uploaded data is deleted from our servers, and the results "
+"will no longer be available. Anyone using the link to this page after that "
+"will be show a message that tells them the file has been removed."
+msgstr ""
 
 #: cove/templates/terms.html:6
 msgid "Terms &amp; conditions"

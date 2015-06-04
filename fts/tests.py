@@ -70,12 +70,14 @@ def test_accordion(server_url, browser, prefix):
 
 @pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text'), [
     ('/ocds/', 'tenders_releases_2_releases.json', 'Download Files'),
+    ('/ocds/', 'tenders_releases_2_releases.json', 'Save or Share these results'),
     # Conversion should still work for files that don't validate against the schema
     ('/ocds/', 'tenders_releases_2_releases_invalid.json', 'Download Files'),
     # But we expect to see an error message if a file is not well formed JSON at all
     ('/ocds/', 'tenders_releases_2_releases_not_json.json', 'not well formed JSON'),
     ('/ocds/', 'tenders_releases_2_releases.xlsx', 'Download Files'),
     ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Download Files'),
+    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Save or Share these results'),
     ])
 def test_URL_input_json(server_url, browser, httpserver, source_filename, prefix, expected_text):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
