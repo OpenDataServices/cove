@@ -95,7 +95,7 @@ def get_file_type(django_file):
 def explore(request, pk):
     data = SuppliedData.objects.get(pk=pk)
     original_file = data.original_file
-
+    
     try:
         original_file.file.name
     except FileNotFoundError:
@@ -121,6 +121,7 @@ def explore(request, pk):
                 main_sheet_name=request.cove_config['main_sheet_name'],
                 root_list_path=request.cove_config['main_sheet_name'],
                 root_id=request.cove_config['root_id'],
+                schema=request.cove_config['item_schema_url'],
             )
         except BadlyFormedJSONError as err:
             return render(request, 'error.html', {
@@ -137,6 +138,7 @@ def explore(request, pk):
             input_format=file_type,
             main_sheet_name=request.cove_config['main_sheet_name'],
             root_id=request.cove_config['root_id'],
+            schema=request.cove_config['item_schema_url'],
         )
         json_path = converted_path
 
