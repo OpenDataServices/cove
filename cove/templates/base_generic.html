@@ -89,6 +89,9 @@
             <li>{% trans "The code for this site is available on" %}<br>{% trans "GitHub" %}: <a href="https://github.com/OpenDataServices/cove/">{%trans "Cove - COnvert Validate & Explore" %}</a><br>{% trans "Licence" %}: <a href="https://www.gnu.org/licenses/agpl-3.0.html">{% trans "AGPLv3" %}</a><br>{% trans "Report/View issues" %}: <a href="https://github.com/OpenDataServices/cove/issues">{% trans "Cove Issues" %}</a>
             </li>
           </ul>
+          <ul class="text-muted">
+            <li><a href="{% url 'cove:terms' %}">{% trans "Terms &amp; Conditions" %}</a></li>
+          </ul>
           {% comment %}Translators: Provides information about the version of the code base that is being used{% endcomment %}
           <p class="text-muted">{% blocktrans with version=request.revision %}Running version <a href="https://github.com/OpenDataServices/cove/tree/{{version}}">{{version}}</a>.{% endblocktrans %}</p>
         </div>
