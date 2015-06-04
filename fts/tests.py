@@ -27,7 +27,7 @@ def test_index_page_ocds(server_url, browser):
     assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
     assert 'Why do you delete data after 7 days?' in browser.find_element_by_tag_name('body').text
     assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
-    assert 'Terms &amp; Conditions' in browser.find_element_by_tag_name('body').text
+    assert 'Terms & Conditions' in browser.find_element_by_tag_name('body').text
     
     
 def test_index_page_360(server_url, browser):
@@ -37,7 +37,7 @@ def test_index_page_360(server_url, browser):
     assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
     assert 'Why do you delete data after 7 days?' in browser.find_element_by_tag_name('body').text
     assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
-    assert 'Terms &amp; Conditions' in browser.find_element_by_tag_name('body').text
+    assert 'Terms & Conditions' in browser.find_element_by_tag_name('body').text
 
 
 @pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])

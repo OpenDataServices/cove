@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-04 12:08+0000\n"
+"POT-Creation-Date: 2015-06-04 13:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -697,22 +697,52 @@ msgid ""
 "issues beyond our control."
 msgstr ""
 
-#: cove/views.py:103
-msgid ""
-"This file no longer exists. Uploaded data is automatically deleted after 7 "
-"days, see our terms of use for more information."
+#: cove/views.py:101 cove/views.py:111
+msgid "Sorry, the page you are looking for is not available"
 msgstr ""
 
-#: cove/views.py:110
-msgid "Unrecognised file type."
-msgstr "Tip de fișier nerecunoscută."
+#: cove/views.py:103 cove/views.py:113
+msgid "Go to Home page"
+msgstr ""
 
-#: cove/views.py:128
+#: cove/views.py:104
+msgid "We don't seem to be able to find the data you requested."
+msgstr ""
+
+#: cove/views.py:114
+msgid ""
+"The data you were hoping to explore no longer exists.\n"
+"\n"
+"This is because all data suplied to this website is automatically deleted "
+"after 7 days, and therefore the analysis of that data is no longer available."
+msgstr ""
+
+#: cove/views.py:121 cove/views.py:142
+msgid "Sorry we can't process that data"
+msgstr ""
+
+#: cove/views.py:123 cove/views.py:144
+msgid "Try Again"
+msgstr ""
+
+#: cove/views.py:124
+msgid ""
+"We did not recognise the file type.\n"
+"\n"
+"We can only process json, xls, xlxs and csv files.\n"
+"\n"
+"Is this a bug? Contact us on code [at] opendataservices.coop"
+msgstr ""
+
+#: cove/views.py:145
 msgid ""
 "We think you tried to upload a JSON file, but it is not well formed JSON.\n"
 "\n"
 "Error message: {}"
 msgstr ""
+
+#~ msgid "Unrecognised file type."
+#~ msgstr "Tip de fișier nerecunoscută."
 
 #~ msgid "Running version %(version)s."
 #~ msgstr "Rularea versiunea %(version)s."
