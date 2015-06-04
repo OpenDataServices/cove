@@ -62,19 +62,26 @@ def test_accordion(server_url, browser, prefix):
     assert buttons() == [False, False, True]
 
 
-@pytest.mark.parametrize(('prefix', 'source_url'), [
-    ('/ocds/', 'https://raw.githubusercontent.com/OpenDataServices/flatten-tool/master/flattentool/tests/fixtures/tenders_releases_2_releases.json'),
-    ('/ocds/', 'https://github.com/OpenDataServices/cove/raw/master/cove/fixtures/tenders_releases_2_releases.xlsx'),
-    ('/ocds/', 'https://github.com/OpenDataServices/cove/blob/master/cove/fixtures/tenders_releases_2_releases.xlsx?raw=true'),
-    ('/360/', 'http://data.threesixtygiving.org/sites/default/files/WellcomeTrust-grants.json'),
+@pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text'), [
+    ('/ocds/', 'tenders_releases_2_releases.json', 'Download Files'),
+    # Conversion should still work for files that don't validate against the schema
+    ('/ocds/', 'tenders_releases_2_releases_invalid.json', 'Download Files'),
+    # But we expect to see an error message if a file is not well formed JSON at all
+    ('/ocds/', 'tenders_releases_2_releases_not_json.json', 'not well formed JSON'),
+    ('/ocds/', 'tenders_releases_2_releases.xlsx', 'Download Files'),
+    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Download Files'),
     ])
-def test_URL_input_json(server_url, browser, source_url, prefix):
+def test_URL_input_json(server_url, browser, httpserver, source_filename, prefix, expected_text):
+    with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
+        httpserver.serve_content(fp.read())
+    source_url = httpserver.url + '/' + source_filename
+
     browser.get(server_url + prefix)
     browser.find_element_by_partial_link_text('Link').click()
     time.sleep(0.5)
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
-    assert 'Download Files' in browser.find_element_by_tag_name('body').text
+    assert expected_text in browser.find_element_by_tag_name('body').text
     
     # We should still be in the correct app
     if prefix == 'ocds':

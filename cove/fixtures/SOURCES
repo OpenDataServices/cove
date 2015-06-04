@@ -1,6 +1,21 @@
 tenders_releases_2_releases.json
 Source: https://github.com/open-contracting/sample-data/tree/958fc30e827e980e750459e1b9a6fe09eb266d7d/buyandsell/ocds_data
+License: http://data.gc.ca/eng/open-government-licence-canada 
 (but truncated to only two releases)
 
 tenders_releases_2_releases.xlsx
-Same data as above, but converted to xlsx using flatten-tool
+Source: Same data as tenders_releases_2_releases.json, but converted to xlsx using flatten-tool
+License: http://data.gc.ca/eng/open-government-licence-canada 
+
+tenders_releases_2_releases_invalid.json
+Source: Same data as tenders_releases_2_releases.json, but edited such that it doesn't validate against the schema.
+License: http://data.gc.ca/eng/open-government-licence-canada 
+
+tenders_releases_2_releases_not_json.json
+Source: Same data as tenders_releases_2_releases.json, but edited such that it is not well formed JSON.
+License: http://data.gc.ca/eng/open-government-licence-canada 
+
+WellcomeTrust-grants_fixed_2_grants.json
+Source: http://data.threesixtygiving.org/dataset/welcome-trust-grants-awarded
+(but with the key "Grants" changed to "grants" and truncated to to releases)
+License: Creative Commons Attribution

@@ -15,6 +15,8 @@ pytest-django==2.8.0
 pytest-cov==1.8.1
 cov-core==1.15.0
 coverage==3.7.1
+pytest-localserver==0.3.4
+Werkzeug==0.10.4
 
 # coveralls
 coveralls==0.5
