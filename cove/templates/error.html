@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{{ msg | linebreaks }}
+<div class="panel panel-primary">
+  <div class="panel-heading">{{ sub_title | linebreaks }}</div>
+  <div class="panel-body">
+    {{ msg | linebreaks }}
+  </div>
+</div>
+
+
+<a class="btn btn-success" href="{% url link %}" role="button">{{ link_text }}</a>
+
+
 
 {% endblock %}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-27 19:34+0000\n"
+"POT-Creation-Date: 2015-06-04 14:09+0000\n"
 "PO-Revision-Date: 2015-04-27 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -87,74 +87,141 @@ msgid ""
 "application is able to find, so that you can check the data."
 msgstr ""
 
-#: cove/templates/base_360.html:18 cove/templates/base_ocds.html:20
-msgid "Why provide converted versions?"
-msgstr ""
-
-#: cove/templates/base_360.html:19 cove/templates/base_ocds.html:21
-msgid ""
-"\n"
-"  The W3C <a href=\"http://www.w3.org/TR/dwbp/\">Data on the Web Best "
-"Practices</a> recommend making open data available in a range of formats to "
-"meet the needs of different users, for example, developers may want JSON, "
-"researchers might prefer a spreadsheet format.\n"
-"  "
-msgstr ""
-
 #. Translators: Label of a button that triggers search
 #: cove/templates/base_generic.html:38
 msgid "Go"
 msgstr ""
 
+#: cove/templates/base_generic.html:57
+msgid "What happens to the data I provide to this site?"
+msgstr ""
+
+#: cove/templates/base_generic.html:58
+msgid ""
+"We retain the data you upload or paste to this site, on our server, for 7 "
+"days."
+msgstr ""
+
+#: cove/templates/base_generic.html:59
+msgid ""
+"If you supply a link, we fetch the data from that link and store it on our "
+"server for 7 days."
+msgstr ""
+
+#: cove/templates/base_generic.html:60
+msgid ""
+"We delete all data older than 7 days from our servers daily, retaining none "
+"of the original data."
+msgstr ""
+
 #: cove/templates/base_generic.html:61
+msgid ""
+"While the data is on our servers we may access that data to help us "
+"understand how people are using this application, what types of data are "
+"being supplied, what common errors exist and so on."
+msgstr ""
+
+#: cove/templates/base_generic.html:62
+msgid ""
+"We may also retain data in backups of our servers, which means on occassion, "
+"some data may be retained longer. We have no intention of using this data "
+"for anything other than server recovery in an emergency."
+msgstr ""
+
+#: cove/templates/base_generic.html:63
+msgid ""
+"We do retain some metadata about data supplied to this site. Details can be "
+"found in the code, but may include information about whether or not the file "
+"was uploaded, linked or pasted, the size of the file, the date/time it was "
+"supplied and so on. "
+msgstr ""
+
+#: cove/templates/base_generic.html:65
+msgid "Why do you delete data after 7 days?"
+msgstr ""
+
+#: cove/templates/base_generic.html:66
+msgid ""
+"This is service to allow people to explore machine readable data. As such we "
+"see no need to store and gather everything people submit to the site "
+"forever. We have chosen 7 days as a practical time frame that allows people "
+"to share results with collegues, but also allows data to disappear over time "
+"to save people having to clean up after themselves."
+msgstr ""
+
+#: cove/templates/base_generic.html:67
+msgid ""
+"We believe that deleting supplied data after 7 days provides a level of "
+"privacy for the users of this service. "
+msgstr ""
+
+#: cove/templates/base_generic.html:73
+msgid "Why provide converted versions?"
+msgstr ""
+
+#: cove/templates/base_generic.html:74
+msgid ""
+"\n"
+"    The W3C <a href=\"http://www.w3.org/TR/dwbp/\">Data on the Web Best "
+"Practices</a> recommend making open data available in a range of formats to "
+"meet the needs of different users, for example, developers may want JSON, "
+"researchers might prefer a spreadsheet format.\n"
+"    "
+msgstr ""
+
+#: cove/templates/base_generic.html:86
 msgid "About"
 msgstr ""
 
-#: cove/templates/base_generic.html:63
+#: cove/templates/base_generic.html:88
 msgid "Built by"
 msgstr ""
 
-#: cove/templates/base_generic.html:63
+#: cove/templates/base_generic.html:88
 msgid "Open Data Services Co-operative"
 msgstr ""
 
-#: cove/templates/base_generic.html:64
+#: cove/templates/base_generic.html:89
 msgid "The code for this site is available on"
 msgstr ""
 
-#: cove/templates/base_generic.html:64
+#: cove/templates/base_generic.html:89
 msgid "GitHub"
 msgstr ""
 
-#: cove/templates/base_generic.html:64
+#: cove/templates/base_generic.html:89
 msgid "Cove - COnvert Validate & Explore"
 msgstr ""
 
-#: cove/templates/base_generic.html:64
+#: cove/templates/base_generic.html:89
 msgid "Licence"
 msgstr ""
 
-#: cove/templates/base_generic.html:64
+#: cove/templates/base_generic.html:89
 msgid "AGPLv3"
 msgstr ""
 
-#: cove/templates/base_generic.html:64
+#: cove/templates/base_generic.html:89
 msgid "Report/View issues"
 msgstr ""
 
-#: cove/templates/base_generic.html:64
+#: cove/templates/base_generic.html:89
 msgid "Cove Issues"
 msgstr ""
 
+#: cove/templates/base_generic.html:93
+msgid "Terms &amp; Conditions"
+msgstr ""
+
 #. Translators: Provides information about the version of the code base that is being used
-#: cove/templates/base_generic.html:68
+#: cove/templates/base_generic.html:96
 #, python-format
 msgid ""
 "Running version <a href=\"https://github.com/OpenDataServices/cove/tree/"
 "%(version)s\">%(version)s</a>."
 msgstr ""
 
-#: cove/templates/base_generic.html:71
+#: cove/templates/base_generic.html:99
 msgid "Links"
 msgstr ""
 
@@ -242,6 +309,445 @@ msgstr ""
 msgid "Number of grants"
 msgstr ""
 
-#: cove/views.py:111
-msgid "Unrecognised file type."
+#: cove/templates/explore.html:133
+msgid "Save or Share these results"
+msgstr ""
+
+#. Translators: Paragraph that describes the application
+#: cove/templates/explore.html:135
+msgid ""
+"These results will be available for 7 days from the day the data was first "
+"uploaded. You can revisit these results until then."
+msgstr ""
+
+#: cove/templates/explore.html:137
+msgid ""
+"After 7 days all uploaded data is deleted from our servers, and the results "
+"will no longer be available. Anyone using the link to this page after that "
+"will be show a message that tells them the file has been removed."
+msgstr ""
+
+#: cove/templates/terms.html:6
+msgid "Terms &amp; conditions"
+msgstr ""
+
+#: cove/templates/terms.html:7
+msgid ""
+"This web application is free software designed to help people check data "
+"published to particular data standards."
+msgstr ""
+
+#: cove/templates/terms.html:9
+msgid ""
+"It is offered as service WITHOUT ANY WARRANTY; without even the implied "
+"warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+msgstr ""
+
+#: cove/templates/terms.html:11
+msgid ""
+"If you continue to browse and use this website, you are agreeing to comply "
+"with and be bound by the following terms and conditions of use, which "
+"together with our privacy policy govern Open Data Services Limited's "
+"relationship with you in relation to this website. If you disagree with any "
+"part of these terms and conditions, please do not use our website."
+msgstr ""
+
+#: cove/templates/terms.html:13
+msgid ""
+"The term 'Open Data Services Limited' or 'us' or 'we' refers to the owner of "
+"the website. Our company registration number is 09506232. There is more "
+"company information on the <a href=\"https://opencorporates.com/companies/"
+"gb/09506232\">Open Data Services Limited page at Open Corporates</a>. The "
+"term 'you' refers to the user or viewer of our website."
+msgstr ""
+
+#: cove/templates/terms.html:15
+msgid "The use of this website is subject to the following terms of use:"
+msgstr ""
+
+#: cove/templates/terms.html:17
+msgid ""
+"The content of the pages of this website is for your general information and "
+"use only. It is subject to change without notice."
+msgstr ""
+
+#: cove/templates/terms.html:19
+msgid ""
+"Neither we nor any third parties provide any warranty or guarantee as to the "
+"accuracy, timeliness, performance, completeness or suitability of the "
+"information and materials found or offered on this website for any "
+"particular purpose. You acknowledge that such information and materials may "
+"contain inaccuracies or errors and we expressly exclude liability for any "
+"such inaccuracies or errors to the fullest extent permitted by law.\n"
+"  Your use of any information or materials on this website is entirely at "
+"your own risk, for which we shall not be liable. It shall be your own "
+"responsibility to ensure that any products, services or information "
+"available through this website meet your specific requirements.\n"
+"  This website contains material which is owned by or licensed to us. This "
+"material includes, but is not limited to, the design, layout, look, "
+"appearance and graphics. Reproduction is prohibited other than in accordance "
+"with the copyright notice, which forms part of these terms and conditions.\n"
+"  All trademarks reproduced in this website which are not the property of, "
+"or licensed to, the operator are acknowledged on the website.\n"
+"  Unauthorised use of this website may give rise to a claim for damages and/"
+"or be a criminal offence.\n"
+"  From time to time this website may also include links to other websites. "
+"These links are provided for your convenience to provide further "
+"information. They do not signify that we endorse the website(s). We have no "
+"responsibility for the content of the linked website(s).\n"
+"  Your use of this website and any dispute arising out of such use of the "
+"website is subject to the laws of England, Northern Ireland, Scotland and "
+"Wales."
+msgstr ""
+
+#: cove/templates/terms.html:27
+msgid "How we use cookies"
+msgstr ""
+
+#: cove/templates/terms.html:28
+msgid ""
+"A cookie is a small file which asks permission to be placed on your "
+"computer's hard drive. Once you agree, the file is added and the cookie "
+"helps analyse web traffic or lets you know when you visit a particular site."
+msgstr ""
+
+#: cove/templates/terms.html:30
+msgid ""
+"Cookies allow web applications to respond to you as an individual. The web "
+"application can tailor its operations to your needs, likes and dislikes by "
+"gathering and remembering information about your preferences. A cookie in no "
+"way gives us access to your computer or any information about you, other "
+"than the data you choose to share with us."
+msgstr ""
+
+#: cove/templates/terms.html:32
+msgid ""
+"You can choose to accept or decline cookies. Most web browsers automatically "
+"accept cookies, but you can usually modify your browser setting to decline "
+"cookies if you prefer. This may prevent you from taking full advantage of "
+"the website."
+msgstr ""
+
+#: cove/templates/terms.html:34
+msgid "In this website we use cookies to:"
+msgstr ""
+
+#: cove/templates/terms.html:37
+msgid "Help us analyse how our website is used."
+msgstr ""
+
+#: cove/templates/terms.html:38
+msgid "To ensure other sites can’t “forge” requests."
+msgstr ""
+
+#: cove/templates/terms.html:39
+msgid ""
+"Remember your choices within the application, for your convenience, and "
+"where relevant remember that you are logged into the application."
+msgstr ""
+
+#: cove/templates/terms.html:42
+msgid ""
+"We use <a href=\"http://piwik.org\">Piwik</a> to analyse usage of our "
+"website (see Piwik section below). This uses cookies to identify you "
+"(anonymously) as the same user, so that we can analyse our web traffic "
+"better. E.g. it allows us to count how many users we have, instead of just "
+"total page views or analyse what pages people commonly visit together."
+msgstr ""
+
+#: cove/templates/terms.html:44
+msgid ""
+"If you do allow cookies to be used, Piwik uses 1st party cookies, set on the "
+"domain of this website. Cookies created by Piwik start with: "
+msgstr ""
+
+#: cove/templates/terms.html:52
+msgid ""
+"See: <a href=\"http://piwik.org/faq/general/faq_146/\">http://piwik.org/faq/"
+"general/faq_146/</a> for more information."
+msgstr ""
+
+#: cove/templates/terms.html:54
+msgid ""
+"The application is built using <a href=\"https://www.djangoproject.com/"
+"\">Django</a> and we use that framework to set the following cookies:"
+msgstr ""
+
+#. Translators: csrftoken and sessionid are names of cookies and do not need translation
+#: cove/templates/terms.html:56
+msgid ""
+"csrftoken - (to prevent cross site scripting attacks https://docs."
+"djangoproject.com/en/1.8/ref/csrf/#how-it-works)"
+msgstr ""
+
+#: cove/templates/terms.html:57
+msgid ""
+"sessionid - (you will get this if you interact with the application, so that "
+"we can save the things you have done, e.g. select a language)"
+msgstr ""
+
+#: cove/templates/terms.html:60
+msgid ""
+"If you choose not to accept these cookies the application may not work for "
+"you."
+msgstr ""
+
+#: cove/templates/terms.html:62
+msgid "Piwik Traffic Analytics"
+msgstr ""
+
+#: cove/templates/terms.html:64
+msgid ""
+"We use our own hosted version of <a href=\"http://piwik.org\">Piwik</a> to "
+"analyse our web traffic. We do this to get an idea of how much traffic we "
+"are getting, where from and when."
+msgstr ""
+
+#: cove/templates/terms.html:66
+msgid ""
+"If you have set your web browser to \"I do not want to be tracked"
+"\" (DoNotTrack is enabled) then Piwik will not track your visit."
+msgstr ""
+
+#: cove/templates/terms.html:68
+msgid "Piwik also it’s own opt out mechanism:"
+msgstr ""
+
+#: cove/templates/terms.html:72
+msgid "Server Logs"
+msgstr ""
+
+#: cove/templates/terms.html:73
+msgid ""
+"Open Data Services Limited keep server logs of traffic to, and activity on, "
+"our all of our servers. Primarily this is to help us keep our servers "
+"healthy and working by knowing how much activity is taking place on them."
+msgstr ""
+
+#: cove/templates/terms.html:75
+msgid ""
+"We use the ELK stack (Elasticsearch, Logstash, Kibana) to analyse Server "
+"logs. "
+msgstr ""
+
+#: cove/templates/terms.html:76
+msgid ""
+"Our server logs record information such as your IP address, the browser you "
+"are using, and your operating system. Generally, this is considered not to "
+"constitute personal information, but we recognise that when aggregated, and "
+"analysed there is a chance that this data could potentially enable "
+"identification of individuals. This is not something we do. "
+msgstr ""
+
+#: cove/templates/terms.html:78
+msgid "Privacy Policy"
+msgstr ""
+
+#: cove/templates/terms.html:79
+msgid ""
+"This privacy policy sets out how Open Data Services Limited uses and "
+"protects any information that you give Open Data Services Limited when you "
+"use this website."
+msgstr ""
+
+#: cove/templates/terms.html:81
+msgid ""
+"Open Data Services Limited is committed to ensuring that your privacy is "
+"protected. Should we ask you to provide certain information by which you can "
+"be identified when using this website, then you can be assured that it will "
+"only be used in accordance with this privacy statement."
+msgstr ""
+
+#: cove/templates/terms.html:83
+msgid ""
+"Open Data Services Limited may change this policy from time to time by "
+"updating this page. You should check this page from time to time to ensure "
+"that you are happy with any changes. This policy is effective from 1st April "
+"2015."
+msgstr ""
+
+#: cove/templates/terms.html:85
+msgid "What we collect"
+msgstr ""
+
+#: cove/templates/terms.html:86
+msgid ""
+"Currently we do not collect any personal information from you when you use "
+"this website."
+msgstr ""
+
+#: cove/templates/terms.html:88
+msgid ""
+"This application is designed so that people can submit files to the "
+"application, allow the application to process them and to then display "
+"information about them, generate alternative file formats of the original "
+"data, and provide those files for download."
+msgstr ""
+
+#: cove/templates/terms.html:90
+msgid ""
+"\n"
+"  Open Data Services Limited does not make use of any of the data within the "
+"files for purposes other than to create reports for you about the data you "
+"have submitted."
+msgstr ""
+
+#: cove/templates/terms.html:93
+msgid ""
+"Open Data Services Limited does create and store metadata about your use of "
+"the application, and about the files/data that you have uploaded in order to "
+"monitor how the application is being used."
+msgstr ""
+
+#: cove/templates/terms.html:95
+msgid "Deleting our copies of the files"
+msgstr ""
+
+#: cove/templates/terms.html:96
+msgid ""
+"When you provide data to the application we store the data you have provided "
+"in order to process it for you. We also enable derived versions of the data "
+"to be downloaded. Those derived versions and the original data are stored on "
+"our server."
+msgstr ""
+
+#: cove/templates/terms.html:98
+msgid ""
+"After a period of time we will delete those files from our server, meaning "
+"they are no-longer available for download."
+msgstr ""
+
+#: cove/templates/terms.html:100
+msgid ""
+"We may also provide a means for a user to delete those files, such as a "
+"'delete' button that a user must select."
+msgstr ""
+
+#: cove/templates/terms.html:102
+msgid ""
+"Information about how long files will be stored is made available to users "
+"directly through the interface, but will be for no longer than one year from "
+"the date of submission."
+msgstr ""
+
+#: cove/templates/terms.html:105
+msgid "Controlling your personal information"
+msgstr ""
+
+#: cove/templates/terms.html:106
+msgid ""
+"Although this application does not record any personal information you may "
+"like to know that you may request details of personal information which we "
+"hold about you under the Data Protection Act 1998. A small fee will be "
+"payable. If you would like a copy of the information held on you please "
+"email the Data Protection Officer at company@opendataservices.coop. If you "
+"would like to write to us our contact details are available on the Open Data "
+"Services Limited page at Open Corporates."
+msgstr ""
+
+#: cove/templates/terms.html:108
+msgid ""
+"If you believe that any information we are holding on you is incorrect or "
+"incomplete, please write to or email us as soon as possible at the above "
+"address. We will promptly correct any information found to be incorrect."
+msgstr ""
+
+#: cove/templates/terms.html:110
+msgid "Security"
+msgstr ""
+
+#: cove/templates/terms.html:111
+msgid ""
+"We are committed to ensuring that your information is secure. In order to "
+"prevent unauthorised access or disclosure, we have put in place suitable "
+"physical, electronic and managerial procedures to safeguard and secure the "
+"information we collect online."
+msgstr ""
+
+#: cove/templates/terms.html:113
+msgid "Links to other websites"
+msgstr ""
+
+#: cove/templates/terms.html:114
+msgid ""
+"Our website may contain links to other websites of interest. However, once "
+"you have used these links to leave our site, you should note that we do not "
+"have any control over that other website. Therefore, we cannot be "
+"responsible for the protection and privacy of any information which you "
+"provide whilst visiting such sites and such sites are not governed by this "
+"privacy statement. You should exercise caution and look at the privacy "
+"statement applicable to the website in question."
+msgstr ""
+
+#: cove/templates/terms.html:116
+msgid "Website disclaimer"
+msgstr ""
+
+#: cove/templates/terms.html:117
+msgid ""
+"The information contained in this website is for general information "
+"purposes only. The information is provided by Open Data Services Limited and "
+"while we endeavour to keep the information up to date and correct, we make "
+"no representations or warranties of any kind, express or implied, about the "
+"completeness, accuracy, reliability, suitability or availability with "
+"respect to the website or the information, products, services, or related "
+"graphics contained on the website for any purpose. Any reliance you place on "
+"such information is therefore strictly at your own risk.\n"
+"  In no event will we be liable for any loss or damage including without "
+"limitation, indirect or consequential loss or damage, or any loss or damage "
+"whatsoever arising from loss of data or profits arising out of, or in "
+"connection with, the use of this website.\n"
+"  Through this website you are able to link to other websites which are not "
+"under the control of Open Data Services Limited. We have no control over the "
+"nature, content and availability of those sites. The inclusion of any links "
+"does not necessarily imply a recommendation or endorse the views expressed "
+"within them.\n"
+"  Every effort is made to keep the website up and running smoothly. However, "
+"Open Data Services Limited takes no responsibility for, and will not be "
+"liable for, the website being temporarily unavailable due to technical "
+"issues beyond our control."
+msgstr ""
+
+#: cove/views.py:101 cove/views.py:111
+msgid "Sorry, the page you are looking for is not available"
+msgstr ""
+
+#: cove/views.py:103 cove/views.py:113
+msgid "Go to Home page"
+msgstr ""
+
+#: cove/views.py:104
+msgid "We don't seem to be able to find the data you requested."
+msgstr ""
+
+#: cove/views.py:114
+msgid ""
+"The data you were hoping to explore no longer exists.\n"
+"\n"
+"This is because all data suplied to this website is automatically deleted "
+"after 7 days, and therefore the analysis of that data is no longer available."
+msgstr ""
+
+#: cove/views.py:121 cove/views.py:142
+msgid "Sorry we can't process that data"
+msgstr ""
+
+#: cove/views.py:123 cove/views.py:144
+msgid "Try Again"
+msgstr ""
+
+#: cove/views.py:124
+msgid ""
+"We did not recognise the file type.\n"
+"\n"
+"We can only process json, xls, xlxs and csv files.\n"
+"\n"
+"Is this a bug? Contact us on code [at] opendataservices.coop"
+msgstr ""
+
+#: cove/views.py:145
+msgid ""
+"We think you tried to upload a JSON file, but it is not well formed JSON.\n"
+"\n"
+"Error message: {}"
 msgstr ""

@@ -6,7 +6,7 @@
 <li><a href="http://standard.open-contracting.org/">{% trans "Open Contracting Data Standard" %}</a></li>
 {% endblock %}
 
-{% block aboveFooter %}
+{% block howToUse %}
 <div class="above-footer">
   <h2><small>{% blocktrans %}How to use the {{ application_name }}{% endblocktrans %}</small></h2>
   {% comment %}Translators: Paragraph that describes the application{% endcomment %}
@@ -16,10 +16,5 @@
   <p>{% blocktrans %}You will also be able to inspect key information from the data that the application is able to find, so that you can check the data.{% endblocktrans %}</p>
   
   <p>{% blocktrans %}The application only works with 'release' documents that conform to the Open Data Contracting Standard{% endblocktrans %}</p>
-  
-  <h2><small>{% trans "Why provide converted versions?" %}</small></h2>
-  <p>{% blocktrans %}
-  The W3C <a href="http://www.w3.org/TR/dwbp/">Data on the Web Best Practices</a> recommend making open data available in a range of formats to meet the needs of different users, for example, developers may want JSON, researchers might prefer a spreadsheet format.
-  {% endblocktrans %}</p>
 </div>
 {% endblock %}

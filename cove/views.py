@@ -93,21 +93,35 @@ def get_file_type(django_file):
 
 
 def explore(request, pk):
-    data = SuppliedData.objects.get(pk=pk)
-    original_file = data.original_file
+    try:
+        data = SuppliedData.objects.get(pk=pk)
+        original_file = data.original_file
+    except (SuppliedData.DoesNotExist, ValueError):  # Catches: Primary key does not exist, and, badly formed hexadecimal UUID string
+        return render(request, 'error.html', {
+            'sub_title': _('Sorry, the page you are looking for is not available'),
+            'link': 'cove:index',
+            'link_text': _('Go to Home page'),
+            'msg': _("We don't seem to be able to find the data you requested.")
+            }, status=404)
     
     try:
         original_file.file.name
     except FileNotFoundError:
         return render(request, 'error.html', {
-            'msg': _('This file no longer exists. Uploaded data is automatically deleted after 7 days, see our terms of use for more information.')
+            'sub_title': _('Sorry, the page you are looking for is not available'),
+            'link': 'cove:index',
+            'link_text': _('Go to Home page'),
+            'msg': _('The data you were hoping to explore no longer exists.\n\nThis is because all data suplied to this website is automatically deleted after 7 days, and therefore the analysis of that data is no longer available.')
         }, status=404)
     
     try:
         file_type = get_file_type(original_file)
     except UnrecognisedFileType:
         return render(request, 'error.html', {
-            'msg': _('Unrecognised file type.')
+            'sub_title': _("Sorry we can't process that data"),
+            'link': 'cove:index',
+            'link_text': _('Try Again'),
+            'msg': _('We did not recognise the file type.\n\nWe can only process json, xls, xlsx and csv files.\n\nIs this a bug? Contact us on code [at] opendataservices.coop')
         })
 
     if file_type == 'json':
@@ -125,6 +139,9 @@ def explore(request, pk):
             )
         except BadlyFormedJSONError as err:
             return render(request, 'error.html', {
+                'sub_title': _("Sorry we can't process that data"),
+                'link': 'cove:index',
+                'link_text': _('Try Again'),
                 'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\nError message: {}'.format(err))
             })
         json_path = original_file.file.name

@@ -49,7 +49,32 @@
   
   <div class="container">
     
-  {% block aboveFooter %}
+  {% block howToUse %}
+  {% endblock %}
+  
+  {% block deletingData %}
+  <div class="above-footer">
+    <h2><small>{% trans "What happens to the data I provide to this site?" %}</small></h2>
+      <p>{% blocktrans %}We retain the data you upload or paste to this site, on our server, for 7 days.{% endblocktrans %}</p>
+      <p>{% blocktrans %}If you supply a link, we fetch the data from that link and store it on our server for 7 days.{% endblocktrans %}</p>
+      <p>{% blocktrans %}We delete all data older than 7 days from our servers daily, retaining none of the original data.{% endblocktrans %}</p>
+      <p>{% blocktrans %}While the data is on our servers we may access that data to help us understand how people are using this application, what types of data are being supplied, what common errors exist and so on.{% endblocktrans %}</p>
+      <p>{% blocktrans %}We may also retain data in backups of our servers, which means on occassion, some data may be retained longer. We have no intention of using this data for anything other than server recovery in an emergency.{% endblocktrans %}</p>
+      <p>{% blocktrans %}We do retain some metadata about data supplied to this site. Details can be found in the code, but may include information about whether or not the file was uploaded, linked or pasted, the size of the file, the date/time it was supplied and so on. {% endblocktrans %}</p>
+
+    <h2><small>{% trans "Why do you delete data after 7 days?" %}</small></h2>
+      <p>{% blocktrans %}This is service to allow people to explore machine readable data. As such we see no need to store and gather everything people submit to the site forever. We have chosen 7 days as a practical time frame that allows people to share results with collegues, but also allows data to disappear over time to save people having to clean up after themselves.{% endblocktrans %}</p>
+      <p>{% blocktrans %}We believe that deleting supplied data after 7 days provides a level of privacy for the users of this service. {% endblocktrans %}</p>
+    </div>
+  {% endblock %}
+  
+  {% block whyConvert %}
+  <div class="above-footer">
+    <h2><small>{% trans "Why provide converted versions?" %}</small></h2>
+    <p>{% blocktrans %}
+    The W3C <a href="http://www.w3.org/TR/dwbp/">Data on the Web Best Practices</a> recommend making open data available in a range of formats to meet the needs of different users, for example, developers may want JSON, researchers might prefer a spreadsheet format.
+    {% endblocktrans %}</p>
+  </div>
   {% endblock %}
     
   </div><!-- /.container -->
@@ -63,6 +88,9 @@
             <li>{% trans "Built by" %} <a href="http://opendataservices.coop/">{% trans "Open Data Services Co-operative" %}</a></li>
             <li>{% trans "The code for this site is available on" %}<br>{% trans "GitHub" %}: <a href="https://github.com/OpenDataServices/cove/">{%trans "Cove - COnvert Validate & Explore" %}</a><br>{% trans "Licence" %}: <a href="https://www.gnu.org/licenses/agpl-3.0.html">{% trans "AGPLv3" %}</a><br>{% trans "Report/View issues" %}: <a href="https://github.com/OpenDataServices/cove/issues">{% trans "Cove Issues" %}</a>
             </li>
+          </ul>
+          <ul class="text-muted">
+            <li><a href="{% url 'cove:terms' %}">{% trans "Terms &amp; Conditions" %}</a></li>
           </ul>
           {% comment %}Translators: Provides information about the version of the code base that is being used{% endcomment %}
           <p class="text-muted">{% blocktrans with version=request.revision %}Running version <a href="https://github.com/OpenDataServices/cove/tree/{{version}}">{{version}}</a>.{% endblocktrans %}</p>

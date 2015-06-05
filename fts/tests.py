@@ -24,14 +24,20 @@ def test_index_page_ocds(server_url, browser):
     browser.get(server_url + '/ocds/')
     assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'How to use the Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
+    assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
+    assert 'Why do you delete data after 7 days?' in browser.find_element_by_tag_name('body').text
     assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
-
-
+    assert 'Terms & Conditions' in browser.find_element_by_tag_name('body').text
+    
+    
 def test_index_page_360(server_url, browser):
     browser.get(server_url + '/360/')
     assert '360 Giving Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'How to use the 360 Giving Data Tool' in browser.find_element_by_tag_name('body').text
+    assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
+    assert 'Why do you delete data after 7 days?' in browser.find_element_by_tag_name('body').text
     assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
+    assert 'Terms & Conditions' in browser.find_element_by_tag_name('body').text
 
 
 @pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
@@ -64,12 +70,14 @@ def test_accordion(server_url, browser, prefix):
 
 @pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text'), [
     ('/ocds/', 'tenders_releases_2_releases.json', 'Download Files'),
+    ('/ocds/', 'tenders_releases_2_releases.json', 'Save or Share these results'),
     # Conversion should still work for files that don't validate against the schema
     ('/ocds/', 'tenders_releases_2_releases_invalid.json', 'Download Files'),
     # But we expect to see an error message if a file is not well formed JSON at all
     ('/ocds/', 'tenders_releases_2_releases_not_json.json', 'not well formed JSON'),
     ('/ocds/', 'tenders_releases_2_releases.xlsx', 'Download Files'),
     ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Download Files'),
+    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Save or Share these results'),
     ])
 def test_URL_input_json(server_url, browser, httpserver, source_filename, prefix, expected_text):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
@@ -90,3 +98,16 @@ def test_URL_input_json(server_url, browser, httpserver, source_filename, prefix
         assert 'Release Table' in browser.find_element_by_tag_name('body').text
     elif prefix == '360':
         assert '360 Giving Data Tool' in browser.find_element_by_tag_name('body').text
+
+
+@pytest.mark.parametrize(('prefix'), [
+    ('/ocds/'),
+    ('/360/'),
+    ])
+def test_URL_invalid_dataset_request(server_url, browser, prefix):
+    # Test a badly formed hexadecimal UUID string
+    browser.get(server_url + prefix + 'data/0')
+    assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
+    # Test for a dataset that does not exist in the dataset. Not sure how we specify a UUID that will never be used again tho!
+    browser.get(server_url + prefix + 'data/be0c2fd7-108b-4d78-bae2-5a8a096a8273')
+    assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
