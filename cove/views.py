@@ -96,7 +96,7 @@ def explore(request, pk):
     try:
         data = SuppliedData.objects.get(pk=pk)
         original_file = data.original_file
-    except:  # Primary key does not exist
+    except SuppliedData.DoesNotExist:  # Primary key does not exist
         return render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
             'link': 'cove:index',
