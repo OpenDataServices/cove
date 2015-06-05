@@ -24,4 +24,4 @@ docopt==0.6.2
 PyYAML==3.11
 
 # selenium
-selenium==2.45.0
+selenium==2.46.0
