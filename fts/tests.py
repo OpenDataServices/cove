@@ -78,6 +78,8 @@ def test_accordion(server_url, browser, prefix):
     ('/ocds/', 'tenders_releases_2_releases.xlsx', 'Download Files'),
     ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Download Files'),
     ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Save or Share these results'),
+    # Test a 360 spreadsheet with titles, rather than fields
+    ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files'),
     ])
 def test_URL_input_json(server_url, browser, httpserver, source_filename, prefix, expected_text):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
@@ -92,11 +94,11 @@ def test_URL_input_json(server_url, browser, httpserver, source_filename, prefix
     assert expected_text in browser.find_element_by_tag_name('body').text
     
     # We should still be in the correct app
-    if prefix == 'ocds':
+    if prefix == '/ocds/':
         assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
-        # Look for Release Table
-        assert 'Release Table' in browser.find_element_by_tag_name('body').text
-    elif prefix == '360':
+        # # Look for Release Table
+        # assert 'Release Table' in browser.find_element_by_tag_name('body').text
+    elif prefix == '/360/':
         assert '360 Giving Data Tool' in browser.find_element_by_tag_name('body').text
 
 

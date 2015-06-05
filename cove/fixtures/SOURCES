@@ -19,3 +19,7 @@ WellcomeTrust-grants_fixed_2_grants.json
 Source: http://data.threesixtygiving.org/dataset/welcome-trust-grants-awarded
 (but with the key "Grants" changed to "grants" and truncated to to releases)
 License: Creative Commons Attribution
+
+WellcomeTrust-grants_2_grants.xlsx
+Source: http://data.threesixtygiving.org/dataset/welcome-trust-grants-awarded
+License: Creative Commons Attribution
