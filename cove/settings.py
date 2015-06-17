@@ -16,6 +16,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 import environ
 env = environ.Env(  # set default values and casting
+    SENTRY_DSN=(str, ''),
     DEBUG=(bool, True),
     PIWIK_URL=(str, ''),
     PIWIK_SITE_ID=(str, ''),
@@ -81,6 +82,10 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
+RAVEN_CONFIG = {
+    'dsn': env('SENTRY_DSN')
+}
+
 
 # Application definition
 
@@ -95,6 +100,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'cove',
     'cove.input',
+    'raven.contrib.django.raven_compat',
 )
 
 MIDDLEWARE_CLASSES = (
