@@ -103,7 +103,11 @@ def test_accordion(server_url, browser, prefix):
 def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
-    source_url = httpserver.url + '/' + source_filename
+    if 'CUSTOM_SERVER_URL' in os.environ:
+        # Use urls pointing to GitHub if we have a custom (probably non local) server URL
+        source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/master/cove/fixtures/' + source_filename
+    else:
+        source_url = httpserver.url + '/' + source_filename
 
     browser.get(server_url + prefix)
     browser.find_element_by_partial_link_text('Link').click()
