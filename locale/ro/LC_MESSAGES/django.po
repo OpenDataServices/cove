@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-04 14:09+0000\n"
+"POT-Creation-Date: 2015-06-18 10:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,15 +45,15 @@ msgstr "Încărcați un fișier"
 msgid "Supply a URL"
 msgstr "Furnizează o adresă URL"
 
-#: cove/settings.py:44 cove/templates/multi_index.html:8
+#: cove/settings.py:45 cove/templates/multi_index.html:8
 msgid "Open Contracting Data Tool"
 msgstr ""
 
-#: cove/settings.py:45
+#: cove/settings.py:46
 msgid "360 Giving Data Tool"
 msgstr ""
 
-#: cove/settings.py:46
+#: cove/settings.py:47
 msgid "Cove"
 msgstr ""
 
@@ -84,6 +84,45 @@ msgstr ""
 msgid ""
 "You will also be able to inspect key information from the data that the "
 "application is able to find, so that you can check the data."
+msgstr ""
+
+#: cove/templates/base_360.html:18
+msgid "Formats"
+msgstr ""
+
+#: cove/templates/base_360.html:19
+msgid ""
+"\n"
+"  The application accepts data in some of the formats given in the <a href="
+"\"http://docs.threesixtygiving.org/publish/\">360 Giving Data Standard "
+"publishing guidence</a> under <a href=\"http://docs.threesixtygiving.org/"
+"publish/#toc1\">Choose your template</a>.\n"
+"  <br>Acceptable files are: "
+msgstr ""
+
+#: cove/templates/base_360.html:23
+msgid ""
+"Summary Spreadsheet - <a href=\"http://docs.threesixtygiving.org/assets/"
+"standard/schema/summary-table/360-giving-schema-titles.xlsx\">Excel</a>"
+msgstr ""
+
+#: cove/templates/base_360.html:24
+msgid ""
+"Summary Spreadsheet - <a href=\"http://docs.threesixtygiving.org/assets/"
+"standard/schema/summary-table/360-giving-schema-titles.csv/Activity.csv"
+"\">CSV</a>"
+msgstr ""
+
+#: cove/templates/base_360.html:25
+msgid ""
+"JSON built to the <a href=\"http://docs.threesixtygiving.org/docs/#json-"
+"schema\">360 Giving Data Standard JSON schema</a>"
+msgstr ""
+
+#: cove/templates/base_360.html:26
+msgid ""
+"Multi-table data package - <a href=\"http://docs.threesixtygiving.org/assets/"
+"standard/schema/multi-table/360-giving-schema-fields.xlsx\">Excel</a>"
 msgstr ""
 
 #. Translators: Label of a button that triggers search
@@ -264,70 +303,77 @@ msgstr "Original"
 msgid "Excel Spreadsheet (.xlsx)"
 msgstr "Foaie de calcul Excel (.xlsx)"
 
+#: cove/templates/explore.html:8
+#, fuzzy
+#| msgid "Excel Spreadsheet (.xlsx)"
+msgid "Excel Spreadsheet (.xlsx) with titles"
+msgstr "Foaie de calcul Excel (.xlsx)"
+
 #. Translators: JSON probably does not need a transalation: http://www.json.org/
-#: cove/templates/explore.html:9
+#: cove/templates/explore.html:10
 msgid "JSON"
 msgstr "JSON"
 
-#: cove/templates/explore.html:15
+#: cove/templates/explore.html:16
 msgid "Download Files"
 msgstr "Descărca fișiere"
 
-#: cove/templates/explore.html:22 cove/templates/explore.html.py:23
-#: cove/templates/explore.html:27 cove/templates/explore.html.py:28
+#: cove/templates/explore.html:23 cove/templates/explore.html.py:24
+#: cove/templates/explore.html:25 cove/templates/explore.html.py:29
+#: cove/templates/explore.html:30
 #, python-format
 msgid "%(file_format)s (%(status)s)"
 msgstr "%(file_format)s (%(status)s)"
 
-#: cove/templates/explore.html:41
+#: cove/templates/explore.html:43
 msgid "Validates against the schema?"
 msgstr ""
 
-#: cove/templates/explore.html:56
+#: cove/templates/explore.html:58
 #, fuzzy
 #| msgid "Number of Releases"
 msgid "Number of releases"
 msgstr "Numărul de presă"
 
-#: cove/templates/explore.html:67
+#: cove/templates/explore.html:69
 #, python-format
 msgid "Unique OCIDs (%(number_of_ocids)s)"
 msgstr ""
 
-#: cove/templates/explore.html:83
+#: cove/templates/explore.html:85
 msgid "Release Dates"
 msgstr ""
 
-#: cove/templates/explore.html:87
+#: cove/templates/explore.html:89
 msgid "Earliest:"
 msgstr ""
 
-#: cove/templates/explore.html:89
+#: cove/templates/explore.html:91
 msgid "Latest:"
 msgstr ""
 
-#: cove/templates/explore.html:97
+#: cove/templates/explore.html:99
 msgid "Releases Table:"
 msgstr ""
 
-#: cove/templates/explore.html:121
+#: cove/templates/explore.html:123
 #, fuzzy
 #| msgid "Number of Releases"
 msgid "Number of grants"
 msgstr "Numărul de presă"
 
-#: cove/templates/explore.html:133
+#: cove/templates/explore.html:135
 msgid "Save or Share these results"
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove/templates/explore.html:135
+#: cove/templates/explore.html:137
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
 msgstr ""
 
-#: cove/templates/explore.html:137
+#: cove/templates/explore.html:139
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
@@ -735,11 +781,11 @@ msgid ""
 "after 7 days, and therefore the analysis of that data is no longer available."
 msgstr ""
 
-#: cove/views.py:121 cove/views.py:142
+#: cove/views.py:121 cove/views.py:152
 msgid "Sorry we can't process that data"
 msgstr ""
 
-#: cove/views.py:123 cove/views.py:144
+#: cove/views.py:123 cove/views.py:154
 msgid "Try Again"
 msgstr ""
 
@@ -747,12 +793,12 @@ msgstr ""
 msgid ""
 "We did not recognise the file type.\n"
 "\n"
-"We can only process json, xls, xlxs and csv files.\n"
+"We can only process json, xls, xlsx and csv files.\n"
 "\n"
 "Is this a bug? Contact us on code [at] opendataservices.coop"
 msgstr ""
 
-#: cove/views.py:145
+#: cove/views.py:155
 msgid ""
 "We think you tried to upload a JSON file, but it is not well formed JSON.\n"
 "\n"
