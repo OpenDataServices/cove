@@ -5,6 +5,7 @@
 {% trans 'Converted from Original' as converted %}
 {% trans 'Original' as original %}
 {% trans 'Excel Spreadsheet (.xlsx)' as xlsx %} 
+{% trans 'CSV Spreadsheet (.csv)' as csv %} 
 {% trans 'Excel Spreadsheet (.xlsx) with titles' as xlsx_titles %} 
 {# Translators: JSON probably does not need a transalation: http://www.json.org/ #}
 {% trans 'JSON' as JSON %}
@@ -26,7 +27,13 @@
       </ul>    
     {% elif conversion == 'unflatten' %}
       <ul>
-        <li><a href="{{original_file.url}}">{% blocktrans with file_format=xlsx status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
+        <li><a href="{{original_file.url}}">
+            {% if file_type == 'xlsx' %}
+                {% blocktrans with file_format=xlsx status=original %}{{file_format}} ({{status}}){% endblocktrans %}
+            {% elif file_type == 'csv' %}
+                {% blocktrans with file_format=csv status=original %}{{file_format}} ({{status}}){% endblocktrans %}
+            {% endif %}
+            </a></li>
         <li><a href="{{converted_url}}">{% blocktrans with file_format=JSON status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
       </ul>
     {% endif %}

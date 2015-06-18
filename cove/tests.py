@@ -36,6 +36,10 @@ def test_get_file_type_xlsx():
         assert v.get_file_type(UploadedFile(fp, 'basic.xlsx')) == 'xlsx'
 
 
+def test_get_file_type_csv():
+    assert v.get_file_type(SimpleUploadedFile('test.csv', b'a,b')) == 'csv'
+
+
 def test_get_file_type_json():
     assert v.get_file_type(SimpleUploadedFile('test.json', b'{}')) == 'json'
 
@@ -65,6 +69,16 @@ def test_explore_page(client):
     data.original_file.save('test.json', ContentFile('{}'))
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
+    assert resp.context['conversion'] == 'flatten'
+
+
+@pytest.mark.django_db
+def test_explore_page_csv(client):
+    data = SuppliedData.objects.create()
+    data.original_file.save('test.csv', ContentFile('a,b'))
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
+    assert resp.context['conversion'] == 'unflatten'
 
 
 @pytest.mark.django_db

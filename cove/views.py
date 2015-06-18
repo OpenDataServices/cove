@@ -2,6 +2,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render
 from cove.input.models import SuppliedData
 import os
+import shutil
 import json
 import flattentool
 from flattentool.json_input import BadlyFormedJSONError
@@ -84,6 +85,8 @@ def get_file_type(django_file):
         return 'json'
     elif django_file.name.endswith('.xlsx'):
         return 'xlsx'
+    elif django_file.name.endswith('.csv'):
+        return 'csv'
     else:
         first_byte = django_file.read(1)
         if first_byte in [b'{', b'[']:
@@ -156,11 +159,21 @@ def explore(request, pk):  # NOQA # FIXME
             })
         json_path = original_file.file.name
     else:
+        if file_type == 'csv':
+            # flatten-tool expects a directory full of CSVs with file names
+            # matching what xlsx titles would be.
+            # If only one upload file is specified, we rename it and move into
+            # a new directory, such that it fits this pattern.
+            input_name = os.path.join(data.upload_dir(), 'csv_dir')
+            os.makedirs(input_name, exist_ok=True)
+            shutil.copy(original_file.file.name, os.path.join(input_name, request.cove_config['main_sheet_name'] + '.csv'))
+        else:
+            input_name = original_file.file.name
         converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
         converted_url = '{}/unflattened.json'.format(data.upload_url())
         conversion = 'unflatten'
         flattentool.unflatten(
-            original_file.file.name,
+            input_name,
             output_name=converted_path,
             input_format=file_type,
             main_sheet_name=request.cove_config['main_sheet_name'],

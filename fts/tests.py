@@ -80,8 +80,9 @@ def test_accordion(server_url, browser, prefix):
     ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Save or Share these results'),
     # Test a 360 spreadsheet with titles, rather than fields
     ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files'),
+    ('/360/', 'WellcomeTrust-grants_2_grants.csv', 'Download Files'),
     ])
-def test_URL_input_json(server_url, browser, httpserver, source_filename, prefix, expected_text):
+def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
     source_url = httpserver.url + '/' + source_filename
@@ -91,7 +92,8 @@ def test_URL_input_json(server_url, browser, httpserver, source_filename, prefix
     time.sleep(0.5)
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
-    assert expected_text in browser.find_element_by_tag_name('body').text
+    body_text = browser.find_element_by_tag_name('body').text
+    assert expected_text in body_text
     
     # We should still be in the correct app
     if prefix == '/ocds/':
@@ -100,6 +102,11 @@ def test_URL_input_json(server_url, browser, httpserver, source_filename, prefix
         # assert 'Release Table' in browser.find_element_by_tag_name('body').text
     elif prefix == '/360/':
         assert '360 Giving Data Tool' in browser.find_element_by_tag_name('body').text
+
+    if source_filename.endswith('.xlsx'):
+        assert '(.xlsx) (Original)' in body_text
+    elif source_filename.endswith('.csv'):
+        assert '(.csv) (Original)' in body_text
 
 
 @pytest.mark.parametrize(('prefix'), [
