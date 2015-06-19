@@ -61,8 +61,42 @@ def get_releases_aggregates(json_data):
 def get_grants_aggregates(json_data):
     count = len(json_data['grants']) if 'grants' in json_data else 0
     
+    ids = []
+    unique_ids = []
+    #release_dates = []
+    #earliest_release_date = None
+    #latest_release_date = None
+    table_data = {}
+    if 'grants' in json_data:
+        for grant in json_data['grants']:
+            # Gather all the ocids
+            ids.append(grant['id']) if 'id' in grant else 0
+            
+            #Gather all the release dates
+            #release_dates.append(release['date']) if 'date' in release else 0
+            
+            # Some identifying data from a release that could be displayed in a table
+            generic_info = {}
+            generic_info['title'] = grant.get('title')
+            generic_info['amountAwarded'] = grant.get('amountAwarded')
+            generic_info['dateModified'] = grant.get('dateModified')
+            if 'id' in grant:
+                table_data[grant['id']] = generic_info
+            
+        # Find unique ocid's
+        unique_ids = set(ids)
+        
+        # Get the earliest and latest release dates found
+        #if release_dates:
+        #    earliest_release_date = min(release_dates)
+        #    latest_release_date = max(release_dates)
+    
     return {
         'count': count,
+        'unique_ids': unique_ids,
+        #'earliest_release_date': earliest_release_date,
+        #'latest_release_date': latest_release_date,
+        'table_data': table_data
     }
 
 
