@@ -8,6 +8,9 @@ import flattentool
 from flattentool.json_input import BadlyFormedJSONError
 import requests
 from jsonschema.validators import Draft4Validator as validator
+from django.db.models.aggregates import Count
+from django.utils import timezone
+from datetime import timedelta
 
 
 def get_releases_aggregates(json_data):
@@ -204,3 +207,17 @@ def explore(request, pk):  # NOQA # FIXME
             context['grants_aggregates'] = get_grants_aggregates(json_data)
 
         return render(request, 'explore.html', context)
+
+
+def stats(request):
+    query = SuppliedData.objects.filter(current_app=request.current_app)
+    by_form = query.values('form_name').annotate(Count('id'))
+    return render(request, 'stats.html', {
+        'uploaded': query.count(),
+        'total_by_form': by_form,
+        'upload_by_time_by_form': [(
+            num_days,
+            query.filter(created__gt=timezone.now() - timedelta(days=num_days)).count(),
+            {x['form_name']:x['id__count'] for x in by_form.filter(created__gt=timezone.now() - timedelta(days=num_days))}
+        ) for num_days in [1, 7, 30]],
+    })
