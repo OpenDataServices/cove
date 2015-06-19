@@ -76,12 +76,9 @@ def get_grants_aggregates(json_data):
             
             # Some identifying data from a release that could be displayed in a table
             generic_info = {}
-            if 'title' in grant:
-                generic_info['title'] = grant['title']
-            if 'amountAwarded' in grant:
-                generic_info['amountAwarded'] = grant['amountAwarded']
-            if 'dateModified' in grant:
-                generic_info['dateModified'] = grant['dateModified']
+            generic_info['title'] = grant.get('title')
+            generic_info['amountAwarded'] = grant.get('amountAwarded')
+            generic_info['dateModified'] = grant.get('dateModified')
             if 'id' in grant:
                 table_data[grant['id']] = generic_info
             
