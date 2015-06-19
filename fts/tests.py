@@ -84,7 +84,7 @@ def test_accordion(server_url, browser, prefix):
     # Test a 360 spreadsheet with titles, rather than fields
     ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files'),
     # Test a non-valid file. Currently csv is not supported
-    ('/360/', 'paul-hamlyn-foundation-grants_dc.csv', 'We can only process json and xlsx files'),
+    ('/360/', 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files'),
     ])
 def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
