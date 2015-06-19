@@ -34,6 +34,9 @@ def test_index_page_360(server_url, browser):
     browser.get(server_url + '/360/')
     assert '360 Giving Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'How to use the 360 Giving Data Tool' in browser.find_element_by_tag_name('body').text
+    assert 'Summary Spreadsheet - Excel' in browser.find_element_by_tag_name('body').text
+    assert 'JSON built to the 360 Giving Data Standard JSON schema' in browser.find_element_by_tag_name('body').text
+    assert 'Multi-table data package - Excel' in browser.find_element_by_tag_name('body').text
     assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
     assert 'Why do you delete data after 7 days?' in browser.find_element_by_tag_name('body').text
     assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
@@ -80,7 +83,8 @@ def test_accordion(server_url, browser, prefix):
     ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Save or Share these results'),
     # Test a 360 spreadsheet with titles, rather than fields
     ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files'),
-    ('/360/', 'WellcomeTrust-grants_2_grants.csv', 'Download Files'),
+    # Test a non-valid file. Currently csv is not supported
+    ('/360/', 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files'),
     ])
 def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
