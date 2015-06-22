@@ -24,10 +24,6 @@ def test_index_page_ocds(server_url, browser):
     browser.get(server_url + '/ocds/')
     assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'How to use the Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
-    assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
-    assert 'Why do you delete data after 7 days?' in browser.find_element_by_tag_name('body').text
-    assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
-    assert 'Terms & Conditions' in browser.find_element_by_tag_name('body').text
     
     
 def test_index_page_360(server_url, browser):
@@ -37,11 +33,24 @@ def test_index_page_360(server_url, browser):
     assert 'Summary Spreadsheet - Excel' in browser.find_element_by_tag_name('body').text
     assert 'JSON built to the 360 Giving Data Standard JSON schema' in browser.find_element_by_tag_name('body').text
     assert 'Multi-table data package - Excel' in browser.find_element_by_tag_name('body').text
+
+
+@pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
+def test_common_index_elements(server_url, browser, prefix):
     assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
     assert 'Why do you delete data after 7 days?' in browser.find_element_by_tag_name('body').text
     assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
     assert 'Terms & Conditions' in browser.find_element_by_tag_name('body').text
+    assert 'Open Data Services' in browser.find_element_by_tag_name('body').text
+    assert 'Open Data Services Co-operative' not in browser.find_element_by_tag_name('body').text
 
+
+@pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
+def test_terms_page(server_url, browser, prefix):
+    browser.get(server_url + prefix + 'terms/')
+    assert 'Open Data Services Co-operative Limited' in browser.find_element_by_tag_name('body').text
+    assert 'Open Data Services Limited' not in browser.find_element_by_tag_name('body').text
+    
 
 @pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
 def test_accordion(server_url, browser, prefix):
