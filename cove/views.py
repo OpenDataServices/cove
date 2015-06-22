@@ -17,27 +17,17 @@ def get_releases_aggregates(json_data):
     release_dates = []
     earliest_release_date = None
     latest_release_date = None
-    table_data = {}
+    #table_data = {}
     if 'releases' in json_data:
         for release in json_data['releases']:
             # Gather all the ocids
-            ocids.append(release['ocid']) if 'ocid' in release else 0
+            if 'ocid' in release:
+                ocids.append(release['ocid'])
             
             #Gather all the release dates
-            release_dates.append(release['date']) if 'date' in release else 0
-            
-            # Some identifying data from a release that could be displayed in a table
-            generic_info = {}
-            if 'tender' in release:
-                if 'items' in release['tender']:
-                    if 'description' in release['tender']['items']:
-                        generic_info['description'] = release['tender']['items'][0]['description']
-            if 'buyer' in release:
-                if 'name' in release['buyer']:
-                    generic_info['buyer'] = release['buyer']['name']
-            if 'ocid' in release:
-                table_data[release['ocid']] = generic_info
-        
+            if 'date' in release:
+                release_dates.append(release['date'])
+ 
         # Find unique ocid's
         unique_ocids = set(ocids)
         
@@ -54,7 +44,6 @@ def get_releases_aggregates(json_data):
         'unique_ocids': unique_ocids,
         'earliest_release_date': earliest_release_date,
         'latest_release_date': latest_release_date,
-        'table_data': table_data
     }
 
 
@@ -63,40 +52,18 @@ def get_grants_aggregates(json_data):
     
     ids = []
     unique_ids = []
-    #release_dates = []
-    #earliest_release_date = None
-    #latest_release_date = None
-    table_data = {}
     if 'grants' in json_data:
         for grant in json_data['grants']:
             # Gather all the ocids
-            ids.append(grant['id']) if 'id' in grant else 0
-            
-            #Gather all the release dates
-            #release_dates.append(release['date']) if 'date' in release else 0
-            
-            # Some identifying data from a release that could be displayed in a table
-            generic_info = {}
-            generic_info['title'] = grant.get('title')
-            generic_info['amountAwarded'] = grant.get('amountAwarded')
-            generic_info['dateModified'] = grant.get('dateModified')
             if 'id' in grant:
-                table_data[grant['id']] = generic_info
+                ids.append(grant['id'])
             
         # Find unique ocid's
         unique_ids = set(ids)
-        
-        # Get the earliest and latest release dates found
-        #if release_dates:
-        #    earliest_release_date = min(release_dates)
-        #    latest_release_date = max(release_dates)
     
     return {
         'count': count,
-        'unique_ids': unique_ids,
-        #'earliest_release_date': earliest_release_date,
-        #'latest_release_date': latest_release_date,
-        'table_data': table_data
+        'unique_ids': unique_ids
     }
 
 
@@ -227,7 +194,8 @@ def explore(request, pk):  # NOQA # FIXME
             'converted_url': converted_url,
             'file_type': file_type,
             'schema_url': schema_url,
-            'validation_error_list': get_schema_validation_errors(json_data, schema_url) if schema_url else None
+            'validation_error_list': get_schema_validation_errors(json_data, schema_url) if schema_url else None,
+            'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
         }
 
         if request.current_app == 'cove-ocds':

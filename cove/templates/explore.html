@@ -107,16 +107,22 @@
       <thead>
         <tr>
           <th>ocid</th>
-          <th>tender:items:0:description</th>
+          <th>tender:items:[]:description</th>
           <th>buyer:name</th>
         </tr>
       </thead>
       <tbody>
-        {% for key, value in releases_aggregates.table_data.items %}
+        {% for release in json_data.releases %}
         <tr>
-          <td>{{ key }}</td>
-          <td>{{ value.description }}</td>
-          <td>{{ value.buyer }}</td>          
+          <td>{{ release.ocid }}</td>
+          <td>
+            <ul>
+              {% for item in release.tender.items %}
+                <li>{{ item.description }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>{{ release.buyer.name }}</td>          
         </tr>
         {% endfor %}
       </tbody>
@@ -165,12 +171,12 @@
         </tr>
       </thead>
       <tbody>
-        {% for key, value in grants_aggregates.table_data.items %}
+        {% for grant in json_data.grants %}
         <tr>
-          <td>{{ key }}</td>
-          <td>{{ value.title }}</td>
-          <td>{{ value.amountAwarded }}</td> 
-          <td>{{ value.dateModified }}</td>        
+          <td>{{ grant.id }}</td>
+          <td>{{ grant.title }}</td>
+          <td>{{ grant.amountAwarded }}</td> 
+          <td>{{ grant.dateModified }}</td>        
         </tr>
         {% endfor %}
       </tbody>
