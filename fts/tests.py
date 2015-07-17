@@ -20,6 +20,19 @@ def server_url(request, live_server):
         return live_server.url
 
 
+def test_index_page_banner(server_url, browser):
+    browser.get(server_url)
+    assert 'This tool is alpha. Please report any problems on GitHub issues.' in browser.find_element_by_tag_name('body').text
+    
+
+def test_index_page(server_url, browser):
+    browser.get(server_url)
+    assert 'CoVE' in browser.find_element_by_tag_name('body').text
+    assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
+    assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
+    assert 'Creating and using Open Data is made easier when there are good tools to help.' in browser.find_element_by_tag_name('body').text
+
+
 def test_index_page_ocds(server_url, browser):
     browser.get(server_url + '/ocds/')
     assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
