@@ -43,7 +43,7 @@ COVE_CONFIG_BY_NAMESPACE = {
     },
     'application_name': {
         'cove-ocds': _('Open Contracting Data Tool'),
-        'cove-360': _('360 Giving Data Tool'),
+        'cove-360': _('360Giving Data Tool'),
         'default': _('Cove'),
     },
     'schema_url': {  # Schema url for the package schema (does not yet exist for 360)
