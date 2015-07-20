@@ -28,11 +28,12 @@ def test_index_page_ocds(server_url, browser):
     
 def test_index_page_360(server_url, browser):
     browser.get(server_url + '/360/')
-    assert '360 Giving Data Tool' in browser.find_element_by_tag_name('body').text
-    assert 'How to use the 360 Giving Data Tool' in browser.find_element_by_tag_name('body').text
+    assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
+    assert 'How to use the 360Giving Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'Summary Spreadsheet - Excel' in browser.find_element_by_tag_name('body').text
-    assert 'JSON built to the 360 Giving Data Standard JSON schema' in browser.find_element_by_tag_name('body').text
+    assert 'JSON built to the 360Giving Data Standard JSON schema' in browser.find_element_by_tag_name('body').text
     assert 'Multi-table data package - Excel' in browser.find_element_by_tag_name('body').text
+    assert '360 Giving' not in browser.find_element_by_tag_name('body').text
 
 
 @pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
@@ -43,6 +44,7 @@ def test_common_index_elements(server_url, browser, prefix):
     assert 'Terms & Conditions' in browser.find_element_by_tag_name('body').text
     assert 'Open Data Services' in browser.find_element_by_tag_name('body').text
     assert 'Open Data Services Co-operative' not in browser.find_element_by_tag_name('body').text
+    assert '360 Giving' not in browser.find_element_by_tag_name('body').text
 
 
 @pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
@@ -50,6 +52,7 @@ def test_terms_page(server_url, browser, prefix):
     browser.get(server_url + prefix + 'terms/')
     assert 'Open Data Services Co-operative Limited' in browser.find_element_by_tag_name('body').text
     assert 'Open Data Services Limited' not in browser.find_element_by_tag_name('body').text
+    assert '360 Giving' not in browser.find_element_by_tag_name('body').text
     
 
 @pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
@@ -114,7 +117,8 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
         # # Look for Release Table
         # assert 'Release Table' in browser.find_element_by_tag_name('body').text
     elif prefix == '/360/':
-        assert '360 Giving Data Tool' in browser.find_element_by_tag_name('body').text
+        assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
+        assert '360 Giving' not in browser.find_element_by_tag_name('body').text
 
     if source_filename.endswith('.xlsx'):
         assert '(.xlsx) (Original)' in body_text
@@ -133,3 +137,4 @@ def test_URL_invalid_dataset_request(server_url, browser, prefix):
     # Test for a dataset that does not exist in the dataset. Not sure how we specify a UUID that will never be used again tho!
     browser.get(server_url + prefix + 'data/be0c2fd7-108b-4d78-bae2-5a8a096a8273')
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
+    assert '360 Giving' not in browser.find_element_by_tag_name('body').text
