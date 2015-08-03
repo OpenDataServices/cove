@@ -88,6 +88,8 @@ def test_accordion(server_url, browser, prefix):
     ('/ocds/', 'tenders_releases_2_releases.json', 'Save or Share these results'),
     # Conversion should still work for files that don't validate against the schema
     ('/ocds/', 'tenders_releases_2_releases_invalid.json', 'Download Files'),
+    # Test UTF-8 support
+    ('/ocds/', 'utf8.json', 'Download Files'),
     # But we expect to see an error message if a file is not well formed JSON at all
     ('/ocds/', 'tenders_releases_2_releases_not_json.json', 'not well formed JSON'),
     ('/ocds/', 'tenders_releases_2_releases.xlsx', 'Download Files'),

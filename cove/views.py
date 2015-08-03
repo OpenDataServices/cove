@@ -187,7 +187,7 @@ def explore(request, pk):  # NOQA # FIXME
         )
         json_path = converted_path
 
-    with open(json_path) as fp:
+    with open(json_path, encoding='utf-8') as fp:
         json_data = json.load(fp)
         schema_url = request.cove_config['schema_url']
 
