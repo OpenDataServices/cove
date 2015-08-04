@@ -41,3 +41,8 @@ show-open-if-noscript {
   list-style-type: none;
 
 }
+
+.thumbnail {
+ background-color: #f4f8fb;
+ text-align: center;
+ }

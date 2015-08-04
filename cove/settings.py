@@ -46,6 +46,11 @@ COVE_CONFIG_BY_NAMESPACE = {
         'cove-360': _('360Giving Data Tool'),
         'default': _('Cove'),
     },
+    'application_strapline': {
+        'cove-ocds': _('Convert, Validate, Explore Open Contracting Data'),
+        'cove-360': _('Convert, Validate, Explore 360Giving Data'),
+        'default': _('Convert, Validate, Explore'),
+    },
     'schema_url': {  # Schema url for the package schema (does not yet exist for 360)
         'cove-ocds': 'http://ocds.open-contracting.org/standard/r/1__0__RC/release-package-schema.json',
         'default': None

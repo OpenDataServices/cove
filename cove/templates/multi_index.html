@@ -5,7 +5,42 @@
 
 {% block content %}
 
-<h2><a href="{% url 'cove-360:index' %}">{% trans '360Giving Data Tool' %}</a></h2>
-<h2><a href="{% url 'cove-ocds:index' %}">{% trans 'Open Contracting Data Tool' %}</a></h2>
+<div class="row">
+  <div class="col-sm-6 col-md-6">
+    <div class="thumbnail">
+      {% load staticfiles %}
+      <img src="{% static 'dataexplore/360Giving-logo.png' %}"  width=200 height=200 alt="{% trans '360Giving Logo' %}">
+      <div class="caption">
+        <h3>{% trans '360Giving Data Standard' %}</h3>
+        <p>{% blocktrans %}360Giving provides support for grantmakers to publish their grants data openly, to understand their data, and to use the data to create online tools that make grant-making more effective.{% endblocktrans %}</p><br>
+        <p><a href="{% url 'cove-360:index' %}" class="btn btn-primary" role="button">{% trans '360Giving Data Tool' %}</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-md-6">
+    <div class="thumbnail">
+      {% load staticfiles %}
+      <img src="{% static 'dataexplore/lKMj_JJ4_400x400.jpeg' %}" width=200 height=200 alt="{% trans 'Open Contracting Logo' %}">
+      <div class="caption">
+        <h3>{% trans 'Open Contracting Data Standard' %}</h3>
+        <p>{% blocktrans %}The Open Contracting Data Standard promotes the effective use of contracting data, helping users to “follow the money”, and it provides a clear template for governments wishing to disclose their data.{% endblocktrans %}</p><br>
+        <p><a href="{% url 'cove-ocds:index' %}" class="btn btn-primary" role="button">{% trans 'Open Contracting Data Tool' %}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="jumbotron">
+    <p>{% trans 'Creating and using Open Data is made easier when there are good tools to help.' %}</p>
+    <p>{% trans 'CoVE exisits to help people:' %}</p>
+    <ul>
+      <li>{% trans 'Convert data between common formats (e.g. csv to json)' %}</li>
+      <li>{% trans 'Validate data against rules' %}</li>
+      <li>{% trans 'Explore data, that machines find easy, but humans find harder to read' %}</li>
+    </ul>
+   <!--<p>CoVE is pretty good at Converting right now, and we're working on Validation and Exploration all the time.</p>
+   <p>CoVE is currently designed to work with data built to the 360Giving and Open Contracting data standards.</p>-->
+</div>
 
 {% endblock %}
