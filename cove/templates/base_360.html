@@ -2,8 +2,8 @@
 {% load i18n %}
 
 {% block link %}
-<li><a href="http://threesixtygiving.org/">{% trans "Three Sixty Degree Giving" %}</a></li>
-<li><a href="http://docs.threesixtygiving.org/">{% trans "360Giving Data Standard" %}</a></li>
+<li><a href="http://www.threesixtygiving.org/">{% trans "360Giving" %}</a></li>
+<li><a href="http://www.threesixtygiving.org/standard/">{% trans "360Giving Data Standard" %}</a></li>
 {% endblock %}
 
 {% block howToUse %}
@@ -17,13 +17,12 @@
   
   <h3><small>{% blocktrans %}Formats{% endblocktrans %}</small></h3>
   <p>{% blocktrans %}
-  The application accepts data in some of the formats given in the <a href="http://docs.threesixtygiving.org/publish/">360Giving Data Standard publishing guidence</a> under <a href="http://docs.threesixtygiving.org/publish/#toc1">Choose your template</a>.
+  The application accepts data in some of the formats given in the <a href="http://www.threesixtygiving.org/standard/">360Giving Data Standard guidence</a>.
   <br>Acceptable files are: {% endblocktrans %}</p>
   <ul>
-    <li>{% blocktrans %}Summary Spreadsheet - <a href="http://docs.threesixtygiving.org/assets/standard/schema/summary-table/360-giving-schema-titles.xlsx">Excel</a>{% endblocktrans %}</li>
-    <!--<li>{% blocktrans %}Summary Spreadsheet - <a href="http://docs.threesixtygiving.org/assets/standard/schema/summary-table/360-giving-schema-titles.csv/Activity.csv">CSV</a>{% endblocktrans %}</li>-->
-    <li>{% blocktrans %}JSON built to the <a href="http://docs.threesixtygiving.org/docs/#json-schema">360Giving Data Standard JSON schema</a>{% endblocktrans %}</li>
-    <li>{% blocktrans %}Multi-table data package - <a href="http://docs.threesixtygiving.org/assets/standard/schema/multi-table/360-giving-schema-fields.xlsx">Excel</a>{% endblocktrans %}</li>
+    <li>{% blocktrans %}Summary Spreadsheet - <a href="https://github.com/ThreeSixtyGiving/standard/raw/master/schema/summary-table/360-giving-schema-titles.xlsx">Excel</a>, <a href="https://github.com/ThreeSixtyGiving/standard/raw/master/schema/summary-table/360-giving-schema-titles.csv/grants.csv">CSV</a>{% endblocktrans %}</li>
+    <li>{% blocktrans %}JSON built to the <a href="http://www.threesixtygiving.org/standard/reference/#toc-json-schema">360Giving Data Standard JSON schema</a>{% endblocktrans %}</li>
+    <li>{% blocktrans %}<a href="https://github.com/ThreeSixtyGiving/standard/raw/master/schema/multi-table/360-giving-schema-fields.xlsx">Multi-table data package - Excel</a>{% endblocktrans %}</li>
   </ul>
 </div>
 {% endblock %}
