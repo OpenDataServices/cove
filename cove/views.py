@@ -176,15 +176,23 @@ def explore(request, pk):  # NOQA # FIXME
         converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
         converted_url = '{}/unflattened.json'.format(data.upload_url())
         conversion = 'unflatten'
-        flattentool.unflatten(
-            input_name,
-            output_name=converted_path,
-            input_format=file_type,
-            main_sheet_name=request.cove_config['main_sheet_name'],
-            root_id=request.cove_config['root_id'],
-            schema=request.cove_config['item_schema_url'],
-            convert_titles=True
-        )
+        try:
+            flattentool.unflatten(
+                input_name,
+                output_name=converted_path,
+                input_format=file_type,
+                main_sheet_name=request.cove_config['main_sheet_name'],
+                root_id=request.cove_config['root_id'],
+                schema=request.cove_config['item_schema_url'],
+                convert_titles=True
+            )
+        except Exception as err:
+            return render(request, 'error.html', {
+                'sub_title': _("Sorry we can't process that data"),
+                'link': 'cove:index',
+                'link_text': _('Try Again'),
+                'msg': _('We think you tried to supply a spreadsheet, but we failed to convert it to JSON.\n\nError message: {}'.format(repr(err)))
+            })
         json_path = converted_path
 
     with open(json_path, encoding='utf-8') as fp:
