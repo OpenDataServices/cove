@@ -18,7 +18,7 @@ def server_url(request, live_server):
         return os.environ['CUSTOM_SERVER_URL']
     else:
         return live_server.url
-
+    
 
 def test_index_page_banner(server_url, browser):
     browser.get(server_url)
@@ -31,6 +31,34 @@ def test_index_page(server_url, browser):
     assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'Creating and using Open Data is made easier when there are good tools to help.' in browser.find_element_by_tag_name('body').text
+
+
+@pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
+    ('Open Contracting', 'What is Open Contracting?', 'div#page-what h1', 'http://www.open-contracting.org/'),
+    ('Open Contracting Data Standard', 'OPEN CONTRACTING DATA STANDARD (OCDS) PROJECT SITE', 'h1.site-title', 'http://standard.open-contracting.org/'),
+    ])
+def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector, url):
+    browser.get(server_url + '/ocds/')
+    link = browser.find_element_by_link_text(link_text)
+    href = link.get_attribute("href")
+    assert url in href
+    link.click()
+    time.sleep(0.5)
+    assert expected_text in browser.find_element_by_css_selector(css_selector).text
+
+
+@pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
+    ('360Giving', 'We believe that with better information, grantmakers can be more effective and strategic decision-makers.', 'body.home', 'http://www.threesixtygiving.org/'),
+    ('360Giving Data Standard', 'Standard', 'h1.entry-title', 'http://www.threesixtygiving.org/standard/'),
+    ])
+def test_footer_360(server_url, browser, link_text, expected_text, css_selector, url):
+    browser.get(server_url + '/360/')
+    link = browser.find_element_by_link_text(link_text)
+    href = link.get_attribute("href")
+    assert url in href
+    link.click()
+    time.sleep(0.5)
+    assert expected_text in browser.find_element_by_css_selector(css_selector).text
 
 
 def test_index_page_ocds(server_url, browser):
@@ -47,6 +75,19 @@ def test_index_page_360(server_url, browser):
     assert 'JSON built to the 360Giving Data Standard JSON schema' in browser.find_element_by_tag_name('body').text
     assert 'Multi-table data package - Excel' in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
+  
+  
+@pytest.mark.parametrize(('link_text', 'url'), [
+    ('360Giving Data Standard guidence', 'http://www.threesixtygiving.org/standard/'),
+    ('Excel', 'https://github.com/ThreeSixtyGiving/standard/raw/master/schema/summary-table/360-giving-schema-titles.xlsx'),
+    ('CSV', 'https://github.com/ThreeSixtyGiving/standard/raw/master/schema/summary-table/360-giving-schema-titles.csv/grants.csv'),
+    ('360Giving Data Standard JSON schema', 'http://www.threesixtygiving.org/standard/reference/#toc-json-schema'),
+    ('Multi-table data package - Excel', 'https://github.com/ThreeSixtyGiving/standard/raw/master/schema/multi-table/360-giving-schema-fields.xlsx')
+    ])
+def test_index_page_360_links(server_url, browser, link_text, url):
+    link = browser.find_element_by_link_text(link_text)
+    href = link.get_attribute("href")
+    assert url in href
 
 
 @pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
