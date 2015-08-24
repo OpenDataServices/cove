@@ -112,10 +112,12 @@ def test_accordion(server_url, browser, prefix):
     ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
     # Test a non-valid file. Currently csv is not supported
     ('/360/', 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
-    # Test a unconvertable sparesheet (main sheet "grants" is missing)
+    # Test a unconvertable spreadsheet (main sheet "grants" is missing)
     ('/360/', 'basic.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
-    # Test a unconvertable sparesheet (main sheet "releases" is missing)
+    # Test a unconvertable spreadsheet (main sheet "releases" is missing)
     ('/ocds/', 'WellcomeTrust-grants_2_grants.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
+    # Test unconvertable JSON (main sheet "releases" is missing)
+    pytest.mark.xfail(('/ocds/', 'unconvertable_json.json', 'could not be converted', False)),
     ])
 def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
