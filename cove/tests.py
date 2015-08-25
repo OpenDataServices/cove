@@ -99,7 +99,6 @@ def test_explore_unconvertable_spreadsheet(client):
 
 
 @pytest.mark.django_db
-@pytest.mark.xfail
 def test_explore_unconvertable_json(client):
     data = SuppliedData.objects.create()
     with open(os.path.join('cove', 'fixtures', 'unconvertable_json.json')) as fp:

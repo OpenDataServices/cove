@@ -117,7 +117,7 @@ def test_accordion(server_url, browser, prefix):
     # Test a unconvertable spreadsheet (main sheet "releases" is missing)
     ('/ocds/', 'WellcomeTrust-grants_2_grants.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
     # Test unconvertable JSON (main sheet "releases" is missing)
-    pytest.mark.xfail(('/ocds/', 'unconvertable_json.json', 'could not be converted', False)),
+    ('/ocds/', 'unconvertable_json.json', 'could not be converted', False),
     ])
 def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:

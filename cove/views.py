@@ -131,6 +131,7 @@ def explore(request, pk):  # NOQA # FIXME
             'msg': _('We did not recognise the file type.\n\nWe can only process json, csv and xlsx files.\n\nIs this a bug? Contact us on code [at] opendataservices.coop')
         })
 
+    conversion_error = None
     if file_type == 'json':
         converted_path = os.path.join(data.upload_dir(), 'flattened')
         converted_url = '{}/flattened'.format(data.upload_url())
@@ -161,6 +162,8 @@ def explore(request, pk):  # NOQA # FIXME
                 'link_text': _('Try Again'),
                 'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\nError message: {}'.format(err))
             })
+        except Exception as err:
+            conversion_error = repr(err)
         json_path = original_file.file.name
     else:
         if file_type == 'csv':
@@ -201,6 +204,7 @@ def explore(request, pk):  # NOQA # FIXME
 
         context = {
             'conversion': conversion,
+            'conversion_error': conversion_error,
             'original_file': original_file,
             'converted_url': converted_url,
             'file_type': file_type,
