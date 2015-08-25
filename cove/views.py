@@ -4,6 +4,7 @@ from cove.input.models import SuppliedData
 import os
 import shutil
 import json
+import logging
 import flattentool
 from flattentool.json_input import BadlyFormedJSONError
 import requests
@@ -11,6 +12,9 @@ from jsonschema.validators import Draft4Validator as validator
 from django.db.models.aggregates import Count
 from django.utils import timezone
 from datetime import timedelta
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_releases_aggregates(json_data):
@@ -163,6 +167,9 @@ def explore(request, pk):  # NOQA # FIXME
                 'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\nError message: {}'.format(err))
             })
         except Exception as err:
+            logger.exception(err, extra={
+                'request': request,
+                })
             conversion_error = repr(err)
         json_path = original_file.file.name
     else:
@@ -190,6 +197,9 @@ def explore(request, pk):  # NOQA # FIXME
                 convert_titles=True
             )
         except Exception as err:
+            logger.exception(err, extra={
+                'request': request,
+                })
             return render(request, 'error.html', {
                 'sub_title': _("Sorry we can't process that data"),
                 'link': 'cove:index',
