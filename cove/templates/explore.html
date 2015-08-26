@@ -11,7 +11,7 @@
 {% trans 'JSON' as JSON %}
 
 <!--Download Converted Files-->
-<div class="panel panel-success">
+<div class="panel {% if conversion_error %}panel-warning{% else %}panel-success{% endif %}">
   <div class="panel-heading">
     <h4 class="panel-title">
       <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{% trans 'Download Files' %}
@@ -21,10 +21,15 @@
   <div class="panel-body">
     {% if conversion == 'flatten' %}
       <ul>
+        <li><a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
+      {% if not conversion_error %}
         <li><a href="{{converted_url}}-titles.xlsx">{% blocktrans with file_format=xlsx_titles status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
         <li><a href="{{converted_url}}.xlsx">{% blocktrans with file_format=xlsx status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
-        <li><a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
-      </ul>    
+      {% endif %}
+      </ul>
+    {% if conversion_error %}
+        <p>The JSON could not be converted to Spreadsheet due to the error: {{ conversion_error }}
+    {% endif %}
     {% elif conversion == 'unflatten' %}
       <ul>
         <li><a href="{{original_file.url}}">

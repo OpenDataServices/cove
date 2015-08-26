@@ -4,6 +4,7 @@ from cove.input.models import SuppliedData
 import os
 import shutil
 import json
+import logging
 import flattentool
 from flattentool.json_input import BadlyFormedJSONError
 import requests
@@ -11,6 +12,9 @@ from jsonschema.validators import Draft4Validator as validator
 from django.db.models.aggregates import Count
 from django.utils import timezone
 from datetime import timedelta
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_releases_aggregates(json_data):
@@ -131,6 +135,7 @@ def explore(request, pk):  # NOQA # FIXME
             'msg': _('We did not recognise the file type.\n\nWe can only process json, csv and xlsx files.\n\nIs this a bug? Contact us on code [at] opendataservices.coop')
         })
 
+    conversion_error = None
     if file_type == 'json':
         converted_path = os.path.join(data.upload_dir(), 'flattened')
         converted_url = '{}/flattened'.format(data.upload_url())
@@ -161,6 +166,11 @@ def explore(request, pk):  # NOQA # FIXME
                 'link_text': _('Try Again'),
                 'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\nError message: {}'.format(err))
             })
+        except Exception as err:
+            logger.exception(err, extra={
+                'request': request,
+                })
+            conversion_error = repr(err)
         json_path = original_file.file.name
     else:
         if file_type == 'csv':
@@ -176,15 +186,26 @@ def explore(request, pk):  # NOQA # FIXME
         converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
         converted_url = '{}/unflattened.json'.format(data.upload_url())
         conversion = 'unflatten'
-        flattentool.unflatten(
-            input_name,
-            output_name=converted_path,
-            input_format=file_type,
-            main_sheet_name=request.cove_config['main_sheet_name'],
-            root_id=request.cove_config['root_id'],
-            schema=request.cove_config['item_schema_url'],
-            convert_titles=True
-        )
+        try:
+            flattentool.unflatten(
+                input_name,
+                output_name=converted_path,
+                input_format=file_type,
+                main_sheet_name=request.cove_config['main_sheet_name'],
+                root_id=request.cove_config['root_id'],
+                schema=request.cove_config['item_schema_url'],
+                convert_titles=True
+            )
+        except Exception as err:
+            logger.exception(err, extra={
+                'request': request,
+                })
+            return render(request, 'error.html', {
+                'sub_title': _("Sorry we can't process that data"),
+                'link': 'cove:index',
+                'link_text': _('Try Again'),
+                'msg': _('We think you tried to supply a spreadsheet, but we failed to convert it to JSON.\n\nError message: {}'.format(repr(err)))
+            })
         json_path = converted_path
 
     with open(json_path, encoding='utf-8') as fp:
@@ -193,6 +214,7 @@ def explore(request, pk):  # NOQA # FIXME
 
         context = {
             'conversion': conversion,
+            'conversion_error': conversion_error,
             'original_file': original_file,
             'converted_url': converted_url,
             'file_type': file_type,

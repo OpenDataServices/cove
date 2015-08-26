@@ -137,24 +137,30 @@ def test_accordion(server_url, browser, prefix):
     assert buttons() == [False, False, True]
 
 
-@pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text'), [
-    ('/ocds/', 'tenders_releases_2_releases.json', 'Download Files'),
-    ('/ocds/', 'tenders_releases_2_releases.json', 'Save or Share these results'),
+@pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text', 'conversion_successful'), [
+    ('/ocds/', 'tenders_releases_2_releases.json', 'Download Files', True),
+    ('/ocds/', 'tenders_releases_2_releases.json', 'Save or Share these results', True),
     # Conversion should still work for files that don't validate against the schema
-    ('/ocds/', 'tenders_releases_2_releases_invalid.json', 'Download Files'),
+    ('/ocds/', 'tenders_releases_2_releases_invalid.json', 'Download Files', True),
     # Test UTF-8 support
-    ('/ocds/', 'utf8.json', 'Download Files'),
+    ('/ocds/', 'utf8.json', 'Download Files', True),
     # But we expect to see an error message if a file is not well formed JSON at all
-    ('/ocds/', 'tenders_releases_2_releases_not_json.json', 'not well formed JSON'),
-    ('/ocds/', 'tenders_releases_2_releases.xlsx', 'Download Files'),
-    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Download Files'),
-    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Save or Share these results'),
+    ('/ocds/', 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
+    ('/ocds/', 'tenders_releases_2_releases.xlsx', 'Download Files', True),
+    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Download Files', True),
+    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Save or Share these results', True),
     # Test a 360 spreadsheet with titles, rather than fields
-    ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files'),
+    ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
     # Test a non-valid file. Currently csv is not supported
-    ('/360/', 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files'),
+    ('/360/', 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
+    # Test a unconvertable spreadsheet (main sheet "grants" is missing)
+    ('/360/', 'basic.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
+    # Test a unconvertable spreadsheet (main sheet "releases" is missing)
+    ('/ocds/', 'WellcomeTrust-grants_2_grants.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
+    # Test unconvertable JSON (main sheet "releases" is missing)
+    ('/ocds/', 'unconvertable_json.json', 'could not be converted', False),
     ])
-def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text):
+def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -180,10 +186,13 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
         assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
         assert '360 Giving' not in browser.find_element_by_tag_name('body').text
 
-    if source_filename.endswith('.xlsx'):
-        assert '(.xlsx) (Original)' in body_text
-    elif source_filename.endswith('.csv'):
-        assert '(.csv) (Original)' in body_text
+    if conversion_successful:
+        if source_filename.endswith('.json'):
+            assert 'JSON (Original)' in body_text
+        elif source_filename.endswith('.xlsx'):
+            assert '(.xlsx) (Original)' in body_text
+        elif source_filename.endswith('.csv'):
+            assert '(.csv) (Original)' in body_text
 
 
 @pytest.mark.parametrize(('prefix'), [
