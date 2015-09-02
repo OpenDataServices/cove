@@ -39,6 +39,7 @@ COVE_CONFIG_BY_NAMESPACE = {
     'base_template_name': {
         'cove-ocds': 'base_ocds.html',
         'cove-360': 'base_360.html',
+        'cove-resourceprojects': 'base_resourceprojects.html',
         'default': 'base_generic.html',
     },
     'application_name': {
@@ -105,6 +106,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'cove',
     'cove.input',
+    'cove.dataload',
     'raven.contrib.django.raven_compat',
 )
 

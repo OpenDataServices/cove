@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>DataSet</th>
+      <th>Fetched</th>
+      <th>Convert</th>
+      {% if mode >= 1 %}
+      <th>Validates</th>
+      {% endif %}
+      <th>Loaded to staging</th>
+      <th>Loaded to live</th>
+    </tr>
+  </tdead>
+  <tbody>
+    {% for dataset in datasets %}
+    <tr>
+      <td><a href="1">{{ dataset.name }}</a></td>
+      <td>{% if dataset.fetched %}<span class="label {% if dataset.fetched.success %}label-success{% else %}label-danger{% endif %}">{{ dataset.fetched.when }} mins ago {% if dataset.fetched.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.converted %}<span class="label {% if dataset.converted.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.converted.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.converted.when }} mins ago {% if dataset.converted.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      {% if mode >= 1 %}
+      <td>{% if dataset.validated %}<span class="label {% if dataset.validated.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.validated.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.validated.when }} mins ago {% if dataset.validated.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      {% endif %}
+      <td>{% if dataset.on_staging %}<span class="label {% if dataset.on_staging.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.on_staging.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.on_staging.when }} mins ago {% if dataset.on_staging.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.on_live %}<span class="label {% if dataset.on_live.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.on_live.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.on_live.when }} mins ago {% if dataset.on_live.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
