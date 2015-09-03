@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<p>
+Legend: <span class="label label-success">Up to date and OK</span> <span class="label label-danger">Up to date and Failed</span> <span class="label label-warning">Out of date</span>
+</p>
+
 <table class="table">
   <thead>
     <tr>
@@ -30,4 +34,11 @@
     {% endfor %}
   </tbody>
 </table>
+
+<!--<form action="../" method="get">-->
+<form method="get">
+<button type="submit" class="btn btn-default">
+  Add new dataset
+</button>
+</form>
 {% endblock %}

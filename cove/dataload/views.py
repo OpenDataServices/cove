@@ -47,7 +47,7 @@ MOCK_DATASETS = [
         'converted': {'success': True, 'when': 2},
         'on_staging': {'success': True, 'when': 1},
         'on_live': {'success': True, 'when': 18},
-    },
+    }
 ]
 for i, dataset in enumerate(MOCK_DATASETS):
     dataset['id'] = i
