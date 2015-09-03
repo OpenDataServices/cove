@@ -17,7 +17,7 @@
   <tbody>
     {% for dataset in datasets %}
     <tr>
-      <td><a href="1">{{ dataset.name }}</a></td>
+      <td><a href="{{dataset.id}}">{{ dataset.name }}</a></td>
       <td>{% if dataset.fetched %}<span class="label {% if dataset.fetched.success %}label-success{% else %}label-danger{% endif %}">{{ dataset.fetched.when }} mins ago {% if dataset.fetched.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
       <td>{% if dataset.converted %}<span class="label {% if dataset.converted.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.converted.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.converted.when }} mins ago {% if dataset.converted.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
       {% if mode >= 1 %}

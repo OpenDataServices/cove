@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>{{dataset.name}}</h2>
+
+<table class="table" style="width: auto">
+  <tbody>
+    <tr>
+      <th>Name</th>
+      <td>{{ dataset.name }}</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Source URL</th>
+      <td>http://something</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Fetch</th>
+      <td>{% if dataset.fetched %}<span class="label {% if dataset.fetched.success %}label-success{% else %}label-danger{% endif %}">{{ dataset.fetched.when }} mins ago {% if dataset.fetched.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td></td>
+      <td>
+        <button type="button" class="btn btn-default">
+          Fetch Now
+        </button>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Convert</th>
+      <td>{% if dataset.converted %}<span class="label {% if dataset.converted.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.converted.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.converted.when }} mins ago {% if dataset.converted.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td><a href="#">Conversion Messages</a></td>
+      <td>
+        <button type="button" class="btn btn-default">
+          Convert Now
+        </button>
+      </td>
+      <td></td>
+    </tr>
+    {% if mode >= 1 %}
+    <tr>
+      <th>Validate</th>
+      <td>{% if dataset.validated %}<span class="label {% if dataset.validated.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.validated.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.validated.when }} mins ago {% if dataset.validated.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td><a href="#">Validation Messages</a></td>
+      <td>
+        <button type="button" class="btn btn-default">
+          Validate Now
+        </button>
+      </td>
+      <td></td>
+    </tr>
+    {% endif %}
+    <tr>
+      <th>Staging</th>
+      <td>{% if dataset.on_staging %}<span class="label {% if dataset.on_staging.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.on_staging.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.on_staging.when }} mins ago {% if dataset.on_staging.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td><a href="#">View on Staging</a></td>
+      <td>
+        <button type="button" class="btn btn-default">
+          Push to Staging Now
+        </button>
+      </td>
+      <td>
+        <button type="button" class="btn btn-default">
+          Remove from Staging
+        </button>
+      </td>
+    </tr>
+    <tr>
+      <th>Live</th>
+      <td>{% if dataset.on_live %}<span class="label {% if dataset.on_live.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.on_live.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.on_live.when }} mins ago {% if dataset.on_live.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td><a href="#">View on Live</a></td>
+      <td>
+        <button type="button" class="btn btn-default">
+          Push to Live Now
+        </button>
+      </td>
+      <td>
+        <button type="button" class="btn btn-default">
+          Remove from Live
+        </button>
+      </td>
+  </tbody>
+</table>
+
+{% endblock %}

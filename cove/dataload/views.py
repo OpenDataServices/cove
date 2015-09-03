@@ -49,7 +49,13 @@ MOCK_DATASETS = [
         'on_live': {'success': True, 'when': 18},
     },
 ]
+for i, dataset in enumerate(MOCK_DATASETS):
+    dataset['id'] = i
 
 
 def dataload(request):
     return render(request, "dataload.html", {'mode': int(request.GET.get('mode', 0)), 'datasets': MOCK_DATASETS})
+
+
+def dataset(request, id):
+    return render(request, "dataset.html", {'mode': int(request.GET.get('mode', 0)), 'dataset': MOCK_DATASETS[int(id)]})
