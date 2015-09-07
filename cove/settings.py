@@ -73,6 +73,10 @@ COVE_CONFIG_BY_NAMESPACE = {
     'convert_titles': {
         'cove-360': True,
         'default': False
+    },
+    'input_methods': {
+        'default': ['upload', 'url', 'text'],
+        'cove-resourceprojects': ['upload', 'url']
     }
 }
 
