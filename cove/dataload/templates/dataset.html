@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<a href="{% url 'cove:dataload' %}">&lt;- Back to dashboard</a>
+
 <h2>{{dataset.name}}</h2>
 
 <table class="table" style="width: auto">
@@ -15,72 +17,67 @@
     </tr>
     <tr>
       <th>Source URL</th>
-      <td>http://something</td>
+      <td><a href="{{ dataset.supplied_data.source_url }}">{{ dataset.supplied_data.source_url }}</a></td>
       <td></td>
       <td></td>
       <td></td>
     </tr>
     <tr>
       <th>Fetch</th>
-      <td>{% if dataset.fetched %}<span class="label {% if dataset.fetched.success %}label-success{% else %}label-danger{% endif %}">{{ dataset.fetched.when }} mins ago {% if dataset.fetched.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.fetch %}<span class="label {% if dataset.most_recent_process_by_type.fetch.successful %}label-success{% else %}label-danger{% endif %}">{{ dataset.most_recent_process_by_type.fetch.datetime }} {% if dataset.most_recent_process_by_type.fetch.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
       <td></td>
       <td>
-        <button type="button" class="btn btn-default">
+        <form action="fetch" method="post">{% csrf_token %}
+        <button type="submit" class="btn btn-default">
           Fetch Now
         </button>
+        </form>
       </td>
       <td></td>
     </tr>
     <tr>
       <th>Convert</th>
-      <td>{% if dataset.converted %}<span class="label {% if dataset.converted.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.converted.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.converted.when }} mins ago {% if dataset.converted.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.convert %}<span class="label {% if dataset.most_recent_process_by_type.convert.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.convert.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.convert.datetime }} {% if dataset.most_recent_process_by_type.convert.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
       <td><a href="#">Conversion Messages</a></td>
       <td>
-        <button type="button" class="btn btn-default">
+        <form action="convert" method="post"">{% csrf_token %}
+        <button type="submit" class="btn btn-default">
           Convert Now
         </button>
+        </form>
       </td>
       <td></td>
     </tr>
-    {% if mode >= 1 %}
-    <tr>
-      <th>Validate</th>
-      <td>{% if dataset.validated %}<span class="label {% if dataset.validated.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.validated.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.validated.when }} mins ago {% if dataset.validated.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td><a href="#">Validation Messages</a></td>
-      <td>
-        <button type="button" class="btn btn-default">
-          Validate Now
-        </button>
-      </td>
-      <td></td>
-    </tr>
-    {% endif %}
     <tr>
       <th>Staging</th>
-      <td>{% if dataset.on_staging %}<span class="label {% if dataset.on_staging.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.on_staging.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.on_staging.when }} mins ago {% if dataset.on_staging.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.staging %}<span class="label {% if dataset.most_recent_process_by_type.staging.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.staging.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.staging.datetime }} {% if dataset.most_recent_process_by_type.staging.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
       <td><a href="#">View on Staging</a></td>
       <td>
-        <button type="button" class="btn btn-default">
+        <form action="staging" method="post"">{% csrf_token %}
+        <button type="submit" class="btn btn-default">
           Push to Staging Now
         </button>
+        </form>
       </td>
       <td>
-        <button type="button" class="btn btn-default">
+        <button type="submit" class="btn btn-default">
           Remove from Staging
         </button>
       </td>
     </tr>
     <tr>
       <th>Live</th>
-      <td>{% if dataset.on_live %}<span class="label {% if dataset.on_live.when > dataset.fetched.when %}label-warning{% else %}{% if dataset.on_live.success %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.on_live.when }} mins ago {% if dataset.on_live.success %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.live %}<span class="label {% if dataset.most_recent_process_by_type.live.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.live.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.live.datetime }} {% if dataset.most_recent_process_by_type.live.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
       <td><a href="#">View on Live</a></td>
       <td>
-        <button type="button" class="btn btn-default">
+        <form action="live" method="post"">{% csrf_token %}
+        <button type="submit" class="btn btn-default">
           Push to Live Now
         </button>
+        </form>
       </td>
       <td>
-        <button type="button" class="btn btn-default">
+        <button type="submit" class="btn btn-default">
           Remove from Live
         </button>
       </td>

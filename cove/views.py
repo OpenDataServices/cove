@@ -104,6 +104,10 @@ def get_file_type(django_file):
 
 
 def explore(request, pk):  # NOQA # FIXME
+    if request.current_app == 'cove-resourceprojects':
+        import cove.dataload.views
+        return cove.dataload.views.data(request, pk)
+
     try:
         data = SuppliedData.objects.get(pk=pk)
         original_file = data.original_file

@@ -1,61 +1,33 @@
-from django.shortcuts import render
-
-MOCK_DATASETS = [
-    {
-        'name': 'Dataset 1',
-        'fetched': {'success': True, 'when': 6},
-        'converted': {'success': True, 'when': 5},
-        'on_staging': {'success': True, 'when': 4},
-        'on_live': {'success': True, 'when': 3},
-    },
-    {
-        'name': 'Dataset 2',
-        'fetched': {'success': False, 'when': 10},
-    },
-    {
-        'name': 'Dataset 3',
-        'fetched': {'success': True, 'when': 8},
-        'converted': {'success': False, 'when': 7},
-    },
-    {
-        'name': 'Dataset 4',
-        'fetched': {'success': True, 'when': 1},
-        'converted': {'success': True, 'when': 20},
-        'on_staging': {'success': True, 'when': 19},
-        'on_live': {'success': True, 'when': 18},
-    },
-    {
-        'name': 'Dataset 5',
-        'fetched': {'success': True, 'when': 6},
-        'converted': {'success': False, 'when': 5},
-    },
-    {
-        'name': 'Dataset 6',
-        'fetched': {'success': True, 'when': 1},
-        'converted': {'success': False, 'when': 2},
-    },
-    {
-        'name': 'Dataset 7',
-        'fetched': {'success': True, 'when': 3},
-        'converted': {'success': True, 'when': 2},
-        'on_staging': {'success': True, 'when': 19},
-        'on_live': {'success': True, 'when': 18},
-    },
-    {
-        'name': 'Dataset 8',
-        'fetched': {'success': True, 'when': 3},
-        'converted': {'success': True, 'when': 2},
-        'on_staging': {'success': True, 'when': 1},
-        'on_live': {'success': True, 'when': 18},
-    }
-]
-for i, dataset in enumerate(MOCK_DATASETS):
-    dataset['id'] = i
+from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
+from cove.input.models import SuppliedData
+from cove.dataload.models import Dataset, Process
 
 
 def dataload(request):
-    return render(request, "dataload.html", {'mode': int(request.GET.get('mode', 0)), 'datasets': MOCK_DATASETS})
+    return render(request, "dataload.html", {
+        'datasets': Dataset.objects.all()
+    })
 
 
-def dataset(request, id):
-    return render(request, "dataset.html", {'mode': int(request.GET.get('mode', 0)), 'dataset': MOCK_DATASETS[int(id)]})
+def data(request, pk):
+    supplied_data = SuppliedData.objects.get(pk=pk)
+    try:
+        dataset = supplied_data.dataset
+    except Dataset.DoesNotExist:
+        dataset = Dataset.objects.create(supplied_data=supplied_data)
+    return redirect(reverse('cove:dataload_dataset', args=(dataset.pk,), current_app=request.current_app))
+
+
+def run_process(request, pk, process_name):
+    Process.objects.create(
+        type=process_name,
+        dataset=Dataset.objects.get(pk=pk)
+    )
+    return redirect(reverse('cove:dataload_dataset', args=(pk,), current_app=request.current_app))
+
+
+def dataset(request, pk):
+    return render(request, "dataset.html", {
+        'dataset': Dataset.objects.get(pk=pk),
+    })
