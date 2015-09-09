@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block content %}
 
 <a href="{% url 'cove:dataload' %}">&lt;- Back to dashboard</a>
@@ -24,11 +24,11 @@
     </tr>
     <tr>
       <th>Fetch</th>
-      <td>{% if dataset.most_recent_process_by_type.fetch %}<span class="label {% if dataset.most_recent_process_by_type.fetch.successful %}label-success{% else %}label-danger{% endif %}">{{ dataset.most_recent_process_by_type.fetch.datetime }} {% if dataset.most_recent_process_by_type.fetch.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.fetch %}<span class="label {% if dataset.most_recent_process_by_type.fetch.successful %}label-success{% else %}label-danger{% endif %}">{{ dataset.most_recent_process_by_type.fetch.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.fetch.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
       <td></td>
       <td>
         <form action="fetch" method="post">{% csrf_token %}
-        <button type="submit" class="btn btn-default">
+        <button type="submit" class="btn btn-default fetch">
           Fetch Now
         </button>
         </form>
@@ -37,11 +37,11 @@
     </tr>
     <tr>
       <th>Convert</th>
-      <td>{% if dataset.most_recent_process_by_type.convert %}<span class="label {% if dataset.most_recent_process_by_type.convert.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.convert.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.convert.datetime }} {% if dataset.most_recent_process_by_type.convert.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.convert %}<span class="label {% if dataset.most_recent_process_by_type.convert.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.convert.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.convert.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.convert.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
       <td><a href="#">Conversion Messages</a></td>
       <td>
         <form action="convert" method="post"">{% csrf_token %}
-        <button type="submit" class="btn btn-default">
+        <button type="submit" class="btn btn-default convert">
           Convert Now
         </button>
         </form>
@@ -50,34 +50,34 @@
     </tr>
     <tr>
       <th>Staging</th>
-      <td>{% if dataset.most_recent_process_by_type.staging %}<span class="label {% if dataset.most_recent_process_by_type.staging.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.staging.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.staging.datetime }} {% if dataset.most_recent_process_by_type.staging.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.staging %}<span class="label {% if dataset.most_recent_process_by_type.staging.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.staging.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.staging.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.staging.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
       <td><a href="#">View on Staging</a></td>
       <td>
         <form action="staging" method="post"">{% csrf_token %}
-        <button type="submit" class="btn btn-default">
+        <button type="submit" class="btn btn-default staging-push">
           Push to Staging Now
         </button>
         </form>
       </td>
       <td>
-        <button type="submit" class="btn btn-default">
+        <button type="submit" class="btn btn-default staging-remove">
           Remove from Staging
         </button>
       </td>
     </tr>
     <tr>
       <th>Live</th>
-      <td>{% if dataset.most_recent_process_by_type.live %}<span class="label {% if dataset.most_recent_process_by_type.live.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.live.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.live.datetime }} {% if dataset.most_recent_process_by_type.live.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.live %}<span class="label {% if dataset.most_recent_process_by_type.live.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.live.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.live.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.live.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
       <td><a href="#">View on Live</a></td>
       <td>
         <form action="live" method="post"">{% csrf_token %}
-        <button type="submit" class="btn btn-default">
+        <button type="submit" class="btn btn-default live-push">
           Push to Live Now
         </button>
         </form>
       </td>
       <td>
-        <button type="submit" class="btn btn-default">
+        <button type="submit" class="btn btn-default live-remove">
           Remove from Live
         </button>
       </td>

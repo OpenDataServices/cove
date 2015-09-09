@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block content %}
 <p>
 Legend: <span class="label label-success">Up to date and OK</span> <span class="label label-danger">Up to date and Failed</span> <span class="label label-warning">Out of date</span>
@@ -20,10 +20,10 @@ Legend: <span class="label label-success">Up to date and OK</span> <span class="
     {% for dataset in datasets %}
     <tr>
       <td><a href="{{dataset.id}}">{{ dataset.name }}</a></td>
-      <td>{% if dataset.most_recent_process_by_type.fetch %}<span class="label {% if dataset.most_recent_process_by_type.fetch.successful %}label-success{% else %}label-danger{% endif %}">{{ dataset.most_recent_process_by_type.fetch.datetime }} {% if dataset.most_recent_process_by_type.fetch.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td>{% if dataset.most_recent_process_by_type.convert %}<span class="label {% if dataset.most_recent_process_by_type.convert.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.convert.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.convert.datetime }} {% if dataset.most_recent_process_by_type.convert.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td>{% if dataset.most_recent_process_by_type.staging %}<span class="label {% if dataset.most_recent_process_by_type.staging.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.staging.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.staging.datetime }} {% if dataset.most_recent_process_by_type.staging.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td>{% if dataset.most_recent_process_by_type.live %}<span class="label {% if dataset.most_recent_process_by_type.live.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.live.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.live.datetime }} {% if dataset.most_recent_process_by_type.live.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.fetch %}<span class="label {% if dataset.most_recent_process_by_type.fetch.successful %}label-success{% else %}label-danger{% endif %}">{{ dataset.most_recent_process_by_type.fetch.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.fetch.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.convert %}<span class="label {% if dataset.most_recent_process_by_type.convert.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.convert.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.convert.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.convert.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.staging %}<span class="label {% if dataset.most_recent_process_by_type.staging.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.staging.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.staging.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.staging.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
+      <td>{% if dataset.most_recent_process_by_type.live %}<span class="label {% if dataset.most_recent_process_by_type.live.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.live.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.live.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.live.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
       <td></td>
     </tr>
     {% endfor %}
