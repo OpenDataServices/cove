@@ -1,5 +1,6 @@
 Django==1.8.4
 -e git+https://github.com/OpenDataServices/flatten-tool.git@61d8404b444f10384363cde1cad542a0d04af004#egg=flattentool
+-e git+https://github.com/NRGI/resource-projects-etl.git@90b17771bf4e0f8a9d9e582467969ca1f4a7f8bb
 django-bootstrap3==5.4.0
 django-debug-toolbar==1.3.0
 requests==2.7.0
