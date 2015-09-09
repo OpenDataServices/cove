@@ -16,7 +16,7 @@ class Dataset(models.Model):
         return self.supplied_data.original_file.name
 
     def most_recent_process_by_type(self):
-        return {type_: Process.objects.filter(type=type_).order_by('-datetime').first() for type_, type_name in PROCESS_CHOICES}
+        return {type_: self.process_set.filter(type=type_).order_by('-datetime').first() for type_, type_name in PROCESS_CHOICES}
 
 
 class Process(models.Model):
