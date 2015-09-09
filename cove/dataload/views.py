@@ -4,7 +4,13 @@ from cove.input.models import SuppliedData
 from cove.dataload.models import Dataset, Process
 from django.http import Http404
 from taglifter import TagLifter
+from functools import partial
 import os
+##requests doesn't work with large files, see below
+#import requests
+#from requests.auth import HTTPDigestAuth
+import subprocess
+import urllib.parse
 
 
 def dataload(request):
@@ -33,29 +39,53 @@ def convert(dataset):
         base="http://resourceprojects.org/",
         source_meta={"author": "TODO", "Source_Type": "official", "Converted": "Today"}
     )
-
     tl.build_graph()
     tl.graph.serialize(
         format='turtle',
         destination=os.path.join(dataset.supplied_data.upload_dir(), 'output.ttl')
     )
-    pass
 
 
-def staging(dataset):
-    pass
+def put_to_virtuoso(dataset, staging):
+    ttl_filename = os.path.join(dataset.supplied_data.upload_dir(), 'output.ttl')
+    prefix = 'staging.' if staging else ''
+    graphuri = 'http://{}resourceprojects.org/{}'.format(prefix, dataset.supplied_data.pk)
 
+    # Call curl in a subprocess, as requests doesn't work with large files.
+    #
+    # Security considerations:
+    # Beware adding user input to this call. check_call has shell=False by
+    # default, which means it's not possible to eascape the shell. However,
+    # user input could pass extra arguments / sensitive files to curl, so we
+    # should be careful:
+    # * ttl_filename is not from user input, so should be safe
+    # * graphuri is urlencoded, so should be safe
+    subprocess.check_call([
+        'curl',
+        '-T',
+        ttl_filename,
+        'http://localhost:8890/sparql-graph-crud-auth?' + urllib.parse.urlencode({'graph': graphuri}),
+        '--digest',
+        '--user',
+        'dba:{}'.format(os.environ['DBA_PASS'])
+    ])
 
-def live(dataset):
-    pass
+    # This requests code doesn't work for files larger than about 1MB
+    #with open(os.path.join(data_dir, f), 'rb') as fp:
+    #    r = requests.put('http://localhost:8890/sparql-graph-crud-auth',
+    #    #'http://requestb.in/1mfng7t1',
+    #        params = {'graph': graphuri},
+    #        auth=HTTPDigestAuth('dba', os.environ['DBA_PASS']),
+    #        data=fp
+    #    )
 
 
 def run_process(request, pk, process_type):
     processes = {
         'fetch': fetch,
         'convert': convert,
-        'staging': staging,
-        'live': live
+        'staging': partial(put_to_virtuoso, staging=True),
+        'live': partial(put_to_virtuoso, staging=False),
     }
     if process_type in processes:
         dataset = Dataset.objects.get(pk=pk)
