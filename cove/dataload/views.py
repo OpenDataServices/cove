@@ -64,7 +64,7 @@ def put_to_virtuoso(dataset, staging):
         'curl',
         '-T',
         ttl_filename,
-        'http://localhost:8890/sparql-graph-crud-auth?' + urllib.parse.urlencode({'graph': graphuri}),
+        'http://virtuoso:8890/sparql-graph-crud-auth?' + urllib.parse.urlencode({'graph': graphuri}),
         '--digest',
         '--user',
         'dba:{}'.format(os.environ['DBA_PASS'])
