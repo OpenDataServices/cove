@@ -79,6 +79,14 @@ def put_to_virtuoso(dataset, staging):
     #        data=fp
     #    )
 
+    # We're using shell=True here (and running virutoso SQL directly!), so must
+    # trust prefix and graphuri. The only outside input to this is the pk used
+    # to construct graphuri, which is not user editable. We must ensure this
+    # continues to be the case.
+    subprocess.check_call('''
+        echo "DB.DBA.RDF_GRAPH_GROUP_INS('http://{}resourceprojects.org/data/', '{}');" | isql virtuoso \
+        '''.format(prefix, graphuri), shell=True)
+
 
 def run_process(request, pk, process_type):
     processes = {
