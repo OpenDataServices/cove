@@ -34,7 +34,7 @@ def fetch(dataset):
 
 def convert(dataset):
     tl = TagLifter(
-        ontology=".ve/src/taglifter/ontology/resource-projects-ontology.rdf",
+        ontology=".ve/src/resource-projects-etl/ontology/resource-projects-ontology.rdf",
         source=dataset.supplied_data.original_file.file.name,
         base="http://resourceprojects.org/",
         source_meta={"author": "TODO", "Source_Type": "official", "Converted": "Today"}
