@@ -6,6 +6,7 @@ import shutil
 import json
 import logging
 import flattentool
+import functools
 from flattentool.json_input import BadlyFormedJSONError
 import requests
 from jsonschema.validators import Draft4Validator as validator
@@ -84,8 +85,33 @@ def get_schema_validation_errors(json_data, schema_url):
     return validation_error_list
     
 
-class UnrecognisedFileType(Exception):
-    pass
+class CoveInputDataError(Exception):
+    """
+    An error that we think is due to the data input by the user, rather than a
+    bug in the application.
+    """
+    def __init__(self, context=None):
+        if context:
+            self.context = context
+
+    @staticmethod
+    def error_page(func):
+        @functools.wraps(func)
+        def wrapper(request, *args, **kwargs):
+            try:
+                return func(request, *args, **kwargs)
+            except CoveInputDataError as err:
+                return render(request, 'error.html', context=err.context)
+        return wrapper
+
+
+class UnrecognisedFileType(CoveInputDataError):
+    context = {
+        'sub_title': _("Sorry we can't process that data"),
+        'link': 'cove:index',
+        'link_text': _('Try Again'),
+        'msg': _('We did not recognise the file type.\n\nWe can only process json, csv and xlsx files.\n\nIs this a bug? Contact us on code [at] opendataservices.coop')
+    }
 
 
 def get_file_type(django_file):
@@ -103,10 +129,88 @@ def get_file_type(django_file):
             raise UnrecognisedFileType
 
 
-def explore(request, pk):  # NOQA # FIXME
+def convert_json(request, data):
+    converted_path = os.path.join(data.upload_dir(), 'flattened')
+    flatten_kwargs = dict(
+        output_name=converted_path,
+        main_sheet_name=request.cove_config['main_sheet_name'],
+        root_list_path=request.cove_config['main_sheet_name'],
+        root_id=request.cove_config['root_id'],
+        schema=request.cove_config['item_schema_url'],
+    )
+    if request.cove_config['convert_titles']:
+        flatten_kwargs.update(dict(
+            output_name=converted_path + '-titles',
+            use_titles=True
+        ))
+    try:
+        flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+    except BadlyFormedJSONError as err:
+        raise CoveInputDataError(context={
+            'sub_title': _("Sorry we can't process that data"),
+            'link': 'cove:index',
+            'link_text': _('Try Again'),
+            'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\nError message: {}'.format(err))
+        })
+    except Exception as err:
+        logger.exception(err, extra={
+            'request': request,
+            })
+        return {
+            'conversion': 'flatten',
+            'conversion_error': repr(err)
+        }
+    return {
+        'conversion': 'flatten',
+        'converted_path': converted_path,
+        'converted_url': '{}/flattened'.format(data.upload_url())
+    }
+
+
+def convert_spreadsheet(request, data, file_type):
+    converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
+    if file_type == 'csv':
+        # flatten-tool expects a directory full of CSVs with file names
+        # matching what xlsx titles would be.
+        # If only one upload file is specified, we rename it and move into
+        # a new directory, such that it fits this pattern.
+        input_name = os.path.join(data.upload_dir(), 'csv_dir')
+        os.makedirs(input_name, exist_ok=True)
+        shutil.copy(data.original_file.file.name, os.path.join(input_name, request.cove_config['main_sheet_name'] + '.csv'))
+    else:
+        input_name = data.original_file.file.name
+    try:
+        flattentool.unflatten(
+            input_name,
+            output_name=converted_path,
+            input_format=file_type,
+            main_sheet_name=request.cove_config['main_sheet_name'],
+            root_id=request.cove_config['root_id'],
+            schema=request.cove_config['item_schema_url'],
+            convert_titles=True
+        )
+    except Exception as err:
+        logger.exception(err, extra={
+            'request': request,
+            })
+        raise CoveInputDataError({
+            'sub_title': _("Sorry we can't process that data"),
+            'link': 'cove:index',
+            'link_text': _('Try Again'),
+            'msg': _('We think you tried to supply a spreadsheet, but we failed to convert it to JSON.\n\nError message: {}'.format(repr(err)))
+        })
+
+    return {
+        'conversion': 'unflatten',
+        'converted_path': converted_path,
+        'converted_url': '{}/unflattened.json'.format(data.upload_url())
+    }
+
+
+@CoveInputDataError.error_page
+def explore(request, pk):
     try:
         data = SuppliedData.objects.get(pk=pk)
-        original_file = data.original_file
     except (SuppliedData.DoesNotExist, ValueError):  # Catches: Primary key does not exist, and, badly formed hexadecimal UUID string
         return render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
@@ -116,7 +220,7 @@ def explore(request, pk):  # NOQA # FIXME
             }, status=404)
     
     try:
-        original_file.file.name
+        data.original_file.file.name
     except FileNotFoundError:
         return render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
@@ -125,103 +229,27 @@ def explore(request, pk):  # NOQA # FIXME
             'msg': _('The data you were hoping to explore no longer exists.\n\nThis is because all data suplied to this website is automatically deleted after 7 days, and therefore the analysis of that data is no longer available.')
         }, status=404)
     
-    try:
-        file_type = get_file_type(original_file)
-    except UnrecognisedFileType:
-        return render(request, 'error.html', {
-            'sub_title': _("Sorry we can't process that data"),
-            'link': 'cove:index',
-            'link_text': _('Try Again'),
-            'msg': _('We did not recognise the file type.\n\nWe can only process json, csv and xlsx files.\n\nIs this a bug? Contact us on code [at] opendataservices.coop')
-        })
+    file_type = get_file_type(data.original_file)
 
-    conversion_error = None
+    context = {}
+
     if file_type == 'json':
-        converted_path = os.path.join(data.upload_dir(), 'flattened')
-        converted_url = '{}/flattened'.format(data.upload_url())
-        conversion = 'flatten'
-        try:
-            flattentool.flatten(
-                original_file.file.name,
-                output_name=converted_path,
-                main_sheet_name=request.cove_config['main_sheet_name'],
-                root_list_path=request.cove_config['main_sheet_name'],
-                root_id=request.cove_config['root_id'],
-                schema=request.cove_config['item_schema_url'],
-            )
-            if request.cove_config['convert_titles']:
-                flattentool.flatten(
-                    original_file.file.name,
-                    output_name=converted_path + '-titles',
-                    main_sheet_name=request.cove_config['main_sheet_name'],
-                    root_list_path=request.cove_config['main_sheet_name'],
-                    root_id=request.cove_config['root_id'],
-                    schema=request.cove_config['item_schema_url'],
-                    use_titles=True
-                )
-        except BadlyFormedJSONError as err:
-            return render(request, 'error.html', {
-                'sub_title': _("Sorry we can't process that data"),
-                'link': 'cove:index',
-                'link_text': _('Try Again'),
-                'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\nError message: {}'.format(err))
-            })
-        except Exception as err:
-            logger.exception(err, extra={
-                'request': request,
-                })
-            conversion_error = repr(err)
-        json_path = original_file.file.name
+        context.update(convert_json(request, data))
+        json_path = data.original_file.file.name
     else:
-        if file_type == 'csv':
-            # flatten-tool expects a directory full of CSVs with file names
-            # matching what xlsx titles would be.
-            # If only one upload file is specified, we rename it and move into
-            # a new directory, such that it fits this pattern.
-            input_name = os.path.join(data.upload_dir(), 'csv_dir')
-            os.makedirs(input_name, exist_ok=True)
-            shutil.copy(original_file.file.name, os.path.join(input_name, request.cove_config['main_sheet_name'] + '.csv'))
-        else:
-            input_name = original_file.file.name
-        converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
-        converted_url = '{}/unflattened.json'.format(data.upload_url())
-        conversion = 'unflatten'
-        try:
-            flattentool.unflatten(
-                input_name,
-                output_name=converted_path,
-                input_format=file_type,
-                main_sheet_name=request.cove_config['main_sheet_name'],
-                root_id=request.cove_config['root_id'],
-                schema=request.cove_config['item_schema_url'],
-                convert_titles=True
-            )
-        except Exception as err:
-            logger.exception(err, extra={
-                'request': request,
-                })
-            return render(request, 'error.html', {
-                'sub_title': _("Sorry we can't process that data"),
-                'link': 'cove:index',
-                'link_text': _('Try Again'),
-                'msg': _('We think you tried to supply a spreadsheet, but we failed to convert it to JSON.\n\nError message: {}'.format(repr(err)))
-            })
-        json_path = converted_path
+        context.update(convert_spreadsheet(request, data, file_type))
+        json_path = context['converted_path']
 
     with open(json_path, encoding='utf-8') as fp:
         json_data = json.load(fp)
         schema_url = request.cove_config['schema_url']
 
-        context = {
-            'conversion': conversion,
-            'conversion_error': conversion_error,
-            'original_file': original_file,
-            'converted_url': converted_url,
+        context.update({
             'file_type': file_type,
             'schema_url': schema_url,
             'validation_error_list': get_schema_validation_errors(json_data, schema_url) if schema_url else None,
             'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
-        }
+        })
 
         if request.current_app == 'cove-ocds':
             context['releases_aggregates'] = get_releases_aggregates(json_data)
