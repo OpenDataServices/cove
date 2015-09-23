@@ -20,28 +20,47 @@
       
   <div class="panel-body">
     {% if conversion == 'flatten' %}
+      
       <ul>
-        <li><a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
-      {% if not conversion_error %}
-        <li><a href="{{converted_url}}-titles.xlsx">{% blocktrans with file_format=xlsx_titles status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
-        <li><a href="{{converted_url}}.xlsx">{% blocktrans with file_format=xlsx status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
-      {% endif %}
+        <li>
+          <a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{original_file.size|filesizeformat }}
+        </li>
+        {% if not conversion_error %}
+          <li>
+            <a href="{{converted_url}}.xlsx">{% blocktrans with file_format=xlsx status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{converted_file_size|filesizeformat }}
+          </li>
+          <!--Only show for 360Giving files-->
+          {% if request.cove_config.convert_titles %}
+            <li>
+              <a href="{{converted_url}}-titles.xlsx">{% blocktrans with file_format=xlsx_titles status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{converted_file_size_titles|filesizeformat }}
+            </li>
+          {% endif %}
+        {% endif %}
       </ul>
-    {% if conversion_error %}
-        <p>The JSON could not be converted to Spreadsheet due to the error: {{ conversion_error }}
-    {% endif %}
+      {% if conversion_error %}
+          <p>The JSON could not be converted to Spreadsheet due to the error: {{ conversion_error }}
+      {% endif %}
+    
     {% elif conversion == 'unflatten' %}
+    
       <ul>
-        <li><a href="{{original_file.url}}">
+        <li>
+          <a href="{{original_file.url}}">
             {% if file_type == 'xlsx' %}
                 {% blocktrans with file_format=xlsx status=original %}{{file_format}} ({{status}}){% endblocktrans %}
             {% elif file_type == 'csv' %}
                 {% blocktrans with file_format=csv status=original %}{{file_format}} ({{status}}){% endblocktrans %}
             {% endif %}
-            </a></li>
-        <li><a href="{{converted_url}}">{% blocktrans with file_format=JSON status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a></li>
+            </a> 
+            {{original_file.size|filesizeformat }}
+          </li>
+          <li>
+            <a href="{{converted_url}}">{% blocktrans with file_format=JSON status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{converted_file_size|filesizeformat }}
+          </li>
       </ul>
+      
     {% endif %}
+    
   </div>
 </div>
 

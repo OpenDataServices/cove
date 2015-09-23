@@ -61,12 +61,19 @@ def test_get_schema_validation_errors():
 
 
 @pytest.mark.django_db
-def test_explore_page(client):
+@pytest.mark.parametrize('current_app', ['cove-ocds', 'cove-360'])
+def test_explore_page(client, current_app):
     data = SuppliedData.objects.create()
     data.original_file.save('test.json', ContentFile('{}'))
+    data.current_app = current_app
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
     assert resp.context['conversion'] == 'flatten'
+    assert 'converted_file_size' in resp.context
+    if current_app == 'cove-360':
+        assert 'converted_file_size_titles' in resp.context
+    else:
+        assert 'converted_file_size_titles' not in resp.context
 
 
 @pytest.mark.django_db
@@ -76,6 +83,7 @@ def test_explore_page_csv(client):
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
     assert resp.context['conversion'] == 'unflatten'
+    assert resp.context['converted_file_size'] == 20
 
 
 @pytest.mark.django_db

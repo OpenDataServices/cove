@@ -130,6 +130,7 @@ def get_file_type(django_file):
 
 
 def convert_json(request, data):
+    context = {}
     converted_path = os.path.join(data.upload_dir(), 'flattened')
     flatten_kwargs = dict(
         output_name=converted_path,
@@ -138,13 +139,16 @@ def convert_json(request, data):
         root_id=request.cove_config['root_id'],
         schema=request.cove_config['item_schema_url'],
     )
-    if request.cove_config['convert_titles']:
-        flatten_kwargs.update(dict(
-            output_name=converted_path + '-titles',
-            use_titles=True
-        ))
     try:
         flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+        context['converted_file_size'] = os.path.getsize(converted_path + '.xlsx')
+        if request.cove_config['convert_titles']:
+            flatten_kwargs.update(dict(
+                output_name=converted_path + '-titles',
+                use_titles=True
+            ))
+            flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+            context['converted_file_size_titles'] = os.path.getsize(converted_path + '-titles.xlsx')
     except BadlyFormedJSONError as err:
         raise CoveInputDataError(context={
             'sub_title': _("Sorry we can't process that data"),
@@ -160,14 +164,16 @@ def convert_json(request, data):
             'conversion': 'flatten',
             'conversion_error': repr(err)
         }
-    return {
+    context.update({
         'conversion': 'flatten',
         'converted_path': converted_path,
         'converted_url': '{}/flattened'.format(data.upload_url())
-    }
+    })
+    return context
 
 
 def convert_spreadsheet(request, data, file_type):
+    context = {}
     converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
     if file_type == 'csv':
         # flatten-tool expects a directory full of CSVs with file names
@@ -189,6 +195,7 @@ def convert_spreadsheet(request, data, file_type):
             schema=request.cove_config['item_schema_url'],
             convert_titles=True
         )
+        context['converted_file_size'] = os.path.getsize(converted_path)
     except Exception as err:
         logger.exception(err, extra={
             'request': request,
@@ -200,11 +207,12 @@ def convert_spreadsheet(request, data, file_type):
             'msg': _('We think you tried to supply a spreadsheet, but we failed to convert it to JSON.\n\nError message: {}'.format(repr(err)))
         })
 
-    return {
+    context.update({
         'conversion': 'unflatten',
         'converted_path': converted_path,
         'converted_url': '{}/unflattened.json'.format(data.upload_url())
-    }
+    })
+    return context
 
 
 @CoveInputDataError.error_page
