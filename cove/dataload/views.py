@@ -88,12 +88,31 @@ def put_to_virtuoso(dataset, staging):
         '''.format(prefix, graphuri, os.environ['DBA_PASS']), shell=True)
 
 
+def delete_from_virtuoso(dataset, staging):
+    prefix = 'staging.' if staging else ''
+    graphuri = 'http://{}resourceprojects.org/{}'.format(prefix, dataset.supplied_data.pk)
+
+    # Using curl here because we're already using it for putting.
+    # If we want to switch to e.g. requests this part should work fine.
+    subprocess.check_call([
+        'curl',
+        '-X',
+        'DELETE',
+        'http://virtuoso:8890/sparql-graph-crud-auth?' + urllib.parse.urlencode({'graph': graphuri}),
+        '--digest',
+        '--user',
+        'dba:{}'.format(os.environ['DBA_PASS'])
+    ])
+
+
 def run_process(request, pk, process_type):
     processes = {
         'fetch': fetch,
         'convert': convert,
         'staging': partial(put_to_virtuoso, staging=True),
         'live': partial(put_to_virtuoso, staging=False),
+        'rm_staging': partial(delete_from_virtuoso, staging=True),
+        'rm_live': partial(delete_from_virtuoso, staging=False),
     }
     if process_type in processes:
         dataset = Dataset.objects.get(pk=pk)

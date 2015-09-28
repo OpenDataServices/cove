@@ -60,9 +60,11 @@
         </form>
       </td>
       <td>
+        <form action="rm_staging" method="post"">{% csrf_token %}
         <button type="submit" class="btn btn-default staging-remove">
           Remove from Staging
         </button>
+        </form
       </td>
     </tr>
     <tr>
@@ -77,9 +79,11 @@
         </form>
       </td>
       <td>
+        <form action="rm_live" method="post"">{% csrf_token %}
         <button type="submit" class="btn btn-default live-remove">
           Remove from Live
         </button>
+        </form>
       </td>
   </tbody>
 </table>
