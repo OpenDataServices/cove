@@ -10,21 +10,25 @@ Legend: <span class="label label-success">Up to date and OK</span> <span class="
   <thead>
     <tr>
       <th>DataSet</th>
-      <th>Fetched</th>
-      <th>Convert</th>
-      <th>Loaded to staging</th>
-      <th>Loaded to live</th>
+      {% for process_type_name in main_process_names %}
+      <th>{{ process_type_name }}</th>
+      {% endfor %}
     </tr>
   </tdead>
   <tbody>
-    {% for dataset in datasets %}
+    {% for dataset, statuses in datasets_statuses %}
     <tr>
-      <td><a href="{{dataset.id}}">{{ dataset.name }}</a></td>
-      <td>{% if dataset.most_recent_process_by_type.fetch %}<span class="label {% if dataset.most_recent_process_by_type.fetch.successful %}label-success{% else %}label-danger{% endif %}">{{ dataset.most_recent_process_by_type.fetch.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.fetch.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td>{% if dataset.most_recent_process_by_type.convert %}<span class="label {% if dataset.most_recent_process_by_type.convert.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.convert.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.convert.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.convert.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td>{% if dataset.most_recent_process_by_type.staging %}<span class="label {% if dataset.most_recent_process_by_type.staging.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.staging.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.staging.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.staging.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td>{% if dataset.most_recent_process_by_type.live %}<span class="label {% if dataset.most_recent_process_by_type.live.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.live.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.live.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.live.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td></td>
+      <td><a href="{{ dataset.id }}">{{ dataset.name }}</a></td>
+      {% for status in statuses %}
+      <td>
+        {% if status.last_run %}
+          <span class="label {{ status.label_class }}">
+            {{ status.last_run.datetime|naturaltime }}
+            {% if status.last_run.successful %}(OK){% else %}(Failed){% endif %}
+          </span>
+        {% endif %}
+      </td>
+      {% endfor %}
     </tr>
     {% endfor %}
   </tbody>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from cove.input.models import SuppliedData
-from cove.dataload.models import Dataset, Process
+from cove.dataload.models import Dataset, ProcessRun
 from django.http import Http404
 from taglifter import TagLifter
 from functools import partial
@@ -11,21 +11,7 @@ import os
 #from requests.auth import HTTPDigestAuth
 import subprocess
 import urllib.parse
-
-
-def dataload(request):
-    return render(request, "dataload.html", {
-        'datasets': Dataset.objects.all()
-    })
-
-
-def data(request, pk):
-    supplied_data = SuppliedData.objects.get(pk=pk)
-    try:
-        dataset = supplied_data.dataset
-    except Dataset.DoesNotExist:
-        dataset = Dataset.objects.create(supplied_data=supplied_data)
-    return redirect(reverse('cove:dataload_dataset', args=(dataset.pk,), current_app=request.current_app))
+from collections import OrderedDict
 
 
 def fetch(dataset):
@@ -105,28 +91,117 @@ def delete_from_virtuoso(dataset, staging):
     ])
 
 
-def run_process(request, pk, process_type):
-    processes = {
-        'fetch': fetch,
-        'convert': convert,
-        'staging': partial(put_to_virtuoso, staging=True),
-        'live': partial(put_to_virtuoso, staging=False),
-        'rm_staging': partial(delete_from_virtuoso, staging=True),
-        'rm_live': partial(delete_from_virtuoso, staging=False),
-    }
-    if process_type in processes:
+PROCESSES = OrderedDict([
+    ('fetch', {
+        'name': 'Fetched',
+        'action_name': 'Fetch',
+        'depends': None,
+        'function': fetch,
+        'main': True,
+    }),
+    ('convert', {
+        'name': 'Converted',
+        'action_name': 'Convert',
+        'more_info_name': 'Conversion messages',
+        'depends': 'fetch',
+        'function': convert,
+        'main': True
+    }),
+    ('staging', {
+        'name': 'Pushed to staging',
+        'action_name': 'Push to staging',
+        'more_info_name': 'View on staging',
+        'depends': 'convert',
+        'function': partial(put_to_virtuoso, staging=True),
+        'reverse_id': 'rm_staging',
+        'main': True
+    }),
+    ('live', {
+        'name': 'Pushed to live',
+        'action_name': 'Push to live',
+        'depends': 'fetch',
+        'more_info_name': 'View on live',
+        'function': partial(put_to_virtuoso, staging=False),
+        'reverse_id': 'rm_live',
+        'main': True
+    }),
+    ('rm_staging', {
+        'name': 'Removed from staging',
+        'action_name': 'Remove from staging',
+        'depends': 'staging',
+        'function': partial(delete_from_virtuoso, staging=True),
+        'main': False
+    }),
+    ('rm_live', {
+        'name': 'Removed from live',
+        'action_name': 'Remove from live',
+        'depends': 'live',
+        'function': partial(delete_from_virtuoso, staging=False),
+        'main': False
+    }),
+])
+
+# Add id and reverse fields to each process
+PROCESSES = OrderedDict([
+    (process_id, dict(
+        id=process_id,
+        reverse=PROCESSES[process['reverse_id']] if 'reverse_id' in process else None,
+        **process))
+    for process_id, process in PROCESSES.items()])
+
+
+def statuses(dataset):
+    for process_id, process in PROCESSES.items():
+        if process['main']:
+            last_run = dataset.processrun_set.filter(process=process_id).order_by('-datetime').first()
+            depends_last_run = dataset.processrun_set.filter(process=process['depends']).order_by('-datetime').first()
+            label_class = ''
+            if last_run and depends_last_run:
+                if last_run.datetime < depends_last_run.datetime:
+                    label_class = 'label-warning'
+                elif last_run.successful:
+                    label_class = 'label-success'
+                else:
+                    label_class = 'label-danger'
+            yield {
+                'process': process,
+                'label_class': label_class,
+                'last_run': last_run,
+            }
+
+
+def dataload(request):
+    return render(request, "dataload.html", {
+        'datasets_statuses': ((dataset, statuses(dataset)) for dataset in Dataset.objects.all()),
+        'main_process_names': [process['name'] for process in PROCESSES.values() if process['main']]
+    })
+
+
+def data(request, pk):
+    supplied_data = SuppliedData.objects.get(pk=pk)
+    try:
+        dataset = supplied_data.dataset
+    except Dataset.DoesNotExist:
+        dataset = Dataset.objects.create(supplied_data=supplied_data)
+    return redirect(reverse('cove:dataload_dataset', args=(dataset.pk,), current_app=request.current_app))
+
+
+def dataset(request, pk):
+    dataset = Dataset.objects.get(pk=pk)
+    return render(request, "dataset.html", {
+        'dataset': dataset,
+        'statuses': statuses(dataset)
+    })
+
+
+def run_process(request, pk, process_id):
+    if process_id in PROCESSES:
         dataset = Dataset.objects.get(pk=pk)
-        processes[process_type](dataset)
-        Process.objects.create(
-            type=process_type,
+        PROCESSES[process_id]['function'](dataset)
+        ProcessRun.objects.create(
+            process=process_id,
             dataset=dataset
         )
         return redirect(reverse('cove:dataload_dataset', args=(pk,), current_app=request.current_app))
     else:
         raise Http404()
-
-
-def dataset(request, pk):
-    return render(request, "dataset.html", {
-        'dataset': Dataset.objects.get(pk=pk),
-    })

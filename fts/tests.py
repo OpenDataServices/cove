@@ -29,7 +29,7 @@ def server_url(request, live_server):
 
 
 @pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text', 'conversion_successful'), [
-    ('/resourceprojects/', 'tenders_releases_2_releases.json', 'Fetch Now', True),
+    ('/resourceprojects/', 'tenders_releases_2_releases.json', 'Fetch now', True),
     ])
 def test_humanize_naturaltime(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
@@ -51,7 +51,7 @@ def test_humanize_naturaltime(server_url, browser, httpserver, source_filename, 
     # We should still be in the correct app
     if prefix == '/resourceprojects/':
         assert 'ResourceProjects DataLoad Dashboard' in browser.find_element_by_tag_name('body').text
-    #Click the Fetch Now button
+    #Click the Fetch now button
     browser.find_element_by_css_selector("button.btn.btn-default.fetch").click()
     assert 'now' in browser.find_element_by_tag_name('body').text
     #Click the convert button

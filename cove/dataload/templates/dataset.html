@@ -22,69 +22,34 @@
       <td></td>
       <td></td>
     </tr>
+    {% for status in statuses %}
     <tr>
-      <th>Fetch</th>
-      <td>{% if dataset.most_recent_process_by_type.fetch %}<span class="label {% if dataset.most_recent_process_by_type.fetch.successful %}label-success{% else %}label-danger{% endif %}">{{ dataset.most_recent_process_by_type.fetch.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.fetch.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td></td>
+      <th>{{ status.process.name }}</th>
       <td>
-        <form action="fetch" method="post">{% csrf_token %}
+        <span class="label {{ status.label_class }}">
+          {{ status.last_run.datetime|naturaltime }}
+          {% if status.last_run.successful %}(OK){% else %}(Failed){% endif %}
+        </span>
+      </td>
+      <td><a href="#">{{ status.process.more_info_name }}</a></td>
+      <td>
+        <form action="{{ status.process.id }}" method="post">{% csrf_token %}
         <button type="submit" class="btn btn-default fetch">
-          Fetch Now
-        </button>
-        </form>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <th>Convert</th>
-      <td>{% if dataset.most_recent_process_by_type.convert %}<span class="label {% if dataset.most_recent_process_by_type.convert.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.convert.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.convert.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.convert.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td><a href="#">Conversion Messages</a></td>
-      <td>
-        <form action="convert" method="post"">{% csrf_token %}
-        <button type="submit" class="btn btn-default convert">
-          Convert Now
-        </button>
-        </form>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <th>Staging</th>
-      <td>{% if dataset.most_recent_process_by_type.staging %}<span class="label {% if dataset.most_recent_process_by_type.staging.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.staging.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.staging.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.staging.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td><a href="#">View on Staging</a></td>
-      <td>
-        <form action="staging" method="post"">{% csrf_token %}
-        <button type="submit" class="btn btn-default staging-push">
-          Push to Staging Now
+          {{ status.process.action_name }} now
         </button>
         </form>
       </td>
       <td>
-        <form action="rm_staging" method="post"">{% csrf_token %}
-        <button type="submit" class="btn btn-default staging-remove">
-          Remove from Staging
-        </button>
-        </form
+        {% if status.process.reverse %}
+          <form action="{{ status.process.reverse.id }}" method="post">{% csrf_token %}
+          <button type="submit" class="btn btn-default fetch">
+            {{ status.process.reverse.action_name }}
+          </button>
+          </form>
+        {% endif %}
       </td>
     </tr>
-    <tr>
-      <th>Live</th>
-      <td>{% if dataset.most_recent_process_by_type.live %}<span class="label {% if dataset.most_recent_process_by_type.live.datetime < dataset.most_recent_process_by_type.fetch.datetime %}label-warning{% else %}{% if dataset.most_recent_process_by_type.live.successful %}label-success{% else %}label-danger{% endif %}{% endif %}">{{ dataset.most_recent_process_by_type.live.datetime|naturaltime }} {% if dataset.most_recent_process_by_type.live.successful %}(OK){% else %}(Failed){% endif %}</span>{% endif %}</td>
-      <td><a href="#">View on Live</a></td>
-      <td>
-        <form action="live" method="post"">{% csrf_token %}
-        <button type="submit" class="btn btn-default live-push">
-          Push to Live Now
-        </button>
-        </form>
-      </td>
-      <td>
-        <form action="rm_live" method="post"">{% csrf_token %}
-        <button type="submit" class="btn btn-default live-remove">
-          Remove from Live
-        </button>
-        </form>
-      </td>
+    {% endfor %}
   </tbody>
 </table>
 
