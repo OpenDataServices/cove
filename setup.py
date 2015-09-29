@@ -14,6 +14,8 @@ with open('./requirements.txt') as requirements_txt:
         else:
             install_requires.append(requirement)
 
+print(install_requires)
+
 setup(
     name='cove',
     version='0.0.0',
