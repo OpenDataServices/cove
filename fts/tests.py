@@ -20,54 +20,6 @@ def server_url(request, live_server):
         return live_server.url
 
 
-'''
-  This test loads a file from a url into the resourceprojects interface.
-  You should then be taken to a /dataload/x page
-  Click the e.g. Fetch Now button
-  Check to see that the fetch now message is filtered by the naturaltime filter
-'''
-
-
-@pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text', 'conversion_successful'), [
-    ('/resourceprojects/', 'tenders_releases_2_releases.json', 'Fetch now', True),
-    ])
-def test_humanize_naturaltime(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
-    with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
-        httpserver.serve_content(fp.read())
-    if 'CUSTOM_SERVER_URL' in os.environ:
-        # Use urls pointing to GitHub if we have a custom (probably non local) server URL
-        source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/master/cove/fixtures/' + source_filename
-    else:
-        source_url = httpserver.url + '/' + source_filename
-
-    browser.get(server_url + prefix)
-    browser.find_element_by_partial_link_text('Link').click()
-    time.sleep(0.5)
-    browser.find_element_by_id('id_source_url').send_keys(source_url)
-    browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
-    body_text = browser.find_element_by_tag_name('body').text
-    assert expected_text in body_text
-    
-    # We should still be in the correct app
-    if prefix == '/resourceprojects/':
-        assert 'ResourceProjects DataLoad Dashboard' in browser.find_element_by_tag_name('body').text
-    #Click the Fetch now button
-    browser.find_element_by_css_selector("button.btn.btn-default.fetch").click()
-    assert 'now' in browser.find_element_by_tag_name('body').text
-    #Click the convert button
-    #browser.find_element_by_css_selector("button.btn.btn-default.convert").click()
-    #Click the Push to Staging button
-    #browser.find_element_by_css_selector("button.btn.btn-default.staging-push").click()
-    #Click the Remove from Staging button
-    #browser.find_element_by_css_selector("button.btn.btn-default.staging-remove").click()
-    #Click the Push to Live button
-    #browser.find_element_by_css_selector("button.btn.btn-default.staging-push").click()
-    #Click the Remove from Live button
-    #browser.find_element_by_css_selector("button.btn.btn-default.staging-remove").click()
-    browser.get(server_url + prefix + 'dataload/')
-    assert 'now' in browser.find_element_by_tag_name('body').text
-    
-
 def test_index_page_banner(server_url, browser):
     browser.get(server_url)
     assert 'This tool is alpha. Please report any problems on GitHub issues.' in browser.find_element_by_tag_name('body').text
