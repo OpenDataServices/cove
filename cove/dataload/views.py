@@ -60,7 +60,8 @@ def data(request, pk):
         dataset = supplied_data.dataset
     except Dataset.DoesNotExist:
         dataset = Dataset.objects.create(supplied_data=supplied_data)
-    return redirect(reverse('cove:dataload_dataset', args=(dataset.pk,), current_app=request.current_app))
+    # Input module has already fetched the data for us, so fake a fetch
+    return run_process(request, dataset.id, 'fetch', fake=True)
 
 
 def dataset(request, pk):
@@ -71,10 +72,11 @@ def dataset(request, pk):
     })
 
 
-def run_process(request, pk, process_id):
+def run_process(request, pk, process_id, fake=False):
     if process_id in PROCESSES:
         dataset = Dataset.objects.get(pk=pk)
-        PROCESSES[process_id]['function'](dataset)
+        if not fake:
+            PROCESSES[process_id]['function'](dataset)
         ProcessRun.objects.create(
             process=process_id,
             dataset=dataset

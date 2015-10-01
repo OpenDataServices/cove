@@ -3,6 +3,8 @@ import uuid
 from django.core.urlresolvers import reverse
 import os
 from django.conf import settings
+import requests
+from django.core.files.base import ContentFile
 
 
 def upload_to(instance, filename=''):
@@ -36,3 +38,12 @@ class SuppliedData(models.Model):
 
     def upload_url(self):
         return os.path.join(settings.MEDIA_URL, upload_to(self))
+
+    def download(self):
+        if self.source_url:
+            r = requests.get(self.source_url)
+            self.original_file.save(
+                r.url.split('/')[-1],
+                ContentFile(r.content))
+        else:
+            raise ValueError('No source_url specified.')

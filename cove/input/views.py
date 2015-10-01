@@ -3,7 +3,6 @@ from django.shortcuts import render, redirect
 from django import forms
 from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
-import requests
 
 
 class UploadForm(forms.ModelForm):
@@ -53,10 +52,7 @@ def input(request):
             data.form_name = form_name
             data.save()
             if form_name == 'url_form':
-                r = requests.get(data.source_url)
-                data.original_file.save(
-                    r.url.split('/')[-1],
-                    ContentFile(r.content))
+                data.download()
             elif form_name == 'text_form':
                 data.original_file.save('test.json', ContentFile(form['paste'].value()))
             return redirect(data.get_absolute_url())
