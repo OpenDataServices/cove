@@ -4,16 +4,31 @@ from cove.input.models import SuppliedData
 from cove.dataload.models import Dataset, ProcessRun
 from django.http import Http404
 from cove_resourceprojects import PROCESSES
+from collections import OrderedDict
+
+
+# Add id and reverse fields to each process
+PROCESSES = OrderedDict([
+    (process_id, dict(
+        id=process_id,
+        reverse=PROCESSES[process['reverse_id']] if 'reverse_id' in process else None,
+        **process))
+    for process_id, process in PROCESSES.items()])
 
 
 def statuses(dataset):
     for process_id, process in PROCESSES.items():
         if process['main']:
+            # Get the last run for this process
             last_run = dataset.processrun_set.filter(process=process_id).order_by('-datetime').first()
-            depends_last_run = dataset.processrun_set.filter(process=process['depends']).order_by('-datetime').first()
+            # And for the process it depends on
+            if process['depends']:
+                depends_last_run = dataset.processrun_set.filter(process=process['depends']).order_by('-datetime').first()
+            else:
+                depends_last_run = None
             label_class = ''
-            if last_run and depends_last_run:
-                if last_run.datetime < depends_last_run.datetime:
+            if last_run:
+                if depends_last_run and last_run.datetime < depends_last_run.datetime:
                     label_class = 'label-warning'
                 elif last_run.successful:
                     label_class = 'label-success'
