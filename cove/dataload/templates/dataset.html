@@ -27,7 +27,7 @@
       <th>{{ status.process.name }}</th>
       <td>
         <span class="label {{ status.label_class }}">
-          {{ status.last_run.datetime|naturaltime }}
+          <abbr title="{{ status.last_run.datetime|date:"c" }}">{{ status.last_run.datetime|naturaltime }}</abbr>
           {% if status.last_run.successful %}(OK){% else %}(Failed){% endif %}
         </span>
       </td>
