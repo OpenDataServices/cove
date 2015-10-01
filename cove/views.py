@@ -217,6 +217,10 @@ def convert_spreadsheet(request, data, file_type):
 
 @CoveInputDataError.error_page
 def explore(request, pk):
+    if request.current_app == 'cove-resourceprojects':
+        import cove.dataload.views
+        return cove.dataload.views.data(request, pk)
+
     try:
         data = SuppliedData.objects.get(pk=pk)
     except (SuppliedData.DoesNotExist, ValueError):  # Catches: Primary key does not exist, and, badly formed hexadecimal UUID string

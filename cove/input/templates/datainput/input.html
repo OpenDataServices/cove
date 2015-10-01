@@ -5,6 +5,7 @@
 {% block content %}
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  {% if 'upload' in input_methods %}
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
       <h4 class="panel-title">
@@ -26,6 +27,8 @@
       </div>
     </div>
   </div>
+  {% endif %}
+  {% if 'url' in input_methods %}
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
       <h4 class="panel-title">
@@ -47,6 +50,8 @@
       </div>
     </div>
   </div>
+  {% endif %}
+  {% if 'text' in input_methods %}
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
       <h4 class="panel-title">
@@ -67,6 +72,7 @@
         </form>
       </div>
     </div>
+  {% endif %}
   </div>
 </div>
 

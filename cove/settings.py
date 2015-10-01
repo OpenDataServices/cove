@@ -39,6 +39,7 @@ COVE_CONFIG_BY_NAMESPACE = {
     'base_template_name': {
         'cove-ocds': 'base_ocds.html',
         'cove-360': 'base_360.html',
+        'cove-resourceprojects': 'base_resourceprojects.html',
         'default': 'base_generic.html',
     },
     'application_name': {
@@ -72,6 +73,10 @@ COVE_CONFIG_BY_NAMESPACE = {
     'convert_titles': {
         'cove-360': True,
         'default': False
+    },
+    'input_methods': {
+        'default': ['upload', 'url', 'text'],
+        'cove-resourceprojects': ['upload', 'url']
     }
 }
 
@@ -98,6 +103,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -105,6 +111,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'cove',
     'cove.input',
+    'cove.dataload',
     'raven.contrib.django.raven_compat',
 )
 
