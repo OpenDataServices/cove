@@ -21,11 +21,17 @@ def statuses(dataset):
         if process['main']:
             # Get the last run for this process
             last_run = dataset.processrun_set.filter(process=process_id).order_by('-datetime').first()
+            depends_last_run = None
+
             # And for the process it depends on
             if process['depends']:
                 depends_last_run = dataset.processrun_set.filter(process=process['depends']).order_by('-datetime').first()
-            else:
-                depends_last_run = None
+            # If the reverse of the process has been run more recently, undo it
+            if last_run and 'reverse_id' in process:
+                reverse_last_run = dataset.processrun_set.filter(process=process['reverse_id'], successful=True).order_by('-datetime').first()
+                if reverse_last_run and last_run.datetime < reverse_last_run.datetime:
+                    last_run = None
+
             label_class = ''
             if last_run:
                 if depends_last_run and last_run.datetime < depends_last_run.datetime:
