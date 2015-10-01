@@ -18,7 +18,7 @@ def server_url(request, live_server):
         return os.environ['CUSTOM_SERVER_URL']
     else:
         return live_server.url
-
+    
 
 def test_index_page_banner(server_url, browser):
     browser.get(server_url)
