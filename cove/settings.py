@@ -21,6 +21,7 @@ env = environ.Env(  # set default values and casting
     PIWIK_URL=(str, ''),
     PIWIK_SITE_ID=(str, ''),
     ALLOWED_HOSTS=(list, []),
+    DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3'))
 )
 
 PIWIK = {
@@ -158,7 +159,7 @@ WSGI_APPLICATION = 'cove.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': env('DB_NAME'),
     }
 }
 
