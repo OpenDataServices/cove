@@ -5,6 +5,7 @@ import os
 from django.conf import settings
 import requests
 from django.core.files.base import ContentFile
+from cove.input import get_google_doc
 
 
 def upload_to(instance, filename=''):
@@ -39,11 +40,17 @@ class SuppliedData(models.Model):
     def upload_url(self):
         return os.path.join(settings.MEDIA_URL, upload_to(self))
 
+    def is_google_doc(self):
+        return self.source_url.startswith('https://docs.google.com/')
+
     def download(self):
         if self.source_url:
-            r = requests.get(self.source_url)
-            self.original_file.save(
-                r.url.split('/')[-1],
-                ContentFile(r.content))
+            if self.is_google_doc():
+                get_google_doc(self)
+            else:
+                r = requests.get(self.source_url)
+                self.original_file.save(
+                    r.url.split('/')[-1],
+                    ContentFile(r.content))
         else:
             raise ValueError('No source_url specified.')

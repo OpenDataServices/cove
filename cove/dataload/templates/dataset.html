@@ -31,7 +31,7 @@
           {% if status.last_run.successful %}(OK){% else %}(Failed){% endif %}
         </span>
       </td>
-      <td><a href="#">{{ status.process.more_info_name }}</a></td>
+      <td><a href="{{ status.more_info_link }}">{{ status.process.more_info_name }}</a></td>
       <td>
         <form action="{{ status.process.id }}" method="post">{% csrf_token %}
         <button type="submit" class="btn btn-default {{ status.process.id }}">

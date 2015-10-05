@@ -44,6 +44,7 @@ def statuses(dataset):
                 'process': process,
                 'label_class': label_class,
                 'last_run': last_run,
+                'more_info_link': process['more_info_link'](dataset) if 'more_info_link' in process else '',
             }
 
 
