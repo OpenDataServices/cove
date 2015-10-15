@@ -86,6 +86,8 @@ The tests include functional tests (actually interacting with the website in sel
 
     CUSTOM_SERVER_URL=http://dev.cove.opendataservices.coop py.test fts 
 
+We also use flake8 to test code quality, see https://github.com/OpenDataServices/developer-docs/blob/master/tests.md#flake8 
+
 Translations
 ============
 
