@@ -4,9 +4,7 @@ from cove.input.models import SuppliedData
 
 class Dataset(models.Model):
     supplied_data = models.OneToOneField(SuppliedData)
-
-    def name(self):
-        return self.supplied_data.original_file.name
+    name = models.CharField(unique=True, max_length=50)
 
 
 class ProcessRun(models.Model):

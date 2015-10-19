@@ -60,7 +60,13 @@ def data(request, pk):
     try:
         dataset = supplied_data.dataset
     except Dataset.DoesNotExist:
-        dataset = Dataset.objects.create(supplied_data=supplied_data)
+        if 'name' in request.POST:
+            dataset = Dataset.objects.create(
+                supplied_data=supplied_data,
+                name=request.POST['name']
+            )
+        else:
+            return render(request, 'dataset_name.html')
     # Input module has already fetched the data for us, so fake a fetch
     return run_process(request, dataset.id, 'fetch', fake=True)
 

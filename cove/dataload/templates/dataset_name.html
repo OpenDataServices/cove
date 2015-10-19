@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post">{% csrf_token %}
+Name for this dataset: <input name="name" id="name" type="text" />
+<button class="button" type="submit" id="submit">Submit</button>
+</form>
+{% endblock %}
