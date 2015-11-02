@@ -14,6 +14,8 @@ CoVE - Convert Validate & Explore
 .. image:: https://img.shields.io/badge/license-AGPLv3-blue.svg
     :target: https://github.com/OpenDataServices/cove/blob/master/AGPLv3.txt
 
+We use HuBoard to provide an "agile board" view of our issues https://huboard.com/OpenDataServices/cove
+
 Introduction
 ============
 
