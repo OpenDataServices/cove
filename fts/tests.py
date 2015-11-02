@@ -193,6 +193,7 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
             assert '(.xlsx) (Original)' in body_text
         elif source_filename.endswith('.csv'):
             assert '(.csv) (Original)' in body_text
+        assert '0 bytes' not in body_text
 
 
 @pytest.mark.parametrize(('prefix'), [
