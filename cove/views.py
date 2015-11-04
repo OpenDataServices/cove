@@ -243,7 +243,12 @@ def explore(request, pk):
     
     file_type = get_file_type(data.original_file)
 
-    context = {}
+    context = {
+        "original_file": {
+            "url": data.original_file.url,
+            "size": data.original_file.size
+        }
+    }
 
     if file_type == 'json':
         context.update(convert_json(request, data))
