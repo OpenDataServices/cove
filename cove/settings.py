@@ -12,7 +12,15 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import warnings
+from django.utils.crypto import get_random_string
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+secret_key = get_random_string(50, chars)
+if 'SECRET_KEY' not in os.environ:
+    warnings.warn('SECRET_KEY should be added to Enviroment Variables. Random key will be used instead.')
 
 import environ
 env = environ.Env(  # set default values and casting
@@ -21,6 +29,7 @@ env = environ.Env(  # set default values and casting
     PIWIK_URL=(str, ''),
     PIWIK_SITE_ID=(str, ''),
     ALLOWED_HOSTS=(list, []),
+    SECRET_KEY=(str, secret_key),
     DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3'))
 )
 
@@ -86,7 +95,7 @@ COVE_CONFIG_BY_NAMESPACE = {
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'vank@j*7v8#%k6c-*tpsl1&z$!8qniq*@-q_&k1_^1jf5x6##n'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
