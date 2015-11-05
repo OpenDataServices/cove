@@ -1,4 +1,5 @@
 import pytest
+import requests
 from selenium import webdriver
 import time
 import os
@@ -189,11 +190,30 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
     if conversion_successful:
         if source_filename.endswith('.json'):
             assert 'JSON (Original)' in body_text
+            original_file = browser.find_element_by_link_text("JSON (Original)").get_attribute("href")
+            converted_file = browser.find_element_by_link_text("Excel Spreadsheet (.xlsx) (Converted from Original)").get_attribute("href")
+            assert "flattened.xlsx" in converted_file
         elif source_filename.endswith('.xlsx'):
             assert '(.xlsx) (Original)' in body_text
+            original_file = browser.find_element_by_link_text("Excel Spreadsheet (.xlsx) (Original)").get_attribute("href")
+            converted_file = browser.find_element_by_link_text("JSON (Converted from Original)").get_attribute("href")
+            assert "unflattened.json" in converted_file
         elif source_filename.endswith('.csv'):
             assert '(.csv) (Original)' in body_text
+            original_file = browser.find_element_by_link_text("CSV Spreadsheet (.csv) (Original)").get_attribute("href")
+            converted_file = browser.find_element_by_link_text("JSON (Converted from Original)").get_attribute("href")
+            assert "unflattened.json" in browser.find_element_by_link_text("JSON (Converted from Original)").get_attribute("href")
+
+        assert source_filename in original_file
         assert '0 bytes' not in body_text
+
+        original_file_response = requests.get(original_file)
+        assert original_file_response.status_code == 200
+        assert int(original_file_response.headers['content-length']) != 0
+
+        converted_file_response = requests.get(converted_file)
+        assert converted_file_response.status_code == 200
+        assert int(converted_file_response.headers['content-length']) != 0
 
 
 @pytest.mark.parametrize(('prefix'), [
