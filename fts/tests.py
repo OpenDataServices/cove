@@ -175,10 +175,16 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
     time.sleep(0.5)
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+    check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+    
+    browser.get(server_url + prefix + '?source_url=' + source_url)
+    check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+
+
+def check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
+    # We should still be in the correct app
     body_text = browser.find_element_by_tag_name('body').text
     assert expected_text in body_text
-    
-    # We should still be in the correct app
     if prefix == '/ocds/':
         assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
         # # Look for Release Table
