@@ -34,14 +34,20 @@ def input(request):
         'text_form': TextForm,
     }
     forms = {form_name: form_class() for form_name, form_class in form_classes.items()}
-    if request.method == 'POST':
-        if 'source_url' in request.POST:
+
+    request_data = None
+    if "source_url" in request.GET:
+        request_data = request.GET
+    if request.POST:
+        request_data = request.POST
+    if request_data:
+        if 'source_url' in request_data:
             form_name = 'url_form'
-        elif 'paste' in request.POST:
+        elif 'paste' in request_data:
             form_name = 'text_form'
         else:
             form_name = 'upload_form'
-        form = form_classes[form_name](request.POST, request.FILES)
+        form = form_classes[form_name](request_data, request.FILES)
         forms[form_name] = form
         if form.is_valid():
             if form_name == 'text_form':
@@ -56,4 +62,5 @@ def input(request):
             elif form_name == 'text_form':
                 data.original_file.save('test.json', ContentFile(form['paste'].value()))
             return redirect(data.get_absolute_url())
+
     return render(request, 'datainput/input.html', {'forms': forms})
