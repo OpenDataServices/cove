@@ -2,13 +2,16 @@ from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render
 from cove.input.models import SuppliedData
 import os
+from collections import OrderedDict
 import shutil
 import json
+import jsonref
 import logging
 import flattentool
 import functools
 import collections
 from flattentool.json_input import BadlyFormedJSONError
+from flattentool.schema import get_property_type_set
 import requests
 from jsonschema.validators import Draft4Validator as validator
 from jsonschema.exceptions import ValidationError
@@ -172,6 +175,40 @@ def get_grants_aggregates(json_data):
         'distinct_recipient_org_identifier': distinct_recipient_org_identifier,
         'distinct_currency': distinct_currency
     }
+
+
+def fields_present_generator(json_data, prefix=''):
+    if hasattr(json_data, 'items'):
+        for key, value in json_data.items():
+            yield from fields_present_generator(value, prefix + '/' + key)
+            yield prefix + '/' + key
+    elif isinstance(json_data, list):
+        for x in json_data:
+            yield from fields_present_generator(x, prefix + '[]')
+
+
+def get_fields_present(*args, **kwargs):
+    return set(fields_present_generator(*args, **kwargs))
+
+
+def schema_dict_fields_generator(schema_dict):
+    if 'properties' in schema_dict:
+        for property_name, property_schema_dict in schema_dict['properties'].items():
+            property_type_set = get_property_type_set(property_schema_dict)
+            if 'object' in property_type_set:
+                for field in schema_dict_fields_generator(property_schema_dict):
+                    yield '/' + property_name + field
+
+            elif 'array' in property_type_set:
+                fields = schema_dict_fields_generator(property_schema_dict['items'])
+                for field in fields:
+                    yield '/' + property_name + '[]' + field
+            yield '/' + property_name
+
+
+def get_schema_fields(schema_filename):
+    r = requests.get(schema_filename)
+    return set(schema_dict_fields_generator(jsonref.loads(r.text, object_pairs_hook=OrderedDict)))
 
 
 def get_schema_validation_errors(json_data, schema_url):
@@ -385,6 +422,10 @@ def explore(request, pk):
     if request.current_app == 'cove-ocds':
         schema_url = schema_url['record'] if 'records' in json_data else schema_url['release']
 
+    if schema_url:
+        fields_present = get_fields_present(json_data)
+        schema_fields = get_schema_fields(schema_url)
+
     validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors.json')
     if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validiation_error_fp:
@@ -399,6 +440,8 @@ def explore(request, pk):
         'schema_url': schema_url,
         'validation_errors': validation_errors,
         'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
+        'schema_only': schema_fields - fields_present,
+        'data_only': fields_present - schema_fields
     })
 
     view = 'explore.html'
