@@ -9,7 +9,7 @@ jsonschema==2.5.1
 raven==5.7.2
 
 # Dependencies of flatten-tool
-jdcal==1.0
+jdcal==1.0.1
 jsonref==0.1
 # flatten-tool currently requires openpyxl<2.2
 openpyxl==2.1.5 # rq.filter: <2.2
