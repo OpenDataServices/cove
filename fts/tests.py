@@ -230,7 +230,7 @@ def test_URL_invalid_dataset_request(server_url, browser, prefix):
     # Test a badly formed hexadecimal UUID string
     browser.get(server_url + prefix + 'data/0')
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
-    # Test for a dataset that does not exist in the dataset. Not sure how we specify a UUID that will never be used again tho!
-    browser.get(server_url + prefix + 'data/be0c2fd7-108b-4d78-bae2-5a8a096a8273')
+    # Test for well formed UUID that doesn't identify any dataset that exists
+    browser.get(server_url + prefix + 'data/38e267ce-d395-46ba-acbf-2540cdd0c810')
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
