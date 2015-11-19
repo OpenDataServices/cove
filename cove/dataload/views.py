@@ -50,7 +50,7 @@ def statuses(dataset):
 
 def dataload(request):
     return render(request, "dataload.html", {
-        'datasets_statuses': ((dataset, statuses(dataset)) for dataset in Dataset.objects.all()),
+        'datasets_statuses': ((dataset, statuses(dataset)) for dataset in Dataset.objects.filter(deleted=False)),
         'main_process_names': [process['name'] for process in PROCESSES.values() if process['main']]
     })
 
@@ -73,6 +73,8 @@ def data(request, pk):
 
 def dataset(request, pk):
     dataset = Dataset.objects.get(pk=pk)
+    if dataset.deleted:
+        return redirect(reverse('cove:dataload', current_app=request.current_app))
     return render(request, "dataset.html", {
         'dataset': dataset,
         'statuses': statuses(dataset)
