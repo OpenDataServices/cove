@@ -139,17 +139,15 @@ def test_accordion(server_url, browser, prefix):
 
 
 @pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text', 'conversion_successful'), [
-    ('/ocds/', 'tenders_releases_2_releases.json', 'Download Files', True),
-    ('/ocds/', 'tenders_releases_2_releases.json', 'Save or Share these results', True),
+    ('/ocds/', 'tenders_releases_2_releases.json', ['Download Files', 'Save or Share these results'], True),
     # Conversion should still work for files that don't validate against the schema
-    ('/ocds/', 'tenders_releases_2_releases_invalid.json', 'Download Files', True),
+    ('/ocds/', 'tenders_releases_2_releases_invalid.json', ['Download Files', 'Vailidation Errors', "'id' is a required property"], True),
     # Test UTF-8 support
     ('/ocds/', 'utf8.json', 'Download Files', True),
     # But we expect to see an error message if a file is not well formed JSON at all
     ('/ocds/', 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
     ('/ocds/', 'tenders_releases_2_releases.xlsx', 'Download Files', True),
-    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Download Files', True),
-    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', 'Save or Share these results', True),
+    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files', 'Save or Share these results'], True),
     # Test a 360 spreadsheet with titles, rather than fields
     ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
     # Test a non-valid file.
@@ -184,7 +182,12 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
     # We should still be in the correct app
     body_text = browser.find_element_by_tag_name('body').text
-    assert expected_text in body_text
+    if isinstance(expected_text, str):
+        expected_text = [expected_text]
+
+    for text in expected_text:
+        assert text in body_text
+
     if prefix == '/ocds/':
         assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
         # # Look for Release Table
