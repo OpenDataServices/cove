@@ -1,0 +1,57 @@
+{% extends 'explore.html' %}
+{% load i18n %}
+
+{% block explore_content %}
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">{% trans 'Number of grants' %}</h4>
+      </div>
+      <div class="panel-body">
+        {{grants_aggregates.count}}
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          {% blocktrans with number_of_ids=grants_aggregates.unique_ids|length %}Unique IDs ({{number_of_ids}}){% endblocktrans %}
+        </h4>
+      </div>
+      <div class="panel-body">
+        <ul>
+        {% for id in grants_aggregates.unique_ids %}
+        <li>{{id}}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!--End Row -->
+<div class="row"> <!--Start Row (Detail Table)-->
+  <div class="col-md-12">
+    <table class="table table-striped">
+      <caption>{% trans "Grants Table:" %}</caption>
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>title</th>
+          <th>amountAwarded</th>
+          <th>dateModified</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for grant in json_data.grants %}
+        <tr>
+          <td>{{ grant.id }}</td>
+          <td>{{ grant.title }}</td>
+          <td>{{ grant.amountAwarded }}</td> 
+          <td>{{ grant.dateModified }}</td>        
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

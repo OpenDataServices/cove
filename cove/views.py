@@ -306,12 +306,15 @@ def explore(request, pk):
             'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
         })
 
+        view = 'explore.html'
         if request.current_app == 'cove-ocds':
             context['releases_aggregates'] = get_releases_aggregates(json_data)
+            view = 'explore_ocds-release.html'
         elif request.current_app == 'cove-360':
             context['grants_aggregates'] = get_grants_aggregates(json_data)
+            view = 'explore_360.html'
 
-        return render(request, 'explore.html', context)
+        return render(request, view, context)
 
 
 def stats(request):
