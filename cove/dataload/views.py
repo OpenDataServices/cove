@@ -78,7 +78,8 @@ def dataset(request, pk):
         return redirect(reverse('cove:dataload', current_app=request.current_app))
     return render(request, "dataset.html", {
         'dataset': dataset,
-        'statuses': statuses(dataset)
+        'statuses': statuses(dataset),
+        'statuses_dict': { status['process']['id']:status for status in statuses(dataset) }
     })
 
 

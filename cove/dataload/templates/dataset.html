@@ -40,9 +40,9 @@
       <td>
         {% if status.process.reverse %}
           <form action="{{ status.process.reverse_id }}" method="post">{% csrf_token %}
-          <button type="submit" class="btn btn-default {{ status.process.reverse_id }}">
-            {{ status.process.reverse.action_name }}
-          </button>
+            <button type="{% if status.process.reverse.delete %}{% if statuses_dict.live.last_run or statuses_dict.staging.last_run %}button{% else %}submit{% endif %}{% else %}submit{% endif %}" class="btn btn-default {{ status.process.reverse_id }} {% if status.process.reverse.delete %}{% if statuses_dict.live.last_run or statuses_dict.staging.last_run %}disabled" data-toggle="tooltip" data-placement="top" title="Deletion is disabled because the dataset is still loaded to staging or live.{% endif %}{% endif %}">
+              {{ status.process.reverse.action_name }}
+            </button>
           </form>
         {% endif %}
       </td>
@@ -51,4 +51,12 @@
   </tbody>
 </table>
 
+{% endblock %}
+
+{% block extrafooterscript %}
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
 {% endblock %}
