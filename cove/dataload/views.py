@@ -39,6 +39,7 @@ def statuses(dataset):
                 elif last_run.successful:
                     label_class = 'label-success'
                 else:
+                    # Note this currently will never happen for the NRGI code
                     label_class = 'label-danger'
             yield {
                 'process': process,
