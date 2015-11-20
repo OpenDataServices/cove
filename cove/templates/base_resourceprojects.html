@@ -13,6 +13,12 @@
   <div class="container">
   <h1>ResourceProjects DataLoad Dashboard</h1>
 
+  {% if not datasets_statuses %}
+    <div style="padding-bottom: 1em">
+      <a href="{% url 'cove:dataload' %}">&lt;- Back to dashboard</a>
+    </div>
+  {% endif %}
+
   {% block content %}
   {% endblock %}
   </div><!-- /.container -->
