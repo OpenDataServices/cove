@@ -58,8 +58,15 @@
             <a href="{{converted_url}}">{% blocktrans with file_format=JSON status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{converted_file_size|filesizeformat }}
           </li>
       </ul>
-      
+
+    {% else %}
+      <ul>
+        <li>
+          <a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{original_file.size|filesizeformat }}
+        </li>
+      </ul>
     {% endif %}
+
     
   </div>
 </div>

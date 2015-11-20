@@ -86,6 +86,25 @@ def get_releases_aggregates(json_data):
     }
 
 
+def get_records_aggregates(json_data):
+    # Unique ocids
+    unique_ocids = set()
+
+    if 'records' in json_data:
+        for record in json_data['records']:
+            # Gather all the ocids
+            if 'ocid' in record:
+                unique_ocids.add(record['ocid'])
+
+    # Number of records
+    count = len(json_data['records']) if 'records' in json_data else 0
+
+    return {
+        'count': count,
+        'unique_ocids': unique_ocids,
+    }
+
+
 def get_grants_aggregates(json_data):
     count = len(json_data['grants']) if 'grants' in json_data else 0
     
@@ -289,32 +308,51 @@ def explore(request, pk):
     }
 
     if file_type == 'json':
-        context.update(convert_json(request, data))
-        json_path = data.original_file.file.name
+        # open the data first so we can inspect for record package
+        with open(data.original_file.file.name, encoding='utf-8') as fp:
+            try:
+                json_data = json.load(fp)
+            except ValueError as err:
+                raise CoveInputDataError(context={
+                    'sub_title': _("Sorry we can't process that data"),
+                    'link': 'cove:index',
+                    'link_text': _('Try Again'),
+                    'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\nError message: {}'.format(err))
+                })
+        if request.current_app == 'cove-ocds' and 'records' in json_data:
+            context['conversion'] = None
+        else:
+            context.update(convert_json(request, data))
     else:
         context.update(convert_spreadsheet(request, data, file_type))
-        json_path = context['converted_path']
+        with open(context['converted_path'], encoding='utf-8') as fp:
+            json_data = json.load(fp)
 
-    with open(json_path, encoding='utf-8') as fp:
-        json_data = json.load(fp)
-        schema_url = request.cove_config['schema_url']
+    schema_url = request.cove_config['schema_url']
 
-        context.update({
-            'file_type': file_type,
-            'schema_url': schema_url,
-            'validation_errors': get_schema_validation_errors(json_data, schema_url) if schema_url else None,
-            'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
-        })
+    if request.current_app == 'cove-ocds':
+        schema_url = schema_url['record'] if 'records' in json_data else schema_url['release']
 
-        view = 'explore.html'
-        if request.current_app == 'cove-ocds':
+    context.update({
+        'file_type': file_type,
+        'schema_url': schema_url,
+        'validation_errors': get_schema_validation_errors(json_data, schema_url) if schema_url else None,
+        'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
+    })
+
+    view = 'explore.html'
+    if request.current_app == 'cove-ocds':
+        if 'records' in json_data:
+            context['records_aggregates'] = get_records_aggregates(json_data)
+            view = 'explore_ocds-record.html'
+        else:
             context['releases_aggregates'] = get_releases_aggregates(json_data)
             view = 'explore_ocds-release.html'
-        elif request.current_app == 'cove-360':
-            context['grants_aggregates'] = get_grants_aggregates(json_data)
-            view = 'explore_360.html'
+    elif request.current_app == 'cove-360':
+        context['grants_aggregates'] = get_grants_aggregates(json_data)
+        view = 'explore_360.html'
 
-        return render(request, view, context)
+    return render(request, view, context)
 
 
 def stats(request):

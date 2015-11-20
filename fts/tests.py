@@ -160,6 +160,7 @@ def test_accordion(server_url, browser, prefix):
     ('/ocds/', 'WellcomeTrust-grants_2_grants.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('/ocds/', 'unconvertable_json.json', 'could not be converted', False),
+    ('/ocds/', 'full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], True),
     ])
 def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
@@ -202,8 +203,9 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
         if source_filename.endswith('.json'):
             assert 'JSON (Original)' in body_text
             original_file = browser.find_element_by_link_text("JSON (Original)").get_attribute("href")
-            converted_file = browser.find_element_by_link_text("Excel Spreadsheet (.xlsx) (Converted from Original)").get_attribute("href")
-            assert "flattened.xlsx" in converted_file
+            if 'record' not in source_filename:
+                converted_file = browser.find_element_by_link_text("Excel Spreadsheet (.xlsx) (Converted from Original)").get_attribute("href")
+                assert "flattened.xlsx" in converted_file
         elif source_filename.endswith('.xlsx'):
             assert '(.xlsx) (Original)' in body_text
             original_file = browser.find_element_by_link_text("Excel Spreadsheet (.xlsx) (Original)").get_attribute("href")
@@ -222,9 +224,10 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
         assert original_file_response.status_code == 200
         assert int(original_file_response.headers['content-length']) != 0
 
-        converted_file_response = requests.get(converted_file)
-        assert converted_file_response.status_code == 200
-        assert int(converted_file_response.headers['content-length']) != 0
+        if 'record' not in source_filename:
+            converted_file_response = requests.get(converted_file)
+            assert converted_file_response.status_code == 200
+            assert int(converted_file_response.headers['content-length']) != 0
 
 
 @pytest.mark.parametrize(('prefix'), [
