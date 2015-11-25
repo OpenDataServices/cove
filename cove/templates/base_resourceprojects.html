@@ -8,13 +8,29 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="icon" type="image/png" href="{% static 'dataexplore/favicon.png' %}">
   <title>{{ application_name }} {% block title %}{% endblock %}</title>
+  <style>
+    .btn.disabled {
+      pointer-events: auto;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
   <h1>ResourceProjects DataLoad Dashboard</h1>
 
+  {% if not datasets_statuses %}
+    <div style="padding-bottom: 1em">
+      <a href="{% url 'cove:dataload' %}">&lt;- Back to dashboard</a>
+    </div>
+  {% endif %}
+
   {% block content %}
   {% endblock %}
   </div><!-- /.container -->
+  {% if dataset %}
+  <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+  {% bootstrap_javascript %}
+  {% block extrafooterscript %}{% endblock %}
+  {% endif %}
 </body>
 </html>

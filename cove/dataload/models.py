@@ -5,6 +5,7 @@ from cove.input.models import SuppliedData
 class Dataset(models.Model):
     supplied_data = models.OneToOneField(SuppliedData)
     name = models.CharField(unique=True, max_length=50)
+    deleted = models.BooleanField(default=False)
 
 
 class ProcessRun(models.Model):

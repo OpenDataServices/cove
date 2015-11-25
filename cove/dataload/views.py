@@ -39,6 +39,7 @@ def statuses(dataset):
                 elif last_run.successful:
                     label_class = 'label-success'
                 else:
+                    # Note this currently will never happen for the NRGI code
                     label_class = 'label-danger'
             yield {
                 'process': process,
@@ -50,7 +51,7 @@ def statuses(dataset):
 
 def dataload(request):
     return render(request, "dataload.html", {
-        'datasets_statuses': ((dataset, statuses(dataset)) for dataset in Dataset.objects.all()),
+        'datasets_statuses': ((dataset, statuses(dataset)) for dataset in Dataset.objects.filter(deleted=False)),
         'main_process_names': [process['name'] for process in PROCESSES.values() if process['main']]
     })
 
@@ -73,9 +74,12 @@ def data(request, pk):
 
 def dataset(request, pk):
     dataset = Dataset.objects.get(pk=pk)
+    if dataset.deleted:
+        return redirect(reverse('cove:dataload', current_app=request.current_app))
     return render(request, "dataset.html", {
         'dataset': dataset,
-        'statuses': statuses(dataset)
+        'statuses': statuses(dataset),
+        'statuses_dict': {status['process']['id']: status for status in statuses(dataset)}
     })
 
 
