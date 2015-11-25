@@ -79,7 +79,7 @@ def dataset(request, pk):
     return render(request, "dataset.html", {
         'dataset': dataset,
         'statuses': statuses(dataset),
-        'statuses_dict': { status['process']['id']:status for status in statuses(dataset) }
+        'statuses_dict': {status['process']['id']: status for status in statuses(dataset)}
     })
 
 
