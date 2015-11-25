@@ -7,6 +7,7 @@ import json
 import logging
 import flattentool
 import functools
+import collections
 from flattentool.json_input import BadlyFormedJSONError
 import requests
 from jsonschema.validators import Draft4Validator as validator
@@ -77,12 +78,10 @@ def get_grants_aggregates(json_data):
 
 def get_schema_validation_errors(json_data, schema_url):
     schema = requests.get(schema_url).json()
-    validation_error_list = []
+    validation_errors = collections.defaultdict(list)
     for n, e in enumerate(validator(schema).iter_errors(json_data)):
-        if n >= 100:
-            break
-        validation_error_list.append(e)
-    return validation_error_list
+        validation_errors[e.message].append("/".join(str(item) for item in e.path))
+    return dict(validation_errors)
     
 
 class CoveInputDataError(Exception):
@@ -264,7 +263,7 @@ def explore(request, pk):
         context.update({
             'file_type': file_type,
             'schema_url': schema_url,
-            'validation_error_list': get_schema_validation_errors(json_data, schema_url) if schema_url else None,
+            'validation_errors': get_schema_validation_errors(json_data, schema_url) if schema_url else None,
             'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
         })
 

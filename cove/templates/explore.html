@@ -64,6 +64,26 @@
   </div>
 </div>
 
+{% if validation_errors %}
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          {% trans 'Validation Errors' %}
+        </h4>
+      </div>
+     <table class="table">
+         <thead> <th>{% trans 'Error Description' %}</th> <th>{% trans 'Error Count' %}</th> <th>{% trans 'Location of first 3 errors' %}</th> </thead>
+         <tbody>
+         {% for error, paths in validation_errors.items %}
+          <tr>
+              <td>{{error}}</td> <td>{{paths|length}}</td> <td>{{paths|slice:":3"|join:", "}}</td>
+          </tr>
+         {% endfor %}
+         </tbody>
+     </table>
+    </div>
+{% endif %}
+
 <!-- Count of Releases -->
 <div class="row">
   {% if schema_url %}
@@ -74,7 +94,8 @@
         <h4 class="panel-title">{% trans 'Validates against the schema?' %}</h4>
       </div>
       <div class="panel-body">
-        {% if validation_error_list %}No{% else %}Yes{% endif %}
+        {% if validation_errors %}No{% else %}Yes{% endif %}
+
       </div>
     </div>
   </div>
