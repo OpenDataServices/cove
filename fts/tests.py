@@ -141,7 +141,7 @@ def test_accordion(server_url, browser, prefix):
 @pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text', 'conversion_successful'), [
     ('/ocds/', 'tenders_releases_2_releases.json', ['Download Files', 'Save or Share these results'], True),
     # Conversion should still work for files that don't validate against the schema
-    ('/ocds/', 'tenders_releases_2_releases_invalid.json', ['Download Files', 'Vailidation Errors', "'id' is a required property"], True),
+    ('/ocds/', 'tenders_releases_2_releases_invalid.json', ['Download Files', 'Validation Errors', "'id' is a required property"], True),
     # Test UTF-8 support
     ('/ocds/', 'utf8.json', 'Download Files', True),
     # But we expect to see an error message if a file is not well formed JSON at all
