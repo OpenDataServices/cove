@@ -64,6 +64,7 @@ COVE_CONFIG_BY_NAMESPACE = {
     },
     'schema_url': {  # Schema url for the package schema (does not yet exist for 360)
         'cove-ocds': 'http://ocds.open-contracting.org/standard/r/1__0__0/release-package-schema.json',
+        'cove-360': 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/360-giving-package-schema.json',
         'default': None
     },
     'item_schema_url': {  # Schema url for an individual item e.g. a single release or grant
