@@ -246,7 +246,8 @@ def explore(request, pk):
         "original_file": {
             "url": data.original_file.url,
             "size": data.original_file.size
-        }
+        },
+        "current_url": request.build_absolute_uri()
     }
 
     if file_type == 'json':

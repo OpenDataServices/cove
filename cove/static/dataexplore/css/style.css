@@ -46,3 +46,22 @@ show-open-if-noscript {
  background-color: #f4f8fb;
  text-align: center;
  }
+
+.copy-button {
+  padding: 3px;
+  position: relative;
+  top: -2px;
+  right: -5px;
+  color: grey
+}
+
+.copy-div {
+  margin-bottom: 5px;
+  margin-top: -3px
+}
+
+.copy-span {
+  border: 1px solid #DDD;
+  border-radius: 4px;
+  padding: 4px;
+}
