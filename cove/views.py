@@ -174,6 +174,7 @@ def convert_json(request, data):
 def convert_spreadsheet(request, data, file_type):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
+    encoding = 'utf-8'
     if file_type == 'csv':
         # flatten-tool expects a directory full of CSVs with file names
         # matching what xlsx titles would be.
@@ -181,7 +182,13 @@ def convert_spreadsheet(request, data, file_type):
         # a new directory, such that it fits this pattern.
         input_name = os.path.join(data.upload_dir(), 'csv_dir')
         os.makedirs(input_name, exist_ok=True)
-        shutil.copy(data.original_file.file.name, os.path.join(input_name, request.cove_config['main_sheet_name'] + '.csv'))
+        destination = os.path.join(input_name, request.cove_config['main_sheet_name'] + '.csv')
+        shutil.copy(data.original_file.file.name, destination)
+        try:
+            with open(destination, encoding='utf-8') as main_sheet_file:
+                main_sheet_file.read()
+        except UnicodeDecodeError:
+            encoding = 'cp1252'
     else:
         input_name = data.original_file.file.name
     try:
@@ -192,7 +199,8 @@ def convert_spreadsheet(request, data, file_type):
             main_sheet_name=request.cove_config['main_sheet_name'],
             root_id=request.cove_config['root_id'],
             schema=request.cove_config['item_schema_url'],
-            convert_titles=True
+            convert_titles=True,
+            encoding=encoding
         )
         context['converted_file_size'] = os.path.getsize(converted_path)
     except Exception as err:
