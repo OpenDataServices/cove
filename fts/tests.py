@@ -150,6 +150,8 @@ def test_accordion(server_url, browser, prefix):
     ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files', 'Save or Share these results'], True),
     # Test a 360 spreadsheet with titles, rather than fields
     ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
+    # Test a 360 csv in cp1252 incoding
+    ('/360/', 'WellcomeTrust-grants_2_grants_cp1252.csv', 'Download Files', True),
     # Test a non-valid file.
     ('/360/', 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
     # Test a unconvertable spreadsheet (main sheet "grants" is missing)
