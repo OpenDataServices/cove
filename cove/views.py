@@ -11,12 +11,42 @@ import collections
 from flattentool.json_input import BadlyFormedJSONError
 import requests
 from jsonschema.validators import Draft4Validator as validator
+from jsonschema.exceptions import ValidationError
 from django.db.models.aggregates import Count
 from django.utils import timezone
 from datetime import timedelta
 
-
 logger = logging.getLogger(__name__)
+
+
+uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
+
+
+def uniqueIds(validator, uI, instance, schema):
+    if (
+        uI and
+        validator.is_type(instance, "array")
+    ):
+        non_unique_ids = set()
+        all_ids = set()
+        for item in instance:
+            item_id = item.get('id')
+            if item_id:
+                if item_id in all_ids:
+                    non_unique_ids.add(item_id)
+                all_ids.add(item_id)
+            else:
+                ## if there is any item without an id key revert to original validator
+                for error in uniqueItemsValidator(validator, uI, instance, schema):
+                    yield error
+                return
+
+        if non_unique_ids:
+            yield ValidationError("Non-unique Id Values {}".format(", ".join(non_unique_ids)))
+
+
+validator.VALIDATORS.pop("patternProperties")
+validator.VALIDATORS["uniqueItems"] = uniqueIds
 
 
 def get_releases_aggregates(json_data):
