@@ -19,6 +19,9 @@ from datetime import timedelta
 logger = logging.getLogger(__name__)
 
 
+uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
+
+
 def uniqueIds(validator, uI, instance, schema):
     if (
         uI and
@@ -32,12 +35,18 @@ def uniqueIds(validator, uI, instance, schema):
                 if item_id in all_ids:
                     non_unique_ids.add(item_id)
                 all_ids.add(item_id)
+            else:
+                ## if there is any item without an id key revert to original validator
+                for error in uniqueItemsValidator(validator, uI, instance, schema):
+                    yield error
+                return
+
         if non_unique_ids:
             yield ValidationError("Non-unique Id Values {}".format(", ".join(non_unique_ids)))
 
 
-validator.VALIDATORS["uniqueItems"] = uniqueIds
 validator.VALIDATORS.pop("patternProperties")
+validator.VALIDATORS["uniqueItems"] = uniqueIds
 
 
 def get_releases_aggregates(json_data):
