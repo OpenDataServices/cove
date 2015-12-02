@@ -30,13 +30,18 @@ def uniqueIds(validator, uI, instance, schema):
         non_unique_ids = set()
         all_ids = set()
         for item in instance:
-            item_id = item.get('id')
+            try:
+                item_id = item.get('id')
+            except AttributeError:
+                ##if item is not a dict
+                item_id = None
             if item_id:
                 if item_id in all_ids:
                     non_unique_ids.add(item_id)
                 all_ids.add(item_id)
             else:
-                ## if there is any item without an id key revert to original validator
+                ## if there is any item without an id key, or the item is not a dict
+                ## revert to original validator
                 for error in uniqueItemsValidator(validator, uI, instance, schema):
                     yield error
                 return
