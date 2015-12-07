@@ -87,5 +87,11 @@
    //We use this to collapse pannels 2 and 3 if javascript is on.
   $("#collapseTwo").attr('class', 'panel-collapse collapse');
   $("#collapseThree").attr('class', 'panel-collapse collapse');
+
+  $('button').click(function() {
+          $('<h3> Loading: </h3> <img class="spinner" src="https://i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="" width="30" height="30">').insertBefore('#accordion');
+      $('#accordion').hide();
+  });
+
 </script>
 {% endblock %}
