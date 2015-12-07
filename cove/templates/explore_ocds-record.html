@@ -1,0 +1,56 @@
+{% extends 'explore.html' %}
+{% load i18n %}
+
+{% block explore_content %}
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">{% trans 'Number of records' %}</h4>
+      </div>
+      <div class="panel-body">
+        {{records_aggregates.count}}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          {% blocktrans with number_of_ocids=records_aggregates.unique_ocids|length %}Unique OCIDs ({{number_of_ocids}}){% endblocktrans %}
+        </h4>
+      </div>
+      <div class="panel-body">
+        <ul>
+        {% for ocid in records_aggregates.unique_ocids %}
+        <li>{{ocid}}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!--End Row -->
+<div class="row"> <!--Start Row (Detail Table)-->
+  <div class="col-md-12">
+    <table class="table table-striped">
+      <caption>{% trans "Records Table:" %}</caption>
+      <thead>
+        <tr>
+          <th>ocid</th>
+          <th>record count</th>
+          <th>compiledRelease</th>
+          <th>versionedRelease</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in json_data.records %}
+        <tr>
+          <td>{{ record.ocid }}</td>
+          <td>{{ record.releases|length }}</td>
+          <td>{% if record.compiledRelease %}Yes{% else %}No{% endif %}</td>          
+          <td>{% if record.versionedRelease %}Yes{% else %}No{% endif %}</td>          
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
