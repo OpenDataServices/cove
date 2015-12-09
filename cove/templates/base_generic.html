@@ -21,7 +21,7 @@
             {% block h1 %}<h1 class="application-name"><a href="{% url 'cove:index' %}">{{ application_name }}</a></h1>{% endblock %}
             <p>{{ application_strapline }}</p>
           </div><!--col-md-8-->
-          <div class="col-md-4">
+          <div class="col-md-2">
             <form class="language-select" action="{% url 'set_language' %}" method="post">
             {% csrf_token %}
               <input name="next" type="hidden" value="{{ redirect_to }}" />
@@ -40,7 +40,11 @@
                 <input type="submit" value={% trans "Go" %} />
               </noscript>
             </form>
-          </div><!--col-md-4-->
+          </div><!--col-md-2-->
+          <div class="col-md-2">
+            {% block header_button %}
+            {% endblock %}
+          </div>
         </div><!--row-->
       {% endblock %}
     </div><!--page-header-->

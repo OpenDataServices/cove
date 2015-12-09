@@ -223,6 +223,8 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
         assert source_filename in original_file
         assert '0 bytes' not in body_text
+        # Test for Load New File button
+        assert 'Load New File' in body_text
 
         original_file_response = requests.get(original_file)
         assert original_file_response.status_code == 200
