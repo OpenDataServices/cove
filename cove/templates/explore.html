@@ -2,6 +2,7 @@
 {% block content %}
 
 {% load i18n %}
+{% load cove_tags %}
 {% trans 'Converted from Original' as converted %}
 {% trans 'Original' as original %}
 {% trans 'Excel Spreadsheet (.xlsx)' as xlsx %} 
@@ -91,28 +92,10 @@
     </div>
 {% endif %}
 
-<!-- Count of Releases -->
-<div class="row">
-  {% if schema_url %}
 
-  <div class="col-md-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">{% trans 'Validates against the schema?' %}</h4>
-      </div>
-      <div class="panel-body">
-        {% if validation_errors %}No{% else %}Yes{% endif %}
+{% block explore_content %}
+{% endblock %}
 
-      </div>
-    </div>
-  </div>
-
-  {% endif %}
-
-  {% block explore_content %}
-  {% endblock %}
-
-</div><!--End Row-->
 
 <div class="above-footer">
   <h2>{% trans "Save or Share these results" %}</h2>

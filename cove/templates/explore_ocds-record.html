@@ -2,6 +2,22 @@
 {% load i18n %}
 
 {% block explore_content %}
+<div class="row">
+  {% if schema_url %}
+
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">{% trans 'Validates against the schema?' %}</h4>
+      </div>
+      <div class="panel-body">
+        {% if validation_errors %}No{% else %}Yes{% endif %}
+
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
   <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -53,4 +69,5 @@
       </tbody>
     </table>
   </div>
+</div><!--End Row -->
 {% endblock %}

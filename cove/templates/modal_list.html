@@ -1,0 +1,15 @@
+<div class="modal {{className}}" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         <h5 class="modal-title">{{ modalTitle }}</h5>
+      </div>
+      <ul class="list-group">
+        {% for id in itemList %}
+           <li class="list-group-item">{{ id }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
