@@ -75,7 +75,7 @@
     <div class="panel panel-danger">
       <div class="panel-heading">
         <h4 class="panel-title">
-          {% trans 'Validation Errors' %}
+          {% blocktrans %}Validation Errors (against <a href="{{ schema_url }}">{{ schema_url }}</a>){% endblocktrans %}
         </h4>
       </div>
      <table class="table">
@@ -88,7 +88,9 @@
          {% endfor %}
          </tbody>
      </table>
+    <div class="panel-footer">Schema used for validation: <a href="{{ schema_url }}">{{ schema_url }}</a></div>
     </div>
+    
 {% endif %}
 
 <!-- Count of Releases -->
@@ -98,12 +100,13 @@
   <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4 class="panel-title">{% trans 'Validates against the schema?' %}</h4>
+        <h4 class="panel-title">{% blocktrans %}Validates against the <a href="{{ schema_url }}">schema?</a>{% endblocktrans %}</h4>
       </div>
       <div class="panel-body">
         {% if validation_errors %}No{% else %}Yes{% endif %}
 
       </div>
+      <div class="panel-footer">Schema used for validation: <a href="{{ schema_url }}">{{ schema_url|truncatechars:9 }}</a></div>
     </div>
   </div>
 
