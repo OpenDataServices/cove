@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
+{% load i18n %}
+{% block header_button %}
+  <a href="{% url 'cove:index' %}" class="btn btn-large btn-success">{% trans 'Load New File' %}</a>
+{% endblock %}
 {% block content %}
 
-{% load i18n %}
 {% load cove_tags %}
+
 {% trans 'Converted from Original' as converted %}
 {% trans 'Original' as original %}
 {% trans 'Excel Spreadsheet (.xlsx)' as xlsx %} 

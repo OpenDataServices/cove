@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-10 14:36+0000\n"
+"POT-Creation-Date: 2015-12-11 11:37+0000\n"
 "PO-Revision-Date: 2015-04-27 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,23 +18,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.7.5\n"
 
-#: cove/input/templates/datainput/input.html:13 cove/templates/stats.html:10
+#: cove/input/templates/datainput/input.html:15 cove/templates/stats.html:10
 #, fuzzy
 #| msgid "Upload a file"
 msgid "Upload"
 msgstr "Télécharger un fichier"
 
-#: cove/input/templates/datainput/input.html:23
-#: cove/input/templates/datainput/input.html:46
-#: cove/input/templates/datainput/input.html:69
+#: cove/input/templates/datainput/input.html:25
+#: cove/input/templates/datainput/input.html:48
+#: cove/input/templates/datainput/input.html:71
 msgid "Submit"
 msgstr "Soumettre"
 
-#: cove/input/templates/datainput/input.html:36 cove/templates/stats.html:11
+#: cove/input/templates/datainput/input.html:38 cove/templates/stats.html:11
 msgid "Link"
 msgstr ""
 
-#: cove/input/templates/datainput/input.html:59 cove/input/views.py:27
+#: cove/input/templates/datainput/input.html:61 cove/input/views.py:27
 #: cove/templates/stats.html:12
 msgid "Paste"
 msgstr ""
@@ -139,43 +139,43 @@ msgstr ""
 msgid "Go"
 msgstr ""
 
-#: cove/templates/base_generic.html:59
+#: cove/templates/base_generic.html:63
 msgid "What happens to the data I provide to this site?"
 msgstr ""
 
-#: cove/templates/base_generic.html:60
+#: cove/templates/base_generic.html:64
 msgid ""
 "We retain the data you upload or paste to this site, on our server, for 7 "
 "days."
 msgstr ""
 
-#: cove/templates/base_generic.html:61
+#: cove/templates/base_generic.html:65
 msgid ""
 "If you supply a link, we fetch the data from that link and store it on our "
 "server for 7 days."
 msgstr ""
 
-#: cove/templates/base_generic.html:62
+#: cove/templates/base_generic.html:66
 msgid ""
 "We delete all data older than 7 days from our servers daily, retaining none "
 "of the original data."
 msgstr ""
 
-#: cove/templates/base_generic.html:63
+#: cove/templates/base_generic.html:67
 msgid ""
 "While the data is on our servers we may access that data to help us "
 "understand how people are using this application, what types of data are "
 "being supplied, what common errors exist and so on."
 msgstr ""
 
-#: cove/templates/base_generic.html:64
+#: cove/templates/base_generic.html:68
 msgid ""
 "We may also retain data in backups of our servers, which means on occassion, "
 "some data may be retained longer. We have no intention of using this data "
 "for anything other than server recovery in an emergency."
 msgstr ""
 
-#: cove/templates/base_generic.html:65
+#: cove/templates/base_generic.html:69
 msgid ""
 "We do retain some metadata about data supplied to this site. Details can be "
 "found in the code, but may include information about whether or not the file "
@@ -183,11 +183,11 @@ msgid ""
 "supplied and so on. "
 msgstr ""
 
-#: cove/templates/base_generic.html:67
+#: cove/templates/base_generic.html:71
 msgid "Why do you delete data after 7 days?"
 msgstr ""
 
-#: cove/templates/base_generic.html:68
+#: cove/templates/base_generic.html:72
 msgid ""
 "This is service to allow people to explore machine readable data. As such we "
 "see no need to store and gather everything people submit to the site "
@@ -196,17 +196,17 @@ msgid ""
 "to save people having to clean up after themselves."
 msgstr ""
 
-#: cove/templates/base_generic.html:69
+#: cove/templates/base_generic.html:73
 msgid ""
 "We believe that deleting supplied data after 7 days provides a level of "
 "privacy for the users of this service. "
 msgstr ""
 
-#: cove/templates/base_generic.html:75
+#: cove/templates/base_generic.html:79
 msgid "Why provide converted versions?"
 msgstr ""
 
-#: cove/templates/base_generic.html:76
+#: cove/templates/base_generic.html:80
 msgid ""
 "\n"
 "    The W3C <a href=\"http://www.w3.org/TR/dwbp/\">Data on the Web Best "
@@ -216,59 +216,59 @@ msgid ""
 "    "
 msgstr ""
 
-#: cove/templates/base_generic.html:88
+#: cove/templates/base_generic.html:92
 msgid "About"
 msgstr ""
 
-#: cove/templates/base_generic.html:90
+#: cove/templates/base_generic.html:94
 msgid "Built by"
 msgstr ""
 
-#: cove/templates/base_generic.html:90
+#: cove/templates/base_generic.html:94
 msgid "Open Data Services"
 msgstr ""
 
-#: cove/templates/base_generic.html:91
+#: cove/templates/base_generic.html:95
 msgid "The code for this site is available on"
 msgstr ""
 
-#: cove/templates/base_generic.html:91
+#: cove/templates/base_generic.html:95
 msgid "GitHub"
 msgstr ""
 
-#: cove/templates/base_generic.html:91
+#: cove/templates/base_generic.html:95
 msgid "Cove - COnvert Validate & Explore"
 msgstr ""
 
-#: cove/templates/base_generic.html:91
+#: cove/templates/base_generic.html:95
 msgid "Licence"
 msgstr ""
 
-#: cove/templates/base_generic.html:91
+#: cove/templates/base_generic.html:95
 msgid "AGPLv3"
 msgstr ""
 
-#: cove/templates/base_generic.html:91
+#: cove/templates/base_generic.html:95
 msgid "Report/View issues"
 msgstr ""
 
-#: cove/templates/base_generic.html:91
+#: cove/templates/base_generic.html:95
 msgid "Cove Issues"
 msgstr ""
 
-#: cove/templates/base_generic.html:95
+#: cove/templates/base_generic.html:99
 msgid "Terms &amp; Conditions"
 msgstr ""
 
 #. Translators: Provides information about the version of the code base that is being used
-#: cove/templates/base_generic.html:98
+#: cove/templates/base_generic.html:102
 #, python-format
 msgid ""
 "Running version <a href=\"https://github.com/OpenDataServices/cove/tree/"
 "%(version)s\">%(version)s</a>."
 msgstr ""
 
-#: cove/templates/base_generic.html:101
+#: cove/templates/base_generic.html:105
 msgid "Links"
 msgstr ""
 
@@ -296,79 +296,85 @@ msgid ""
 "conform to the Open Data Contracting Standard"
 msgstr ""
 
-#: cove/templates/explore.html:5
+#: cove/templates/explore.html:4
+#, fuzzy
+#| msgid "Upload a file"
+msgid "Load New File"
+msgstr "Télécharger un fichier"
+
+#: cove/templates/explore.html:9
 msgid "Converted from Original"
 msgstr ""
 
-#: cove/templates/explore.html:6
+#: cove/templates/explore.html:10
 msgid "Original"
 msgstr ""
 
-#: cove/templates/explore.html:7
+#: cove/templates/explore.html:11
 msgid "Excel Spreadsheet (.xlsx)"
 msgstr ""
 
-#: cove/templates/explore.html:8
+#: cove/templates/explore.html:12
 msgid "CSV Spreadsheet (.csv)"
 msgstr ""
 
-#: cove/templates/explore.html:9
+#: cove/templates/explore.html:13
 msgid "Excel Spreadsheet (.xlsx) with titles"
 msgstr ""
 
 #. Translators: JSON probably does not need a transalation: http://www.json.org/
-#: cove/templates/explore.html:11
+#: cove/templates/explore.html:15
 msgid "JSON"
 msgstr ""
 
-#: cove/templates/explore.html:17
+#: cove/templates/explore.html:21
 msgid "Download Files"
 msgstr ""
 
-#: cove/templates/explore.html:26 cove/templates/explore.html.py:30
-#: cove/templates/explore.html:35 cove/templates/explore.html.py:50
-#: cove/templates/explore.html:52 cove/templates/explore.html.py:58
-#: cove/templates/explore.html:65
+#: cove/templates/explore.html:30 cove/templates/explore.html.py:34
+#: cove/templates/explore.html:39 cove/templates/explore.html.py:54
+#: cove/templates/explore.html:56 cove/templates/explore.html.py:62
+#: cove/templates/explore.html:69
 #, python-format
 msgid "%(file_format)s (%(status)s)"
 msgstr ""
 
-#: cove/templates/explore.html:78
+#: cove/templates/explore.html:82
 msgid "Validation Errors"
 msgstr ""
 
-#: cove/templates/explore.html:82
+#: cove/templates/explore.html:86
 msgid "Error Description"
 msgstr ""
 
-#: cove/templates/explore.html:82
+#: cove/templates/explore.html:86
 msgid "Error Count"
 msgstr ""
 
-#: cove/templates/explore.html:82
+#: cove/templates/explore.html:86
 msgid "Location of first 3 errors"
 msgstr ""
 
-#: cove/templates/explore.html:101
+#: cove/templates/explore.html:105
 msgid "Validates against the schema?"
 msgstr ""
 
-#: cove/templates/explore.html:118
+#: cove/templates/explore.html:122
 msgid "Save or Share these results"
 msgstr ""
 
-#: cove/templates/explore.html:119
+#: cove/templates/explore.html:123
 msgid "Use the following url to share these results:"
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove/templates/explore.html:124
+#: cove/templates/explore.html:128
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
 msgstr ""
 
-#: cove/templates/explore.html:125
+#: cove/templates/explore.html:129
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
