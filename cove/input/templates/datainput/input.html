@@ -4,6 +4,8 @@
 
 {% block content %}
 
+<div id="loading" style="display: none"> <h3> Loading: </h3> <img class="spinner" src="//i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="spinner" width="30" height="30"> </div>
+
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   {% if 'upload' in input_methods %}
   <div class="panel panel-default">
@@ -89,7 +91,7 @@
   $("#collapseThree").attr('class', 'panel-collapse collapse');
 
   $('button').click(function() {
-          $('<h3> Loading: </h3> <img class="spinner" src="https://i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="" width="30" height="30">').insertBefore('#accordion');
+      $('#loading').css({"display": "block"})
       $('#accordion').hide();
   });
 
