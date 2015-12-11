@@ -32,7 +32,7 @@
 </div><!--End Row -->
 <div class="row"> <!--Start Row (Detail Table)-->
   <div class="col-md-12">
-    <table class="table table-striped">
+    <table class="table table-striped tablesorter">
       <caption>{% trans "Grants Table:" %}</caption>
       <thead>
         <tr>
@@ -54,4 +54,10 @@
       </tbody>
     </table>
   </div>
+{% endblock %}
+
+{% block extrafooterscript %}
+<!--table sorting may be useful-->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.24.6/js/jquery.tablesorter.min.js"></script>
+<script>$(function() { $("table.table").tablesorter(); });</script>
 {% endblock %}
