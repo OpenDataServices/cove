@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-10 12:54+0000\n"
+"POT-Creation-Date: 2015-12-10 14:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,54 +18,54 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: cove/input/templates/datainput/input.html:12 cove/templates/stats.html:10
+#: cove/input/templates/datainput/input.html:13 cove/templates/stats.html:10
 msgid "Upload"
 msgstr "Subir"
 
-#: cove/input/templates/datainput/input.html:22
-#: cove/input/templates/datainput/input.html:43
-#: cove/input/templates/datainput/input.html:64
+#: cove/input/templates/datainput/input.html:23
+#: cove/input/templates/datainput/input.html:46
+#: cove/input/templates/datainput/input.html:69
 msgid "Submit"
 msgstr "Presentar"
 
-#: cove/input/templates/datainput/input.html:33 cove/templates/stats.html:11
+#: cove/input/templates/datainput/input.html:36 cove/templates/stats.html:11
 msgid "Link"
 msgstr "Enlace"
 
-#: cove/input/templates/datainput/input.html:54 cove/input/views.py:28
+#: cove/input/templates/datainput/input.html:59 cove/input/views.py:27
 #: cove/templates/stats.html:12
 msgid "Paste"
 msgstr "Pasta"
 
-#: cove/input/views.py:14
+#: cove/input/views.py:13
 msgid "Upload a file"
 msgstr "Cargar un archivo"
 
-#: cove/input/views.py:23
+#: cove/input/views.py:22
 msgid "Supply a URL"
 msgstr "Proporcione una dirección URL"
 
-#: cove/settings.py:45 cove/templates/multi_index.html:28
+#: cove/settings.py:56 cove/templates/multi_index.html:28
 msgid "Open Contracting Data Tool"
 msgstr ""
 
-#: cove/settings.py:46 cove/templates/multi_index.html:16
+#: cove/settings.py:57 cove/templates/multi_index.html:16
 msgid "360Giving Data Tool"
 msgstr ""
 
-#: cove/settings.py:47
+#: cove/settings.py:58
 msgid "CoVE"
 msgstr ""
 
-#: cove/settings.py:50
+#: cove/settings.py:61
 msgid "Convert, Validate, Explore Open Contracting Data"
 msgstr ""
 
-#: cove/settings.py:51
+#: cove/settings.py:62
 msgid "Convert, Validate, Explore 360Giving Data"
 msgstr ""
 
-#: cove/settings.py:52
+#: cove/settings.py:63
 msgid "Convert, Validate, Explore"
 msgstr ""
 
@@ -292,8 +292,8 @@ msgstr ""
 
 #: cove/templates/base_ocds.html:18
 msgid ""
-"The application only works with 'release' documents that conform to the Open "
-"Data Contracting Standard"
+"The application only works with both 'release' and 'record' documents that "
+"conform to the Open Data Contracting Standard"
 msgstr ""
 
 #: cove/templates/explore.html:5
@@ -325,75 +325,107 @@ msgstr ""
 msgid "Download Files"
 msgstr "Bajar Archivos"
 
-#: cove/templates/explore.html:24 cove/templates/explore.html.py:25
-#: cove/templates/explore.html:26 cove/templates/explore.html.py:32
-#: cove/templates/explore.html:34 cove/templates/explore.html.py:37
+#: cove/templates/explore.html:26 cove/templates/explore.html.py:30
+#: cove/templates/explore.html:35 cove/templates/explore.html.py:50
+#: cove/templates/explore.html:52 cove/templates/explore.html.py:58
+#: cove/templates/explore.html:65
 #, python-format
 msgid "%(file_format)s (%(status)s)"
 msgstr ""
 
-#: cove/templates/explore.html:50
+#: cove/templates/explore.html:78
+msgid "Validation Errors"
+msgstr ""
+
+#: cove/templates/explore.html:82
+msgid "Error Description"
+msgstr ""
+
+#: cove/templates/explore.html:82
+msgid "Error Count"
+msgstr ""
+
+#: cove/templates/explore.html:82
+msgid "Location of first 3 errors"
+msgstr ""
+
+#: cove/templates/explore.html:101
 msgid "Validates against the schema?"
 msgstr ""
 
-#: cove/templates/explore.html:65
-#, fuzzy
-#| msgid "Number of Releases"
-msgid "Number of releases"
-msgstr "Número de Releases"
-
-#: cove/templates/explore.html:76
-#, python-format
-msgid "Unique OCIDs (%(number_of_ocids)s)"
-msgstr ""
-
-#: cove/templates/explore.html:92
-msgid "Release Dates"
-msgstr ""
-
-#: cove/templates/explore.html:96
-msgid "Earliest:"
-msgstr ""
-
-#: cove/templates/explore.html:98
-msgid "Latest:"
-msgstr ""
-
-#: cove/templates/explore.html:106
-msgid "Releases Table:"
-msgstr ""
-
-#: cove/templates/explore.html:136
-#, fuzzy
-#| msgid "Number of Releases"
-msgid "Number of grants"
-msgstr "Número de Releases"
-
-#: cove/templates/explore.html:148
-#, python-format
-msgid "Unique IDs (%(number_of_ids)s)"
-msgstr ""
-
-#: cove/templates/explore.html:164
-msgid "Grants Table:"
-msgstr ""
-
-#: cove/templates/explore.html:190
+#: cove/templates/explore.html:118
 msgid "Save or Share these results"
 msgstr ""
 
+#: cove/templates/explore.html:119
+msgid "Use the following url to share these results:"
+msgstr ""
+
 #. Translators: Paragraph that describes the application
-#: cove/templates/explore.html:192
+#: cove/templates/explore.html:124
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
 msgstr ""
 
-#: cove/templates/explore.html:194
+#: cove/templates/explore.html:125
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
 "will be show a message that tells them the file has been removed."
+msgstr ""
+
+#: cove/templates/explore_360.html:8
+#, fuzzy
+#| msgid "Number of Releases"
+msgid "Number of grants"
+msgstr "Número de Releases"
+
+#: cove/templates/explore_360.html:20
+#, python-format
+msgid "Unique IDs (%(number_of_ids)s)"
+msgstr ""
+
+#: cove/templates/explore_360.html:36
+msgid "Grants Table:"
+msgstr ""
+
+#: cove/templates/explore_ocds-record.html:8
+#, fuzzy
+#| msgid "Number of Releases"
+msgid "Number of records"
+msgstr "Número de Releases"
+
+#: cove/templates/explore_ocds-record.html:19
+#: cove/templates/explore_ocds-release.html:19
+#, python-format
+msgid "Unique OCIDs (%(number_of_ocids)s)"
+msgstr ""
+
+#: cove/templates/explore_ocds-record.html:35
+msgid "Records Table:"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:8
+#, fuzzy
+#| msgid "Number of Releases"
+msgid "Number of releases"
+msgstr "Número de Releases"
+
+#: cove/templates/explore_ocds-release.html:35
+msgid "Release Dates"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:39
+msgid "Earliest:"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:41
+msgid "Latest:"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:49
+msgid "Releases Table:"
 msgstr ""
 
 #: cove/templates/multi_index.html:12
@@ -836,35 +868,15 @@ msgid ""
 "technical issues beyond our control."
 msgstr ""
 
-#: cove/views.py:108 cove/views.py:118
-msgid "Sorry, the page you are looking for is not available"
-msgstr ""
-
-#: cove/views.py:110 cove/views.py:120
-msgid "Go to Home page"
-msgstr ""
-
-#: cove/views.py:111
-msgid "We don't seem to be able to find the data you requested."
-msgstr ""
-
-#: cove/views.py:121
-msgid ""
-"The data you were hoping to explore no longer exists.\n"
-"\n"
-"This is because all data suplied to this website is automatically deleted "
-"after 7 days, and therefore the analysis of that data is no longer available."
-msgstr ""
-
-#: cove/views.py:128 cove/views.py:159
+#: cove/views.py:163 cove/views.py:207 cove/views.py:265 cove/views.py:322
 msgid "Sorry we can't process that data"
 msgstr ""
 
-#: cove/views.py:130 cove/views.py:161
+#: cove/views.py:165 cove/views.py:209 cove/views.py:267 cove/views.py:324
 msgid "Try Again"
 msgstr ""
 
-#: cove/views.py:131
+#: cove/views.py:166
 msgid ""
 "We did not recognise the file type.\n"
 "\n"
@@ -873,11 +885,39 @@ msgid ""
 "Is this a bug? Contact us on code [at] opendataservices.coop"
 msgstr ""
 
-#: cove/views.py:162
+#: cove/views.py:210 cove/views.py:325
 msgid ""
 "We think you tried to upload a JSON file, but it is not well formed JSON.\n"
 "\n"
 "Error message: {}"
+msgstr ""
+
+#: cove/views.py:268
+msgid ""
+"We think you tried to supply a spreadsheet, but we failed to convert it to "
+"JSON.\n"
+"\n"
+"Error message: {}"
+msgstr ""
+
+#: cove/views.py:289 cove/views.py:299
+msgid "Sorry, the page you are looking for is not available"
+msgstr ""
+
+#: cove/views.py:291 cove/views.py:301
+msgid "Go to Home page"
+msgstr ""
+
+#: cove/views.py:292
+msgid "We don't seem to be able to find the data you requested."
+msgstr ""
+
+#: cove/views.py:302
+msgid ""
+"The data you were hoping to explore no longer exists.\n"
+"\n"
+"This is because all data suplied to this website is automatically deleted "
+"after 7 days, and therefore the analysis of that data is no longer available."
 msgstr ""
 
 #~ msgid "Unrecognised file type."

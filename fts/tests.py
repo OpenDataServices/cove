@@ -24,6 +24,8 @@ def server_url(request, live_server):
 def test_index_page_banner(server_url, browser):
     browser.get(server_url)
     assert 'This tool is alpha. Please report any problems on GitHub issues.' in browser.find_element_by_tag_name('body').text
+    if server_url == "http://dev.cove.opendataservices.coop/":
+        assert 'This is a development site with experimental features. Do not rely on it.' in browser.find_element_by_tag_name('body').text
     
 
 def test_index_page(server_url, browser):
@@ -66,6 +68,8 @@ def test_index_page_ocds(server_url, browser):
     browser.get(server_url + '/ocds/')
     assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'How to use the Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
+    assert "'release'" in browser.find_element_by_tag_name('body').text
+    assert "'record'" in browser.find_element_by_tag_name('body').text
     
     
 def test_index_page_360(server_url, browser):
