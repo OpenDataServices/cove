@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-10 14:36+0000\n"
+"POT-Creation-Date: 2015-12-11 11:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,21 +18,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: cove/input/templates/datainput/input.html:13 cove/templates/stats.html:10
+#: cove/input/templates/datainput/input.html:15 cove/templates/stats.html:10
 msgid "Upload"
 msgstr "Subir"
 
-#: cove/input/templates/datainput/input.html:23
-#: cove/input/templates/datainput/input.html:46
-#: cove/input/templates/datainput/input.html:69
+#: cove/input/templates/datainput/input.html:25
+#: cove/input/templates/datainput/input.html:48
+#: cove/input/templates/datainput/input.html:71
 msgid "Submit"
 msgstr "Presentar"
 
-#: cove/input/templates/datainput/input.html:36 cove/templates/stats.html:11
+#: cove/input/templates/datainput/input.html:38 cove/templates/stats.html:11
 msgid "Link"
 msgstr "Enlace"
 
-#: cove/input/templates/datainput/input.html:59 cove/input/views.py:27
+#: cove/input/templates/datainput/input.html:61 cove/input/views.py:27
 #: cove/templates/stats.html:12
 msgid "Paste"
 msgstr "Pasta"
@@ -331,50 +331,50 @@ msgstr ""
 msgid "Download Files"
 msgstr "Bajar Archivos"
 
-#: cove/templates/explore.html:26 cove/templates/explore.html.py:30
-#: cove/templates/explore.html:35 cove/templates/explore.html.py:50
-#: cove/templates/explore.html:52 cove/templates/explore.html.py:58
-#: cove/templates/explore.html:65
+#: cove/templates/explore.html:30 cove/templates/explore.html.py:34
+#: cove/templates/explore.html:39 cove/templates/explore.html.py:54
+#: cove/templates/explore.html:56 cove/templates/explore.html.py:62
+#: cove/templates/explore.html:69
 #, python-format
 msgid "%(file_format)s (%(status)s)"
 msgstr ""
 
-#: cove/templates/explore.html:78
+#: cove/templates/explore.html:82
 msgid "Validation Errors"
 msgstr ""
 
-#: cove/templates/explore.html:82
+#: cove/templates/explore.html:86
 msgid "Error Description"
 msgstr ""
 
-#: cove/templates/explore.html:82
+#: cove/templates/explore.html:86
 msgid "Error Count"
 msgstr ""
 
-#: cove/templates/explore.html:82
+#: cove/templates/explore.html:86
 msgid "Location of first 3 errors"
 msgstr ""
 
-#: cove/templates/explore.html:101
+#: cove/templates/explore.html:105
 msgid "Validates against the schema?"
 msgstr ""
 
-#: cove/templates/explore.html:118
+#: cove/templates/explore.html:122
 msgid "Save or Share these results"
 msgstr ""
 
-#: cove/templates/explore.html:119
+#: cove/templates/explore.html:123
 msgid "Use the following url to share these results:"
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove/templates/explore.html:124
+#: cove/templates/explore.html:128
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
 msgstr ""
 
-#: cove/templates/explore.html:125
+#: cove/templates/explore.html:129
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
