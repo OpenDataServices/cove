@@ -151,7 +151,7 @@ def test_accordion(server_url, browser, prefix):
     # But we expect to see an error message if a file is not well formed JSON at all
     ('/ocds/', 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
     ('/ocds/', 'tenders_releases_2_releases.xlsx', 'Download Files', True),
-    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files', 'Save or Share these results'], True),
+    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files', 'Save or Share these results', 'Unique Grant IDs: 2', 'Duplicate IDs: 2'], True),
     # Test a 360 spreadsheet with titles, rather than fields
     ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
     # Test a 360 csv in cp1252 incoding
