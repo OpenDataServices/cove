@@ -68,6 +68,8 @@ def test_index_page_ocds(server_url, browser):
     browser.get(server_url + '/ocds/')
     assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'How to use the Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
+    assert "'release'" in browser.find_element_by_tag_name('body').text
+    assert "'record'" in browser.find_element_by_tag_name('body').text
     
     
 def test_index_page_360(server_url, browser):
