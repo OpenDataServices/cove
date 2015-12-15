@@ -186,6 +186,9 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
     check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+    #refresh page to now check if tests still work after caching some data
+    browser.refresh()
+    check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
     
     browser.get(server_url + prefix + '?source_url=' + source_url)
     check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)

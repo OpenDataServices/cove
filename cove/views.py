@@ -237,14 +237,16 @@ def convert_json(request, data):
         schema=request.cove_config['item_schema_url'],
     )
     try:
-        flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+        if not os.path.exists(converted_path + '.xlsx'):
+            flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
         context['converted_file_size'] = os.path.getsize(converted_path + '.xlsx')
         if request.cove_config['convert_titles']:
             flatten_kwargs.update(dict(
                 output_name=converted_path + '-titles',
                 use_titles=True
             ))
-            flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+            if not os.path.exists(converted_path + '-titles.xlsx'):
+                flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
             context['converted_file_size_titles'] = os.path.getsize(converted_path + '-titles.xlsx')
     except BadlyFormedJSONError as err:
         raise CoveInputDataError(context={
@@ -290,16 +292,17 @@ def convert_spreadsheet(request, data, file_type):
     else:
         input_name = data.original_file.file.name
     try:
-        flattentool.unflatten(
-            input_name,
-            output_name=converted_path,
-            input_format=file_type,
-            main_sheet_name=request.cove_config['main_sheet_name'],
-            root_id=request.cove_config['root_id'],
-            schema=request.cove_config['item_schema_url'],
-            convert_titles=True,
-            encoding=encoding
-        )
+        if not os.path.exists(converted_path):
+            flattentool.unflatten(
+                input_name,
+                output_name=converted_path,
+                input_format=file_type,
+                main_sheet_name=request.cove_config['main_sheet_name'],
+                root_id=request.cove_config['root_id'],
+                schema=request.cove_config['item_schema_url'],
+                convert_titles=True,
+                encoding=encoding
+            )
         context['converted_file_size'] = os.path.getsize(converted_path)
     except Exception as err:
         logger.exception(err, extra={
@@ -382,10 +385,19 @@ def explore(request, pk):
     if request.current_app == 'cove-ocds':
         schema_url = schema_url['record'] if 'records' in json_data else schema_url['release']
 
+    validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors.json')
+    if os.path.exists(validation_errors_path):
+        with open(validation_errors_path) as validiation_error_fp:
+            validation_errors = json.load(validiation_error_fp)
+    else:
+        validation_errors = get_schema_validation_errors(json_data, schema_url) if schema_url else None
+        with open(validation_errors_path, 'w+') as validiation_error_fp:
+            validiation_error_fp.write(json.dumps(validation_errors))
+
     context.update({
         'file_type': file_type,
         'schema_url': schema_url,
-        'validation_errors': get_schema_validation_errors(json_data, schema_url) if schema_url else None,
+        'validation_errors': validation_errors,
         'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
     })
 
