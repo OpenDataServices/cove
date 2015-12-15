@@ -87,28 +87,30 @@
           {% trans 'Grants Table' %}
         </h4>
       </div>
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>id</th>
-            <th>title</th>
-            <th>currency</th>
-            <th>amountAwarded</th>
-            <th>dateModified</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for grant in json_data.grants %}
-          <tr>
-            <td>{{ grant.id }}</td>
-            <td>{{ grant.title }}</td>
-            <td>{{ grant.currency }}</td>
-            <td>{{ grant.amountAwarded }}</td>
-            <td>{{ grant.dateModified }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="panel-body">
+          <table class="table table-striped result-table">
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>title</th>
+                <th>currency</th>
+                <th>amountAwarded</th>
+                <th>dateModified</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for grant in json_data.grants %}
+              <tr>
+                <td>{{ grant.id }}</td>
+                <td>{{ grant.title }}</td>
+                <td>{{ grant.currency }}</td>
+                <td>{{ grant.amountAwarded }}</td>
+                <td>{{ grant.dateModified }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+      </div>
     </div>
   </div>
 </div><!--End Row-->

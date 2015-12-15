@@ -119,6 +119,9 @@
     $( document ).ready(function() {
         ZeroClipboard.config({swfPath: "http://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.swf"})
         var client = new ZeroClipboard( document.getElementById('copy-url-button') );
+        $('.result-table').DataTable();
     });
   </script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
 {% endblock %}
