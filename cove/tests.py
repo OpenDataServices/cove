@@ -29,14 +29,16 @@ def test_get_releases_aggregates():
 
 
 def test_fields_present():
-    assert v.get_fields_present({}) == set()
-    assert v.get_fields_present({'a': 1, 'b': 2}) == set(['/a', '/b'])
-    assert v.get_fields_present({'a': {}, 'b': 2}) == set(['/a', '/b'])
-    assert v.get_fields_present({'a': {'c': 1}, 'b': 2}) == set(['/a', '/b', '/a/c'])
-    assert v.get_fields_present({'a': {'c': 1}, 'b': 2}) == set(['/a', '/b', '/a/c'])
-    assert v.get_fields_present({'a': {'c': {'d': 1}}, 'b': 2}) == set(['/a', '/b', '/a/c', '/a/c/d'])
-    assert v.get_fields_present({'a': [{'c': 1}], 'b': 2}) == set(['/a', '/b', '/a[]/c'])
-    assert v.get_fields_present({'a': {'c': [{'d': 1}]}, 'b': 2}) == set(['/a', '/b', '/a/c', '/a/c[]/d'])
+    assert v.get_fields_present({}) == {}
+    assert v.get_fields_present({'a': 1, 'b': 2}) == {"/a": 1, "/b": 1}
+    assert v.get_fields_present({'a': {}, 'b': 2}) == {'/a': 1, '/b': 1}
+    assert v.get_fields_present({'a': {'c': 1}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
+    assert v.get_fields_present({'a': {'c': 1}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
+    assert v.get_fields_present({'a': {'c': {'d': 1}}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1, '/a/c/d': 1}
+    assert v.get_fields_present({'a': [{'c': 1}], 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
+    assert v.get_fields_present({'a': {'c': [{'d': 1}]}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1, '/a/c/d': 1}
+    assert v.get_fields_present({'a': {'c_1': [{'d': 1}]}, 'b_1': 2}) == {'/a': 1, '/a/c_1': 1, '/a/c_1/d': 1}
+    assert v.get_fields_present({'a': {'c_1': [{'d': 1}, {'d': 1}]}, 'b_1': 2}) == {'/a': 1, '/a/c_1': 1, '/a/c_1/d': 2}
 
 
 def test_get_file_type_xlsx():

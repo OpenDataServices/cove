@@ -96,6 +96,26 @@
     </div>
 {% endif %}
 
+{% if data_only %}
+    <div class="panel panel-warning">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          {% trans 'Additional Fields (fields in data not in schema)' %}
+        </h4>
+      </div>
+      <table class="table">
+         <thead> <th>{% trans 'Field' %}</th> <th>{% trans 'Path to Field' %}</th> <th>{% trans 'Usage Count' %}</th> </thead>
+         <tbody>
+         {% for path, error, count in data_only %}
+            <tr>
+               <td>{{error}}</td> <td>{{path}}</td> <td>{{count}}</td>
+            </tr>
+         {% endfor %}
+         </tbody>
+      </table>
+    </div>
+{% endif %}
+
 
 {% block explore_content %}
 {% endblock %}

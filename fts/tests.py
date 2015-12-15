@@ -156,7 +156,9 @@ def test_accordion(server_url, browser, prefix):
                                                            'Unique Grant IDs: 2',
                                                            'Duplicate IDs: 2',
                                                            'Silent Signal',
-                                                           'Showing 1 to 4 of 4 entries'], True),
+                                                           'Showing 1 to 4 of 4 entries',
+                                                           'Additional Fields',
+                                                           'Data source'], True),
     # Test a 360 spreadsheet with titles, rather than fields
     ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
     # Test a 360 csv in cp1252 incoding

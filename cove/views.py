@@ -178,37 +178,67 @@ def get_grants_aggregates(json_data):
 
 
 def fields_present_generator(json_data, prefix=''):
-    if hasattr(json_data, 'items'):
-        for key, value in json_data.items():
+    if not isinstance(json_data, dict):
+        return
+    for key, value in json_data.items():
+        if isinstance(value, list):
+            for item in value:
+                if isinstance(item, dict):
+                    yield from fields_present_generator(item, prefix + '/' + key)
+            yield prefix + '/' + key
+        elif isinstance(value, dict):
             yield from fields_present_generator(value, prefix + '/' + key)
             yield prefix + '/' + key
-    elif isinstance(json_data, list):
-        for x in json_data:
-            yield from fields_present_generator(x, prefix + '[]')
+        else:
+            # if a string value has an underscore in it, assume its a language property
+            # and do not count as a present field.
+            if '_' not in key:
+                yield prefix + '/' + key
 
 
 def get_fields_present(*args, **kwargs):
-    return set(fields_present_generator(*args, **kwargs))
+    counter = collections.Counter()
+    counter.update(fields_present_generator(*args, **kwargs))
+    return dict(counter)
 
 
 def schema_dict_fields_generator(schema_dict):
     if 'properties' in schema_dict:
-        for property_name, property_schema_dict in schema_dict['properties'].items():
-            property_type_set = get_property_type_set(property_schema_dict)
-            if 'object' in property_type_set:
-                for field in schema_dict_fields_generator(property_schema_dict):
-                    yield '/' + property_name + field
-
-            elif 'array' in property_type_set:
-                fields = schema_dict_fields_generator(property_schema_dict['items'])
-                for field in fields:
-                    yield '/' + property_name + '[]' + field
-            yield '/' + property_name
+        for property_name, value in schema_dict['properties'].items():
+            if 'oneOf' in value:
+                property_schema_dicts = value['oneOf']
+            else:
+                property_schema_dicts = [value]
+            for property_schema_dict in property_schema_dicts:
+                property_type_set = get_property_type_set(property_schema_dict)
+                if 'object' in property_type_set:
+                    for field in schema_dict_fields_generator(property_schema_dict):
+                        yield '/' + property_name + field
+                elif 'array' in property_type_set:
+                    fields = schema_dict_fields_generator(property_schema_dict['items'])
+                    for field in fields:
+                        yield '/' + property_name + field
+                yield '/' + property_name
 
 
 def get_schema_fields(schema_filename):
     r = requests.get(schema_filename)
     return set(schema_dict_fields_generator(jsonref.loads(r.text, object_pairs_hook=OrderedDict)))
+
+
+def get_counts_additional_fields(schema_url, json_data):
+    fields_present = get_fields_present(json_data)
+    schema_fields = get_schema_fields(schema_url)
+    data_only_all = set(fields_present) - schema_fields
+    data_only = set()
+    for field in data_only_all:
+        parent_field = "/".join(field.split('/')[:-1])
+        # only take fields with parent in schema (and top level fields)
+        # to make results less verbose
+        if not parent_field or parent_field in schema_fields:
+            data_only.add(field)
+
+    return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
 
 
 def get_schema_validation_errors(json_data, schema_url):
@@ -423,8 +453,9 @@ def explore(request, pk):
         schema_url = schema_url['record'] if 'records' in json_data else schema_url['release']
 
     if schema_url:
-        fields_present = get_fields_present(json_data)
-        schema_fields = get_schema_fields(schema_url)
+        context.update({
+            'data_only': sorted(get_counts_additional_fields(schema_url, json_data))
+        })
 
     validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors.json')
     if os.path.exists(validation_errors_path):
@@ -440,8 +471,6 @@ def explore(request, pk):
         'schema_url': schema_url,
         'validation_errors': validation_errors,
         'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
-        'schema_only': schema_fields - fields_present,
-        'data_only': fields_present - schema_fields
     })
 
     view = 'explore.html'
