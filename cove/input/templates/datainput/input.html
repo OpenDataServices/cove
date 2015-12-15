@@ -91,9 +91,13 @@
   $("#collapseThree").attr('class', 'panel-collapse collapse');
 
   $('button').click(function() {
-      $('#loading').css({"display": "block"})
+      $('#loading').css({"display": "block"});
       $('#accordion').hide();
   });
+  $(window).unload(function() {
+    $('#accordion').unhide();
+    $('#loading').css({"display": "none"});
+  })
 
 </script>
 {% endblock %}
