@@ -131,12 +131,12 @@ def get_grants_aggregates(json_data):
         for grant in json_data['grants']:
             count = count + 1
             amountAwarded = grant.get('amountAwarded')
-            if amountAwarded:
+            if amountAwarded and isinstance(amountAwarded, (int, float)):
                 max_amount_awarded = max(amountAwarded, max_amount_awarded)
                 if not min_amount_awarded:
                     min_amount_awarded = amountAwarded
                 min_amount_awarded = min(amountAwarded, min_amount_awarded)
-            awardDate = grant.get('awardDate')
+            awardDate = str(grant.get('awardDate', ''))
             if awardDate:
                 max_award_date = max(awardDate, max_award_date)
                 if not min_award_date:
