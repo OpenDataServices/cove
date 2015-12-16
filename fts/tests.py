@@ -158,7 +158,9 @@ def test_accordion(server_url, browser, prefix):
                                                            'Silent Signal',
                                                            'Showing 1 to 4 of 4 entries',
                                                            'Additional Fields',
-                                                           'Data source'], True),
+                                                           'Data source',
+                                                           "'24/07/2014' is not a 'date-time'",
+                                                           "'13-03-2015' is not a 'date-time'"], True),
     # Test a 360 spreadsheet with titles, rather than fields
     ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
     # Test a 360 csv in cp1252 incoding

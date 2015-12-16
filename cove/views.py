@@ -10,11 +10,14 @@ import logging
 import flattentool
 import functools
 import collections
+import strict_rfc3339
+import datetime
 from flattentool.json_input import BadlyFormedJSONError
 from flattentool.schema import get_property_type_set
 import requests
 from jsonschema.validators import Draft4Validator as validator
 from jsonschema.exceptions import ValidationError
+from jsonschema import FormatChecker
 from django.db.models.aggregates import Count
 from django.utils import timezone
 from datetime import timedelta
@@ -241,10 +244,20 @@ def get_counts_additional_fields(schema_url, json_data):
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
 
 
-def get_schema_validation_errors(json_data, schema_url):
+def datetime_or_date(instance):
+    result = strict_rfc3339.validate_rfc3339(instance)
+    if result:
+        return result
+    return datetime.datetime.strptime(instance, "%Y-%m-%d")
+
+
+def get_schema_validation_errors(json_data, schema_url, current_app):
     schema = requests.get(schema_url).json()
     validation_errors = collections.defaultdict(list)
-    for n, e in enumerate(validator(schema).iter_errors(json_data)):
+    format_checker = FormatChecker()
+    if current_app == 'cove-360':
+        format_checker.checkers['date-time'] = (datetime_or_date, ValueError)
+    for n, e in enumerate(validator(schema, format_checker=format_checker).iter_errors(json_data)):
         validation_errors[e.message].append("/".join(str(item) for item in e.path))
     return dict(validation_errors)
     
@@ -462,7 +475,7 @@ def explore(request, pk):
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
-        validation_errors = get_schema_validation_errors(json_data, schema_url) if schema_url else None
+        validation_errors = get_schema_validation_errors(json_data, schema_url, request.current_app) if schema_url else None
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 
