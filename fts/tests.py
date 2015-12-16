@@ -151,7 +151,14 @@ def test_accordion(server_url, browser, prefix):
     # But we expect to see an error message if a file is not well formed JSON at all
     ('/ocds/', 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
     ('/ocds/', 'tenders_releases_2_releases.xlsx', 'Download Files', True),
-    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files', 'Save or Share these results', 'Unique Grant IDs: 2', 'Duplicate IDs: 2'], True),
+    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files',
+                                                           'Save or Share these results',
+                                                           'Unique Grant IDs: 2',
+                                                           'Duplicate IDs: 2',
+                                                           'Silent Signal',
+                                                           'Showing 1 to 4 of 4 entries',
+                                                           'Additional Fields',
+                                                           'Data source'], True),
     # Test a 360 spreadsheet with titles, rather than fields
     ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
     # Test a 360 csv in cp1252 incoding
@@ -180,6 +187,9 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
     time.sleep(0.5)
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+    check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+    #refresh page to now check if tests still work after caching some data
+    browser.refresh()
     check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
     
     browser.get(server_url + prefix + '?source_url=' + source_url)

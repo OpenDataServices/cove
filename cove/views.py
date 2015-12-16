@@ -2,13 +2,16 @@ from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render
 from cove.input.models import SuppliedData
 import os
+from collections import OrderedDict
 import shutil
 import json
+import jsonref
 import logging
 import flattentool
 import functools
 import collections
 from flattentool.json_input import BadlyFormedJSONError
+from flattentool.schema import get_property_type_set
 import requests
 from jsonschema.validators import Draft4Validator as validator
 from jsonschema.exceptions import ValidationError
@@ -174,6 +177,70 @@ def get_grants_aggregates(json_data):
     }
 
 
+def fields_present_generator(json_data, prefix=''):
+    if not isinstance(json_data, dict):
+        return
+    for key, value in json_data.items():
+        if isinstance(value, list):
+            for item in value:
+                if isinstance(item, dict):
+                    yield from fields_present_generator(item, prefix + '/' + key)
+            yield prefix + '/' + key
+        elif isinstance(value, dict):
+            yield from fields_present_generator(value, prefix + '/' + key)
+            yield prefix + '/' + key
+        else:
+            # if a string value has an underscore in it, assume its a language property
+            # and do not count as a present field.
+            if '_' not in key:
+                yield prefix + '/' + key
+
+
+def get_fields_present(*args, **kwargs):
+    counter = collections.Counter()
+    counter.update(fields_present_generator(*args, **kwargs))
+    return dict(counter)
+
+
+def schema_dict_fields_generator(schema_dict):
+    if 'properties' in schema_dict:
+        for property_name, value in schema_dict['properties'].items():
+            if 'oneOf' in value:
+                property_schema_dicts = value['oneOf']
+            else:
+                property_schema_dicts = [value]
+            for property_schema_dict in property_schema_dicts:
+                property_type_set = get_property_type_set(property_schema_dict)
+                if 'object' in property_type_set:
+                    for field in schema_dict_fields_generator(property_schema_dict):
+                        yield '/' + property_name + field
+                elif 'array' in property_type_set:
+                    fields = schema_dict_fields_generator(property_schema_dict['items'])
+                    for field in fields:
+                        yield '/' + property_name + field
+                yield '/' + property_name
+
+
+def get_schema_fields(schema_filename):
+    r = requests.get(schema_filename)
+    return set(schema_dict_fields_generator(jsonref.loads(r.text, object_pairs_hook=OrderedDict)))
+
+
+def get_counts_additional_fields(schema_url, json_data):
+    fields_present = get_fields_present(json_data)
+    schema_fields = get_schema_fields(schema_url)
+    data_only_all = set(fields_present) - schema_fields
+    data_only = set()
+    for field in data_only_all:
+        parent_field = "/".join(field.split('/')[:-1])
+        # only take fields with parent in schema (and top level fields)
+        # to make results less verbose
+        if not parent_field or parent_field in schema_fields:
+            data_only.add(field)
+
+    return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
+
+
 def get_schema_validation_errors(json_data, schema_url):
     schema = requests.get(schema_url).json()
     validation_errors = collections.defaultdict(list)
@@ -237,14 +304,16 @@ def convert_json(request, data):
         schema=request.cove_config['item_schema_url'],
     )
     try:
-        flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+        if not os.path.exists(converted_path + '.xlsx'):
+            flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
         context['converted_file_size'] = os.path.getsize(converted_path + '.xlsx')
         if request.cove_config['convert_titles']:
             flatten_kwargs.update(dict(
                 output_name=converted_path + '-titles',
                 use_titles=True
             ))
-            flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+            if not os.path.exists(converted_path + '-titles.xlsx'):
+                flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
             context['converted_file_size_titles'] = os.path.getsize(converted_path + '-titles.xlsx')
     except BadlyFormedJSONError as err:
         raise CoveInputDataError(context={
@@ -290,16 +359,17 @@ def convert_spreadsheet(request, data, file_type):
     else:
         input_name = data.original_file.file.name
     try:
-        flattentool.unflatten(
-            input_name,
-            output_name=converted_path,
-            input_format=file_type,
-            main_sheet_name=request.cove_config['main_sheet_name'],
-            root_id=request.cove_config['root_id'],
-            schema=request.cove_config['item_schema_url'],
-            convert_titles=True,
-            encoding=encoding
-        )
+        if not os.path.exists(converted_path):
+            flattentool.unflatten(
+                input_name,
+                output_name=converted_path,
+                input_format=file_type,
+                main_sheet_name=request.cove_config['main_sheet_name'],
+                root_id=request.cove_config['root_id'],
+                schema=request.cove_config['item_schema_url'],
+                convert_titles=True,
+                encoding=encoding
+            )
         context['converted_file_size'] = os.path.getsize(converted_path)
     except Exception as err:
         logger.exception(err, extra={
@@ -382,10 +452,24 @@ def explore(request, pk):
     if request.current_app == 'cove-ocds':
         schema_url = schema_url['record'] if 'records' in json_data else schema_url['release']
 
+    if schema_url:
+        context.update({
+            'data_only': sorted(get_counts_additional_fields(schema_url, json_data))
+        })
+
+    validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors.json')
+    if os.path.exists(validation_errors_path):
+        with open(validation_errors_path) as validiation_error_fp:
+            validation_errors = json.load(validiation_error_fp)
+    else:
+        validation_errors = get_schema_validation_errors(json_data, schema_url) if schema_url else None
+        with open(validation_errors_path, 'w+') as validiation_error_fp:
+            validiation_error_fp.write(json.dumps(validation_errors))
+
     context.update({
         'file_type': file_type,
         'schema_url': schema_url,
-        'validation_errors': get_schema_validation_errors(json_data, schema_url) if schema_url else None,
+        'validation_errors': validation_errors,
         'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
     })
 
