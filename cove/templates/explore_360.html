@@ -46,9 +46,9 @@
               <b>{% trans "Recipient Organisations IDs:" %}</b> {{grants_aggregates.distinct_recipient_org_identifier|length}}
             </a>
             <br/>
-            <b>{% trans "Currencies Used Count:" %}</b> {{grants_aggregates.distinct_currency|length}}</td>
+            <b>{% trans "Currencies Used Count:" %}</b> {{grants_aggregates.distinct_currency|length}}
             <br/>
-            <b>{% trans "Currencies Used:" %}</b> {{grants_aggregates.distinct_currency|join:", "}}</td>
+            <b>{% trans "Currencies Used:" %}</b> {{grants_aggregates.distinct_currency|join:", "}}
             <br/>
           </div>
         </div>
