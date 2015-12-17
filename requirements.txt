@@ -1,12 +1,12 @@
-Django==1.8.7
+Django==1.8.7 # rq.filter: <1.9
 -e git+https://github.com/OpenDataServices/flatten-tool.git@e0ecec379a1e313666da7a5f1e511b8ca6cd0d0c#egg=flattentool
 django-bootstrap3==6.2.2
 django-debug-toolbar==1.4
-requests==2.8.1
-dealer==2.0.4
+requests==2.9.0
+dealer==2.0.5
 django-environ==0.4.0
 jsonschema==2.5.1
-raven==5.8.1
+raven==5.9.2
 strict-rfc3339==0.6
 
 # Dependencies of flatten-tool
