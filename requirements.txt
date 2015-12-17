@@ -7,6 +7,7 @@ dealer==2.0.4
 django-environ==0.4.0
 jsonschema==2.5.1
 raven==5.8.1
+strict-rfc3339==0.6
 
 # Dependencies of flatten-tool
 jdcal==1.2
