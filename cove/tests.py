@@ -6,26 +6,156 @@ from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 
+EMPTY_RELEASE_AGGREGATE = {
+    'award_doc_count': 0,
+    'award_doctype': {},
+    'award_count': 0,
+    'contract_doc_count': 0,
+    'contract_doctype': {},
+    'contract_count': 0,
+    'contracts_without_awards': [],
+    'duplicate_release_ids': set(),
+    'implementation_count': 0,
+    'implementation_doc_count': 0,
+    'implementation_doctype': {},
+    'implementation_milestones_doc_count': 0,
+    'implementation_milestones_doctype': {},
+    'item_identifier_schemes': set(),
+    'max_award_date': '',
+    'max_contract_date': '',
+    'max_release_date': '',
+    'max_tender_date': '',
+    'min_award_date': '',
+    'min_contract_date': '',
+    'min_release_date': '',
+    'min_tender_date': '',
+    'organisations_with_address': 0,
+    'organisations_with_contact_point': 0,
+    'planning_doc_count': 0,
+    'planning_doctype': {},
+    'planning_count': 0,
+    'award_item_count': 0,
+    'contract_item_count': 0,
+    'release_count': 0,
+    'tender_item_count': 0,
+    'tags': {},
+    'tender_doc_count': 0,
+    'tender_doctype': {},
+    'tender_milestones_doc_count': 0,
+    'tender_milestones_doctype': {},
+    'tender_count': 0,
+    'unique_award_id': set(),
+    'unique_buyers_count': 0,
+    'unique_buyers_identifier': set(),
+    'unique_buyers_name_no_id': set(),
+    'unique_currency': set(),
+    'unique_initation_type': set(),
+    'unique_lang': set(),
+    'unique_ocids': set(),
+    'unique_org_count': 0,
+    'unique_org_identifier_count': 0,
+    'unique_org_name_count': 0,
+    'unique_organisation_schemes': set(),
+    'unique_procuring_count': 0,
+    'unique_procuring_identifier': set(),
+    'unique_procuring_name_no_id': set(),
+    'unique_suppliers_count': 0,
+    'unique_suppliers_identifier': set(),
+    'unique_suppliers_name_no_id': set(),
+    'unique_tenderers_count': 0,
+    'unique_tenderers_identifier': set(),
+    'unique_tenderers_name_no_id': set()
+}
+
+EXPECTED_RELEASE_AGGREGATE = {
+    'award_count': 2,
+    'award_doc_count': 3,
+    'award_doctype': {'doctype1': 2, 'doctype2': 1},
+    'award_item_count': 2,
+    'contract_count': 2,
+    'contract_doc_count': 3,
+    'contract_doctype': {'doctype1': 2, 'doctype2': 1},
+    'contract_item_count': 2,
+    'contracts_without_awards': [{'awardID': 'no',
+                               'id': '2',
+                               'period': {'startDate': '2015-01-02T00:00Z'},
+                               'value': {'currency': 'EUR'}}],
+    'duplicate_release_ids': set(),
+    'implementation_count': 1,
+    'implementation_doc_count': 3,
+    'implementation_doctype': {'doctype1': 2, 'doctype2': 1},
+    'implementation_milestones_doc_count': 3,
+    'implementation_milestones_doctype': {'doctype1': 2, 'doctype2': 1},
+    'item_identifier_schemes': {'scheme1', 'scheme2'},
+    'max_award_date': '2015-01-02T00:00Z',
+    'max_contract_date': '2015-01-02T00:00Z',
+    'max_release_date': '2015-01-02T00:00Z',
+    'max_tender_date': '2015-01-02T00:00Z',
+    'min_award_date': '2015-01-01T00:00Z',
+    'min_contract_date': '2015-01-01T00:00Z',
+    'min_release_date': '2015-01-02T00:00Z',
+    'min_tender_date': '2015-01-02T00:00Z',
+    'organisations_with_address': 2,
+    'organisations_with_contact_point': 2,
+    'planning_count': 1,
+    'planning_doc_count': 3,
+    'planning_doctype': {'doctype1': 2, 'doctype2': 1},
+    'release_count': 1,
+    'tags': {'planning': 1, 'tender': 1},
+    'tender_count': 1,
+    'tender_doc_count': 3,
+    'tender_doctype': {'doctype1': 2, 'doctype2': 1},
+    'tender_item_count': 2,
+    'tender_milestones_doc_count': 3,
+    'tender_milestones_doctype': {'doctype1': 2},
+    'unique_award_id': {'1', '2'},
+    'unique_buyers_count': 1,
+    'unique_buyers_identifier': {'1'},
+    'unique_buyers_name_no_id': set(),
+    'unique_currency': {'EUR', 'YEN', 'USD', 'GBP'},
+    'unique_initation_type': {'tender'},
+    'unique_lang': {'English'},
+    'unique_ocids': {'1'},
+    'unique_org_count': 4,
+    'unique_org_identifier_count': 2,
+    'unique_org_name_count': 2,
+    'unique_organisation_schemes': {'a', 'b'},
+    'unique_procuring_count': 1,
+    'unique_procuring_identifier': {'1'},
+    'unique_procuring_name_no_id': set(),
+    'unique_suppliers_count': 3,
+    'unique_suppliers_identifier': {'2'},
+    'unique_suppliers_name_no_id': {'Big corp1', 'Big corp2'},
+    'unique_tenderers_count': 3,
+    'unique_tenderers_identifier': {'2'},
+    'unique_tenderers_name_no_id': {'Big corp1', 'Big corp2'}
+}
+
 
 def test_get_releases_aggregates():
-    assert v.get_releases_aggregates({}) == {
-        'count': 0,
-        'unique_ocids': [],
-        'earliest_release_date': None,
-        'latest_release_date': None
-    }
-    assert v.get_releases_aggregates({'releases': []}) == {
-        'count': 0,
-        'unique_ocids': set([]),
-        'earliest_release_date': None,
-        'latest_release_date': None
-    }
-    assert v.get_releases_aggregates({'releases': [{}, {}, {}]}) == {
-        'count': 3,
-        'unique_ocids': set([]),
-        'earliest_release_date': None,
-        'latest_release_date': None
-    }
+    assert v.get_releases_aggregates({}) == EMPTY_RELEASE_AGGREGATE
+    assert v.get_releases_aggregates({'releases': []}) == EMPTY_RELEASE_AGGREGATE
+    release_aggregate_3_empty = EMPTY_RELEASE_AGGREGATE.copy()
+    release_aggregate_3_empty['release_count'] = 3
+    assert v.get_releases_aggregates({'releases': [{}, {}, {}]}) == release_aggregate_3_empty
+
+    with open(os.path.join('cove', 'fixtures', 'release_aggregate.json')) as fp:
+        data = json.load(fp)
+
+    assert v.get_releases_aggregates({'releases': data['releases']}) == EXPECTED_RELEASE_AGGREGATE
+
+    # test if a release is duplicated
+    actual = v.get_releases_aggregates({'releases': data['releases'] + data['releases']})
+    actual_cleaned = {key: actual[key] for key in actual if 'doc' not in key}
+    actual_cleaned.pop('contracts_without_awards')
+
+    expected_cleaned = {key: EXPECTED_RELEASE_AGGREGATE[key] for key in EXPECTED_RELEASE_AGGREGATE if 'doc' not in key}
+    expected_cleaned['tags'] = {'planning': 2, 'tender': 2}
+    expected_cleaned.pop('contracts_without_awards')
+    expected_cleaned['release_count'] = 2
+    expected_cleaned['duplicate_release_ids'] = set(['1'])
+
+    assert actual_cleaned == expected_cleaned
 
 
 def test_fields_present():

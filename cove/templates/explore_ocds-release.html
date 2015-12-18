@@ -24,7 +24,7 @@
         <h4 class="panel-title">{% trans 'Number of releases' %}</h4>
       </div>
       <div class="panel-body">
-        {{releases_aggregates.count}}
+        {{releases_aggregates.release_count}}
       </div>
     </div>
   </div>
@@ -52,9 +52,9 @@
         </h4>
       </div>
       <div class="panel-body">
-        {% trans "Earliest:" %} {{releases_aggregates.earliest_release_date}}
+        {% trans "Earliest:" %} {{releases_aggregates.min_release_date}}
         <br>
-        {% trans "Latest:" %} {{releases_aggregates.latest_release_date}}
+        {% trans "Latest:" %} {{releases_aggregates.max_release_date}}
       </div>
     </div>
   </div>
