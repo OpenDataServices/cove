@@ -152,7 +152,8 @@ def get_releases_aggregates(json_data):
                     organisation_identifier_contact_point.add(org_id)
         if not org_id:
             name = org.get('name')
-            unique_name.add(name)
+            if name:
+                unique_name.add(name)
             if org.get('address'):
                 organisation_name_no_id_address.add(name)
             if org.get('contactPoint'):
@@ -189,9 +190,9 @@ def get_releases_aggregates(json_data):
         if initiationType:
             unique_initation_type.add(initiationType)
 
-        releaseDate = str(release.get('date', ''))
+        releaseDate = release.get('date', '')
         if releaseDate:
-            release_dates.append(releaseDate)
+            release_dates.append(str(releaseDate))
 
         if 'language' in release:
             unique_lang.add(release['language'])
@@ -212,9 +213,9 @@ def get_releases_aggregates(json_data):
             tender_doc_count += update_docs(tender, tender_doctype)
             tender_period = tender.get('tenderPeriod')
             if tender_period:
-                start_date = str(tender_period.get('startDate', ''))
+                start_date = tender_period.get('startDate', '')
                 if start_date:
-                    tender_dates.append(start_date)
+                    tender_dates.append(str(start_date))
             procuringEntity = tender.get('procuringEntity')
             if procuringEntity:
                 process_org(procuringEntity, unique_procuring_identifier, unique_procuring_name_no_id)
@@ -239,9 +240,9 @@ def get_releases_aggregates(json_data):
             if award_id:
                 unique_award_id.add(award_id)
                 awardid_ocids.add((award_id, ocid))
-            award_date = str(award.get('date', ''))
+            award_date = award.get('date', '')
             if award_date:
-                award_dates.append(award_date)
+                award_dates.append(str(award_date))
             award_items = award.get('items', [])
             for item in award_items:
                 item_id = item.get('id')
@@ -261,7 +262,7 @@ def get_releases_aggregates(json_data):
                 contractid_ocids.add((contract_id, ocid))
             period = contract.get('period')
             if period:
-                start_date = str(period.get('startDate', ''))
+                start_date = period.get('startDate', '')
                 if start_date:
                     contract_dates.append(start_date)
             contract_items = contract.get('items', [])
@@ -276,7 +277,7 @@ def get_releases_aggregates(json_data):
                 if contract_id:
                     implementation_contractid_ocids.add((contract_id, ocid))
                 implementation_doc_count += update_docs(implementation, implementation_doctype)
-                implementation_milestones = implementation.get('milestones')
+                implementation_milestones = implementation.get('milestones', [])
                 for milestone in implementation_milestones:
                     implementation_milestones_doc_count += update_docs(milestone, implementation_milestones_doctype)
 
@@ -407,7 +408,7 @@ def get_records_aggregates(json_data):
 
 
 def get_grants_aggregates(json_data):
-    
+
     id_count = 0
     count = 0
     unique_ids = set()

@@ -131,6 +131,42 @@ EXPECTED_RELEASE_AGGREGATE = {
     'unique_tenderers_name_no_id': {'Big corp1', 'Big corp2'}
 }
 
+EXPECTED_RELEASE_AGGREGATE_RANDOM = {
+    'award_count': 1477,
+    'award_doc_count': 2159,
+    'award_item_count': 2245,
+    'contract_count': 1479,
+    'contract_doc_count': 2186,
+    'contract_item_count': 2093,
+    'implementation_count': 562,
+    'implementation_doc_count': 1140,
+    'implementation_milestones_doc_count': 1659,
+    'max_award_date': '5137-06-18T19:25:03.403Z',
+    'max_contract_date': '5113-08-13T17:04:27.669Z',
+    'max_release_date': '5137-06-07T19:44:36.152Z',
+    'max_tender_date': '5084-05-16T03:11:56.723Z',
+    'min_award_date': '1977-01-18T23:35:50.858Z',
+    'min_contract_date': '1970-02-23T13:49:12.592Z',
+    'min_release_date': '1970-08-03T00:21:37.491Z',
+    'min_tender_date': '1989-03-20T22:29:02.697Z',
+    'organisations_with_address': 770,
+    'organisations_with_contact_point': 729,
+    'planning_count': 339,
+    'planning_doc_count': 738,
+    'release_count': 1005,
+    'tender_count': 467,
+    'tender_doc_count': 799,
+    'tender_item_count': 770,
+    'tender_milestones_doc_count': 1163,
+    'unique_buyers_count': 169,
+    'unique_org_count': 1339,
+    'unique_org_identifier_count': 625,
+    'unique_org_name_count': 714,
+    'unique_procuring_count': 94,
+    'unique_suppliers_count': 812,
+    'unique_tenderers_count': 286,
+}
+
 
 def test_get_releases_aggregates():
     assert v.get_releases_aggregates({}) == EMPTY_RELEASE_AGGREGATE
@@ -156,6 +192,14 @@ def test_get_releases_aggregates():
     expected_cleaned['duplicate_release_ids'] = set(['1'])
 
     assert actual_cleaned == expected_cleaned
+
+    with open(os.path.join('cove', 'fixtures', 'samplerubbish.json')) as fp:
+        data = json.load(fp)
+
+    actual = v.get_releases_aggregates(data)
+    actual_cleaned = {key: actual[key] for key in actual if isinstance(actual[key], (str, int, float))}
+
+    assert actual_cleaned == EXPECTED_RELEASE_AGGREGATE_RANDOM
 
 
 def test_fields_present():
