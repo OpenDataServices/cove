@@ -95,7 +95,8 @@
             "id": "1",
             "documents": [
               {
-                "id": "doc1"
+                "id": "doc1",
+                "documentType": "doctype1"
               }, 
               {
                 "id": "doc2",
@@ -103,7 +104,7 @@
               }, 
               {
                 "id": "doc1",
-                "documentType": "doctype1"
+                "documentType": "doctype2"
               } 
             ]
           }

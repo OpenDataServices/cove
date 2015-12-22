@@ -46,7 +46,7 @@ EMPTY_RELEASE_AGGREGATE = {
     'tender_count': 0,
     'unique_award_id': set(),
     'unique_buyers_count': 0,
-    'unique_buyers_identifier': set(),
+    'unique_buyers_identifier': {},
     'unique_buyers_name_no_id': set(),
     'unique_currency': set(),
     'unique_initation_type': set(),
@@ -57,14 +57,22 @@ EMPTY_RELEASE_AGGREGATE = {
     'unique_org_name_count': 0,
     'unique_organisation_schemes': set(),
     'unique_procuring_count': 0,
-    'unique_procuring_identifier': set(),
+    'unique_procuring_identifier': {},
     'unique_procuring_name_no_id': set(),
     'unique_suppliers_count': 0,
-    'unique_suppliers_identifier': set(),
+    'unique_suppliers_identifier': {},
     'unique_suppliers_name_no_id': set(),
     'unique_tenderers_count': 0,
-    'unique_tenderers_identifier': set(),
-    'unique_tenderers_name_no_id': set()
+    'unique_tenderers_identifier': {},
+    'unique_tenderers_name_no_id': set(),
+    'processes_implementation_count': 0,
+    'processes_award_count': 0,
+    'processes_contract_count': 0,
+    'total_item_count': 0,
+    'unique_buyers': set(),
+    'unique_procuring': set(),
+    'unique_suppliers': set(),
+    'unique_tenderers': set()
 }
 
 EXPECTED_RELEASE_AGGREGATE = {
@@ -107,10 +115,10 @@ EXPECTED_RELEASE_AGGREGATE = {
     'tender_doctype': {'doctype1': 2, 'doctype2': 1},
     'tender_item_count': 2,
     'tender_milestones_doc_count': 3,
-    'tender_milestones_doctype': {'doctype1': 2},
+    'tender_milestones_doctype': {'doctype1': 2, 'doctype2': 1},
     'unique_award_id': {'1', '2'},
     'unique_buyers_count': 1,
-    'unique_buyers_identifier': {'1'},
+    'unique_buyers_identifier': {'1': 'Gov'},
     'unique_buyers_name_no_id': set(),
     'unique_currency': {'EUR', 'YEN', 'USD', 'GBP'},
     'unique_initation_type': {'tender'},
@@ -121,14 +129,22 @@ EXPECTED_RELEASE_AGGREGATE = {
     'unique_org_name_count': 2,
     'unique_organisation_schemes': {'a', 'b'},
     'unique_procuring_count': 1,
-    'unique_procuring_identifier': {'1'},
+    'unique_procuring_identifier': {'1': 'Gov'},
     'unique_procuring_name_no_id': set(),
     'unique_suppliers_count': 3,
-    'unique_suppliers_identifier': {'2'},
+    'unique_suppliers_identifier': {'2': 'Big corp3'},
     'unique_suppliers_name_no_id': {'Big corp1', 'Big corp2'},
     'unique_tenderers_count': 3,
-    'unique_tenderers_identifier': {'2'},
-    'unique_tenderers_name_no_id': {'Big corp1', 'Big corp2'}
+    'unique_tenderers_identifier': {'2': 'Big corp3'},
+    'unique_tenderers_name_no_id': {'Big corp1', 'Big corp2'},
+    'processes_implementation_count': 1,
+    'processes_award_count': 1,
+    'processes_contract_count': 1,
+    'total_item_count': 6,
+    'unique_buyers': {'Gov (1)'},
+    'unique_procuring': {'Gov (1)'},
+    'unique_suppliers': {'Big corp3 (2)', 'Big corp2', 'Big corp1'},
+    'unique_tenderers': {'Big corp3 (2)', 'Big corp2', 'Big corp1'},
 }
 
 EXPECTED_RELEASE_AGGREGATE_RANDOM = {
@@ -165,6 +181,10 @@ EXPECTED_RELEASE_AGGREGATE_RANDOM = {
     'unique_procuring_count': 94,
     'unique_suppliers_count': 812,
     'unique_tenderers_count': 286,
+    'processes_award_count': 466,
+    'processes_contract_count': 467,
+    'processes_implementation_count': 327,
+    'total_item_count': 5108,
 }
 
 
