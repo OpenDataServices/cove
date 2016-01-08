@@ -73,3 +73,7 @@ show-open-if-noscript {
 a:hover {
  cursor:pointer;
 }
+
+.left-space {
+    margin-left:10px
+}

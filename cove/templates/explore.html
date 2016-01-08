@@ -26,7 +26,7 @@
   <div class="panel-body">
     {% if conversion == 'flatten' %}
       
-      <ul>
+      <ul class="list-unstyled left-space">
         <li>
           <a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{original_file.size|filesizeformat }}
         </li>
@@ -48,7 +48,7 @@
     
     {% elif conversion == 'unflatten' %}
     
-      <ul>
+      <ul class="list-unstyled left-space">
         <li>
           <a href="{{original_file.url}}">
             {% if file_type == 'xlsx' %}
@@ -65,9 +65,13 @@
       </ul>
 
     {% else %}
-      <ul>
+      <ul class="list-unstyled left-space">
         <li>
-          <a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{original_file.size|filesizeformat }}
+          <span class="pull-left"><a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{original_file.size|filesizeformat }}
+          </span>
+          {% if conversion == 'flattenable' %}
+             <form method="post"> <button name="flatten" value="true" type="submit" class="btn btn-default btn-xs left-space"> Convert to Spreadsheet </button> {% csrf_token %} </form>
+          {% endif %}
         </li>
       </ul>
     {% endif %}

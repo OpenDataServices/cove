@@ -1,6 +1,7 @@
 import pytest
 import requests
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 import time
 import os
 
@@ -191,7 +192,8 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
     check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
     #refresh page to now check if tests still work after caching some data
-    browser.refresh()
+    browser.get(browser.current_url)
+
     check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
     
     browser.get(server_url + prefix + '?source_url=' + source_url)
@@ -200,6 +202,11 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
     # We should still be in the correct app
+    if source_filename.endswith('.json'):
+        try:
+            browser.find_element_by_name("flatten").click()
+        except NoSuchElementException:
+            pass
     body_text = browser.find_element_by_tag_name('body').text
     if isinstance(expected_text, str):
         expected_text = [expected_text]
