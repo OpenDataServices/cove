@@ -14,13 +14,13 @@ def upload_to(instance, filename=''):
 
 class SuppliedData(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    source_url = models.URLField(null=True)
+    source_url = models.URLField(null=True, max_length=2000)
     original_file = models.FileField(upload_to=upload_to)
     current_app = models.CharField(max_length=20)
 
     created = models.DateTimeField(auto_now_add=True, null=True)
     modified = models.DateTimeField(auto_now=True, null=True)
-    
+
     form_name = models.CharField(
         max_length=20,
         choices=[
@@ -50,7 +50,7 @@ class SuppliedData(models.Model):
             else:
                 r = requests.get(self.source_url)
                 self.original_file.save(
-                    r.url.split('/')[-1],
+                    r.url.split('/')[-1].split('?')[0][:100],
                     ContentFile(r.content))
         else:
             raise ValueError('No source_url specified.')

@@ -17,7 +17,7 @@ from django.utils.crypto import get_random_string
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#%^&*(-_=+)'
 secret_key = get_random_string(50, chars)
 if 'SECRET_KEY' not in os.environ:
     warnings.warn('SECRET_KEY should be added to Enviroment Variables. Random key will be used instead.')
@@ -28,6 +28,7 @@ env = environ.Env(  # set default values and casting
     DEBUG=(bool, True),
     PIWIK_URL=(str, ''),
     PIWIK_SITE_ID=(str, ''),
+    PREFIX_MAP=(dict, {}),
     ALLOWED_HOSTS=(list, []),
     SECRET_KEY=(str, secret_key),
     DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3'))
@@ -43,6 +44,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 DEALER_TYPE = 'git'
+
+PREFIX_MAP = env('PREFIX_MAP')
 
 from django.utils.translation import ugettext_lazy as _
 COVE_CONFIG_BY_NAMESPACE = {
