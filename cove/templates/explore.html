@@ -150,7 +150,12 @@
     $( document ).ready(function() {
         ZeroClipboard.config({swfPath: "http://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.swf"})
         var client = new ZeroClipboard( document.getElementById('copy-url-button') );
-        $('.result-table').DataTable();
+        rowCount = $('.result-table')[0].rows.length;
+        if (rowCount < 10000) {
+           $('.result-table').DataTable({
+               "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+           });
+        }
     });
   </script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
