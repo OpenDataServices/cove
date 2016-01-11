@@ -368,7 +368,12 @@ def convert_spreadsheet(request, data, file_type):
             with open(destination, encoding='utf-8') as main_sheet_file:
                 main_sheet_file.read()
         except UnicodeDecodeError:
-            encoding = 'cp1252'
+            try:
+                with open(destination, encoding='cp1252') as main_sheet_file:
+                    main_sheet_file.read()
+                encoding = 'cp1252'
+            except UnicodeDecodeError:
+                encoding = 'latin_1'
     else:
         input_name = data.original_file.file.name
     try:
