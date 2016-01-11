@@ -15,6 +15,10 @@ h1.application-name {
     cursor: pointer;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .panel-title a {
   text-decoration:none;
 }
@@ -64,4 +68,8 @@ show-open-if-noscript {
   border: 1px solid #DDD;
   border-radius: 4px;
   padding: 4px;
+}
+
+a:hover {
+ cursor:pointer;
 }
