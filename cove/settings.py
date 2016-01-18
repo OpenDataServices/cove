@@ -107,9 +107,10 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
-RAVEN_CONFIG = {
-    'dsn': env('SENTRY_DSN')
-}
+if env('SENTRY_DSN'):
+    RAVEN_CONFIG = {
+        'dsn': env('SENTRY_DSN')
+    }
 
 
 # Application definition
