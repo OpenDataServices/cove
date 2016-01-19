@@ -15,6 +15,14 @@ h1.application-name {
     cursor: pointer;
 }
 
+#more-information .panel-heading {
+    cursor: pointer;
+}
+
+.heading-in-panel {
+    margin-top:0px;
+}
+
 .pointer {
     cursor: pointer;
 }

@@ -67,8 +67,8 @@ def test_footer_360(server_url, browser, link_text, expected_text, css_selector,
 
 def test_index_page_ocds(server_url, browser):
     browser.get(server_url + '/ocds/')
-    assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
-    assert 'How to use the Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
+    assert 'Open Contracting Data Standard Validator' in browser.find_element_by_tag_name('body').text
+    assert 'Using the validator' in browser.find_element_by_tag_name('body').text
     assert "'release'" in browser.find_element_by_tag_name('body').text
     assert "'record'" in browser.find_element_by_tag_name('body').text
     
@@ -98,6 +98,8 @@ def test_index_page_360_links(server_url, browser, link_text, url):
 
 @pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
 def test_common_index_elements(server_url, browser, prefix):
+    browser.find_element_by_css_selector('#more-information').click()
+    time.sleep(0.5)
     assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
     assert 'Why do you delete data after 7 days?' in browser.find_element_by_tag_name('body').text
     assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
@@ -215,7 +217,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
         assert text in body_text
 
     if prefix == '/ocds/':
-        assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
+        assert 'Open Contracting Data Standard Validator' in browser.find_element_by_tag_name('body').text
         # # Look for Release Table
         # assert 'Release Table' in browser.find_element_by_tag_name('body').text
     elif prefix == '/360/':
