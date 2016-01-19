@@ -318,7 +318,11 @@ def convert_json(request, data):
     )
     try:
         if not os.path.exists(converted_path + '.xlsx'):
-            flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+            if request.POST.get('flatten'):
+                flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+            else:
+                return {'conversion': 'flattenable'}
+
         context['converted_file_size'] = os.path.getsize(converted_path + '.xlsx')
         if request.cove_config['convert_titles']:
             flatten_kwargs.update(dict(

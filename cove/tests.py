@@ -81,6 +81,10 @@ def test_explore_page(client, current_app):
     data.current_app = current_app
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
+    assert resp.context['conversion'] == 'flattenable'
+
+    resp = client.post(data.get_absolute_url(), {'flatten': 'true'})
+    assert resp.status_code == 200
     assert resp.context['conversion'] == 'flatten'
     assert 'converted_file_size' in resp.context
     if current_app == 'cove-360':
@@ -124,6 +128,6 @@ def test_explore_unconvertable_json(client):
     data = SuppliedData.objects.create()
     with open(os.path.join('cove', 'fixtures', 'unconvertable_json.json')) as fp:
         data.original_file.save('unconvertable_json.json', UploadedFile(fp))
-    resp = client.get(data.get_absolute_url())
+    resp = client.post(data.get_absolute_url(), {'flatten': 'true'})
     assert resp.status_code == 200
     assert b'could not be converted' in resp.content
