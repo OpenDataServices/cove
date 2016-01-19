@@ -56,12 +56,12 @@ COVE_CONFIG_BY_NAMESPACE = {
         'default': 'base_generic.html',
     },
     'application_name': {
-        'cove-ocds': _('Open Contracting Data Tool'),
+        'cove-ocds': _('Open Contracting Data Standard Validator'),
         'cove-360': _('360Giving Data Tool'),
         'default': _('CoVE'),
     },
     'application_strapline': {
-        'cove-ocds': _('Convert, Validate, Explore Open Contracting Data'),
+        'cove-ocds': _('Validate and Explore your data.'),
         'cove-360': _('Convert, Validate, Explore 360Giving Data'),
         'default': _('Convert, Validate, Explore'),
     },
