@@ -83,5 +83,9 @@ a:hover {
 }
 
 .left-space {
-    margin-left:10px
+  margin-left:10px
+}
+
+.indent {
+  padding-left:20px
 }

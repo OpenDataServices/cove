@@ -1,91 +1,346 @@
 {% extends 'explore.html' %}
 {% load i18n %}
+{% load cove_tags %}
 
 {% block explore_content %}
+{% with releases_aggregates as ra %}
 <div class="row">
-  {% if schema_url %}
-
-  <div class="col-md-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">{% trans 'Validates against the schema?' %}</h4>
-      </div>
-      <div class="panel-body">
-        {% if validation_errors %}No{% else %}Yes{% endif %}
-
-      </div>
-    </div>
-  </div>
-
-  {% endif %}
-  <div class="col-md-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">{% trans 'Number of releases' %}</h4>
-      </div>
-      <div class="panel-body">
-        {{releases_aggregates.count}}
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          {% blocktrans with number_of_ocids=releases_aggregates.unique_ocids|length %}Unique OCIDs ({{number_of_ocids}}){% endblocktrans %}
-        </h4>
-      </div>
-      <div class="panel-body">
-        <ul>
-        {% for ocid in releases_aggregates.unique_ocids %}
-        <li>{{ocid}}</li>
-        {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </div>
-    <div class="col-md-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          {% trans "Release Dates" %}
-        </h4>
-      </div>
-      <div class="panel-body">
-        {% trans "Earliest:" %} {{releases_aggregates.earliest_release_date}}
-        <br>
-        {% trans "Latest:" %} {{releases_aggregates.latest_release_date}}
-      </div>
-    </div>
-  </div>
-</div><!--End Row -->
-<div class="row"> <!--Start Row (Detail Table)-->
   <div class="col-md-12">
-    <table class="table table-striped">
-      <caption>{% trans "Releases Table:" %}</caption>
-      <thead>
-        <tr>
-          <th>ocid</th>
-          <th>tender:items:[]:description</th>
-          <th>buyer:name</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for release in json_data.releases %}
-        <tr>
-          <td>{{ release.ocid }}</td>
-          <td>
-            <ul>
-              {% for item in release.tender.items %}
-                <li>{{ item.description }}</li>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h4 class="panel-title">{% trans 'Key Facts' %}</h4>
+      </div>
+      <div class="panel-body">
+         <p>
+           {% trans "Data " %} 
+           {% if source_url %}
+              {% trans "downloaded from " %} {{source_url}} 
+           {% else %}
+             {% trans "uploaded " %} 
+           {% endif %}
+           {% trans "on " %} {{created_date}} 
+         </p>
+         <p>
+           {% blocktrans with release_count=ra.release_count ocid_count=ra.unique_ocids|length %}
+             This package contains {{release_count}} release(s) describing {{ocid_count}} contracting process(es). 
+           {% endblocktrans %}
+         </p>
+         <p>
+           {% if json_data.publisher %} {% trans "The publisher named in the file is" %}{{json_data.publisher.name}}.{% endif %}
+           {% if json_data.license %} {% trans "The license is" %} {{json_data.license}}.{% endif %}
+           {{config}}
+         </p>
+         <p>
+         {% trans "This package " %} 
+            {% if validation_errors %} <b> {% trans "failed " %} </b> {% else %} {% trans "passed " %} {% endif %}
+            {% blocktrans %}
+               validation against <a href="{{ schema_url }}">{{ schema_url }}</a>.
+            {% endblocktrans %}
+         </p>
+         {% if ra.duplicate_release_ids %} 
+            {% blocktrans with duplicate_count=ra.duplicate_release_ids|length %}
+              <b> There are {{ duplicate_count }} duplicate release IDs in this package.</b>
+            {% endblocktrans %}
+         {% endif %}
+        
+      </div>
+    </div>
+  </div>
+
+</div><!--End Row -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h4 class="panel-title">{% trans 'Key Field Information' %}</h4>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-4">
+            <b>{% trans "Initiation Types: " %}</b> {{ra.unique_initation_type|join:", "}}<br/>
+            <b>{% trans "Tags:" %}</b> <br/> 
+            <ul class="list-unstyled">
+              {% for key, value in ra.tags.items %} 
+                <li class="indent"> <b> {{key}}: </b> {{value}}</li> 
               {% endfor %}
             </ul>
-          </td>
-          <td>{{ release.buyer.name }}</td>          
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+            <b>{% trans "Planning: " %}</b> {{ra.planning_count}}<br/>
+            <b>{% trans "Tenders: " %}</b> {{ra.tender_count}}<br/>
+
+            <b>{% trans "Awards: "%}</b><br/>
+            <ul class="list-unstyled">
+              <li><b class="indent">{% trans "Total Count: " %}</b> {{ra.award_count}}</li>
+              <li><b class="indent">{% trans "Unique OCIDs: " %}</b> {{ra.processes_award_count}}</li>
+            </ul>
+
+            <b>{% trans "Contracts: "%}</b><br/>
+            <ul class="list-unstyled">
+              <li><b class="indent">{% trans "Total Count: " %}</b> {{ra.contract_count}}</li>
+              <li><b class="indent">{% trans "Unique OCIDs: " %}</b> {{ra.processes_contract_count}}</li>
+              {% if ra.contracts_without_awards %}
+                  <li style="color: #A94442"><b class="indent">{% trans "Contracts with no awards: " %}</b> {{ra.contracts_without_awards|length}}</li>
+              {% endif %}
+            </ul>
+
+            <b>{% trans "Implementation: "%}</b><br/>
+            <ul class="list-unstyled">
+              <li><b class="indent">{% trans "Total Count: " %}</b> {{ra.implementation_count}}</li>
+              <li><b class="indent">{% trans "Unique OCIDs: " %}</b> {{ra.processes_implementation_count}}</li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <b>{% trans "Earliest release: " %}</b> </br> {{ra.min_release_date}}<br/>
+            <b>{% trans "Latest release: " %}</b> </br> {{ra.max_release_date}}<br/><br/>
+            <b>{% trans "Earliest tender start: " %}</b> </br> {{ra.min_tender_date}}<br/>
+            <b>{% trans "Latest tender start: " %}</b> </br> {{ra.max_tender_date}}<br/><br/>
+            <b>{% trans "Earliest award: " %}</b> </br> {{ra.min_award_date}}<br/>
+            <b>{% trans "Latest award: " %}</b> </br> {{ra.max_award_date}}<br/><br/>
+            <b>{% trans "Earliest contract start: " %}</b> </br> {{ra.min_contract_date}}<br/>
+            <b>{% trans "Latest contract start: " %}</b> </br> {{ra.max_contract_date}}<br/><br/>
+          </div>
+          <div class="col-md-4">
+            <b>{% trans "Total Unique Organizations: " %}</b> {{ra.unique_org_count}}<br/>
+            <ul class="list-unstyled">
+              <li><b class="indent">{% trans "with address details: " %}</b> {{ra.organisations_with_address}}<br/></li>
+              <li><b class="indent">{% trans "with contact points: " %}</b> {{ra.organisations_with_contact_point}}<br/></li>
+              <li><b class="indent">{% trans "that have identifiers: " %}</b> {{ra.unique_org_identifier_count}}<br/></li>
+              <li><b class="indent">{% trans "using schemes: " %}</b> {{ra.unique_organisation_schemes|join:", "}}<li/>
+            </ul>
+
+            <b>{% trans "Organization Roles: " %}</b> <br/>
+            <ul class="list-unstyled">
+                <li>
+                   <a data-toggle="modal" data-target=".buyer-orgs">
+                     <b class="indent">{% trans "Buyers: " %}</b> {{ra.unique_buyers_count}}</li>
+                   </a>
+                </li>
+                <li>
+                   <a data-toggle="modal" data-target=".supplier-orgs">
+                     <b class="indent">{% trans "Suppliers: " %}</b> {{ra.unique_suppliers_count}}
+                   </a>
+                </li>
+                <li>
+                   <a data-toggle="modal" data-target=".procuring-orgs">
+                     <b class="indent">{% trans "Procuring Entities: " %}</b> {{ra.unique_procuring_count}}
+                   </a>
+                </li>
+                <li>
+                   <a data-toggle="modal" data-target=".tenderers-orgs">
+                     <b class="indent">{% trans "Tenderers: " %}</b> {{ra.unique_tenderers_count}}
+                   </a>
+                </li>
+            </ul>
+
+            <b>{% trans "Total Items: " %}</b> {{ra.total_item_count}}<br/>
+            <b>{% trans "Items ID schemes: " %}</b> {{ra.item_identifier_schemes|join:", "}}<br/>
+            <b>{% trans "Item Types: " %}</b> <br/>
+            <ul class="list-unstyled">
+            <li><b class="indent">{% trans "Tender: " %}</b> {{ra.tender_item_count}}</li>
+            <li><b class="indent">{% trans "Award: " %}</b> {{ra.award_item_count}}</li>
+            <li><b class="indent">{% trans "Contract: " %}</b> {{ra.contract_item_count}}</li>
+            </ul>
+
+            <b>{% trans "Languages: " %}</b> {{ra.unique_lang|join:", "}}<br/>
+            <b>{% trans "Currencies: " %}</b> {{ra.unique_currency|join:", "}}<br/>
+
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div><!--End Row -->
+
+{% cove_modal_list className="buyer-orgs" modalTitle="Buyer Organizations" itemList=ra.unique_buyers %}
+{% cove_modal_list className="supplier-orgs" modalTitle="Supplier Organizations" itemList=ra.unique_suppliers %}
+{% cove_modal_list className="procuring-orgs" modalTitle="Pucuring Entities" itemList=ra.unique_procuring %}
+{% cove_modal_list className="tenderers-orgs" modalTitle="Tenderers" itemList=ra.unique_tenderers %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h4 class="panel-title">{% trans 'Documents' %}</h4>
+      </div>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Part of Contracting Process</th>
+            <th>Count of Docs</th>
+            <th>Document Types</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if ra.planning_doc_count %}
+          <tr>
+             <td>{% trans "Planning" %}</td> <td> {{ra.planning_doc_count}} </td>
+             <td> 
+               <ul class="list-unstyled">
+                 {% for doc_type, count in ra.planning_doctype.items %}
+                    <li> <b> {{doc_type}}: </b> {{count}} </li>
+                 {% endfor %}
+               </ul> 
+             </td>          
+          </tr>
+          {% endif %}
+          {% if ra.tender_doc_count %}
+          <tr>
+             <td>{% trans "Tender" %}</td> <td> {{ra.tender_doc_count}} </td>
+             <td> 
+               <ul class="list-unstyled">
+                 {% for doc_type, count in ra.tender_doctype.items %}
+                    <li> <b> {{doc_type}}: </b> {{count}} </li>
+                 {% endfor %}
+               </ul> 
+             </td>          
+          </tr>
+          {% endif %}
+          {% if ra.tender_milestones_doc_count %}
+          <tr>
+             <td>{% trans "Tender Milestones" %}</td> <td> {{ra.tender_milestones_doc_count}} </td>
+             <td> 
+               <ul class="list-unstyled">
+                 {% for doc_type, count in ra.tender_milestones_doctype.items %}
+                    <li> <b> {{doc_type}}: </b> {{count}} </li>
+                 {% endfor %}
+               </ul> 
+             </td>          
+          </tr>
+          {% endif %}
+          {% if ra.award_doc_count %}
+          <tr>
+             <td>{% trans "Awards" %}</td> <td> {{ra.award_doc_count}} </td>
+             <td> 
+               <ul class="list-unstyled">
+                 {% for doc_type, count in ra.award_doctype.items %}
+                    <li> <b> {{doc_type}}: </b> {{count}} </li>
+                 {% endfor %}
+               </ul> 
+             </td>          
+          </tr>
+          {% endif %}
+          {% if ra.contract_doc_count %}
+          <tr>
+             <td>{% trans "Contracts" %}</td> <td> {{ra.contract_doc_count}} </td>
+             <td> 
+               <ul class="list-unstyled">
+                 {% for doc_type, count in ra.contract_doctype.items %}
+                    <li> <b> {{doc_type}}: </b> {{count}} </li>
+                 {% endfor %}
+               </ul> 
+             </td>          
+          </tr>
+          {% endif %}
+          {% if ra.implementation_doc_count %}
+          <tr>
+             <td>{% trans "Implementation" %}</td> <td> {{ra.implementation_doc_count}} </td>
+             <td> 
+               <ul class="list-unstyled">
+                 {% for doc_type, count in ra.implementation_doctype.items %}
+                    <li> <b> {{doc_type}}: </b> {{count}} </li>
+                 {% endfor %}
+               </ul> 
+             </td>          
+          </tr>
+          {% endif %}
+          {% if ra.implementation_milestones_doc_count %}
+          <tr>
+             <td>{% trans "Implementation Milestones" %}</td> <td> {{ra.implementation_milestones_doc_count}} </td>
+             <td> 
+               <ul class="list-unstyled">
+                 {% for doc_type, count in ra.implementation_milestones_doctype.items %}
+                    <li> <b> {{doc_type}}: </b> {{count}} </li>
+                 {% endfor %}
+               </ul> 
+             </td>          
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div><!--End Row -->
+{% endwith %}
+
+<div class="row"> <!--Start Row (Detail Table)-->
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+           {% trans "Releases Table:" %}
+        </h4>
+      </div>
+      <div class="panel-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>OCID</th>
+              <th>Release Date</th>
+              <th>Tags</th>
+              <th>Descriptions</th>
+              <th>Purchasers</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for release in json_data.releases %}
+            <tr>
+              <td>{{ release.ocid }}</td>
+              <td>{{ release.date }}</td>
+              <td>{{ release.tag|join:", " }}</td>
+              <td>
+                <ul class="list-unstyled">
+                  {% if release.tender.title %} 
+                      <li> <b> Tender Title:</b> {{ release.tender.title }}</li>
+                  {% endif %} 
+                  {% if release.tender.description %} 
+                      <li> <b> Tender Description:</b> {{ release.tender.description }}</li>
+                  {% endif %} 
+                  {% for item in release.tender.items %}
+                    {% if item.description %} 
+                      <li> <b> Tender Item Description:</b> {{ item.description }}</li>
+                    {% endif %} 
+                  {% endfor %}
+                  {% for award in release.awards %}
+                    {% if award.title %} 
+                      <li> <b> Award Title:</b> {{ award.title }}</li>
+                    {% endif %} 
+                    {% if award.description %} 
+                      <li> <b> Award Description:</b> {{ award.description }}</li>
+                    {% endif %} 
+                  {% endfor %}
+                  {% for contract in release.contracts %}
+                    {% if contract.description %} 
+                      <li> <b> Contract Title:</b> {{ contract.title }}</li>
+                    {% endif %} 
+                    {% if contract.description %} 
+                      <li> <b> Contract Description:</b> {{ contract.description }}</li>
+                    {% endif %} 
+                  {% endfor %}
+                </ul>
+              </td>
+              <td>
+                <ul class="list-unstyled">
+                  {% if release.buyer.name or release.buyer.identifier.id %} 
+                  <li> <b> Buyer:</b> 
+                       {% if release.buyer.name %} {{release.buyer.name}} {%endif%}
+                       {% if release.buyer.identifier.id %} ({{ release.buyer.identifier.id }}) {%endif%}
+                  </li>
+                  {% endif %} 
+                  {% if release.tender.procuringEntity.name or release.tender.procuringEntity.identifier.id %} 
+                  <li> <b> Procuring Entity:</b> 
+                       {% if release.tender.procuringEntity.name %} {{release.tender.procuringEntity.name}} {%endif%}
+                       {% if release.tender.procuringEntity.identifier.id %} ({{ release.tender.procuringEntity.identifier.id }}) {%endif%}
+                  </li>
+                  {% endif %} 
+                </ul>
+              </td>          
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div><!--End Row-->
+
 {% endblock %}
