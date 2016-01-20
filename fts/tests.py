@@ -6,6 +6,15 @@ import time
 import os
 
 
+PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '')
+PREFIX_360 = os.environ.get('PREFIX_360', '')
+if not PREFIX_360 and not PREFIX_OCDS:
+    PREFIX_OCDS = '/ocds/'
+    PREFIX_360 = '/360/'
+
+PREFIX_LIST = [prefix for prefix in (PREFIX_OCDS, PREFIX_360) if prefix]
+
+
 @pytest.fixture(scope="module")
 def browser(request):
     browser = webdriver.Firefox()
@@ -23,6 +32,8 @@ def server_url(request, live_server):
     
 
 def test_index_page_banner(server_url, browser):
+    if not PREFIX_360 or not PREFIX_OCDS:
+        return
     browser.get(server_url)
     assert 'This tool is alpha. Please report any problems on GitHub issues.' in browser.find_element_by_tag_name('body').text
     if server_url == "http://dev.cove.opendataservices.coop/":
@@ -30,6 +41,8 @@ def test_index_page_banner(server_url, browser):
     
 
 def test_index_page(server_url, browser):
+    if not PREFIX_360 or not PREFIX_OCDS:
+        return
     browser.get(server_url)
     assert 'CoVE' in browser.find_element_by_tag_name('body').text
     assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
@@ -42,7 +55,9 @@ def test_index_page(server_url, browser):
     ('Open Contracting Data Standard', 'OPEN CONTRACTING DATA STANDARD (OCDS) PROJECT SITE', 'h1.site-title', 'http://standard.open-contracting.org/'),
     ])
 def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector, url):
-    browser.get(server_url + '/ocds/')
+    if not PREFIX_OCDS:
+        return
+    browser.get(server_url + PREFIX_OCDS)
     link = browser.find_element_by_link_text(link_text)
     href = link.get_attribute("href")
     assert url in href
@@ -56,7 +71,9 @@ def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector
     ('360Giving Data Standard', 'Standard', 'h1.entry-title', 'http://www.threesixtygiving.org/standard/'),
     ])
 def test_footer_360(server_url, browser, link_text, expected_text, css_selector, url):
-    browser.get(server_url + '/360/')
+    if not PREFIX_360:
+        return
+    browser.get(server_url + PREFIX_360)
     link = browser.find_element_by_link_text(link_text)
     href = link.get_attribute("href")
     assert url in href
@@ -66,7 +83,9 @@ def test_footer_360(server_url, browser, link_text, expected_text, css_selector,
 
 
 def test_index_page_ocds(server_url, browser):
-    browser.get(server_url + '/ocds/')
+    if not PREFIX_OCDS:
+        return
+    browser.get(server_url + PREFIX_OCDS)
     assert 'Open Contracting Data Standard Validator' in browser.find_element_by_tag_name('body').text
     assert 'Using the validator' in browser.find_element_by_tag_name('body').text
     assert "'release'" in browser.find_element_by_tag_name('body').text
@@ -74,7 +93,9 @@ def test_index_page_ocds(server_url, browser):
     
     
 def test_index_page_360(server_url, browser):
-    browser.get(server_url + '/360/')
+    if not PREFIX_360:
+        return
+    browser.get(server_url + PREFIX_360)
     assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'How to use the 360Giving Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'Summary Spreadsheet - Excel' in browser.find_element_by_tag_name('body').text
@@ -91,13 +112,17 @@ def test_index_page_360(server_url, browser):
     ('Multi-table data package - Excel', 'https://github.com/ThreeSixtyGiving/standard/raw/master/schema/multi-table/360-giving-schema-fields.xlsx')
     ])
 def test_index_page_360_links(server_url, browser, link_text, url):
+    if not PREFIX_360:
+        return
     link = browser.find_element_by_link_text(link_text)
     href = link.get_attribute("href")
     assert url in href
 
 
-@pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
+@pytest.mark.parametrize('prefix', PREFIX_LIST)
 def test_common_index_elements(server_url, browser, prefix):
+    if not PREFIX_360 or not PREFIX_OCDS:
+        return
     browser.find_element_by_css_selector('#more-information').click()
     time.sleep(0.5)
     assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
@@ -109,7 +134,7 @@ def test_common_index_elements(server_url, browser, prefix):
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
 
 
-@pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
+@pytest.mark.parametrize('prefix', PREFIX_LIST)
 def test_terms_page(server_url, browser, prefix):
     browser.get(server_url + prefix + 'terms/')
     assert 'Open Data Services Co-operative Limited' in browser.find_element_by_tag_name('body').text
@@ -117,7 +142,7 @@ def test_terms_page(server_url, browser, prefix):
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
     
 
-@pytest.mark.parametrize('prefix', ['/ocds/', '/360/'])
+@pytest.mark.parametrize('prefix', PREFIX_LIST)
 def test_accordion(server_url, browser, prefix):
     browser.get(server_url + prefix)
 
@@ -146,15 +171,15 @@ def test_accordion(server_url, browser, prefix):
 
 
 @pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text', 'conversion_successful'), [
-    ('/ocds/', 'tenders_releases_2_releases.json', ['Download Files', 'Save or Share these results'], True),
+    (PREFIX_OCDS, 'tenders_releases_2_releases.json', ['Download Files', 'Save or Share these results'], True),
     # Conversion should still work for files that don't validate against the schema
-    ('/ocds/', 'tenders_releases_2_releases_invalid.json', ['Download Files', 'Validation Errors', "'id' is a required property"], True),
+    (PREFIX_OCDS, 'tenders_releases_2_releases_invalid.json', ['Download Files', 'Validation Errors', "'id' is a required property"], True),
     # Test UTF-8 support
-    ('/ocds/', 'utf8.json', 'Download Files', True),
+    (PREFIX_OCDS, 'utf8.json', 'Download Files', True),
     # But we expect to see an error message if a file is not well formed JSON at all
-    ('/ocds/', 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
-    ('/ocds/', 'tenders_releases_2_releases.xlsx', 'Download Files', True),
-    ('/360/', 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files',
+    (PREFIX_OCDS, 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
+    (PREFIX_OCDS, 'tenders_releases_2_releases.xlsx', 'Download Files', True),
+    (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files',
                                                            'Save or Share these results',
                                                            'Unique Grant IDs: 2',
                                                            'Duplicate IDs: 2',
@@ -165,20 +190,22 @@ def test_accordion(server_url, browser, prefix):
                                                            "'24/07/2014' is not a 'date-time'",
                                                            "'13-03-2015' is not a 'date-time'"], True),
     # Test a 360 spreadsheet with titles, rather than fields
-    ('/360/', 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
+    (PREFIX_360, 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
     # Test a 360 csv in cp1252 incoding
-    ('/360/', 'WellcomeTrust-grants_2_grants_cp1252.csv', 'Download Files', True),
+    (PREFIX_360, 'WellcomeTrust-grants_2_grants_cp1252.csv', 'Download Files', True),
     # Test a non-valid file.
-    ('/360/', 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
+    (PREFIX_360, 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
     # Test a unconvertable spreadsheet (main sheet "grants" is missing)
-    ('/360/', 'basic.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
+    (PREFIX_360, 'basic.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
     # Test a unconvertable spreadsheet (main sheet "releases" is missing)
-    ('/ocds/', 'WellcomeTrust-grants_2_grants.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
+    (PREFIX_OCDS, 'WellcomeTrust-grants_2_grants.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
     # Test unconvertable JSON (main sheet "releases" is missing)
-    ('/ocds/', 'unconvertable_json.json', 'could not be converted', False),
-    ('/ocds/', 'full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], True),
+    (PREFIX_OCDS, 'unconvertable_json.json', 'could not be converted', False),
+    (PREFIX_OCDS, 'full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], True),
     ])
 def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
+    if not prefix:
+        return
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -216,11 +243,10 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
     for text in expected_text:
         assert text in body_text
 
-    if prefix == '/ocds/':
+    if prefix == PREFIX_OCDS:
         assert 'Open Contracting Data Standard Validator' in browser.find_element_by_tag_name('body').text
-        # # Look for Release Table
         # assert 'Release Table' in browser.find_element_by_tag_name('body').text
-    elif prefix == '/360/':
+    elif prefix == PREFIX_360:
         assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
         assert '360 Giving' not in browser.find_element_by_tag_name('body').text
 
@@ -257,10 +283,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
             assert int(converted_file_response.headers['content-length']) != 0
 
 
-@pytest.mark.parametrize(('prefix'), [
-    ('/ocds/'),
-    ('/360/'),
-    ])
+@pytest.mark.parametrize(('prefix'), PREFIX_LIST)
 def test_URL_invalid_dataset_request(server_url, browser, prefix):
     # Test a badly formed hexadecimal UUID string
     browser.get(server_url + prefix + 'data/0')
