@@ -98,18 +98,34 @@ Translations
 
 Translations for Translators
 ++++++++++++++++++++++++++++
-Translators can provide translations for this application by editing the django.po file for a particular language.
-These files are found in the `locale` directory
+Translators can provide translations for this application by becomming a collaborator on Transifex https://www.transifex.com/OpenDataServices/cove
 
 Translations for Developers
 +++++++++++++++++++++++++++
 For more information about Django's translation framework, see https://docs.djangoproject.com/en/1.8/topics/i18n/translation/
 
-If you add new text to the interface, ensure to wrap it in the relevant gettext blocks/functions, and then regnerate the .po files in the locale folder:
+If you add new text to the interface, ensure to wrap it in the relevant gettext blocks/functions.
+
+In order to generate messages and post them on transifex:
 
 .. code:: bash
+    python manage.py makemessages -l en
+    tx push -s
 
-    python manage.py makemessages
+In order to fetch messages from transifex:
+
+.. code:: bash
+    tx pull -t -a
+
+In order to compile them:
+
+.. code:: bash
+    python manage.py compilemessages
+
+Do not do not this process on every text change so as not to pollute the commit diffs.  
+Keep the makemessages and pull messages steps in thier own commits seperate from the text changes.
+
+The aim is to run this process each month, but it can be done more regulularly if needed.
 
 To check that all new text is written so that it is able to be translated you could install and run `django-template-i18n-lint`
 
