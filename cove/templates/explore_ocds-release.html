@@ -33,9 +33,7 @@
          <p>
          {% trans "This package " %} 
             {% if validation_errors %} <b> {% trans "failed " %} </b> {% else %} {% trans "passed " %} {% endif %}
-            {% blocktrans %}
-               validation against <a href="{{ schema_url }}">{{ schema_url }}</a>.
-            {% endblocktrans %}
+            {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">{{ schema_url }}</a>.
          </p>
          {% if ra.duplicate_release_ids %} 
             {% blocktrans with duplicate_count=ra.duplicate_release_ids|length %}
@@ -164,9 +162,9 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Part of Contracting Process</th>
-            <th>Count of Docs</th>
-            <th>Document Types</th>
+            <th>{%blocktrans%}Part of Contracting Process{%endblocktrans%}</th>
+            <th>{%blocktrans%}Count of Docs{%endblocktrans%}</th>
+            <th>{%blocktrans%}Document Types{%endblocktrans%}</th>
           </tr>
         </thead>
         <tbody>
@@ -275,10 +273,10 @@
           <thead>
             <tr>
               <th>OCID</th>
-              <th>Release Date</th>
-              <th>Tags</th>
-              <th>Descriptions</th>
-              <th>Purchasers</th>
+              <th>{%blocktrans%}Release Date{%endblocktrans%}</th>
+              <th>{%blocktrans%}Tags{%endblocktrans%}</th>
+              <th>{%blocktrans%}Descriptions{%endblocktrans%}</th>
+              <th>{%blocktrans%}Purchasers{%endblocktrans%}</th>
             </tr>
           </thead>
           <tbody>
@@ -290,30 +288,30 @@
               <td>
                 <ul class="list-unstyled">
                   {% if release.tender.title %} 
-                      <li> <b> Tender Title:</b> {{ release.tender.title }}</li>
+                      <li> <b>{%blocktrans%}Tender Title:{%endblocktrans%}</b> {{ release.tender.title }}</li>
                   {% endif %} 
                   {% if release.tender.description %} 
-                      <li> <b> Tender Description:</b> {{ release.tender.description }}</li>
+                      <li> <b> {%blocktrans%}Tender Description:{%endblocktrans%}</b> {{ release.tender.description }}</li>
                   {% endif %} 
                   {% for item in release.tender.items %}
                     {% if item.description %} 
-                      <li> <b> Tender Item Description:</b> {{ item.description }}</li>
+                      <li> <b> {%blocktrans%}Tender Item Description:{%endblocktrans%}</b> {{ item.description }}</li>
                     {% endif %} 
                   {% endfor %}
                   {% for award in release.awards %}
                     {% if award.title %} 
-                      <li> <b> Award Title:</b> {{ award.title }}</li>
+                      <li> <b> {%blocktrans%}Award Title:{%endblocktrans%}</b> {{ award.title }}</li>
                     {% endif %} 
                     {% if award.description %} 
-                      <li> <b> Award Description:</b> {{ award.description }}</li>
+                      <li> <b> {%blocktrans%}Award Description:{%endblocktrans%}</b> {{ award.description }}</li>
                     {% endif %} 
                   {% endfor %}
                   {% for contract in release.contracts %}
                     {% if contract.description %} 
-                      <li> <b> Contract Title:</b> {{ contract.title }}</li>
+                      <li> <b> {%blocktrans%}Contract Title:{%endblocktrans%}</b> {{ contract.title }}</li>
                     {% endif %} 
                     {% if contract.description %} 
-                      <li> <b> Contract Description:</b> {{ contract.description }}</li>
+                      <li> <b> {%blocktrans%}Contract Description:{%endblocktrans%}</b> {{ contract.description }}</li>
                     {% endif %} 
                   {% endfor %}
                 </ul>
@@ -321,13 +319,13 @@
               <td>
                 <ul class="list-unstyled">
                   {% if release.buyer.name or release.buyer.identifier.id %} 
-                  <li> <b> Buyer:</b> 
+                  <li> <b> {%blocktrans%}Buyer:{%endblocktrans%}</b> 
                        {% if release.buyer.name %} {{release.buyer.name}} {%endif%}
                        {% if release.buyer.identifier.id %} ({{ release.buyer.identifier.id }}) {%endif%}
                   </li>
                   {% endif %} 
                   {% if release.tender.procuringEntity.name or release.tender.procuringEntity.identifier.id %} 
-                  <li> <b> Procuring Entity:</b> 
+                  <li> <b> {%blocktrans%}Procuring Entity:{%endblocktrans%}</b> 
                        {% if release.tender.procuringEntity.name %} {{release.tender.procuringEntity.name}} {%endif%}
                        {% if release.tender.procuringEntity.identifier.id %} ({{ release.tender.procuringEntity.identifier.id }}) {%endif%}
                   </li>

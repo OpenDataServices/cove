@@ -1,20 +1,21 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: CoVE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-19 11:52+0000\n"
+"POT-Creation-Date: 2016-01-22 00:33+0000\n"
 "PO-Revision-Date: 2016-01-21 10:44+0000\n"
 "Last-Translator: David Raznick <david.raznick@opendataservices.coop>\n"
-"Language-Team: Spanish (http://www.transifex.com/OpenDataServices/cove/language/es/)\n"
+"Language-Team: Spanish (http://www.transifex.com/OpenDataServices/cove/"
+"language/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: cove/input/templates/datainput/input.html:15 cove/templates/stats.html:10
@@ -44,8 +45,8 @@ msgstr "Cargar un archivo"
 msgid "Supply a URL"
 msgstr "Proporcione una dirección URL"
 
-#: cove/settings.py:59 cove/templates/multi_index.html:28
-msgid "Open Contracting Data Tool"
+#: cove/settings.py:59
+msgid "Open Contracting Data Standard Validator"
 msgstr ""
 
 #: cove/settings.py:60 cove/templates/multi_index.html:16
@@ -57,7 +58,7 @@ msgid "CoVE"
 msgstr ""
 
 #: cove/settings.py:64
-msgid "Convert, Validate, Explore Open Contracting Data"
+msgid "Validate and Explore your data."
 msgstr ""
 
 #: cove/settings.py:65
@@ -76,55 +77,58 @@ msgstr ""
 msgid "360Giving Data Standard"
 msgstr ""
 
-#: cove/templates/base_360.html:11 cove/templates/base_ocds.html:11
+#: cove/templates/base_360.html:12
 #, python-format
 msgid "How to use the %(application_name)s"
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove/templates/base_360.html:13
+#: cove/templates/base_360.html:14
 msgid ""
 "\n"
-"  Upload, paste or provide a link to data in the 360Giving Data Standard format, and this application will convert between JSON, Excel and CSV formats, allowing you to download the original file, and the converted versions."
+"    Upload, paste or provide a link to data in the 360Giving Data Standard "
+"format, and this application will convert between JSON, Excel and CSV "
+"formats, allowing you to download the original file, and the converted "
+"versions."
 msgstr ""
 
-#: cove/templates/base_360.html:16 cove/templates/base_ocds.html:16
+#: cove/templates/base_360.html:17
 msgid ""
 "You will also be able to inspect key information from the data that the "
 "application is able to find, so that you can check the data."
 msgstr ""
 
-#: cove/templates/base_360.html:18
+#: cove/templates/base_360.html:19
 msgid "Formats"
 msgstr ""
 
-#: cove/templates/base_360.html:19
+#: cove/templates/base_360.html:20
 msgid ""
 "\n"
-"  The application accepts data in some of the formats given in the <a href=\"http://www.threesixtygiving.org/standard/\">360Giving Data Standard guidence</a>.\n"
-"  <br>Acceptable files are: "
-msgstr ""
-
-#: cove/templates/base_360.html:23
-msgid ""
-"Summary Spreadsheet - <a "
-"href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema"
-"/summary-table/360-giving-schema-titles.xlsx\">Excel</a>, <a "
-"href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema"
-"/summary-table/360-giving-schema-titles.csv/grants.csv\">CSV</a>"
+"    The application accepts data in some of the formats given in the <a href="
+"\"http://www.threesixtygiving.org/standard/\">360Giving Data Standard "
+"guidence</a>.\n"
+"    <br>Acceptable files are: "
 msgstr ""
 
 #: cove/templates/base_360.html:24
 msgid ""
-"JSON built to the <a "
-"href=\"http://www.threesixtygiving.org/standard/reference/#toc-json-"
-"schema\">360Giving Data Standard JSON schema</a>"
+"Summary Spreadsheet - <a href=\"https://github.com/ThreeSixtyGiving/standard/"
+"raw/master/schema/summary-table/360-giving-schema-titles.xlsx\">Excel</a>, "
+"<a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema/"
+"summary-table/360-giving-schema-titles.csv/grants.csv\">CSV</a>"
 msgstr ""
 
 #: cove/templates/base_360.html:25
 msgid ""
-"<a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema"
-"/multi-table/360-giving-schema-fields.xlsx\">Multi-table data package - "
+"JSON built to the <a href=\"http://www.threesixtygiving.org/standard/"
+"reference/#toc-json-schema\">360Giving Data Standard JSON schema</a>"
+msgstr ""
+
+#: cove/templates/base_360.html:26
+msgid ""
+"<a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema/"
+"multi-table/360-giving-schema-fields.xlsx\">Multi-table data package - "
 "Excel</a>"
 msgstr ""
 
@@ -133,134 +137,140 @@ msgstr ""
 msgid "Go"
 msgstr ""
 
-#: cove/templates/base_generic.html:65
+#: cove/templates/base_generic.html:68
+msgid " More Information "
+msgstr ""
+
+#: cove/templates/base_generic.html:74
 msgid "What happens to the data I provide to this site?"
 msgstr ""
 
-#: cove/templates/base_generic.html:66
+#: cove/templates/base_generic.html:75
 msgid ""
 "We retain the data you upload or paste to this site, on our server, for 7 "
 "days."
 msgstr ""
 
-#: cove/templates/base_generic.html:67
+#: cove/templates/base_generic.html:76
 msgid ""
 "If you supply a link, we fetch the data from that link and store it on our "
 "server for 7 days."
 msgstr ""
 
-#: cove/templates/base_generic.html:68
+#: cove/templates/base_generic.html:77
 msgid ""
 "We delete all data older than 7 days from our servers daily, retaining none "
 "of the original data."
 msgstr ""
 
-#: cove/templates/base_generic.html:69
+#: cove/templates/base_generic.html:78
 msgid ""
 "While the data is on our servers we may access that data to help us "
 "understand how people are using this application, what types of data are "
 "being supplied, what common errors exist and so on."
 msgstr ""
 
-#: cove/templates/base_generic.html:70
+#: cove/templates/base_generic.html:79
 msgid ""
-"We may also retain data in backups of our servers, which means on occassion,"
-" some data may be retained longer. We have no intention of using this data "
+"We may also retain data in backups of our servers, which means on occassion, "
+"some data may be retained longer. We have no intention of using this data "
 "for anything other than server recovery in an emergency."
 msgstr ""
 
-#: cove/templates/base_generic.html:71
+#: cove/templates/base_generic.html:80
 msgid ""
 "We do retain some metadata about data supplied to this site. Details can be "
-"found in the code, but may include information about whether or not the file"
-" was uploaded, linked or pasted, the size of the file, the date/time it was "
+"found in the code, but may include information about whether or not the file "
+"was uploaded, linked or pasted, the size of the file, the date/time it was "
 "supplied and so on. "
 msgstr ""
 
-#: cove/templates/base_generic.html:73
+#: cove/templates/base_generic.html:82
 msgid "Why do you delete data after 7 days?"
 msgstr ""
 
-#: cove/templates/base_generic.html:74
+#: cove/templates/base_generic.html:83
 msgid ""
-"This is service to allow people to explore machine readable data. As such we"
-" see no need to store and gather everything people submit to the site "
+"This is service to allow people to explore machine readable data. As such we "
+"see no need to store and gather everything people submit to the site "
 "forever. We have chosen 7 days as a practical time frame that allows people "
-"to share results with collegues, but also allows data to disappear over time"
-" to save people having to clean up after themselves."
+"to share results with collegues, but also allows data to disappear over time "
+"to save people having to clean up after themselves."
 msgstr ""
 
-#: cove/templates/base_generic.html:75
+#: cove/templates/base_generic.html:84
 msgid ""
 "We believe that deleting supplied data after 7 days provides a level of "
 "privacy for the users of this service. "
 msgstr ""
 
-#: cove/templates/base_generic.html:81
+#: cove/templates/base_generic.html:88
 msgid "Why provide converted versions?"
 msgstr ""
 
-#: cove/templates/base_generic.html:82
+#: cove/templates/base_generic.html:89
 msgid ""
 "\n"
-"    The W3C <a href=\"http://www.w3.org/TR/dwbp/\">Data on the Web Best Practices</a> recommend making open data available in a range of formats to meet the needs of different users, for example, developers may want JSON, researchers might prefer a spreadsheet format.\n"
-"    "
+"      The W3C <a href=\"http://www.w3.org/TR/dwbp/\">Data on the Web Best "
+"Practices</a> recommend making open data available in a range of formats to "
+"meet the needs of different users, for example, developers may want JSON, "
+"researchers might prefer a spreadsheet format.\n"
+"      "
 msgstr ""
 
-#: cove/templates/base_generic.html:94
+#: cove/templates/base_generic.html:102
 msgid "About"
 msgstr ""
 
-#: cove/templates/base_generic.html:96
+#: cove/templates/base_generic.html:104
 msgid "Built by"
 msgstr ""
 
-#: cove/templates/base_generic.html:96
+#: cove/templates/base_generic.html:104
 msgid "Open Data Services"
 msgstr ""
 
-#: cove/templates/base_generic.html:97
+#: cove/templates/base_generic.html:105
 msgid "The code for this site is available on"
 msgstr ""
 
-#: cove/templates/base_generic.html:97
+#: cove/templates/base_generic.html:105
 msgid "GitHub"
 msgstr ""
 
-#: cove/templates/base_generic.html:97
+#: cove/templates/base_generic.html:105
 msgid "Cove - COnvert Validate & Explore"
 msgstr ""
 
-#: cove/templates/base_generic.html:97
+#: cove/templates/base_generic.html:105
 msgid "Licence"
 msgstr ""
 
-#: cove/templates/base_generic.html:97
+#: cove/templates/base_generic.html:105
 msgid "AGPLv3"
 msgstr ""
 
-#: cove/templates/base_generic.html:97
+#: cove/templates/base_generic.html:105
 msgid "Report/View issues"
 msgstr ""
 
-#: cove/templates/base_generic.html:97
+#: cove/templates/base_generic.html:105
 msgid "Cove Issues"
 msgstr ""
 
-#: cove/templates/base_generic.html:101
+#: cove/templates/base_generic.html:109
 msgid "Terms &amp; Conditions"
 msgstr ""
 
-#. Translators: Provides information about the version of the code base that
-#. is being used
-#: cove/templates/base_generic.html:104
+#. Translators: Provides information about the version of the code base that is being used
+#: cove/templates/base_generic.html:112
 #, python-format
 msgid ""
-"Running version <a "
-"href=\"https://github.com/OpenDataServices/cove/tree/%(version)s\">%(version)s</a>."
+"Running version <a href=\"https://github.com/OpenDataServices/cove/tree/"
+"%(version)s\">%(version)s</a>."
 msgstr ""
 
-#: cove/templates/base_generic.html:107
+#: cove/templates/base_generic.html:115
 msgid "Links"
 msgstr ""
 
@@ -272,17 +282,83 @@ msgstr ""
 msgid "Open Contracting Data Standard"
 msgstr ""
 
-#. Translators: Paragraph that describes the application
-#: cove/templates/base_ocds.html:13
-msgid ""
-"\n"
-"  Upload, paste or provide a link to data in the Open Contracting Data Standard format, and this application will convert between JSON, Excel and CSV formats, allowing you to download the original file, and the converted versions."
+#: cove/templates/base_ocds.html:15
+msgid " About OCDS "
 msgstr ""
 
-#: cove/templates/base_ocds.html:18
+#: cove/templates/base_ocds.html:16
 msgid ""
-"The application only works with both 'release' and 'record' documents that "
-"conform to the Open Data Contracting Standard"
+" The Open Contracting Data Standard (OCDS) exists to formalize how "
+"contracting data and documents can be published in an accessible, structured "
+"and repeatable way. "
+msgstr ""
+
+#: cove/templates/base_ocds.html:17
+msgid ""
+" Governments around the world spend an estimated US$9.5 trillion through "
+"contracts every year. Yet, contracting information is often unavailable for "
+"public scrutiny. OCDS works to change that. "
+msgstr ""
+
+#: cove/templates/base_ocds.html:25
+msgid " Validate and Explore "
+msgstr ""
+
+#: cove/templates/base_ocds.html:26
+msgid " This tool helps you to: "
+msgstr ""
+
+#: cove/templates/base_ocds.html:28
+msgid " Check that your OCDS data complies with the schema "
+msgstr ""
+
+#: cove/templates/base_ocds.html:29
+msgid " Inspect key contents of your data to check data quality "
+msgstr ""
+
+#: cove/templates/base_ocds.html:30
+msgid ""
+" Access your data in different formats (spreadsheet and JSON) to support "
+"further data validation. "
+msgstr ""
+
+#: cove/templates/base_ocds.html:45
+msgid " Using the validator "
+msgstr ""
+
+#: cove/templates/base_ocds.html:46
+msgid ""
+" You can upload, paste or provide a link to data published using the Open "
+"Contracting Data Standard. This can be: "
+msgstr ""
+
+#: cove/templates/base_ocds.html:49
+msgid " <b> JSON </b> - following the OCDS schema; "
+msgstr ""
+
+#: cove/templates/base_ocds.html:50
+msgid ""
+" <b> A CSV file or Excel Spreadsheet </b> - using the flattened "
+"serialization of OCDS; "
+msgstr ""
+
+#: cove/templates/base_ocds.html:52
+msgid ""
+" The application works with both 'release' and 'record' OCDS documents that "
+"conform to the Open Data Contracting Standard "
+msgstr ""
+
+#: cove/templates/base_ocds.html:53
+msgid ""
+" If your data passes basic validation checks, the tool will then present a "
+"report on data quality, and information about the contents of your file. It "
+"will also offer alternative copies of the data for download. "
+msgstr ""
+
+#: cove/templates/base_ocds.html:54
+msgid ""
+" Data is stored for 7 days at a randomly generated URL. You can share this "
+"link with others to support discussion of data quality.  "
 msgstr ""
 
 #: cove/templates/explore.html:4
@@ -309,8 +385,7 @@ msgstr ""
 msgid "Excel Spreadsheet (.xlsx) with titles"
 msgstr ""
 
-#. Translators: JSON probably does not need a transalation:
-#. http://www.json.org/
+#. Translators: JSON probably does not need a transalation: http://www.json.org/
 #: cove/templates/explore.html:16
 msgid "JSON"
 msgstr ""
@@ -327,54 +402,54 @@ msgstr "Bajar Archivos"
 msgid "%(file_format)s (%(status)s)"
 msgstr ""
 
-#: cove/templates/explore.html:83
+#: cove/templates/explore.html:87
 msgid "Validation Errors"
 msgstr ""
 
-#: cove/templates/explore.html:88
+#: cove/templates/explore.html:92
 msgid "Error Description"
 msgstr ""
 
-#: cove/templates/explore.html:88
+#: cove/templates/explore.html:92
 msgid "Error Count"
 msgstr ""
 
-#: cove/templates/explore.html:88
+#: cove/templates/explore.html:92
 msgid "Location of first 3 errors"
 msgstr ""
 
-#: cove/templates/explore.html:112
+#: cove/templates/explore.html:116
 msgid "Additional Fields (fields in data not in schema)"
 msgstr ""
 
-#: cove/templates/explore.html:117
+#: cove/templates/explore.html:121
 msgid "Field"
 msgstr ""
 
-#: cove/templates/explore.html:117
+#: cove/templates/explore.html:121
 msgid "Path to Field"
 msgstr ""
 
-#: cove/templates/explore.html:117
+#: cove/templates/explore.html:121
 msgid "Usage Count"
 msgstr ""
 
-#: cove/templates/explore.html:136
+#: cove/templates/explore.html:145
 msgid "Save or Share these results"
 msgstr ""
 
-#: cove/templates/explore.html:137
+#: cove/templates/explore.html:146
 msgid "Use the following url to share these results:"
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove/templates/explore.html:142
+#: cove/templates/explore.html:151
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
 msgstr ""
 
-#: cove/templates/explore.html:143
+#: cove/templates/explore.html:152
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
@@ -382,6 +457,7 @@ msgid ""
 msgstr ""
 
 #: cove/templates/explore_360.html:10
+#: cove/templates/explore_ocds-release.html:55
 msgid "Key Field Information"
 msgstr ""
 
@@ -438,7 +514,6 @@ msgid "Grants Table"
 msgstr ""
 
 #: cove/templates/explore_ocds-record.html:11
-#: cove/templates/explore_ocds-release.html:11
 msgid "Validates against the schema?"
 msgstr ""
 
@@ -447,7 +522,6 @@ msgid "Number of records"
 msgstr ""
 
 #: cove/templates/explore_ocds-record.html:35
-#: cove/templates/explore_ocds-release.html:35
 #, python-format
 msgid "Unique OCIDs (%(number_of_ocids)s)"
 msgstr ""
@@ -456,23 +530,256 @@ msgstr ""
 msgid "Records Table:"
 msgstr ""
 
+#: cove/templates/explore_ocds-release.html:11
+msgid "Key Facts"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:15
+msgid "Data "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:17
+msgid "downloaded from "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:19
+#, fuzzy
+#| msgid "Upload"
+msgid "uploaded "
+msgstr "Subir"
+
+#: cove/templates/explore_ocds-release.html:21
+msgid "on "
+msgstr ""
+
 #: cove/templates/explore_ocds-release.html:24
-msgid "Number of releases"
+#, python-format
+msgid ""
+"\n"
+"             This package contains %(release_count)s release(s) describing "
+"%(ocid_count)s contracting process(es). \n"
+"           "
 msgstr ""
 
-#: cove/templates/explore_ocds-release.html:51
-msgid "Release Dates"
+#: cove/templates/explore_ocds-release.html:29
+msgid "The publisher named in the file is"
 msgstr ""
 
-#: cove/templates/explore_ocds-release.html:55
-msgid "Earliest:"
+#: cove/templates/explore_ocds-release.html:30
+msgid "The license is"
 msgstr ""
 
-#: cove/templates/explore_ocds-release.html:57
-msgid "Latest:"
+#: cove/templates/explore_ocds-release.html:34
+msgid "This package "
 msgstr ""
 
-#: cove/templates/explore_ocds-release.html:65
+#: cove/templates/explore_ocds-release.html:35
+msgid "failed "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:35
+msgid "passed "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:36
+#, python-format
+msgid ""
+"\n"
+"               validation against <a href=\"%(schema_url)s\">%(schema_url)s</"
+"a>.\n"
+"            "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:41
+#, python-format
+msgid ""
+"\n"
+"              <b> There are %(duplicate_count)s duplicate release IDs in "
+"this package.</b>\n"
+"            "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:60
+msgid "Initiation Types: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:61
+msgid "Tags:"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:67
+msgid "Planning: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:68
+msgid "Tenders: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:70
+msgid "Awards: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:72
+#: cove/templates/explore_ocds-release.html:78
+#: cove/templates/explore_ocds-release.html:87
+msgid "Total Count: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:73
+#: cove/templates/explore_ocds-release.html:79
+#: cove/templates/explore_ocds-release.html:88
+msgid "Unique OCIDs: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:76
+msgid "Contracts: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:81
+msgid "Contracts with no awards: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:85
+msgid "Implementation: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:92
+msgid "Earliest release: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:93
+msgid "Latest release: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:94
+msgid "Earliest tender start: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:95
+msgid "Latest tender start: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:96
+msgid "Earliest award: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:97
+msgid "Latest award: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:98
+msgid "Earliest contract start: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:99
+msgid "Latest contract start: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:102
+msgid "Total Unique Organizations: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:104
+msgid "with address details: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:105
+msgid "with contact points: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:106
+msgid "that have identifiers: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:107
+msgid "using schemes: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:110
+msgid "Organization Roles: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:114
+msgid "Buyers: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:119
+msgid "Suppliers: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:124
+msgid "Procuring Entities: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:129
+msgid "Tenderers: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:134
+msgid "Total Items: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:135
+msgid "Items ID schemes: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:136
+msgid "Item Types: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:138
+msgid "Tender: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:139
+msgid "Award: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:140
+msgid "Contract: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:143
+msgid "Languages: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:144
+msgid "Currencies: "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:162
+msgid "Documents"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:175
+msgid "Planning"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:187
+msgid "Tender"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:199
+msgid "Tender Milestones"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:211
+msgid "Awards"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:223
+msgid "Contracts"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:235
+msgid "Implementation"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:247
+msgid "Implementation Milestones"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:270
 msgid "Releases Table:"
 msgstr ""
 
@@ -483,8 +790,8 @@ msgstr ""
 #: cove/templates/multi_index.html:15
 msgid ""
 "360Giving provides support for grantmakers to publish their grants data "
-"openly, to understand their data, and to use the data to create online tools"
-" that make grant-making more effective."
+"openly, to understand their data, and to use the data to create online tools "
+"that make grant-making more effective."
 msgstr ""
 
 #: cove/templates/multi_index.html:24
@@ -493,9 +800,13 @@ msgstr ""
 
 #: cove/templates/multi_index.html:27
 msgid ""
-"The Open Contracting Data Standard promotes the effective use of contracting"
-" data, helping users to “follow the money”, and it provides a clear template"
-" for governments wishing to disclose their data."
+"The Open Contracting Data Standard promotes the effective use of contracting "
+"data, helping users to “follow the money”, and it provides a clear template "
+"for governments wishing to disclose their data."
+msgstr ""
+
+#: cove/templates/multi_index.html:28
+msgid "Open Contracting Data Tool"
 msgstr ""
 
 #: cove/templates/multi_index.html:35
@@ -550,19 +861,19 @@ msgid ""
 "If you continue to browse and use this website, you are agreeing to comply "
 "with and be bound by the following terms and conditions of use, which "
 "together with our privacy policy govern Open Data Services Co-operative "
-"Limited's relationship with you in relation to this website. If you disagree"
-" with any part of these terms and conditions, please do not use our website."
+"Limited's relationship with you in relation to this website. If you disagree "
+"with any part of these terms and conditions, please do not use our website."
 msgstr ""
 
 #: cove/templates/terms.html:13
 msgid ""
-"The term 'Open Data Services Co-operative Limited' or 'us' or 'we' refers to"
-" the owner of the website. Our company registration number is 09506232. Our "
+"The term 'Open Data Services Co-operative Limited' or 'us' or 'we' refers to "
+"the owner of the website. Our company registration number is 09506232. Our "
 "registered address is 32 Church Road, Hove, East Sussex, England, BN3 2FN. "
-"There is more company information on the <a "
-"href=\"https://opencorporates.com/companies/gb/09506232\">Open Data Services"
-" Co-operative Limited page at Open Corporates</a>. The term 'you' refers to "
-"the user or viewer of our website."
+"There is more company information on the <a href=\"https://opencorporates."
+"com/companies/gb/09506232\">Open Data Services Co-operative Limited page at "
+"Open Corporates</a>. The term 'you' refers to the user or viewer of our "
+"website."
 msgstr ""
 
 #: cove/templates/terms.html:15
@@ -571,19 +882,37 @@ msgstr ""
 
 #: cove/templates/terms.html:17
 msgid ""
-"The content of the pages of this website is for your general information and"
-" use only. It is subject to change without notice."
+"The content of the pages of this website is for your general information and "
+"use only. It is subject to change without notice."
 msgstr ""
 
 #: cove/templates/terms.html:19
 msgid ""
-"Neither we nor any third parties provide any warranty or guarantee as to the accuracy, timeliness, performance, completeness or suitability of the information and materials found or offered on this website for any particular purpose. You acknowledge that such information and materials may contain inaccuracies or errors and we expressly exclude liability for any such inaccuracies or errors to the fullest extent permitted by law.\n"
-"  Your use of any information or materials on this website is entirely at your own risk, for which we shall not be liable. It shall be your own responsibility to ensure that any products, services or information available through this website meet your specific requirements.\n"
-"  This website contains material which is owned by or licensed to us. This material includes, but is not limited to, the design, layout, look, appearance and graphics. Reproduction is prohibited other than in accordance with the copyright notice, which forms part of these terms and conditions.\n"
-"  All trademarks reproduced in this website which are not the property of, or licensed to, the operator are acknowledged on the website.\n"
-"  Unauthorised use of this website may give rise to a claim for damages and/or be a criminal offence.\n"
-"  From time to time this website may also include links to other websites. These links are provided for your convenience to provide further information. They do not signify that we endorse the website(s). We have no responsibility for the content of the linked website(s).\n"
-"  Your use of this website and any dispute arising out of such use of the website is subject to the laws of England, Northern Ireland, Scotland and Wales."
+"Neither we nor any third parties provide any warranty or guarantee as to the "
+"accuracy, timeliness, performance, completeness or suitability of the "
+"information and materials found or offered on this website for any "
+"particular purpose. You acknowledge that such information and materials may "
+"contain inaccuracies or errors and we expressly exclude liability for any "
+"such inaccuracies or errors to the fullest extent permitted by law.\n"
+"  Your use of any information or materials on this website is entirely at "
+"your own risk, for which we shall not be liable. It shall be your own "
+"responsibility to ensure that any products, services or information "
+"available through this website meet your specific requirements.\n"
+"  This website contains material which is owned by or licensed to us. This "
+"material includes, but is not limited to, the design, layout, look, "
+"appearance and graphics. Reproduction is prohibited other than in accordance "
+"with the copyright notice, which forms part of these terms and conditions.\n"
+"  All trademarks reproduced in this website which are not the property of, "
+"or licensed to, the operator are acknowledged on the website.\n"
+"  Unauthorised use of this website may give rise to a claim for damages and/"
+"or be a criminal offence.\n"
+"  From time to time this website may also include links to other websites. "
+"These links are provided for your convenience to provide further "
+"information. They do not signify that we endorse the website(s). We have no "
+"responsibility for the content of the linked website(s).\n"
+"  Your use of this website and any dispute arising out of such use of the "
+"website is subject to the laws of England, Northern Ireland, Scotland and "
+"Wales."
 msgstr ""
 
 #: cove/templates/terms.html:27
@@ -601,15 +930,15 @@ msgstr ""
 msgid ""
 "Cookies allow web applications to respond to you as an individual. The web "
 "application can tailor its operations to your needs, likes and dislikes by "
-"gathering and remembering information about your preferences. A cookie in no"
-" way gives us access to your computer or any information about you, other "
+"gathering and remembering information about your preferences. A cookie in no "
+"way gives us access to your computer or any information about you, other "
 "than the data you choose to share with us."
 msgstr ""
 
 #: cove/templates/terms.html:32
 msgid ""
-"You can choose to accept or decline cookies. Most web browsers automatically"
-" accept cookies, but you can usually modify your browser setting to decline "
+"You can choose to accept or decline cookies. Most web browsers automatically "
+"accept cookies, but you can usually modify your browser setting to decline "
 "cookies if you prefer. This may prevent you from taking full advantage of "
 "the website."
 msgstr ""
@@ -643,36 +972,33 @@ msgstr ""
 
 #: cove/templates/terms.html:44
 msgid ""
-"If you do allow cookies to be used, Piwik uses 1st party cookies, set on the"
-" domain of this website. Cookies created by Piwik start with: "
+"If you do allow cookies to be used, Piwik uses 1st party cookies, set on the "
+"domain of this website. Cookies created by Piwik start with: "
 msgstr ""
 
 #: cove/templates/terms.html:52
 msgid ""
-"See: <a "
-"href=\"http://piwik.org/faq/general/faq_146/\">http://piwik.org/faq/general/faq_146/</a>"
-" for more information."
+"See: <a href=\"http://piwik.org/faq/general/faq_146/\">http://piwik.org/faq/"
+"general/faq_146/</a> for more information."
 msgstr ""
 
 #: cove/templates/terms.html:54
 msgid ""
-"The application is built using <a "
-"href=\"https://www.djangoproject.com/\">Django</a> and we use that framework"
-" to set the following cookies:"
+"The application is built using <a href=\"https://www.djangoproject.com/"
+"\">Django</a> and we use that framework to set the following cookies:"
 msgstr ""
 
-#. Translators: csrftoken and sessionid are names of cookies and do not need
-#. translation
+#. Translators: csrftoken and sessionid are names of cookies and do not need translation
 #: cove/templates/terms.html:56
 msgid ""
-"csrftoken - (to prevent cross site scripting attacks "
-"https://docs.djangoproject.com/en/1.8/ref/csrf/#how-it-works)"
+"csrftoken - (to prevent cross site scripting attacks https://docs."
+"djangoproject.com/en/1.8/ref/csrf/#how-it-works)"
 msgstr ""
 
 #: cove/templates/terms.html:57
 msgid ""
-"sessionid - (you will get this if you interact with the application, so that"
-" we can save the things you have done, e.g. select a language)"
+"sessionid - (you will get this if you interact with the application, so that "
+"we can save the things you have done, e.g. select a language)"
 msgstr ""
 
 #: cove/templates/terms.html:60
@@ -694,8 +1020,8 @@ msgstr ""
 
 #: cove/templates/terms.html:66
 msgid ""
-"If you have set your web browser to \"I do not want to be tracked\" "
-"(DoNotTrack is enabled) then Piwik will not track your visit."
+"If you have set your web browser to \"I do not want to be tracked"
+"\" (DoNotTrack is enabled) then Piwik will not track your visit."
 msgstr ""
 
 #: cove/templates/terms.html:68
@@ -744,8 +1070,8 @@ msgstr ""
 msgid ""
 "Open Data Services Co-operative Limited is committed to ensuring that your "
 "privacy is protected. Should we ask you to provide certain information by "
-"which you can be identified when using this website, then you can be assured"
-" that it will only be used in accordance with this privacy statement."
+"which you can be identified when using this website, then you can be assured "
+"that it will only be used in accordance with this privacy statement."
 msgstr ""
 
 #: cove/templates/terms.html:83
@@ -777,14 +1103,16 @@ msgstr ""
 #: cove/templates/terms.html:90
 msgid ""
 "\n"
-"  Open Data Services Co-operative Limited does not make use of any of the data within the files for purposes other than to create reports for you about the data you have submitted."
+"  Open Data Services Co-operative Limited does not make use of any of the "
+"data within the files for purposes other than to create reports for you "
+"about the data you have submitted."
 msgstr ""
 
 #: cove/templates/terms.html:93
 msgid ""
-"Open Data Services Co-operative Limited does create and store metadata about"
-" your use of the application, and about the files/data that you have "
-"uploaded in order to monitor how the application is being used."
+"Open Data Services Co-operative Limited does create and store metadata about "
+"your use of the application, and about the files/data that you have uploaded "
+"in order to monitor how the application is being used."
 msgstr ""
 
 #: cove/templates/terms.html:95
@@ -793,10 +1121,10 @@ msgstr ""
 
 #: cove/templates/terms.html:96
 msgid ""
-"When you provide data to the application we store the data you have provided"
-" in order to process it for you. We also enable derived versions of the data"
-" to be downloaded. Those derived versions and the original data are stored "
-"on our server."
+"When you provide data to the application we store the data you have provided "
+"in order to process it for you. We also enable derived versions of the data "
+"to be downloaded. Those derived versions and the original data are stored on "
+"our server."
 msgstr ""
 
 #: cove/templates/terms.html:98
@@ -814,8 +1142,8 @@ msgstr ""
 #: cove/templates/terms.html:102
 msgid ""
 "Information about how long files will be stored is made available to users "
-"directly through the interface, but will be for no longer than one year from"
-" the date of submission."
+"directly through the interface, but will be for no longer than one year from "
+"the date of submission."
 msgstr ""
 
 #: cove/templates/terms.html:105
@@ -830,9 +1158,9 @@ msgid ""
 "payable. If you would like a copy of the information held on you please "
 "email the Data Protection Officer at company@opendataservices.coop. If you "
 "would like to write to us our registered addresess is 32 Church Road, Hove, "
-"East Sussex, England, BN3 2FN. Further details are available on the <a "
-"href=\"https://opencorporates.com/companies/gb/09506232\">Open Data Services"
-" Co-operative Limited page at Open Corporates</a>."
+"East Sussex, England, BN3 2FN. Further details are available on the <a href="
+"\"https://opencorporates.com/companies/gb/09506232\">Open Data Services Co-"
+"operative Limited page at Open Corporates</a>."
 msgstr ""
 
 #: cove/templates/terms.html:108
@@ -875,21 +1203,39 @@ msgstr ""
 
 #: cove/templates/terms.html:117
 msgid ""
-"The information contained in this website is for general information purposes only. The information is provided by Open Data Services Co-operative Limited and while we endeavour to keep the information up to date and correct, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.\n"
-"  In no event will we be liable for any loss or damage including without limitation, indirect or consequential loss or damage, or any loss or damage whatsoever arising from loss of data or profits arising out of, or in connection with, the use of this website.\n"
-"  Through this website you are able to link to other websites which are not under the control of Open Data Services Co-operative Limited. We have no control over the nature, content and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorse the views expressed within them.\n"
-"  Every effort is made to keep the website up and running smoothly. However, Open Data Services Co-operative Limited takes no responsibility for, and will not be liable for, the website being temporarily unavailable due to technical issues beyond our control."
+"The information contained in this website is for general information "
+"purposes only. The information is provided by Open Data Services Co-"
+"operative Limited and while we endeavour to keep the information up to date "
+"and correct, we make no representations or warranties of any kind, express "
+"or implied, about the completeness, accuracy, reliability, suitability or "
+"availability with respect to the website or the information, products, "
+"services, or related graphics contained on the website for any purpose. Any "
+"reliance you place on such information is therefore strictly at your own "
+"risk.\n"
+"  In no event will we be liable for any loss or damage including without "
+"limitation, indirect or consequential loss or damage, or any loss or damage "
+"whatsoever arising from loss of data or profits arising out of, or in "
+"connection with, the use of this website.\n"
+"  Through this website you are able to link to other websites which are not "
+"under the control of Open Data Services Co-operative Limited. We have no "
+"control over the nature, content and availability of those sites. The "
+"inclusion of any links does not necessarily imply a recommendation or "
+"endorse the views expressed within them.\n"
+"  Every effort is made to keep the website up and running smoothly. However, "
+"Open Data Services Co-operative Limited takes no responsibility for, and "
+"will not be liable for, the website being temporarily unavailable due to "
+"technical issues beyond our control."
 msgstr ""
 
-#: cove/views.py:287 cove/views.py:333 cove/views.py:397 cove/views.py:454
+#: cove/views.py:610 cove/views.py:660 cove/views.py:724 cove/views.py:783
 msgid "Sorry we can't process that data"
 msgstr ""
 
-#: cove/views.py:289 cove/views.py:335 cove/views.py:399 cove/views.py:456
+#: cove/views.py:612 cove/views.py:662 cove/views.py:726 cove/views.py:785
 msgid "Try Again"
 msgstr ""
 
-#: cove/views.py:290
+#: cove/views.py:613
 msgid ""
 "We did not recognise the file type.\n"
 "\n"
@@ -898,35 +1244,37 @@ msgid ""
 "Is this a bug? Contact us on code [at] opendataservices.coop"
 msgstr ""
 
-#: cove/views.py:336 cove/views.py:457
+#: cove/views.py:663 cove/views.py:786
 msgid ""
 "We think you tried to upload a JSON file, but it is not well formed JSON.\n"
 "\n"
 "Error message: {}"
 msgstr ""
 
-#: cove/views.py:400
+#: cove/views.py:727
 msgid ""
-"We think you tried to supply a spreadsheet, but we failed to convert it to JSON.\n"
+"We think you tried to supply a spreadsheet, but we failed to convert it to "
+"JSON.\n"
 "\n"
 "Error message: {}"
 msgstr ""
 
-#: cove/views.py:421 cove/views.py:431
+#: cove/views.py:748 cove/views.py:758
 msgid "Sorry, the page you are looking for is not available"
 msgstr ""
 
-#: cove/views.py:423 cove/views.py:433
+#: cove/views.py:750 cove/views.py:760
 msgid "Go to Home page"
 msgstr ""
 
-#: cove/views.py:424
+#: cove/views.py:751
 msgid "We don't seem to be able to find the data you requested."
 msgstr ""
 
-#: cove/views.py:434
+#: cove/views.py:761
 msgid ""
 "The data you were hoping to explore no longer exists.\n"
 "\n"
-"This is because all data suplied to this website is automatically deleted after 7 days, and therefore the analysis of that data is no longer available."
+"This is because all data suplied to this website is automatically deleted "
+"after 7 days, and therefore the analysis of that data is no longer available."
 msgstr ""
