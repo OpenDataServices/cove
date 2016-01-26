@@ -65,7 +65,7 @@
   
   <div id="more-information" class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#more-information-body">
-      <h3 class="panel-title"> {% blocktrans %} More Information {% endblocktrans %} <small> click to see. </small></h3>
+      <h3 class="panel-title"> {% blocktrans %}More Information {% endblocktrans %} <small> {% blocktrans %}click to see.{% endblocktrans %} </small></h3>
     </div>
 
     <div id="more-information-body" class="panel-body">
@@ -86,9 +86,7 @@
 
     {% block whyConvert %}
       <h2><small>{% trans "Why provide converted versions?" %}</small></h2>
-      <p>{% blocktrans %}
-      The W3C <a href="http://www.w3.org/TR/dwbp/">Data on the Web Best Practices</a> recommend making open data available in a range of formats to meet the needs of different users, for example, developers may want JSON, researchers might prefer a spreadsheet format.
-      {% endblocktrans %}</p>
+      <p>{% blocktrans %}The W3C{% endblocktrans %}<a href="http://www.w3.org/TR/dwbp/">{% blocktrans %}Data on the Web Best Practices{% endblocktrans %}</a> {% blocktrans %}recommend making open data available in a range of formats to meet the needs of different users, for example, developers may want JSON, researchers might prefer a spreadsheet format.{% endblocktrans %}</p>
     {% endblock %}
     </div>
     </div>

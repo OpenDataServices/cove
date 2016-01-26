@@ -25,3 +25,6 @@ PyYAML==3.11
 
 # selenium
 selenium==2.48.0
+
+# transifex
+transifex-client==0.11 

@@ -70,7 +70,7 @@
           <span class="pull-left"><a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{original_file.size|filesizeformat }}
           </span>
           {% if conversion == 'flattenable' %}
-             <form method="post"> <button name="flatten" value="true" type="submit" class="btn btn-default btn-xs left-space"> Convert to Spreadsheet </button> {% csrf_token %} </form>
+            <form method="post"> <button name="flatten" value="true" type="submit" class="btn btn-default btn-xs left-space"> {% blocktrans %}Convert to Spreadsheet{% endblocktrans %} </button> {% csrf_token %} </form>
           {% endif %}
         </li>
       </ul>

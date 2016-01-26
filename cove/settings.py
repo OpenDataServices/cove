@@ -201,10 +201,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 LANGUAGES = (
-    ('fr', 'French'),
     ('en', 'English'),
     ('es', 'Spanish'),
-    ('ro', 'Romanian'),
 )
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
