@@ -21,9 +21,7 @@
            {% trans "on " %} {{created_date}} 
          </p>
          <p>
-           {% blocktrans with release_count=ra.release_count ocid_count=ra.unique_ocids|length %}
-             This package contains {{release_count}} release(s) describing {{ocid_count}} contracting process(es). 
-           {% endblocktrans %}
+           {% blocktrans %}This package contains{% endblocktrans %} {{ra.release_count}} {% blocktrans %}release(s) describing{% endblocktrans %} {{ra.unique_ocids|length}} {% blocktrans %}contracting process(es).{% endblocktrans %}
          </p>
          <p>
            {% if json_data.publisher %} {% trans "The publisher named in the file is" %}{{json_data.publisher.name}}.{% endif %}
@@ -36,9 +34,7 @@
             {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">{{ schema_url }}</a>.
          </p>
          {% if ra.duplicate_release_ids %} 
-            {% blocktrans with duplicate_count=ra.duplicate_release_ids|length %}
-              <b> There are {{ duplicate_count }} duplicate release IDs in this package.</b>
-            {% endblocktrans %}
+              <b> {% blocktrans %}There are{% endblocktrans %} {{ ra.duplicate_release_ids|length }} {% blocktrans %}duplicate release IDs in this package.{% endblocktrans %}</b>
          {% endif %}
         
       </div>

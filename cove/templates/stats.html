@@ -16,7 +16,7 @@
     <tbody>
     {% for num_days, total, by_form in upload_by_time_by_form %}
         <tr>
-            <th>{% blocktrans %}Last {{num_days}} days{% endblocktrans %}</th>
+            <th>{% blocktrans %}Last{% endblocktrans %} {{num_days}} {% blocktrans %}days{% endblocktrans %}</th>
             <td>{{by_form.upload_form|default:"0"}}</td>
             <td>{{by_form.url_form|default:"0"}}</td>
             <td>{{by_form.text_form|default:"0"}}</td>

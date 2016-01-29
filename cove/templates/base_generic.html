@@ -107,7 +107,7 @@
             <li><a href="{% url 'cove:terms' %}">{% trans "Terms &amp; Conditions" %}</a></li>
           </ul>
           {% comment %}Translators: Provides information about the version of the code base that is being used{% endcomment %}
-          <p class="text-muted">{% blocktrans with version=request.revision %}Running version <a href="https://github.com/OpenDataServices/cove/tree/{{version}}">{{version}}</a>.{% endblocktrans %}</p>
+          <p class="text-muted">{% blocktrans %}Running version {% endblocktrans %}<a href="https://github.com/OpenDataServices/cove/tree/{{version}}">{{version}}</a></p>
         </div>
         <div class="col-md-6">
           <h4>{% trans "Links" %}</h4>

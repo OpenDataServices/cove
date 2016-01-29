@@ -115,7 +115,7 @@ In order to generate messages and post them on transifex:
 In order to fetch messages from transifex:
 
 .. code:: bash
-    tx pull -t -a
+    tx pull -a
 
 In order to compile them:
 

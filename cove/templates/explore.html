@@ -28,16 +28,16 @@
       
       <ul class="list-unstyled left-space">
         <li>
-          <a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{original_file.size|filesizeformat }}
+          <a href="{{original_file.url}}">{{JSON}} ({{original}})</a> {{original_file.size|filesizeformat }}
         </li>
         {% if not conversion_error %}
           <li>
-            <a href="{{converted_url}}.xlsx">{% blocktrans with file_format=xlsx status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{converted_file_size|filesizeformat }}
+            <a href="{{converted_url}}.xlsx">{{xlsx}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
           </li>
           <!--Only show for 360Giving files-->
           {% if request.cove_config.convert_titles %}
             <li>
-              <a href="{{converted_url}}-titles.xlsx">{% blocktrans with file_format=xlsx_titles status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{converted_file_size_titles|filesizeformat }}
+              <a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({{converted}})</a> {{converted_file_size_titles|filesizeformat }}
             </li>
           {% endif %}
         {% endif %}
@@ -52,22 +52,22 @@
         <li>
           <a href="{{original_file.url}}">
             {% if file_type == 'xlsx' %}
-                {% blocktrans with file_format=xlsx status=original %}{{file_format}} ({{status}}){% endblocktrans %}
+                {{xlsx}} ({{original}})
             {% elif file_type == 'csv' %}
-                {% blocktrans with file_format=csv status=original %}{{file_format}} ({{status}}){% endblocktrans %}
+                {{csv}} ({{original}})
             {% endif %}
             </a> 
             {{original_file.size|filesizeformat }}
           </li>
           <li>
-            <a href="{{converted_url}}">{% blocktrans with file_format=JSON status=converted %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{converted_file_size|filesizeformat }}
+            <a href="{{converted_url}}">{{JSON}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
           </li>
       </ul>
 
     {% else %}
       <ul class="list-unstyled left-space">
         <li>
-          <span class="pull-left"><a href="{{original_file.url}}">{% blocktrans with file_format=JSON status=original %}{{file_format}} ({{status}}){% endblocktrans %}</a> {{original_file.size|filesizeformat }}
+          <span class="pull-left"><a href="{{original_file.url}}">{{JSON}} ({{original}})</a> {{original_file.size|filesizeformat }}
           </span>
           {% if conversion == 'flattenable' %}
             <form method="post"> <button name="flatten" value="true" type="submit" class="btn btn-default btn-xs left-space"> {% blocktrans %}Convert to Spreadsheet{% endblocktrans %} </button> {% csrf_token %} </form>
