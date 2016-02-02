@@ -32,7 +32,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          {% blocktrans with number_of_ocids=records_aggregates.unique_ocids|length %}Unique OCIDs ({{number_of_ocids}}){% endblocktrans %}
+          {% blocktrans %}Unique OCIDs{% endblocktrans %}({{records_aggregates.unique_ocids}})
         </h4>
       </div>
       <div class="panel-body">
