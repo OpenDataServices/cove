@@ -7,6 +7,9 @@
   <script>try{Typekit.load({ async: true });}catch(e){}</script>
 {% endblock %}
 
+{% block banner %}
+{% endblock %}
+
 {% block page_header %}
 {% endblock %}
 
@@ -47,7 +50,7 @@
       </div><!--row-->
       <div class="row">
         <div class="col-xs-7">
-          {% block h1 %}<h1 class="application-name"><a href="{% url 'cove:index' %}">{% blocktrans %} Data <span> Standard </span> Validator{% endblocktrans %} </a></h1>{% endblock %}
+          {% block h1 %}<h1 class="application-name"><a href="{% url 'cove:index' %}">{% blocktrans %} Data <span> Standard </span> Validator{% endblocktrans %} </h1></a> <h2 class="beta"><small>beta</small></h2>{% endblock %}
         </div><!--col-md-8-->
         <div class="col-xs-5">
           <a href="http://standard.open-contracting.org"><h3 class="docs-link pull-right">{% blocktrans %} Standard Documentaion {% endblocktrans %}</h3></a>
