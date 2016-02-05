@@ -28,3 +28,6 @@ selenium==2.48.0
 
 # transifex
 transifex-client==0.11 
+
+# sass
+libsass==0.10.1
