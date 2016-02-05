@@ -1,6 +1,8 @@
 Cove - COnvert Validate & Explore
 =================================
 
+Note: This license doesn't apply to the OCDS theme and related assets (such as the logo).
+
 Cove - COnvert Validate & Explore is free software designed to help people check data 
 pubplished to the Open Contracting Data Standard.
   
@@ -18,6 +20,4 @@ You should have received a copy of the GNU Affero General Public License
 along with Cove - COnvert Validate & Explore.  If not, see <http://www.gnu.org/licenses/>.
 
 Copyright 2015 Open Data Services Co-operative Limited.
-
-
 

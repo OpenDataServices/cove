@@ -1,5 +1,75 @@
 {% extends 'base_generic.html' %}
 {% load i18n %}
+{% load static from staticfiles %}
+
+{% block after_head %}
+  <script src="https://use.typekit.net/xpw3jps.js"></script>
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
+{% endblock %}
+
+{% block page_header %}
+{% endblock %}
+
+{% block full_width_header %}
+{% include 'ocds-svg.html' %}
+
+<div class="full_width_header">
+  <div class="container">
+    <div class="page-header">
+      <div class="row border-bottom">
+        <div class="col-xs-10">
+          <a class="ocp-logo" href="http://open-contracting.org">
+            <svg>
+              <use xlink:href="#ocp-logo" />
+            </svg>
+          </a>
+        </div>
+        <div class="col-xs-2">
+          <form class="language-select pull-right" action="{% url 'set_language' %}" method="post">
+          {% csrf_token %}
+            <input name="next" type="hidden" value="{{ redirect_to }}" />
+            <select class="custom-select" name="language" onchange="this.form.submit()">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+            {% for language in languages %}
+            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                {{ language.name_local }} ({{ language.code }})
+            </option>
+            {% endfor %}
+            </select>
+            <noscript>
+              {# Translators: Label of a button that triggers search #}
+              <input type="submit" value={% trans "Go" %} />
+            </noscript>
+          </form>
+        </div><!--col-md-2-->
+      </div><!--row-->
+      <div class="row">
+        <div class="col-xs-7">
+          {% block h1 %}<h1 class="application-name"><a href="{% url 'cove:index' %}">{% blocktrans %} Data <span> Standard </span> Validator{% endblocktrans %} </a></h1>{% endblock %}
+        </div><!--col-md-8-->
+        <div class="col-xs-5">
+          <a href="http://standard.open-contracting.org"><h3 class="docs-link pull-right">{% blocktrans %} Standard Documentaion {% endblocktrans %}</h3></a>
+        </div><!--col-md-8-->
+      </div><!--row-->
+    </div><!--page-header-->
+  </div><!--container-->
+</div>
+
+<div class="container">
+   <div class="row ocds-header-button">
+      <div class="col-xs-12">
+        {% block header_button %}{% endblock header_button %}
+      </div>
+   </div>
+</div>
+
+{% endblock %}
+
+{% block bootstrap_css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/bootstrap-ocds.css' %}">
+{% endblock %}
 
 {% block link %}
 <li><a href="http://www.open-contracting.org/">{% trans "Open Contracting" %}</a></li>

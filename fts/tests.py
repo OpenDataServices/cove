@@ -86,7 +86,7 @@ def test_index_page_ocds(server_url, browser):
     if not PREFIX_OCDS:
         return
     browser.get(server_url + PREFIX_OCDS)
-    assert 'Open Contracting Data Standard Validator' in browser.find_element_by_tag_name('body').text
+    assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
     assert 'Using the validator' in browser.find_element_by_tag_name('body').text
     assert "'release'" in browser.find_element_by_tag_name('body').text
     assert "'record'" in browser.find_element_by_tag_name('body').text
@@ -244,7 +244,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
         assert text in body_text
 
     if prefix == PREFIX_OCDS:
-        assert 'Open Contracting Data Standard Validator' in browser.find_element_by_tag_name('body').text
+        assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
         # assert 'Release Table' in browser.find_element_by_tag_name('body').text
     elif prefix == PREFIX_360:
         assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
