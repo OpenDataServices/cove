@@ -52,7 +52,7 @@ def test_index_page(server_url, browser):
 
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
     ('Open Contracting', 'What is Open Contracting?', 'div#page-what h1', 'http://www.open-contracting.org/'),
-    ('Open Contracting Data Standard', 'OPEN CONTRACTING DATA STANDARD (OCDS) PROJECT SITE', 'h1.site-title', 'http://standard.open-contracting.org/'),
+    ('Open Contracting Data Standard', 'Open Contracting Data Standard: Documentation', '#open-contracting-data-standard-documentation', 'http://standard.open-contracting.org/'),
     ])
 def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector, url):
     if not PREFIX_OCDS:
