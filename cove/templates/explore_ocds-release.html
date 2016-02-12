@@ -24,7 +24,7 @@
            {% blocktrans %}This package contains{% endblocktrans %} {{ra.release_count}} {% blocktrans %}release(s) describing{% endblocktrans %} {{ra.unique_ocids|length}} {% blocktrans %}contracting process(es).{% endblocktrans %}
          </p>
          <p>
-           {% if json_data.publisher %} {% trans "The publisher named in the file is" %}{{json_data.publisher.name}}.{% endif %}
+           {% if json_data.publisher %} {% trans "The publisher named in the file is" %} {{json_data.publisher.name}}.{% endif %}
            {% if json_data.license %} {% trans "The license is" %} {{json_data.license}}.{% endif %}
            {{config}}
          </p>
