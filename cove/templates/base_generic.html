@@ -95,7 +95,7 @@
 
     {% block whyConvert %}
       <h2><small>{% trans "Why provide converted versions?" %}</small></h2>
-      <p>{% blocktrans %}The W3C{% endblocktrans %}<a href="http://www.w3.org/TR/dwbp/">{% blocktrans %}Data on the Web Best Practices{% endblocktrans %}</a> {% blocktrans %}recommend making open data available in a range of formats to meet the needs of different users, for example, developers may want JSON, researchers might prefer a spreadsheet format.{% endblocktrans %}</p>
+      <p>{% blocktrans %}The W3C{% endblocktrans %} <a href="http://www.w3.org/TR/dwbp/">{% blocktrans %}Data on the Web Best Practices{% endblocktrans %}</a> {% blocktrans %}recommend making open data available in a range of formats to meet the needs of different users, for example, developers may want JSON, researchers might prefer a spreadsheet format.{% endblocktrans %}</p>
     {% endblock %}
     </div>
     </div>
@@ -116,7 +116,7 @@
             <li><a href="{% url 'cove:terms' %}">{% trans "Terms &amp; Conditions" %}</a></li>
           </ul>
           {% comment %}Translators: Provides information about the version of the code base that is being used{% endcomment %}
-          <p class="text-muted">{% blocktrans %}Running version {% endblocktrans %}<a href="https://github.com/OpenDataServices/cove/tree/{{version}}">{{version}}</a></p>
+          <p class="text-muted">{% blocktrans %}Running version {% endblocktrans %}<a href="https://github.com/OpenDataServices/cove/tree/{{request.tag}}">{{request.tag}}</a></p>
         </div>
         <div class="col-md-6">
           <h4>{% trans "Links" %}</h4>
