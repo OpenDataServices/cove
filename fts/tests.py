@@ -191,9 +191,6 @@ def test_accordion(server_url, browser, prefix):
                                                            "'13-03-2015' is not a 'date-time'"], True),
     # Test a 360 spreadsheet with titles, rather than fields
     (PREFIX_360, 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
-    # Test that titles that aren't in the rollup are converted correctly
-    # (See if statement in check_url_input_result_page).
-    (PREFIX_360, 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx', 'Download Files', True),
     # Test a 360 csv in cp1252 incoding
     (PREFIX_360, 'WellcomeTrust-grants_2_grants_cp1252.csv', 'Download Files', True),
     # Test a non-valid file.
@@ -282,10 +279,6 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
         if 'record' not in source_filename:
             converted_file_response = requests.get(converted_file)
-            if source_filename == 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx':
-                grant1 = converted_file_response.json()['grants'][1]
-                assert grant1['recipientOrganization'][0]['department'] == 'Test data'
-                assert grant1['classifications'][0]['title'] == 'Test'
             assert converted_file_response.status_code == 200
             assert int(converted_file_response.headers['content-length']) != 0
 
