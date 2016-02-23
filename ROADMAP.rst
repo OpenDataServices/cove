@@ -34,9 +34,9 @@ We have discussed but will not be doing the following in the forseable future:
 * Provides a merge releases feature for OCDS data
 * Do we want a queue?
 * "API" on validation / warnings / aggregate data
-* Button to download as CSV/JSON of results
-* When to use and when not - ipython notebooks, sql output, (part of this is moving cove into a lbrary)
-* We don't think should become a datastore...
+* Button to download a CSV/JSON of results
+* When to use and when not - ipython notebooks, sql output, (part of this is moving cove into a library)
+* We don't think it should become a datastore...
 * Widget to let people embed links to converted data in their own websites (e.g. user publishers as CSV, but tags the link so that JSON and Excel links also provided);
 
 
