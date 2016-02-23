@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoVE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-22 12:02+0000\n"
-"PO-Revision-Date: 2016-02-22 12:05+0000\n"
+"POT-Creation-Date: 2016-02-23 12:16+0000\n"
+"PO-Revision-Date: 2016-02-23 12:23+0000\n"
 "Last-Translator: Ben Webb <ben.webb@opendataservices.coop>\n"
 "Language-Team: Spanish (http://www.transifex.com/OpenDataServices/cove/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -119,9 +119,9 @@ msgstr "Resumen de hoja de cálculo - <a href=\"https://github.com/ThreeSixtyGiv
 #: cove/templates/base_360.html:23
 msgid ""
 "JSON built to the <a "
-"href=\"http://www.threesixtygiving.org/standard/reference/#toc-json-"
-"schema\">360Giving Data Standard JSON schema</a>"
-msgstr "JSON construido para el <a href=\"http://www.threesixtygiving.org/standard/reference/#toc-json-schema\">esquema 360Giving datos estándar JSON</a>"
+"href=\"http://www.threesixtygiving.org/standard/reference/#toc-360giving-"
+"json-schemas\">360Giving JSON schema</a>"
+msgstr "JSON construido para el <a href=\"http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas\">esquema 360Giving JSON</a>"
 
 #: cove/templates/base_360.html:24
 msgid ""
