@@ -1,19 +1,18 @@
 Django==1.8.10 # rq.filter: <1.9
 -e git+https://github.com/OpenDataServices/flatten-tool.git@760afa26ce6f81bcae450c2b9c1fa9618082ed34#egg=flattentool
-django-bootstrap3==6.2.2
+django-bootstrap3==7.0.0
 django-debug-toolbar==1.4
-requests==2.9.0
+requests==2.9.1
 dealer==2.0.5
 django-environ==0.4.0
 jsonschema==2.5.1
-raven==5.9.2
+raven==5.11.0
 strict-rfc3339==0.6
 
 # Dependencies of flatten-tool
 jdcal==1.2
 jsonref==0.1
-# flatten-tool currently requires openpyxl<2.2
-openpyxl==2.3.2
+openpyxl==2.3.3
 pytz==2015.7
 schema==0.4.0
 six==1.10.0

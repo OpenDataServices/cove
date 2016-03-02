@@ -1,22 +1,22 @@
 -r requirements.txt 
 
 # flake8 and dependencies
-flake8==2.5.1
-mccabe==0.3.1
+flake8==2.5.4
+mccabe==0.4.0
 # Flake8 2.4.1 uses pep8 < 1.6, see
 # https://gitlab.com/pycqa/flake8/blob/ea628fa9d16b3adc6e15e6726439128d345d80d4/CHANGES.rst
 pep8==1.5.7 # rq.filter: <1.6
-pyflakes==1.0.0
+pyflakes==1.1.0
 
 # pytest and plugins
 py==1.4.31
-pytest==2.8.5
+pytest==2.9.0
 pytest-django==2.9.1
-pytest-cov==2.2.0
+pytest-cov==2.2.1
 cov-core==1.15.0
 coverage==4.0.3
-pytest-localserver==0.3.4
-Werkzeug==0.11.2
+pytest-localserver==0.3.5
+Werkzeug==0.11.4
 
 # coveralls
 coveralls==1.1
@@ -24,7 +24,7 @@ docopt==0.6.2
 PyYAML==3.11
 
 # selenium
-selenium==2.48.0
+selenium==2.52.0
 
 # transifex
 transifex-client==0.11 
