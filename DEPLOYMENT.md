@@ -15,7 +15,7 @@ Standing tasks:
 - [ ] Create a new branch `release-201602` if it doesn't exist.
 - [ ] Deploy to a subdomain on the dev server http://release-201602.dev.cove.opendataservices.coop/ - redo this for any additional commits
 - [ ] Check that the correct commit has been deployed using the link in the footer
-- [ ] Run CUSTOM_SERVER_URL=http://release-201602.dev.cove.opendataservices.coop/ py.test fts - redo this for each redeploy to the subomdain
+- [ ] Run `CUSTOM_SERVER_URL=http://release-201602.dev.cove.opendataservices.coop/ py.test fts` - redo this for each redeploy to the subomdain
 
 After merge:
 - [ ] Run salt highstate on `cove-live`
