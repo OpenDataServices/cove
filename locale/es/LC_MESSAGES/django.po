@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoVE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-23 12:16+0000\n"
-"PO-Revision-Date: 2016-02-23 12:23+0000\n"
+"POT-Creation-Date: 2016-03-04 16:06+0000\n"
+"PO-Revision-Date: 2016-03-04 16:09+0000\n"
 "Last-Translator: Ben Webb <ben.webb@opendataservices.coop>\n"
 "Language-Team: Spanish (http://www.transifex.com/OpenDataServices/cove/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -284,8 +284,8 @@ msgid " Data <span> Standard </span> Validator"
 msgstr "Validador de datos <span>estándar</span>"
 
 #: cove/templates/base_ocds.html:56
-msgid " Standard Documentaion "
-msgstr "documentaion estándar"
+msgid " Standard Documentation "
+msgstr "Documentación estándar"
 
 #: cove/templates/base_ocds.html:78
 msgid "Open Contracting"
