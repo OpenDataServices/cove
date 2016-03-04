@@ -3,12 +3,12 @@
 
 Post a pull request with a title following the template:
 ``
-Post {{Month}} {{Year}} bug fixes ({{Num}}) - typo - live deployment 
+Post {{Month}} {{Year}} bug fixes ({{Num}}) - {{optionally, brief description of changes}} - live deployment 
 ``
 
 And a description following this template:
 ```
-{{summary of the change}}
+{{Explanation of what has changed.}}
 
 Standing tasks:
 - [ ] Re-run translations if any text has changed
