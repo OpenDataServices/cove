@@ -1,5 +1,5 @@
 
-## How to create a deployment pull requset
+## How to create a deployment pull request
 
 
 Post a pull request with a title following the appropriate template.:
