@@ -1,3 +1,6 @@
+# Deployment Notes
+
+General Django deployment considerations apply to deploying Cove. We deploy using Apache and uwsgi using this  [Salt State file](https://github.com/OpenDataServices/opendataservices-deploy/blob/master/salt/cove.sls).
 
 ## How to create a deployment pull request
 

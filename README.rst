@@ -14,16 +14,24 @@ CoVE - Convert Validate & Explore
 .. image:: https://img.shields.io/badge/license-AGPLv3-blue.svg
     :target: https://github.com/OpenDataServices/cove/blob/master/AGPLv3.txt
 
-We use HuBoard to provide an "agile board" view of our issues https://huboard.com/OpenDataServices/cove
+HuBoard "agile board" view of our issues: https://huboard.com/OpenDataServices/cove
 
 Introduction
 ============
 
-This application is currently in a pre-alpha state.
+CoVE is an web application to Convert, Validate and Explore data following certain open data standards - currently 360Giving and the Open Contracting Data standard. http://cove.opendataservices.coop
+
+CoVE is current in an alpha/beta state.
+
+Why convert data?
++++++++++++++++++
 
 The W3C `Data on the Web Best Practices <http://www.w3.org/TR/dwbp/>`_ recommend making open data available in a range of formats to meet the needs of different users. Developers may want JSON, researchers might prefer a spreadsheet format.
 
 CoVE manages the process of converting between JSON, Excel and CSV formats for structured data. 
+
+Validate and Explore
+++++++++++++++++++++
 
 CoVE presents key validation information during the process, and can be configured to display information about the contents of a data file, so that it can be easily inspected.
 
@@ -36,9 +44,6 @@ CoVE currently supports conversion from:
  * Excel to JSON (it uses the `flatten-tool <(https://github.com/OpenDataServices/flatten-tool>`_ for conversion) 
  
 If a JSON schema is supplied, CoVE can use either field names, or user-friendly column titles. 
-
-Exploration views need to be developed, customised to the type of data being converted.
-
 
 Release Cycle
 =============
@@ -57,10 +62,9 @@ We also use Huboard as a way to prioritise issues and indicate what is being wor
  
 Serious Bug fixes and 'priority' features, that need to make it into a release at short notice can be included by negotiation.
 
-
 Requirements
 ============
-This application is built using Django and python 3
+This application is built using Django and Python 3
 
 Installation
 ============
@@ -87,6 +91,11 @@ Steps to installation:
     python manage.py runserver
 
 Follow the instructions in your terminal to open the aplication in your browser.
+
+Deployment
+==========
+
+See https://github.com/OpenDataServices/cove/blob/master/DEPLOYMENT.md
 
 Run tests
 =========
@@ -128,17 +137,20 @@ If you add new text to the interface, ensure to wrap it in the relevant gettext 
 In order to generate messages and post them on transifex:
 
 .. code:: bash
+
     python manage.py makemessages -l en
     tx push -s
 
 In order to fetch messages from transifex:
 
 .. code:: bash
+
     tx pull -a
 
 In order to compile them:
 
 .. code:: bash
+
     python manage.py compilemessages
 
 Do not do not this process on every text change so as not to pollute the commit diffs.  
