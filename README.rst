@@ -39,6 +39,25 @@ If a JSON schema is supplied, CoVE can use either field names, or user-friendly 
 
 Exploration views need to be developed, customised to the type of data being converted.
 
+
+Release Cycle
+=============
+
+CoVE is in constant development.
+There are public instances in use at:
+http://cove.opendataservices.coop/
+http://standard.open-contracting.org/validator/
+
+We deploy the latest version of CoVE at the end of each calendar month (usually the last Thursday of the Month).
+We make development version ready for user testing (mainly internally) two weeks before deployment. Our cut off date for new features to be considered in that cycle is the week before that.
+
+Feature requests, bugs, questions and answers etc are all handled via GitHub.
+We use release cycle milestones to organise those issues.
+We also use Huboard as a way to prioritise issues and indicate what is being worked on.
+ 
+Serious Bug fixes and 'priority' features, that need to make it into a release at short notice can be included by negotiation.
+
+
 Requirements
 ============
 This application is built using Django and python 3
