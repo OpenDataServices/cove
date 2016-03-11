@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-22 12:02+0000\n"
+"POT-Creation-Date: 2016-03-04 16:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,7 +118,7 @@ msgstr ""
 #: cove/templates/base_360.html:23
 msgid ""
 "JSON built to the <a href=\"http://www.threesixtygiving.org/standard/"
-"reference/#toc-json-schema\">360Giving Data Standard JSON schema</a>"
+"reference/#toc-360giving-json-schemas\">360Giving JSON schema</a>"
 msgstr ""
 
 #: cove/templates/base_360.html:24
@@ -281,7 +281,7 @@ msgid " Data <span> Standard </span> Validator"
 msgstr ""
 
 #: cove/templates/base_ocds.html:56
-msgid " Standard Documentaion "
+msgid " Standard Documentation "
 msgstr ""
 
 #: cove/templates/base_ocds.html:78

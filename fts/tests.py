@@ -51,7 +51,8 @@ def test_index_page(server_url, browser):
 
 
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
-    ('Open Contracting', 'What is Open Contracting?', 'div#page-what h1', 'http://www.open-contracting.org/'),
+    # FIXME: Pick some text to lookg for on the OCP home page. Currently it's changing a lot.
+    ('Open Contracting', '', 'div.homepage-title h1', 'http://www.open-contracting.org/'),
     ('Open Contracting Data Standard', 'Open Contracting Data Standard: Documentation', '#open-contracting-data-standard-documentation', 'http://standard.open-contracting.org/'),
     ])
 def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector, url):
@@ -99,7 +100,7 @@ def test_index_page_360(server_url, browser):
     assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'How to use the 360Giving Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'Summary Spreadsheet - Excel' in browser.find_element_by_tag_name('body').text
-    assert 'JSON built to the 360Giving Data Standard JSON schema' in browser.find_element_by_tag_name('body').text
+    assert 'JSON built to the 360Giving JSON schema' in browser.find_element_by_tag_name('body').text
     assert 'Multi-table data package - Excel' in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
   
@@ -108,7 +109,7 @@ def test_index_page_360(server_url, browser):
     ('360Giving Data Standard guidence', 'http://www.threesixtygiving.org/standard/'),
     ('Excel', 'https://github.com/ThreeSixtyGiving/standard/raw/master/schema/summary-table/360-giving-schema-titles.xlsx'),
     ('CSV', 'https://github.com/ThreeSixtyGiving/standard/raw/master/schema/summary-table/360-giving-schema-titles.csv/grants.csv'),
-    ('360Giving Data Standard JSON schema', 'http://www.threesixtygiving.org/standard/reference/#toc-json-schema'),
+    ('360Giving JSON schema', 'http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas'),
     ('Multi-table data package - Excel', 'https://github.com/ThreeSixtyGiving/standard/raw/master/schema/multi-table/360-giving-schema-fields.xlsx')
     ])
 def test_index_page_360_links(server_url, browser, link_text, url):
