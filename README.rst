@@ -40,8 +40,8 @@ Supported formats
 
 CoVE currently supports conversion from: 
 
- * JSON to multi-tabbed Excel files 
- * Excel to JSON (it uses the `flatten-tool <(https://github.com/OpenDataServices/flatten-tool>`_ for conversion) 
+* JSON to multi-tabbed Excel files 
+* Excel to JSON (it uses the `flatten-tool <(https://github.com/OpenDataServices/flatten-tool>`_ for conversion) 
  
 If a JSON schema is supplied, CoVE can use either field names, or user-friendly column titles. 
 
