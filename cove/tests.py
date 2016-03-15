@@ -221,6 +221,13 @@ def test_get_releases_aggregates():
 
     assert actual_cleaned == EXPECTED_RELEASE_AGGREGATE_RANDOM
 
+    with open(os.path.join('cove', 'fixtures', 'badfile.json')) as fp:
+        data = json.load(fp)
+
+    actual = v.get_releases_aggregates(data, ignore_errors=True)
+
+    assert actual == {}
+
 
 def test_fields_present():
     assert v.get_fields_present({}) == {}
