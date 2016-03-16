@@ -311,5 +311,5 @@ def test_500_error(server_url, browser, prefix):
     # This helps to check that the theme including the css has been loaded
     # properly
     icon_span = browser.find_element_by_class_name('panel-danger').find_element_by_tag_name('span')
-    assert icon_span.value_of_css_property('font-family') == '"Glyphicons Halflings"'
+    assert 'Glyphicons Halflings' in icon_span.value_of_css_property('font-family')
     assert icon_span.value_of_css_property('color') == 'rgba(169, 68, 66, 1)'
