@@ -1,4 +1,4 @@
--r requirements.txt 
+-r requirements.in
 
 flake8
 pytest

@@ -10,4 +10,5 @@ pip freeze -r requirements.in > requirements.txt
 pip install --upgrade -r requirements_dev.in
 pip freeze -r requirements_dev.in > requirements_dev.txt
 # Put comments back on the same line (mostly for requires.io's benefit)
-sed -ie '$!N;s/\n#^^/ #/;P;D' requirements*txt
+sed -i '$!N;s/\n#\^\^/ #/;P;D' requirements*txt
+sed -i 's/^-r.*//' requirements*txt
