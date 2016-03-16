@@ -39,15 +39,15 @@ def uniqueIds(validator, uI, instance, schema):
             try:
                 item_id = item.get('id')
             except AttributeError:
-                ##if item is not a dict
+                # if item is not a dict
                 item_id = None
             if item_id:
                 if item_id in all_ids:
                     non_unique_ids.add(item_id)
                 all_ids.add(item_id)
             else:
-                ## if there is any item without an id key, or the item is not a dict
-                ## revert to original validator
+                # if there is any item without an id key, or the item is not a dict
+                # revert to original validator
                 for error in uniqueItemsValidator(validator, uI, instance, schema):
                     yield error
                 return
@@ -178,7 +178,7 @@ def get_releases_aggregates(json_data):
 
     releases = get_no_exception(json_data, 'releases', [])
     for release in releases:
-        ### Release Section ###
+        # ### Release Section ###
         if not isinstance(release, dict):
             continue
         release_count = release_count + 1
@@ -208,13 +208,13 @@ def get_releases_aggregates(json_data):
         if buyer:
             process_org(buyer, unique_buyers_identifier, unique_buyers_name_no_id)
 
-        ### Planning Section ###
+        # ### Planning Section ###
         planning = get_no_exception(release, 'planning', {})
         if planning and isinstance(planning, dict):
             planning_ocids.add(ocid)
             planning_doc_count += update_docs(planning, planning_doctype)
 
-        ### Tender Section ###
+        # ### Tender Section ###
         tender = get_no_exception(release, 'tender', {})
         if tender and isinstance(tender, dict):
             tender_ocids.add(ocid)
@@ -241,7 +241,7 @@ def get_releases_aggregates(json_data):
                 for milestone in milestones:
                     tender_milestones_doc_count += update_docs(milestone, tender_milestones_doctype)
 
-        ### Award Section ###
+        # ### Award Section ###
         awards = get_no_exception(release, 'awards', [])
         for award in awards:
             if not isinstance(award, dict):
@@ -265,7 +265,7 @@ def get_releases_aggregates(json_data):
                 process_org(supplier, unique_suppliers_identifier, unique_suppliers_name_no_id)
             award_doc_count += update_docs(award, award_doctype)
 
-        ### Contract section
+        # ### Contract section
         contracts = get_no_exception(release, 'contracts', [])
         for contract in contracts:
             if not isinstance(contract, dict):
