@@ -5,6 +5,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
+from django.template import Context, loader
+from django.http import HttpResponseServerError
+
+
 if settings.PREFIX_MAP:
     urls = []
     prefix_ocds = settings.PREFIX_MAP.get('ocds')
@@ -20,7 +24,21 @@ else:
         url(r'^$', TemplateView.as_view(template_name='multi_index.html'), name='multi_index'),
     ]
 
+
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 ] + urls + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+def handler500(request):
+    """500 error handler which includes ``request`` in the context.
+    """
+    
+    context = {
+        'request': request,
+    }
+    context.update(request.cove_config)
+
+    t = loader.get_template('500.html')  # You need to create a 500.html template.
+    return HttpResponseServerError(t.render(Context(context)))
