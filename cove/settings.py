@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import warnings
 import environ
+import raven
 from django.utils.crypto import get_random_string
 from django.utils.translation import ugettext_lazy as _
 
@@ -109,7 +110,8 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 if env('SENTRY_DSN'):
     RAVEN_CONFIG = {
-        'dsn': env('SENTRY_DSN')
+        'dsn': env('SENTRY_DSN'),
+        'release': raven.fetch_git_sha(os.path.join(os.path.dirname(__file__), '..')),
     }
 
 
