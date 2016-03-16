@@ -1,0 +1,12 @@
+pip
+Django<1.9
+#^^ rq.filter: <1.9
+-e git+https://github.com/OpenDataServices/flatten-tool.git@760afa26ce6f81bcae450c2b9c1fa9618082ed34#egg=flattentool
+django-bootstrap3
+django-debug-toolbar
+requests
+dealer
+django-environ
+jsonschema
+raven
+strict-rfc3339

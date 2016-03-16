@@ -1,0 +1,13 @@
+-r requirements.txt 
+
+flake8
+pytest
+pytest-django
+pytest-cov
+pytest-localserver==0.3.5
+coveralls
+# https://github.com/SeleniumHQ/selenium/issues/1820
+selenium!=2.53.0
+#^^ rq.filter: !=2.53.0
+transifex-client
+libsass
