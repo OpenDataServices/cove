@@ -1,6 +1,19 @@
+pip==8.1.0
+Django==1.8.11 # rq.filter: <1.9
+-e git+https://github.com/OpenDataServices/flatten-tool.git@760afa26ce6f81bcae450c2b9c1fa9618082ed34#egg=flattentool
+django-bootstrap3==7.0.0
+django-debug-toolbar==1.4
+requests==2.9.1
+dealer==2.0.5
+django-environ==0.4.0
+jsonschema==2.5.1
+raven==5.11.1
+strict-rfc3339==0.6
 
 
 flake8==2.5.4
+# flake8 requires pyflakes <1.1
+pyflakes==1.0.0 # rq.filter: <1.1
 pytest==2.9.0
 pytest-django==2.9.1
 pytest-cov==2.2.1
@@ -13,28 +26,17 @@ libsass==0.10.1
 ## The following requirements were added by pip freeze:
 contextlib2==0.5.1
 coverage==4.0.3
-dealer==2.0.5
-Django==1.8.11
-django-bootstrap3==7.0.0
-django-debug-toolbar==1.4
-django-environ==0.4.0
 docopt==0.6.2
 et-xmlfile==1.0.1
--e git+https://github.com/OpenDataServices/flatten-tool.git@760afa26ce6f81bcae450c2b9c1fa9618082ed34#egg=flattentool
 jdcal==1.2
 jsonref==0.1
-jsonschema==2.5.1
 mccabe==0.4.0
 openpyxl==2.3.4
 pep8==1.7.0
 py==1.4.31
-pyflakes==1.0.0
 pytz==2016.1
-raven==5.11.1
-requests==2.9.1
 schema==0.4.0
 six==1.10.0
 sqlparse==0.1.19
-strict-rfc3339==0.6
 urllib3==1.14
 Werkzeug==0.11.4
