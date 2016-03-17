@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+
+<div class="panel panel-danger">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {% trans 'Internal Server Error' %}
+    </h4>
+  </div>
+  <div class="panel-body">
+    <p>Something went wrong with your request. This could be due to a bug in the application and/or the data you supplied.</p>
+    {% if request.sentry.id %}
+      <p>This error has been automatically reported to our development team. If you get in touch, please reference this error as <strong>{{ request.sentry.id }}</strong>.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

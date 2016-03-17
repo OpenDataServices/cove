@@ -41,7 +41,7 @@ def uniqueIds(validator, uI, instance, schema):
             except AttributeError:
                 # if item is not a dict
                 item_id = None
-            if item_id:
+            if item_id and not isinstance(item_id, list):
                 if item_id in all_ids:
                     non_unique_ids.add(item_id)
                 all_ids.add(item_id)
@@ -83,6 +83,19 @@ def update_docs(document_parent, counter):
     return count
 
 
+def ignore_errors(f):
+    def ignore(json_data, ignore_errors=False):
+        if ignore_errors:
+            try:
+                return f(json_data)
+            except (KeyError, TypeError, IndexError, AttributeError):
+                return {}
+        else:
+            return f(json_data)
+    return ignore
+
+
+@ignore_errors
 def get_releases_aggregates(json_data):
     release_count = 0
     unique_ocids = set()
@@ -420,6 +433,7 @@ def get_releases_aggregates(json_data):
     )
 
 
+@ignore_errors
 def get_records_aggregates(json_data):
     # Unique ocids
     unique_ocids = set()
@@ -439,6 +453,7 @@ def get_records_aggregates(json_data):
     }
 
 
+@ignore_errors
 def get_grants_aggregates(json_data):
 
     id_count = 0
@@ -826,7 +841,7 @@ def explore(request, pk):
             context['records_aggregates'] = get_records_aggregates(json_data)
             view = 'explore_ocds-record.html'
         else:
-            context['releases_aggregates'] = get_releases_aggregates(json_data)
+            context['releases_aggregates'] = get_releases_aggregates(json_data, ignore_errors=bool(validation_errors))
             view = 'explore_ocds-release.html'
     elif request.current_app == 'cove-360':
         context['grants_aggregates'] = get_grants_aggregates(json_data)
