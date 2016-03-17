@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import warnings
+import environ
 from django.utils.crypto import get_random_string
+from django.utils.translation import ugettext_lazy as _
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,7 +24,6 @@ secret_key = get_random_string(50, chars)
 if 'SECRET_KEY' not in os.environ:
     warnings.warn('SECRET_KEY should be added to Enviroment Variables. Random key will be used instead.')
 
-import environ
 env = environ.Env(  # set default values and casting
     SENTRY_DSN=(str, ''),
     DEBUG=(bool, True),
@@ -47,7 +48,6 @@ DEALER_TYPE = 'git'
 
 PREFIX_MAP = env('PREFIX_MAP')
 
-from django.utils.translation import ugettext_lazy as _
 COVE_CONFIG_BY_NAMESPACE = {
     'base_template_name': {
         'cove-ocds': 'base_ocds.html',

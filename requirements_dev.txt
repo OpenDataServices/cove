@@ -1,33 +1,41 @@
--r requirements.txt 
+pip==8.1.0
+Django==1.8.11 # rq.filter: <1.9
+-e git+https://github.com/OpenDataServices/flatten-tool.git@760afa26ce6f81bcae450c2b9c1fa9618082ed34#egg=flattentool
+django-bootstrap3==7.0.0
+django-debug-toolbar==1.4
+requests==2.9.1
+dealer==2.0.5
+django-environ==0.4.0
+jsonschema==2.5.1
+raven==5.11.1
+strict-rfc3339==0.6
 
-# flake8 and dependencies
+
 flake8==2.5.4
-mccabe==0.4.0
-# Flake8 2.4.1 uses pep8 < 1.6, see
-# https://gitlab.com/pycqa/flake8/blob/ea628fa9d16b3adc6e15e6726439128d345d80d4/CHANGES.rst
-pep8==1.5.7 # rq.filter: <1.6
-pyflakes==1.1.0
-
-# pytest and plugins
-py==1.4.31
+# flake8 requires pyflakes <1.1
+pyflakes==1.0.0 # rq.filter: <1.1
 pytest==2.9.0
 pytest-django==2.9.1
 pytest-cov==2.2.1
-cov-core==1.15.0
-coverage==4.0.3
 pytest-localserver==0.3.5
-Werkzeug==0.11.4
-
-# coveralls
 coveralls==1.1
-docopt==0.6.2
-PyYAML==3.11
-
-# selenium
-selenium==2.52.0
-
-# transifex
-transifex-client==0.11 
-
-# sass
+selenium==2.53.1
+transifex-client==0.11
 libsass==0.10.1
+## The following requirements were added by pip freeze:
+contextlib2==0.5.1
+coverage==4.0.3
+docopt==0.6.2
+et-xmlfile==1.0.1
+jdcal==1.2
+jsonref==0.1
+mccabe==0.4.0
+openpyxl==2.3.4
+pep8==1.7.0
+py==1.4.31
+pytz==2016.1
+schema==0.4.0
+six==1.10.0
+sqlparse==0.1.19
+urllib3==1.14
+Werkzeug==0.11.4
