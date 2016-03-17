@@ -51,8 +51,7 @@ def test_index_page(server_url, browser):
 
 
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
-    # FIXME: Pick some text to lookg for on the OCP home page. Currently it's changing a lot.
-    ('Open Contracting', '', 'div.homepage-title h1', 'http://www.open-contracting.org/'),
+    ('Open Contracting', 'We connect governments', 'h1', 'http://www.open-contracting.org/'),
     ('Open Contracting Data Standard', 'Open Contracting Data Standard: Documentation', '#open-contracting-data-standard-documentation', 'http://standard.open-contracting.org/'),
     ])
 def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector, url):
@@ -180,6 +179,7 @@ def test_accordion(server_url, browser, prefix):
     # But we expect to see an error message if a file is not well formed JSON at all
     (PREFIX_OCDS, 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
     (PREFIX_OCDS, 'tenders_releases_2_releases.xlsx', 'Download Files', True),
+    (PREFIX_OCDS, 'badfile.json', 'Statistics can not produced', True),
     (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files',
                                                            'Save or Share these results',
                                                            'Unique Grant IDs: 2',
