@@ -3,6 +3,39 @@
 {% load cove_tags %}
 
 {% block explore_content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h4 class="panel-title">{% trans 'Key Facts' %}</h4>
+      </div>
+      <div class="panel-body">
+         <p>
+           {% trans "Data " %} 
+           {% if source_url %}
+              {% trans "downloaded from " %} {{source_url}} 
+           {% else %}
+             {% trans "uploaded " %} 
+           {% endif %}
+           {% trans "on " %} {{created_date}} 
+         </p>
+         <p>
+           {% blocktrans %}This file contains{% endblocktrans %} {{grants_aggregates.count}} {% blocktrans %} grants {% endblocktrans %}
+         </p>
+         <p>
+         {% trans "This file " %} 
+            {% if validation_errors %} <b> {% trans "failed " %} </b> {% else %} {% trans "passed " %} {% endif %}
+            {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">{{ schema_url }}</a>.
+         </p>
+         {% if grants_aggregates.duplicate_ids %} 
+              <b> {% blocktrans %}There are{% endblocktrans %} {{ grants_aggregates.duplicate_ids|length }} {% blocktrans %}duplicate grant IDs in this package.{% endblocktrans %}</b>
+         {% endif %}
+      </div>
+    </div>
+  </div>
+</div><!--End Row -->
+
 <div class="row">
   <div class="col-md-12">
     <div class="panel panel-primary">
