@@ -625,7 +625,7 @@ class UnrecognisedFileType(CoveInputDataError):
         'sub_title': _("Sorry we can't process that data"),
         'link': 'cove:index',
         'link_text': _('Try Again'),
-        'msg': _('We did not recognise the file type.\n\nWe can only process json, csv and xlsx files.\n\nIs this a bug? Contact us on code [at] opendataservices.coop')
+        'msg': _('We did not recognise the file type.\n\nWe can only process json, csv and xlsx files.')
     }
 
 
