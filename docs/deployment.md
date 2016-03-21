@@ -21,6 +21,8 @@ In both cases, add a description following this template:
 ```
 {{Explanation of what has changed.}}
 
+Planned deployment date: 
+
 Standing tasks:
 - [ ] Re-run translations if any text has changed
 - [ ] Create a new branch `release-{{YYYYMM}}` if it doesn't exist.
