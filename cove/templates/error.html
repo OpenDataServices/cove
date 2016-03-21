@@ -2,12 +2,12 @@
 {% load i18n %}
 {% block content %}
 
-<div class="panel panel-primary">
+<div class="panel panel-warning">
   <div class="panel-heading">{{ sub_title | linebreaks }}</div>
   <div class="panel-body">
     {{ msg | linebreaks }}
 
-    <p>{% blocktrans %}If you think this is a bug, you can <a href="https://github.com/OpenDataServices/cove/issues">file an issue publicly on GitHub</a> or {% endblocktrans %}<a href="mailto:{{support_email}}">{% trans "get in touch via email" %}</a>.
+    {% include 'error_extra.html' %}
   </div>
 </div>
 

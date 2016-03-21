@@ -44,6 +44,8 @@
       </ul>
       {% if conversion_error %}
           <p>{% blocktrans %}The JSON could not be converted to Spreadsheet due to the error:{% endblocktrans %} {{ conversion_error }}</p>
+
+          {% include 'error_extra.html' %}
       {% endif %}
     
     {% elif conversion == 'unflatten' %}
