@@ -92,7 +92,12 @@ COVE_CONFIG_BY_NAMESPACE = {
     'input_methods': {
         'default': ['upload', 'url', 'text'],
         'cove-resourceprojects': ['upload', 'url']
-    }
+    },
+    'support_email': {
+        'cove-ocds': 'data@open-contracting.org',
+        'cove-360': 'support@threesixtygiving.org',
+        'default': 'code@opendataservices.coop',
+    },
 }
 
 
