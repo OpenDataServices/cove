@@ -30,6 +30,7 @@ env = environ.Env(  # set default values and casting
     DEBUG=(bool, True),
     PIWIK_URL=(str, ''),
     PIWIK_SITE_ID=(str, ''),
+    GOOGLE_ANALYTICS_ID=(str, ''),
     PREFIX_MAP=(dict, {}),
     ALLOWED_HOSTS=(list, []),
     SECRET_KEY=(str, secret_key),
@@ -40,6 +41,8 @@ PIWIK = {
     'url': env('PIWIK_URL'),
     'site_id': env('PIWIK_SITE_ID'),
 }
+
+GOOGLE_ANALYTICS_ID = env('GOOGLE_ANALYTICS_ID')
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -165,7 +168,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cove.context_processors.piwik',
+                'cove.context_processors.analytics',
                 'cove.context_processors.cove_namespace_context',
             ],
         },
