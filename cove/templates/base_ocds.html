@@ -50,7 +50,7 @@
       </div><!--row-->
       <div class="row">
         <div class="col-xs-7">
-          {% block h1 %}<h1 class="application-name"><a href="{% url 'cove:index' %}">{% blocktrans %} Data <span> Standard </span> Validator{% endblocktrans %} </h1></a> <h2 class="beta"><small>beta</small></h2>{% endblock %}
+          {% block h1 %}<h1 class="application-name"><a href="{% url 'cove:index' %}">{% blocktrans %} Data <span> Standard </span> Validator{% endblocktrans %} </a></h1> <h2 class="beta"><small>beta</small></h2>{% endblock %}
         </div><!--col-md-8-->
         <div class="col-xs-5">
           <a href="http://standard.open-contracting.org"><h3 class="docs-link pull-right">{% blocktrans %} Standard Documentation {% endblocktrans %}</h3></a>
@@ -102,8 +102,8 @@
           <li> {% blocktrans %}Check that your OCDS data complies with the schema{%endblocktrans%}</li>
           <li> {% blocktrans %}Inspect key contents of your data to check data quality{%endblocktrans%} </li>
           <li> {% blocktrans %}Access your data in different formats (spreadsheet and JSON) to support further data validation.{%endblocktrans%} </li>
-          </br>
         </ul>
+        <br/>
       </div>
     </div>
   </div>
