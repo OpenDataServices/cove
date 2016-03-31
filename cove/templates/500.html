@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+
+<div class="panel panel-danger">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {% trans 'Internal Server Error' %}
+    </h4>
+  </div>
+  <div class="panel-body">
+    <p>{% blocktrans %}Something went wrong with your request. This could be due to a bug in the application and/or the data you supplied.{% endblocktrans %}</p>
+    {% if request.sentry.id %}
+      <p>{% blocktrans %}This error has been automatically reported to our development team. If you {% endblocktrans %}<a href="mailto:{{ support_email }}?subject=Cove%20Internal%20Server%20Error%20ref%20{{ request.sentry.id }}">get in touch</a>, {% blocktrans %}please reference this error as {% endblocktrans %}<strong>{{ request.sentry.id }}</strong>.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

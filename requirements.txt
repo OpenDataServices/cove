@@ -1,22 +1,21 @@
-Django==1.8.10 # rq.filter: <1.9
--e git+https://github.com/OpenDataServices/flatten-tool.git@2af8a004d24e376e948d2f473753692ad6c248b8#egg=flattentool
-django-bootstrap3==6.2.2
+pip==8.1.0
+Django==1.8.11 # rq.filter: <1.9
+-e git+https://github.com/OpenDataServices/flatten-tool.git@85b9c13bb9f8ca169fe667b80751fec1a17c4032#egg=flattentool
+django-bootstrap3==7.0.0
 django-debug-toolbar==1.4
-requests==2.9.0
+requests==2.9.1
 dealer==2.0.5
 django-environ==0.4.0
 jsonschema==2.5.1
-raven==5.9.2
+raven==5.11.1
 strict-rfc3339==0.6
-
-# Dependencies of flatten-tool
+## The following requirements were added by pip freeze:
+contextlib2==0.5.1
+et-xmlfile==1.0.1
 jdcal==1.2
 jsonref==0.1
-# flatten-tool currently requires openpyxl<2.2
-openpyxl==2.3.2
-pytz==2015.7
+openpyxl==2.3.4
+pytz==2016.1
 schema==0.4.0
 six==1.10.0
-
-# Dependencies of django-debug-toolbar
-sqlparse==0.1.18
+sqlparse==0.1.19

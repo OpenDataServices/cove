@@ -51,8 +51,7 @@ def test_index_page(server_url, browser):
 
 
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
-    # FIXME: Pick some text to lookg for on the OCP home page. Currently it's changing a lot.
-    ('Open Contracting', '', 'div.homepage-title h1', 'http://www.open-contracting.org/'),
+    ('Open Contracting', 'We connect governments', 'h1', 'http://www.open-contracting.org/'),
     ('Open Contracting Data Standard', 'Open Contracting Data Standard: Documentation', '#open-contracting-data-standard-documentation', 'http://standard.open-contracting.org/'),
     ])
 def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector, url):
@@ -180,10 +179,15 @@ def test_accordion(server_url, browser, prefix):
     # But we expect to see an error message if a file is not well formed JSON at all
     (PREFIX_OCDS, 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
     (PREFIX_OCDS, 'tenders_releases_2_releases.xlsx', 'Download Files', True),
+    (PREFIX_OCDS, 'badfile.json', 'Statistics can not produced', True),
     (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files',
                                                            'Save or Share these results',
                                                            'Unique Grant IDs: 2',
                                                            'Duplicate IDs: 2',
+                                                           'Duplicate IDs: 2',
+                                                           'This file contains 4 grants',
+                                                           'This file failed validation against',
+                                                           'There are 2 duplicate grant IDs in this package.',
                                                            'Silent Signal',
                                                            'Showing 1 to 4 of 4 entries',
                                                            'Additional Fields',
@@ -192,6 +196,9 @@ def test_accordion(server_url, browser, prefix):
                                                            "'13-03-2015' is not a 'date-time'"], True),
     # Test a 360 spreadsheet with titles, rather than fields
     (PREFIX_360, 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
+    # Test that titles that aren't in the rollup are converted correctly
+    # (See if statement in check_url_input_result_page).
+    (PREFIX_360, 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx', 'Download Files', True),
     # Test a 360 csv in cp1252 incoding
     (PREFIX_360, 'WellcomeTrust-grants_2_grants_cp1252.csv', 'Download Files', True),
     # Test a non-valid file.
@@ -280,6 +287,10 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
         if 'record' not in source_filename:
             converted_file_response = requests.get(converted_file)
+            if source_filename == 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx':
+                grant1 = converted_file_response.json()['grants'][1]
+                assert grant1['recipientOrganization'][0]['department'] == 'Test data'
+                assert grant1['classifications'][0]['title'] == 'Test'
             assert converted_file_response.status_code == 200
             assert int(converted_file_response.headers['content-length']) != 0
 
@@ -293,3 +304,16 @@ def test_URL_invalid_dataset_request(server_url, browser, prefix):
     browser.get(server_url + prefix + 'data/38e267ce-d395-46ba-acbf-2540cdd0c810')
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
+
+
+@pytest.mark.parametrize('prefix', PREFIX_LIST)
+def test_500_error(server_url, browser, prefix):
+    browser.get(server_url + prefix + 'test/500')
+    # Check that our nice error message is there
+    assert 'Something went wrong' in browser.find_element_by_tag_name('body').text
+    # Check for the exclamation icon
+    # This helps to check that the theme including the css has been loaded
+    # properly
+    icon_span = browser.find_element_by_class_name('panel-danger').find_element_by_tag_name('span')
+    assert 'Glyphicons Halflings' in icon_span.value_of_css_property('font-family')
+    assert icon_span.value_of_css_property('color') == 'rgba(169, 68, 66, 1)'

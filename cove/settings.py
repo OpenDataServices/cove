@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import warnings
+import environ
+import raven
 from django.utils.crypto import get_random_string
+from django.utils.translation import ugettext_lazy as _
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,12 +25,12 @@ secret_key = get_random_string(50, chars)
 if 'SECRET_KEY' not in os.environ:
     warnings.warn('SECRET_KEY should be added to Enviroment Variables. Random key will be used instead.')
 
-import environ
 env = environ.Env(  # set default values and casting
     SENTRY_DSN=(str, ''),
     DEBUG=(bool, True),
     PIWIK_URL=(str, ''),
     PIWIK_SITE_ID=(str, ''),
+    GOOGLE_ANALYTICS_ID=(str, ''),
     PREFIX_MAP=(dict, {}),
     ALLOWED_HOSTS=(list, []),
     SECRET_KEY=(str, secret_key),
@@ -39,6 +42,8 @@ PIWIK = {
     'site_id': env('PIWIK_SITE_ID'),
 }
 
+GOOGLE_ANALYTICS_ID = env('GOOGLE_ANALYTICS_ID')
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -47,7 +52,6 @@ DEALER_TYPE = 'git'
 
 PREFIX_MAP = env('PREFIX_MAP')
 
-from django.utils.translation import ugettext_lazy as _
 COVE_CONFIG_BY_NAMESPACE = {
     'base_template_name': {
         'cove-ocds': 'base_ocds.html',
@@ -92,7 +96,12 @@ COVE_CONFIG_BY_NAMESPACE = {
     'input_methods': {
         'default': ['upload', 'url', 'text'],
         'cove-resourceprojects': ['upload', 'url']
-    }
+    },
+    'support_email': {
+        'cove-ocds': 'data@open-contracting.org',
+        'cove-360': 'support@threesixtygiving.org',
+        'default': 'code@opendataservices.coop',
+    },
 }
 
 
@@ -109,7 +118,8 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 if env('SENTRY_DSN'):
     RAVEN_CONFIG = {
-        'dsn': env('SENTRY_DSN')
+        'dsn': env('SENTRY_DSN'),
+        'release': raven.fetch_git_sha(os.path.join(os.path.dirname(__file__), '..')),
     }
 
 
@@ -158,7 +168,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cove.context_processors.piwik',
+                'cove.context_processors.analytics',
                 'cove.context_processors.cove_namespace_context',
             ],
         },
