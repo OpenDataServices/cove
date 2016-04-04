@@ -663,13 +663,13 @@ def convert_json(request, data):
                     flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
                 else:
                     return {'conversion': 'flattenable'}
-                context['converted_file_size'] = os.path.getsize(converted_path + '.xlsx')
                 context['conversion_warning_messages'] = [str(w.message) for w in conversion_warnings]
             with open(conversion_warning_cache_path, 'w+') as fp:
                 json.dump(context['conversion_warning_messages'], fp)
         elif os.path.exists(conversion_warning_cache_path):
             with open(conversion_warning_cache_path) as fp:
                 context['conversion_warning_messages'] = json.load(fp)
+        context['converted_file_size'] = os.path.getsize(converted_path + '.xlsx')
 
         conversion_warning_cache_path_titles = os.path.join(data.upload_dir(), 'conversion_warning_messages_titles.json')
 
@@ -681,13 +681,14 @@ def convert_json(request, data):
                 ))
                 if not os.path.exists(converted_path + '-titles.xlsx'):
                     flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
-                context['converted_file_size_titles'] = os.path.getsize(converted_path + '-titles.xlsx')
-                context['conversion_warning_messages_titles'] = [str(w.message) for w in conversion_warnings_titles]
-            with open(conversion_warning_cache_path_titles, 'w+') as fp:
-                json.dump(context['conversion_warning_messages_titles'], fp)
-        elif os.path.exists(conversion_warning_cache_path_titles):
-            with open(conversion_warning_cache_path_titles) as fp:
-                context['conversion_warning_messages_titles'] = json.load(fp)
+                    context['conversion_warning_messages_titles'] = [str(w.message) for w in conversion_warnings_titles]
+                    with open(conversion_warning_cache_path_titles, 'w+') as fp:
+                        json.dump(context['conversion_warning_messages_titles'], fp)
+                elif os.path.exists(conversion_warning_cache_path_titles):
+                    with open(conversion_warning_cache_path_titles) as fp:
+                        context['conversion_warning_messages_titles'] = json.load(fp)
+
+            context['converted_file_size_titles'] = os.path.getsize(converted_path + '-titles.xlsx')
 
     except BadlyFormedJSONError as err:
         raise CoveInputDataError(context={
