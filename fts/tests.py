@@ -58,7 +58,8 @@ def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector
     if not PREFIX_OCDS:
         return
     browser.get(server_url + PREFIX_OCDS)
-    link = browser.find_element_by_link_text(link_text)
+    footer = browser.find_element_by_id('footer')
+    link = footer.find_element_by_link_text(link_text)
     href = link.get_attribute("href")
     assert url in href
     link.click()
@@ -90,6 +91,22 @@ def test_index_page_ocds(server_url, browser):
     assert 'Using the validator' in browser.find_element_by_tag_name('body').text
     assert "'release'" in browser.find_element_by_tag_name('body').text
     assert "'record'" in browser.find_element_by_tag_name('body').text
+
+
+@pytest.mark.parametrize(('css_id', 'link_text', 'url'), [
+    ('introduction', 'schema', 'http://standard.open-contracting.org/latest/en/schema/'),
+    ('introduction', 'Open Contracting Data Standard (OCDS)', 'http://standard.open-contracting.org/'),
+    ('how-to-use', "'release' and 'record'", 'http://standard.open-contracting.org/latest/en/getting_started/releases_and_records/'),
+    ('how-to-use', 'flattened serialization of OCDS', 'http://standard.open-contracting.org/latest/en/implementation/serialization/'),
+    ('how-to-use', 'Open Contracting Data Standard', 'http://standard.open-contracting.org/')
+    ])
+def test_index_page_ocds_links(server_url, browser, css_id, link_text, url):
+    if not PREFIX_OCDS:
+        return
+    section = browser.find_element_by_id(css_id)
+    link = section.find_element_by_link_text(link_text)
+    href = link.get_attribute("href")
+    assert url in href
     
     
 def test_index_page_360(server_url, browser):
