@@ -54,7 +54,8 @@
                 ], 
                 "awardCriteriaDetails": null, 
                 "procuringEntity": {
-                    "name": "Agriculture & Agrifood Canada"
+                    "name": "Agriculture & Agrifood Canada",
+                    "name_fr": "Agriculture & Agrifood Canada"
                 }, 
                 "id": "PW-14-00627094", 
                 "methodRationale": "Open"

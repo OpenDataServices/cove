@@ -531,10 +531,7 @@ def fields_present_generator(json_data, prefix=''):
             yield from fields_present_generator(value, prefix + '/' + key)
             yield prefix + '/' + key
         else:
-            # if a string value has an underscore in it, assume its a language property
-            # and do not count as a present field.
-            if '_' not in key:
-                yield prefix + '/' + key
+            yield prefix + '/' + key
 
 
 def get_fields_present(*args, **kwargs):
@@ -567,7 +564,7 @@ def get_schema_fields(schema_filename):
     return set(schema_dict_fields_generator(jsonref.loads(r.text, object_pairs_hook=OrderedDict)))
 
 
-def get_counts_additional_fields(schema_url, json_data):
+def get_counts_additional_fields(schema_url, json_data, context, current_app):
     fields_present = get_fields_present(json_data)
     schema_fields = get_schema_fields(schema_url)
     data_only_all = set(fields_present) - schema_fields
@@ -577,6 +574,9 @@ def get_counts_additional_fields(schema_url, json_data):
         # only take fields with parent in schema (and top level fields)
         # to make results less verbose
         if not parent_field or parent_field in schema_fields:
+            print(field, current_app)
+            if '_' in field.split('/')[-1] and current_app == 'cove-ocds':
+                context['language_additional_field_warning'] = True
             data_only.add(field)
 
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
@@ -815,8 +815,9 @@ def explore(request, pk):
         schema_url = schema_url['record'] if 'records' in json_data else schema_url['release']
 
     if schema_url:
+        additional_fields = sorted(get_counts_additional_fields(schema_url, json_data, context, request.current_app))
         context.update({
-            'data_only': sorted(get_counts_additional_fields(schema_url, json_data))
+            'data_only': additional_fields
         })
 
     validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors.json')
