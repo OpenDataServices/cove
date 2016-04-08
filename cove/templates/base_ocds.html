@@ -50,7 +50,7 @@
       </div><!--row-->
       <div class="row">
         <div class="col-xs-7">
-          {% block h1 %}<h1 class="application-name"><a href="{% url 'cove:index' %}">{% blocktrans %} Data <span> Standard </span> Validator{% endblocktrans %} </h1></a> <h2 class="beta"><small>beta</small></h2>{% endblock %}
+          {% block h1 %}<h1 class="application-name"><a href="{% url 'cove:index' %}">{% blocktrans %} Data <span> Standard </span> Validator{% endblocktrans %} </a></h1> <h2 class="beta"><small>beta</small></h2>{% endblock %}
         </div><!--col-md-8-->
         <div class="col-xs-5">
           <a href="http://standard.open-contracting.org"><h3 class="docs-link pull-right">{% blocktrans %} Standard Documentation {% endblocktrans %}</h3></a>
@@ -77,16 +77,17 @@
 {% block link %}
 <li><a href="http://www.open-contracting.org/">{% trans "Open Contracting" %}</a></li>
 <li><a href="http://standard.open-contracting.org/">{% trans "Open Contracting Data Standard" %}</a></li>
+<li><a href="http://standard.open-contracting.org/latest/en/support/">{% trans "Support" %}</a></li>
 {% endblock %}
 
 {% block introduction %}
-<div class="row">
+<div class="row" id="introduction">
   <div class="col-sm-6">
     <div class="panel panel-default">
       <div class="panel-body">
 
         <h1 class="heading-in-panel"> <small> {% blocktrans %}About OCDS {%endblocktrans%}</small> </h1>
-        <p> {% blocktrans %}The Open Contracting Data Standard (OCDS) exists to formalize how contracting data and documents can be published in an accessible, structured and repeatable way.{%endblocktrans%} </p>
+        <p> {% blocktrans %}The <a href="http://standard.open-contracting.org/">Open Contracting Data Standard (OCDS)</a> exists to formalize how contracting data and documents can be published in an accessible, structured and repeatable way.{%endblocktrans%} </p>
         <p> {% blocktrans %}Governments around the world spend an estimated US$9.5 trillion through contracts every year. Yet, contracting information is often unavailable for public scrutiny. OCDS works to change that.{%endblocktrans%} </p>
       </div>
     </div>
@@ -98,11 +99,11 @@
         <h1 class="heading-in-panel"> <small>{% blocktrans %}Validate and Explore{%endblocktrans%}</small> </h1>
         <p> {% blocktrans %}This tool helps you to:{%endblocktrans%} </p>
         <ul>
-          <li> {% blocktrans %}Check that your OCDS data complies with the schema{%endblocktrans%}</li>
+          <li> {% blocktrans %}Check that your OCDS data complies with the <a href="http://standard.open-contracting.org/latest/en/schema/">schema</a>{%endblocktrans%}</li>
           <li> {% blocktrans %}Inspect key contents of your data to check data quality{%endblocktrans%} </li>
           <li> {% blocktrans %}Access your data in different formats (spreadsheet and JSON) to support further data validation.{%endblocktrans%} </li>
-          </br>
         </ul>
+        <br/>
       </div>
     </div>
   </div>
@@ -110,19 +111,19 @@
 {% endblock %}
 
 {% block howToUse %}
-<div class="row">
+<div class="row" id="how-to-use">
   <div class="col-xs-12">
     <div class="panel panel-default">
       <div class="panel-body">
 
         <h1 class="heading-in-panel"> <small> {% blocktrans %}Using the validator{%endblocktrans%}</small> </h1>
-        <p> {% blocktrans %}You can upload, paste or provide a link to data published using the Open Contracting Data Standard. This can be:{%endblocktrans%} </p>
+        <p> {% blocktrans %}You can upload, paste or provide a link to data published using the <a href="http://standard.open-contracting.org/">Open Contracting Data Standard</a>. This can be:{%endblocktrans%} </p>
 
         <ul>
           <li> {% blocktrans %}<b> JSON </b> - following the OCDS schema; {%endblocktrans%}</li>
-          <li> {% blocktrans %}<b> A CSV file or Excel Spreadsheet </b> - using the flattened serialization of OCDS; {%endblocktrans%}</li>
+          <li> {% blocktrans %}<b> A CSV file or Excel Spreadsheet </b> - using the <a href="http://standard.open-contracting.org/latest/en/implementation/serialization/">flattened serialization of OCDS</a>; {%endblocktrans%}</li>
         </ul>
-        <p> {% blocktrans %}The application works with both 'release' and 'record' OCDS documents that conform to the Open Data Contracting Standard {%endblocktrans%} </p>
+        <p> {% blocktrans %}The application works with both <a href="http://standard.open-contracting.org/latest/en/getting_started/releases_and_records/">'release' and 'record'</a> OCDS documents that conform to the <a href="http://standard.open-contracting.org/">Open Data Contracting Standard</a> {%endblocktrans%} </p>
         <p> {% blocktrans %}If your data passes basic validation checks, the tool will then present a report on data quality, and information about the contents of your file. It will also offer alternative copies of the data for download. {%endblocktrans%} </p>
         <p> {% blocktrans %}Data is stored for 7 days at a randomly generated URL. You can share this link with others to support discussion of data quality.  {%endblocktrans%} </p>
         <p> {% blocktrans %}To preview how the validator works, try <a href="?source_url=https://raw.githubusercontent.com/open-contracting/sample-data/master/fictional-example/ocds-213czf-000-00001-02-tender.json"> loading some sample data. </a>{% endblocktrans%} </p>
