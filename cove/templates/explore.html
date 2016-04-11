@@ -116,6 +116,9 @@
       <div class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalFieldTable" data-toggle="collapse" data-target="#additionalFieldTable">
         <h4 class="panel-title">
           {% trans 'Additional Fields (fields in data not in schema)' %}
+          {% if language_additional_field_warning %}
+             <span class="indent"> {% trans 'Warning: fields with a language suffix will appear as additional field' %} </span>
+          {% endif %}
         </h4>
       </div>
       <div id="additionalFieldTable" class="collapse in">
