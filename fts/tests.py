@@ -188,7 +188,7 @@ def test_accordion(server_url, browser, prefix):
 
 
 @pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text', 'conversion_successful'), [
-    (PREFIX_OCDS, 'tenders_releases_2_releases.json', ['Download Files', 'Save or Share these results'], True),
+    (PREFIX_OCDS, 'tenders_releases_2_releases.json', ['Download Files', 'Save or Share these results', 'Warning: fields with a language suffix will appear as additional field'], True),
     # Conversion should still work for files that don't validate against the schema
     (PREFIX_OCDS, 'tenders_releases_2_releases_invalid.json', ['Download Files',
                                                                'Validation Errors',

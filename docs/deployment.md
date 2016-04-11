@@ -21,6 +21,8 @@ In both cases, add a description following this template:
 ```
 {{Explanation of what has changed.}}
 
+Planned deployment date: 
+
 Standing tasks:
 - [ ] Re-run translations if any text has changed
 - [ ] Create a new branch `release-{{YYYYMM}}` if it doesn't exist.
@@ -35,6 +37,7 @@ After merge:
 - [ ] Run salt highstate on `cove-live-ocds`
 - [ ] Check that the correct commit has been deployed using the link in the footer http://standard.open-contracting.org/validator/
 - [ ] Run `CUSTOM_SERVER_URL=http://standard.open-contracting.org PREFIX_OCDS=/validator/ py.test fts ` on a local copy of the updated live branch
+- [ ] Check that changes on live are merged back into master too
 ```
 
 Where `{{YYYYMM}}` should be replace with the actual year and month numbers - e.g. 201602
