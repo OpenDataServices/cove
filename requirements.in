@@ -10,3 +10,4 @@ django-environ
 jsonschema
 raven
 strict-rfc3339
+rfc3987
