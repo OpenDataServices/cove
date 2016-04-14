@@ -258,7 +258,6 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
 
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
-    # We should still be in the correct app
     if source_filename.endswith('.json'):
         try:
             browser.find_element_by_name("flatten").click()
@@ -271,6 +270,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
     for text in expected_text:
         assert text in body_text
 
+    # We should still be in the correct app
     if prefix == PREFIX_OCDS:
         assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
         # assert 'Release Table' in browser.find_element_by_tag_name('body').text
@@ -313,6 +313,62 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
                 assert grant1['classifications'][0]['title'] == 'Test'
             assert converted_file_response.status_code == 200
             assert int(converted_file_response.headers['content-length']) != 0
+
+
+@pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
+@pytest.mark.parametrize('prefix', [PREFIX_OCDS, PREFIX_360])
+@pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
+def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warning_texts, prefix, flatten_or_unflatten):
+    # Actual input file doesn't matter, as we override
+    # flattentool behaviour with a mock below
+    if flatten_or_unflatten == 'flatten':
+        source_filename = 'tenders_releases_2_releases.json'
+    else:
+        source_filename = 'tenders_releases_2_releases.xlsx'
+
+    import flattentool
+    import warnings
+
+    def mockunflatten(input_name, output_name, *args, **kwargs):
+        with open(output_name, 'w') as fp:
+            fp.write('{}')
+            for warning_text in warning_texts:
+                warnings.warn(warning_text)
+
+    def mockflatten(input_name, output_name, *args, **kwargs):
+        with open(output_name + '.xlsx', 'w') as fp:
+            fp.write('{}')
+            for warning_text in warning_texts:
+                warnings.warn(warning_text)
+
+    mocks = {
+        'flatten': mockflatten,
+        'unflatten': mockunflatten
+    }
+    monkeypatch.setattr(flattentool, flatten_or_unflatten, mocks[flatten_or_unflatten])
+
+    with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
+        httpserver.serve_content(fp.read())
+    if 'CUSTOM_SERVER_URL' in os.environ:
+        # Use urls pointing to GitHub if we have a custom (probably non local) server URL
+        source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/master/cove/fixtures/' + source_filename
+    else:
+        source_url = httpserver.url + '/' + source_filename
+
+    browser.get(server_url + prefix + '?source_url=' + source_url)
+
+    if source_filename.endswith('.json'):
+        try:
+            browser.find_element_by_name("flatten").click()
+        except NoSuchElementException:
+            pass
+
+    body_text = browser.find_element_by_tag_name('body').text
+    if len(warning_texts) == 0:
+        assert 'Conversion Warnings' not in body_text
+    else:
+        assert warning_texts[0] in body_text
+        assert 'Conversion Warnings' in body_text
 
 
 @pytest.mark.parametrize(('prefix'), PREFIX_LIST)

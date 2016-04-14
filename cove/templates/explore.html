@@ -82,6 +82,36 @@
   </div>
 </div>
 
+{% if conversion_warning_messages %}
+  <div class="panel panel-warning">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        {% trans 'Conversion Warnings' %}
+      </h4>
+    </div>
+    <div class="panel-body">
+      {% for warning_message in conversion_warning_messages %}
+        <p>{{warning_message}}</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% if conversion_warning_messages_titles %}
+  <div class="panel panel-warning">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        {% trans 'Conversion Warnings (titles)' %}
+      </h4>
+    </div>
+    <div class="panel-body">
+      {% for warning_message in conversion_warning_messages_titles %}
+        <p>{{warning_message}}</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
 {% if validation_errors %}
   <div class="panel panel-danger">
     <div class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
