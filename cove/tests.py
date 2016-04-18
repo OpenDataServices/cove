@@ -332,3 +332,13 @@ def test_explore_unconvertable_json(client):
     resp = client.post(data.get_absolute_url(), {'flatten': 'true'})
     assert resp.status_code == 200
     assert b'could not be converted' in resp.content
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize('current_app', ['cove-ocds', 'cove-360'])
+def test_explore_page_null_tag(client, current_app):
+    data = SuppliedData.objects.create()
+    data.original_file.save('test.json', ContentFile('{"releases":[{"tag":null}]}'))
+    data.current_app = current_app
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200

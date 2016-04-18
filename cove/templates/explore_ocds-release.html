@@ -293,7 +293,7 @@
             <tr>
               <td>{{ release.ocid }}</td>
               <td>{{ release.date }}</td>
-              <td>{{ release.tag|join:", " }}</td>
+              <td>{% if release.tag %}{{ release.tag|join:", " }}{% endif %}</td>
               <td>
                 <ul class="list-unstyled">
                   {% if release.tender.title %} 
