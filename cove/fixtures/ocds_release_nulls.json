@@ -1,0 +1,457 @@
+{ "releases": [{
+    "ocid": null,
+    "id": null,
+    "date": null,
+    "tag": null,
+    "initiationType": null,
+    "planning": {
+        "budget": {
+            "source": null,
+            "id": null,
+            "description": null,
+            "amount": {
+                "amount": null,
+                "currency": null
+            },
+            "project": null,
+            "projectID": null,
+            "uri": null
+        },
+        "rationale": null,
+        "documents": [
+            {
+                "id": null,
+                "documentType": null,
+                "title": null,
+                "description": null,
+                "url": null,
+                "datePublished": null,
+                "dateModified": null,
+                "format": null,
+                "language": null
+            }
+        ]
+    },
+    "tender": {
+        "id": null,
+        "title": null,
+        "description": null,
+        "status": null,
+        "items": [
+            {
+                "id": null,
+                "description": null,
+                "classification": {
+                    "scheme": null,
+                    "id": null,
+                    "description": null,
+                    "uri": null
+                },
+                "additionalClassifications": [
+                    {
+                        "scheme": null,
+                        "id": null,
+                        "description": null,
+                        "uri": null
+                    }
+                ],
+                "quantity": null,
+                "unit": {
+                    "name": null,
+                    "value": {
+                        "amount": null,
+                        "currency": null
+                    }
+                }
+            }
+        ],
+        "minValue": {
+            "amount": null,
+            "currency": null
+        },
+        "value": {
+            "amount": null,
+            "currency": null
+        },
+        "procurementMethod": null,
+        "procurementMethodRationale": null,
+        "awardCriteria": null,
+        "awardCriteriaDetails": null,
+        "submissionMethod": null,
+        "submissionMethodDetails": null,
+        "tenderPeriod": {
+            "startDate": null,
+            "endDate": null
+        },
+        "enquiryPeriod": {
+            "startDate": null,
+            "endDate": null
+        },
+        "hasEnquiries": null,
+        "eligibilityCriteria": null,
+        "awardPeriod": {
+            "startDate": null,
+            "endDate": null
+        },
+        "numberOfTenderers": null,
+        "tenderers": [
+            {
+                "identifier": {
+                    "scheme": null,
+                    "id": null,
+                    "legalName": null,
+                    "uri": null
+                },
+                "additionalIdentifiers": [
+                    {
+                        "scheme": null,
+                        "id": null,
+                        "legalName": null,
+                        "uri": null
+                    }
+                ],
+                "name": null,
+                "address": {
+                    "streetAddress": null,
+                    "locality": null,
+                    "region": null,
+                    "postalCode": null,
+                    "countryName": null
+                },
+                "contactPoint": {
+                    "name": null,
+                    "email": null,
+                    "telephone": null,
+                    "faxNumber": null,
+                    "url": null
+                }
+            }
+        ],
+        "procuringEntity": {
+            "identifier": {
+                "scheme": null,
+                "id": null,
+                "legalName": null,
+                "uri": null
+            },
+            "additionalIdentifiers": [
+                {
+                    "scheme": null,
+                    "id": null,
+                    "legalName": null,
+                    "uri": null
+                }
+            ],
+            "name": null,
+            "address": {
+                "streetAddress": null,
+                "locality": null,
+                "region": null,
+                "postalCode": null,
+                "countryName": null
+            },
+            "contactPoint": {
+                "name": null,
+                "email": null,
+                "telephone": null,
+                "faxNumber": null,
+                "url": null
+            }
+        },
+        "documents": [
+            {
+                "id": null,
+                "documentType": null,
+                "title": null,
+                "description": null,
+                "url": null,
+                "datePublished": null,
+                "dateModified": null,
+                "format": null,
+                "language": null
+            }
+        ],
+        "milestones": [
+            {
+                "id": null,
+                "title": null,
+                "description": null,
+                "dueDate": null,
+                "dateModified": null,
+                "status": null,
+                "documents": [
+                    {
+                        "id": null,
+                        "documentType": null,
+                        "title": null,
+                        "description": null,
+                        "url": null,
+                        "datePublished": null,
+                        "dateModified": null,
+                        "format": null,
+                        "language": null
+                    }
+                ]
+            }
+        ],
+        "amendment": {
+            "date": null,
+            "changes": null,
+            "rationale": null
+        }
+    },
+    "buyer": {
+        "identifier": {
+            "scheme": null,
+            "id": null,
+            "legalName": null,
+            "uri": null
+        },
+        "additionalIdentifiers": [
+            {
+                "scheme": null,
+                "id": null,
+                "legalName": null,
+                "uri": null
+            }
+        ],
+        "name": null,
+        "address": {
+            "streetAddress": null,
+            "locality": null,
+            "region": null,
+            "postalCode": null,
+            "countryName": null
+        },
+        "contactPoint": {
+            "name": null,
+            "email": null,
+            "telephone": null,
+            "faxNumber": null,
+            "url": null
+        }
+    },
+    "awards": [
+        {
+            "id": null,
+            "title": null,
+            "description": null,
+            "status": null,
+            "date": null,
+            "value": {
+                "amount": null,
+                "currency": null
+            },
+            "suppliers": [
+                {
+                    "identifier": {
+                        "scheme": null,
+                        "id": null,
+                        "legalName": null,
+                        "uri": null
+                    },
+                    "additionalIdentifiers": [
+                        {
+                            "scheme": null,
+                            "id": null,
+                            "legalName": null,
+                            "uri": null
+                        }
+                    ],
+                    "name": null,
+                    "address": {
+                        "streetAddress": null,
+                        "locality": null,
+                        "region": null,
+                        "postalCode": null,
+                        "countryName": null
+                    },
+                    "contactPoint": {
+                        "name": null,
+                        "email": null,
+                        "telephone": null,
+                        "faxNumber": null,
+                        "url": null
+                    }
+                }
+            ],
+            "items": [
+                {
+                    "id": null,
+                    "description": null,
+                    "classification": {
+                        "scheme": null,
+                        "id": null,
+                        "description": null,
+                        "uri": null
+                    },
+                    "additionalClassifications": [
+                        {
+                            "scheme": null,
+                            "id": null,
+                            "description": null,
+                            "uri": null
+                        }
+                    ],
+                    "quantity": null,
+                    "unit": {
+                        "name": null,
+                        "value": {
+                            "amount": null,
+                            "currency": null
+                        }
+                    }
+                }
+            ],
+            "contractPeriod": {
+                "startDate": null,
+                "endDate": null
+            },
+            "documents": [
+                {
+                    "id": null,
+                    "documentType": null,
+                    "title": null,
+                    "description": null,
+                    "url": null,
+                    "datePublished": null,
+                    "dateModified": null,
+                    "format": null,
+                    "language": null
+                }
+            ],
+            "amendment": {
+                "date": null,
+                "changes": null,
+                "rationale": null
+            }
+        }
+    ],
+    "contracts": [
+        {
+            "id": null,
+            "awardID": null,
+            "title": null,
+            "description": null,
+            "status": null,
+            "period": {
+                "startDate": null,
+                "endDate": null
+            },
+            "value": {
+                "amount": null,
+                "currency": null
+            },
+            "items": [
+                {
+                    "id": null,
+                    "description": null,
+                    "classification": {
+                        "scheme": null,
+                        "id": null,
+                        "description": null,
+                        "uri": null
+                    },
+                    "additionalClassifications": [
+                        {
+                            "scheme": null,
+                            "id": null,
+                            "description": null,
+                            "uri": null
+                        }
+                    ],
+                    "quantity": null,
+                    "unit": {
+                        "name": null,
+                        "value": {
+                            "amount": null,
+                            "currency": null
+                        }
+                    }
+                }
+            ],
+            "dateSigned": null,
+            "documents": [
+                {
+                    "id": null,
+                    "documentType": null,
+                    "title": null,
+                    "description": null,
+                    "url": null,
+                    "datePublished": null,
+                    "dateModified": null,
+                    "format": null,
+                    "language": null
+                }
+            ],
+            "amendment": {
+                "date": null,
+                "changes": null,
+                "rationale": null
+            },
+            "implementation": {
+                "transactions": [
+                    {
+                        "id": null,
+                        "source": null,
+                        "date": null,
+                        "amount": {
+                            "amount": null,
+                            "currency": null
+                        },
+                        "providerOrganization": {
+                            "scheme": null,
+                            "id": null,
+                            "legalName": null,
+                            "uri": null
+                        },
+                        "receiverOrganization": {
+                            "scheme": null,
+                            "id": null,
+                            "legalName": null,
+                            "uri": null
+                        },
+                        "uri": null
+                    }
+                ],
+                "milestones": [
+                    {
+                        "id": null,
+                        "title": null,
+                        "description": null,
+                        "dueDate": null,
+                        "dateModified": null,
+                        "status": null,
+                        "documents": [
+                            {
+                                "id": null,
+                                "documentType": null,
+                                "title": null,
+                                "description": null,
+                                "url": null,
+                                "datePublished": null,
+                                "dateModified": null,
+                                "format": null,
+                                "language": null
+                            }
+                        ]
+                    }
+                ],
+                "documents": [
+                    {
+                        "id": null,
+                        "documentType": null,
+                        "title": null,
+                        "description": null,
+                        "url": null,
+                        "datePublished": null,
+                        "dateModified": null,
+                        "format": null,
+                        "language": null
+                    }
+                ]
+            }
+        }
+    ],
+    "language": null
+}] }
