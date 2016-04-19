@@ -27,3 +27,6 @@ License: Creative Commons Attribution
 paul-hamlyn-foundation-grants_dc.txt
 Source: Edited version of data taken from http://data.threesixtygiving.org/sites/default/files/PHF-201314grants_1.csv
 License: Creative Commons Attribution
+
+ocds_release_nulls.json
+Adapted from://github.com/open-contracting/sample-data/blob/master/blank-template/release-template-1__0__0.json 
