@@ -320,6 +320,10 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 @pytest.mark.parametrize('prefix', [PREFIX_OCDS, PREFIX_360])
 @pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
 def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warning_texts, prefix, flatten_or_unflatten):
+    # If we're testing a remove server then we can't run this test as we can't
+    # set up the mocks
+    if 'CUSTOM_SERVER_URL' in os.environ:
+        pytest.skip()
     # Actual input file doesn't matter, as we override
     # flattentool behaviour with a mock below
     if flatten_or_unflatten == 'flatten':
