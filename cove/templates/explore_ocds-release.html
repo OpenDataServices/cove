@@ -85,14 +85,14 @@
             </ul>
           </div>
           <div class="col-md-4">
-            <b>{% trans "Earliest release: " %}</b> </br> {{ra.min_release_date}}<br/>
-            <b>{% trans "Latest release: " %}</b> </br> {{ra.max_release_date}}<br/><br/>
-            <b>{% trans "Earliest tender start: " %}</b> </br> {{ra.min_tender_date}}<br/>
-            <b>{% trans "Latest tender start: " %}</b> </br> {{ra.max_tender_date}}<br/><br/>
-            <b>{% trans "Earliest award: " %}</b> </br> {{ra.min_award_date}}<br/>
-            <b>{% trans "Latest award: " %}</b> </br> {{ra.max_award_date}}<br/><br/>
-            <b>{% trans "Earliest contract start: " %}</b> </br> {{ra.min_contract_date}}<br/>
-            <b>{% trans "Latest contract start: " %}</b> </br> {{ra.max_contract_date}}<br/><br/>
+            <b>{% trans "Earliest release: " %}</b> {{ra.min_release_date}}<br/>
+            <b>{% trans "Latest release: " %}</b> {{ra.max_release_date}}<br/><br/>
+            <b>{% trans "Earliest tender start: " %}</b> {{ra.min_tender_date}}<br/>
+            <b>{% trans "Latest tender start: " %}</b> {{ra.max_tender_date}}<br/><br/>
+            <b>{% trans "Earliest award: " %}</b> {{ra.min_award_date}}<br/>
+            <b>{% trans "Latest award: " %}</b> {{ra.max_award_date}}<br/><br/>
+            <b>{% trans "Earliest contract start: " %}</b> {{ra.min_contract_date}}<br/>
+            <b>{% trans "Latest contract start: " %}</b> {{ra.max_contract_date}}<br/><br/>
           </div>
           <div class="col-md-4">
             <b>{% trans "Total Unique Organizations: " %}</b> {{ra.unique_org_count}}<br/>
@@ -100,14 +100,14 @@
               <li><b class="indent">{% trans "with address details: " %}</b> {{ra.organisations_with_address}}<br/></li>
               <li><b class="indent">{% trans "with contact points: " %}</b> {{ra.organisations_with_contact_point}}<br/></li>
               <li><b class="indent">{% trans "that have identifiers: " %}</b> {{ra.unique_org_identifier_count}}<br/></li>
-              <li><b class="indent">{% trans "using schemes: " %}</b> {{ra.unique_organisation_schemes|join:", "}}<li/>
+              <li><b class="indent">{% trans "using schemes: " %}</b> {{ra.unique_organisation_schemes|join:", "}}</li>
             </ul>
 
             <b>{% trans "Organization Roles: " %}</b> <br/>
             <ul class="list-unstyled">
                 <li>
                    <a data-toggle="modal" data-target=".buyer-orgs">
-                     <b class="indent">{% trans "Buyers: " %}</b> {{ra.unique_buyers_count}}</li>
+                     <b class="indent">{% trans "Buyers: " %}</b> {{ra.unique_buyers_count}}
                    </a>
                 </li>
                 <li>

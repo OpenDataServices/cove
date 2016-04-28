@@ -223,11 +223,7 @@ LOCALE_PATHS = (
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
-    'root': {
-        'level': 'WARNING',
-        'handlers': ['sentry'],
-    },
+    'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s '
@@ -260,6 +256,10 @@ LOGGING = {
             'level': 'DEBUG',
             'handlers': ['console'],
             'propagate': False,
+        },
+        '': {
+            'level': 'WARNING',
+            'handlers': ['console', 'sentry'],
         },
     },
 }

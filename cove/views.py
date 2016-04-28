@@ -7,6 +7,7 @@ import shutil
 import json
 import jsonref
 import logging
+import warnings
 import flattentool
 import functools
 import collections
@@ -531,10 +532,7 @@ def fields_present_generator(json_data, prefix=''):
             yield from fields_present_generator(value, prefix + '/' + key)
             yield prefix + '/' + key
         else:
-            # if a string value has an underscore in it, assume its a language property
-            # and do not count as a present field.
-            if '_' not in key:
-                yield prefix + '/' + key
+            yield prefix + '/' + key
 
 
 def get_fields_present(*args, **kwargs):
@@ -567,7 +565,7 @@ def get_schema_fields(schema_filename):
     return set(schema_dict_fields_generator(jsonref.loads(r.text, object_pairs_hook=OrderedDict)))
 
 
-def get_counts_additional_fields(schema_url, json_data):
+def get_counts_additional_fields(schema_url, json_data, context, current_app):
     fields_present = get_fields_present(json_data)
     schema_fields = get_schema_fields(schema_url)
     data_only_all = set(fields_present) - schema_fields
@@ -577,6 +575,9 @@ def get_counts_additional_fields(schema_url, json_data):
         # only take fields with parent in schema (and top level fields)
         # to make results less verbose
         if not parent_field or parent_field in schema_fields:
+            print(field, current_app)
+            if '_' in field.split('/')[-1] and current_app == 'cove-ocds':
+                context['language_additional_field_warning'] = True
             data_only.add(field)
 
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
@@ -655,21 +656,40 @@ def convert_json(request, data):
         schema=request.cove_config['item_schema_url'],
     )
     try:
+        conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
         if not os.path.exists(converted_path + '.xlsx'):
-            if request.POST.get('flatten'):
-                flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
-            else:
-                return {'conversion': 'flattenable'}
-
+            with warnings.catch_warnings(record=True) as conversion_warnings:
+                if request.POST.get('flatten'):
+                    flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+                else:
+                    return {'conversion': 'flattenable'}
+                context['conversion_warning_messages'] = [str(w.message) for w in conversion_warnings]
+            with open(conversion_warning_cache_path, 'w+') as fp:
+                json.dump(context['conversion_warning_messages'], fp)
+        elif os.path.exists(conversion_warning_cache_path):
+            with open(conversion_warning_cache_path) as fp:
+                context['conversion_warning_messages'] = json.load(fp)
         context['converted_file_size'] = os.path.getsize(converted_path + '.xlsx')
+
+        conversion_warning_cache_path_titles = os.path.join(data.upload_dir(), 'conversion_warning_messages_titles.json')
+
         if request.cove_config['convert_titles']:
-            flatten_kwargs.update(dict(
-                output_name=converted_path + '-titles',
-                use_titles=True
-            ))
-            if not os.path.exists(converted_path + '-titles.xlsx'):
-                flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+            with warnings.catch_warnings(record=True) as conversion_warnings_titles:
+                flatten_kwargs.update(dict(
+                    output_name=converted_path + '-titles',
+                    use_titles=True
+                ))
+                if not os.path.exists(converted_path + '-titles.xlsx'):
+                    flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
+                    context['conversion_warning_messages_titles'] = [str(w.message) for w in conversion_warnings_titles]
+                    with open(conversion_warning_cache_path_titles, 'w+') as fp:
+                        json.dump(context['conversion_warning_messages_titles'], fp)
+                elif os.path.exists(conversion_warning_cache_path_titles):
+                    with open(conversion_warning_cache_path_titles) as fp:
+                        context['conversion_warning_messages_titles'] = json.load(fp)
+
             context['converted_file_size_titles'] = os.path.getsize(converted_path + '-titles.xlsx')
+
     except BadlyFormedJSONError as err:
         raise CoveInputDataError(context={
             'sub_title': _("Sorry we can't process that data"),
@@ -719,17 +739,26 @@ def convert_spreadsheet(request, data, file_type):
     else:
         input_name = data.original_file.file.name
     try:
+        conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
         if not os.path.exists(converted_path):
-            flattentool.unflatten(
-                input_name,
-                output_name=converted_path,
-                input_format=file_type,
-                main_sheet_name=request.cove_config['main_sheet_name'],
-                root_id=request.cove_config['root_id'],
-                schema=request.cove_config['item_schema_url'],
-                convert_titles=True,
-                encoding=encoding
-            )
+            with warnings.catch_warnings(record=True) as conversion_warnings:
+                flattentool.unflatten(
+                    input_name,
+                    output_name=converted_path,
+                    input_format=file_type,
+                    main_sheet_name=request.cove_config['main_sheet_name'],
+                    root_id=request.cove_config['root_id'],
+                    schema=request.cove_config['item_schema_url'],
+                    convert_titles=True,
+                    encoding=encoding
+                )
+                context['conversion_warning_messages'] = [str(w.message) for w in conversion_warnings]
+            with open(conversion_warning_cache_path, 'w+') as fp:
+                json.dump(context['conversion_warning_messages'], fp)
+        elif os.path.exists(conversion_warning_cache_path):
+            with open(conversion_warning_cache_path) as fp:
+                context['conversion_warning_messages'] = json.load(fp)
+
         context['converted_file_size'] = os.path.getsize(converted_path)
     except Exception as err:
         logger.exception(err, extra={
@@ -815,8 +844,9 @@ def explore(request, pk):
         schema_url = schema_url['record'] if 'records' in json_data else schema_url['release']
 
     if schema_url:
+        additional_fields = sorted(get_counts_additional_fields(schema_url, json_data, context, request.current_app))
         context.update({
-            'data_only': sorted(get_counts_additional_fields(schema_url, json_data))
+            'data_only': additional_fields
         })
 
     validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors.json')

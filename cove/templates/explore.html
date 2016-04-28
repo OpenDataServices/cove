@@ -82,9 +82,39 @@
   </div>
 </div>
 
+{% if conversion_warning_messages %}
+  <div class="panel panel-warning">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        {% trans 'Conversion Warnings' %}
+      </h4>
+    </div>
+    <div class="panel-body">
+      {% for warning_message in conversion_warning_messages %}
+        <p>{{warning_message}}</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% if conversion_warning_messages_titles %}
+  <div class="panel panel-warning">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        {% trans 'Conversion Warnings (titles)' %}
+      </h4>
+    </div>
+    <div class="panel-body">
+      {% for warning_message in conversion_warning_messages_titles %}
+        <p>{{warning_message}}</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
 {% if validation_errors %}
   <div class="panel panel-danger">
-    <div class="panel-heading pointer" role="tab" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
+    <div class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
       <h4 class="panel-title">
         {% trans 'Validation Errors' %}
       </h4>
@@ -113,9 +143,12 @@
 
 {% if data_only %}
     <div class="panel panel-warning">
-      <div class="panel-heading pointer" role="tab" aria-expanded="true" aria-controls="additionalFieldTable" data-toggle="collapse" data-target="#additionalFieldTable">
+      <div class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalFieldTable" data-toggle="collapse" data-target="#additionalFieldTable">
         <h4 class="panel-title">
           {% trans 'Additional Fields (fields in data not in schema)' %}
+          {% if language_additional_field_warning %}
+             <span class="indent"> {% trans 'Warning: fields with a language suffix will appear as additional field' %} </span>
+          {% endif %}
         </h4>
       </div>
       <div id="additionalFieldTable" class="collapse in">

@@ -6,12 +6,18 @@ python:
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
+  # install Java 8 as required by vnu.jar
+  - sudo apt-get update
+  - sudo apt-get install oracle-java8-installer
+  - sudo update-java-alternatives -s java-8-oracle
 
 install: 
   - "pip install -r requirements_dev.txt --use-mirrors"
+  - wget "https://github.com/validator/validator/releases/download/16.3.3/vnu.jar_16.3.3.zip"; unzip vnu.jar_16.3.3.zip
 
 script:
-    - "flake8 ."
-    - "py.test --cov cove"
+  - "flake8 ."
+  - "py.test --cov cove"
+  - "python manage.py migrate; python manage.py compilemessages; DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver & java -jar dist/vnu.jar http://localhost:8000/ http://localhost:8000/360/ http://localhost:8000/ocds/ 'http://localhost:8000/360/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove/fixtures/WellcomeTrust-grants_2_grants.csv' 'http://localhost:8000/ocds/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove/fixtures/tenders_releases_2_releases.json' "
 
 after_success: coveralls
