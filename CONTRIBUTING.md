@@ -43,7 +43,7 @@ Before contributions to any of our projects are accepted, we require you to comp
 
 ### Submission Instructions
 
-We have a [generic agreement](http://contributoragreements.org/chooser/?beneficiary-name=Open+Data+Services+Co-operative+Limited&project-name=Open+Data+Services+code&project-website=https%3A%2F%2Fgithub.com%2FOpenDataServices%2F&project-email=code%40opendataservices.coop&process-url=&project-jurisdiction=United+Kingdom&agreement-exclusivity=non-exclusive&outbound-option=fsf&outboundlist=&outboundlist-custom=&medialist=CC-BY-4.0&patent-option=Patent-Pledge&your-date=&your-name=&your-title=&your-address=&your-patents=&pos=apply&action=) that covers all code projects in the [Open Data Services GitHub Organisation](https://github.com/opendataservices)
+We have a [generic agreement](http://contributoragreements.org/u2s/bm1v4q5je) that covers all code projects in the [Open Data Services GitHub Organisation](https://github.com/opendataservices)
 
 If this is amenable to you, feel free to complete it. We will be automatically notified that you have submitted an agreement and will contact you (usually in the same day, but in no more than 3 working days)
 
