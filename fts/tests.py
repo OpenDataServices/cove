@@ -45,7 +45,7 @@ def test_index_page(server_url, browser):
         return
     browser.get(server_url)
     assert 'CoVE' in browser.find_element_by_tag_name('body').text
-    assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
+    assert '360Giving Data Quality Tool' in browser.find_element_by_tag_name('body').text
     assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'Creating and using Open Data is made easier when there are good tools to help.' in browser.find_element_by_tag_name('body').text
 
@@ -113,8 +113,8 @@ def test_index_page_360(server_url, browser):
     if not PREFIX_360:
         return
     browser.get(server_url + PREFIX_360)
-    assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
-    assert 'How to use the 360Giving Data Tool' in browser.find_element_by_tag_name('body').text
+    assert '360Giving Data Quality Tool' in browser.find_element_by_tag_name('body').text
+    assert 'How to use the 360Giving Data Quality Tool' in browser.find_element_by_tag_name('body').text
     assert 'Summary Spreadsheet - Excel' in browser.find_element_by_tag_name('body').text
     assert 'JSON built to the 360Giving JSON schema' in browser.find_element_by_tag_name('body').text
     assert 'Multi-table data package - Excel' in browser.find_element_by_tag_name('body').text
@@ -276,7 +276,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
         assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
         # assert 'Release Table' in browser.find_element_by_tag_name('body').text
     elif prefix == PREFIX_360:
-        assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
+        assert '360Giving Data Quality Tool' in browser.find_element_by_tag_name('body').text
         assert '360 Giving' not in browser.find_element_by_tag_name('body').text
 
     if conversion_successful:
