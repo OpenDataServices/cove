@@ -6,6 +6,3 @@ class CoveInputDataError(Exception):
     def __init__(self, context=None):
         if context:
             self.context = context
-
-
-

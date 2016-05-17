@@ -1,8 +1,8 @@
-from cove.lib.common import *
+import cove.lib.common as common
 import collections
 
 
-@ignore_errors
+@common.ignore_errors
 def get_releases_aggregates(json_data):
     release_count = 0
     unique_ocids = set()
@@ -96,7 +96,7 @@ def get_releases_aggregates(json_data):
             if scheme:
                 item_identifier_schemes.add(scheme)
 
-    releases = get_no_exception(json_data, 'releases', [])
+    releases = common.get_no_exception(json_data, 'releases', [])
     for release in releases:
         # ### Release Section ###
         if not isinstance(release, dict):
@@ -113,7 +113,7 @@ def get_releases_aggregates(json_data):
 
         unique_ocids.add(release['ocid'])
         if 'tag' in release:
-            tags.update(to_list(release['tag']))
+            tags.update(common.to_list(release['tag']))
         initiationType = release.get('initiationType')
         if initiationType:
             unique_initation_type.add(initiationType)
@@ -129,16 +129,16 @@ def get_releases_aggregates(json_data):
             process_org(buyer, unique_buyers_identifier, unique_buyers_name_no_id)
 
         # ### Planning Section ###
-        planning = get_no_exception(release, 'planning', {})
+        planning = common.get_no_exception(release, 'planning', {})
         if planning and isinstance(planning, dict):
             planning_ocids.add(ocid)
-            planning_doc_count += update_docs(planning, planning_doctype)
+            planning_doc_count += common.update_docs(planning, planning_doctype)
 
         # ### Tender Section ###
-        tender = get_no_exception(release, 'tender', {})
+        tender = common.get_no_exception(release, 'tender', {})
         if tender and isinstance(tender, dict):
             tender_ocids.add(ocid)
-            tender_doc_count += update_docs(tender, tender_doctype)
+            tender_doc_count += common.update_docs(tender, tender_doctype)
             tender_period = tender.get('tenderPeriod')
             if tender_period:
                 start_date = tender_period.get('startDate', '')
@@ -159,10 +159,10 @@ def get_releases_aggregates(json_data):
             milestones = tender.get('milestones')
             if milestones:
                 for milestone in milestones:
-                    tender_milestones_doc_count += update_docs(milestone, tender_milestones_doctype)
+                    tender_milestones_doc_count += common.update_docs(milestone, tender_milestones_doctype)
 
         # ### Award Section ###
-        awards = get_no_exception(release, 'awards', [])
+        awards = common.get_no_exception(release, 'awards', [])
         for award in awards:
             if not isinstance(award, dict):
                 continue
@@ -183,10 +183,10 @@ def get_releases_aggregates(json_data):
             suppliers = award.get('suppliers', [])
             for supplier in suppliers:
                 process_org(supplier, unique_suppliers_identifier, unique_suppliers_name_no_id)
-            award_doc_count += update_docs(award, award_doctype)
+            award_doc_count += common.update_docs(award, award_doctype)
 
         # ### Contract section
-        contracts = get_no_exception(release, 'contracts', [])
+        contracts = common.get_no_exception(release, 'contracts', [])
         for contract in contracts:
             if not isinstance(contract, dict):
                 continue
@@ -205,16 +205,16 @@ def get_releases_aggregates(json_data):
                 if item_id and release_id and contract_id:
                     release_contract_item_ids.add((ocid, release_id, contract_id, item_id))
                 get_item_scheme(item)
-            contract_doc_count += update_docs(contract, contract_doctype)
+            contract_doc_count += common.update_docs(contract, contract_doctype)
             implementation = contract.get('implementation')
             if implementation:
                 implementation_ocids.add(ocid)
                 if contract_id:
                     implementation_contractid_ocids.add((contract_id, ocid))
-                implementation_doc_count += update_docs(implementation, implementation_doctype)
+                implementation_doc_count += common.update_docs(implementation, implementation_doctype)
                 implementation_milestones = implementation.get('milestones', [])
                 for milestone in implementation_milestones:
-                    implementation_milestones_doc_count += update_docs(milestone, implementation_milestones_doctype)
+                    implementation_milestones_doc_count += common.update_docs(milestone, implementation_milestones_doctype)
 
     contracts_without_awards = []
     for release in releases:
@@ -340,7 +340,7 @@ def get_releases_aggregates(json_data):
     )
 
 
-@ignore_errors
+@common.ignore_errors
 def get_records_aggregates(json_data):
     # Unique ocids
     unique_ocids = set()

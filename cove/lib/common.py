@@ -7,7 +7,7 @@ from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
 from jsonschema import FormatChecker
 
-from cove.lib.tools import *
+import cove.lib.tools as tools
 
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
@@ -110,7 +110,7 @@ def get_schema_validation_errors(json_data, schema_url, current_app):
     validation_errors = collections.defaultdict(list)
     format_checker = FormatChecker()
     if current_app == 'cove-360':
-        format_checker.checkers['date-time'] = (datetime_or_date, ValueError)
+        format_checker.checkers['date-time'] = (tools.datetime_or_date, ValueError)
     for n, e in enumerate(validator(schema, format_checker=format_checker).iter_errors(json_data)):
         validation_errors[e.message].append("/".join(str(item) for item in e.path))
     return dict(validation_errors)

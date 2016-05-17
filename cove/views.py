@@ -9,9 +9,8 @@ from jsonschema.validators import Draft4Validator as validator
 from django.db.models.aggregates import Count
 from django.utils import timezone
 from datetime import timedelta
-
-from cove.lib.common import *
-from cove.lib.tools import *
+import cove.lib.common as common
+import cove.lib.tools as tools
 import cove.lib.ocds as ocds
 import cove.lib.threesixtygiving as threesixtygiving
 from cove.lib.converters import convert_spreadsheet, convert_json
@@ -20,7 +19,8 @@ from cove.lib.exceptions import CoveInputDataError
 logger = logging.getLogger(__name__)
 
 validator.VALIDATORS.pop("patternProperties")
-validator.VALIDATORS["uniqueItems"] = uniqueIds
+validator.VALIDATORS["uniqueItems"] = common.uniqueIds
+
 
 class CoveWebInputDataError(CoveInputDataError):
     """
@@ -41,6 +41,7 @@ class CoveWebInputDataError(CoveInputDataError):
                 return render(request, 'error.html', context=err.context)
         return wrapper
 
+
 class UnrecognisedFileType(CoveInputDataError):
     context = {
         'sub_title': _("Sorry we can't process that data"),
@@ -48,6 +49,7 @@ class UnrecognisedFileType(CoveInputDataError):
         'link_text': _('Try Again'),
         'msg': _('We did not recognise the file type.\n\nWe can only process json, csv and xlsx files.')
     }
+
 
 def get_file_type(django_file):
     if django_file.name.endswith('.json'):
@@ -129,7 +131,7 @@ def explore(request, pk):
         schema_url = schema_url['record'] if 'records' in json_data else schema_url['release']
 
     if schema_url:
-        additional_fields = sorted(get_counts_additional_fields(schema_url, json_data, context, request.current_app))
+        additional_fields = sorted(tools.get_counts_additional_fields(schema_url, json_data, context, request.current_app))
         context.update({
             'data_only': additional_fields
         })
@@ -139,7 +141,7 @@ def explore(request, pk):
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
-        validation_errors = get_schema_validation_errors(json_data, schema_url, request.current_app) if schema_url else None
+        validation_errors = tools.get_schema_validation_errors(json_data, schema_url, request.current_app) if schema_url else None
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 
