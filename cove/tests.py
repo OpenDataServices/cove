@@ -1,5 +1,6 @@
 import pytest
 import cove.views as v
+import cove.lib.ocds as ocds
 import os
 import json
 from cove.input.models import SuppliedData
@@ -189,19 +190,19 @@ EXPECTED_RELEASE_AGGREGATE_RANDOM = {
 
 
 def test_get_releases_aggregates():
-    assert v.get_releases_aggregates({}) == EMPTY_RELEASE_AGGREGATE
-    assert v.get_releases_aggregates({'releases': []}) == EMPTY_RELEASE_AGGREGATE
+    assert ocds.get_releases_aggregates({}) == EMPTY_RELEASE_AGGREGATE
+    assert ocds.get_releases_aggregates({'releases': []}) == EMPTY_RELEASE_AGGREGATE
     release_aggregate_3_empty = EMPTY_RELEASE_AGGREGATE.copy()
     release_aggregate_3_empty['release_count'] = 3
-    assert v.get_releases_aggregates({'releases': [{}, {}, {}]}) == release_aggregate_3_empty
+    assert ocds.get_releases_aggregates({'releases': [{}, {}, {}]}) == release_aggregate_3_empty
 
     with open(os.path.join('cove', 'fixtures', 'release_aggregate.json')) as fp:
         data = json.load(fp)
 
-    assert v.get_releases_aggregates({'releases': data['releases']}) == EXPECTED_RELEASE_AGGREGATE
+    assert ocds.get_releases_aggregates({'releases': data['releases']}) == EXPECTED_RELEASE_AGGREGATE
 
     # test if a release is duplicated
-    actual = v.get_releases_aggregates({'releases': data['releases'] + data['releases']})
+    actual = ocds.get_releases_aggregates({'releases': data['releases'] + data['releases']})
     actual_cleaned = {key: actual[key] for key in actual if 'doc' not in key}
     actual_cleaned.pop('contracts_without_awards')
 
@@ -216,7 +217,7 @@ def test_get_releases_aggregates():
     with open(os.path.join('cove', 'fixtures', 'samplerubbish.json')) as fp:
         data = json.load(fp)
 
-    actual = v.get_releases_aggregates(data)
+    actual = ocds.get_releases_aggregates(data)
     actual_cleaned = {key: actual[key] for key in actual if isinstance(actual[key], (str, int, float))}
 
     assert actual_cleaned == EXPECTED_RELEASE_AGGREGATE_RANDOM
@@ -224,7 +225,7 @@ def test_get_releases_aggregates():
     with open(os.path.join('cove', 'fixtures', 'badfile.json')) as fp:
         data = json.load(fp)
 
-    actual = v.get_releases_aggregates(data, ignore_errors=True)
+    actual = ocds.get_releases_aggregates(data, ignore_errors=True)
 
     assert actual == {}
 
