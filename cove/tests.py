@@ -1,5 +1,7 @@
 import pytest
 import cove.views as v
+import cove.lib.tools as t
+import cove.lib.common as c
 import cove.lib.ocds as ocds
 import os
 import json
@@ -231,16 +233,16 @@ def test_get_releases_aggregates():
 
 
 def test_fields_present():
-    assert v.get_fields_present({}) == {}
-    assert v.get_fields_present({'a': 1, 'b': 2}) == {"/a": 1, "/b": 1}
-    assert v.get_fields_present({'a': {}, 'b': 2}) == {'/a': 1, '/b': 1}
-    assert v.get_fields_present({'a': {'c': 1}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
-    assert v.get_fields_present({'a': {'c': 1}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
-    assert v.get_fields_present({'a': {'c': {'d': 1}}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1, '/a/c/d': 1}
-    assert v.get_fields_present({'a': [{'c': 1}], 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
-    assert v.get_fields_present({'a': {'c': [{'d': 1}]}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1, '/a/c/d': 1}
-    assert v.get_fields_present({'a': {'c_1': [{'d': 1}]}, 'b_1': 2}) == {'/a': 1, '/a/c_1': 1, '/a/c_1/d': 1, '/b_1': 1}
-    assert v.get_fields_present({'a': {'c_1': [{'d': 1}, {'d': 1}]}, 'b_1': 2}) == {'/a': 1, '/a/c_1': 1, '/a/c_1/d': 2, '/b_1': 1}
+    assert c.get_fields_present({}) == {}
+    assert c.get_fields_present({'a': 1, 'b': 2}) == {"/a": 1, "/b": 1}
+    assert c.get_fields_present({'a': {}, 'b': 2}) == {'/a': 1, '/b': 1}
+    assert c.get_fields_present({'a': {'c': 1}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
+    assert c.get_fields_present({'a': {'c': 1}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
+    assert c.get_fields_present({'a': {'c': {'d': 1}}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1, '/a/c/d': 1}
+    assert c.get_fields_present({'a': [{'c': 1}], 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
+    assert c.get_fields_present({'a': {'c': [{'d': 1}]}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1, '/a/c/d': 1}
+    assert c.get_fields_present({'a': {'c_1': [{'d': 1}]}, 'b_1': 2}) == {'/a': 1, '/a/c_1': 1, '/a/c_1/d': 1, '/b_1': 1}
+    assert c.get_fields_present({'a': {'c_1': [{'d': 1}, {'d': 1}]}, 'b_1': 2}) == {'/a': 1, '/a/c_1': 1, '/a/c_1/d': 2, '/b_1': 1}
 
 
 def test_get_file_type_xlsx():
@@ -268,10 +270,10 @@ def test_get_file_unrecognised_file_type():
 def test_get_schema_validation_errors():
     schema_url = 'http://ocds.open-contracting.org/standard/r/1__0__RC/release-package-schema.json'
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
-        error_list = v.get_schema_validation_errors(json.load(fp), schema_url, 'cove-ocds')
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, 'cove-ocds')
         assert len(error_list) == 0
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_invalid.json')) as fp:
-        error_list = v.get_schema_validation_errors(json.load(fp), schema_url, 'cove-ocds')
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, 'cove-ocds')
         assert len(error_list) > 0
 
 

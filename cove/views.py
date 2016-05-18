@@ -131,7 +131,7 @@ def explore(request, pk):
         schema_url = schema_url['record'] if 'records' in json_data else schema_url['release']
 
     if schema_url:
-        additional_fields = sorted(tools.get_counts_additional_fields(schema_url, json_data, context, request.current_app))
+        additional_fields = sorted(common.get_counts_additional_fields(schema_url, json_data, context, request.current_app))
         context.update({
             'data_only': additional_fields
         })
@@ -141,7 +141,7 @@ def explore(request, pk):
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
-        validation_errors = tools.get_schema_validation_errors(json_data, schema_url, request.current_app) if schema_url else None
+        validation_errors = common.get_schema_validation_errors(json_data, schema_url, request.current_app) if schema_url else None
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 

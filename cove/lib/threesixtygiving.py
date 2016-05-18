@@ -1,7 +1,8 @@
 import cove.lib.common as common
+import cove.lib.tools as tools
 
 
-@common.ignore_errors
+@tools.ignore_errors
 def get_grants_aggregates(json_data):
 
     id_count = 0
