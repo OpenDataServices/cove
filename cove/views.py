@@ -10,7 +10,6 @@ from django.db.models.aggregates import Count
 from django.utils import timezone
 from datetime import timedelta
 import cove.lib.common as common
-import cove.lib.tools as tools
 import cove.lib.ocds as ocds
 import cove.lib.threesixtygiving as threesixtygiving
 from cove.lib.converters import convert_spreadsheet, convert_json
