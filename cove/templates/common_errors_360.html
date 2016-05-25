@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+
+<div>
+  <h2>{% trans "Common Errors" %}</h2>
+  <a name="invalid-uri"></a>
+  <h3>{% trans "Invalid 'uri' found" %}</h3>
+  <p>{% blocktrans %}This message means you have a problem, usually with a website address in your data.<br />Common mistakes include:{% endblocktrans %}</p>
+  <ul>
+    <li>{% blocktrans %}Not starting the address with 'http://' e.g. example.com is not a 'uri' but http://example.com is.{% endblocktrans %}</li>
+    <li>{% blocktrans %}Having extra spaces at the start or end of the address - these should be removed{% endblocktrans %}</li>
+    <li>{% blocktrans %}Putting more than one address in the same field e.g. "http://example.com and http:example2.com" is not a 'uri'{% endblocktrans %}</li>
+  </ul>
+  
+  <a name="datetime"></a>
+  <h3>{% trans "Date is not in datetime format" %}</h3>
+  <p>{% blocktrans %}A datetime format is a very specific form of a date and time that is specified by the 360Giving Standard.{% endblocktrans %}</p>
+  <p>{% blocktrans %}A datetime should be in the form of YYYY-MM-DDThh:mm:ss±hh:mm where:{% endblocktrans %}</p>
+  <ul>
+    <li>{% blocktrans %}YYYY represent a year e.g. 2016{% endblocktrans %}</li>
+    <li>{% blocktrans %}MM represents a 2 digit month of the year e.g. 01 for January{% endblocktrans %}</li>
+    <li>{% blocktrans %}DD represents a 2 digit day of the month e.g. 01 for the 1st{% endblocktrans %}</li>
+    <li>{% blocktrans %}T is simply the letter 'T'{% endblocktrans %}</li>
+    <li>{% blocktrans %}hh is a 2 digit representation of an hour e.g. 01 for 1AM, 13 for 1PM{% endblocktrans %}</li>
+    <li>{% blocktrans %}mm is a 2 digit representation of minutes in an hour e.g. 05 for 5 past{% endblocktrans %}</li>
+    <li>{% blocktrans %}ss is a 2 digit representation of seconds{% endblocktrans %}</li>
+    <li>{% blocktrans %}±hh:mm is a timezone offset from UTC. For must UK data producers this can simply be replaced with a 'Z'{% endblocktrans %}</li>
+  </ul>
+  <p>{% blocktrans %}Example: 2016-05-15T12:00:00Z is 12 noon on the 15th May 2016 in UTC time{% endblocktrans %}</p>
+  
+  <a name="required"></a>
+  <h3>{% trans "(something) is missing but is required" %}</h3>
+  <p>{% blocktrans %}Many fields are required in the 360Giving data standard in order for others to make sense of the data supplied. If any of the following fields are missing the data is seen as invalid against the schema.{% endblocktrans %}</p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{% trans "Field" %}</th><th>{% trans "JSON value" %}</th><th>{% trans "Notes" %}</th><th>{% trans "Documentation" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Identifier</td><td>id</td><td>{% blocktrans %}Every grant needs a unique identifier so we can tel them apart{% endblocktrans %}</td><td><a href="http://www.threesixtygiving.org/standard/identifiers/#toc-grant-identifier">{% trans "Grant Indentifiers" %}</a></td>
+      </tr>
+    </tbody>
+    </table>
+  <!--<p>{% blocktrans %}Example{% endblocktrans %}</p>-->
+
+    <p>&nbsp;</p>
+
+
+</div>
+
+  {% block howToUse %}
+  {% endblock %}
+  {% block deletingData %}
+  {% endblock %}
+  {% block whyConvert %}
+  {% endblock %}
+
+{% endblock %}
