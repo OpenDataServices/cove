@@ -5,7 +5,6 @@ import os
 import json
 import logging
 import functools
-from jsonschema.validators import Draft4Validator as validator
 from django.db.models.aggregates import Count
 from django.utils import timezone
 from django.http import Http404
@@ -17,9 +16,6 @@ from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError
 
 logger = logging.getLogger(__name__)
-
-validator.VALIDATORS.pop("patternProperties")
-validator.VALIDATORS["uniqueItems"] = common.uniqueIds
 
 
 class CoveWebInputDataError(CoveInputDataError):
@@ -136,19 +132,28 @@ def explore(request, pk):
             'data_only': additional_fields
         })
 
-    validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors.json')
+    cell_source_map = {}
+    heading_source_map = {}
+    if file_type != 'json':  # Assume it is csv or xlsx
+        with open(os.path.join(data.upload_dir(), 'cell_source_map.json')) as cell_source_map_fp:
+            cell_source_map = json.load(cell_source_map_fp)
+
+        with open(os.path.join(data.upload_dir(), 'heading_source_map.json')) as heading_source_map_fp:
+            heading_source_map = json.load(heading_source_map_fp)
+
+    validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors-2.json')
     if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
-        validation_errors = common.get_schema_validation_errors(json_data, schema_url, request.current_app) if schema_url else None
+        validation_errors = common.get_schema_validation_errors(json_data, schema_url, request.current_app, cell_source_map, heading_source_map) if schema_url else None
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 
     context.update({
         'file_type': file_type,
         'schema_url': schema_url,
-        'validation_errors': validation_errors,
+        'validation_errors': sorted(validation_errors.items()),
         'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
     })
 

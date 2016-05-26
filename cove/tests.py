@@ -269,10 +269,10 @@ def test_get_file_unrecognised_file_type():
 def test_get_schema_validation_errors():
     schema_url = 'http://ocds.open-contracting.org/standard/r/1__0__RC/release-package-schema.json'
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
-        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, 'cove-ocds')
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, 'cove-ocds', {}, {})
         assert len(error_list) == 0
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_invalid.json')) as fp:
-        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, 'cove-ocds')
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, 'cove-ocds', {}, {})
         assert len(error_list) > 0
 
 
