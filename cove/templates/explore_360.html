@@ -189,7 +189,15 @@
             </a>
             <br/>
             <a data-toggle="modal" data-target=".distinct-recipient-org-identifier">
-              <b>{% trans "Recipient Organisations IDs:" %}</b> {{grants_aggregates.distinct_recipient_org_identifier|length}}
+              <b>{% trans "Recipient Organisation IDs:" %}</b> {{grants_aggregates.distinct_recipient_org_identifier|length}}
+            </a>
+            <br/>
+            <a data-toggle="modal" data-target=".recipient-org-identifier-prefixes">
+              <b>{% trans "Recipient Organisation ID Prefixes" %}</b> {{grants_aggregates.recipient_org_identifier_prefixes|length}}
+            </a>
+            <br/>
+            <a data-toggle="modal" data-target=".recipient-org-identifiers-unrecognised-prefixes">
+              <b>{% trans "Unrecognised Recipient Organisation ID Prefixes" %}</b> {{grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length}}
             </a>
             <br/>
             <b>{% trans "Currencies Used Count:" %}</b> {{grants_aggregates.distinct_currency|length}}
@@ -204,8 +212,10 @@
 </div><!--End Row -->
 
 {% cove_modal_list className="duplicate-id-modal" modalTitle="Duplicate IDs" itemList=grants_aggregates.duplicate_ids %}
-{% cove_modal_list className="distinct-recipient-org-identifier" modalTitle="Recipient Organisation IDs" itemList=grants_aggregates.distinct_recipient_org_identifier %}
 {% cove_modal_list className="distinct-funding-org-identifier" modalTitle="Funder Organisation IDs" itemList=grants_aggregates.distinct_funding_org_identifier %}
+{% cove_modal_list className="distinct-recipient-org-identifier" modalTitle="Recipient Organisation IDs" itemList=grants_aggregates.distinct_recipient_org_identifier %}
+{% cove_modal_list className="recipient-org-identifier-prefixes" modalTitle="Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifier_prefixes %}
+{% cove_modal_list className="recipient-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}
 {% cove_modal_list className="unique-ids" modalTitle="Unique IDs" itemList=grants_aggregates.unique_ids %}
 
 <div class="modal fade distinct-funding-orgs" tabindex="-1" role="dialog">
