@@ -201,13 +201,13 @@ def test_accordion(server_url, browser, prefix):
     (PREFIX_OCDS, 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
     (PREFIX_OCDS, 'tenders_releases_2_releases.xlsx', 'Download Files', True),
     (PREFIX_OCDS, 'badfile.json', 'Statistics can not produced', True),
-    (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files',
+    (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', ['Convert',
                                                            'Save or Share these results',
                                                            'Unique Grant IDs: 2',
                                                            'Duplicate IDs: 2',
                                                            'Duplicate IDs: 2',
                                                            'This file contains 4 grants',
-                                                           'This file failed validation against',
+                                                           'Failed validation against',
                                                            'There are 2 duplicate grant IDs in this package.',
                                                            'Silent Signal',
                                                            'Showing 1 to 4 of 4 entries',
@@ -215,12 +215,12 @@ def test_accordion(server_url, browser, prefix):
                                                            'Data source',
                                                            'Date is not in datetime format'], True),
     # Test a 360 spreadsheet with titles, rather than fields
-    (PREFIX_360, 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
+    (PREFIX_360, 'WellcomeTrust-grants_2_grants.xlsx', 'Convert', True),
     # Test that titles that aren't in the rollup are converted correctly
     # (See if statement in check_url_input_result_page).
-    (PREFIX_360, 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx', 'Download Files', True),
+    (PREFIX_360, 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx', 'Convert', True),
     # Test a 360 csv in cp1252 incoding
-    (PREFIX_360, 'WellcomeTrust-grants_2_grants_cp1252.csv', 'Download Files', True),
+    (PREFIX_360, 'WellcomeTrust-grants_2_grants_cp1252.csv', 'Convert', True),
     # Test a non-valid file.
     (PREFIX_360, 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
     # Test a unconvertable spreadsheet (main sheet "grants" is missing)
