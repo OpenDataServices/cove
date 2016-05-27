@@ -121,18 +121,49 @@
     </div>
     <div id="validationTable" class="collapse in">
     <table class="table">
-      <thead> <tr> <th>{% trans 'Error Description' %}</th> <th>{% trans 'Error Count' %}</th> <th>{% trans 'Location of first 3 errors' %}</th> </tr> </thead>
+      <thead> 
+        <tr> 
+          <th>{% trans 'Error Description' %}</th> 
+          <th>{% trans 'Error Count' %}</th> 
+          <th>{% trans 'First 3 Examples' %}</th> 
+          <th>{% trans 'Location of first 3 errors' %}</th> 
+          {% if file_type == 'xlsx' or file_type == 'csv' %}
+            <th>{% trans 'Spreadsheet Location of first 3 errors' %}</th> 
+          {% endif %}
+        </tr> 
+      </thead>
       <tbody>
-      {% for error, paths in validation_errors.items %}
+      {% for error, values in validation_errors %}
       <tr>
-        <td>{{error}}</td> <td>{{paths|length}}</td>
+        {% if error|get_message_type in common_error_types %}
+        <td><a href="{% url 'cove:common_errors' %}#{{error|get_message_type}}"> {{error|get_message}} </a></td>
+        {% else %}
+          <td>{{error|get_message}}</td> 
+        {% endif %}
+        <td>{{values|length}}</td>
         <td>
           <ul class="list-unstyled">
-            {% for path in paths|slice:":3" %}
-               <li> {{path}} </li>
+            {% for value in values|slice:":3" %}
+              <li> {{value.value}} </li>
             {% endfor %}
           </ul>
         </td>
+        <td>
+          <ul class="list-unstyled">
+            {% for value in values|slice:":3" %}
+               <li> {{value.path}} </li>
+            {% endfor %}
+          </ul>
+        </td>
+        {% if file_type == 'xlsx' or file_type == 'csv' %}
+        <td style="white-space: nowrap">
+          <ul class="list-unstyled">
+            {% for value in values|slice:":3" %}
+            <li> <b>Sheet:</b> {{value.sheet}} <b>Row:</b> {{value.row_number}} {% if value.header %} <b>Header:</b> {{value.header}} {% endif %} </li>
+            {% endfor %}
+          </ul>
+        </td>
+        {% endif %}
       </tr>
       {% endfor %}
       </tbody>

@@ -50,7 +50,9 @@ def convert_spreadsheet(request, data, file_type):
                     root_id=request.cove_config['root_id'],
                     schema=request.cove_config['item_schema_url'],
                     convert_titles=True,
-                    encoding=encoding
+                    encoding=encoding,
+                    cell_source_map=os.path.join(data.upload_dir(), 'cell_source_map.json'),
+                    heading_source_map=os.path.join(data.upload_dir(), 'heading_source_map.json'),
                 )
                 context['conversion_warning_messages'] = [str(w.message) for w in conversion_warnings]
             with open(conversion_warning_cache_path, 'w+') as fp:

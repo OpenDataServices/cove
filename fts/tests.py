@@ -193,8 +193,8 @@ def test_accordion(server_url, browser, prefix):
     # Conversion should still work for files that don't validate against the schema
     (PREFIX_OCDS, 'tenders_releases_2_releases_invalid.json', ['Download Files',
                                                                'Validation Errors',
-                                                               "'id' is a required property",
-                                                               "'buyandsell.gc.ca' is not a 'uri'"], True),
+                                                               "'id' is missing but required",
+                                                               "Invalid 'uri' found"], True),
     # Test UTF-8 support
     (PREFIX_OCDS, 'utf8.json', 'Download Files', True),
     # But we expect to see an error message if a file is not well formed JSON at all
@@ -213,8 +213,7 @@ def test_accordion(server_url, browser, prefix):
                                                            'Showing 1 to 4 of 4 entries',
                                                            'Additional Fields',
                                                            'Data source',
-                                                           "'24/07/2014' is not a 'date-time'",
-                                                           "'13-03-2015' is not a 'date-time'"], True),
+                                                           'Date is not in datetime format'], True),
     # Test a 360 spreadsheet with titles, rather than fields
     (PREFIX_360, 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
     # Test that titles that aren't in the rollup are converted correctly
@@ -378,6 +377,10 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
     import warnings
 
     def mockunflatten(input_name, output_name, *args, **kwargs):
+        with open(kwargs['cell_source_map'], 'w') as fp:
+            fp.write('{}')
+        with open(kwargs['heading_source_map'], 'w') as fp:
+            fp.write('{}')
         with open(output_name, 'w') as fp:
             fp.write('{}')
             for warning_text in warning_texts:
