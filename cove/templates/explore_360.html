@@ -26,7 +26,7 @@
          <p>
          {% trans "This file " %} 
             {% if validation_errors %} <b> {% trans "failed " %} </b> {% else %} {% trans "passed " %} {% endif %}
-            {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">{{ schema_url }}</a>.
+            {% blocktrans %}validation against the {% endblocktrans %}<a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas">360Giving JSON Package Schema</a>.
          </p>
          {% if grants_aggregates.duplicate_ids %} 
               <b> {% blocktrans %}There are{% endblocktrans %} {{ grants_aggregates.duplicate_ids|length }} {% blocktrans %}duplicate grant IDs in this package.{% endblocktrans %}</b>

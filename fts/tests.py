@@ -316,6 +316,53 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
             assert int(converted_file_response.headers['content-length']) != 0
 
 
+'''
+    ## This is broken
+    The test tries to load some data, and then on the results page check that the link to
+    360Giving JSON Package Schema actually goes to the main threesixtygiving.org website
+    and on that page a certain id is found.
+
+    However, I think that find_element_by_link has the effect of scrolling the
+    page so that the link is at the very top of the browser.
+    The link is then obscured by the 'This is alpha' banner and so cannot be clicked.
+
+    I can't find a way round this.
+
+
+
+@pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text'), [
+    (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', '360Giving JSON Package Schema')
+    ])
+def test_check_schema_link_on_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text):
+    if not prefix:
+        return
+    with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
+        httpserver.serve_content(fp.read())
+    if 'CUSTOM_SERVER_URL' in os.environ:
+        # Use urls pointing to GitHub if we have a custom (probably non local) server URL
+        source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/master/cove/fixtures/' + source_filename
+    else:
+        source_url = httpserver.url + '/' + source_filename
+
+    browser.get(server_url + prefix)
+    browser.find_element_by_partial_link_text('Link').click()
+    time.sleep(0.5)
+    browser.find_element_by_id('id_source_url').send_keys(source_url)
+    browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+    
+    # We should still be in the correct app
+    if prefix == PREFIX_360:
+      #browser.find_element_by_xpath("//*[contains(text(), 'Validation Errors')]")
+      #browser.execute_script("window.scrollTo(0, 200);")
+      #time.sleep(10)
+      #assert "This file failed validation against the " in browser.find_element_by_tag_name('body').text
+      schema_link = browser.find_element_by_link_text(expected_text)
+      browser.execute_script("window.scrollTo(0, 600);")
+      schema_link.click()
+      browser.find_element_by_id('toc-360giving-json-schemas')
+'''
+
+
 @pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
 @pytest.mark.parametrize('prefix', [PREFIX_OCDS, PREFIX_360])
 @pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
