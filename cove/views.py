@@ -8,6 +8,7 @@ import functools
 from jsonschema.validators import Draft4Validator as validator
 from django.db.models.aggregates import Count
 from django.utils import timezone
+from django.http import Http404
 from datetime import timedelta
 import cove.lib.common as common
 import cove.lib.ocds as ocds
@@ -178,3 +179,9 @@ def stats(request):
             {x['form_name']: x['id__count'] for x in by_form.filter(created__gt=timezone.now() - timedelta(days=num_days))}
         ) for num_days in [1, 7, 30]],
     })
+
+
+def common_errors(request):
+    if request.current_app == 'cove-360':
+        return render(request, 'common_errors_360.html')
+    raise Http404('Common error page does not exist')
