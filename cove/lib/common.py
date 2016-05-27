@@ -162,7 +162,7 @@ def get_schema_validation_errors(json_data, schema_url, current_app, cell_source
         if e.validator == 'required':
             field_name = e.message
             if len(e.path) > 2:
-                field_name =  e.path[-2] + ":" + e.message
+                field_name = e.path[-2] + ":" + e.message
             heading = heading_source_map.get(path_no_number + '/' + e.message)
             if heading:
                 field_name = heading[0][1]

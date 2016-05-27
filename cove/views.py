@@ -154,7 +154,8 @@ def explore(request, pk):
         'file_type': file_type,
         'schema_url': schema_url,
         'validation_errors': sorted(validation_errors.items()),
-        'json_data': json_data  # Pass the JSON data to the template so we can display values that need little processing
+        'json_data': json_data,  # Pass the JSON data to the template so we can display values that need little processing
+        'common_error_types': []
     })
 
     view = 'explore.html'
@@ -167,6 +168,7 @@ def explore(request, pk):
             view = 'explore_ocds-release.html'
     elif request.current_app == 'cove-360':
         context['grants_aggregates'] = threesixtygiving.get_grants_aggregates(json_data)
+        context['common_error_types'] = ['uri', 'date-time', 'required']
         view = 'explore_360.html'
 
     return render(request, view, context)

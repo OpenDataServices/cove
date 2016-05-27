@@ -12,3 +12,8 @@ def cove_modal_list(**kw):
 @register.filter(name='get_message')
 def get_message(error):
     return json.loads(error)[1]
+
+
+@register.filter(name='get_message_type')
+def get_message_type(error):
+    return json.loads(error)[0]
