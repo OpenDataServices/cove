@@ -8,6 +8,7 @@ def cause500(request):
 
 urlpatterns = [
     url(r'^$', 'cove.input.views.input', name='index'),
+    url(r'^common_errors', TemplateView.as_view(template_name='common_errors_360.html'), name='common_errors'),
     url(r'^data/(.+)$', 'cove.views.explore', name='explore'),
     url(r'^terms', TemplateView.as_view(template_name='terms.html'), name='terms'),
     url(r'^stats', 'cove.views.stats', name='stats'),

@@ -444,3 +444,9 @@ def test_500_error(server_url, browser, prefix):
     icon_span = browser.find_element_by_class_name('panel-danger').find_element_by_tag_name('span')
     assert 'Glyphicons Halflings' in icon_span.value_of_css_property('font-family')
     assert icon_span.value_of_css_property('color') == 'rgba(169, 68, 66, 1)'
+
+
+def test_common_errors_page(server_url, browser):
+    browser.get(server_url + '/360/common_errors/')
+    assert "Common Errors" in browser.find_element_by_tag_name('h2').text
+    assert '360 Giving' not in browser.find_element_by_tag_name('body').text
