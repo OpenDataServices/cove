@@ -15,8 +15,14 @@
 {# Translators: JSON probably does not need a transalation: http://www.json.org/ #}
 {% trans 'JSON' as JSON %}
 
+
+{% block key_facts %}
+{% endblock %}
+
+{% block converted_files %}
+
 <!--Download Converted Files-->
-<div class="panel {% if conversion_error %}panel-warning{% else %}panel-success{% endif %}">
+<div class="panel {% if conversion_error %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
   <div class="panel-heading">
     <h4 class="panel-title">
       <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{% trans 'Download Files' %}
@@ -81,23 +87,32 @@
     
   </div>
 </div>
+{% endblock %}
+
 
 {% if conversion_warning_messages %}
+  <a name="conversion-warning" class="anchor"></a>
   <div class="panel panel-warning">
     <div class="panel-heading">
       <h4 class="panel-title">
+        
         {% trans 'Conversion Warnings' %}
       </h4>
     </div>
     <div class="panel-body">
-      {% for warning_message in conversion_warning_messages %}
-        <p>{{warning_message}}</p>
-      {% endfor %}
+      <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+      <ul>
+        {% for warning_message in conversion_warning_messages %}
+          <li>{{warning_message}}</li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 {% endif %}
 
+
 {% if conversion_warning_messages_titles %}
+  <a name="conversion-warning" class="anchor"></a>
   <div class="panel panel-warning">
     <div class="panel-heading">
       <h4 class="panel-title">
@@ -105,14 +120,18 @@
       </h4>
     </div>
     <div class="panel-body">
+    <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+    <ul>
       {% for warning_message in conversion_warning_messages_titles %}
-        <p>{{warning_message}}</p>
+        <li>{{warning_message}}</li>
       {% endfor %}
+    </ul>
     </div>
   </div>
 {% endif %}
 
 {% if validation_errors %}
+  <a name="validation-errors" class="anchor"></a>
   <div class="panel panel-danger">
     <div class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
       <h4 class="panel-title">

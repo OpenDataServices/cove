@@ -3,6 +3,10 @@
   text-decoration:none;
 }
 
+.page-header a.btn {
+ float:right
+}
+
 h1.application-name {
   margin-top: 0;
 }
@@ -91,9 +95,33 @@ a:hover {
 }
 
 .success-button {
-padding-bottom: 20px;
+  padding-bottom: 20px;
 }
 
 .spinner {
-margin-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.explanation {
+  font-size: 1.2em;
+}
+
+a.anchor::before {
+  display: block;
+  content: " ";
+  margin-top: -30px;
+  height: 30px;
+  visibility: hidden;
+}
+
+.message  {
+  margin-left:30px;
+  margin-bottom: 10px;
+}
+.message span {
+  margin-left: -30px;
+  padding-right:15px;
+}
+.key-facts ul {
+  padding-left: 15px;
 }
