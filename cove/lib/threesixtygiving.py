@@ -1,4 +1,20 @@
 import cove.lib.tools as tools
+import requests
+from collections import defaultdict
+import json
+import os
+
+
+# JSON from link on http://iatistandard.org/202/codelists/OrganisationRegistrationAgency/
+try:
+    org_prefix_codelist = requests.get('http://iatistandard.org/202/codelists/downloads/clv3/json/en/OrganisationRegistrationAgency.json').json()
+except requests.exceptions.RequestException:
+    local_codelist_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'OrganisationRegistrationAgency.json')
+    with open(local_codelist_file) as local_codelist:
+        org_prefix_codelist = json.load(local_codelist)
+
+org_prefixes = [x['code'] for x in org_prefix_codelist['data']]
+org_prefixes.append('360G')
 
 
 @tools.ignore_errors
@@ -51,6 +67,17 @@ def get_grants_aggregates(json_data):
             if currency:
                 distinct_currency.add(currency)
 
+    recipient_org_identifier_prefixes = defaultdict(int)
+    recipient_org_identifiers_unrecognised_prefixes = defaultdict(int)
+
+    for recipient_org_identifier in distinct_recipient_org_identifier:
+        for prefix in org_prefixes:
+            if recipient_org_identifier.startswith(prefix):
+                recipient_org_identifier_prefixes[prefix] += 1
+                break
+        else:
+            recipient_org_identifiers_unrecognised_prefixes[recipient_org_identifier] += 1
+
     return {
         'count': count,
         'id_count': id_count,
@@ -62,5 +89,7 @@ def get_grants_aggregates(json_data):
         'min_amount_awarded': min_amount_awarded,
         'distinct_funding_org_identifier': distinct_funding_org_identifier,
         'distinct_recipient_org_identifier': distinct_recipient_org_identifier,
-        'distinct_currency': distinct_currency
+        'distinct_currency': distinct_currency,
+        'recipient_org_identifier_prefixes': recipient_org_identifier_prefixes,
+        'recipient_org_identifiers_unrecognised_prefixes': recipient_org_identifiers_unrecognised_prefixes,
     }

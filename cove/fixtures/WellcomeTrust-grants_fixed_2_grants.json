@@ -66,6 +66,7 @@
             "amountAwarded": 152505, 
             "recipientOrganization": [
                 {
+                    "id": "RUBBISH-COH-RC000659", 
                     "addressLocality": "London", 
                     "name": "Animate Project Limited"
                 }

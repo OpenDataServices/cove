@@ -40,6 +40,11 @@
                   <b> {% blocktrans %}There are{% endblocktrans %} {{ grants_aggregates.duplicate_ids|length }} {% blocktrans %}duplicate grant IDs in this package.{% endblocktrans %}</b>
              </li>
              {% endif %}
+             {% if grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %} 
+             <li>
+                  <b> {% blocktrans %}There are{% endblocktrans %} {{ grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length }} {% blocktrans %}unrecognised organisation prefixes in this package.{% endblocktrans %}</b>
+             </li>
+             {% endif %}
              
             <li>
               {% if data_only %}
@@ -173,6 +178,8 @@
             {% else %}
               <b>{% trans "Duplicate IDs:" %}</b> {{grants_aggregates.duplicate_ids|length}}
             {% endif %}
+            <br/>
+            <b>{% trans "Currencies Used Count:" %}</b> {{grants_aggregates.distinct_currency|length}}
           </div>
           <div class="col-md-4">
             <b>{% trans "First Award Date:" %}</b> {{grants_aggregates.min_award_date}}
@@ -182,6 +189,9 @@
             <b>{% trans "Highest Award Amount:" %}</b> {{grants_aggregates.max_amount_awarded}}
             <br/>
             <b>{% trans "Lowest Award Amount:" %}</b> {{grants_aggregates.min_amount_awarded}}
+            <br/>
+            <b>{% trans "Currencies Used:" %}</b> {{grants_aggregates.distinct_currency|join:", "}}
+            <br/>
           </div>
           <div class="col-md-4">
             <a data-toggle="modal" data-target=".distinct-funding-org-identifier">
@@ -189,12 +199,16 @@
             </a>
             <br/>
             <a data-toggle="modal" data-target=".distinct-recipient-org-identifier">
-              <b>{% trans "Recipient Organisations IDs:" %}</b> {{grants_aggregates.distinct_recipient_org_identifier|length}}
+              <b>{% trans "Recipient Organisation IDs:" %}</b> {{grants_aggregates.distinct_recipient_org_identifier|length}}
             </a>
             <br/>
-            <b>{% trans "Currencies Used Count:" %}</b> {{grants_aggregates.distinct_currency|length}}
+            <a data-toggle="modal" data-target=".recipient-org-identifier-prefixes">
+              <b>{% trans "Recipient Org ID Prefixes:" %}</b> {{grants_aggregates.recipient_org_identifier_prefixes|length}}
+            </a>
             <br/>
-            <b>{% trans "Currencies Used:" %}</b> {{grants_aggregates.distinct_currency|join:", "}}
+            <a data-toggle="modal" data-target=".recipient-org-identifiers-unrecognised-prefixes">
+              <b>{% trans "Unrecognised Recipient Org ID Prefixes:" %}</b> {{grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length}}
+            </a>
             <br/>
           </div>
         </div>
@@ -204,8 +218,10 @@
 </div><!--End Row -->
 
 {% cove_modal_list className="duplicate-id-modal" modalTitle="Duplicate IDs" itemList=grants_aggregates.duplicate_ids %}
-{% cove_modal_list className="distinct-recipient-org-identifier" modalTitle="Recipient Organisation IDs" itemList=grants_aggregates.distinct_recipient_org_identifier %}
 {% cove_modal_list className="distinct-funding-org-identifier" modalTitle="Funder Organisation IDs" itemList=grants_aggregates.distinct_funding_org_identifier %}
+{% cove_modal_list className="distinct-recipient-org-identifier" modalTitle="Recipient Organisation IDs" itemList=grants_aggregates.distinct_recipient_org_identifier %}
+{% cove_modal_list className="recipient-org-identifier-prefixes" modalTitle="Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifier_prefixes %}
+{% cove_modal_list className="recipient-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}
 {% cove_modal_list className="unique-ids" modalTitle="Unique IDs" itemList=grants_aggregates.unique_ids %}
 
 <div class="modal fade distinct-funding-orgs" tabindex="-1" role="dialog">
