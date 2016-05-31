@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 def convert_spreadsheet(request, data, file_type):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
+    cell_source_map_path = os.path.join(data.upload_dir(), 'cell_source_map.json')
+    heading_source_map_path = os.path.join(data.upload_dir(), 'heading_source_map.json')
     encoding = 'utf-8'
     if file_type == 'csv':
         # flatten-tool expects a directory full of CSVs with file names
@@ -40,7 +42,7 @@ def convert_spreadsheet(request, data, file_type):
         input_name = data.original_file.file.name
     try:
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
-        if not os.path.exists(converted_path):
+        if not os.path.exists(converted_path) or not os.path.exists(cell_source_map_path):
             with warnings.catch_warnings(record=True) as conversion_warnings:
                 flattentool.unflatten(
                     input_name,
@@ -51,8 +53,8 @@ def convert_spreadsheet(request, data, file_type):
                     schema=request.cove_config['item_schema_url'],
                     convert_titles=True,
                     encoding=encoding,
-                    cell_source_map=os.path.join(data.upload_dir(), 'cell_source_map.json'),
-                    heading_source_map=os.path.join(data.upload_dir(), 'heading_source_map.json'),
+                    cell_source_map=cell_source_map_path,
+                    heading_source_map=heading_source_map_path,
                 )
                 context['conversion_warning_messages'] = [str(w.message) for w in conversion_warnings]
             with open(conversion_warning_cache_path, 'w+') as fp:
