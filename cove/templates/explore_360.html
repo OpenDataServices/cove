@@ -40,6 +40,11 @@
                   <b> {% blocktrans %}There are{% endblocktrans %} {{ grants_aggregates.duplicate_ids|length }} {% blocktrans %}duplicate grant IDs in this package.{% endblocktrans %}</b>
              </li>
              {% endif %}
+             {% if grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %} 
+             <li>
+                  <b> {% blocktrans %}There are{% endblocktrans %} {{ grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length }} {% blocktrans %}unrecognised organisation prefixes in this package.{% endblocktrans %}</b>
+             </li>
+             {% endif %}
              
             <li>
               {% if data_only %}
@@ -173,6 +178,8 @@
             {% else %}
               <b>{% trans "Duplicate IDs:" %}</b> {{grants_aggregates.duplicate_ids|length}}
             {% endif %}
+            <br/>
+            <b>{% trans "Currencies Used Count:" %}</b> {{grants_aggregates.distinct_currency|length}}
           </div>
           <div class="col-md-4">
             <b>{% trans "First Award Date:" %}</b> {{grants_aggregates.min_award_date}}
@@ -182,6 +189,9 @@
             <b>{% trans "Highest Award Amount:" %}</b> {{grants_aggregates.max_amount_awarded}}
             <br/>
             <b>{% trans "Lowest Award Amount:" %}</b> {{grants_aggregates.min_amount_awarded}}
+            <br/>
+            <b>{% trans "Currencies Used:" %}</b> {{grants_aggregates.distinct_currency|join:", "}}
+            <br/>
           </div>
           <div class="col-md-4">
             <a data-toggle="modal" data-target=".distinct-funding-org-identifier">
@@ -193,16 +203,12 @@
             </a>
             <br/>
             <a data-toggle="modal" data-target=".recipient-org-identifier-prefixes">
-              <b>{% trans "Recipient Organisation ID Prefixes" %}</b> {{grants_aggregates.recipient_org_identifier_prefixes|length}}
+              <b>{% trans "Recipient Org ID Prefixes:" %}</b> {{grants_aggregates.recipient_org_identifier_prefixes|length}}
             </a>
             <br/>
             <a data-toggle="modal" data-target=".recipient-org-identifiers-unrecognised-prefixes">
-              <b>{% trans "Unrecognised Recipient Organisation ID Prefixes" %}</b> {{grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length}}
+              <b>{% trans "Unrecognised Recipient Org ID Prefixes:" %}</b> {{grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length}}
             </a>
-            <br/>
-            <b>{% trans "Currencies Used Count:" %}</b> {{grants_aggregates.distinct_currency|length}}
-            <br/>
-            <b>{% trans "Currencies Used:" %}</b> {{grants_aggregates.distinct_currency|join:", "}}
             <br/>
           </div>
         </div>

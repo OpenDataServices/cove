@@ -214,6 +214,9 @@ def test_accordion(server_url, browser, prefix):
                                                            'Additional Fields',
                                                            'Data source',
                                                            'This file uses 7 additional fields not used in the standard.',
+                                                           'Recipient Org ID Prefixes: 1',
+                                                           'Unrecognised Recipient Org ID Prefixes: 1',
+                                                           'There are 1 unrecognised organisation prefixes in this package.',
                                                            'Date is not in datetime format'], True),
     # Test a 360 spreadsheet with titles, rather than fields
     (PREFIX_360, 'WellcomeTrust-grants_2_grants.xlsx', 'Convert', True),

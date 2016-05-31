@@ -1,11 +1,20 @@
 import cove.lib.tools as tools
 import requests
 from collections import defaultdict
+import json
+import os
 
 
 # JSON from link on http://iatistandard.org/202/codelists/OrganisationRegistrationAgency/
-org_prefix_codelist = requests.get('http://iatistandard.org/202/codelists/downloads/clv3/json/en/OrganisationRegistrationAgency.json').json()
+try:
+    org_prefix_codelist = requests.get('http://iatistandard.org/202/codelists/downloads/clv3/json/en/OrganisationRegistrationAgency.json').json()
+except requests.exceptions.RequestException:
+    local_codelist_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'OrganisationRegistrationAgency.json')
+    with open(local_codelist_file) as local_codelist:
+        org_prefix_codelist = json.load(local_codelist)
+
 org_prefixes = [x['code'] for x in org_prefix_codelist['data']]
+org_prefixes.append('360G')
 
 
 @tools.ignore_errors
