@@ -11,6 +11,15 @@ h1.application-name {
   margin-top: 0;
 }
 
+.title360 {
+  font-size: 1.4em;
+  margin-top: 32px;
+}
+
+.logo360 {
+  margin-top: -30px;
+}
+
 .language-select {
   margin: 1px 0;
 }
