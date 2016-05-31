@@ -41,15 +41,15 @@
              </li>
              {% endif %}
              
-            <!-- <li>
+            <li>
               {% if data_only %}
-                {% blocktrans count count=data_only.count %}
-                  This file uses {{count}} additional field not used in the standard.
+                {% blocktrans count count=data_only|length %}
+                  This file uses {{count}} <a href="#additional-fields">additional field</a>ot used in the standard.
                 {% plural %}
-                  This file uses {{count}} additional fields not used in the standard.
+                  This file uses {{count}} <a href="#additional-fields">additional fields</a> not used in the standard.
                 {% endblocktrans %}
               {% endif %}
-             </li>-->
+             </li>
 
              <li>
                {% trans "Data " %} 
