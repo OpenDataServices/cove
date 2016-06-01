@@ -31,7 +31,7 @@
         <div class="row">
           <div class="col-md-8">
             {% block h1 %}<h1 class="application-name"><a href="{% url 'cove:index' %}">{{ application_name }}</a></h1>{% endblock %}
-            <p>{{ application_strapline }}</p>
+            {% block strapline %}<p>{{ application_strapline }}</p>{% endblock %}
           </div><!--col-md-8-->
           <div class="col-md-2">
             <form class="language-select" action="{% url 'set_language' %}" method="post">

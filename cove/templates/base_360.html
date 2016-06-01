@@ -1,5 +1,20 @@
 {% extends 'base_generic.html' %}
 {% load i18n %}
+{% load static %}
+
+{% block h1 %}
+  <div class="row">
+    <div class="col-md-2">
+        <a href="{% url 'cove:index' %}"><img src="{% static 'dataexplore/360Giving-logo.png' %}" alt="360Giving Logo" width=270 height=270 class="logo360"/></a>
+    </div>
+    <div class="col-md-5 col-md-offset-2">
+      <div class="title360"><a href="{% url 'cove:index' %}">Data Quality Tool</a></div>
+      <div>Convert, Validate, Explore 360Giving Data</div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block strapline %}{% endblock %}
 
 {% block link %}
 <li><a href="http://www.threesixtygiving.org/">{% trans "360Giving" %}</a></li>
