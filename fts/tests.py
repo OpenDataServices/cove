@@ -457,3 +457,17 @@ def test_common_errors_page(server_url, browser):
     browser.get(server_url + '/360/common_errors/')
     assert "Common Errors" in browser.find_element_by_tag_name('h2').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
+
+
+@pytest.mark.parametrize(('anchor_text'), [
+    ('uri'),
+    ('date-time'),
+    ('required'),
+    ('enum'),
+    ('string'),
+    ('integer')
+    ])
+def test_common_errors_page_anchors(server_url, browser, anchor_text):
+    # Checks we have sections for each our error messages
+    browser.get(server_url + '/360/common_errors/')
+    browser.find_element_by_id(anchor_text)
