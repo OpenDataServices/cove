@@ -1,8 +1,10 @@
 import strict_rfc3339
 import datetime
+from functools import wraps  # use this to preserve function signatures and docstrings
 
 
 def ignore_errors(f):
+    @wraps(f)
     def ignore(json_data, ignore_errors=False):
         if ignore_errors:
             try:

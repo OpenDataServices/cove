@@ -9,6 +9,7 @@ Contents:
 
    deployment
    errors
+   lib
 ```
 
 
