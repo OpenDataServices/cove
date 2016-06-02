@@ -7,3 +7,4 @@ __pycache__
 media
 .coverage
 htmlcov
+docs/_build

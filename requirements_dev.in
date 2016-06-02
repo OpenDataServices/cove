@@ -12,3 +12,5 @@ coveralls
 selenium
 transifex-client
 libsass
+Sphinx
+recommonmark
