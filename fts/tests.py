@@ -68,7 +68,7 @@ def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector
 
 
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
-    ('360Giving', 'We believe that with better information, grantmakers can be more effective and strategic decision-makers.', 'body.home', 'http://www.threesixtygiving.org/'),
+    ('360Giving', '360Giving is a company limited by guarantee', 'body.home', 'http://www.threesixtygiving.org/'),
     ('360Giving Data Standard', 'Standard', 'h1.entry-title', 'http://www.threesixtygiving.org/standard/'),
     ])
 def test_footer_360(server_url, browser, link_text, expected_text, css_selector, url):
