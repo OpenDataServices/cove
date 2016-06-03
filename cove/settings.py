@@ -34,7 +34,8 @@ env = environ.Env(  # set default values and casting
     PREFIX_MAP=(dict, {}),
     ALLOWED_HOSTS=(list, []),
     SECRET_KEY=(str, secret_key),
-    DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3'))
+    DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
+    DEBUG_TOOLBAR=(bool, False),
 )
 
 PIWIK = {
@@ -133,13 +134,15 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
     'bootstrap3',
     'cove',
     'cove.input',
     'cove.dataload',
     'raven.contrib.django.raven_compat',
 )
+
+if env('DEBUG_TOOLBAR'):
+    INSTALLED_APPS += ('debug_toolbar',)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
