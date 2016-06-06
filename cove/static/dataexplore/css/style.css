@@ -133,5 +133,13 @@ a.anchor::before {
   padding-right:15px;
 }
 .key-facts ul {
-  padding-left: 15px;
+  padding-left: 0;
+  list-style: none;
+}
+.key-facts ul li {
+  margin: 4px 0;
+}
+
+.key-facts .glyphicon-flag {
+  color: #a94442;
 }
