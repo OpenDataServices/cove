@@ -131,6 +131,11 @@
 {% endif %}
 
 {% if validation_errors %}
+  {% for error, values in validation_errors %}
+     {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type %}
+  {% endfor %}
+  
+
   <a name="validation-errors" class="anchor"></a>
   <div class="panel panel-danger">
     <div class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
@@ -159,7 +164,15 @@
         {% else %}
           <td>{{error|get_message}}</td> 
         {% endif %}
-        <td>{{values|length}}</td>
+        <td>
+          {% if values|length > 3 %}
+            <a data-toggle="modal" data-target=".{{"validation-errors-"|concat:forloop.counter}}">
+              {{values|length}}
+            </a>
+          {% else %}
+              {{values|length}}
+          {% endif %}
+        </td>
         <td>
           <ul class="list-unstyled">
             {% for value in values|slice:":3" %}
