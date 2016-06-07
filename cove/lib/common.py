@@ -121,6 +121,7 @@ validation_error_lookup = {"date-time": "Date is not in datetime format",
                            "uri": "Invalid 'uri' found",
                            "string": "Value is not a string",
                            "integer": "Value is not a integer",
+                           "number": "Value is not a number",
                            "object": "Value is not an object",
                            "array": "Value is not an array"}
 
