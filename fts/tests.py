@@ -259,10 +259,12 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
     #refresh page to now check if tests still work after caching some data
     browser.get(browser.current_url)
 
-    check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
-    
-    browser.get(server_url + prefix + '?source_url=' + source_url)
-    check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+    selected_examples = ['tenders_releases_2_releases_invalid.json', 'WellcomeTrust-grants_fixed_2_grants.xlsx', 'WellcomeTrust-grants_2_grants_cp1252.csv']
+
+    if source_filename in selected_examples:
+        check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+        browser.get(server_url + prefix + '?source_url=' + source_url)
+        check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
 
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
