@@ -170,6 +170,9 @@ Adding and updating requirements
 
 Add a new requirements to ``requirements.in`` or ``requirements_dev.in`` depending on whether it is just a development requirement or not.
 
-Then, run ``./update_requirements --new-only`` this will populate ``requirements.txt`` and/or ``requirements_dev.txt`` with pinned versions of the new requirement and it's dependencies. WARNING: This will delete and recreate your current ``.ve`` directory.
+
+Then, run ``./update_requirements --new-only`` this will populate ``requirements.txt`` and/or ``requirements_dev.txt`` with pinned versions of the new requirement and it's dependencies.
+
+WARNING: The ``./update_requirements`` script will delete and recreate your current ``.ve`` directory.
 
 ``./update_requirements`` without any flags will update all pinned requirements to the latest version. Generally we don't want to do this at the same time as adding a new dependency, to make testing any problems easier.
