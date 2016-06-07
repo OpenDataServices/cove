@@ -216,8 +216,12 @@ def test_accordion(server_url, browser, prefix):
                                                            'This file uses 7 additional fields not used in the standard.',
                                                            'Recipient Org ID Prefixes: 1',
                                                            'Unrecognised Recipient Org ID Prefixes: 1',
-                                                           'There are 1 unrecognised organisation prefixes in this package.',
+                                                           'There is 1 unrecognised recipient organisation prefix in this package.',
                                                            'Date is not in datetime format'], True),
+    (PREFIX_360, 'WellcomeTrust-grants_broken_grants.json', ['Convert',
+                                                           'Funder Organisation IDs: 2',
+                                                           'Unrecognised Funding Org ID Prefixes: 1',
+                                                           'There is 1 unrecognised funding organisation prefix in this package.'], True),
     # Test a 360 spreadsheet with titles, rather than fields
     (PREFIX_360, 'WellcomeTrust-grants_2_grants.xlsx', 'Convert', True),
     # Test that titles that aren't in the rollup are converted correctly
@@ -255,10 +259,12 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
     #refresh page to now check if tests still work after caching some data
     browser.get(browser.current_url)
 
-    check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
-    
-    browser.get(server_url + prefix + '?source_url=' + source_url)
-    check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+    selected_examples = ['tenders_releases_2_releases_invalid.json', 'WellcomeTrust-grants_fixed_2_grants.xlsx', 'WellcomeTrust-grants_2_grants_cp1252.csv']
+
+    if source_filename in selected_examples:
+        check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+        browser.get(server_url + prefix + '?source_url=' + source_url)
+        check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
 
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):

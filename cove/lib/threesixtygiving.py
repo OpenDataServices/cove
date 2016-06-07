@@ -67,16 +67,13 @@ def get_grants_aggregates(json_data):
             if currency:
                 distinct_currency.add(currency)
 
-    recipient_org_identifier_prefixes = defaultdict(int)
-    recipient_org_identifiers_unrecognised_prefixes = defaultdict(int)
-
-    for recipient_org_identifier in distinct_recipient_org_identifier:
-        for prefix in org_prefixes:
-            if recipient_org_identifier.startswith(prefix):
-                recipient_org_identifier_prefixes[prefix] += 1
-                break
-        else:
-            recipient_org_identifiers_unrecognised_prefixes[recipient_org_identifier] += 1
+    recipient_org_prefixes = get_prefixes(distinct_recipient_org_identifier)
+    recipient_org_identifier_prefixes = recipient_org_prefixes['prefixes']
+    recipient_org_identifiers_unrecognised_prefixes = recipient_org_prefixes['unrecognised_prefixes']
+    
+    funding_org_prefixes = get_prefixes(distinct_funding_org_identifier)
+    funding_org_identifier_prefixes = funding_org_prefixes['prefixes']
+    funding_org_identifiers_unrecognised_prefixes = funding_org_prefixes['unrecognised_prefixes']
 
     return {
         'count': count,
@@ -92,4 +89,25 @@ def get_grants_aggregates(json_data):
         'distinct_currency': distinct_currency,
         'recipient_org_identifier_prefixes': recipient_org_identifier_prefixes,
         'recipient_org_identifiers_unrecognised_prefixes': recipient_org_identifiers_unrecognised_prefixes,
+        'funding_org_identifier_prefixes': funding_org_identifier_prefixes,
+        'funding_org_identifiers_unrecognised_prefixes': funding_org_identifiers_unrecognised_prefixes
+    }
+
+
+def get_prefixes(distinct_identifiers):
+
+    org_identifier_prefixes = defaultdict(int)
+    org_identifiers_unrecognised_prefixes = defaultdict(int)
+
+    for org_identifier in distinct_identifiers:
+        for prefix in org_prefixes:
+            if org_identifier.startswith(prefix):
+                org_identifier_prefixes[prefix] += 1
+                break
+        else:
+            org_identifiers_unrecognised_prefixes[org_identifier] += 1
+    
+    return {
+        'prefixes': org_identifier_prefixes,
+        'unrecognised_prefixes': org_identifiers_unrecognised_prefixes,
     }
