@@ -90,12 +90,11 @@
   $("#collapseTwo").attr('class', 'panel-collapse collapse');
   $("#collapseThree").attr('class', 'panel-collapse collapse');
 
-  $('button').click(function() {
+  $('form').submit(function() {
       $('#loading').css({"display": "block"});
       $('#accordion').hide();
   });
   $(window).unload(function() {
-    $('#accordion').unhide();
     $('#loading').css({"display": "none"});
   })
 
