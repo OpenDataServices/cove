@@ -100,7 +100,9 @@
       </h4>
     </div>
     <div class="panel-body">
-      <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+      {% if file_type == 'xlsx' or file_type == 'csv' %}
+        <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+      {% endif %}
       <ul>
         {% for warning_message in conversion_warning_messages %}
           <li>{{warning_message}}</li>
@@ -120,7 +122,9 @@
       </h4>
     </div>
     <div class="panel-body">
-    <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+    {% if file_type == 'xlsx' or file_type == 'csv' %}
+      <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+    {% endif %}
     <ul>
       {% for warning_message in conversion_warning_messages_titles %}
         <li>{{warning_message}}</li>
