@@ -487,3 +487,10 @@ def test_common_errors_page_anchors(server_url, browser, anchor_text):
     # Checks we have sections for each our error messages
     browser.get(server_url + '/360/common_errors/')
     browser.find_element_by_id(anchor_text)
+
+
+def test_favicon(server_url, browser):
+    browser.get(server_url)
+    # we should not have a favicon link just now
+    with pytest.raises(NoSuchElementException):
+        browser.find_element_by_xpath("//link[@rel='icon']")
