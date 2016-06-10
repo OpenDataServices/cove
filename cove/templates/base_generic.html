@@ -143,6 +143,7 @@
   <!-- Piwik -->
   <script type="text/javascript">
     var _paq = _paq || [];
+    {% block extrapiwik %}{% endblock %}
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
