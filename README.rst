@@ -104,6 +104,14 @@ Run tests
 
     py.test
 
+To run functional tests with a different browser:
+
+.. code:: bash
+
+    BROWSER=Chrome py.test
+
+See http://selenium-python.readthedocs.io/api.html for browser options.
+
 To generate a coverage report (in the htmlcov directory):
 
 .. code:: bash

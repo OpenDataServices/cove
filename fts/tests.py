@@ -14,10 +14,12 @@ if not PREFIX_360 and not PREFIX_OCDS:
 
 PREFIX_LIST = [prefix for prefix in (PREFIX_OCDS, PREFIX_360) if prefix]
 
+BROWSER = os.environ.get('BROWSER', 'Firefox')
+
 
 @pytest.fixture(scope="module")
 def browser(request):
-    browser = webdriver.Firefox()
+    browser = getattr(webdriver, BROWSER)()
     browser.implicitly_wait(3)
     request.addfinalizer(lambda: browser.quit())
     return browser
@@ -140,6 +142,7 @@ def test_index_page_360_links(server_url, browser, link_text, url):
 def test_common_index_elements(server_url, browser, prefix):
     if not PREFIX_360 or not PREFIX_OCDS:
         return
+    browser.get(server_url + prefix)
     browser.find_element_by_css_selector('#more-information').click()
     time.sleep(0.5)
     assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
