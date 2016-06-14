@@ -319,7 +319,7 @@ def test_explore_not_json(client):
 @pytest.mark.django_db
 def test_explore_unconvertable_spreadsheet(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove', 'fixtures', 'basic.xlsx'), 'rb') as fp:
+    with open(os.path.join('cove', 'fixtures', 'bad.xlsx'), 'rb') as fp:
         data.original_file.save('basic.xlsx', UploadedFile(fp))
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200

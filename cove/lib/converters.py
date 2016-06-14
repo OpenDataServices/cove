@@ -26,7 +26,7 @@ def convert_spreadsheet(request, data, file_type):
         # a new directory, such that it fits this pattern.
         input_name = os.path.join(data.upload_dir(), 'csv_dir')
         os.makedirs(input_name, exist_ok=True)
-        destination = os.path.join(input_name, request.cove_config['main_sheet_name'] + '.csv')
+        destination = os.path.join(input_name, request.cove_config['root_list_path'] + '.csv')
         shutil.copy(data.original_file.file.name, destination)
         try:
             with open(destination, encoding='utf-8') as main_sheet_file:
@@ -48,7 +48,7 @@ def convert_spreadsheet(request, data, file_type):
                     input_name,
                     output_name=converted_path,
                     input_format=file_type,
-                    main_sheet_name=request.cove_config['main_sheet_name'],
+                    root_list_path=request.cove_config['root_list_path'],
                     root_id=request.cove_config['root_id'],
                     schema=request.cove_config['item_schema_url'],
                     convert_titles=True,
@@ -88,8 +88,8 @@ def convert_json(request, data):
     converted_path = os.path.join(data.upload_dir(), 'flattened')
     flatten_kwargs = dict(
         output_name=converted_path,
-        main_sheet_name=request.cove_config['main_sheet_name'],
-        root_list_path=request.cove_config['main_sheet_name'],
+        main_sheet_name=request.cove_config['root_list_path'],
+        root_list_path=request.cove_config['root_list_path'],
         root_id=request.cove_config['root_id'],
         schema=request.cove_config['item_schema_url'],
     )
