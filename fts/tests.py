@@ -237,7 +237,7 @@ def test_accordion(server_url, browser, prefix):
     # Test a non-valid file.
     (PREFIX_360, 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
     # Test a unconvertable spreadsheet (main sheet "grants" is missing)
-    (PREFIX_360, 'basic.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
+    (PREFIX_360, 'bad.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
     # Test a unconvertable spreadsheet (main sheet "releases" is missing)
     (PREFIX_OCDS, 'WellcomeTrust-grants_2_grants.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
     # Test unconvertable JSON (main sheet "releases" is missing)
