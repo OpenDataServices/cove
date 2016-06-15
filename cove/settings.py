@@ -81,7 +81,7 @@ COVE_CONFIG_BY_NAMESPACE = {
         'cove-360': 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/360-giving-schema.json',
         'default': None
     },
-    'main_sheet_name': {
+    'root_list_path': {
         'cove-ocds': 'releases',
         'cove-360': 'grants',
         'default': None
