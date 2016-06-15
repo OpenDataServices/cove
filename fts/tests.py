@@ -105,6 +105,7 @@ def test_index_page_ocds(server_url, browser):
 def test_index_page_ocds_links(server_url, browser, css_id, link_text, url):
     if not PREFIX_OCDS:
         return
+    browser.get(server_url + PREFIX_OCDS)
     section = browser.find_element_by_id(css_id)
     link = section.find_element_by_link_text(link_text)
     href = link.get_attribute("href")
@@ -133,6 +134,7 @@ def test_index_page_360(server_url, browser):
 def test_index_page_360_links(server_url, browser, link_text, url):
     if not PREFIX_360:
         return
+    browser.get(server_url + PREFIX_360)
     link = browser.find_element_by_link_text(link_text)
     href = link.get_attribute("href")
     assert url in href
