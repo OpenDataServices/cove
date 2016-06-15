@@ -275,6 +275,9 @@
 {% endblock %}
 
 {% block extrapiwik %}
+{% if first_render %}
+_paq.push(['trackEvent', '{{file_type}}', 'supply_data']);
+{% endif %}
 {% if piwik.dimension_map.file_type %}
 _paq.push(['setCustomDimension', {{piwik.dimension_map.file_type}}, '{{file_type}}']);
 {% endif %}
