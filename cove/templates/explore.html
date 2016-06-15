@@ -275,5 +275,7 @@
 {% endblock %}
 
 {% block extrapiwik %}
-_paq.push(['setCustomDimension', 1, '{{file_type}}']);
+{% if piwik.dimension_map.file_type %}
+_paq.push(['setCustomDimension', {{piwik.dimension_map.file_type}}, '{{file_type}}']);
+{% endif %}
 {% endblock %}

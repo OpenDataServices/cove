@@ -30,6 +30,7 @@ env = environ.Env(  # set default values and casting
     DEBUG=(bool, True),
     PIWIK_URL=(str, ''),
     PIWIK_SITE_ID=(str, ''),
+    PIWIK_DIMENSION_MAP=(dict, {}),
     GOOGLE_ANALYTICS_ID=(str, ''),
     PREFIX_MAP=(dict, {}),
     ALLOWED_HOSTS=(list, []),
@@ -41,6 +42,7 @@ env = environ.Env(  # set default values and casting
 PIWIK = {
     'url': env('PIWIK_URL'),
     'site_id': env('PIWIK_SITE_ID'),
+    'dimension_map': env('PIWIK_DIMENSION_MAP'),
 }
 
 GOOGLE_ANALYTICS_ID = env('GOOGLE_ANALYTICS_ID')
