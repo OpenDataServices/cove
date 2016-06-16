@@ -97,6 +97,7 @@ def explore(request, pk):
         },
         "current_url": request.build_absolute_uri(),
         "source_url": data.source_url,
+        "form_name": data.form_name,
         "created_date": data.created.strftime("%A, %d %B %Y %I:%M%p %Z"),
     }
 
@@ -155,6 +156,7 @@ def explore(request, pk):
         'schema_url': schema_url,
         'validation_errors': sorted(validation_errors.items()),
         'json_data': json_data,  # Pass the JSON data to the template so we can display values that need little processing
+        'first_render': not data.rendered,
         'common_error_types': []
     })
 
@@ -171,7 +173,11 @@ def explore(request, pk):
         context['common_error_types'] = ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
         view = 'explore_360.html'
 
-    return render(request, view, context)
+    rendered_response = render(request, view, context)
+    if not data.rendered:
+        data.rendered = True
+        data.save()
+    return rendered_response
 
 
 def stats(request):

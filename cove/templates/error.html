@@ -18,3 +18,10 @@
 
 
 {% endblock %}
+
+{% block extrapiwik %}
+
+{% if piwik.dimension_map.page_type %}
+_paq.push(['setCustomDimension', {{piwik.dimension_map.page_type}}, 'caught error']);
+{% endif %}
+{% endblock %}
