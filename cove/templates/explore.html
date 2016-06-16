@@ -275,10 +275,15 @@
 {% endblock %}
 
 {% block extrapiwik %}
-{% if first_render %}
-_paq.push(['trackEvent', '{{file_type}}', 'supply_data']);
-{% endif %}
 {% if piwik.dimension_map.file_type %}
 _paq.push(['setCustomDimension', {{piwik.dimension_map.file_type}}, '{{file_type}}']);
+{% endif %}
+{% if piwik.dimension_map.page_type %}
+_paq.push(['setCustomDimension', {{piwik.dimension_map.page_type}}, '{% if first_render %}explore initial{% else %}explore reload{% endif %}']);
+{% endif %}
+{% if first_render %}
+{% if piwik.dimension_map.form_name %}
+_paq.push(['setCustomDimension', {{piwik.dimension_map.form_name}}, '{{ form_name }}']);
+{% endif %}
 {% endif %}
 {% endblock %}

@@ -17,3 +17,9 @@
 </div>
 
 {% endblock %}
+
+{% block extrapiwik %}
+{% if piwik.dimension_map.page_type %}
+_paq.push(['setCustomDimension', {{piwik.dimension_map.page_type}}, '500 error']);
+{% endif %}
+{% endblock %}

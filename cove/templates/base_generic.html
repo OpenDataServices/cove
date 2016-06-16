@@ -144,6 +144,13 @@
   <script type="text/javascript">
     var _paq = _paq || [];
     {% block extrapiwik %}{% endblock %}
+    {% get_current_language as LANGUAGE_CODE %}
+    {% if piwik.dimension_map.language %}
+      _paq.push(['setCustomDimension', {{piwik.dimension_map.language}}, '{{ LANGUAGE_CODE }}']);
+    {% endif %}
+    {% if piwik.dimension_map.exit_language %}
+      _paq.push(['setCustomDimension', {{piwik.dimension_map.exit_language}}, '{{ LANGUAGE_CODE }}']);
+    {% endif %}
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {

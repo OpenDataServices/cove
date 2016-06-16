@@ -97,6 +97,7 @@ def explore(request, pk):
         },
         "current_url": request.build_absolute_uri(),
         "source_url": data.source_url,
+        "form_name": data.form_name,
         "created_date": data.created.strftime("%A, %d %B %Y %I:%M%p %Z"),
     }
 
