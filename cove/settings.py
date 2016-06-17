@@ -37,6 +37,8 @@ env = environ.Env(  # set default values and casting
     SECRET_KEY=(str, secret_key),
     DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
     DEBUG_TOOLBAR=(bool, False),
+    SCHEMA_URL_OCDS=(str, 'http://standard.open-contracting.org/schema/1__0__1/'),
+    SCHEMA_URL_360=(str, 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/'),
 )
 
 PIWIK = {
@@ -54,6 +56,7 @@ MEDIA_URL = '/media/'
 DEALER_TYPE = 'git'
 
 PREFIX_MAP = env('PREFIX_MAP')
+
 
 COVE_CONFIG_BY_NAMESPACE = {
     'base_template_name': {
@@ -73,14 +76,19 @@ COVE_CONFIG_BY_NAMESPACE = {
         'default': _('Convert, Validate, Explore'),
     },
     'schema_url': {
-        'cove-360': 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/360-giving-package-schema.json',
-        'cove-ocds': {'release': 'http://standard.open-contracting.org/schema/1__0__1/release-package-schema.json',
-                      'record': 'http://standard.open-contracting.org/schema/1__0__1/record-package-schema.json'},
+        'cove-360': env('SCHEMA_URL_360'),
+        'cove-ocds': env('SCHEMA_URL_OCDS'),
         'default': None
     },
-    'item_schema_url': {  # Schema url for an individual item e.g. a single release or grant
-        'cove-ocds': 'http://standard.open-contracting.org/schema/1__0__1/release-schema.json',
-        'cove-360': 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/360-giving-schema.json',
+    'schema_name': {
+        'cove-360': '360-giving-package-schema.json',
+        'cove-ocds': {'release': 'release-package-schema.json',
+                      'record': 'record-package-schema.json'},
+        'default': None
+    },
+    'item_schema_name': {  # Schema url for an individual item e.g. a single release or grant
+        'cove-ocds': 'release-schema.json',
+        'cove-360': '360-giving-schema.json',
         'default': None
     },
     'root_list_path': {

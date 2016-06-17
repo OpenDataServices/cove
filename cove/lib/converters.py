@@ -50,7 +50,7 @@ def convert_spreadsheet(request, data, file_type):
                     input_format=file_type,
                     root_list_path=request.cove_config['root_list_path'],
                     root_id=request.cove_config['root_id'],
-                    schema=request.cove_config['item_schema_url'],
+                    schema=request.cove_config['schema_url'] + request.cove_config['item_schema_name'],
                     convert_titles=True,
                     encoding=encoding,
                     cell_source_map=cell_source_map_path,
@@ -91,7 +91,7 @@ def convert_json(request, data):
         main_sheet_name=request.cove_config['root_list_path'],
         root_list_path=request.cove_config['root_list_path'],
         root_id=request.cove_config['root_id'],
-        schema=request.cove_config['item_schema_url'],
+        schema=request.cove_config['schema_url'] + request.cove_config['item_schema_name'],
     )
     try:
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')

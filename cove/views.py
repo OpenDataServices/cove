@@ -123,12 +123,13 @@ def explore(request, pk):
             json_data = json.load(fp)
 
     schema_url = request.cove_config['schema_url']
+    schema_name = request.cove_config['schema_name']
 
     if request.current_app == 'cove-ocds':
-        schema_url = schema_url['record'] if 'records' in json_data else schema_url['release']
+        schema_name = schema_name['record'] if 'records' in json_data else schema_name['release']
 
     if schema_url:
-        additional_fields = sorted(common.get_counts_additional_fields(schema_url, json_data, context, request.current_app))
+        additional_fields = sorted(common.get_counts_additional_fields(schema_url, schema_name, json_data, context, request.current_app))
         context.update({
             'data_only': additional_fields
         })
@@ -147,13 +148,13 @@ def explore(request, pk):
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
-        validation_errors = common.get_schema_validation_errors(json_data, schema_url, request.current_app, cell_source_map, heading_source_map) if schema_url else None
+        validation_errors = common.get_schema_validation_errors(json_data, schema_url, schema_name, request.current_app, cell_source_map, heading_source_map) if schema_url else None
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 
     context.update({
         'file_type': file_type,
-        'schema_url': schema_url,
+        'schema_url': schema_url + schema_name,
         'validation_errors': sorted(validation_errors.items()),
         'json_data': json_data,  # Pass the JSON data to the template so we can display values that need little processing
         'first_render': not data.rendered,
