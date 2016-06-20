@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#%^&*(-_=+)'
 secret_key = get_random_string(50, chars)
 if 'SECRET_KEY' not in os.environ:
-    warnings.warn('SECRET_KEY should be added to Enviroment Variables. Random key will be used instead.')
+    warnings.warn('SECRET_KEY should be added to Environment Variables. Random key will be used instead.')
 
 env = environ.Env(  # set default values and casting
     SENTRY_DSN=(str, ''),
