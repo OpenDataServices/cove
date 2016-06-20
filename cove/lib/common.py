@@ -6,7 +6,7 @@ import json
 from flattentool.schema import get_property_type_set
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
-from jsonschema import FormatChecker
+from jsonschema import FormatChecker, RefResolver
 
 import cove.lib.tools as tools
 
@@ -95,14 +95,35 @@ def schema_dict_fields_generator(schema_dict):
                 yield '/' + property_name
 
 
-def get_schema_fields(schema_filename):
-    r = requests.get(schema_filename)
-    return set(schema_dict_fields_generator(jsonref.loads(r.text, object_pairs_hook=OrderedDict)))
+class CustomJsonrefLoader(jsonref.JsonLoader):
+    def __init__(self, **kwargs):
+        self.schema_url = kwargs.pop('schema_url', None)
+        super().__init__(**kwargs)
+
+    def get_remote_json(self, uri, **kwargs):
+        # ignore url in ref apart from last part
+        uri = self.schema_url + uri.split('/')[-1]
+        if uri[:4] == 'http':
+            return super().get_remote_json(uri, **kwargs)
+        else:
+            with open(uri) as schema_file:
+                return json.load(schema_file, **kwargs)
 
 
-def get_counts_additional_fields(schema_url, json_data, context, current_app):
+def get_schema_fields(schema_url, schema_name):
+    if schema_url[:4] == 'http':
+        r = requests.get(schema_url + schema_name)
+        json_text = r.text
+    else:
+        with open(schema_url + schema_name) as schema_file:
+            json_text = schema_file.read()
+
+    return set(schema_dict_fields_generator(jsonref.loads(json_text, loader=CustomJsonrefLoader(schema_url=schema_url), object_pairs_hook=OrderedDict)))
+
+
+def get_counts_additional_fields(schema_url, schema_name, json_data, context, current_app):
     fields_present = get_fields_present(json_data)
-    schema_fields = get_schema_fields(schema_url)
+    schema_fields = get_schema_fields(schema_url, schema_name)
     data_only_all = set(fields_present) - schema_fields
     data_only = set()
     for field in data_only_all:
@@ -117,6 +138,27 @@ def get_counts_additional_fields(schema_url, json_data, context, current_app):
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
 
 
+class CustomRefResolver(RefResolver):
+    def __init__(self, *args, **kw):
+        self.schema_url = kw.pop('schema_url')
+        super().__init__(*args, **kw)
+
+    def resolve_remote(self, uri):
+        uri = self.schema_url + uri.split('/')[-1]
+        document = self.store.get(uri)
+        if document:
+            return document
+
+        if self.schema_url.startswith("http"):
+            return super().resolve_remote(uri)
+        else:
+            with open(uri) as schema_file:
+                result = json.load(schema_file)
+            if self.cache_remote:
+                self.store[uri] = result
+            return result
+
+
 validation_error_lookup = {"date-time": "Date is not in datetime format",
                            "uri": "Invalid 'uri' found",
                            "string": "Value is not a string",
@@ -126,13 +168,18 @@ validation_error_lookup = {"date-time": "Date is not in datetime format",
                            "array": "Value is not an array"}
 
 
-def get_schema_validation_errors(json_data, schema_url, current_app, cell_source_map, heading_source_map):
-    schema = requests.get(schema_url).json()
+def get_schema_validation_errors(json_data, schema_url, schema_name, current_app, cell_source_map, heading_source_map):
+    if schema_url.startswith("http"):
+        schema = requests.get(schema_url + schema_name).json()
+    else:
+        with open(schema_url + schema_name) as schema_file:
+            schema = json.load(schema_file)
+
     validation_errors = collections.defaultdict(list)
     format_checker = FormatChecker()
     if current_app == 'cove-360':
         format_checker.checkers['date-time'] = (tools.datetime_or_date, ValueError)
-    for n, e in enumerate(validator(schema, format_checker=format_checker).iter_errors(json_data)):
+    for n, e in enumerate(validator(schema, format_checker=format_checker, resolver=CustomRefResolver('', schema, schema_url=schema_url)).iter_errors(json_data)):
         message = e.message
         path = "/".join(str(item) for item in e.path)
         path_no_number = "/".join(str(item) for item in e.path if not isinstance(item, int))
