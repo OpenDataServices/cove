@@ -1,0 +1,35 @@
+{% load i18n %}
+<div class="modal {{className}}" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         <h5 class="modal-title">{{ modalTitle }}</h5>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{% trans 'Value' %}</th> 
+              <th>{% trans 'Location' %}</th> 
+              {% if file_type == 'xlsx' or file_type == 'csv' %}
+                <th>{% trans 'Spreadsheet Location' %}</th> 
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for value in errorList %}
+              <tr>
+                <td> {{value.value}} </td>
+                <td> {{value.path}} </td>
+                {% if file_type == 'xlsx' or file_type == 'csv' %}
+                  <td> <b>Sheet:</b> {{value.sheet}} <b>Row:</b> {{value.row_number}} {% if value.header %} <b>Header:</b> {{value.header}} {% endif %} </td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

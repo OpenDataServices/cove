@@ -3,8 +3,22 @@
   text-decoration:none;
 }
 
+.page-header a.btn {
+ float:right
+}
+
 h1.application-name {
   margin-top: 0;
+}
+
+.title360 {
+  font-size: 1.4em;
+  margin-top: 32px;
+}
+
+.logo360 {
+  margin-top: -84px;
+  margin-bottom: -36px;
 }
 
 .language-select {
@@ -88,4 +102,44 @@ a:hover {
 
 .indent {
   padding-left:20px
+}
+
+.success-button {
+  padding-bottom: 20px;
+}
+
+.spinner {
+  margin-bottom: 20px;
+}
+
+.explanation {
+  font-size: 1.2em;
+}
+
+a.anchor::before {
+  display: block;
+  content: " ";
+  margin-top: -30px;
+  height: 30px;
+  visibility: hidden;
+}
+
+.message  {
+  margin-left:30px;
+  margin-bottom: 10px;
+}
+.message span {
+  margin-left: -30px;
+  padding-right:15px;
+}
+.key-facts ul {
+  padding-left: 0;
+  list-style: none;
+}
+.key-facts ul li {
+  margin: 4px 0;
+}
+
+.key-facts .glyphicon-flag {
+  color: #a94442;
 }

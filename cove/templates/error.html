@@ -11,9 +11,17 @@
   </div>
 </div>
 
+<div class="success-button">
+  <a class="btn btn-success" href="{% url link %}" role="button">{{ link_text }}</a>
+</div>
 
-<a class="btn btn-success" href="{% url link %}" role="button">{{ link_text }}</a>
 
 
+{% endblock %}
 
+{% block extrapiwik %}
+
+{% if piwik.dimension_map.page_type %}
+_paq.push(['setCustomDimension', {{piwik.dimension_map.page_type}}, 'caught error']);
+{% endif %}
 {% endblock %}

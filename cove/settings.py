@@ -23,23 +23,28 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#%^&*(-_=+)'
 secret_key = get_random_string(50, chars)
 if 'SECRET_KEY' not in os.environ:
-    warnings.warn('SECRET_KEY should be added to Enviroment Variables. Random key will be used instead.')
+    warnings.warn('SECRET_KEY should be added to Environment Variables. Random key will be used instead.')
 
 env = environ.Env(  # set default values and casting
     SENTRY_DSN=(str, ''),
     DEBUG=(bool, True),
     PIWIK_URL=(str, ''),
     PIWIK_SITE_ID=(str, ''),
+    PIWIK_DIMENSION_MAP=(dict, {}),
     GOOGLE_ANALYTICS_ID=(str, ''),
     PREFIX_MAP=(dict, {}),
     ALLOWED_HOSTS=(list, []),
     SECRET_KEY=(str, secret_key),
-    DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3'))
+    DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
+    DEBUG_TOOLBAR=(bool, False),
+    SCHEMA_URL_OCDS=(str, 'http://standard.open-contracting.org/schema/1__0__1/'),
+    SCHEMA_URL_360=(str, 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/'),
 )
 
 PIWIK = {
     'url': env('PIWIK_URL'),
     'site_id': env('PIWIK_SITE_ID'),
+    'dimension_map': env('PIWIK_DIMENSION_MAP'),
 }
 
 GOOGLE_ANALYTICS_ID = env('GOOGLE_ANALYTICS_ID')
@@ -52,6 +57,7 @@ DEALER_TYPE = 'git'
 
 PREFIX_MAP = env('PREFIX_MAP')
 
+
 COVE_CONFIG_BY_NAMESPACE = {
     'base_template_name': {
         'cove-ocds': 'base_ocds.html',
@@ -61,7 +67,7 @@ COVE_CONFIG_BY_NAMESPACE = {
     },
     'application_name': {
         'cove-ocds': _('Open Contracting Data Standard Validator'),
-        'cove-360': _('360Giving Data Tool'),
+        'cove-360': _('360Giving Data Quality Tool'),
         'default': _('CoVE'),
     },
     'application_strapline': {
@@ -70,17 +76,22 @@ COVE_CONFIG_BY_NAMESPACE = {
         'default': _('Convert, Validate, Explore'),
     },
     'schema_url': {
-        'cove-360': 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/360-giving-package-schema.json',
-        'cove-ocds': {'release': 'http://standard.open-contracting.org/schema/1__0__1/release-package-schema.json',
-                      'record': 'http://standard.open-contracting.org/schema/1__0__1/record-package-schema.json'},
+        'cove-360': env('SCHEMA_URL_360'),
+        'cove-ocds': env('SCHEMA_URL_OCDS'),
         'default': None
     },
-    'item_schema_url': {  # Schema url for an individual item e.g. a single release or grant
-        'cove-ocds': 'http://standard.open-contracting.org/schema/1__0__1/release-schema.json',
-        'cove-360': 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/360-giving-schema.json',
+    'schema_name': {
+        'cove-360': '360-giving-package-schema.json',
+        'cove-ocds': {'release': 'release-package-schema.json',
+                      'record': 'record-package-schema.json'},
         'default': None
     },
-    'main_sheet_name': {
+    'item_schema_name': {  # Schema url for an individual item e.g. a single release or grant
+        'cove-ocds': 'release-schema.json',
+        'cove-360': '360-giving-schema.json',
+        'default': None
+    },
+    'root_list_path': {
         'cove-ocds': 'releases',
         'cove-360': 'grants',
         'default': None
@@ -133,13 +144,15 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
     'bootstrap3',
     'cove',
     'cove.input',
     'cove.dataload',
     'raven.contrib.django.raven_compat',
 )
+
+if env('DEBUG_TOOLBAR'):
+    INSTALLED_APPS += ('debug_toolbar',)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

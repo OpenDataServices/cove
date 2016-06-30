@@ -26,7 +26,7 @@
             ], 
             "Surname of applicant": "Addison", 
             "Grant number": "105177/Z/14/Z", 
-            "amountAwarded": 152505, 
+            "amountAwarded": 152505.03, 
             "recipientOrganization": [
                 {
                     "addressLocality": "London", 
@@ -35,7 +35,13 @@
             ], 
             "Grant type": "Large Arts Awards", 
             "Full name of applicant": "Miss Abigail Addison", 
-            "awardDate": "24/07/2014"
+            "awardDate": "24/07/2014",
+            "commitmentTransaction": [
+              {
+                "id": "111",
+                "value": 23.50
+              }
+            ]
         }, 
         {
             "currency": "GBP", 
@@ -50,7 +56,7 @@
             "title": "Silent Signal.", 
             "fundingOrganization": [
                 {
-                    "id": "GB-CHC-210183", 
+                    "id": "RUBBISH1-GB-CHC-210183", 
                     "name": "The Wellcome Trust"
                 }
             ], 
@@ -66,7 +72,7 @@
             "amountAwarded": 152505, 
             "recipientOrganization": [
                 {
-                    "id": "RUBBISH-COH-RC000659", 
+                    "id": "RUBBISH2-COH-RC000659", 
                     "addressLocality": "London", 
                     "name": "Animate Project Limited"
                 }

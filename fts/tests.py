@@ -14,10 +14,12 @@ if not PREFIX_360 and not PREFIX_OCDS:
 
 PREFIX_LIST = [prefix for prefix in (PREFIX_OCDS, PREFIX_360) if prefix]
 
+BROWSER = os.environ.get('BROWSER', 'Firefox')
+
 
 @pytest.fixture(scope="module")
 def browser(request):
-    browser = webdriver.Firefox()
+    browser = getattr(webdriver, BROWSER)()
     browser.implicitly_wait(3)
     request.addfinalizer(lambda: browser.quit())
     return browser
@@ -45,7 +47,7 @@ def test_index_page(server_url, browser):
         return
     browser.get(server_url)
     assert 'CoVE' in browser.find_element_by_tag_name('body').text
-    assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
+    assert '360Giving Data Quality Tool' in browser.find_element_by_tag_name('body').text
     assert 'Open Contracting Data Tool' in browser.find_element_by_tag_name('body').text
     assert 'Creating and using Open Data is made easier when there are good tools to help.' in browser.find_element_by_tag_name('body').text
 
@@ -68,7 +70,7 @@ def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector
 
 
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
-    ('360Giving', 'We believe that with better information, grantmakers can be more effective and strategic decision-makers.', 'body.home', 'http://www.threesixtygiving.org/'),
+    ('360Giving', '360Giving is a company limited by guarantee', 'body.home', 'http://www.threesixtygiving.org/'),
     ('360Giving Data Standard', 'Standard', 'h1.entry-title', 'http://www.threesixtygiving.org/standard/'),
     ])
 def test_footer_360(server_url, browser, link_text, expected_text, css_selector, url):
@@ -103,6 +105,7 @@ def test_index_page_ocds(server_url, browser):
 def test_index_page_ocds_links(server_url, browser, css_id, link_text, url):
     if not PREFIX_OCDS:
         return
+    browser.get(server_url + PREFIX_OCDS)
     section = browser.find_element_by_id(css_id)
     link = section.find_element_by_link_text(link_text)
     href = link.get_attribute("href")
@@ -113,8 +116,8 @@ def test_index_page_360(server_url, browser):
     if not PREFIX_360:
         return
     browser.get(server_url + PREFIX_360)
-    assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
-    assert 'How to use the 360Giving Data Tool' in browser.find_element_by_tag_name('body').text
+    assert 'Data Quality Tool' in browser.find_element_by_class_name('title360').text
+    assert 'How to use the 360Giving Data Quality Tool' in browser.find_element_by_tag_name('body').text
     assert 'Summary Spreadsheet - Excel' in browser.find_element_by_tag_name('body').text
     assert 'JSON built to the 360Giving JSON schema' in browser.find_element_by_tag_name('body').text
     assert 'Multi-table data package - Excel' in browser.find_element_by_tag_name('body').text
@@ -131,6 +134,7 @@ def test_index_page_360(server_url, browser):
 def test_index_page_360_links(server_url, browser, link_text, url):
     if not PREFIX_360:
         return
+    browser.get(server_url + PREFIX_360)
     link = browser.find_element_by_link_text(link_text)
     href = link.get_attribute("href")
     assert url in href
@@ -140,6 +144,7 @@ def test_index_page_360_links(server_url, browser, link_text, url):
 def test_common_index_elements(server_url, browser, prefix):
     if not PREFIX_360 or not PREFIX_OCDS:
         return
+    browser.get(server_url + prefix)
     browser.find_element_by_css_selector('#more-information').click()
     time.sleep(0.5)
     assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
@@ -193,39 +198,46 @@ def test_accordion(server_url, browser, prefix):
     # Conversion should still work for files that don't validate against the schema
     (PREFIX_OCDS, 'tenders_releases_2_releases_invalid.json', ['Download Files',
                                                                'Validation Errors',
-                                                               "'id' is a required property",
-                                                               "'buyandsell.gc.ca' is not a 'uri'"], True),
+                                                               "'id' is missing but required",
+                                                               "Invalid 'uri' found"], True),
     # Test UTF-8 support
     (PREFIX_OCDS, 'utf8.json', 'Download Files', True),
     # But we expect to see an error message if a file is not well formed JSON at all
     (PREFIX_OCDS, 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
     (PREFIX_OCDS, 'tenders_releases_2_releases.xlsx', 'Download Files', True),
     (PREFIX_OCDS, 'badfile.json', 'Statistics can not produced', True),
-    (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', ['Download Files',
+    (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', ['Convert',
                                                            'Save or Share these results',
                                                            'Unique Grant IDs: 2',
                                                            'Duplicate IDs: 2',
                                                            'Duplicate IDs: 2',
                                                            'This file contains 4 grants',
-                                                           'This file failed validation against',
+                                                           'Failed validation against',
                                                            'There are 2 duplicate grant IDs in this package.',
                                                            'Silent Signal',
                                                            'Showing 1 to 4 of 4 entries',
                                                            'Additional Fields',
                                                            'Data source',
-                                                           "'24/07/2014' is not a 'date-time'",
-                                                           "'13-03-2015' is not a 'date-time'"], True),
+                                                           'This file uses 7 additional fields not used in the standard.',
+                                                           'Recipient Org ID Prefixes: 1',
+                                                           'Unrecognised Recipient Org ID Prefixes: 1',
+                                                           'There is 1 unrecognised recipient organisation prefix in this package.',
+                                                           'Date is not in datetime format'], True),
+    (PREFIX_360, 'WellcomeTrust-grants_broken_grants.json', ['Convert',
+                                                           'Funder Organisation IDs: 2',
+                                                           'Unrecognised Funding Org ID Prefixes: 1',
+                                                           'There is 1 unrecognised funding organisation prefix in this package.'], True),
     # Test a 360 spreadsheet with titles, rather than fields
-    (PREFIX_360, 'WellcomeTrust-grants_2_grants.xlsx', 'Download Files', True),
+    (PREFIX_360, 'WellcomeTrust-grants_2_grants.xlsx', 'Convert', True),
     # Test that titles that aren't in the rollup are converted correctly
     # (See if statement in check_url_input_result_page).
-    (PREFIX_360, 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx', 'Download Files', True),
+    (PREFIX_360, 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx', 'Convert', True),
     # Test a 360 csv in cp1252 incoding
-    (PREFIX_360, 'WellcomeTrust-grants_2_grants_cp1252.csv', 'Download Files', True),
+    (PREFIX_360, 'WellcomeTrust-grants_2_grants_cp1252.csv', 'Convert', True),
     # Test a non-valid file.
     (PREFIX_360, 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
     # Test a unconvertable spreadsheet (main sheet "grants" is missing)
-    (PREFIX_360, 'basic.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
+    (PREFIX_360, 'bad.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
     # Test a unconvertable spreadsheet (main sheet "releases" is missing)
     (PREFIX_OCDS, 'WellcomeTrust-grants_2_grants.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
     # Test unconvertable JSON (main sheet "releases" is missing)
@@ -252,10 +264,12 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
     #refresh page to now check if tests still work after caching some data
     browser.get(browser.current_url)
 
-    check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
-    
-    browser.get(server_url + prefix + '?source_url=' + source_url)
-    check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+    selected_examples = ['tenders_releases_2_releases_invalid.json', 'WellcomeTrust-grants_fixed_2_grants.xlsx', 'WellcomeTrust-grants_2_grants_cp1252.csv']
+
+    if source_filename in selected_examples:
+        check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+        browser.get(server_url + prefix + '?source_url=' + source_url)
+        check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
 
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
@@ -276,7 +290,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
         assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
         # assert 'Release Table' in browser.find_element_by_tag_name('body').text
     elif prefix == PREFIX_360:
-        assert '360Giving Data Tool' in browser.find_element_by_tag_name('body').text
+        assert 'Data Quality Tool' in browser.find_element_by_class_name('title360').text
         assert '360 Giving' not in browser.find_element_by_tag_name('body').text
 
     if conversion_successful:
@@ -316,6 +330,63 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
             assert int(converted_file_response.headers['content-length']) != 0
 
 
+@pytest.mark.parametrize(('prefix', 'source_filename'), [
+    (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json'),
+    ])
+def test_error_modal(server_url, browser, httpserver, source_filename, prefix):
+    with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
+        httpserver.serve_content(fp.read())
+    if 'CUSTOM_SERVER_URL' in os.environ:
+        # Use urls pointing to GitHub if we have a custom (probably non local) server URL
+        source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/master/cove/fixtures/' + source_filename
+    else:
+        source_url = httpserver.url + '/' + source_filename
+
+    browser.get(server_url + prefix)
+    browser.find_element_by_partial_link_text('Link').click()
+    time.sleep(0.5)
+    browser.find_element_by_id('id_source_url').send_keys(source_url)
+    browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+
+    browser.find_element_by_css_selector('a[data-target=".validation-errors-1"]').click()
+
+    modal = browser.find_element_by_css_selector('.validation-errors-1')
+    assert "in" in modal.get_attribute("class").split()
+    modal_text = modal.text
+    assert "24/07/2014" in modal_text
+    assert "grants/0/awardDate" in modal_text
+
+    table_rows = browser.find_elements_by_css_selector('.validation-errors-1 tbody tr')
+    assert len(table_rows) == 4
+
+
+@pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text'), [
+    (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', '360Giving JSON Package Schema')
+    ])
+def test_check_schema_link_on_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text):
+    if not prefix:
+        return
+    with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
+        httpserver.serve_content(fp.read())
+    if 'CUSTOM_SERVER_URL' in os.environ:
+        # Use urls pointing to GitHub if we have a custom (probably non local) server URL
+        source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/master/cove/fixtures/' + source_filename
+    else:
+        source_url = httpserver.url + '/' + source_filename
+
+    browser.get(server_url + prefix)
+    browser.find_element_by_partial_link_text('Link').click()
+    time.sleep(0.5)
+    browser.find_element_by_id('id_source_url').send_keys(source_url)
+    browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+    
+    # We should still be in the correct app
+    if prefix == PREFIX_360:
+        schema_link = browser.find_element_by_link_text(expected_text)
+        schema_link.click()
+        browser.find_element_by_id('toc-360giving-json-schemas')
+
+
 @pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
 @pytest.mark.parametrize('prefix', [PREFIX_OCDS, PREFIX_360])
 @pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
@@ -335,6 +406,10 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
     import warnings
 
     def mockunflatten(input_name, output_name, *args, **kwargs):
+        with open(kwargs['cell_source_map'], 'w') as fp:
+            fp.write('{}')
+        with open(kwargs['heading_source_map'], 'w') as fp:
+            fp.write('{}')
         with open(output_name, 'w') as fp:
             fp.write('{}')
             for warning_text in warning_texts:
@@ -385,6 +460,9 @@ def test_URL_invalid_dataset_request(server_url, browser, prefix):
     browser.get(server_url + prefix + 'data/38e267ce-d395-46ba-acbf-2540cdd0c810')
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
+    #363 - Tests there is padding round the 'go to home' button
+    success_button = browser.find_element_by_class_name('success-button')
+    assert success_button.value_of_css_property('padding-bottom') == '20px'
 
 
 @pytest.mark.parametrize('prefix', PREFIX_LIST)
@@ -398,3 +476,30 @@ def test_500_error(server_url, browser, prefix):
     icon_span = browser.find_element_by_class_name('panel-danger').find_element_by_tag_name('span')
     assert 'Glyphicons Halflings' in icon_span.value_of_css_property('font-family')
     assert icon_span.value_of_css_property('color') == 'rgba(169, 68, 66, 1)'
+
+
+def test_common_errors_page(server_url, browser):
+    browser.get(server_url + '/360/common_errors/')
+    assert "Common Errors" in browser.find_element_by_tag_name('h2').text
+    assert '360 Giving' not in browser.find_element_by_tag_name('body').text
+
+
+@pytest.mark.parametrize(('anchor_text'), [
+    ('uri'),
+    ('date-time'),
+    ('required'),
+    ('enum'),
+    ('string'),
+    ('integer')
+    ])
+def test_common_errors_page_anchors(server_url, browser, anchor_text):
+    # Checks we have sections for each our error messages
+    browser.get(server_url + '/360/common_errors/')
+    browser.find_element_by_id(anchor_text)
+
+
+def test_favicon(server_url, browser):
+    browser.get(server_url)
+    # we should not have a favicon link just now
+    with pytest.raises(NoSuchElementException):
+        browser.find_element_by_xpath("//link[@rel='icon']")

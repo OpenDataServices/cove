@@ -14,13 +14,12 @@
 
   <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/style.css' %}">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.10/css/dataTables.bootstrap.min.css">
-
-  <link rel="icon" type="image/png" href="{% static 'dataexplore/favicon.png' %}">
+  
   <title>{{ application_name }} {% block title %}{% endblock %}</title>
 </head>
 <body>
   {% block banner %}
-  <div style="background-color: orange; color: black; width: 100%; text-align: center; font-weight: bold; position: fixed; right: 0; left: 0; z-index: 1030">This tool is <em>alpha</em>. Please report any problems on <a href="https://github.com/OpenDataServices/cove/issues">GitHub issues</a>.</div>
+  <div style="background-color: orange; color: black; width: 100%; text-align: center; font-weight: bold; right: 0; left: 0">This tool is <em>alpha</em>. Please report any problems on <a href="https://github.com/OpenDataServices/cove/issues">GitHub issues</a>.</div>
   {% endblock banner %}
   {% block full_width_header %}
   {% endblock %}
@@ -31,7 +30,7 @@
         <div class="row">
           <div class="col-md-8">
             {% block h1 %}<h1 class="application-name"><a href="{% url 'cove:index' %}">{{ application_name }}</a></h1>{% endblock %}
-            <p>{{ application_strapline }}</p>
+            {% block strapline %}<p>{{ application_strapline }}</p>{% endblock %}
           </div><!--col-md-8-->
           <div class="col-md-2">
             <form class="language-select" action="{% url 'set_language' %}" method="post">
@@ -144,6 +143,14 @@
   <!-- Piwik -->
   <script type="text/javascript">
     var _paq = _paq || [];
+    {% block extrapiwik %}{% endblock %}
+    {% get_current_language as LANGUAGE_CODE %}
+    {% if piwik.dimension_map.language %}
+      _paq.push(['setCustomDimension', {{piwik.dimension_map.language}}, '{{ LANGUAGE_CODE }}']);
+    {% endif %}
+    {% if piwik.dimension_map.exit_language %}
+      _paq.push(['setCustomDimension', {{piwik.dimension_map.exit_language}}, '{{ LANGUAGE_CODE }}']);
+    {% endif %}
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {

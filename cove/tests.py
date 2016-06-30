@@ -1,5 +1,7 @@
 import pytest
 import cove.views as v
+import cove.lib.common as c
+import cove.lib.ocds as ocds
 import os
 import json
 from cove.input.models import SuppliedData
@@ -189,19 +191,19 @@ EXPECTED_RELEASE_AGGREGATE_RANDOM = {
 
 
 def test_get_releases_aggregates():
-    assert v.get_releases_aggregates({}) == EMPTY_RELEASE_AGGREGATE
-    assert v.get_releases_aggregates({'releases': []}) == EMPTY_RELEASE_AGGREGATE
+    assert ocds.get_releases_aggregates({}) == EMPTY_RELEASE_AGGREGATE
+    assert ocds.get_releases_aggregates({'releases': []}) == EMPTY_RELEASE_AGGREGATE
     release_aggregate_3_empty = EMPTY_RELEASE_AGGREGATE.copy()
     release_aggregate_3_empty['release_count'] = 3
-    assert v.get_releases_aggregates({'releases': [{}, {}, {}]}) == release_aggregate_3_empty
+    assert ocds.get_releases_aggregates({'releases': [{}, {}, {}]}) == release_aggregate_3_empty
 
     with open(os.path.join('cove', 'fixtures', 'release_aggregate.json')) as fp:
         data = json.load(fp)
 
-    assert v.get_releases_aggregates({'releases': data['releases']}) == EXPECTED_RELEASE_AGGREGATE
+    assert ocds.get_releases_aggregates({'releases': data['releases']}) == EXPECTED_RELEASE_AGGREGATE
 
     # test if a release is duplicated
-    actual = v.get_releases_aggregates({'releases': data['releases'] + data['releases']})
+    actual = ocds.get_releases_aggregates({'releases': data['releases'] + data['releases']})
     actual_cleaned = {key: actual[key] for key in actual if 'doc' not in key}
     actual_cleaned.pop('contracts_without_awards')
 
@@ -216,7 +218,7 @@ def test_get_releases_aggregates():
     with open(os.path.join('cove', 'fixtures', 'samplerubbish.json')) as fp:
         data = json.load(fp)
 
-    actual = v.get_releases_aggregates(data)
+    actual = ocds.get_releases_aggregates(data)
     actual_cleaned = {key: actual[key] for key in actual if isinstance(actual[key], (str, int, float))}
 
     assert actual_cleaned == EXPECTED_RELEASE_AGGREGATE_RANDOM
@@ -224,22 +226,22 @@ def test_get_releases_aggregates():
     with open(os.path.join('cove', 'fixtures', 'badfile.json')) as fp:
         data = json.load(fp)
 
-    actual = v.get_releases_aggregates(data, ignore_errors=True)
+    actual = ocds.get_releases_aggregates(data, ignore_errors=True)
 
     assert actual == {}
 
 
 def test_fields_present():
-    assert v.get_fields_present({}) == {}
-    assert v.get_fields_present({'a': 1, 'b': 2}) == {"/a": 1, "/b": 1}
-    assert v.get_fields_present({'a': {}, 'b': 2}) == {'/a': 1, '/b': 1}
-    assert v.get_fields_present({'a': {'c': 1}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
-    assert v.get_fields_present({'a': {'c': 1}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
-    assert v.get_fields_present({'a': {'c': {'d': 1}}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1, '/a/c/d': 1}
-    assert v.get_fields_present({'a': [{'c': 1}], 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
-    assert v.get_fields_present({'a': {'c': [{'d': 1}]}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1, '/a/c/d': 1}
-    assert v.get_fields_present({'a': {'c_1': [{'d': 1}]}, 'b_1': 2}) == {'/a': 1, '/a/c_1': 1, '/a/c_1/d': 1, '/b_1': 1}
-    assert v.get_fields_present({'a': {'c_1': [{'d': 1}, {'d': 1}]}, 'b_1': 2}) == {'/a': 1, '/a/c_1': 1, '/a/c_1/d': 2, '/b_1': 1}
+    assert c.get_fields_present({}) == {}
+    assert c.get_fields_present({'a': 1, 'b': 2}) == {"/a": 1, "/b": 1}
+    assert c.get_fields_present({'a': {}, 'b': 2}) == {'/a': 1, '/b': 1}
+    assert c.get_fields_present({'a': {'c': 1}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
+    assert c.get_fields_present({'a': {'c': 1}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
+    assert c.get_fields_present({'a': {'c': {'d': 1}}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1, '/a/c/d': 1}
+    assert c.get_fields_present({'a': [{'c': 1}], 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1}
+    assert c.get_fields_present({'a': {'c': [{'d': 1}]}, 'b': 2}) == {'/a': 1, '/b': 1, '/a/c': 1, '/a/c/d': 1}
+    assert c.get_fields_present({'a': {'c_1': [{'d': 1}]}, 'b_1': 2}) == {'/a': 1, '/a/c_1': 1, '/a/c_1/d': 1, '/b_1': 1}
+    assert c.get_fields_present({'a': {'c_1': [{'d': 1}, {'d': 1}]}, 'b_1': 2}) == {'/a': 1, '/a/c_1': 1, '/a/c_1/d': 2, '/b_1': 1}
 
 
 def test_get_file_type_xlsx():
@@ -265,12 +267,13 @@ def test_get_file_unrecognised_file_type():
 
 
 def test_get_schema_validation_errors():
-    schema_url = 'http://ocds.open-contracting.org/standard/r/1__0__RC/release-package-schema.json'
+    schema_url = 'http://ocds.open-contracting.org/standard/r/1__0__RC/'
+    schema_name = 'release-package-schema.json'
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
-        error_list = v.get_schema_validation_errors(json.load(fp), schema_url, 'cove-ocds')
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, schema_name, 'cove-ocds', {}, {})
         assert len(error_list) == 0
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_invalid.json')) as fp:
-        error_list = v.get_schema_validation_errors(json.load(fp), schema_url, 'cove-ocds')
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, schema_name, 'cove-ocds', {}, {})
         assert len(error_list) > 0
 
 
@@ -317,7 +320,7 @@ def test_explore_not_json(client):
 @pytest.mark.django_db
 def test_explore_unconvertable_spreadsheet(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove', 'fixtures', 'basic.xlsx'), 'rb') as fp:
+    with open(os.path.join('cove', 'fixtures', 'bad.xlsx'), 'rb') as fp:
         data.original_file.save('basic.xlsx', UploadedFile(fp))
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200

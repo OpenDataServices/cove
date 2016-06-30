@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-26 07:12+0000\n"
+"POT-Creation-Date: 2016-06-22 16:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,27 +44,52 @@ msgstr ""
 msgid "Supply a URL"
 msgstr ""
 
-#: cove/settings.py:63
-msgid "Open Contracting Data Standard Validator"
+#: cove/lib/converters.py:72 cove/lib/converters.py:133 cove/views.py:43
+#: cove/views.py:111
+msgid "Sorry we can't process that data"
 msgstr ""
 
-#: cove/settings.py:64 cove/templates/multi_index.html:16
-msgid "360Giving Data Tool"
+#: cove/lib/converters.py:74 cove/lib/converters.py:135 cove/views.py:45
+#: cove/views.py:113
+msgid "Try Again"
 msgstr ""
 
-#: cove/settings.py:65
-msgid "CoVE"
+#: cove/lib/converters.py:75
+msgid ""
+"We think you tried to supply a spreadsheet, but we failed to convert it to "
+"JSON.\n"
+"\n"
+"Error message: {}"
 msgstr ""
 
-#: cove/settings.py:68
-msgid "Validate and Explore your data."
+#: cove/lib/converters.py:136 cove/views.py:114
+msgid ""
+"We think you tried to upload a JSON file, but it is not well formed JSON.\n"
+"\n"
+"Error message: {}"
 msgstr ""
 
 #: cove/settings.py:69
+msgid "Open Contracting Data Standard Validator"
+msgstr ""
+
+#: cove/settings.py:70 cove/templates/multi_index.html:16
+msgid "360Giving Data Quality Tool"
+msgstr ""
+
+#: cove/settings.py:71
+msgid "CoVE"
+msgstr ""
+
+#: cove/settings.py:74
+msgid "Validate and Explore your data."
+msgstr ""
+
+#: cove/settings.py:75
 msgid "Convert, Validate, Explore 360Giving Data"
 msgstr ""
 
-#: cove/settings.py:70
+#: cove/settings.py:76
 msgid "Convert, Validate, Explore"
 msgstr ""
 
@@ -87,20 +112,20 @@ msgstr ""
 msgid "please reference this error as "
 msgstr ""
 
-#: cove/templates/base_360.html:5
+#: cove/templates/base_360.html:21
 msgid "360Giving"
 msgstr ""
 
-#: cove/templates/base_360.html:6 cove/templates/multi_index.html:14
+#: cove/templates/base_360.html:22 cove/templates/multi_index.html:14
 msgid "360Giving Data Standard"
 msgstr ""
 
-#: cove/templates/base_360.html:13
+#: cove/templates/base_360.html:29
 msgid "How to use the "
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove/templates/base_360.html:15
+#: cove/templates/base_360.html:31
 msgid ""
 "Upload, paste or provide a link to data in the 360Giving Data Standard "
 "format, and this application will convert between JSON, Excel and CSV "
@@ -108,17 +133,17 @@ msgid ""
 "versions."
 msgstr ""
 
-#: cove/templates/base_360.html:17
+#: cove/templates/base_360.html:33
 msgid ""
 "You will also be able to inspect key information from the data that the "
 "application is able to find, so that you can check the data."
 msgstr ""
 
-#: cove/templates/base_360.html:19
+#: cove/templates/base_360.html:35
 msgid "Formats"
 msgstr ""
 
-#: cove/templates/base_360.html:20
+#: cove/templates/base_360.html:36
 msgid ""
 "The application accepts data in some of the formats given in the <a href="
 "\"http://www.threesixtygiving.org/standard/\">360Giving Data Standard "
@@ -126,7 +151,7 @@ msgid ""
 "    <br>Acceptable files are: "
 msgstr ""
 
-#: cove/templates/base_360.html:23
+#: cove/templates/base_360.html:39
 msgid ""
 "Summary Spreadsheet - <a href=\"https://github.com/ThreeSixtyGiving/standard/"
 "raw/master/schema/summary-table/360-giving-schema-titles.xlsx\">Excel</a>, "
@@ -134,13 +159,13 @@ msgid ""
 "summary-table/360-giving-schema-titles.csv/grants.csv\">CSV</a>"
 msgstr ""
 
-#: cove/templates/base_360.html:24
+#: cove/templates/base_360.html:40
 msgid ""
 "JSON built to the <a href=\"http://www.threesixtygiving.org/standard/"
 "reference/#toc-360giving-json-schemas\">360Giving JSON schema</a>"
 msgstr ""
 
-#: cove/templates/base_360.html:25
+#: cove/templates/base_360.html:41
 msgid ""
 "<a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema/"
 "multi-table/360-giving-schema-fields.xlsx\">Multi-table data package - "
@@ -148,55 +173,55 @@ msgid ""
 msgstr ""
 
 #. Translators: Label of a button that triggers search
-#: cove/templates/base_generic.html:52 cove/templates/base_ocds.html:46
+#: cove/templates/base_generic.html:51 cove/templates/base_ocds.html:46
 msgid "Go"
 msgstr ""
 
-#: cove/templates/base_generic.html:78
+#: cove/templates/base_generic.html:77
 msgid "More Information "
 msgstr ""
 
-#: cove/templates/base_generic.html:78
+#: cove/templates/base_generic.html:77
 msgid "click to see."
 msgstr ""
 
-#: cove/templates/base_generic.html:84
+#: cove/templates/base_generic.html:83
 msgid "What happens to the data I provide to this site?"
 msgstr ""
 
-#: cove/templates/base_generic.html:85
+#: cove/templates/base_generic.html:84
 msgid ""
 "We retain the data you upload or paste to this site, on our server, for 7 "
 "days."
 msgstr ""
 
-#: cove/templates/base_generic.html:86
+#: cove/templates/base_generic.html:85
 msgid ""
 "If you supply a link, we fetch the data from that link and store it on our "
 "server for 7 days."
 msgstr ""
 
-#: cove/templates/base_generic.html:87
+#: cove/templates/base_generic.html:86
 msgid ""
 "We delete all data older than 7 days from our servers daily, retaining none "
 "of the original data."
 msgstr ""
 
-#: cove/templates/base_generic.html:88
+#: cove/templates/base_generic.html:87
 msgid ""
 "While the data is on our servers we may access that data to help us "
 "understand how people are using this application, what types of data are "
 "being supplied, what common errors exist and so on."
 msgstr ""
 
-#: cove/templates/base_generic.html:89
+#: cove/templates/base_generic.html:88
 msgid ""
 "We may also retain data in backups of our servers, which means on occassion, "
 "some data may be retained longer. We have no intention of using this data "
 "for anything other than server recovery in an emergency."
 msgstr ""
 
-#: cove/templates/base_generic.html:90
+#: cove/templates/base_generic.html:89
 msgid ""
 "We do retain some metadata about data supplied to this site. Details can be "
 "found in the code, but may include information about whether or not the file "
@@ -204,11 +229,11 @@ msgid ""
 "supplied and so on. "
 msgstr ""
 
-#: cove/templates/base_generic.html:92
+#: cove/templates/base_generic.html:91
 msgid "Why do you delete data after 7 days?"
 msgstr ""
 
-#: cove/templates/base_generic.html:93
+#: cove/templates/base_generic.html:92
 msgid ""
 "This is service to allow people to explore machine readable data. As such we "
 "see no need to store and gather everything people submit to the site "
@@ -217,81 +242,81 @@ msgid ""
 "to save people having to clean up after themselves."
 msgstr ""
 
-#: cove/templates/base_generic.html:94
+#: cove/templates/base_generic.html:93
 msgid ""
 "We believe that deleting supplied data after 7 days provides a level of "
 "privacy for the users of this service. "
 msgstr ""
 
-#: cove/templates/base_generic.html:98
+#: cove/templates/base_generic.html:97
 msgid "Why provide converted versions?"
 msgstr ""
 
-#: cove/templates/base_generic.html:99
+#: cove/templates/base_generic.html:98
 msgid "The W3C"
 msgstr ""
 
-#: cove/templates/base_generic.html:99
+#: cove/templates/base_generic.html:98
 msgid "Data on the Web Best Practices"
 msgstr ""
 
-#: cove/templates/base_generic.html:99
+#: cove/templates/base_generic.html:98
 msgid ""
 "recommend making open data available in a range of formats to meet the needs "
 "of different users, for example, developers may want JSON, researchers might "
 "prefer a spreadsheet format."
 msgstr ""
 
-#: cove/templates/base_generic.html:111
+#: cove/templates/base_generic.html:110
 msgid "About"
 msgstr ""
 
-#: cove/templates/base_generic.html:113
+#: cove/templates/base_generic.html:112
 msgid "Built by"
 msgstr ""
 
-#: cove/templates/base_generic.html:113
+#: cove/templates/base_generic.html:112
 msgid "Open Data Services"
 msgstr ""
 
-#: cove/templates/base_generic.html:114
+#: cove/templates/base_generic.html:113
 msgid "The code for this site is available on"
 msgstr ""
 
-#: cove/templates/base_generic.html:114
+#: cove/templates/base_generic.html:113
 msgid "GitHub"
 msgstr ""
 
-#: cove/templates/base_generic.html:114
+#: cove/templates/base_generic.html:113
 msgid "Cove - COnvert Validate & Explore"
 msgstr ""
 
-#: cove/templates/base_generic.html:114
+#: cove/templates/base_generic.html:113
 msgid "Licence"
 msgstr ""
 
-#: cove/templates/base_generic.html:114
+#: cove/templates/base_generic.html:113
 msgid "AGPLv3"
 msgstr ""
 
-#: cove/templates/base_generic.html:114
+#: cove/templates/base_generic.html:113
 msgid "Report/View issues"
 msgstr ""
 
-#: cove/templates/base_generic.html:114
+#: cove/templates/base_generic.html:113
 msgid "Cove Issues"
 msgstr ""
 
-#: cove/templates/base_generic.html:118
+#: cove/templates/base_generic.html:117
 msgid "Terms &amp; Conditions"
 msgstr ""
 
 #. Translators: Provides information about the version of the code base that is being used
-#: cove/templates/base_generic.html:121
+#: cove/templates/base_generic.html:120
 msgid "Running version "
 msgstr ""
 
-#: cove/templates/base_generic.html:124
+#: cove/templates/base_generic.html:123
 msgid "Links"
 msgstr ""
 
@@ -407,6 +432,248 @@ msgid ""
 "ocds-213czf-000-00001-02-tender.json\"> loading some sample data. </a>"
 msgstr ""
 
+#: cove/templates/common_errors_360.html:6
+msgid "Common Errors"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:8
+msgid "Invalid 'uri' found"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:9
+msgid ""
+"This message means you have a problem, usually with a website address in "
+"your data.<br />Common mistakes include:"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:11
+msgid ""
+"Not starting the address with 'http://' e.g. example.com is not a 'uri' but "
+"http://example.com is."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:12
+msgid ""
+"Having extra spaces at the start or end of the address - these should be "
+"removed"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:13
+msgid ""
+"Putting more than one address in the same field e.g. \"http://example.com "
+"and http:example2.com\" is not a 'uri'"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:17
+msgid "Date is not in datetime format"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:18
+msgid ""
+"A datetime format is a very specific form of a date and time that is "
+"specified by the 360Giving Standard."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:19
+msgid "A datetime should be in the form of YYYY-MM-DDThh:mm:ss±hh:mm where:"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:21
+msgid "YYYY represent a year e.g. 2016"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:22
+msgid "MM represents a 2 digit month of the year e.g. 01 for January"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:23
+msgid "DD represents a 2 digit day of the month e.g. 01 for the 1st"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:24
+msgid "T is simply the letter 'T'"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:25
+msgid "hh is a 2 digit representation of an hour e.g. 01 for 1AM, 13 for 1PM"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:26
+msgid "mm is a 2 digit representation of minutes in an hour e.g. 05 for 5 past"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:27
+msgid "ss is a 2 digit representation of seconds"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:28
+msgid ""
+"±hh:mm is a timezone offset from UTC. For most UK data producers this can "
+"simply be replaced with a 'Z'"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:30
+msgid ""
+"Example: 2016-05-15T12:00:00Z is 12 noon on the 15th May 2016 in UTC time"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:33
+msgid "(something) is missing but is required"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:34
+msgid ""
+"Many fields are required in the 360Giving data standard in order for others "
+"to make sense of the data supplied"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:35
+msgid ""
+"If any of the following fields are missing the data is seen as invalid "
+"against the schema."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:39 cove/templates/explore.html:224
+msgid "Field"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:39
+msgid "JSON value"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:39
+msgid "Notes"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:39
+msgid "Documentation"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:44
+msgid "Every grant needs to specify the amount of money awarded"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:47
+msgid "Every grant needs to specify the date that it was awarded."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:50
+msgid "Every grant needs to specify the currency that the grant was made in."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:53
+msgid "Every grant needs a human readable description."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:56
+msgid "Every grant needs a unique identifier so we can tell them apart"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:56
+#: cove/templates/common_errors_360.html:74
+msgid "Grant Identifiers"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:59
+msgid "Every grant needs a funding organisation that makes the award."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:62
+msgid ""
+"Every organisation needs a unique identifier so we can tell them apart.."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:62
+#: cove/templates/common_errors_360.html:71
+msgid "Organisation Identifiers"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:65
+#: cove/templates/common_errors_360.html:74
+msgid "Every organisation needs a human readable name."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:68
+msgid ""
+"Every grant needs a to specify an organisation to which the grant is awarded."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:71
+msgid "Every organisation a unique identifier so we can tell them apart."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:77
+msgid "Every grant needs a human readable title."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:84
+msgid "Invalid code found in (something)"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:85
+msgid ""
+"In 360Giving data when we talk about currencies, countries and organisation "
+"types we ask publishers to use values from a predefined list. When we ask "
+"whether or not this grant was from an open call we expect either 'yes' or "
+"no' and nothing else. When we validate people's data, we check the values of "
+"those fields against those lists."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:86
+msgid "This error tells us that we have found something not on the list."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:87
+msgid ""
+"The lists are referenced in the 360Giving Grants Schema. See <a href="
+"\"http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-"
+"schemas\">360Giving JSON Schemas</a> for more information."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:91
+msgid "Value is not a string"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:92
+msgid "Data in the standard is expected to be provided in a certain format."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:93
+msgid ""
+"Strings are generally text, but can contain other characters such as "
+"numbers. Sometimes spreadsheet software can alter the format of data so that "
+"it is no longer a string."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:94
+msgid ""
+"To fix these kinds of errors, check the field to make sure you are supplying "
+"a string."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:98
+msgid "Value is not an integer"
+msgstr ""
+
+#: cove/templates/common_errors_360.html:99
+msgid ""
+"Integers are basically numbers (but they are not decimals like financial "
+"values)."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:100
+msgid ""
+"Data in the standard is expected to be provided in a certain format. "
+"Sometimes spreadsheet software can alter the format of data so that it is no "
+"longer a string."
+msgstr ""
+
+#: cove/templates/common_errors_360.html:101
+msgid ""
+"To fix these kinds of errors, check the field to make sure you are supplying "
+"an integer."
+msgstr ""
+
 #: cove/templates/error_extra.html:2
 msgid ""
 "If you think this is a bug, you can <a href=\"https://github.com/"
@@ -450,78 +717,82 @@ msgstr ""
 msgid "JSON"
 msgstr ""
 
-#: cove/templates/explore.html:22
+#: cove/templates/explore.html:28
 msgid "Download Files"
 msgstr ""
 
-#: cove/templates/explore.html:46
+#: cove/templates/explore.html:52 cove/templates/explore_360.html:103
 msgid "The JSON could not be converted to Spreadsheet due to the error:"
 msgstr ""
 
-#: cove/templates/explore.html:75
+#: cove/templates/explore.html:81 cove/templates/explore_360.html:134
 msgid "Convert to Spreadsheet"
 msgstr ""
 
-#: cove/templates/explore.html:89
+#: cove/templates/explore.html:99
 msgid "Conversion Warnings"
 msgstr ""
 
-#: cove/templates/explore.html:104
+#: cove/templates/explore.html:121
 msgid "Conversion Warnings (titles)"
 msgstr ""
 
-#: cove/templates/explore.html:119
+#: cove/templates/explore.html:147
 msgid "Validation Errors"
 msgstr ""
 
-#: cove/templates/explore.html:124
+#: cove/templates/explore.html:154
 msgid "Error Description"
 msgstr ""
 
-#: cove/templates/explore.html:124
+#: cove/templates/explore.html:155
 msgid "Error Count"
 msgstr ""
 
-#: cove/templates/explore.html:124
+#: cove/templates/explore.html:156
+msgid "First 3 Examples"
+msgstr ""
+
+#: cove/templates/explore.html:157
 msgid "Location of first 3 errors"
 msgstr ""
 
-#: cove/templates/explore.html:148
+#: cove/templates/explore.html:159
+msgid "Spreadsheet Location of first 3 errors"
+msgstr ""
+
+#: cove/templates/explore.html:216
 msgid "Additional Fields (fields in data not in schema)"
 msgstr ""
 
-#: cove/templates/explore.html:150
+#: cove/templates/explore.html:218
 msgid "Warning: fields with a language suffix will appear as additional field"
 msgstr ""
 
-#: cove/templates/explore.html:156
-msgid "Field"
-msgstr ""
-
-#: cove/templates/explore.html:156
+#: cove/templates/explore.html:224
 msgid "Path to Field"
 msgstr ""
 
-#: cove/templates/explore.html:156
+#: cove/templates/explore.html:224
 msgid "Usage Count"
 msgstr ""
 
-#: cove/templates/explore.html:180
+#: cove/templates/explore.html:248
 msgid "Save or Share these results"
 msgstr ""
 
-#: cove/templates/explore.html:181
+#: cove/templates/explore.html:249
 msgid "Use the following url to share these results:"
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove/templates/explore.html:186
+#: cove/templates/explore.html:254
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
 msgstr ""
 
-#: cove/templates/explore.html:187
+#: cove/templates/explore.html:255
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
@@ -529,120 +800,177 @@ msgid ""
 msgstr ""
 
 #: cove/templates/explore_360.html:11
-#: cove/templates/explore_ocds-release.html:11
-msgid "Key Facts"
+msgid "Headlines"
 msgstr ""
 
-#: cove/templates/explore_360.html:15
-#: cove/templates/explore_ocds-release.html:15
-msgid "Data "
+#: cove/templates/explore_360.html:16
+msgid ""
+"Please read the <a href=\"#conversion-warning\">conversion warnings</a> "
+"below."
 msgstr ""
 
-#: cove/templates/explore_360.html:17
-#: cove/templates/explore_ocds-release.html:17
-msgid "downloaded from "
+#: cove/templates/explore_360.html:20
+msgid "Failed "
 msgstr ""
 
-#: cove/templates/explore_360.html:19
-#: cove/templates/explore_ocds-release.html:19
-msgid "uploaded "
-msgstr ""
-
-#: cove/templates/explore_360.html:21
-#: cove/templates/explore_ocds-release.html:21
-msgid "on "
+#: cove/templates/explore_360.html:22
+msgid "Passed "
 msgstr ""
 
 #: cove/templates/explore_360.html:24
-msgid "This file contains"
-msgstr ""
-
-#: cove/templates/explore_360.html:24
-msgid " grants "
-msgstr ""
-
-#: cove/templates/explore_360.html:27
-msgid "This file "
-msgstr ""
-
-#: cove/templates/explore_360.html:28
-#: cove/templates/explore_ocds-release.html:33
-msgid "failed "
-msgstr ""
-
-#: cove/templates/explore_360.html:28
-#: cove/templates/explore_ocds-release.html:33
-msgid "passed "
-msgstr ""
-
-#: cove/templates/explore_360.html:29
 #: cove/templates/explore_ocds-release.html:34
 msgid "validation against "
 msgstr ""
 
-#: cove/templates/explore_360.html:32
-#: cove/templates/explore_ocds-release.html:37
-msgid "There are"
+#: cove/templates/explore_360.html:25
+msgid "See <a href=\"#validation-errors\">Validation Errors</a> below."
 msgstr ""
 
 #: cove/templates/explore_360.html:32
-msgid "duplicate grant IDs in this package."
+#, python-format
+msgid "This file contains %(count)s grant."
+msgid_plural "This file contains %(count)s grants."
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove/templates/explore_360.html:37
+#, python-format
+msgid ""
+"There is %(count)s <a href=\"#key-field-info\">duplicate grant ID</a> in "
+"this package."
+msgid_plural ""
+"There are %(count)s <a href=\"#key-field-info\">duplicate grant IDs</a> in "
+"this package."
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove/templates/explore_360.html:42
+#, python-format
+msgid ""
+"There is %(count)s <a href=\"#key-field-info\">unrecognised recipient "
+"organisation prefix</a> in this package."
+msgid_plural ""
+"There are %(count)s <a href=\"#key-field-info\">unrecognised recipient "
+"organisation prefixes</a> in this package."
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove/templates/explore_360.html:47
+#, python-format
+msgid ""
+"There is %(count)s <a href=\"#key-field-info\">unrecognised funding "
+"organisation prefix</a> in this package."
+msgid_plural ""
+"There are %(count)s <a href=\"#key-field-info\">unrecognised funding "
+"organisation prefixes</a> in this package."
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove/templates/explore_360.html:52
+#, python-format
+msgid ""
+"This file uses %(count)s <a href=\"#additional-fields\">additional field</a> "
+"not used in the standard."
+msgid_plural ""
+"This file uses %(count)s <a href=\"#additional-fields\">additional fields</"
+"a> not used in the standard."
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove/templates/explore_360.html:57
+#: cove/templates/explore_ocds-release.html:15
+msgid "Data "
 msgstr ""
 
-#: cove/templates/explore_360.html:43
+#: cove/templates/explore_360.html:59
+#: cove/templates/explore_ocds-release.html:17
+msgid "downloaded from "
+msgstr ""
+
+#: cove/templates/explore_360.html:61
+#: cove/templates/explore_ocds-release.html:19
+msgid "uploaded "
+msgstr ""
+
+#: cove/templates/explore_360.html:63
+#: cove/templates/explore_ocds-release.html:21
+msgid "on "
+msgstr ""
+
+#: cove/templates/explore_360.html:75
+msgid "Convert"
+msgstr ""
+
+#: cove/templates/explore_360.html:159
 #: cove/templates/explore_ocds-release.html:51
 msgid "Key Field Information"
 msgstr ""
 
-#: cove/templates/explore_360.html:48
+#: cove/templates/explore_360.html:164
 msgid "Grants:"
 msgstr ""
 
-#: cove/templates/explore_360.html:50
+#: cove/templates/explore_360.html:166
 msgid "Grant IDs:"
 msgstr ""
 
-#: cove/templates/explore_360.html:53
+#: cove/templates/explore_360.html:169
 msgid "Unique Grant IDs:"
 msgstr ""
 
-#: cove/templates/explore_360.html:58 cove/templates/explore_360.html.py:61
+#: cove/templates/explore_360.html:174 cove/templates/explore_360.html:177
 msgid "Duplicate IDs:"
 msgstr ""
 
-#: cove/templates/explore_360.html:65
-msgid "First Award Date:"
-msgstr ""
-
-#: cove/templates/explore_360.html:67
-msgid "Last Award Date:"
-msgstr ""
-
-#: cove/templates/explore_360.html:69
-msgid "Highest Award Amount:"
-msgstr ""
-
-#: cove/templates/explore_360.html:71
-msgid "Lowest Award Amount:"
-msgstr ""
-
-#: cove/templates/explore_360.html:75
-msgid "Funder Organisation IDs:"
-msgstr ""
-
-#: cove/templates/explore_360.html:79
-msgid "Recipient Organisations IDs:"
-msgstr ""
-
-#: cove/templates/explore_360.html:82
+#: cove/templates/explore_360.html:180
 msgid "Currencies Used Count:"
 msgstr ""
 
-#: cove/templates/explore_360.html:84
+#: cove/templates/explore_360.html:183
+msgid "First Award Date:"
+msgstr ""
+
+#: cove/templates/explore_360.html:185
+msgid "Last Award Date:"
+msgstr ""
+
+#: cove/templates/explore_360.html:187
+msgid "Highest Award Amount:"
+msgstr ""
+
+#: cove/templates/explore_360.html:189
+msgid "Lowest Award Amount:"
+msgstr ""
+
+#: cove/templates/explore_360.html:191
 msgid "Currencies Used:"
 msgstr ""
 
-#: cove/templates/explore_360.html:120
+#: cove/templates/explore_360.html:196
+msgid "Funder Organisation IDs:"
+msgstr ""
+
+#: cove/templates/explore_360.html:200
+msgid "Good Funding Org ID Prefixes:"
+msgstr ""
+
+#: cove/templates/explore_360.html:204
+msgid "Unrecognised Funding Org ID Prefixes:"
+msgstr ""
+
+#: cove/templates/explore_360.html:208
+msgid "Recipient Organisation IDs:"
+msgstr ""
+
+#: cove/templates/explore_360.html:212
+msgid "Good Recipient Org ID Prefixes:"
+msgstr ""
+
+#: cove/templates/explore_360.html:216
+msgid "Unrecognised Recipient Org ID Prefixes:"
+msgstr ""
+
+#: cove/templates/explore_360.html:257
 msgid "Grants Table"
 msgstr ""
 
@@ -660,6 +988,10 @@ msgstr ""
 
 #: cove/templates/explore_ocds-record.html:51
 msgid "Records Table:"
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:11
+msgid "Key Facts"
 msgstr ""
 
 #: cove/templates/explore_ocds-release.html:24
@@ -684,6 +1016,18 @@ msgstr ""
 
 #: cove/templates/explore_ocds-release.html:32
 msgid "This package "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:33
+msgid "failed "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:33
+msgid "passed "
+msgstr ""
+
+#: cove/templates/explore_ocds-release.html:37
+msgid "There are"
 msgstr ""
 
 #: cove/templates/explore_ocds-release.html:37
@@ -940,6 +1284,18 @@ msgstr ""
 
 #: cove/templates/explore_ocds-release.html:337
 msgid "Procuring Entity:"
+msgstr ""
+
+#: cove/templates/modal_errors.html:13
+msgid "Value"
+msgstr ""
+
+#: cove/templates/modal_errors.html:14
+msgid "Location"
+msgstr ""
+
+#: cove/templates/modal_errors.html:16
+msgid "Spreadsheet Location"
 msgstr ""
 
 #: cove/templates/multi_index.html:12
@@ -1388,49 +1744,26 @@ msgid ""
 "technical issues beyond our control."
 msgstr ""
 
-#: cove/views.py:626 cove/views.py:695 cove/views.py:768 cove/views.py:827
-msgid "Sorry we can't process that data"
-msgstr ""
-
-#: cove/views.py:628 cove/views.py:697 cove/views.py:770 cove/views.py:829
-msgid "Try Again"
-msgstr ""
-
-#: cove/views.py:629
+#: cove/views.py:46
 msgid ""
 "We did not recognise the file type.\n"
 "\n"
 "We can only process json, csv and xlsx files."
 msgstr ""
 
-#: cove/views.py:698 cove/views.py:830
-msgid ""
-"We think you tried to upload a JSON file, but it is not well formed JSON.\n"
-"\n"
-"Error message: {}"
-msgstr ""
-
-#: cove/views.py:771
-msgid ""
-"We think you tried to supply a spreadsheet, but we failed to convert it to "
-"JSON.\n"
-"\n"
-"Error message: {}"
-msgstr ""
-
-#: cove/views.py:792 cove/views.py:802
+#: cove/views.py:75 cove/views.py:85
 msgid "Sorry, the page you are looking for is not available"
 msgstr ""
 
-#: cove/views.py:794 cove/views.py:804
+#: cove/views.py:77 cove/views.py:87
 msgid "Go to Home page"
 msgstr ""
 
-#: cove/views.py:795
+#: cove/views.py:78
 msgid "We don't seem to be able to find the data you requested."
 msgstr ""
 
-#: cove/views.py:805
+#: cove/views.py:88
 msgid ""
 "The data you were hoping to explore no longer exists.\n"
 "\n"

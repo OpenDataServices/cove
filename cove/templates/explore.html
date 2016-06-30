@@ -15,8 +15,14 @@
 {# Translators: JSON probably does not need a transalation: http://www.json.org/ #}
 {% trans 'JSON' as JSON %}
 
+
+{% block key_facts %}
+{% endblock %}
+
+{% block converted_files %}
+
 <!--Download Converted Files-->
-<div class="panel {% if conversion_error %}panel-warning{% else %}panel-success{% endif %}">
+<div class="panel {% if conversion_error %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
   <div class="panel-heading">
     <h4 class="panel-title">
       <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{% trans 'Download Files' %}
@@ -81,23 +87,34 @@
     
   </div>
 </div>
+{% endblock %}
+
 
 {% if conversion_warning_messages %}
+  <a name="conversion-warning" class="anchor"></a>
   <div class="panel panel-warning">
     <div class="panel-heading">
       <h4 class="panel-title">
+        
         {% trans 'Conversion Warnings' %}
       </h4>
     </div>
     <div class="panel-body">
-      {% for warning_message in conversion_warning_messages %}
-        <p>{{warning_message}}</p>
-      {% endfor %}
+      {% if file_type == 'xlsx' or file_type == 'csv' %}
+        <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+      {% endif %}
+      <ul>
+        {% for warning_message in conversion_warning_messages %}
+          <li>{{warning_message}}</li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 {% endif %}
 
+
 {% if conversion_warning_messages_titles %}
+  <a name="conversion-warning" class="anchor"></a>
   <div class="panel panel-warning">
     <div class="panel-heading">
       <h4 class="panel-title">
@@ -105,14 +122,25 @@
       </h4>
     </div>
     <div class="panel-body">
+    {% if file_type == 'xlsx' or file_type == 'csv' %}
+      <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+    {% endif %}
+    <ul>
       {% for warning_message in conversion_warning_messages_titles %}
-        <p>{{warning_message}}</p>
+        <li>{{warning_message}}</li>
       {% endfor %}
+    </ul>
     </div>
   </div>
 {% endif %}
 
 {% if validation_errors %}
+  {% for error, values in validation_errors %}
+     {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type %}
+  {% endfor %}
+  
+
+  <a name="validation-errors" class="anchor"></a>
   <div class="panel panel-danger">
     <div class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
       <h4 class="panel-title">
@@ -121,18 +149,57 @@
     </div>
     <div id="validationTable" class="collapse in">
     <table class="table">
-      <thead> <tr> <th>{% trans 'Error Description' %}</th> <th>{% trans 'Error Count' %}</th> <th>{% trans 'Location of first 3 errors' %}</th> </tr> </thead>
+      <thead> 
+        <tr> 
+          <th>{% trans 'Error Description' %}</th> 
+          <th>{% trans 'Error Count' %}</th> 
+          <th>{% trans 'First 3 Examples' %}</th> 
+          <th>{% trans 'Location of first 3 errors' %}</th> 
+          {% if file_type == 'xlsx' or file_type == 'csv' %}
+            <th>{% trans 'Spreadsheet Location of first 3 errors' %}</th> 
+          {% endif %}
+        </tr> 
+      </thead>
       <tbody>
-      {% for error, paths in validation_errors.items %}
+      {% for error, values in validation_errors %}
       <tr>
-        <td>{{error}}</td> <td>{{paths|length}}</td>
+        {% if error|get_message_type in common_error_types %}
+        <td><a href="{% url 'cove:common_errors' %}#{{error|get_message_type}}"> {{error|get_message}} </a></td>
+        {% else %}
+          <td>{{error|get_message}}</td> 
+        {% endif %}
+        <td>
+          {% if values|length > 3 %}
+            <a data-toggle="modal" data-target=".{{"validation-errors-"|concat:forloop.counter}}">
+              {{values|length}}
+            </a>
+          {% else %}
+              {{values|length}}
+          {% endif %}
+        </td>
         <td>
           <ul class="list-unstyled">
-            {% for path in paths|slice:":3" %}
-               <li> {{path}} </li>
+            {% for value in values|slice:":3" %}
+              <li> {{value.value}} </li>
             {% endfor %}
           </ul>
         </td>
+        <td>
+          <ul class="list-unstyled">
+            {% for value in values|slice:":3" %}
+               <li> {{value.path}} </li>
+            {% endfor %}
+          </ul>
+        </td>
+        {% if file_type == 'xlsx' or file_type == 'csv' %}
+        <td style="white-space: nowrap">
+          <ul class="list-unstyled">
+            {% for value in values|slice:":3" %}
+            <li> <b>Sheet:</b> {{value.sheet}} <b>Row:</b> {{value.row_number}} {% if value.header %} <b>Header:</b> {{value.header}} {% endif %} </li>
+            {% endfor %}
+          </ul>
+        </td>
+        {% endif %}
       </tr>
       {% endfor %}
       </tbody>
@@ -142,6 +209,7 @@
 {% endif %}
 
 {% if data_only %}
+    <a name="additional-fields" class="anchor"></a>
     <div class="panel panel-warning">
       <div class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalFieldTable" data-toggle="collapse" data-target="#additionalFieldTable">
         <h4 class="panel-title">
@@ -204,4 +272,18 @@
   </script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
+{% endblock %}
+
+{% block extrapiwik %}
+{% if piwik.dimension_map.file_type %}
+_paq.push(['setCustomDimension', {{piwik.dimension_map.file_type}}, '{{file_type}}']);
+{% endif %}
+{% if piwik.dimension_map.page_type %}
+_paq.push(['setCustomDimension', {{piwik.dimension_map.page_type}}, '{% if first_render %}explore initial{% else %}explore reload{% endif %}']);
+{% endif %}
+{% if first_render %}
+{% if piwik.dimension_map.form_name %}
+_paq.push(['setCustomDimension', {{piwik.dimension_map.form_name}}, '{{ form_name }}']);
+{% endif %}
+{% endif %}
 {% endblock %}
