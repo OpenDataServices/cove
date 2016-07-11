@@ -173,6 +173,7 @@ def test_accordion(server_url, browser, prefix):
 
     time.sleep(0.5)
     assert buttons() == [True, False, False]
+    assert 'Upload a file (.json, .csv, .xlsx)' in browser.find_elements_by_tag_name('label')[0].text
     browser.find_element_by_partial_link_text('Link').click()
     browser.implicitly_wait(1)
     time.sleep(0.5)
@@ -180,6 +181,8 @@ def test_accordion(server_url, browser, prefix):
     browser.find_element_by_partial_link_text('Paste').click()
     time.sleep(0.5)
     assert buttons() == [False, False, True]
+    assert 'Paste (JSON only)' in browser.find_elements_by_tag_name('label')[2].text
+
     # Now test that the whole banner is clickable
     browser.find_element_by_id('headingOne').click()
     time.sleep(0.5)
