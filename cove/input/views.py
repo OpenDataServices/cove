@@ -10,7 +10,7 @@ class UploadForm(forms.ModelForm):
         model = SuppliedData
         fields = ['original_file']
         labels = {
-            'original_file': _('Upload a file')
+            'original_file': _('Upload a file (.json, .csv, .xlsx)')
         }
 
 
@@ -24,7 +24,7 @@ class UrlForm(forms.ModelForm):
 
 
 class TextForm(forms.Form):
-    paste = forms.CharField(label=_('Paste'), widget=forms.Textarea)
+    paste = forms.CharField(label=_('Paste (JSON only)'), widget=forms.Textarea)
 
 
 def input(request):
