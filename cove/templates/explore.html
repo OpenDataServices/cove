@@ -142,9 +142,9 @@
 
   <a name="validation-errors" class="anchor"></a>
   <div class="panel panel-danger">
-    <div class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
+    <div id="validation-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
       <h4 class="panel-title">
-        {% trans 'Validation Errors' %}
+        <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Validation Errors' %}
       </h4>
     </div>
     <div id="validationTable" class="collapse in">
@@ -208,12 +208,14 @@
   </div>
 {% endif %}
 
+
+
 {% if data_only %}
     <a name="additional-fields" class="anchor"></a>
     <div class="panel panel-warning">
-      <div class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalFieldTable" data-toggle="collapse" data-target="#additionalFieldTable">
+      <div id="additional-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalFieldTable" data-toggle="collapse" data-target="#additionalFieldTable">
         <h4 class="panel-title">
-          {% trans 'Additional Fields (fields in data not in schema)' %}
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Fields (fields in data not in schema)' %}</span>
           {% if language_additional_field_warning %}
              <span class="indent"> {% trans 'Warning: fields with a language suffix will appear as additional field' %} </span>
           {% endif %}
@@ -272,6 +274,22 @@
   </script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
+  <script type="text/javascript">
+        $("#validationTable").on("hide.bs.collapse", function(){
+          $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-down"></span>{% trans "Validation Errors" %}</h4>');
+        });
+        $("#validationTable").on("show.bs.collapse", function(){
+          $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Validation Errors" %}</h4>');
+        });
+  </script>
+  <script type="text/javascript">
+        $("#additionalFieldTable").on("hide.bs.collapse", function(){
+          $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
+        });
+        $("#additionalFieldTable").on("show.bs.collapse", function(){
+          $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
+        });
+  </script>
 {% endblock %}
 
 {% block extrapiwik %}
