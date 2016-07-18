@@ -39,3 +39,11 @@ def test_connection_error(rf):
         'source_url': 'https://wrong.host.badssl.com/'
     })))
     assert b'doesn\'t match either of' in resp.content
+
+
+@pytest.mark.django_db
+def test_http_error(rf):
+    resp = v.input(fake_cove_middleware(rf.post('/', {
+        'source_url': 'http://httpstat.us/404'
+    })))
+    assert b'Not Found' in resp.content

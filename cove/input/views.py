@@ -68,6 +68,13 @@ def input(request):
                         'link_text': _('Try Again'),
                         'msg': _(str(err) + '\n\n Common reasons for this error include supplying a local development url that our servers can\'t access, or misconfigured SSL certificates.')
                     })
+                except requests.HTTPError as err:
+                    return render(request, 'error.html', context={
+                        'sub_title': _("Sorry we got a HTTP Error whilst trying to download that file"),
+                        'link': 'cove:index',
+                        'link_text': _('Try Again'),
+                        'msg': _(str(err) + '\n\n If you can access the file through a browser then the problem may be related to permissions, or you may be blocking certain user agents.')
+                    })
             elif form_name == 'text_form':
                 data.original_file.save('test.json', ContentFile(form['paste'].value()))
             return redirect(data.get_absolute_url())
