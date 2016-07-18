@@ -26,3 +26,11 @@ def test_input_post(rf):
     assert SuppliedData.objects.count() == 1
     data = SuppliedData.objects.first()
     assert resp.url.endswith(str(data.pk))
+
+
+@pytest.mark.django_db
+def test_connection_error(rf):
+    resp = v.input(fake_cove_middleware(rf.post('/', {
+        'source_url': 'http://localhost:1234'
+    })))
+    assert 'Connection refused' in str(resp.content)
