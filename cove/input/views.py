@@ -66,7 +66,7 @@ def input(request):
                         'sub_title': _("Sorry we got a ConnectionError whilst trying to download that file"),
                         'link': 'cove:index',
                         'link_text': _('Try Again'),
-                        'msg': _(str(err) + '\n\n Common reasons for this error include supplying a local development url that our servers can\'t access.')
+                        'msg': _(str(err) + '\n\n Common reasons for this error include supplying a local development url that our servers can\'t access, or misconfigured SSL certificates.')
                     })
             elif form_name == 'text_form':
                 data.original_file.save('test.json', ContentFile(form['paste'].value()))

@@ -33,4 +33,9 @@ def test_connection_error(rf):
     resp = v.input(fake_cove_middleware(rf.post('/', {
         'source_url': 'http://localhost:1234'
     })))
-    assert 'Connection refused' in str(resp.content)
+    assert b'Connection refused' in resp.content
+
+    resp = v.input(fake_cove_middleware(rf.post('/', {
+        'source_url': 'https://wrong.host.badssl.com/'
+    })))
+    assert b'doesn\'t match either of' in resp.content
