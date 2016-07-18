@@ -67,6 +67,8 @@ class SuppliedData(models.Model):
                         file_extension = possible_extension
 
                 file_name = r.url.split('/')[-1].split('?')[0][:100]
+                if file_name == '':
+                    file_name = 'file'
                 if file_extension:
                     if not file_name.endswith(file_extension):
                         file_name = file_name + '.' + file_extension
