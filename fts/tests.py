@@ -196,18 +196,18 @@ def test_accordion(server_url, browser, prefix):
 
 
 @pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text', 'conversion_successful'), [
-    (PREFIX_OCDS, 'tenders_releases_2_releases.json', ['Download Files', 'Save or Share these results'], True),
-    (PREFIX_OCDS, 'ocds_release_nulls.json', ['Download Files', 'Save or Share these results'], True),
+    (PREFIX_OCDS, 'tenders_releases_2_releases.json', ['Convert'], True),
+    (PREFIX_OCDS, 'ocds_release_nulls.json', ['Convert', 'Save or Share these results'], True),
     # Conversion should still work for files that don't validate against the schema
-    (PREFIX_OCDS, 'tenders_releases_2_releases_invalid.json', ['Download Files',
+    (PREFIX_OCDS, 'tenders_releases_2_releases_invalid.json', ['Convert',
                                                                'Validation Errors',
                                                                "'id' is missing but required",
                                                                "Invalid 'uri' found"], True),
     # Test UTF-8 support
-    (PREFIX_OCDS, 'utf8.json', 'Download Files', True),
+    (PREFIX_OCDS, 'utf8.json', 'Convert', True),
     # But we expect to see an error message if a file is not well formed JSON at all
     (PREFIX_OCDS, 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
-    (PREFIX_OCDS, 'tenders_releases_2_releases.xlsx', 'Download Files', True),
+    (PREFIX_OCDS, 'tenders_releases_2_releases.xlsx', 'Convert', True),
     (PREFIX_OCDS, 'badfile.json', 'Statistics can not produced', True),
     (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', ['Convert',
                                                            'Save or Share these results',
