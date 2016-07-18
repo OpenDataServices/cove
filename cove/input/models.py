@@ -7,6 +7,12 @@ import requests
 from django.core.files.base import ContentFile
 from cove.input import get_google_doc
 
+CONTENT_TYPE_MAP = {
+    'application/json': 'json',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+    'text/csv': 'csv'
+}
+
 
 def upload_to(instance, filename=''):
     return os.path.join(str(instance.pk), filename)
@@ -50,8 +56,14 @@ class SuppliedData(models.Model):
                 get_google_doc(self)
             else:
                 r = requests.get(self.source_url)
+                content_type = r.headers.get('content-type', '').split(';')[0].lower()
+                file_extension = CONTENT_TYPE_MAP.get(content_type)
+                file_name = r.url.split('/')[-1].split('?')[0][:100]
+                if file_extension:
+                    if not file_name.endswith(file_extension):
+                        file_name = file_name + '.' + file_extension
                 self.original_file.save(
-                    r.url.split('/')[-1].split('?')[0][:100],
+                    file_name,
                     ContentFile(r.content))
         else:
             raise ValueError('No source_url specified.')
