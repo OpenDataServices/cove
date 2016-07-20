@@ -1,3 +1,4 @@
+import os
 import pytest
 import cove.input.views as v
 from cove.input.models import SuppliedData
@@ -73,3 +74,17 @@ def test_extension_from_content_disposition(rf, httpserver):
     supplied_datas = SuppliedData.objects.all()
     assert len(supplied_datas) == 1
     assert supplied_datas[0].original_file.name.endswith('.csv')
+
+
+@pytest.mark.django_db
+def test_directory_for_empty_filename(rf):
+    '''
+    Check that URLs ending in / correctly create a directory, to test against
+    regressions of https://github.com/OpenDataServices/cove/issues/426
+    '''
+    v.input(fake_cove_middleware(rf.post('/', {
+        'source_url': 'http://example.org/'
+    })))
+    supplied_datas = SuppliedData.objects.all()
+    assert len(supplied_datas) == 1
+    assert os.path.isdir(supplied_datas[0].upload_dir())
