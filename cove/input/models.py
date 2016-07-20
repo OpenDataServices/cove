@@ -56,6 +56,7 @@ class SuppliedData(models.Model):
                 get_google_doc(self)
             else:
                 r = requests.get(self.source_url)
+                r.raise_for_status()
                 content_type = r.headers.get('content-type', '').split(';')[0].lower()
                 file_extension = CONTENT_TYPE_MAP.get(content_type)
                 file_name = r.url.split('/')[-1].split('?')[0][:100]

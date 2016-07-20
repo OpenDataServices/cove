@@ -33,6 +33,7 @@
             {% block strapline %}<p>{{ application_strapline }}</p>{% endblock %}
           </div><!--col-md-8-->
           <div class="col-md-2">
+            {% block language_select %}
             <form class="language-select" action="{% url 'set_language' %}" method="post">
             {% csrf_token %}
               <input name="next" type="hidden" value="{{ redirect_to }}" />
@@ -51,6 +52,7 @@
                 <input type="submit" value={% trans "Go" %} />
               </noscript>
             </form>
+            {% endblock %}
           </div><!--col-md-2-->
           <div class="col-md-2">
             {% block header_button %}
