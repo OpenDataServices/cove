@@ -6,6 +6,7 @@ from django.conf import settings
 import requests
 from django.core.files.base import ContentFile
 from cove.input import get_google_doc
+import rfc6266  # (content-disposition header parser)
 
 CONTENT_TYPE_MAP = {
     'application/json': 'json',
@@ -59,6 +60,12 @@ class SuppliedData(models.Model):
                 r.raise_for_status()
                 content_type = r.headers.get('content-type', '').split(';')[0].lower()
                 file_extension = CONTENT_TYPE_MAP.get(content_type)
+
+                if not file_extension:
+                    possible_extension = rfc6266.parse_requests_response(r).filename_unsafe.split('.')[-1]
+                    if possible_extension in CONTENT_TYPE_MAP.values():
+                        file_extension = possible_extension
+
                 file_name = r.url.split('/')[-1].split('?')[0][:100]
                 if file_extension:
                     if not file_name.endswith(file_extension):
