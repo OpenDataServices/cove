@@ -47,3 +47,29 @@ def test_http_error(rf):
         'source_url': 'http://httpstat.us/404'
     })))
     assert b'Not Found' in resp.content
+
+
+@pytest.mark.django_db
+def test_extension_from_content_type(rf, httpserver):
+    httpserver.serve_content('{}', headers={
+        'content-type': 'text/csv'
+    })
+    v.input(fake_cove_middleware(rf.post('/', {
+        'source_url': httpserver.url
+    })))
+    supplied_datas = SuppliedData.objects.all()
+    assert len(supplied_datas) == 1
+    assert supplied_datas[0].original_file.name.endswith('.csv')
+
+
+@pytest.mark.django_db
+def test_extension_from_content_disposition(rf, httpserver):
+    httpserver.serve_content('{}', headers={
+        'content-disposition': 'attachment; filename="something.csv"'
+    })
+    v.input(fake_cove_middleware(rf.post('/', {
+        'source_url': httpserver.url
+    })))
+    supplied_datas = SuppliedData.objects.all()
+    assert len(supplied_datas) == 1
+    assert supplied_datas[0].original_file.name.endswith('.csv')

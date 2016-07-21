@@ -7,7 +7,7 @@ pyflakes<1.1
 pytest
 pytest-django
 pytest-cov
-pytest-localserver==0.3.5
+pytest-localserver
 pytest-xdist
 coveralls
 selenium
