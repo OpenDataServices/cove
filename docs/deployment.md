@@ -19,11 +19,15 @@ Post {{Month}} {{Year}} bug fixes ({{Num}}) - {{optionally, brief description of
 
 In both cases, add a description following this template:
 ```
-{{Explanation of what has changed.}}
+URL for testing: http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/
 
 Planned deployment date: 
 
-Standing tasks:
+#### Summary of changes for this deployment
+
+#### Tasks in deploy process
+
+Before merge:
 - [ ] Re-run translations if any text has changed
 - [ ] Create a new branch `release-{{YYYYMM}}` if it doesn't exist.
 - [ ] Deploy to a subdomain on the dev server http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/ - redo this for any additional commits
