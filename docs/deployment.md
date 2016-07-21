@@ -33,7 +33,7 @@ Standing tasks:
 After merge:
 - [ ] Run salt highstate on `cove-live`
 - [ ] Check that the correct commit has been deployed using the link in the footer http://cove.opendataservices.coop/
-- [ ] Run `CUSTOM_SERVER_URL=http://cove.opendataservices.coop/ py.test fts` on a local copy of the updated live branch
+- [ ] Run `CUSTOM_SERVER_URL=http://cove.opendataservices.coop/ PREFIX_360=/360/ py.test fts` on a local copy of the updated live branch
 - [ ] Run salt highstate on `cove-live-ocds`
 - [ ] Check that the correct commit has been deployed using the link in the footer http://standard.open-contracting.org/validator/
 - [ ] Run `CUSTOM_SERVER_URL=http://standard.open-contracting.org PREFIX_OCDS=/validator/ py.test fts ` on a local copy of the updated live branch
