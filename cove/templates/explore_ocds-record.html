@@ -33,7 +33,7 @@
              {% blocktrans count count=records_aggregates.count %}This file contains <strong>{{count}} record.</strong>{% plural %}This file contains <strong>{{count}} record.</strong>{% endblocktrans %}
              </li>
              <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-             {% blocktrans count count=records_aggregates.unique_ocids|length %}There is <strong>{{count}} unique OCID.</strong>{% plural %}There are <strong>{{count}} OCIDs.</strong>{% endblocktrans %}
+             {% blocktrans count count=records_aggregates.unique_ocids|length %}There is <strong>{{count}} unique OCID.</strong>{% plural %}There are <strong>{{count}} unique OCIDs.</strong>{% endblocktrans %}
              </li>
              {% if json_data.publisher %}
                 <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
