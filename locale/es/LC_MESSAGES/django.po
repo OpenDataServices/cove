@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoVE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-22 16:07+0000\n"
-"PO-Revision-Date: 2016-06-22 16:07+0000\n"
+"POT-Creation-Date: 2016-07-21 11:32+0000\n"
+"PO-Revision-Date: 2016-07-21 11:35+0000\n"
 "Last-Translator: Ben Webb <ben.webb@opendataservices.coop>\n"
 "Language-Team: Spanish (http://www.transifex.com/OpenDataServices/cove/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -34,28 +34,53 @@ msgstr "Enviar"
 msgid "Link"
 msgstr "Enlazar"
 
-#: cove/input/templates/datainput/input.html:61 cove/input/views.py:27
-#: cove/templates/stats.html:12
+#: cove/input/templates/datainput/input.html:61 cove/templates/stats.html:12
 msgid "Paste"
 msgstr "Pegar"
 
-#: cove/input/views.py:13
-msgid "Upload a file"
-msgstr "Cargar un archivo"
+#: cove/input/views.py:14
+msgid "Upload a file (.json, .csv, .xlsx)"
+msgstr "Subir un archivo (.json, .csv, .xlsx)"
 
-#: cove/input/views.py:22
+#: cove/input/views.py:23
 msgid "Supply a URL"
 msgstr "Proporcione una dirección URL"
+
+#: cove/input/views.py:28
+msgid "Paste (JSON only)"
+msgstr "Pegar (sólo JSON)"
+
+#: cove/input/views.py:66
+msgid "Sorry we got a ConnectionError whilst trying to download that file"
+msgstr "En este momento tenemos un ConnectionError mismo tiempo tratando de descargar el archivo"
+
+#: cove/input/views.py:68 cove/input/views.py:75 cove/lib/converters.py:74
+#: cove/lib/converters.py:135 cove/views.py:45 cove/views.py:113
+msgid "Try Again"
+msgstr "Inténtalo de nuevo"
+
+#: cove/input/views.py:69
+msgid ""
+"\n"
+"\n"
+" Common reasons for this error include supplying a local development url that our servers can't access, or misconfigured SSL certificates."
+msgstr "\n\nLas razones más comunes de este error incluyen el suministro de una URL desarrollo local que nuestros servidores no pueden acceder o certificados SSL mal configurados."
+
+#: cove/input/views.py:73
+msgid "Sorry we got a HTTP Error whilst trying to download that file"
+msgstr "En este momento tenemos un error de HTTP al mismo tiempo tratando de descargar el archivo"
+
+#: cove/input/views.py:76
+msgid ""
+"\n"
+"\n"
+" If you can access the file through a browser then the problem may be related to permissions, or you may be blocking certain user agents."
+msgstr "\n\nSi se puede acceder al archivo a través de un navegador entonces el problema puede estar relacionado con los permisos, o puede estar bloqueando ciertas aplicaciones de usuario."
 
 #: cove/lib/converters.py:72 cove/lib/converters.py:133 cove/views.py:43
 #: cove/views.py:111
 msgid "Sorry we can't process that data"
 msgstr "Lo sentimos, no podemos procesar esos datos"
-
-#: cove/lib/converters.py:74 cove/lib/converters.py:135 cove/views.py:45
-#: cove/views.py:113
-msgid "Try Again"
-msgstr "Inténtalo de nuevo"
 
 #: cove/lib/converters.py:75
 msgid ""
@@ -64,7 +89,7 @@ msgid ""
 "Error message: {}"
 msgstr "Creemos que se trató de suministrar una hoja de cálculo, pero no hemos podido convertirlo a JSON.\n\nMensaje de error: {}"
 
-#: cove/lib/converters.py:136 cove/views.py:114
+#: cove/lib/converters.py:136
 msgid ""
 "We think you tried to upload a JSON file, but it is not well formed JSON.\n"
 "\n"
@@ -114,20 +139,20 @@ msgstr "Este error se ha informado de forma automática a nuestro equipo de desa
 msgid "please reference this error as "
 msgstr "por favor haz referencia a este error como"
 
-#: cove/templates/base_360.html:21
+#: cove/templates/base_360.html:23
 msgid "360Giving"
 msgstr "360Giving"
 
-#: cove/templates/base_360.html:22 cove/templates/multi_index.html:14
+#: cove/templates/base_360.html:24 cove/templates/multi_index.html:14
 msgid "360Giving Data Standard"
 msgstr "Estándar de Datos 360Giving"
 
-#: cove/templates/base_360.html:29
+#: cove/templates/base_360.html:31
 msgid "How to use the "
 msgstr "Cómo utilizar el"
 
 #. Translators: Paragraph that describes the application
-#: cove/templates/base_360.html:31
+#: cove/templates/base_360.html:33
 msgid ""
 "Upload, paste or provide a link to data in the 360Giving Data Standard "
 "format, and this application will convert between JSON, Excel and CSV "
@@ -135,23 +160,23 @@ msgid ""
 "versions."
 msgstr "Sube, pega o proporciona un enlace a los datos en el formato del Estándar de Datos 360Giving, y esta aplicación los convertirá entre JSON, Excel y CSV, esto te permitirá descargar el archivo original y las versiones convertidas."
 
-#: cove/templates/base_360.html:33
+#: cove/templates/base_360.html:35
 msgid ""
 "You will also be able to inspect key information from the data that the "
 "application is able to find, so that you can check the data."
 msgstr "También podrás inspeccionar información clave de los datos que la aplicación es capaz de encontrar, para que puedas comprobar los datos."
 
-#: cove/templates/base_360.html:35
+#: cove/templates/base_360.html:37
 msgid "Formats"
 msgstr "Formatos"
 
-#: cove/templates/base_360.html:36
+#: cove/templates/base_360.html:38
 msgid ""
 "The application accepts data in some of the formats given in the <a href=\"http://www.threesixtygiving.org/standard/\">360Giving Data Standard guidence</a>.\n"
 "    <br>Acceptable files are: "
 msgstr "La aplicación acepta datos en algunos de los formatos dados en la <a href=\"http://www.threesixtygiving.org/standard/\">guía del Estándar de Datos 360Giving.</a> <br> Los siguientes son archivos aceptados:"
 
-#: cove/templates/base_360.html:39
+#: cove/templates/base_360.html:41
 msgid ""
 "Summary Spreadsheet - <a "
 "href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema"
@@ -160,14 +185,14 @@ msgid ""
 "/summary-table/360-giving-schema-titles.csv/grants.csv\">CSV</a>"
 msgstr "Hoja de cálculo de resumen - <a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema/summary-table/360-giving-schema-titles.xlsx\">Excel,</a> <a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema/summary-table/360-giving-schema-titles.csv/grants.csv\">CSV</a>"
 
-#: cove/templates/base_360.html:40
+#: cove/templates/base_360.html:42
 msgid ""
 "JSON built to the <a "
 "href=\"http://www.threesixtygiving.org/standard/reference/#toc-360giving-"
 "json-schemas\">360Giving JSON schema</a>"
 msgstr "JSON construido para el <a href=\"http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas\">esquema JSON 360Giving </a>"
 
-#: cove/templates/base_360.html:41
+#: cove/templates/base_360.html:43
 msgid ""
 "<a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema"
 "/multi-table/360-giving-schema-fields.xlsx\">Multi-table data package - "
@@ -175,55 +200,55 @@ msgid ""
 msgstr "<a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema/multi-table/360-giving-schema-fields.xlsx\">Paquete de datos de tablas múltiples - Excel</a>"
 
 #. Translators: Label of a button that triggers search
-#: cove/templates/base_generic.html:51 cove/templates/base_ocds.html:46
+#: cove/templates/base_generic.html:52 cove/templates/base_ocds.html:46
 msgid "Go"
 msgstr "Ir"
 
-#: cove/templates/base_generic.html:77
+#: cove/templates/base_generic.html:79
 msgid "More Information "
 msgstr "Más información"
 
-#: cove/templates/base_generic.html:77
+#: cove/templates/base_generic.html:79
 msgid "click to see."
 msgstr "clic para ver."
 
-#: cove/templates/base_generic.html:83
+#: cove/templates/base_generic.html:85
 msgid "What happens to the data I provide to this site?"
 msgstr "¿Qué sucede con los datos que proporciono a este sitio?"
 
-#: cove/templates/base_generic.html:84
+#: cove/templates/base_generic.html:86
 msgid ""
 "We retain the data you upload or paste to this site, on our server, for 7 "
 "days."
 msgstr "Conservamos los datos que cargas o pegas a este sitio en nuestro servidor durante 7 días."
 
-#: cove/templates/base_generic.html:85
+#: cove/templates/base_generic.html:87
 msgid ""
 "If you supply a link, we fetch the data from that link and store it on our "
 "server for 7 days."
 msgstr "Si proporciona un enlace, buscamos los datos de ese enlace y los almacenamos en nuestro servidor durante 7 días."
 
-#: cove/templates/base_generic.html:86
+#: cove/templates/base_generic.html:88
 msgid ""
 "We delete all data older than 7 days from our servers daily, retaining none "
 "of the original data."
 msgstr "Borramos todos los datos de más de 7 días desde nuestros servidores diariamente, no conservamos ninguno de los datos originales."
 
-#: cove/templates/base_generic.html:87
+#: cove/templates/base_generic.html:89
 msgid ""
 "While the data is on our servers we may access that data to help us "
 "understand how people are using this application, what types of data are "
 "being supplied, what common errors exist and so on."
 msgstr "Mientras los datos están en nuestros servidores podemos acceder a esos datos para ayudarnos a entender cómo las personas usan esta aplicación, lQué tipo de datos se están suministrando, los errores comunes que existen, etc."
 
-#: cove/templates/base_generic.html:88
+#: cove/templates/base_generic.html:90
 msgid ""
 "We may also retain data in backups of our servers, which means on occassion,"
 " some data may be retained longer. We have no intention of using this data "
 "for anything other than server recovery in an emergency."
 msgstr "También podemos conservar los datos en las copias de seguridad de nuestros servidores, lo que significa que algunos datos pueden ser retenidos por más tiempo. No tenemos ninguna intención de utilizar estos datos para nada que no sea la recuperación del servidor en caso de emergencia."
 
-#: cove/templates/base_generic.html:89
+#: cove/templates/base_generic.html:91
 msgid ""
 "We do retain some metadata about data supplied to this site. Details can be "
 "found in the code, but may include information about whether or not the file"
@@ -231,11 +256,11 @@ msgid ""
 "supplied and so on. "
 msgstr "Guardamos algunos metadatos sobre los datos suministrados a este sitio. Los detalles se pueden encontrar en el código, pero pueden incluir información sobre si el archivo fue subido, vinculado o pegado, el tamaño del archivo, la fecha / hora en que se suministra y así sucesivamente."
 
-#: cove/templates/base_generic.html:91
+#: cove/templates/base_generic.html:93
 msgid "Why do you delete data after 7 days?"
 msgstr "¿Por qué eliminan los datos después de 7 días?"
 
-#: cove/templates/base_generic.html:92
+#: cove/templates/base_generic.html:94
 msgid ""
 "This is service to allow people to explore machine readable data. As such we"
 " see no need to store and gather everything people submit to the site "
@@ -244,82 +269,82 @@ msgid ""
 " to save people having to clean up after themselves."
 msgstr "Este es un servicio que permite a la gente a explorar datos legibles por computadora. Como tal no vemos la necesidad de almacenar y reunir todo lo que la gente subre al sitio por siempre. Hemos optado por 7 días como un tiempo práctico que permite a la gente compartir los resultados con colegas, pero también permite que los datos desaparezcan con el tiempo para ahorrar a las personas tener que hacer una limpieza ellos mismos."
 
-#: cove/templates/base_generic.html:93
+#: cove/templates/base_generic.html:95
 msgid ""
 "We believe that deleting supplied data after 7 days provides a level of "
 "privacy for the users of this service. "
 msgstr "Creemos que la supresión de los datos suministrados después de 7 días proporciona un nivel de privacidad para los usuarios de este servicio."
 
-#: cove/templates/base_generic.html:97
+#: cove/templates/base_generic.html:99
 msgid "Why provide converted versions?"
 msgstr "¿Por qué ofrecer versiones convertidas?"
 
-#: cove/templates/base_generic.html:98
+#: cove/templates/base_generic.html:100
 msgid "The W3C"
 msgstr "El W3C"
 
-#: cove/templates/base_generic.html:98
+#: cove/templates/base_generic.html:100
 msgid "Data on the Web Best Practices"
 msgstr "Datos sobre Mejores Prácticas en la Web"
 
-#: cove/templates/base_generic.html:98
+#: cove/templates/base_generic.html:100
 msgid ""
 "recommend making open data available in a range of formats to meet the needs"
 " of different users, for example, developers may want JSON, researchers "
 "might prefer a spreadsheet format."
 msgstr "recomienda poner los datos abiertos disponibles en una variedad de formatos para satisfacer las necesidades de los distintos usuarios, por ejemplo, los desarrolladores pueden requerir JSON, los investigadores podrían preferir un formato de hoja de cálculo."
 
-#: cove/templates/base_generic.html:110
+#: cove/templates/base_generic.html:112
 msgid "About"
 msgstr "Acerca de"
 
-#: cove/templates/base_generic.html:112
+#: cove/templates/base_generic.html:114
 msgid "Built by"
 msgstr "Construido por"
 
-#: cove/templates/base_generic.html:112
+#: cove/templates/base_generic.html:114
 msgid "Open Data Services"
 msgstr "Open Data Services"
 
-#: cove/templates/base_generic.html:113
+#: cove/templates/base_generic.html:115
 msgid "The code for this site is available on"
 msgstr "El código de este sitio está disponible en"
 
-#: cove/templates/base_generic.html:113
+#: cove/templates/base_generic.html:115
 msgid "GitHub"
 msgstr "GitHub"
 
-#: cove/templates/base_generic.html:113
+#: cove/templates/base_generic.html:115
 msgid "Cove - COnvert Validate & Explore"
 msgstr "Cove - COnvert Validate & Explore"
 
-#: cove/templates/base_generic.html:113
+#: cove/templates/base_generic.html:115
 msgid "Licence"
 msgstr "Licencia"
 
-#: cove/templates/base_generic.html:113
+#: cove/templates/base_generic.html:115
 msgid "AGPLv3"
 msgstr "AGPLv3"
 
-#: cove/templates/base_generic.html:113
+#: cove/templates/base_generic.html:115
 msgid "Report/View issues"
 msgstr "Reportar / Ver issues"
 
-#: cove/templates/base_generic.html:113
+#: cove/templates/base_generic.html:115
 msgid "Cove Issues"
 msgstr "Issues del Cove"
 
-#: cove/templates/base_generic.html:117
+#: cove/templates/base_generic.html:119
 msgid "Terms &amp; Conditions"
 msgstr "Términos y condiciones"
 
 #. Translators: Provides information about the version of the code base that
 #. is being used
-#: cove/templates/base_generic.html:120
+#: cove/templates/base_generic.html:122
 msgid "Running version "
 msgstr "Versión en ejecución"
 
-#: cove/templates/base_generic.html:123
+#: cove/templates/base_generic.html:125
 msgid "Links"
 msgstr "Enlaces"
 
@@ -540,7 +565,7 @@ msgid ""
 "against the schema."
 msgstr "Si cualquiera de los siguientes campos faltan los datos se considera como no válida en el esquema."
 
-#: cove/templates/common_errors_360.html:39 cove/templates/explore.html:224
+#: cove/templates/common_errors_360.html:39 cove/templates/explore.html:234
 msgid "Field"
 msgstr "Campo"
 
@@ -727,82 +752,80 @@ msgstr "Hoja de cálculo de Excel (.xlsx) con títulos"
 msgid "JSON"
 msgstr "JSON"
 
-#: cove/templates/explore.html:28
-msgid "Download Files"
-msgstr "Descargar archivos"
+#: cove/templates/explore.html:30
+msgid "Convert"
+msgstr "Convertir"
 
-#: cove/templates/explore.html:52 cove/templates/explore_360.html:103
+#: cove/templates/explore.html:58
 msgid "The JSON could not be converted to Spreadsheet due to the error:"
 msgstr "El JSON no se pudo convertir a hoja de cálculo debido al error:"
 
-#: cove/templates/explore.html:81 cove/templates/explore_360.html:134
+#: cove/templates/explore.html:89
 msgid "Convert to Spreadsheet"
 msgstr "Convertir a hoja de cálculo"
 
-#: cove/templates/explore.html:99
+#: cove/templates/explore.html:110
 msgid "Conversion Warnings"
 msgstr "Advertencias de conversión"
 
-#: cove/templates/explore.html:121
+#: cove/templates/explore.html:132
 msgid "Conversion Warnings (titles)"
 msgstr "Advertencias de conversión (títulos)"
 
-#: cove/templates/explore.html:147
+#: cove/templates/explore.html:158 cove/templates/explore.html.py:287
+#: cove/templates/explore.html:290
 msgid "Validation Errors"
 msgstr "Errores de validación"
 
-#: cove/templates/explore.html:154
+#: cove/templates/explore.html:165
 msgid "Error Description"
 msgstr "Error de descripción"
 
-#: cove/templates/explore.html:155
+#: cove/templates/explore.html:166
 msgid "Error Count"
 msgstr "Total de errores"
 
-#: cove/templates/explore.html:156
+#: cove/templates/explore.html:167
 msgid "First 3 Examples"
 msgstr "3 primeros ejemplos"
 
-#: cove/templates/explore.html:157
+#: cove/templates/explore.html:168
 msgid "Location of first 3 errors"
 msgstr "Ubicación de los primeros 3 errores"
 
-#: cove/templates/explore.html:159
+#: cove/templates/explore.html:170
 msgid "Spreadsheet Location of first 3 errors"
 msgstr "Hoja de cálculo de la ubicación de los primeros 3 errores"
 
-#: cove/templates/explore.html:216
+#: cove/templates/explore.html:229 cove/templates/explore.html.py:295
+#: cove/templates/explore.html:298
 msgid "Additional Fields (fields in data not in schema)"
 msgstr "Campos adicionales (campos en los datos que no están en el esquema)"
 
-#: cove/templates/explore.html:218
-msgid "Warning: fields with a language suffix will appear as additional field"
-msgstr "Advertencia: Los campos con un sufijo de idioma aparecerá como campo adicional"
-
-#: cove/templates/explore.html:224
+#: cove/templates/explore.html:234
 msgid "Path to Field"
 msgstr "Ruta al Campo"
 
-#: cove/templates/explore.html:224
+#: cove/templates/explore.html:234
 msgid "Usage Count"
 msgstr "Total de usos"
 
-#: cove/templates/explore.html:248
+#: cove/templates/explore.html:258
 msgid "Save or Share these results"
 msgstr "Guardar o Compartir Estos Resultados"
 
-#: cove/templates/explore.html:249
+#: cove/templates/explore.html:259
 msgid "Use the following url to share these results:"
 msgstr "Utilice el siguiente enlace para compartir estos resultados:"
 
 #. Translators: Paragraph that describes the application
-#: cove/templates/explore.html:254
+#: cove/templates/explore.html:264
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
 msgstr "Estos resultados estarán disponibles durante 7 días desde el día en que los datos se cargan. Puedes revisar estos resultados hasta entonces."
 
-#: cove/templates/explore.html:255
+#: cove/templates/explore.html:265
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
@@ -810,29 +833,40 @@ msgid ""
 msgstr "Después de 7 días todos los datos cargados se eliminan de nuestros servidores, y los resultados ya no estarán disponibles. Cualquier persona que use el enlace a esta página después de eso verá un mensaje avisando que el archivo se ha eliminado."
 
 #: cove/templates/explore_360.html:11
+#: cove/templates/explore_ocds-record.html:12
+#: cove/templates/explore_ocds-release.html:13
 msgid "Headlines"
 msgstr "Titulares"
 
 #: cove/templates/explore_360.html:16
+#: cove/templates/explore_ocds-record.html:17
+#: cove/templates/explore_ocds-release.html:18
 msgid ""
 "Please read the <a href=\"#conversion-warning\">conversion warnings</a> "
 "below."
 msgstr "Por favor, lea las <a href=\"#conversion-warning\">advertencias de conversión</a> de abajo."
 
 #: cove/templates/explore_360.html:20
+#: cove/templates/explore_ocds-record.html:21
+#: cove/templates/explore_ocds-release.html:22
 msgid "Failed "
 msgstr "Ha fallado"
 
 #: cove/templates/explore_360.html:22
+#: cove/templates/explore_ocds-record.html:23
+#: cove/templates/explore_ocds-release.html:24
 msgid "Passed "
 msgstr "pasado"
 
 #: cove/templates/explore_360.html:24
-#: cove/templates/explore_ocds-release.html:34
+#: cove/templates/explore_ocds-record.html:25
+#: cove/templates/explore_ocds-release.html:26
 msgid "validation against "
 msgstr "validación contra"
 
 #: cove/templates/explore_360.html:25
+#: cove/templates/explore_ocds-record.html:26
+#: cove/templates/explore_ocds-release.html:27
 msgid "See <a href=\"#validation-errors\">Validation Errors</a> below."
 msgstr "Ver <a href=\"#validation-errors\">errores de validación</a> de abajo."
 
@@ -877,6 +911,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: cove/templates/explore_360.html:52
+#: cove/templates/explore_ocds-record.html:57
+#: cove/templates/explore_ocds-release.html:58
 #, python-format
 msgid ""
 "This file uses %(count)s <a href=\"#additional-fields\">additional field</a>"
@@ -884,415 +920,421 @@ msgid ""
 msgid_plural ""
 "This file uses %(count)s <a href=\"#additional-fields\">additional "
 "fields</a> not used in the standard."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Este archivo utiliza %(count)s <a href=\"#additional-fields\">campo adicional</a> no utilizado en la norma."
+msgstr[1] "Este archivo utiliza %(count)s <a href=\"#additional-fields\">campos adicionales</a> que no se utilizan en la norma."
 
 #: cove/templates/explore_360.html:57
-#: cove/templates/explore_ocds-release.html:15
+#: cove/templates/explore_ocds-record.html:62
+#: cove/templates/explore_ocds-release.html:63
 msgid "Data "
 msgstr "Datos"
 
 #: cove/templates/explore_360.html:59
-#: cove/templates/explore_ocds-release.html:17
+#: cove/templates/explore_ocds-record.html:64
+#: cove/templates/explore_ocds-release.html:65
 msgid "downloaded from "
 msgstr "descargado desde"
 
 #: cove/templates/explore_360.html:61
-#: cove/templates/explore_ocds-release.html:19
+#: cove/templates/explore_ocds-record.html:66
+#: cove/templates/explore_ocds-release.html:67
 msgid "uploaded "
 msgstr "subido"
 
 #: cove/templates/explore_360.html:63
-#: cove/templates/explore_ocds-release.html:21
+#: cove/templates/explore_ocds-record.html:68
+#: cove/templates/explore_ocds-release.html:69
 msgid "on "
 msgstr "en"
 
-#: cove/templates/explore_360.html:75
-msgid "Convert"
-msgstr "Convertir"
-
-#: cove/templates/explore_360.html:159
-#: cove/templates/explore_ocds-release.html:51
+#: cove/templates/explore_360.html:82
+#: cove/templates/explore_ocds-release.html:92
 msgid "Key Field Information"
 msgstr "Información de Campos Clave"
 
-#: cove/templates/explore_360.html:164
+#: cove/templates/explore_360.html:87
 msgid "Grants:"
 msgstr "Subvenciones:"
 
-#: cove/templates/explore_360.html:166
+#: cove/templates/explore_360.html:89
 msgid "Grant IDs:"
 msgstr "IDs de Subvenciones:"
 
-#: cove/templates/explore_360.html:169
+#: cove/templates/explore_360.html:92
 msgid "Unique Grant IDs:"
 msgstr "IDs de Grant Únicos:"
 
-#: cove/templates/explore_360.html:174 cove/templates/explore_360.html:177
+#: cove/templates/explore_360.html:97 cove/templates/explore_360.html.py:100
 msgid "Duplicate IDs:"
 msgstr "IDs duplicados:"
 
-#: cove/templates/explore_360.html:180
+#: cove/templates/explore_360.html:103
 msgid "Currencies Used Count:"
 msgstr "Total de divisa usada:"
 
-#: cove/templates/explore_360.html:183
+#: cove/templates/explore_360.html:106
 msgid "First Award Date:"
 msgstr "Fecha de primera adjudicación:"
 
-#: cove/templates/explore_360.html:185
+#: cove/templates/explore_360.html:108
 msgid "Last Award Date:"
 msgstr "Fecha de última adjudicación:"
 
-#: cove/templates/explore_360.html:187
+#: cove/templates/explore_360.html:110
 msgid "Highest Award Amount:"
 msgstr "Monto mayor de adjudicación:"
 
-#: cove/templates/explore_360.html:189
+#: cove/templates/explore_360.html:112
 msgid "Lowest Award Amount:"
 msgstr "Monto menor de adjudicación:"
 
-#: cove/templates/explore_360.html:191
+#: cove/templates/explore_360.html:114
 msgid "Currencies Used:"
 msgstr "Divisas usadas:"
 
-#: cove/templates/explore_360.html:196
+#: cove/templates/explore_360.html:119
 msgid "Funder Organisation IDs:"
 msgstr "ID de la Organización Financiadora:"
 
-#: cove/templates/explore_360.html:200
+#: cove/templates/explore_360.html:123
 msgid "Good Funding Org ID Prefixes:"
 msgstr "Financiación buena Org ID prefijos:"
 
-#: cove/templates/explore_360.html:204
+#: cove/templates/explore_360.html:127
 msgid "Unrecognised Funding Org ID Prefixes:"
 msgstr "Sin reconocimiento de financiación Org ID prefijos:"
 
-#: cove/templates/explore_360.html:208
+#: cove/templates/explore_360.html:131
 msgid "Recipient Organisation IDs:"
 msgstr "Receptores ID de la Organización:"
 
-#: cove/templates/explore_360.html:212
+#: cove/templates/explore_360.html:135
 msgid "Good Recipient Org ID Prefixes:"
 msgstr "Bueno Beneficiario Org ID prefijos:"
 
-#: cove/templates/explore_360.html:216
+#: cove/templates/explore_360.html:139
 msgid "Unrecognised Recipient Org ID Prefixes:"
 msgstr "Destinatario no reconocido Org ID prefijos:"
 
-#: cove/templates/explore_360.html:257
+#: cove/templates/explore_360.html:180
 msgid "Grants Table"
 msgstr "Tabla de Subvenciones"
 
-#: cove/templates/explore_ocds-record.html:11
-msgid "Validates against the schema?"
-msgstr "¿Es válido contra el esquema?"
+#: cove/templates/explore_ocds-record.html:33
+#, python-format
+msgid "This file contains <strong>%(count)s record.</strong>"
+msgid_plural "This file contains <strong>%(count)s record.</strong>"
+msgstr[0] "Este archivo <strong>contiene %(count)s registro.</strong>"
+msgstr[1] "Este archivo <strong>contiene %(count)s registro.</strong>"
 
-#: cove/templates/explore_ocds-record.html:24
-msgid "Number of records"
-msgstr "Número de registros"
+#: cove/templates/explore_ocds-record.html:36
+#, python-format
+msgid "There is <strong>%(count)s unique OCID.</strong>"
+msgid_plural "There are <strong>%(count)s unique OCIDs.</strong>"
+msgstr[0] "<strong>Hay %(count)s única OCID.</strong>"
+msgstr[1] "<strong>Hay %(count)s es OCIDs únicas.</strong>"
 
-#: cove/templates/explore_ocds-record.html:35
-msgid "Unique OCIDs"
-msgstr "OCIDs únicos"
-
-#: cove/templates/explore_ocds-record.html:51
-msgid "Records Table:"
-msgstr "Tabla de Registros:"
-
-#: cove/templates/explore_ocds-release.html:11
-msgid "Key Facts"
-msgstr "Hechos clave"
-
-#: cove/templates/explore_ocds-release.html:24
-msgid "This package contains"
-msgstr "Este paquete contiene"
-
-#: cove/templates/explore_ocds-release.html:24
-msgid "release(s) describing"
-msgstr "entrega(s) que describen"
-
-#: cove/templates/explore_ocds-release.html:24
-msgid "contracting process(es)."
-msgstr "proceso de contratación(es)."
-
-#: cove/templates/explore_ocds-release.html:27
+#: cove/templates/explore_ocds-record.html:40
+#: cove/templates/explore_ocds-release.html:41
 msgid "The publisher named in the file is"
 msgstr "El publicador nombrado en el archivo es"
 
-#: cove/templates/explore_ocds-release.html:28
+#: cove/templates/explore_ocds-record.html:45
+#: cove/templates/explore_ocds-release.html:46
 msgid "The license is"
 msgstr "La licencia es"
 
-#: cove/templates/explore_ocds-release.html:32
-msgid "This package "
-msgstr "Este paquete"
+#: cove/templates/explore_ocds-record.html:51
+#: cove/templates/explore_ocds-release.html:52
+#, python-format
+msgid ""
+"There is %(count)s <a href=\"#key-field-info\">duplicate release ID</a> in "
+"this package."
+msgid_plural ""
+"There are %(count)s <a href=\"#key-field-info\">duplicate release IDs</a> in"
+" this package."
+msgstr[0] "Hay %(count)s <a href=\"#key-field-info\">ID de versión duplicada</a> en este paquete."
+msgstr[1] "Hay %(count)s <a href=\"#key-field-info\">IDs de versión duplicados</a> en este paquete."
 
-#: cove/templates/explore_ocds-release.html:33
-msgid "failed "
-msgstr "falló"
+#: cove/templates/explore_ocds-record.html:92
+msgid "Validates against the schema?"
+msgstr "¿Es válido contra el esquema?"
 
-#: cove/templates/explore_ocds-release.html:33
-msgid "passed "
-msgstr "aprobó"
+#: cove/templates/explore_ocds-record.html:105
+msgid "Number of records"
+msgstr "Número de registros"
 
-#: cove/templates/explore_ocds-release.html:37
-msgid "There are"
-msgstr "Hay"
+#: cove/templates/explore_ocds-record.html:116
+msgid "Unique OCIDs"
+msgstr "OCIDs únicos"
 
-#: cove/templates/explore_ocds-release.html:37
-msgid "duplicate release IDs in this package."
-msgstr "ID de entrega duplicados en este paquete."
+#: cove/templates/explore_ocds-record.html:132
+msgid "Records Table:"
+msgstr "Tabla de Registros:"
 
-#: cove/templates/explore_ocds-release.html:56
+#: cove/templates/explore_ocds-release.html:35
+#, python-format
+msgid "This file contains <strong>%(count)s release</strong>"
+msgid_plural "This file contains <strong>%(count)s releases</strong>"
+msgstr[0] "Este archivo <strong>contiene %(count)s de liberación</strong>"
+msgstr[1] "Este archivo contiene <strong>%(count)s los comunicados</strong>"
+
+#: cove/templates/explore_ocds-release.html:36
+#, python-format
+msgid " describing <strong>%(count)s contracting process</strong>"
+msgid_plural " describing <strong>%(count)s contracting processes.</strong>"
+msgstr[0] "<strong>describiendo %(count)s proceso de contratación</strong>"
+msgstr[1] "<strong>describiendo %(count)s procesos de contratación.</strong>"
+
+#: cove/templates/explore_ocds-release.html:97
 msgid "Initiation Types: "
 msgstr "Tipos de iniciación:"
 
-#: cove/templates/explore_ocds-release.html:57
+#: cove/templates/explore_ocds-release.html:98
 msgid "Tags:"
 msgstr "Etiquetas:"
 
-#: cove/templates/explore_ocds-release.html:63
+#: cove/templates/explore_ocds-release.html:104
 msgid "Planning: "
 msgstr "Planeación:"
 
-#: cove/templates/explore_ocds-release.html:64
+#: cove/templates/explore_ocds-release.html:105
 msgid "Tenders: "
 msgstr "Licitaciones:"
 
-#: cove/templates/explore_ocds-release.html:66
+#: cove/templates/explore_ocds-release.html:107
 msgid "Awards: "
 msgstr "Adjudicaciones:"
 
-#: cove/templates/explore_ocds-release.html:68
-#: cove/templates/explore_ocds-release.html:74
-#: cove/templates/explore_ocds-release.html:83
+#: cove/templates/explore_ocds-release.html:109
+#: cove/templates/explore_ocds-release.html:115
+#: cove/templates/explore_ocds-release.html:124
 msgid "Total Count: "
 msgstr "Total:"
 
-#: cove/templates/explore_ocds-release.html:69
-#: cove/templates/explore_ocds-release.html:75
-#: cove/templates/explore_ocds-release.html:84
+#: cove/templates/explore_ocds-release.html:110
+#: cove/templates/explore_ocds-release.html:116
+#: cove/templates/explore_ocds-release.html:125
 msgid "Unique OCIDs: "
 msgstr "OCIDs únicas:"
 
-#: cove/templates/explore_ocds-release.html:72
+#: cove/templates/explore_ocds-release.html:113
 msgid "Contracts: "
 msgstr "Contratos:"
 
-#: cove/templates/explore_ocds-release.html:77
+#: cove/templates/explore_ocds-release.html:118
 msgid "Contracts with no awards: "
 msgstr "Contratos sin adjudicaciones:"
 
-#: cove/templates/explore_ocds-release.html:81
+#: cove/templates/explore_ocds-release.html:122
 msgid "Implementation: "
 msgstr "Implementación:"
 
-#: cove/templates/explore_ocds-release.html:88
+#: cove/templates/explore_ocds-release.html:129
 msgid "Earliest release: "
 msgstr "Apertura de entrega:"
 
-#: cove/templates/explore_ocds-release.html:89
+#: cove/templates/explore_ocds-release.html:130
 msgid "Latest release: "
 msgstr "Última entrega:"
 
-#: cove/templates/explore_ocds-release.html:90
+#: cove/templates/explore_ocds-release.html:131
 msgid "Earliest tender start: "
 msgstr "Apertura de inicio de licitación:"
 
-#: cove/templates/explore_ocds-release.html:91
+#: cove/templates/explore_ocds-release.html:132
 msgid "Latest tender start: "
 msgstr "Último inicio de licitación:"
 
-#: cove/templates/explore_ocds-release.html:92
+#: cove/templates/explore_ocds-release.html:133
 msgid "Earliest award: "
 msgstr "Apertura de adjudicación:"
 
-#: cove/templates/explore_ocds-release.html:93
+#: cove/templates/explore_ocds-release.html:134
 msgid "Latest award: "
 msgstr "Última adjudicación:"
 
-#: cove/templates/explore_ocds-release.html:94
+#: cove/templates/explore_ocds-release.html:135
 msgid "Earliest contract start: "
 msgstr "Apertura de inicio del contrato:"
 
-#: cove/templates/explore_ocds-release.html:95
+#: cove/templates/explore_ocds-release.html:136
 msgid "Latest contract start: "
 msgstr "Último inicio del contrato:"
 
-#: cove/templates/explore_ocds-release.html:98
+#: cove/templates/explore_ocds-release.html:139
 msgid "Total Unique Organizations: "
 msgstr "Organizaciones totales únicas:"
 
-#: cove/templates/explore_ocds-release.html:100
+#: cove/templates/explore_ocds-release.html:141
 msgid "with address details: "
 msgstr "con detalles de dirección:"
 
-#: cove/templates/explore_ocds-release.html:101
+#: cove/templates/explore_ocds-release.html:142
 msgid "with contact points: "
 msgstr "con puntos de contacto:"
 
-#: cove/templates/explore_ocds-release.html:102
+#: cove/templates/explore_ocds-release.html:143
 msgid "that have identifiers: "
 msgstr "que tienen identificadores:"
 
-#: cove/templates/explore_ocds-release.html:103
+#: cove/templates/explore_ocds-release.html:144
 msgid "using schemes: "
 msgstr "utilizando esquemas:"
 
-#: cove/templates/explore_ocds-release.html:106
+#: cove/templates/explore_ocds-release.html:147
 msgid "Organization Roles: "
 msgstr "Roles de Organización:"
 
-#: cove/templates/explore_ocds-release.html:110
+#: cove/templates/explore_ocds-release.html:151
 msgid "Buyers: "
 msgstr "Compradores:"
 
-#: cove/templates/explore_ocds-release.html:115
+#: cove/templates/explore_ocds-release.html:156
 msgid "Suppliers: "
 msgstr "Proveedores:"
 
-#: cove/templates/explore_ocds-release.html:120
+#: cove/templates/explore_ocds-release.html:161
 msgid "Procuring Entities: "
 msgstr "Entidades contratantes:"
 
-#: cove/templates/explore_ocds-release.html:125
+#: cove/templates/explore_ocds-release.html:166
 msgid "Tenderers: "
 msgstr "Llicitadores:"
 
-#: cove/templates/explore_ocds-release.html:130
+#: cove/templates/explore_ocds-release.html:171
 msgid "Total Items: "
 msgstr "Articulos totales:"
 
-#: cove/templates/explore_ocds-release.html:131
+#: cove/templates/explore_ocds-release.html:172
 msgid "Items ID schemes: "
 msgstr "Esquemas de ID de artículos:"
 
-#: cove/templates/explore_ocds-release.html:132
+#: cove/templates/explore_ocds-release.html:173
 msgid "Item Types: "
 msgstr "Tipos de Artículos:"
 
-#: cove/templates/explore_ocds-release.html:134
+#: cove/templates/explore_ocds-release.html:175
 msgid "Tender: "
 msgstr "Licitación:"
 
-#: cove/templates/explore_ocds-release.html:135
+#: cove/templates/explore_ocds-release.html:176
 msgid "Award: "
 msgstr "Adjudicación:"
 
-#: cove/templates/explore_ocds-release.html:136
+#: cove/templates/explore_ocds-release.html:177
 msgid "Contract: "
 msgstr "Contrato:"
 
-#: cove/templates/explore_ocds-release.html:139
+#: cove/templates/explore_ocds-release.html:180
 msgid "Languages: "
 msgstr "Idiomas:"
 
-#: cove/templates/explore_ocds-release.html:140
+#: cove/templates/explore_ocds-release.html:181
 msgid "Currencies: "
 msgstr "Divisas:"
 
-#: cove/templates/explore_ocds-release.html:158
+#: cove/templates/explore_ocds-release.html:199
 msgid "Documents"
 msgstr "Documentos"
 
-#: cove/templates/explore_ocds-release.html:163
+#: cove/templates/explore_ocds-release.html:204
 msgid "Part of Contracting Process"
 msgstr "Parte del proceso de contratación"
 
-#: cove/templates/explore_ocds-release.html:164
+#: cove/templates/explore_ocds-release.html:205
 msgid "Count of Docs"
 msgstr "Total de Documentos"
 
-#: cove/templates/explore_ocds-release.html:165
+#: cove/templates/explore_ocds-release.html:206
 msgid "Document Types"
 msgstr "Tipos de documentos"
 
-#: cove/templates/explore_ocds-release.html:171
+#: cove/templates/explore_ocds-release.html:212
 msgid "Planning"
 msgstr "Planeación"
 
-#: cove/templates/explore_ocds-release.html:183
+#: cove/templates/explore_ocds-release.html:224
 msgid "Tender"
 msgstr "Licitación"
 
-#: cove/templates/explore_ocds-release.html:195
+#: cove/templates/explore_ocds-release.html:236
 msgid "Tender Milestones"
 msgstr "Hitos de Licitación"
 
-#: cove/templates/explore_ocds-release.html:207
+#: cove/templates/explore_ocds-release.html:248
 msgid "Awards"
 msgstr "Adjudicaciones"
 
-#: cove/templates/explore_ocds-release.html:219
+#: cove/templates/explore_ocds-release.html:260
 msgid "Contracts"
 msgstr "Contratos"
 
-#: cove/templates/explore_ocds-release.html:231
+#: cove/templates/explore_ocds-release.html:272
 msgid "Implementation"
 msgstr "Implementación"
 
-#: cove/templates/explore_ocds-release.html:243
+#: cove/templates/explore_ocds-release.html:284
 msgid "Implementation Milestones"
 msgstr "Hitos de ejecución"
 
-#: cove/templates/explore_ocds-release.html:263
+#: cove/templates/explore_ocds-release.html:304
 msgid "Statistics can not produced as data is invalid."
 msgstr "No se pueden producir estadísticas ya que los datos no son válidos."
 
-#: cove/templates/explore_ocds-release.html:277
+#: cove/templates/explore_ocds-release.html:318
 msgid "Releases Table:"
 msgstr "Tabla de Entregas:"
 
-#: cove/templates/explore_ocds-release.html:285
+#: cove/templates/explore_ocds-release.html:326
 msgid "Release Date"
 msgstr "Fecha de Entrega"
 
-#: cove/templates/explore_ocds-release.html:286
+#: cove/templates/explore_ocds-release.html:327
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: cove/templates/explore_ocds-release.html:287
+#: cove/templates/explore_ocds-release.html:328
 msgid "Descriptions"
 msgstr "Descripciones"
 
-#: cove/templates/explore_ocds-release.html:288
+#: cove/templates/explore_ocds-release.html:329
 msgid "Purchasers"
 msgstr "Compradores"
 
-#: cove/templates/explore_ocds-release.html:300
+#: cove/templates/explore_ocds-release.html:341
 msgid "Tender Title:"
 msgstr "Título de licitación:"
 
-#: cove/templates/explore_ocds-release.html:303
+#: cove/templates/explore_ocds-release.html:344
 msgid "Tender Description:"
 msgstr "Descripción de licitación:"
 
-#: cove/templates/explore_ocds-release.html:307
+#: cove/templates/explore_ocds-release.html:348
 msgid "Tender Item Description:"
 msgstr "Descripción de artículo de la licitación:"
 
-#: cove/templates/explore_ocds-release.html:312
+#: cove/templates/explore_ocds-release.html:353
 msgid "Award Title:"
 msgstr "Título de Adjudicación:"
 
-#: cove/templates/explore_ocds-release.html:315
+#: cove/templates/explore_ocds-release.html:356
 msgid "Award Description:"
 msgstr "Descripción de adjudicación:"
 
-#: cove/templates/explore_ocds-release.html:320
+#: cove/templates/explore_ocds-release.html:361
 msgid "Contract Title:"
 msgstr "Título del contrato:"
 
-#: cove/templates/explore_ocds-release.html:323
+#: cove/templates/explore_ocds-release.html:364
 msgid "Contract Description:"
 msgstr "Descripción del contrato:"
 
-#: cove/templates/explore_ocds-release.html:331
+#: cove/templates/explore_ocds-release.html:372
 msgid "Buyer:"
 msgstr "Comprador:"
 
-#: cove/templates/explore_ocds-release.html:337
+#: cove/templates/explore_ocds-release.html:378
 msgid "Procuring Entity:"
 msgstr "Entidad Contratante:"
 
@@ -1746,3 +1788,10 @@ msgid ""
 "\n"
 "This is because all data suplied to this website is automatically deleted after 7 days, and therefore the analysis of that data is no longer available."
 msgstr "Los datos que usted quería explorar ya no existe.\n\nEsto se debe a que todos los datos suministrados a este sitio web se borran automáticamente después de 7 días, y por lo tanto el análisis de esos datos ya no está disponible."
+
+#: cove/views.py:114
+msgid ""
+"We think you tried to upload a JSON file, but it is not well formed JSON.\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Error message:</strong> {}"
+msgstr "Pensamos que está intentando enviar un archivo JSON, pero no está bien formado JSON\n\n<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Mensaje de error:</strong> {}"
