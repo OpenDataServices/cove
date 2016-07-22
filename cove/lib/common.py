@@ -135,7 +135,6 @@ def get_counts_additional_fields(schema_url, schema_name, json_data, context, cu
         # to make results less verbose
         if not parent_field or parent_field in schema_fields:
             if current_app == 'cove-ocds':
-                print(LANGUAGE_RE.search(field.split('/')[-1]), field.split('/')[-1])
                 if LANGUAGE_RE.search(field.split('/')[-1]):
                     continue
             data_only.add(field)
@@ -215,7 +214,12 @@ def get_schema_validation_errors(json_data, schema_url, schema_name, current_app
         if e.validator == 'required':
             field_name = e.message
             if len(e.path) > 2:
-                field_name = e.path[-2] + ":" + e.message
+                if isinstance(e.path[-2], int):
+                    parent_name = e.path[-1]
+                else:
+                    parent_name = e.path[-2]
+
+                field_name = str(parent_name) + ":" + e.message
             heading = heading_source_map.get(path_no_number + '/' + e.message)
             if heading:
                 field_name = heading[0][1]
