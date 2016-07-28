@@ -111,7 +111,8 @@ def explore(request, pk):
                     'sub_title': _("Sorry we can't process that data"),
                     'link': 'cove:index',
                     'link_text': _('Try Again'),
-                    'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\nError message: {}'.format(err))
+                    'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> {}'.format(err)),
+                    'error': format(err)
                 })
         if request.current_app == 'cove-ocds' and 'records' in json_data:
             context['conversion'] = None

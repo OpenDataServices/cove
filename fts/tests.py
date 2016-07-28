@@ -173,6 +173,7 @@ def test_accordion(server_url, browser, prefix):
 
     time.sleep(0.5)
     assert buttons() == [True, False, False]
+    assert 'Upload a file (.json, .csv, .xlsx)' in browser.find_elements_by_tag_name('label')[0].text
     browser.find_element_by_partial_link_text('Link').click()
     browser.implicitly_wait(1)
     time.sleep(0.5)
@@ -180,6 +181,8 @@ def test_accordion(server_url, browser, prefix):
     browser.find_element_by_partial_link_text('Paste').click()
     time.sleep(0.5)
     assert buttons() == [False, False, True]
+    assert 'Paste (JSON only)' in browser.find_elements_by_tag_name('label')[2].text
+
     # Now test that the whole banner is clickable
     browser.find_element_by_id('headingOne').click()
     time.sleep(0.5)
@@ -193,18 +196,18 @@ def test_accordion(server_url, browser, prefix):
 
 
 @pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text', 'conversion_successful'), [
-    (PREFIX_OCDS, 'tenders_releases_2_releases.json', ['Download Files', 'Save or Share these results', 'Warning: fields with a language suffix will appear as additional field'], True),
-    (PREFIX_OCDS, 'ocds_release_nulls.json', ['Download Files', 'Save or Share these results'], True),
+    (PREFIX_OCDS, 'tenders_releases_2_releases.json', ['Convert'], True),
+    (PREFIX_OCDS, 'ocds_release_nulls.json', ['Convert', 'Save or Share these results'], True),
     # Conversion should still work for files that don't validate against the schema
-    (PREFIX_OCDS, 'tenders_releases_2_releases_invalid.json', ['Download Files',
+    (PREFIX_OCDS, 'tenders_releases_2_releases_invalid.json', ['Convert',
                                                                'Validation Errors',
                                                                "'id' is missing but required",
                                                                "Invalid 'uri' found"], True),
     # Test UTF-8 support
-    (PREFIX_OCDS, 'utf8.json', 'Download Files', True),
+    (PREFIX_OCDS, 'utf8.json', 'Convert', True),
     # But we expect to see an error message if a file is not well formed JSON at all
     (PREFIX_OCDS, 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
-    (PREFIX_OCDS, 'tenders_releases_2_releases.xlsx', 'Download Files', True),
+    (PREFIX_OCDS, 'tenders_releases_2_releases.xlsx', 'Convert', True),
     (PREFIX_OCDS, 'badfile.json', 'Statistics can not produced', True),
     (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', ['Convert',
                                                            'Save or Share these results',
@@ -446,9 +449,11 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
     body_text = browser.find_element_by_tag_name('body').text
     if len(warning_texts) == 0:
         assert 'Conversion Warnings' not in body_text
+        assert 'conversion errors' not in body_text
     else:
         assert warning_texts[0] in body_text
         assert 'Conversion Warnings' in body_text
+        assert 'conversion errors' not in body_text
 
 
 @pytest.mark.parametrize(('prefix'), PREFIX_LIST)

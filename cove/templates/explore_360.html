@@ -2,9 +2,9 @@
 {% load i18n %}
 {% load cove_tags %}
 
-{% block key_facts %}
 
-<div class="row">
+  
+{% block key_facts %}
   <div class="col-md-6">
     <div class="panel {% if validation_errors %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
       <div class="panel-heading">
@@ -68,87 +68,10 @@
     </div>
   </div>
   
-  <div class="col-md-6">
-    <div class="panel {% if conversion_error %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          {% trans 'Convert' %}
-        </h4>
-      </div>
-          
-      <div class="panel-body">
-        <div class="conversion message">
-          {% if conversion_warning_messages or conversion_warning_messages_titles %}
-            <p><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>There were <a href="#conversion-warning">conversion errors</a> when processing your file. The converted data may not represent your data as you want it to be.</p>
-          {% endif %}
-          {% if conversion == 'flatten' %}
-            <p>We have tried to convert your JSON into a spreadsheet format.</p><p>The results can be seen below.</p>
-            <ul class="list-unstyled left-space">
-              <li>
-                <a href="{{original_file.url}}">{{JSON}} ({{original}})</a> {{original_file.size|filesizeformat }}
-              </li>
-              {% if not conversion_error %}
-                <li>
-                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}.xlsx">{{xlsx}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
-                </li>
-                <!--Only show for 360Giving files-->
-                {% if request.cove_config.convert_titles %}
-                  <li>
-                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({{converted}})</a> {{converted_file_size_titles|filesizeformat }}
-                  </li>
-                {% endif %}
-              {% endif %}
-            </ul>
-            {% if conversion_error %}
-                <p>{% blocktrans %}The JSON could not be converted to Spreadsheet due to the error:{% endblocktrans %} {{ conversion_error }}</p>
+ {% endblock %}
+  
 
-                {% include 'error_extra.html' %}
-            {% endif %}
-          
-          {% elif conversion == 'unflatten' %}
-            <p>We have tried to convert your data into JSON format.</p><p>The results can be seen below.</p>
-            <ul class="list-unstyled">
-              <li>
-                <a href="{{original_file.url}}">
-                  {% if file_type == 'xlsx' %}
-                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{xlsx}} ({{original}})
-                  {% elif file_type == 'csv' %}
-                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{csv}} ({{original}})
-                  {% endif %}
-                  </a> 
-                  {{original_file.size|filesizeformat }}
-                </li>
-                <li>
-                  <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
-                </li>
-            </ul>
 
-          {% else %}
-            <ul class="list-unstyled">
-              <li>
-                <a href="{{original_file.url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} ({{original}})</a> {{original_file.size|filesizeformat }}
-                {% if conversion == 'flattenable' %}
-                  <br/>
-                  <br/>
-                  <form method="post">
-                    <button name="flatten" value="true" type="submit" class="btn btn-info btn-sm">{% blocktrans %}Convert to Spreadsheet{% endblocktrans %}</button>
-                    {% csrf_token %}
-                  </form>
-                {% endif %}
-              </li>
-            </ul>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  </div>
-</div><!--End Row -->
-
-{% endblock %}
-
-<!--Overide converted_files block in explore.html-->
-{% block converted_files %}
-{% endblock %}
 
 {% block explore_content %}
 <a id="key-field-info"></a>

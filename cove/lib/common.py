@@ -7,10 +7,13 @@ from flattentool.schema import get_property_type_set
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
 from jsonschema import FormatChecker, RefResolver
+import re
 
 import cove.lib.tools as tools
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
+
+LANGUAGE_RE = re.compile("^(.*_(((([A-Za-z]{2,3}(-([A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-([A-Za-z]{4}))?(-([A-Za-z]{2}|[0-9]{3}))?(-([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-([0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(x(-[A-Za-z0-9]{1,8})+))?)|(x(-[A-Za-z0-9]{1,8})+)))$")
 
 
 def uniqueIds(validator, uI, instance, schema):
@@ -131,8 +134,9 @@ def get_counts_additional_fields(schema_url, schema_name, json_data, context, cu
         # only take fields with parent in schema (and top level fields)
         # to make results less verbose
         if not parent_field or parent_field in schema_fields:
-            if '_' in field.split('/')[-1] and current_app == 'cove-ocds':
-                context['language_additional_field_warning'] = True
+            if current_app == 'cove-ocds':
+                if LANGUAGE_RE.search(field.split('/')[-1]):
+                    continue
             data_only.add(field)
 
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
@@ -210,7 +214,12 @@ def get_schema_validation_errors(json_data, schema_url, schema_name, current_app
         if e.validator == 'required':
             field_name = e.message
             if len(e.path) > 2:
-                field_name = e.path[-2] + ":" + e.message
+                if isinstance(e.path[-2], int):
+                    parent_name = e.path[-1]
+                else:
+                    parent_name = e.path[-2]
+
+                field_name = str(parent_name) + ":" + e.message
             heading = heading_source_map.get(path_no_number + '/' + e.message)
             if heading:
                 field_name = heading[0][1]
