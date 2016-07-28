@@ -35,7 +35,7 @@ def server_url(request, live_server):
 
 def test_index_page_banner(server_url, browser):
     if not PREFIX_360 or not PREFIX_OCDS:
-        return
+        pytest.skip()
     browser.get(server_url)
     assert 'This tool is alpha. Please report any problems on GitHub issues.' in browser.find_element_by_tag_name('body').text
     if server_url == "http://dev.cove.opendataservices.coop/":
@@ -44,7 +44,7 @@ def test_index_page_banner(server_url, browser):
 
 def test_index_page(server_url, browser):
     if not PREFIX_360 or not PREFIX_OCDS:
-        return
+        pytest.skip()
     browser.get(server_url)
     assert 'CoVE' in browser.find_element_by_tag_name('body').text
     assert '360Giving Data Quality Tool' in browser.find_element_by_tag_name('body').text
@@ -58,7 +58,7 @@ def test_index_page(server_url, browser):
     ])
 def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector, url):
     if not PREFIX_OCDS:
-        return
+        pytest.skip()
     browser.get(server_url + PREFIX_OCDS)
     footer = browser.find_element_by_id('footer')
     link = footer.find_element_by_link_text(link_text)
@@ -75,7 +75,7 @@ def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector
     ])
 def test_footer_360(server_url, browser, link_text, expected_text, css_selector, url):
     if not PREFIX_360:
-        return
+        pytest.skip()
     browser.get(server_url + PREFIX_360)
     link = browser.find_element_by_link_text(link_text)
     href = link.get_attribute("href")
@@ -87,7 +87,7 @@ def test_footer_360(server_url, browser, link_text, expected_text, css_selector,
 
 def test_index_page_ocds(server_url, browser):
     if not PREFIX_OCDS:
-        return
+        pytest.skip()
     browser.get(server_url + PREFIX_OCDS)
     assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
     assert 'Using the validator' in browser.find_element_by_tag_name('body').text
@@ -104,7 +104,7 @@ def test_index_page_ocds(server_url, browser):
     ])
 def test_index_page_ocds_links(server_url, browser, css_id, link_text, url):
     if not PREFIX_OCDS:
-        return
+        pytest.skip()
     browser.get(server_url + PREFIX_OCDS)
     section = browser.find_element_by_id(css_id)
     link = section.find_element_by_link_text(link_text)
@@ -114,7 +114,7 @@ def test_index_page_ocds_links(server_url, browser, css_id, link_text, url):
     
 def test_index_page_360(server_url, browser):
     if not PREFIX_360:
-        return
+        pytest.skip()
     browser.get(server_url + PREFIX_360)
     assert 'Data Quality Tool' in browser.find_element_by_class_name('title360').text
     assert 'How to use the 360Giving Data Quality Tool' in browser.find_element_by_tag_name('body').text
@@ -133,7 +133,7 @@ def test_index_page_360(server_url, browser):
     ])
 def test_index_page_360_links(server_url, browser, link_text, url):
     if not PREFIX_360:
-        return
+        pytest.skip()
     browser.get(server_url + PREFIX_360)
     link = browser.find_element_by_link_text(link_text)
     href = link.get_attribute("href")
@@ -143,7 +143,7 @@ def test_index_page_360_links(server_url, browser, link_text, url):
 @pytest.mark.parametrize('prefix', PREFIX_LIST)
 def test_common_index_elements(server_url, browser, prefix):
     if not PREFIX_360 or not PREFIX_OCDS:
-        return
+        pytest.skip()
     browser.get(server_url + prefix)
     browser.find_element_by_css_selector('#more-information').click()
     time.sleep(0.5)
@@ -249,7 +249,7 @@ def test_accordion(server_url, browser, prefix):
     ])
 def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
     if not prefix:
-        return
+        pytest.skip()
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -337,6 +337,8 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
     (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json'),
     ])
 def test_error_modal(server_url, browser, httpserver, source_filename, prefix):
+    if not prefix:
+        pytest.skip()
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -368,7 +370,7 @@ def test_error_modal(server_url, browser, httpserver, source_filename, prefix):
     ])
 def test_check_schema_link_on_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text):
     if not prefix:
-        return
+        pytest.skip()
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -484,6 +486,8 @@ def test_500_error(server_url, browser, prefix):
 
 
 def test_common_errors_page(server_url, browser):
+    if not PREFIX_360:
+        pytest.skip()
     browser.get(server_url + '/360/common_errors/')
     assert "Common Errors" in browser.find_element_by_tag_name('h2').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
@@ -498,6 +502,8 @@ def test_common_errors_page(server_url, browser):
     ('integer')
     ])
 def test_common_errors_page_anchors(server_url, browser, anchor_text):
+    if not PREFIX_360:
+        pytest.skip()
     # Checks we have sections for each our error messages
     browser.get(server_url + '/360/common_errors/')
     browser.find_element_by_id(anchor_text)
