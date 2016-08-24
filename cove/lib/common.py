@@ -29,7 +29,7 @@ def uniqueIds(validator, uI, instance, schema):
             except AttributeError:
                 # if item is not a dict
                 item_id = None
-            if item_id and not isinstance(item_id, list):
+            if item_id and not isinstance(item_id, list) and not isinstance(item_id, dict):
                 if item_id in all_ids:
                     non_unique_ids.add(item_id)
                 all_ids.add(item_id)
@@ -41,7 +41,7 @@ def uniqueIds(validator, uI, instance, schema):
                 return
 
         if non_unique_ids:
-            yield ValidationError("Non-unique ID Values (first 3 shown):  {}".format(", ".join(list(non_unique_ids)[:3])))
+            yield ValidationError("Non-unique ID Values (first 3 shown):  {}".format(", ".join(str(x) for x in list(non_unique_ids)[:3])))
 
 
 def required_draft4(validator, required, instance, schema):
