@@ -12,7 +12,7 @@ before_install:
   - sudo update-java-alternatives -s java-8-oracle
 
 install: 
-  - "pip install -r requirements_dev.txt --use-mirrors"
+  - "pip install -r requirements_dev.txt"
   - wget "https://github.com/validator/validator/releases/download/16.3.3/vnu.jar_16.3.3.zip"; unzip vnu.jar_16.3.3.zip
 
 script:
