@@ -56,7 +56,7 @@ class SuppliedData(models.Model):
             if self.is_google_doc():
                 get_google_doc(self)
             else:
-                r = requests.get(self.source_url)
+                r = requests.get(self.source_url, headers={'User-Agent': 'Cove (cove.opendataservice.coop)'})
                 r.raise_for_status()
                 content_type = r.headers.get('content-type', '').split(';')[0].lower()
                 file_extension = CONTENT_TYPE_MAP.get(content_type)
