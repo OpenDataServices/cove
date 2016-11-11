@@ -166,7 +166,7 @@ def explore(request, pk):
     view = 'explore.html'
     if request.current_app == 'cove-ocds':
         if 'records' in json_data:
-            context['records_aggregates'] = ocds.get_records_aggregates(json_data)
+            context['records_aggregates'] = ocds.get_records_aggregates(json_data, ignore_errors=bool(validation_errors))
             view = 'explore_ocds-record.html'
         else:
             context['releases_aggregates'] = ocds.get_releases_aggregates(json_data, ignore_errors=bool(validation_errors))
