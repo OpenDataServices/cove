@@ -1,6 +1,104 @@
 Roadmap
 =======
 
+August - December 2016
+----------------------
+
+See also the flatten-tool roadmap https://github.com/OpenDataServices/flatten-tool/blob/master/ROADMAP.rst 
+
+- Spend some time on improving analytics 
+    - In particular it would be useful to know how many validations end with error. 
+- Use IODC as an opportunity to do some user testing 
+- Spend some time on Cove deployment 
+    - Configure our dev/staging/live servers more similarly, particularly wrt. OCDS/360 split, to avoid issues only being noticed when doing the live deploy. 
+    - Redeploy some of our Cove instances so that they can be billed directly to clients. 
+    - Review the specs of the servers used for cove 
+- Dedicate some time to misc bug fixes 
+- Validation of extensions is important for OCDS 1.1 live 
+- Ensure we support new style OCDS codelists 
+- Improve display of flatten-tool conversion errors 
+- A Large files policy - we need to decide how we handle them, and tell people how we handle them - need to say we have a time out now.  
+
+We’d like to (but are unlikely to have time for in the next 5 months):
+
+- Start on the process of separating the code for the 360Giving and OCDS versions of the tool 
+- A 360 specific deploy on 360Giving domain 
+- Sentry user feedback from errors 
+- Provide a merge releases feature for OCDS data 
+- Spend some time talking with OCDS/360Giving data analysts to better understand their needs 
+    - When to use CoVE and when to use other analysis tools, and how these fit together: ipython notebooks, sql output 
+    - Programmatic access 
+- Finish work on programmatic access to Cove, this may include: 
+    - "API" on conversion / validation / warnings / aggregate data 
+    - Button to download a CSV/JSON of validation results/warnings/aggregate data 
+    - Be available for offline use - i.e offering CoVE as a python library 
+- Completeness - a tree with percentages like some of the OCDS evaluation reports 
+    - Also useful to flag whether it’s a required field 
+    - Some questions around how this works with work with one of many files 
+    - For 360 flag maybe what appears in the main sheet of the default spreadsheet template 
+- More OCDS summary statistics 
+- Extra warnings for fields that do not follow documentation guidelines. 
+- Improve the information we provide about OCDS record packages 
+
+We won’t:
+
+- Do OCDS completeness based on the current basic/intermediate/advanced framework in the docs as that needs improvement first 
+
+Nice to haves:
+
+- Show some graphs and maps 
+- Use Whoosh - python text search? - This should be a big help with exploring your data 
+- Work with IATI data. 
+- Custom quick and easy deployment. 
+
+April - July 2016, what we did
+------------------------------
+
+PRs for deploying new features to live:
+
+- June https://github.com/OpenDataServices/cove/pull/436
+- July https://github.com/OpenDataServices/cove/pull/466
+
+We did (from the roadmap):
+
+- A specific sprint  in May around the 360Giving version of CoVE 
+    - Improved the words in the application and changed the layout - explain to users more about what's going on 
+    - Use new source map in flatten-tool to provide validation information about the original spreadsheet users 
+- In a later month, applied some of the changes from that sprint to the OCDS version also. 
+- Some more work on errors 
+- Start some work on programmatic access to Cove as a Python library 
+- Testing loading lots of data from various published sources to check for regressions/changes, although not properly merged yet… 
+- Some work around Logging/reporting more information about how the application is being used 
+- Make it more clear about others can contribute to this project 
+- Cove can now be deployed with dev schema 
+- Cove now checks content-type and content-disposition to determine filetype 
+- Lots of work on flatten-tool, and now have a roadmap for that: https://github.com/OpenDataServices/flatten-tool/blob/master/ROADMAP.rst
+
+Additionally we did:
+
+- Warnings from flatten-tool are now displayed in Cove 
+- Better format checking (uris) 
+
+Stalled:
+
+- A Large files policy - we need to decide how we handle them, and tell people how we handle them - need to say we have a time out now. 
+
+We deliberately didn’t:
+
+- Validate other formats directly (e.g csvs as csvs, excel as excel), taking a source map approach instead 
+
+We said we would, but didn’t get to:
+
+- Start on the process of separating the 360Giving and OCDS versions of the tool 
+- Comprehensiveness 
+    - Fields not being used/'coverage' for 360Giving based on spreadsheet on the website. 
+    - Completeness of OCDS 
+- Finish work on programmatic access to Cove, this may include: 
+    - "API" on conversion / validation / warnings / aggregate data 
+    - Button to download a CSV/JSON of validation results/warnings/aggregate data 
+    - Be available for offline use - i.e offering CoVE as a python library 
+- When to use CoVE and when to use other analysis tools, and how these fit together: ipython notebooks, sql output
+
 April - July 2016
 -----------------
 We are planing a specific sprint in May around the 360Giving version of CoVE
