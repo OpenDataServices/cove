@@ -5,13 +5,13 @@
 # Translators:
 # Ben Webb <ben.webb@opendataservices.coop>, 2016
 # David Raznick <david.raznick@opendataservices.coop>, 2016
-# Oscar Montiel <miguel.montiel@gmail.com>, 2016
+# Oscar Montiel <oscar.montiel@okfn.org>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: CoVE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-21 11:32+0000\n"
-"PO-Revision-Date: 2016-07-21 11:35+0000\n"
+"POT-Creation-Date: 2016-11-24 07:53+0000\n"
+"PO-Revision-Date: 2016-11-24 07:56+0000\n"
 "Last-Translator: Ben Webb <ben.webb@opendataservices.coop>\n"
 "Language-Team: Spanish (http://www.transifex.com/OpenDataServices/cove/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgid "Sorry we got a ConnectionError whilst trying to download that file"
 msgstr "En este momento tenemos un ConnectionError mismo tiempo tratando de descargar el archivo"
 
 #: cove/input/views.py:68 cove/input/views.py:75 cove/lib/converters.py:74
-#: cove/lib/converters.py:135 cove/views.py:45 cove/views.py:113
+#: cove/lib/converters.py:135 cove/views.py:45 cove/views.py:114
 msgid "Try Again"
 msgstr "Inténtalo de nuevo"
 
@@ -78,7 +78,7 @@ msgid ""
 msgstr "\n\nSi se puede acceder al archivo a través de un navegador entonces el problema puede estar relacionado con los permisos, o puede estar bloqueando ciertas aplicaciones de usuario."
 
 #: cove/lib/converters.py:72 cove/lib/converters.py:133 cove/views.py:43
-#: cove/views.py:111
+#: cove/views.py:112
 msgid "Sorry we can't process that data"
 msgstr "Lo sentimos, no podemos procesar esos datos"
 
@@ -172,7 +172,7 @@ msgstr "Formatos"
 
 #: cove/templates/base_360.html:38
 msgid ""
-"The application accepts data in some of the formats given in the <a href=\"http://www.threesixtygiving.org/standard/\">360Giving Data Standard guidence</a>.\n"
+"The application accepts data in some of the formats given in the <a href=\"http://www.threesixtygiving.org/standard/\">360Giving Data Standard guidance</a>.\n"
 "    <br>Acceptable files are: "
 msgstr "La aplicación acepta datos en algunos de los formatos dados en la <a href=\"http://www.threesixtygiving.org/standard/\">guía del Estándar de Datos 360Giving.</a> <br> Los siguientes son archivos aceptados:"
 
@@ -243,8 +243,8 @@ msgstr "Mientras los datos están en nuestros servidores podemos acceder a esos 
 
 #: cove/templates/base_generic.html:90
 msgid ""
-"We may also retain data in backups of our servers, which means on occassion,"
-" some data may be retained longer. We have no intention of using this data "
+"We may also retain data in backups of our servers, which means on occasion, "
+"some data may be retained longer. We have no intention of using this data "
 "for anything other than server recovery in an emergency."
 msgstr "También podemos conservar los datos en las copias de seguridad de nuestros servidores, lo que significa que algunos datos pueden ser retenidos por más tiempo. No tenemos ninguna intención de utilizar estos datos para nada que no sea la recuperación del servidor en caso de emergencia."
 
@@ -265,8 +265,8 @@ msgid ""
 "This is service to allow people to explore machine readable data. As such we"
 " see no need to store and gather everything people submit to the site "
 "forever. We have chosen 7 days as a practical time frame that allows people "
-"to share results with collegues, but also allows data to disappear over time"
-" to save people having to clean up after themselves."
+"to share results with colleagues, but also allows data to disappear over "
+"time to save people having to clean up after themselves."
 msgstr "Este es un servicio que permite a la gente a explorar datos legibles por computadora. Como tal no vemos la necesidad de almacenar y reunir todo lo que la gente subre al sitio por siempre. Hemos optado por 7 días como un tiempo práctico que permite a la gente compartir los resultados con colegas, pero también permite que los datos desaparezcan con el tiempo para ahorrar a las personas tener que hacer una limpieza ellos mismos."
 
 #: cove/templates/base_generic.html:95
@@ -1711,7 +1711,7 @@ msgid ""
 "hold about you under the Data Protection Act 1998. A small fee will be "
 "payable. If you would like a copy of the information held on you please "
 "email the Data Protection Officer at company@opendataservices.coop. If you "
-"would like to write to us our registered addresess is 32 Church Road, Hove, "
+"would like to write to us our registered address is 32 Church Road, Hove, "
 "East Sussex, England, BN3 2FN. Further details are available on the <a "
 "href=\"https://opencorporates.com/companies/gb/09506232\">Open Data Services"
 " Co-operative Limited page at Open Corporates</a>."
@@ -1770,26 +1770,26 @@ msgid ""
 "We can only process json, csv and xlsx files."
 msgstr "No se reconoce el tipo de archivo. \n\nSólo podemos procesar archivos JSON, CSV y xlsx."
 
-#: cove/views.py:75 cove/views.py:85
+#: cove/views.py:76 cove/views.py:86
 msgid "Sorry, the page you are looking for is not available"
 msgstr "Lo sentimos, la página que está buscando no está disponible"
 
-#: cove/views.py:77 cove/views.py:87
+#: cove/views.py:78 cove/views.py:88
 msgid "Go to Home page"
 msgstr "Ir a la Página de Inicio"
 
-#: cove/views.py:78
+#: cove/views.py:79
 msgid "We don't seem to be able to find the data you requested."
 msgstr "Parece que no podemos encontrar los datos que usted solicitó."
 
-#: cove/views.py:88
+#: cove/views.py:89
 msgid ""
 "The data you were hoping to explore no longer exists.\n"
 "\n"
 "This is because all data suplied to this website is automatically deleted after 7 days, and therefore the analysis of that data is no longer available."
 msgstr "Los datos que usted quería explorar ya no existe.\n\nEsto se debe a que todos los datos suministrados a este sitio web se borran automáticamente después de 7 días, y por lo tanto el análisis de esos datos ya no está disponible."
 
-#: cove/views.py:114
+#: cove/views.py:115
 msgid ""
 "We think you tried to upload a JSON file, but it is not well formed JSON.\n"
 "\n"
