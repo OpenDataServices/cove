@@ -5,11 +5,13 @@ import csv
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Upload set of files to cove')
+    parser.add_argument('-o', '--out', help='Output filename')
     parser.add_argument('cove_url', help='URL endpoint or upload page')
     parser.add_argument('files', help='files to import', nargs='+')
     args = parser.parse_args()
 
-    with open('validation_errors.csv', 'w+') as validation_errors:
+    output_filename = str(args.out) or 'validation_errors.csv'
+    with open(output_filename, 'w+') as validation_errors:
         validation_writer = csv.writer(validation_errors)
         validation_writer.writerow(["file", "message", "count", "first_error"])
         for file in args.files:
