@@ -244,13 +244,15 @@ def test_fields_present():
     assert c.get_fields_present({'a': {'c_1': [{'d': 1}, {'d': 1}]}, 'b_1': 2}) == {'/a': 1, '/a/c_1': 1, '/a/c_1/d': 2, '/b_1': 1}
 
 
-def test_get_file_type_xlsx():
+@pytest.mark.parametrize('file_name', ['basic.xlsx', 'basic.XLSX'])
+def test_get_file_type_xlsx(file_name):
     with open(os.path.join('cove', 'fixtures', 'basic.xlsx')) as fp:
-        assert v.get_file_type(UploadedFile(fp, 'basic.xlsx')) == 'xlsx'
+        assert v.get_file_type(UploadedFile(fp, file_name)) == 'xlsx'
 
 
-def test_get_file_type_csv():
-    assert v.get_file_type(SimpleUploadedFile('test.csv', b'a,b')) == 'csv'
+@pytest.mark.parametrize('file_name', ['test.csv', 'test.CSV'])
+def test_get_file_type_csv(file_name):
+    assert v.get_file_type(SimpleUploadedFile(file_name, b'a,b')) == 'csv'
 
 
 def test_get_file_type_json():

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-21 11:32+0000\n"
+"POT-Creation-Date: 2016-11-24 07:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,7 +52,7 @@ msgid "Sorry we got a ConnectionError whilst trying to download that file"
 msgstr ""
 
 #: cove/input/views.py:68 cove/input/views.py:75 cove/lib/converters.py:74
-#: cove/lib/converters.py:135 cove/views.py:45 cove/views.py:113
+#: cove/lib/converters.py:135 cove/views.py:45 cove/views.py:114
 msgid "Try Again"
 msgstr ""
 
@@ -77,7 +77,7 @@ msgid ""
 msgstr ""
 
 #: cove/lib/converters.py:72 cove/lib/converters.py:133 cove/views.py:43
-#: cove/views.py:111
+#: cove/views.py:112
 msgid "Sorry we can't process that data"
 msgstr ""
 
@@ -174,7 +174,7 @@ msgstr ""
 msgid ""
 "The application accepts data in some of the formats given in the <a href="
 "\"http://www.threesixtygiving.org/standard/\">360Giving Data Standard "
-"guidence</a>.\n"
+"guidance</a>.\n"
 "    <br>Acceptable files are: "
 msgstr ""
 
@@ -243,7 +243,7 @@ msgstr ""
 
 #: cove/templates/base_generic.html:90
 msgid ""
-"We may also retain data in backups of our servers, which means on occassion, "
+"We may also retain data in backups of our servers, which means on occasion, "
 "some data may be retained longer. We have no intention of using this data "
 "for anything other than server recovery in an emergency."
 msgstr ""
@@ -265,8 +265,8 @@ msgid ""
 "This is service to allow people to explore machine readable data. As such we "
 "see no need to store and gather everything people submit to the site "
 "forever. We have chosen 7 days as a practical time frame that allows people "
-"to share results with collegues, but also allows data to disappear over time "
-"to save people having to clean up after themselves."
+"to share results with colleagues, but also allows data to disappear over "
+"time to save people having to clean up after themselves."
 msgstr ""
 
 #: cove/templates/base_generic.html:95
@@ -1718,7 +1718,7 @@ msgid ""
 "hold about you under the Data Protection Act 1998. A small fee will be "
 "payable. If you would like a copy of the information held on you please "
 "email the Data Protection Officer at company@opendataservices.coop. If you "
-"would like to write to us our registered addresess is 32 Church Road, Hove, "
+"would like to write to us our registered address is 32 Church Road, Hove, "
 "East Sussex, England, BN3 2FN. Further details are available on the <a href="
 "\"https://opencorporates.com/companies/gb/09506232\">Open Data Services Co-"
 "operative Limited page at Open Corporates</a>."
@@ -1795,19 +1795,19 @@ msgid ""
 "We can only process json, csv and xlsx files."
 msgstr ""
 
-#: cove/views.py:75 cove/views.py:85
+#: cove/views.py:76 cove/views.py:86
 msgid "Sorry, the page you are looking for is not available"
 msgstr ""
 
-#: cove/views.py:77 cove/views.py:87
+#: cove/views.py:78 cove/views.py:88
 msgid "Go to Home page"
 msgstr ""
 
-#: cove/views.py:78
+#: cove/views.py:79
 msgid "We don't seem to be able to find the data you requested."
 msgstr ""
 
-#: cove/views.py:88
+#: cove/views.py:89
 msgid ""
 "The data you were hoping to explore no longer exists.\n"
 "\n"
@@ -1815,7 +1815,7 @@ msgid ""
 "after 7 days, and therefore the analysis of that data is no longer available."
 msgstr ""
 
-#: cove/views.py:114
+#: cove/views.py:115
 msgid ""
 "We think you tried to upload a JSON file, but it is not well formed JSON.\n"
 "\n"

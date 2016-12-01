@@ -37,7 +37,7 @@ env = environ.Env(  # set default values and casting
     SECRET_KEY=(str, secret_key),
     DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
     DEBUG_TOOLBAR=(bool, False),
-    SCHEMA_URL_OCDS=(str, 'http://standard.open-contracting.org/schema/1__0__1/'),
+    SCHEMA_URL_OCDS=(str, 'http://standard.open-contracting.org/schema/1__0__2/'),
     SCHEMA_URL_360=(str, 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/'),
 )
 

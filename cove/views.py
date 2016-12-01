@@ -48,11 +48,12 @@ class UnrecognisedFileType(CoveInputDataError):
 
 
 def get_file_type(django_file):
-    if django_file.name.endswith('.json'):
+    name = django_file.name.lower()
+    if name.endswith('.json'):
         return 'json'
-    elif django_file.name.endswith('.xlsx'):
+    elif name.endswith('.xlsx'):
         return 'xlsx'
-    elif django_file.name.endswith('.csv'):
+    elif name.endswith('.csv'):
         return 'csv'
     else:
         first_byte = django_file.read(1)
@@ -165,7 +166,7 @@ def explore(request, pk):
     view = 'explore.html'
     if request.current_app == 'cove-ocds':
         if 'records' in json_data:
-            context['records_aggregates'] = ocds.get_records_aggregates(json_data)
+            context['records_aggregates'] = ocds.get_records_aggregates(json_data, ignore_errors=bool(validation_errors))
             view = 'explore_ocds-record.html'
         else:
             context['releases_aggregates'] = ocds.get_releases_aggregates(json_data, ignore_errors=bool(validation_errors))

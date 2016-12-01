@@ -1,6 +1,6 @@
 pip==8.1.2
-Django==1.8.14 # rq.filter: <1.9
--e git+https://github.com/OpenDataServices/flatten-tool.git@e098e6518d0db43bf72c0e12232ef4cdfb083546#egg=flattentool
+Django==1.8.16 # rq.filter: <1.9
+-e git+https://github.com/OpenDataServices/flatten-tool.git@fc074cd0a4a25b925a05fc0dda0488f17d1c28d5#egg=flattentool
 django-bootstrap3==7.0.1
 django-debug-toolbar==1.4
 requests==2.10.0
@@ -27,6 +27,7 @@ transifex-client==0.12.1
 libsass==0.11.1
 Sphinx==1.4.5
 recommonmark==0.4.0
+hypothesis==3.5.3
 
 ## The following requirements were added by pip freeze:
 alabaster==0.7.8
@@ -54,6 +55,9 @@ pytz==2016.6.1
 schema==0.6.0
 six==1.10.0
 snowballstemmer==1.2.1
+spark-parser==1.4.0
 sqlparse==0.1.19
+uncompyle6==2.9.3
 urllib3==1.16
 Werkzeug==0.11.10
+xdis==3.2.3
