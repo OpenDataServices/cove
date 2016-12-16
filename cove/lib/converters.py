@@ -78,7 +78,8 @@ def convert_spreadsheet(request, data, file_type):
     context.update({
         'conversion': 'unflatten',
         'converted_path': converted_path,
-        'converted_url': '{}/unflattened.json'.format(data.upload_url())
+        'converted_url': '{}/unflattened.json'.format(data.upload_url()),
+        "csv_encoding": encoding
     })
     return context
 
