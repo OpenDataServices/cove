@@ -145,7 +145,7 @@ def test_common_index_elements(server_url, browser, prefix):
     if not PREFIX_360 or not PREFIX_OCDS:
         pytest.skip()
     browser.get(server_url + prefix)
-    browser.find_element_by_css_selector('#more-information').click()
+    browser.find_element_by_css_selector('#more-information .panel-title').click()
     time.sleep(0.5)
     assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
     assert 'Why do you delete data after 7 days?' in browser.find_element_by_tag_name('body').text
@@ -236,7 +236,7 @@ def test_accordion(server_url, browser, prefix):
     # (See if statement in check_url_input_result_page).
     (PREFIX_360, 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx', 'Convert', True),
     # Test a 360 csv in cp1252 incoding
-    (PREFIX_360, 'WellcomeTrust-grants_2_grants_cp1252.csv', 'Convert', True),
+    (PREFIX_360, 'WellcomeTrust-grants_2_grants_cp1252.csv', ['Convert', 'This file is not \'utf-8\' encoded (it is cp1252 encoded)'], True),
     # Test a non-valid file.
     (PREFIX_360, 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
     # Test a unconvertable spreadsheet (blank file)
