@@ -480,7 +480,10 @@ def test_500_error(server_url, browser, prefix):
     # properly
     icon_span = browser.find_element_by_class_name('panel-danger').find_element_by_tag_name('span')
     assert 'Glyphicons Halflings' in icon_span.value_of_css_property('font-family')
-    assert icon_span.value_of_css_property('color') == 'rgba(169, 68, 66, 1)'
+    if prefix == PREFIX_OCDS:
+        assert icon_span.value_of_css_property('color') == 'rgba(169, 68, 66, 1)'
+    elif prefix == PREFIX_360:
+        assert icon_span.value_of_css_property('color') == 'rgba(255, 255, 255, 1)'
 
 
 def test_common_errors_page(server_url, browser):
