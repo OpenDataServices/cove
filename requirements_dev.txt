@@ -20,7 +20,7 @@ pytest-cov==2.4.0
 pytest-localserver==0.3.6
 pytest-xdist==1.15.0
 coveralls==1.1
-selenium==3.0.2
+selenium==2.53.6
 transifex-client==0.12.2
 libsass==0.12.3
 Sphinx==1.5.1
