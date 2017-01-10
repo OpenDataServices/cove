@@ -18,6 +18,10 @@
 
 {% block strapline %}{% endblock %}
 
+{% block bootstrap_css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/bootstrap-360.css' %}">
+{% endblock %}
+
 {% block link %}
 <li><a href="{% url 'cove:common_errors' %}">Common Errors</a></li>
 <li><a href="http://www.threesixtygiving.org/">{% trans "360Giving" %}</a></li>
