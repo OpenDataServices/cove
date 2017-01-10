@@ -3,8 +3,11 @@
 {% load cove_tags %}
 
 
+{% block converted_files %}
+{% endblock %}
   
 {% block key_facts %}
+{% comment %}
   <div class="col-md-6">
     <div class="panel {% if validation_errors %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
       <div class="panel-heading">
@@ -72,6 +75,7 @@
     </div>
   </div>
   
+ {% endcomment %}
  {% endblock %}
   
 

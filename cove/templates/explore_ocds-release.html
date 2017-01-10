@@ -1,4 +1,4 @@
-{% extends 'explore.html' %}
+{% extends 'explore_ocds_base.html' %}
 {% load i18n %}
 {% load cove_tags %}
 
@@ -86,7 +86,7 @@
 
 
 
-{% block explore_content %}
+{% block explore_additional_content %}
 {% with releases_aggregates as ra %}
 {% if ra %}
 <div class="row">
