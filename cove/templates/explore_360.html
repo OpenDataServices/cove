@@ -43,7 +43,7 @@
           <span class="font-tick tick" aria-hidden="true"></span>
           {% trans "Converted to " %}{% if conversion == 'unflatten'%} JSON {% else %} Spreadsheet{% endif %}
           {% if conversion_warning_messages %}
-            <small> {{conversion_warning_messages|length}} Warning(s) </small>
+            <small> {{conversion_warning_messages|length}} Warning{{conversion_warning_messages|pluralize}} </small>
           {% endif %}
           <span class="glyphicon glyphicon-collapse-up pull-right"></span>
         </h3>
@@ -77,7 +77,7 @@
       <h3 class="panel-title panel-title-explore"> 
         {% if validation_errors %}
            <span class="font-tick cross" aria-hidden="true"></span>
-           Invalid against schema <small> {{validation_errors_count}} Error(s) </small>
+           Invalid against schema <small> {{validation_errors_count}} Error{{validation_errors_count|pluralize}} </small>
         {% else %}
            <span class="font-tick tick" aria-hidden="true"></span>
            Valid against schema
@@ -107,10 +107,10 @@
       <h3 class="panel-title panel-title-explore"> 
         <span class="font-tick question" aria-hidden="true"></span>
         Additional fields found
-        <small> {{additional_fields_count}} Additional Field(s) </small>
+        <small> {{additional_fields_count}} Additional Field{{additional_fields_count|pluralize}} </small>
         <span class="glyphicon glyphicon-collapse-up pull-right"></span>
       </h3>
-      Additional fields were found in you Data. Check them to see if they were intended or are actually spelling mistakes.
+      Additional fields were found in your data. Check them to see if they were intended or are actually spelling mistakes.
     </div>
      {% include "additional_fields_table.html" %}
   </div>
