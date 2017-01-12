@@ -15,9 +15,10 @@ body {
     font-weight: 100;
     font-size: 50%;
   }
-  & .glyphicon-collapse-down,& .glyphicon-collapse-up   {
+  & .glyphicon-collapse-down,& .glyphicon-collapse-up {
     padding-right: 0px;
     line-height: 33px;
+    color: #666;
   }
 }
 
