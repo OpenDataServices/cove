@@ -489,7 +489,7 @@ def test_500_error(server_url, browser, prefix):
 def test_common_errors_page(server_url, browser):
     if not PREFIX_360:
         pytest.skip()
-    browser.get(server_url + '/360/common_errors/')
+    browser.get(server_url + PREFIX_360 + 'common_errors/')
     assert "Common Errors" in browser.find_element_by_tag_name('h2').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
 
@@ -506,7 +506,7 @@ def test_common_errors_page_anchors(server_url, browser, anchor_text):
     if not PREFIX_360:
         pytest.skip()
     # Checks we have sections for each our error messages
-    browser.get(server_url + '/360/common_errors/')
+    browser.get(server_url + PREFIX_360 + 'common_errors/')
     browser.find_element_by_id(anchor_text)
 
 
