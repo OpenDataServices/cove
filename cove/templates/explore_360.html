@@ -24,17 +24,24 @@
            {% trans "on " %} {{created_date}}
          </p>
       </div>
+      {% if conversion == 'flattenable' %}
+      <div class="panel-body">
+        <form method="post">
+          <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% blocktrans %}Convert to Spreadsheet{% endblocktrans %}</button>
+          {% csrf_token %}
+        </form>
+      </div>
+      {% endif %}
     </div>
   {% endblock data_supplied %}
 
-
   {% block conversion %}
-  {% if conversion == 'unflatten' %}
+  {% if conversion == 'unflatten' or conversion == 'flatten'%}
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title panel-title-explore"> 
           <span class="font-tick tick" aria-hidden="true"></span>
-          Converted
+          {% trans "Converted to " %}{% if conversion == 'unflatten'%} JSON {% else %} Spreadsheet{% endif %}
           {% if conversion_warning_messages %}
             <small> {{conversion_warning_messages|length}} Warning(s) </small>
           {% endif %}
@@ -42,8 +49,15 @@
         </h3>
       </div>
       <div class="panel-body">
-        {% if file_type == 'xlsx' or file_type == 'csv' %}
-          <p class="explanation">In order to validate your data we needed to convert it.</p>
+        {% if conversion == 'unflatten' %}
+          <p class="explanation">{% trans "In order to validate your data we needed to convert it to JSON." %}</p>
+        {% else %}
+          <p>We have converted your JSON data into spreadsheet format.</p>
+          {% if conversion_error %}
+              <p>{% blocktrans %}The JSON could not be converted to Spreadsheet due to the error:{% endblocktrans %} {{ conversion_error }}</p>
+              {% include 'error_extra.html' %}
+          {% endif %}
+            </ul>
         {% endif %}
         {% if conversion_warning_messages %}
           <ul>
@@ -112,23 +126,49 @@
       </h3>
     </div>
     <div class="panel-body">
-      <p>{% blocktrans %}Use the following url to share these results:{% endblocktrans %}</p>
+      <h4><span class="glyphicon glyphicon-save"></span> Save</h4>
+      <p>{% blocktrans %} The following files are available to <strong>download</strong>: {% endblocktrans %}</p>
+      <ul class="left-space">
+        <li>
+          <a href="{{original_file.url}}"> Original file ({{file_type}})</a> {{original_file.size|filesizeformat }}
+        </li>
+        {% if not conversion_error %}
+          {% if conversion == 'unflatten' %}
+          <li>
+            <a href="{{converted_url}}">{{JSON}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
+          </li>
+          {% elif conversion == 'flatten' %}
+          <li>
+            <a href="{{converted_url}}.xlsx">{{xlsx}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
+          </li>
+          <!--Only show for 360Giving files-->
+            {% if request.cove_config.convert_titles %}
+            <li>
+              <a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({{converted}})</a> {{converted_file_size_titles|filesizeformat }}
+            </li>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      </ul>
+      <h4><span class="glyphicon glyphicon-share"></span> Share</h4>
+      <p>{% blocktrans %}Use the following url to <strong>share</strong> these results:{% endblocktrans %}</p>
       <div class="copy-div">
           <span class="copy-span"> {{ current_url }} <span id="copy-url-button" title="Click to copy." data-clipboard-text={{ current_url }} class="btn copy-button glyphicon glyphicon-copy" aria-hidden="true"></span> </span>
       </div>
       {% comment %}Translators: Paragraph that describes the application{% endcomment %}
-      <p>{% blocktrans %}These results will be available for 7 days from the day the data was first uploaded. You can revisit these results until then.{% endblocktrans %}</p>
+      <br>
       <p>{% blocktrans %}After 7 days all uploaded data is deleted from our servers, and the results will no longer be available. Anyone using the link to this page after that will be show a message that tells them the file has been removed.{% endblocktrans %}</p>
+      <p>{% blocktrans %}These results will be available for 7 days from the day the data was first uploaded. You can revisit these results until then.{% endblocktrans %}</p>
     </div>
   </div>
   {% endblock save_and_share %}
 
 {% endblock explore_content %}
 
-  
 {% block extrafooterscript %}
   {{ block.super }} 
 {% endblock extrafooterscript %}
+
 
 {% comment %}
   <div class="col-md-6">
@@ -198,10 +238,6 @@
     </div>
   </div>
   
-  
-
-
-
 <a id="key-field-info"></a>
 <div class="row">
   <div class="col-md-12">
