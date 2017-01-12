@@ -11,10 +11,12 @@ body {
 
 .panel-title.panel-title-explore {
   font-size: 30px;
+
   & small {
     font-weight: 100;
     font-size: 50%;
   }
+
   & .glyphicon-collapse-down,& .glyphicon-collapse-up {
     padding-right: 0px;
     line-height: 33px;
@@ -22,9 +24,15 @@ body {
   }
 }
 
+.panel-heading .heading-explanation {
+    font-size: 96%;
+    padding-left: 10px;
+    line-height: 30px;
+}
+
 .font-tick {
   font-family: "tick";
-  margin-right: 5px
+  margin-right: 5px;
 }
 
 .font-tick.tick::after {
@@ -40,7 +48,7 @@ body {
 }
 
 .font-tick.cross {
-  color: red
+  color: red;
 }
 
 .font-tick.question::after {
@@ -48,7 +56,7 @@ body {
 }
 
 .font-tick.question {
-  color: darkgrey
+  color: darkgrey;
 }
 
 ////////////
