@@ -39,23 +39,8 @@
   </script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
-  <script type="text/javascript">
-        $("#validationTable").on("hide.bs.collapse", function(){
-          $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-down"></span>{% trans "Validation Errors" %}</h4>');
-        });
-        $("#validationTable").on("show.bs.collapse", function(){
-          $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Validation Errors" %}</h4>');
-        });
-  </script>
-  <script type="text/javascript">
-        $("#additionalFieldTable").on("hide.bs.collapse", function(){
-          $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
-        });
-        $("#additionalFieldTable").on("show.bs.collapse", function(){
-          $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
-        });
-  </script>
 {% endblock %}
+
 
 {% block extrapiwik %}
 {% if piwik.dimension_map.file_type %}

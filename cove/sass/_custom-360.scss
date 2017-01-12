@@ -1,99 +1,55 @@
 // Flatly 3.3.5
 // Bootswatch
 // -----------------------------------------------------
-// Grantnav custom
+// Cove custom
 
 // Example search terms
-.link-on-orange {
-  color: grey;
-  background-color: #fff;
-  padding: 5px 10px;
-  border-radius: 8px;
-  font-style: italic;
-  margin: 3px;
-  display: inline-block;
-  vertical-align: top;
-  &:hover {
-    color: grey
-  }
-  &:active {
-    color: grey
-  }
-  &:visited {
-    color: grey
-  }
-}
 
 body {
   background-color: white
 }
 
-.main-block {
-  background-color: white;
-  padding-top: 21px;
-  margin-top: -21px;
-  min-height: 300px;
-}
-
-.footer-info {
-  margin-top: 15px;
-  color: #c1c1c1;
-}
-
-.home-info {
-  font-family: $font-family-sans-serif;
-  font-weight: 400;
-  color: white;
-}
-
-.home-number {
-  font-family: $font-family-sans-serif;
-  font-weight: 400;
-  color: white;
-  font-size: 56px;
-  margin-bottom: 6px;
-  margin-top: 7px;
-}
-
-.home-number-text {
+.panel-title.panel-title-explore {
   font-size: 30px;
-  color: #663a0e;
-  font-weight: 400;
-  letter-spacing: 2px;
-  margin-top: 0px;
+  & small {
+    font-weight: 100;
+    font-size: 50%;
+  }
+  & .glyphicon-collapse-down,& .glyphicon-collapse-up   {
+    padding-right: 0px;
+    line-height: 33px;
+  }
 }
 
-.left-stat {
-  border-right: 4px solid rgb(229, 131, 30);
-}
-.right-stat {
-  border-left: 4px solid rgb(229, 131, 30);
-}
-.stat-group {
-  margin-top: 20px;
-  margin-bottom: 20px;
+.font-tick {
+  font-family: "tick";
+  margin-right: 5px
 }
 
-// Big numbers link and hover state
-.stat-group a {
-  display: block;
-  padding: 10px;
-}
-.stat-group a:hover {
-  background-color: #f77f03;
-  text-decoration: none;
-  border-radius: 12px;
+.font-tick.tick::after {
+  content: "\2713";
 }
 
-.footer {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  background-color: #333;
+.font-tick.tick {
+  color: green
 }
-.footer-info {
-  margin-top: 15px;
-  color: #c1c1c1;
+
+.font-tick.cross::after {
+  content: "\2715";
 }
+
+.font-tick.cross {
+  color: red
+}
+
+.font-tick.question::after {
+  content: "?";
+}
+
+.font-tick.question {
+  color: darkgrey
+}
+
 ////////////
 
 $web-font-path: "https://fonts.googleapis.com/css?family=Lato:400,700,400italic" !default;
@@ -244,7 +200,6 @@ table,
   > thead > tr > td,
   > tbody > tr > td,
   > tfoot > tr > td {
-    border: none;
   }
 
   &-bordered > thead > tr > th,

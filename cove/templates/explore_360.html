@@ -2,11 +2,134 @@
 {% load i18n %}
 {% load cove_tags %}
 
+{% block explore_content %}
 
-{% block converted_files %}
-{% endblock %}
+  {% block data_supplied %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title panel-title-explore"> 
+          <span class="font-tick tick" aria-hidden="true"></span>
+          Data Supplied
+          <span class="glyphicon glyphicon-collapse-up pull-right"></span>
+        </h3>
+      </div>
+      <div class="panel-body">
+         <p class="explanation">
+           {% trans "A file was " %} 
+           {% if source_url %}
+              {% trans "downloaded from " %} {{source_url}} 
+           {% else %}
+             {% trans "uploaded " %} 
+           {% endif %}
+           {% trans "on " %} {{created_date}}
+         </p>
+      </div>
+    </div>
+  {% endblock data_supplied %}
+
+
+  {% block conversion %}
+  {% if conversion == 'unflatten' %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title panel-title-explore"> 
+          <span class="font-tick tick" aria-hidden="true"></span>
+          Converted
+          {% if conversion_warning_messages %}
+            <small> {{conversion_warning_messages|length}} Warning(s) </small>
+          {% endif %}
+          <span class="glyphicon glyphicon-collapse-up pull-right"></span>
+        </h3>
+      </div>
+      <div class="panel-body">
+        {% if file_type == 'xlsx' or file_type == 'csv' %}
+          <p class="explanation">In order to validate your data we needed to convert it.</p>
+        {% endif %}
+        {% if conversion_warning_messages %}
+          <ul>
+            {% for warning_message in conversion_warning_messages %}
+              <li>{{warning_message}}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+  {% endblock conversion %}
+
+  {% block validation %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title panel-title-explore"> 
+        {% if validation_errors %}
+           <span class="font-tick cross" aria-hidden="true"></span>
+           Invalid against schema <small> {{validation_errors_count}} Error(s) </small>
+        {% else %}
+           <span class="font-tick tick" aria-hidden="true"></span>
+           Valid against schema
+        {% endif %}
+        <span class="glyphicon glyphicon-collapse-up pull-right"></span>
+      </h3>
+    </div>
+       {% if validation_errors %}
+          <div class="panel-body">
+            <p class="explanation">
+              Sorry your data is invalid.
+            </p>
+          </div>
+         {% include "validation_table.html" %}
+       {% else %}
+        <div class="panel-body">
+          <p class="explanation">Congratulations! Your data is valid.</p>
+        </div>
+       {% endif %}
+  </div>
+  {% endblock validation %}
+
+  {% block additional_fields %}
+  {% if data_only %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title panel-title-explore"> 
+        <span class="font-tick question" aria-hidden="true"></span>
+        Additional fields found
+        <small> {{additional_fields_count}} Additional Field(s) </small>
+        <span class="glyphicon glyphicon-collapse-up pull-right"></span>
+      </h3>
+      Additional fields were found in you Data. Check them to see if they were intended or are actually spelling mistakes.
+    </div>
+     {% include "additional_fields_table.html" %}
+  </div>
+  {% endif %}
+  {% endblock additional_fields %}
+
+  {% block save_and_share %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title panel-title-explore"> 
+        Save and Share
+        <span class="glyphicon glyphicon-collapse-up pull-right"></span>
+      </h3>
+    </div>
+    <div class="panel-body">
+      <p>{% blocktrans %}Use the following url to share these results:{% endblocktrans %}</p>
+      <div class="copy-div">
+          <span class="copy-span"> {{ current_url }} <span id="copy-url-button" title="Click to copy." data-clipboard-text={{ current_url }} class="btn copy-button glyphicon glyphicon-copy" aria-hidden="true"></span> </span>
+      </div>
+      {% comment %}Translators: Paragraph that describes the application{% endcomment %}
+      <p>{% blocktrans %}These results will be available for 7 days from the day the data was first uploaded. You can revisit these results until then.{% endblocktrans %}</p>
+      <p>{% blocktrans %}After 7 days all uploaded data is deleted from our servers, and the results will no longer be available. Anyone using the link to this page after that will be show a message that tells them the file has been removed.{% endblocktrans %}</p>
+    </div>
+  </div>
+  {% endblock save_and_share %}
+
+{% endblock explore_content %}
+
   
-{% block key_facts %}
+{% block extrafooterscript %}
+  {{ block.super }} 
+{% endblock extrafooterscript %}
+
 {% comment %}
   <div class="col-md-6">
     <div class="panel {% if validation_errors %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
@@ -75,13 +198,10 @@
     </div>
   </div>
   
- {% endcomment %}
- {% endblock %}
   
 
 
 
-{% block explore_content %}
 <a id="key-field-info"></a>
 <div class="row">
   <div class="col-md-12">
@@ -215,4 +335,5 @@
     </div>
   </div>
 </div><!--End Row-->
-{% endblock %}
+{% endcomment %}
+

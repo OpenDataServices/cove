@@ -114,6 +114,7 @@ a:hover {
 
 .explanation {
   font-size: 1.2em;
+  margin-bottom: 0px;
 }
 
 a.anchor::before {
