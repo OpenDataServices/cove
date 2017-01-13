@@ -6,57 +6,57 @@
 // Example search terms
 
 body {
-  background-color: white
+	background-color: white
 }
 
 .panel-title.panel-title-explore {
-  font-size: 30px;
+	font-size: 30px;
 
-  & small {
-    font-weight: 100;
-    font-size: 50%;
-  }
+	& small {
+		font-weight: 100;
+		font-size: 45%;
+	}
 
-  & .glyphicon-collapse-down, & .glyphicon-collapse-up {
-    padding-right: 0px;
-    line-height: 33px;
-    color: #666;
-  }
+	& .glyphicon-collapse-down, & .glyphicon-collapse-up {
+		padding-right: 0px;
+		line-height: 33px;
+		color: #666;
+	}
 }
 
 .panel-heading .heading-explanation {
-    font-size: 96%;
-    padding-left: 10px;
-    line-height: 30px;
+		font-size: 96%;
+		padding-left: 10px;
+		line-height: 30px;
 }
 
 .font-tick {
-  font-family: 'tick';
-  margin-right: 5px;
+	font-family: 'tick';
+	margin-right: 5px;
 
-  &.tick {
-    color: green;
+	&.tick {
+		color: green;
 
-    &::after {
-      content: '\2713';
-    }
-  }
+		&::after {
+			content: '\2713';
+		}
+	}
 
-  &.cross {
-    color: red;
+	&.cross {
+		color: red;
 
-    &::after {
-          content: '\2715';
-      }
-  }
+		&::after {
+					content: '\2715';
+			}
+	}
 
-  &.question {
-    color: darkgrey;
+	&.question {
+		color: darkgrey;
 
-    &::after {
-      content: '?';
-    }
-  }
+		&::after {
+			content: '?';
+		}
+	}
 }
 
 
@@ -68,113 +68,113 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Lato:400,700,400italic"
 // Navbar =====================================================================
 
 .navbar {
-  border-width: 0;
+	border-width: 0;
 
-  &-default {
+	&-default {
 
-    .badge {
-      background-color: #fff;
-      color: $navbar-default-bg;
-    }
-  }
+		.badge {
+			background-color: #fff;
+			color: $navbar-default-bg;
+		}
+	}
 
-  &-inverse {
+	&-inverse {
 
-    .badge {
-      background-color: #fff;
-      color: $navbar-inverse-bg;
-    }
-  }
+		.badge {
+			background-color: #fff;
+			color: $navbar-inverse-bg;
+		}
+	}
 
-  &-brand {
-    //grantnav changes
-    color: #FFF;
-    font-family: 'Ostrich Sans',sans-serif;
-    font-size: 48px;
-    letter-spacing: 2px;
-    line-height: 1.9em;
-    padding: 0px 12px;
-    @media (min-width: $grid-float-breakpoint) {
-      .navbar > .container &,
-      .navbar > .container-fluid & {
-        margin-left: 0;
-      }
-    }
-    &:hover {
-      color: #FFF !important
-    }
-    //grantnav
-  }
+	&-brand {
+		//grantnav changes
+		color: #FFF;
+		font-family: 'Ostrich Sans',sans-serif;
+		font-size: 48px;
+		letter-spacing: 2px;
+		line-height: 1.9em;
+		padding: 0px 12px;
+		@media (min-width: $grid-float-breakpoint) {
+			.navbar > .container &,
+			.navbar > .container-fluid & {
+				margin-left: 0;
+			}
+		}
+		&:hover {
+			color: #FFF !important
+		}
+		//grantnav
+	}
 
-  &-header {
-    margin-left: 10px;
-  }
+	&-header {
+		margin-left: 10px;
+	}
 }
 
 
 // Buttons ====================================================================
 
 .btn {
-  border-width: 2px;
+	border-width: 2px;
 }
 
 .btn:active {
-  @include box-shadow(none);
+	@include box-shadow(none);
 }
 
 .btn-group.open .dropdown-toggle {
-  @include box-shadow(none);
+	@include box-shadow(none);
 }
 
 // Typography =================================================================
 
 .text-primary,
 .text-primary:hover {
-  color: $brand-primary;
+	color: $brand-primary;
 }
 
 .text-success,
 .text-success:hover {
-  color: $brand-success;
+	color: $brand-success;
 }
 
 .text-danger,
 .text-danger:hover {
-  color: $brand-danger;
+	color: $brand-danger;
 }
 
 .text-warning,
 .text-warning:hover {
-  color: $brand-warning;
+	color: $brand-warning;
 }
 
 .text-info,
 .text-info:hover {
-  color: $brand-info;
+	color: $brand-info;
 }
 
 // grantnav
 h1, .h1,
 h2, .h2,
 h3, .h3 {
-  margin-top: $line-height-computed;
-  margin-bottom: ($line-height-computed / 2);
+	margin-top: $line-height-computed;
+	margin-bottom: ($line-height-computed / 2);
 
-  small,
-  .small {
-    font-size: 85%;
-  }
+	small,
+	.small {
+		font-size: 85%;
+	}
 }
 h4, .h4,
 h5, .h5,
 h6, .h6 {
-  margin-top: ($line-height-computed / 2);
-  margin-bottom: ($line-height-computed / 2);
+	margin-top: ($line-height-computed / 2);
+	margin-bottom: ($line-height-computed / 2);
 
-  small,
-  .small {
-    font-size: 95%;
-  }
+	small,
+	.small {
+		font-size: 95%;
+	}
 }
 //
 
@@ -183,130 +183,130 @@ h6, .h6 {
 table,
 .table {
 
-  a:not(.btn) {
-    text-decoration: underline;
-  }
+	a:not(.btn) {
+		text-decoration: underline;
+	}
 
-  .dropdown-menu a {
-    text-decoration: none;
-  }
+	.dropdown-menu a {
+		text-decoration: none;
+	}
 
-  .success,
-  .warning,
-  .danger,
-  .info {
-    color: #fff;
+	.success,
+	.warning,
+	.danger,
+	.info {
+		color: #fff;
 
-    > th > a,
-    > td > a,
-    > a {
-      color: #fff;
-    }
-  }
+		> th > a,
+		> td > a,
+		> a {
+			color: #fff;
+		}
+	}
 
-  > thead > tr > th,
-  > tbody > tr > th,
-  > tfoot > tr > th,
-  > thead > tr > td,
-  > tbody > tr > td,
-  > tfoot > tr > td {
-  }
+	> thead > tr > th,
+	> tbody > tr > th,
+	> tfoot > tr > th,
+	> thead > tr > td,
+	> tbody > tr > td,
+	> tfoot > tr > td {
+	}
 
-  &-bordered > thead > tr > th,
-  &-bordered > tbody > tr > th,
-  &-bordered > tfoot > tr > th,
-  &-bordered > thead > tr > td,
-  &-bordered > tbody > tr > td,
-  &-bordered > tfoot > tr > td {
-    border: 1px solid $table-border-color;
-  }
+	&-bordered > thead > tr > th,
+	&-bordered > tbody > tr > th,
+	&-bordered > tfoot > tr > th,
+	&-bordered > thead > tr > td,
+	&-bordered > tbody > tr > td,
+	&-bordered > tfoot > tr > td {
+		border: 1px solid $table-border-color;
+	}
 }
 
 // Forms ======================================================================
 
 .form-control,
 input {
-  border-width: 2px;
-  @include box-shadow(none);
+	border-width: 2px;
+	@include box-shadow(none);
 
-  &:focus {
-    @include box-shadow(none);
-  }
+	&:focus {
+		@include box-shadow(none);
+	}
 }
 
 .has-warning {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-warning;
-  }
+	.help-block,
+	.control-label,
+	.radio,
+	.checkbox,
+	.radio-inline,
+	.checkbox-inline,
+	&.radio label,
+	&.checkbox label,
+	&.radio-inline label,
+	&.checkbox-inline label,
+	.form-control-feedback {
+		color: $brand-warning;
+	}
 
-  .form-control,
-  .form-control:focus {
-    border: 2px solid $brand-warning;
-  }
+	.form-control,
+	.form-control:focus {
+		border: 2px solid $brand-warning;
+	}
 
-  .input-group-addon {
-    border-color: $brand-warning;
-  }
+	.input-group-addon {
+		border-color: $brand-warning;
+	}
 }
 
 .has-error {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-danger;
-  }
+	.help-block,
+	.control-label,
+	.radio,
+	.checkbox,
+	.radio-inline,
+	.checkbox-inline,
+	&.radio label,
+	&.checkbox label,
+	&.radio-inline label,
+	&.checkbox-inline label,
+	.form-control-feedback {
+		color: $brand-danger;
+	}
 
-  .form-control,
-  .form-control:focus {
-    border: 2px solid $brand-danger;
-  }
+	.form-control,
+	.form-control:focus {
+		border: 2px solid $brand-danger;
+	}
 
-  .input-group-addon {
-    border-color: $brand-danger;
-  }
+	.input-group-addon {
+		border-color: $brand-danger;
+	}
 }
 
 .has-success {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-success;
-  }
+	.help-block,
+	.control-label,
+	.radio,
+	.checkbox,
+	.radio-inline,
+	.checkbox-inline,
+	&.radio label,
+	&.checkbox label,
+	&.radio-inline label,
+	&.checkbox-inline label,
+	.form-control-feedback {
+		color: $brand-success;
+	}
 
-  .form-control,
-  .form-control:focus {
-    border: 2px solid $brand-success;
-  }
+	.form-control,
+	.form-control:focus {
+		border: 2px solid $brand-success;
+	}
 
-  .input-group-addon {
-    border-color: $brand-success;
-  }
+	.input-group-addon {
+		border-color: $brand-success;
+	}
 }
 
 //grantnav
@@ -317,181 +317,181 @@ input {
 input:-moz-placeholder {font-style:italic}
 
 .container-wrapper {
-  background-color: $brand-success;
-  margin-top: -21px;
-  padding-top: 15px;
+	background-color: $brand-success;
+	margin-top: -21px;
+	padding-top: 15px;
 }
 
 .search-box {
-  left: 18px;
+	left: 18px;
 }
 
 .search-icon {
-  right: 18px;
-  z-index: 1000;
-  position: relative;
+	right: 18px;
+	z-index: 1000;
+	position: relative;
 }
 
 // Main search bar on landing page
 .large-search {
-  display: inline-block;
-  vertical-align: top;
-  width: 79%;
-  margin: 0 auto;
-  padding: 10px 20px;
-  border-radius: 12px;
-  border: 2px solid #e5831e;
-  background-color: #FFF;
-  font-size: 28px;
-  height: 79px;
+	display: inline-block;
+	vertical-align: top;
+	width: 79%;
+	margin: 0 auto;
+	padding: 10px 20px;
+	border-radius: 12px;
+	border: 2px solid #e5831e;
+	background-color: #FFF;
+	font-size: 28px;
+	height: 79px;
 }
 
 .large-search-icon {
-  position: absolute;
-  right: 38px;
-  top: 12px;
+	position: absolute;
+	right: 38px;
+	top: 12px;
 }
 
 // Example search terms container
 .search-help {
-  font-size: 1.1em;
-  color: #663a0e;
-  padding-top: 10px;
-  margin: 0 auto;
-  margin-bottom: 20px;
-  text-align: center;
+	font-size: 1.1em;
+	color: #663a0e;
+	padding-top: 10px;
+	margin: 0 auto;
+	margin-bottom: 20px;
+	text-align: center;
 }
 
 .col-vlg-offset-1 {
-  @media (min-width: 1400px) {
-    width: 1300px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+	@media (min-width: 1400px) {
+		width: 1300px;
+		margin-left: auto;
+		margin-right: auto;
+	}
 }
 //
 
 // Navs =======================================================================
 
 .nav {
-  .open > a,
-  .open > a:hover,
-  .open > a:focus {
-    border-color: transparent;
-  }
+	.open > a,
+	.open > a:hover,
+	.open > a:focus {
+		border-color: transparent;
+	}
 }
 
 .pager {
-  a,
-  a:hover {
-    color: #fff;
-  }
+	a,
+	a:hover {
+		color: #fff;
+	}
 
-  .disabled {
-    &>a,
-    &>a:hover,
-    &>a:focus,
-    &>span {
-      background-color: $pagination-disabled-bg;
-    }
-  }
+	.disabled {
+		&>a,
+		&>a:hover,
+		&>a:focus,
+		&>span {
+			background-color: $pagination-disabled-bg;
+		}
+	}
 }
 
 // Indicators =================================================================
 
 .close {
-  color: #fff;
-  text-decoration: none;
-  opacity: 0.4;
+	color: #fff;
+	text-decoration: none;
+	opacity: 0.4;
 
-  &:hover,
-  &:focus {
-    color: #fff;
-    opacity: 1;
-  }
+	&:hover,
+	&:focus {
+		color: #fff;
+		opacity: 1;
+	}
 }
 
 .alert {
 
-  .alert-link {
-    color: #fff;
-    text-decoration: underline;
-  }
+	.alert-link {
+		color: #fff;
+		text-decoration: underline;
+	}
 }
 
 // Progress bars ==============================================================
 
 .progress {
-  height: 10px;
-  @include box-shadow(none);
-  .progress-bar {
-    font-size: 10px;
-    line-height: 10px;
-  }
+	height: 10px;
+	@include box-shadow(none);
+	.progress-bar {
+		font-size: 10px;
+		line-height: 10px;
+	}
 }
 
 // Containers =================================================================
 
 .well {
-  @include box-shadow(none);
+	@include box-shadow(none);
 }
 
 a.list-group-item {
 
-  &.active,
-  &.active:hover,
-  &.active:focus {
-    border-color: $list-group-border;
-  }
+	&.active,
+	&.active:hover,
+	&.active:focus {
+		border-color: $list-group-border;
+	}
 
-  &-success {
-    &.active {
-      background-color: $state-success-bg;
-    }
+	&-success {
+		&.active {
+			background-color: $state-success-bg;
+		}
 
-    &.active:hover,
-    &.active:focus {
-      background-color: darken($state-success-bg, 5%);
-    }
-  }
+		&.active:hover,
+		&.active:focus {
+			background-color: darken($state-success-bg, 5%);
+		}
+	}
 
-  &-warning {
-    &.active {
-      background-color: $state-warning-bg;
-    }
-    
-    &.active:hover,
-    &.active:focus {
-      background-color: darken($state-warning-bg, 5%);
-    }
-  }
+	&-warning {
+		&.active {
+			background-color: $state-warning-bg;
+		}
+		
+		&.active:hover,
+		&.active:focus {
+			background-color: darken($state-warning-bg, 5%);
+		}
+	}
 
-  &-danger {
-    &.active {
-      background-color: $state-danger-bg;
-    }
-    
-    &.active:hover,
-    &.active:focus {
-      background-color: darken($state-danger-bg, 5%);
-    }
-  }
+	&-danger {
+		&.active {
+			background-color: $state-danger-bg;
+		}
+		
+		&.active:hover,
+		&.active:focus {
+			background-color: darken($state-danger-bg, 5%);
+		}
+	}
 }
 
 .panel {
-  &-default {
-    .close {
-      color: $text-color;
-    }
-  }
+	&-default {
+		.close {
+			color: $text-color;
+		}
+	}
 }
 
 .modal {
-  .close {
-    color: $text-color;
-  }
+	.close {
+		color: $text-color;
+	}
 }
 
 .popover {
-  color: $text-color;
+	color: $text-color;
 }
