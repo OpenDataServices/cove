@@ -17,7 +17,7 @@ body {
     font-size: 50%;
   }
 
-  & .glyphicon-collapse-down,& .glyphicon-collapse-up {
+  & .glyphicon-collapse-down, & .glyphicon-collapse-up {
     padding-right: 0px;
     line-height: 33px;
     color: #666;
@@ -31,33 +31,34 @@ body {
 }
 
 .font-tick {
-  font-family: "tick";
+  font-family: 'tick';
   margin-right: 5px;
+
+  &.tick {
+    color: green;
+
+    &::after {
+      content: '\2713';
+    }
+  }
+
+  &.cross {
+    color: red;
+
+    &::after {
+          content: '\2715';
+      }
+  }
+
+  &.question {
+    color: darkgrey;
+
+    &::after {
+      content: '?';
+    }
+  }
 }
 
-.font-tick.tick::after {
-  content: "\2713";
-}
-
-.font-tick.tick {
-  color: green
-}
-
-.font-tick.cross::after {
-  content: "\2715";
-}
-
-.font-tick.cross {
-  color: red;
-}
-
-.font-tick.question::after {
-  content: "?";
-}
-
-.font-tick.question {
-  color: darkgrey;
-}
 
 ////////////
 
