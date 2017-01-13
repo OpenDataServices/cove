@@ -385,6 +385,7 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
 
     import flattentool
     import warnings
+    from flattentool.exceptions import DataErrorWarning
 
     def mockunflatten(input_name, output_name, *args, **kwargs):
         with open(kwargs['cell_source_map'], 'w') as fp:
@@ -394,13 +395,13 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
         with open(output_name, 'w') as fp:
             fp.write('{}')
             for warning_text in warning_texts:
-                warnings.warn(warning_text)
+                warnings.warn(warning_text, DataErrorWarning)
 
     def mockflatten(input_name, output_name, *args, **kwargs):
         with open(output_name + '.xlsx', 'w') as fp:
             fp.write('{}')
             for warning_text in warning_texts:
-                warnings.warn(warning_text)
+                warnings.warn(warning_text, DataErrorWarning)
 
     mocks = {
         'flatten': mockflatten,
