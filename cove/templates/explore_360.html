@@ -27,17 +27,17 @@
            <br>
            <ul class="left-space">
              <li>
-               {% blocktrans count count=grants_aggregates.count %}This file contains {{count}} grant.{% plural %}This file contains {{count}} grants.{% endblocktrans %}
+               {% blocktrans count n_grants=grants_aggregates.count %}This file contains {{n_grants}} grant.{% plural %}This file contains {{n_grants}} grants.{% endblocktrans %}
               </li>
               {% if csv_encoding and csv_encoding != "utf-8" %}
              <li>
-              {% trans "This file is not 'utf-8' encoded (it is" %} <strong>{{csv_encoding}}</strong> {% trans "encoded)." %}
+              {% blocktrans %} This file is not 'utf-8' encoded (it is <strong>{{csv_encoding}}</strong> encoded).{% endblocktrans %}
              </li>
              {% endif %}
            </ul>
         {% if conversion == 'flattenable' %}
           <form method="post">
-            <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% blocktrans %}Convert to Spreadsheet{% endblocktrans %}</button>
+            <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% trans "Convert to Spreadsheet" %}</button>
             {% csrf_token %}
           </form>
         {% endif %}
@@ -54,7 +54,7 @@
           <span class="font-tick tick" aria-hidden="true"></span>
           {% trans "Converted to " %}{% if conversion == 'unflatten'%} JSON {% else %} Spreadsheet{% endif %}
           {% if conversion_warning_messages %}
-            <small> {{conversion_warning_messages|length}} Warning{{conversion_warning_messages|pluralize}} </small>
+            <small>{% blocktrans count n_warnings=conversion_warning_messages|length %}{{n_warnings}} Warning.{% plural %}{{n_warnings}} Warnings.{% endblocktrans %}</small>
           {% endif %}
           <span class="glyphicon glyphicon-collapse-down pull-right"></span>
         </h3>
@@ -64,15 +64,15 @@
           {% if conversion == 'unflatten' %}
             <p class="explanation">{% trans "In order to validate your data we needed to convert it to JSON." %}</p>
           {% else %}
-            <p class="explanation">We have converted your JSON data into spreadsheet format.</p>
+            <p class="explanation">We have converted your JSON data into Spreadsheet format.</p>
             {% if conversion_error %}
-                <p>{% blocktrans %}The JSON could not be converted to Spreadsheet due to the error:{% endblocktrans %} {{ conversion_error }}</p>
+                <p>{% blocktrans %}The JSON data could not be converted to Spreadsheet due to the following error error: {{conversion_error}}{% endblocktrans %}</p>
                 {% include 'error_extra.html' %}
             {% endif %}
           {% endif %}
           {% if conversion_warning_messages %}
             <br>
-            <p>Conversion <strong>warnings:</strong></p>
+            <p>{% trans "Conversion <strong>warnings:</strong>" %}</p>
             <ul class="left-space">
               {% for warning_message in conversion_warning_messages %}
                 <li>{{warning_message}}</li>
@@ -91,10 +91,10 @@
       <h3 class="panel-title panel-title-explore">
         {% if validation_errors %}
            <span class="font-tick cross" aria-hidden="true"></span>
-           Invalid against schema <small> {{validation_errors_count}} Error{{validation_errors_count|pluralize}} </small>
+           {% trans "Invalid against schema " %}<small>{% blocktrans count n_errors=validation_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</small>
         {% else %}
            <span class="font-tick tick" aria-hidden="true"></span>
-           Valid against schema
+          {% trans "Valid against schema" %}
         {% endif %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
@@ -103,13 +103,13 @@
       <div class="panel-body">
         <p class="explanation">
         {% if validation_errors %}
-            Sorry your data is invalid against <a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas">360Giving JSON Package Schema</a>.
+            {% trans "Sorry your data is invalid against " %}<a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas">360Giving JSON Package Schema</a>
         </p>
         <br>
-        <p>Validation <strong>errors</strong>:</p>
+        <p>{% trans "Validation <strong>errors</strong>:" %}</p>
         {% include "validation_table.html" %}
         {% else %}
-          Congratulations! Your data is valid.
+          {% trans "Congratulations! Your data is valid." %}
         </p>
         {% endif %}
       </div>
@@ -123,11 +123,10 @@
     <div class="panel-heading" data-toggle="collapse" data-target="#additional-fields-body">
       <h3 class="panel-title panel-title-explore"> 
         <span class="font-tick question" aria-hidden="true"></span>
-        Additional fields found
-        <small> {{additional_fields_count}} Additional Field{{additional_fields_count|pluralize}} </small>
+        {% trans "Additional fields found" %} <small>{% blocktrans count n_additional_fields=additional_fields_count %} Additional Field{% plural %}{{n_additional_fields}} Additional Fields{% endblocktrans %}</small>
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
-      <span class="heading-explanation">Additional fields were found in your data. Check them to see if they were intended or are actually spelling mistakes.</span>
+      <span class="heading-explanation">{% trans "Additional fields were found in your data. Check them to see if they were intended or are actually spelling mistakes." %}</span>
     </div>
     <div id="additional-fields-body" class="collapse">
       <div class="panel-body">
@@ -142,38 +141,37 @@
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#save-and-share-body">
       <h3 class="panel-title panel-title-explore"> 
-        Save and Share
+        {% trans "Save and Share" %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
     <div id="save-and-share-body" class="collapse">
       <div class="panel-body">
         <h4><span class="glyphicon glyphicon-save"></span> Save</h4>
-        <p>{% blocktrans %} The following files are available to <strong>download</strong>: {% endblocktrans %}</p>
+        <p>{% trans "The following files are available to <strong>download</strong>:" %}</p>
         <ul class="left-space">
           <li>
-            <a href="{{original_file.url}}"> Original file ({{file_type}})</a> {{original_file.size|filesizeformat }}
+            <a href="{{original_file.url}}">{% trans "Original file" %} ({{file_type}})</a> {{original_file.size|filesizeformat }}
           </li>
           {% if not conversion_error %}
             {% if conversion == 'unflatten' %}
             <li>
-              <a href="{{converted_url}}">{{JSON}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
+              <a href="{{converted_url}}">{{JSON}} ({% trans converted %})</a> {{converted_file_size|filesizeformat }}
             </li>
             {% elif conversion == 'flatten' %}
             <li>
-              <a href="{{converted_url}}.xlsx">{{xlsx}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
+              <a href="{{converted_url}}.xlsx">{{xlsx}} ({% trans converted %})</a> {{converted_file_size|filesizeformat }}
             </li>
-            <!--Only show for 360Giving files-->
               {% if request.cove_config.convert_titles %}
               <li>
-                <a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({{converted}})</a> {{converted_file_size_titles|filesizeformat }}
+                <a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({% trans converted %})</a> {{converted_file_size_titles|filesizeformat }}
               </li>
               {% endif %}
             {% endif %}
           {% endif %}
         </ul>
         <h4><span class="glyphicon glyphicon-share"></span> Share</h4>
-        <p>{% blocktrans %}Use the following url to <strong>share</strong> these results:{% endblocktrans %}</p>
+        <p>{% trans "Use the following url to <strong>share</strong> these results:" %}</p>
         <div class="copy-div">
             <span class="copy-span"> {{ current_url }} <span id="copy-url-button" title="Click to copy." data-clipboard-text={{ current_url }} class="btn copy-button glyphicon glyphicon-copy" aria-hidden="true"></span> </span>
         </div>
