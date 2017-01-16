@@ -22,8 +22,19 @@
              {% else %}
                {% trans "uploaded " %} 
              {% endif %}
-             {% trans "on " %} {{created_date}}
+             {% trans "on " %} {{created_date}}.
            </p>
+           <br>
+           <ul class="left-space">
+             <li>
+               {% blocktrans count count=grants_aggregates.count %}This file contains {{count}} grant.{% plural %}This file contains {{count}} grants.{% endblocktrans %}
+              </li>
+              {% if csv_encoding and csv_encoding != "utf-8" %}
+             <li>
+              {% trans "This file is not 'utf-8' encoded (it is" %} <strong>{{csv_encoding}}</strong> {% trans "encoded)." %}
+             </li>
+             {% endif %}
+           </ul>
         {% if conversion == 'flattenable' %}
           <form method="post">
             <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% blocktrans %}Convert to Spreadsheet{% endblocktrans %}</button>
@@ -58,10 +69,11 @@
                 <p>{% blocktrans %}The JSON could not be converted to Spreadsheet due to the error:{% endblocktrans %} {{ conversion_error }}</p>
                 {% include 'error_extra.html' %}
             {% endif %}
-              </ul>
           {% endif %}
           {% if conversion_warning_messages %}
-            <ul>
+            <br>
+            <p>Conversion <strong>warnings:</strong></p>
+            <ul class="left-space">
               {% for warning_message in conversion_warning_messages %}
                 <li>{{warning_message}}</li>
               {% endfor %}
@@ -91,8 +103,10 @@
       <div class="panel-body">
         <p class="explanation">
         {% if validation_errors %}
-            Sorry your data is invalid.
+            Sorry your data is invalid against <a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas">360Giving JSON Package Schema</a>.
         </p>
+        <br>
+        <p>Validation <strong>errors</strong>:</p>
         {% include "validation_table.html" %}
         {% else %}
           Congratulations! Your data is valid.
@@ -197,26 +211,14 @@
       </div>
       <div class="panel-body">
 
-        {% if conversion_warning_messages or conversion_warning_messages_titles %}
-          <div class="conversion message"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>{% blocktrans %}Please read the <a href="#conversion-warning">conversion warnings</a> below.{% endblocktrans %}</div>
-        {% endif %} 
-        <div class="validation message">  
-        {% if validation_errors %}
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span><b>{% trans "Failed " %}</b>
-        {% else %} 
-          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% trans "Passed " %} 
-        {% endif %}
-        {% blocktrans %}validation against {% endblocktrans %}<a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas">360Giving JSON Package Schema</a>.
-        {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Validation Errors</a> below.{% endblocktrans %}{% endif %}
-        </div>
-
          <div class="key-facts message">
            <strong>At a glance</strong>
            <ul>
+              <!-- This should go in the Potential Issues / Key Field Information section -->
              <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
              {% blocktrans count count=grants_aggregates.count %}This file contains {{count}} grant.{% plural %}This file contains {{count}} grants.{% endblocktrans %}
              </li>
-            
+              
              {% if grants_aggregates.duplicate_ids %} 
              <li><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
                   {% blocktrans count count=grants_aggregates.duplicate_ids|length %}There is {{ count }} <a href="#key-field-info">duplicate grant ID</a> in this package.{% plural %}There are {{ count }} <a href="#key-field-info">duplicate grant IDs</a> in this package.{% endblocktrans %}
@@ -232,25 +234,6 @@
                   {% blocktrans count count=grants_aggregates.funding_org_identifiers_unrecognised_prefixes|length %}There is {{ count }} <a href="#key-field-info">unrecognised funding organisation prefix</a> in this package.{% plural %}There are {{ count }} <a href="#key-field-info">unrecognised funding organisation prefixes</a> in this package.{% endblocktrans %}
              </li>
              {% endif %}
-             {% if data_only %}
-            <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                {% blocktrans count count=data_only|length %}This file uses {{count}} <a href="#additional-fields">additional field</a> not used in the standard.{% plural %}This file uses {{count}} <a href="#additional-fields">additional fields</a> not used in the standard.{% endblocktrans %}
-             </li>
-             {% endif %}
-              {% if csv_encoding and csv_encoding != "utf-8" %}
-             <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-              {% trans "This file is not 'utf-8' encoded (it is" %} <strong>{{csv_encoding}}</strong> {% trans "encoded)." %}
-             </li>
-             {% endif %}
-             <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-               {% trans "Data " %} 
-               {% if source_url %}
-                  {% trans "downloaded from " %} {{source_url}} 
-               {% else %}
-                 {% trans "uploaded " %} 
-               {% endif %}
-               {% trans "on " %} {{created_date}}
-            </li>
            </ul>
          </div>
       </div>
@@ -390,5 +373,6 @@
     </div>
   </div>
 </div><!--End Row-->
+<!-- Potential Issues / Key Field Information  -->
 {% endcomment %}
 
