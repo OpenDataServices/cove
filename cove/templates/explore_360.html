@@ -64,9 +64,9 @@
           {% if conversion == 'unflatten' %}
             <p class="explanation">{% trans "In order to validate your data we needed to convert it to JSON." %}</p>
           {% else %}
-            <p class="explanation">We have converted your JSON data into Spreadsheet format.</p>
+            <p class="explanation">We have converted your JSON data into spreadsheet format.</p>
             {% if conversion_error %}
-                <p>{% blocktrans %}The JSON data could not be converted to Spreadsheet due to the following error error: {{conversion_error}}{% endblocktrans %}</p>
+                <p>{% blocktrans %}The JSON data could not be converted to spreadsheet due to the following error error: {{conversion_error}}{% endblocktrans %}</p>
                 {% include 'error_extra.html' %}
             {% endif %}
           {% endif %}
@@ -141,14 +141,14 @@
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#save-and-share-body">
       <h3 class="panel-title panel-title-explore"> 
-        {% trans "Save and Share" %}
+        {% trans "Download and Share" %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
-    <div id="save-and-share-body" class="collapse">
+    <div id="save-and-share-body" class="collapse {% if conversion == 'flatten' %}in{% endif %}">
       <div class="panel-body">
-        <h4><span class="glyphicon glyphicon-save"></span> Save</h4>
-        <p>{% trans "The following files are available to <strong>download</strong>:" %}</p>
+        <h4><span class="glyphicon glyphicon-save"></span> Download</h4>
+        <p>{% trans "The following files are available to download:" %}</p>
         <ul class="left-space">
           <li>
             <a href="{{original_file.url}}">{% trans "Original file" %} ({{file_type}})</a> {{original_file.size|filesizeformat }}
@@ -171,7 +171,7 @@
           {% endif %}
         </ul>
         <h4><span class="glyphicon glyphicon-share"></span> Share</h4>
-        <p>{% trans "Use the following url to <strong>share</strong> these results:" %}</p>
+        <p>{% trans "Use the following url to share these results:" %}</p>
         <div class="copy-div">
             <span class="copy-span"> {{ current_url }} <span id="copy-url-button" title="Click to copy." data-clipboard-text={{ current_url }} class="btn copy-button glyphicon glyphicon-copy" aria-hidden="true"></span> </span>
         </div>
