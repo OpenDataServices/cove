@@ -126,10 +126,11 @@
         {% trans "Additional fields found" %} <small>{% blocktrans count n_additional_fields=additional_fields_count %} Additional Field{% plural %}{{n_additional_fields}} Additional Fields{% endblocktrans %}</small>
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
-      <span class="heading-explanation">{% trans "Additional fields were found in your data. Check them to see if they were intended or are actually spelling mistakes." %}</span>
     </div>
     <div id="additional-fields-body" class="collapse">
       <div class="panel-body">
+      <p class="explanation">{% trans "Additional fields were found in your data. Check them to see if they were intended or are actually spelling mistakes." %}</p>
+      <br>
       {% include "additional_fields_table.html" %}
       </div>
      </div>
