@@ -225,7 +225,7 @@ def test_accordion(server_url, browser, prefix):
                                                            'Recipient Org ID Prefixes: 1',
                                                            'Unrecognised Recipient Org ID Prefixes: 1',
                                                            'There is 1 unrecognised recipient organisation prefix in this package.',
-                                                           'Date is not in datetime format'], True),
+                                                           'Date is not in the correct format'], True),
     (PREFIX_360, 'WellcomeTrust-grants_broken_grants.json', ['Convert',
                                                            'Funder Organisation IDs: 2',
                                                            'Unrecognised Funding Org ID Prefixes: 1',

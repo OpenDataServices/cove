@@ -14,8 +14,16 @@
   </ul>
   
   <a id="date-time" class="anchor"></a>
-  <h3>{% trans "Date is not in datetime format" %}</h3>
-  <p>{% blocktrans %}A datetime format is a very specific form of a date and time that is specified by the 360Giving Standard.{% endblocktrans %}</p>
+  <h3>{% trans "Date is not in the correct format" %}</h3>
+  <p>{% blocktrans %}Dates should be in the formats defined by the <a href="http://www.threesixtygiving.org/standard/reference/">360Giving Standard</a>.{% endblocktrans %}</p>
+  <p>{% blocktrans %}Most dates should be in the YYYY-MM-DD format, but the <a href="http://www.threesixtygiving.org/standard/reference/">360Giving Standard</a> sets out the requirements for each field of the standard.{% endblocktrans %}</p>
+  <p>{% blocktrans %}Other common errors include{% endblocktrans %}<p>
+  <ul>
+    <li>{% blocktrans %}providing non-existent dates e.g. 2016-02-31 (31st February){% endblocktrans %}</li>
+    <li>{% blocktrans %}non-date content in a date field (by accident){% endblocktrans %}</li>
+  </ul>
+  <h4>{% blocktrans %}Datetimes (used for Last Modified fields){% endblocktrans %}</h4>
+  <p>{% blocktrans %}A datetime format is a very specific form of a date and time that is specified by the <a href="http://www.threesixtygiving.org/standard/reference/">360Giving Standard</a>.{% endblocktrans %}</p>
   <p>{% blocktrans %}A datetime should be in the form of YYYY-MM-DDThh:mm:ss±hh:mm where:{% endblocktrans %}</p>
   <ul>
     <li>{% blocktrans %}YYYY represent a year e.g. 2016{% endblocktrans %}</li>

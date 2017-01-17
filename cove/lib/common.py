@@ -163,7 +163,7 @@ class CustomRefResolver(RefResolver):
             return result
 
 
-validation_error_lookup = {"date-time": "Date is not in datetime format",
+validation_error_lookup = {"date-time": "Date is not in the correct format",
                            "uri": "Invalid 'uri' found",
                            "string": "Value is not a string",
                            "integer": "Value is not a integer",
