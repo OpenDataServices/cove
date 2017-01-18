@@ -43,14 +43,14 @@
                   {% else %}
                     {% trans "<strong>1 grant</strong>" %}
                   {% endif %}
-                  {% blocktrans with amount_awarded=currency_aggregates.total_amount_awarded|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} was awarded in <strong>{{currency_code}}</strong> with a value of <strong>{{currency_symbol}}{{amount_awarded}}</strong>.{% endblocktrans %}
+                  {% blocktrans with amount_awarded=currency_aggregates.total_amount|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} was awarded in <strong>{{currency_code}}</strong> with a value of <strong>{{currency_symbol}}{{amount_awarded}}</strong>.{% endblocktrans %}
                 {% else %}
                   {% if currency_aggregates.count == grants_aggregates.count %}
                     {% trans "The grants" %}
                   {% else %}
                     <strong>{{currency_aggregates.count}}</strong> {% trans "<strong>grants</strong>" %}
                   {% endif %}
-                  {% blocktrans with n_grants=currency_aggregates.count total_amount=currency_aggregates.total_amount_awarded|intcomma max_amount=currency_aggregates.max_amount_awarded|intcomma min_amount=currency_aggregates.min_amount_awarded|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} were awarded in <strong>{{currency_code}}</strong> with a total value of <strong>{{currency_symbol}}{{total_amount}}</strong> and individual awards ranging from <strong>{{currency_symbol}}{{min_amount}}</strong> (lowest) to <strong>{{currency_symbol}}{{max_amount}}</strong> (highest).{% endblocktrans %}
+                  {% blocktrans with n_grants=currency_aggregates.count total_amount=currency_aggregates.total_amount|intcomma max_amount=currency_aggregates.max_amount|intcomma min_amount=currency_aggregates.min_amount|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} were awarded in <strong>{{currency_code}}</strong> with a total value of <strong>{{currency_symbol}}{{total_amount}}</strong> and individual awards ranging from <strong>{{currency_symbol}}{{min_amount}}</strong> (lowest) to <strong>{{currency_symbol}}{{max_amount}}</strong> (highest).{% endblocktrans %}
                 {% endif %}
               </li>
               {% endfor %}
@@ -190,6 +190,58 @@
   {% endif %}
   {% endblock additional_checks %}
 
+  {% block review %}
+  <div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" data-target="#review-body">
+      <h3 class="panel-title panel-title-explore"> 
+        {% trans "Review" %} <small>{% blocktrans count n_grants=grants_aggregates.count %}{{n_grants}} Grant{% plural %}{{n_grants}} Grants{% endblocktrans %}</small>
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="review-body" class="collapse">
+      <div class="panel-body">
+        <p class="explanation">{% trans "Review your data." %}</p>
+        <br>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  {% trans 'Grants Table' %}
+                </h4>
+              </div>
+              <div class="panel-body">
+                  <table class="table table-striped result-table table-condensed">
+                    <thead>
+                      <tr>
+                        <th>id</th>
+                        <th>title</th>
+                        <th>currency</th>
+                        <th>amountAwarded</th>
+                        <th>dateModified</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for grant in json_data.grants|slice:":5000" %}
+                      <tr>
+                        <td>{{grant.id}}</td>
+                        <td>{{grant.title }}</td>
+                        <td>{{grant.currency}}</td>
+                        <td>{{grant.amountAwarded}}</td>
+                        <td>{{grant.dateModified}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock review %}
+
   {% block download_and_share %}
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#save-and-share-body">
@@ -253,11 +305,11 @@
   </script>
 {% endblock extrafooterscript %}
 
-{% comment %}
 
+{% comment %}
+<!-- These components haven't been used in the UI redesign -->
 {% cove_modal_list className="distinct-funding-org-identifier" modalTitle="Funder Organisation IDs" itemList=grants_aggregates.distinct_funding_org_identifier %}
 {% cove_modal_list className="distinct-recipient-org-identifier" modalTitle="Recipient Organisation IDs" itemList=grants_aggregates.distinct_recipient_org_identifier %}
-
 <div class="modal fade distinct-funding-orgs" tabindex="-1" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -273,42 +325,5 @@
     </div>
   </div>
 </div>
-
-
-<div class="row">
-  <div class="col-md-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          {% trans 'Grants Table' %}
-        </h4>
-      </div>
-      <div class="panel-body">
-          <table class="table table-striped result-table">
-            <thead>
-              <tr>
-                <th>id</th>
-                <th>title</th>
-                <th>currency</th>
-                <th>amountAwarded</th>
-                <th>dateModified</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for grant in json_data.grants|slice:":5000" %}
-              <tr>
-                <td>{{ grant.id }}</td>
-                <td>{{ grant.title }}</td>
-                <td>{{ grant.currency }}</td>
-                <td>{{ grant.amountAwarded }}</td>
-                <td>{{ grant.dateModified }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-      </div>
-    </div>
-  </div>
-</div>
+<!--  -->
 {% endcomment %}
-
