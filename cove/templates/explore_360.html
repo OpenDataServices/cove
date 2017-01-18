@@ -1,5 +1,6 @@
 {% extends 'explore.html' %}
 {% load i18n %}
+{% load humanize %}
 {% load cove_tags %}
 
 {% block explore_content %}
@@ -27,12 +28,54 @@
            <br>
            <ul class="left-space">
              <li>
-               {% blocktrans count n_grants=grants_aggregates.count %}This file contains {{n_grants}} grant.{% plural %}This file contains {{n_grants}} grants.{% endblocktrans %}
+               {% blocktrans count n_grants=grants_aggregates.count %} This file contains <strong>{{n_grants}} grant</strong>{% plural %}This file contains <strong>{{n_grants}} grants</strong> {% endblocktrans %}
+               {% blocktrans count n_funders=grants_aggregates.distinct_funding_org_identifier|length %}from <strong>{{n_funders}} funder</strong>{% plural %}from <strong>{{n_funders}} funders</strong>{% endblocktrans %}
+               {% blocktrans count n_recipients=grants_aggregates.distinct_recipient_org_identifier|length %}to <strong>{{n_recipients}} recipient</strong>{% plural %}to <strong>{{n_recipients}} recipients</strong>{% endblocktrans %}
+               {% if grants_aggregates.min_award_date == grants_aggregates.max_award_date %}
+                 {% blocktrans with start_date=grants_aggregates.min_award_date %} awarded on <strong>{{start_date}}</strong>.{% endblocktrans %}{% else %}{% blocktrans with start_date=grants_aggregates.min_award_date end_date=grants_aggregates.max_award_date %}awarded from <strong>{{start_date}} to {{end_date}}</strong>.{% endblocktrans %}
+               {% endif %}
+              </li>
+              {% for currency_code, currency_aggregates in grants_aggregates.currencies.items %}
+              <li>
+                {% if currency_aggregates.count == 1 %}
+                  {% if currency_aggregates.count == grants_aggregates.count %}
+                    {% trans "The grant" %}
+                  {% else %}
+                    {% trans "<strong>1 grant</strong>" %}
+                  {% endif %}
+                  {% blocktrans with amount_awarded=currency_aggregates.total_amount_awarded|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} was awarded in <strong>{{currency_code}}</strong> with a value of <strong>{{currency_symbol}}{{amount_awarded}}</strong>.{% endblocktrans %}
+                {% else %}
+                  {% if currency_aggregates.count == grants_aggregates.count %}
+                    {% trans "The grants" %}
+                  {% else %}
+                    <strong>{{currency_aggregates.count}}</strong> {% trans "<strong>grants</strong>" %}
+                  {% endif %}
+                  {% blocktrans with n_grants=currency_aggregates.count total_amount=currency_aggregates.total_amount_awarded|intcomma max_amount=currency_aggregates.max_amount_awarded|intcomma min_amount=currency_aggregates.min_amount_awarded|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} were awarded in <strong>{{currency_code}}</strong> with a total value of <strong>{{currency_symbol}}{{total_amount}}</strong> and individual awards ranging from <strong>{{currency_symbol}}{{min_amount}}</strong> (lowest) to <strong>{{currency_symbol}}{{max_amount}}</strong> (highest).{% endblocktrans %}
+                {% endif %}
+              </li>
+              {% endfor %}
+              <li>
+                {% blocktrans count n_ids=grants_aggregates.id_count %}The file contains <strong>{{n_ids}} grant ID</strong>: {% plural %}The file contains <strong>{{n_ids}} grant IDs</strong>: {% endblocktrans %}
+                {% if grants_aggregates.unique_ids|length %}<a data-toggle="modal" data-target=".unique-ids">{% endif %}{% blocktrans count n_ids_unique=grants_aggregates.unique_ids|length %}{{n_ids_unique}} unique ID</strong></a>{% plural %}<strong>{{n_ids_unique}} unique IDs</strong>{% endblocktrans %}{% if grants_aggregates.unique_ids|length %}</a>{% endif %}
+                {% trans "and" %}
+                {% if grants_aggregates.duplicate_ids|length %}<a data-toggle="modal" data-target=".duplicate-ids">{% endif %}{% blocktrans count n_ids_duplicate=grants_aggregates.duplicate_ids|length %}<strong>{{n_ids_duplicate}} duplicate ID</strong>{% plural %}<strong>{{n_ids_duplicate}} duplicate IDs</strong>{% endblocktrans %}{% if grants_aggregates.duplicate_ids|length %}</a>{% endif %}.
+              </li>
+              <li>
+                {% blocktrans count n_funder_ids=grants_aggregates.distinct_funding_org_identifier|length %}The file contains <strong>{{n_funder_ids}} funding organisation ID</strong>: {% plural %}The file contains <strong>{{n_funder_ids}} funding organisation IDs</strong>: {% endblocktrans %}
+                {% if grants_aggregates.funding_org_identifier_prefixes|length %}<a data-toggle="modal" data-target=".funding-org-identifier-prefixes">{% endif %}{% blocktrans count n_good_org_prefixes=grants_aggregates.funding_org_identifier_prefixes|length %}<strong>{{n_good_org_prefixes}} good funding organisation prefix</strong></a>{% plural %}<strong>{{n_good_org_prefixes}} good funding organisation prefixes</strong>{% endblocktrans %}{% if grants_aggregates.funding_org_identifier_prefixes|length %}</a>{% endif %}
+                {% trans "and" %}
+                {% if grants_aggregates.funding_org_identifiers_unrecognised_prefixes|length %}<a data-toggle="modal" data-target=".funding-org-identifiers-unrecognised-prefixes">{% endif %}{% blocktrans count n_bad_org_prefixes=grants_aggregates.funding_org_identifiers_unrecognised_prefixes|length %}<strong>{{n_bad_org_prefixes}} unrecognised funding organisation prefix</strong></a>{% plural %}<strong>{{n_bad_org_prefixes}} unrecognised funding organisation prefixes</strong>{% endblocktrans %}{% if grants_aggregates.funding_org_identifiers_unrecognised_prefixes|length %}</a>{% endif %}.
+              </li>
+              <li>
+                {% blocktrans count n_recipient_ids=grants_aggregates.distinct_recipient_org_identifier|length %}The file contains <strong>{{n_recipient_ids}} recipient organisation ID</strong>: {% plural %}The file contains <strong>{{n_recipient_ids}} recipient organisation IDs</strong>: {% endblocktrans %}
+                {% if grants_aggregates.recipient_org_identifier_prefixes|length %}<a data-toggle="modal" data-target=".recipient-org-identifier-prefixes">{% endif %}{% blocktrans count n_good_org_prefixes=grants_aggregates.recipient_org_identifier_prefixes|length %}<strong>{{n_good_org_prefixes}} good recipient organisation prefix</strong></a>{% plural %}<strong>{{n_good_org_prefixes}} good recipient organisation prefixes</strong>{% endblocktrans %}{% if grants_aggregates.recipient_org_identifier_prefixes|length %}</a>{% endif %}
+                {% trans "and" %}
+                {% if grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length %}<a data-toggle="modal" data-target=".recipient-org-identifiers-unrecognised-prefixes">{% endif %}{% blocktrans count n_bad_org_prefixes=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length %}<strong>{{n_bad_org_prefixes}} unrecognised recipient organisation prefix</strong></a>{% plural %}<strong>{{n_bad_org_prefixes}} unrecognised recipient organisation prefixes</strong>{% endblocktrans %}{% if grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}</a>{% endif %}.
               </li>
               {% if csv_encoding and csv_encoding != "utf-8" %}
-             <li>
-              {% blocktrans %} This file is not 'utf-8' encoded (it is <strong>{{csv_encoding}}</strong> encoded).{% endblocktrans %}
-             </li>
+              <li>
+              {% blocktrans %} This file is <strong>not 'utf-8'</strong> encoded (it is <em>{{csv_encoding}}</em> encoded).{% endblocktrans %}
+              </li>
              {% endif %}
            </ul>
         {% if conversion == 'flattenable' %}
@@ -44,6 +87,12 @@
         </div>
       </div>
     </div>
+  {% cove_modal_list className="unique-ids" modalTitle="Unique IDs" itemList=grants_aggregates.unique_ids %}
+  {% cove_modal_list className="duplicate-ids" modalTitle="Duplicate IDs" itemList=grants_aggregates.duplicate_ids %}
+  {% cove_modal_list className="funding-org-identifier-prefixes" modalTitle="Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifier_prefixes %}
+  {% cove_modal_list className="funding-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifiers_unrecognised_prefixes %}
+  {% cove_modal_list className="recipient-org-identifier-prefixes" modalTitle="Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifier_prefixes %}
+  {% cove_modal_list className="recipient-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}
   {% endblock data_supplied %}
 
   {% block conversion %}
@@ -91,7 +140,7 @@
       <h3 class="panel-title panel-title-explore">
         {% if validation_errors %}
            <span class="font-tick cross" aria-hidden="true"></span>
-           {% trans "Invalid against schema " %}<small>{% blocktrans count n_errors=validation_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</small>
+           {% trans "Invalid against Schema " %}<small>{% blocktrans count n_errors=validation_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</small>
         {% else %}
            <span class="font-tick tick" aria-hidden="true"></span>
           {% trans "Valid against schema" %}
@@ -117,28 +166,31 @@
   </div>
   {% endblock validation %}
 
-  {% block additional_fields %}
+  {% block additional_checks %}
   {% if data_only %}
   <div class="panel panel-default">
-    <div class="panel-heading" data-toggle="collapse" data-target="#additional-fields-body">
+    <div class="panel-heading" data-toggle="collapse" data-target="#additional-checks-body">
       <h3 class="panel-title panel-title-explore"> 
         <span class="font-tick question" aria-hidden="true"></span>
-        {% trans "Additional fields found" %} <small>{% blocktrans count n_additional_fields=additional_fields_count %} Additional Field{% plural %}{{n_additional_fields}} Additional Fields{% endblocktrans %}</small>
+        {% trans "Additional Checks" %}{% if additional_fields_count %} <small>{% blocktrans count n_additional_fields=additional_fields_count %} Additional field{% plural %}{{n_additional_fields}} Additional fields{% endblocktrans %}</small>{% endif %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
-    <div id="additional-fields-body" class="collapse">
+    <div id="additional-checks-body" class="collapse">
       <div class="panel-body">
-      <p class="explanation">{% trans "Additional fields were found in your data. Check them to see if they were intended or are actually spelling mistakes." %}</p>
-      <br>
-      {% include "additional_fields_table.html" %}
+        <p class="explanation"><strong>{% trans "Additional checks" %}</strong></p>
       </div>
-     </div>
+      <div class="panel-body">
+        <p class="explanation">{% trans "<strong>Additional fields</strong> were found in your data." %}</p>
+        <p> {% trans "Please check them to see that they are intended additions and not just the result of spelling mistakes." %}</p>
+        {% include "additional_fields_table.html" %}
+      </div>
+    </div>
   </div>
   {% endif %}
-  {% endblock additional_fields %}
+  {% endblock additional_checks %}
 
-  {% block save_and_share %}
+  {% block download_and_share %}
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#save-and-share-body">
       <h3 class="panel-title panel-title-explore"> 
@@ -183,7 +235,7 @@
       </div>
     </div>
   </div>
-  {% endblock save_and_share %}
+  {% endblock download_and_share %}
 
 {% endblock explore_content %}
 
@@ -201,124 +253,10 @@
   </script>
 {% endblock extrafooterscript %}
 
-
 {% comment %}
-  <div class="col-md-6">
-    <div class="panel {% if validation_errors %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
-      <div class="panel-heading">
-        <h4 class="panel-title">{% trans 'Headlines' %}</h4>
-      </div>
-      <div class="panel-body">
 
-         <div class="key-facts message">
-           <strong>At a glance</strong>
-           <ul>
-              <!-- This should go in the Potential Issues / Key Field Information section -->
-             <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-             {% blocktrans count count=grants_aggregates.count %}This file contains {{count}} grant.{% plural %}This file contains {{count}} grants.{% endblocktrans %}
-             </li>
-              
-             {% if grants_aggregates.duplicate_ids %} 
-             <li><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
-                  {% blocktrans count count=grants_aggregates.duplicate_ids|length %}There is {{ count }} <a href="#key-field-info">duplicate grant ID</a> in this package.{% plural %}There are {{ count }} <a href="#key-field-info">duplicate grant IDs</a> in this package.{% endblocktrans %}
-             </li>
-             {% endif %}
-             {% if grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %} 
-             <li><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
-                  {% blocktrans count count=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length %}There is {{ count }} <a href="#key-field-info">unrecognised recipient organisation prefix</a> in this package.{% plural %}There are {{ count }} <a href="#key-field-info">unrecognised recipient organisation prefixes</a> in this package.{% endblocktrans %}
-             </li>
-             {% endif %}
-             {% if grants_aggregates.funding_org_identifiers_unrecognised_prefixes %} 
-             <li><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
-                  {% blocktrans count count=grants_aggregates.funding_org_identifiers_unrecognised_prefixes|length %}There is {{ count }} <a href="#key-field-info">unrecognised funding organisation prefix</a> in this package.{% plural %}There are {{ count }} <a href="#key-field-info">unrecognised funding organisation prefixes</a> in this package.{% endblocktrans %}
-             </li>
-             {% endif %}
-           </ul>
-         </div>
-      </div>
-    </div>
-  </div>
-  
-<a id="key-field-info"></a>
-<div class="row">
-  <div class="col-md-12">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <h4 class="panel-title">{% trans 'Key Field Information' %}</h4>
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-md-4">
-            <b>{% trans "Grants:" %}</b> {{grants_aggregates.count}}
-            <br/>
-            <b>{% trans "Grant IDs:" %}</b> {{grants_aggregates.id_count}}
-            <br/>
-            <a data-toggle="modal" data-target=".unique-ids">
-              <b>{% trans "Unique Grant IDs:" %}</b> {{grants_aggregates.unique_ids|length}}
-            </a>
-            <br/>
-            {% if grants_aggregates.duplicate_ids %}
-              <a data-toggle="modal" data-target=".duplicate-id-modal">
-                <b>{% trans "Duplicate IDs:" %}</b> {{grants_aggregates.duplicate_ids|length}}
-              </a>
-            {% else %}
-              <b>{% trans "Duplicate IDs:" %}</b> {{grants_aggregates.duplicate_ids|length}}
-            {% endif %}
-            <br/>
-            <b>{% trans "Currencies Used Count:" %}</b> {{grants_aggregates.distinct_currency|length}}
-          </div>
-          <div class="col-md-4">
-            <b>{% trans "First Award Date:" %}</b> {{grants_aggregates.min_award_date}}
-            <br/>
-            <b>{% trans "Last Award Date:" %}</b> {{grants_aggregates.max_award_date}}
-            <br/>
-            <b>{% trans "Highest Award Amount:" %}</b> {{grants_aggregates.max_amount_awarded}}
-            <br/>
-            <b>{% trans "Lowest Award Amount:" %}</b> {{grants_aggregates.min_amount_awarded}}
-            <br/>
-            <b>{% trans "Currencies Used:" %}</b> {{grants_aggregates.distinct_currency|join:", "}}
-            <br/>
-          </div>
-          <div class="col-md-4">
-            <a data-toggle="modal" data-target=".distinct-funding-org-identifier">
-              <b>{% trans "Funder Organisation IDs:" %}</b> {{grants_aggregates.distinct_funding_org_identifier|length}}
-            </a>
-            <br/>
-            <a data-toggle="modal" data-target=".funding-org-identifier-prefixes">
-              <b>{% trans "Good Funding Org ID Prefixes:" %}</b> {{grants_aggregates.funding_org_identifier_prefixes|length}}
-            </a>
-            <br/>
-            <a data-toggle="modal" data-target=".funding-org-identifiers-unrecognised-prefixes">
-              <b>{% trans "Unrecognised Funding Org ID Prefixes:" %}</b> {{grants_aggregates.funding_org_identifiers_unrecognised_prefixes|length}}
-            </a>
-            <br/>
-            <a data-toggle="modal" data-target=".distinct-recipient-org-identifier">
-              <b>{% trans "Recipient Organisation IDs:" %}</b> {{grants_aggregates.distinct_recipient_org_identifier|length}}
-            </a>
-            <br/>
-            <a data-toggle="modal" data-target=".recipient-org-identifier-prefixes">
-              <b>{% trans "Good Recipient Org ID Prefixes:" %}</b> {{grants_aggregates.recipient_org_identifier_prefixes|length}}
-            </a>
-            <br/>
-            <a data-toggle="modal" data-target=".recipient-org-identifiers-unrecognised-prefixes">
-              <b>{% trans "Unrecognised Recipient Org ID Prefixes:" %}</b> {{grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length}}
-            </a>
-            <br/>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div><!--End Row -->
-
-{% cove_modal_list className="duplicate-id-modal" modalTitle="Duplicate IDs" itemList=grants_aggregates.duplicate_ids %}
 {% cove_modal_list className="distinct-funding-org-identifier" modalTitle="Funder Organisation IDs" itemList=grants_aggregates.distinct_funding_org_identifier %}
-{% cove_modal_list className="funding-org-identifier-prefixes" modalTitle="Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifier_prefixes %}
-{% cove_modal_list className="funding-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifiers_unrecognised_prefixes %}
 {% cove_modal_list className="distinct-recipient-org-identifier" modalTitle="Recipient Organisation IDs" itemList=grants_aggregates.distinct_recipient_org_identifier %}
-{% cove_modal_list className="recipient-org-identifier-prefixes" modalTitle="Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifier_prefixes %}
-{% cove_modal_list className="recipient-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}
-{% cove_modal_list className="unique-ids" modalTitle="Unique IDs" itemList=grants_aggregates.unique_ids %}
 
 <div class="modal fade distinct-funding-orgs" tabindex="-1" role="dialog">
   <div class="modal-dialog">
@@ -337,7 +275,7 @@
 </div>
 
 
-<div class="row"> <!--Start Row (Detail Table)-->
+<div class="row">
   <div class="col-md-12">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -371,7 +309,6 @@
       </div>
     </div>
   </div>
-</div><!--End Row-->
-<!-- Potential Issues / Key Field Information  -->
+</div>
 {% endcomment %}
 

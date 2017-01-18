@@ -16,6 +16,12 @@ except requests.exceptions.RequestException:
 org_prefixes = [x['code'] for x in org_prefix_codelist['data']]
 org_prefixes.append('360G')
 
+currency_html = {
+    "GBP": "&pound;",
+    "USD": "$",
+    "EUR": "&euro;"
+}
+
 
 @tools.ignore_errors
 def get_grants_aggregates(json_data):
@@ -26,46 +32,58 @@ def get_grants_aggregates(json_data):
     duplicate_ids = set()
     max_award_date = ""
     min_award_date = ""
-    max_amount_awarded = 0
-    min_amount_awarded = 0
     distinct_funding_org_identifier = set()
     distinct_recipient_org_identifier = set()
-    distinct_currency = set()
+    currencies = {}
 
     if 'grants' in json_data:
         for grant in json_data['grants']:
             count = count + 1
-            amountAwarded = grant.get('amountAwarded')
-            if amountAwarded and isinstance(amountAwarded, (int, float)):
-                max_amount_awarded = max(amountAwarded, max_amount_awarded)
-                if not min_amount_awarded:
-                    min_amount_awarded = amountAwarded
-                min_amount_awarded = min(amountAwarded, min_amount_awarded)
-            awardDate = str(grant.get('awardDate', ''))
-            if awardDate:
-                max_award_date = max(awardDate, max_award_date)
+            currency = grant.get('currency')
+
+            if currency not in currencies.keys():
+                currencies[currency] = {
+                    "count": 0,
+                    "total_amount": 0,
+                    "max_amount": 0,
+                    "min_amount": 0,
+                    "currency_symbol": currency_html.get(currency, "")
+                }
+
+            currencies[currency]["count"] += 1
+            amount_awarded = grant.get('amountAwarded')
+            if amount_awarded and isinstance(amount_awarded, (int, float)):
+                currencies[currency]["total_amount"] += amount_awarded
+                currencies[currency]['max_amount'] = max(amount_awarded, currencies[currency]['max_amount'])
+                if not currencies[currency]["min_amount"]:
+                    currencies[currency]['min_amount'] = amount_awarded
+                currencies[currency]['min_amount'] = min(amount_awarded, currencies[currency]['min_amount'])
+
+            award_date = str(grant.get('awardDate', ''))
+            if award_date:
+                max_award_date = max(award_date, max_award_date)
                 if not min_award_date:
-                    min_award_date = awardDate
-                min_award_date = min(awardDate, min_award_date)
+                    min_award_date = award_date
+                min_award_date = min(award_date, min_award_date)
+
             grant_id = grant.get('id')
             if grant_id:
                 id_count = id_count + 1
                 if grant_id in unique_ids:
                     duplicate_ids.add(grant_id)
                 unique_ids.add(grant_id)
+
             funding_orgs = grant.get('fundingOrganization', [])
             for funding_org in funding_orgs:
                 funding_org_id = funding_org.get('id')
                 if funding_org_id:
                     distinct_funding_org_identifier.add(funding_org_id)
+
             recipient_orgs = grant.get('recipientOrganization', [])
             for recipient_org in recipient_orgs:
                 recipient_org_id = recipient_org.get('id')
                 if recipient_org_id:
                     distinct_recipient_org_identifier.add(recipient_org_id)
-            currency = grant.get('currency')
-            if currency:
-                distinct_currency.add(currency)
 
     recipient_org_prefixes = get_prefixes(distinct_recipient_org_identifier)
     recipient_org_identifier_prefixes = recipient_org_prefixes['prefixes']
@@ -82,11 +100,9 @@ def get_grants_aggregates(json_data):
         'duplicate_ids': duplicate_ids,
         'max_award_date': max_award_date,
         'min_award_date': min_award_date,
-        'max_amount_awarded': max_amount_awarded,
-        'min_amount_awarded': min_amount_awarded,
         'distinct_funding_org_identifier': distinct_funding_org_identifier,
         'distinct_recipient_org_identifier': distinct_recipient_org_identifier,
-        'distinct_currency': distinct_currency,
+        'currencies': currencies,
         'recipient_org_identifier_prefixes': recipient_org_identifier_prefixes,
         'recipient_org_identifiers_unrecognised_prefixes': recipient_org_identifiers_unrecognised_prefixes,
         'funding_org_identifier_prefixes': funding_org_identifier_prefixes,
