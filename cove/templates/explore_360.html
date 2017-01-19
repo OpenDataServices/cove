@@ -169,7 +169,7 @@
         <p>{% trans "Validation <strong>errors</strong>:" %}</p>
         {% include "validation_table.html" %}
         {% else %}
-          {% trans "Congratulations! Your data is valid against" %}<a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas"> 360Giving JSON Package Schema</a>
+          {% trans "Congratulations! Your data is valid against" %}
         </p>
         {% endif %}
       </div>
@@ -204,7 +204,7 @@
   {% block review %}
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#review-body">
-      <h3 class="panel-title panel-title-explore"> 
+      <h3 class="panel-title panel-title-explore"><span class="glyphicon glyphicon-list-alt"></span>
         {% trans "Review" %} <small>{% blocktrans count n_grants=grants_aggregates.count %}{{n_grants}} Grant{% plural %}{{n_grants}} Grants{% endblocktrans %}</small>
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
@@ -256,31 +256,31 @@
   {% block download_and_share %}
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#save-and-share-body">
-      <h3 class="panel-title panel-title-explore"> 
+      <h3 class="panel-title panel-title-explore"><span class="glyphicon glyphicon-save"></span>
         {% trans "Download and Share" %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
     <div id="save-and-share-body" class="collapse {% if conversion == 'flatten' %}in{% endif %}">
       <div class="panel-body">
-        <h4><span class="glyphicon glyphicon-save"></span> Download</h4>
+        <h4><span class="glyphicon glyphicon-download-alt"></span> Download</h4>
         <p>{% trans "The following files are available to download:" %}</p>
         <ul class="left-space">
           <li>
-            <a href="{{original_file.url}}">{% trans "Original file" %} ({{file_type}})</a> {{original_file.size|filesizeformat }}
+            <a href="{{original_file.url}}">{% trans "Original file" %} ({{file_type}})</a> {{original_file.size|filesizeformat}}
           </li>
           {% if not conversion_error %}
             {% if conversion == 'unflatten' %}
             <li>
-              <a href="{{converted_url}}">{{JSON}} ({% trans converted %})</a> {{converted_file_size|filesizeformat }}
+              <a href="{{converted_url}}">{{JSON}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
             </li>
             {% elif conversion == 'flatten' %}
             <li>
-              <a href="{{converted_url}}.xlsx">{{xlsx}} ({% trans converted %})</a> {{converted_file_size|filesizeformat }}
+              <a href="{{converted_url}}.xlsx">{{xlsx}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
             </li>
               {% if request.cove_config.convert_titles %}
               <li>
-                <a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({% trans converted %})</a> {{converted_file_size_titles|filesizeformat }}
+                <a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({% trans converted %})</a> {{converted_file_size_titles|filesizeformat}}
               </li>
               {% endif %}
             {% endif %}
@@ -308,9 +308,9 @@
     $("[data-toggle='collapse']").click(function() {
       var $this = $(this);
       if($this.attr("aria-expanded") === "true"){
-        $this.find('.glyphicon').removeClass('glyphicon-collapse-up').addClass('glyphicon-collapse-down')
+        $this.find('.glyphicon-collapse-up').removeClass('glyphicon-collapse-up').addClass('glyphicon-collapse-down')
       } else {
-        $this.find('.glyphicon').removeClass('glyphicon-collapse-down').addClass('glyphicon-collapse-up')
+        $this.find('.glyphicon-collapse-down').removeClass('glyphicon-collapse-down').addClass('glyphicon-collapse-up')
       }
     });
   </script>

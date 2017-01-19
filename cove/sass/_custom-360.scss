@@ -22,6 +22,15 @@ body {
 		line-height: 33px;
 		color: #666;
 	}
+
+	& span.glyphicon-save::before, {
+		color: #666;
+	}
+
+	& span.glyphicon-list-alt::before {
+		color: #666;
+		vertical-align: text-bottom;
+	}
 }
 
 .font-tick {
