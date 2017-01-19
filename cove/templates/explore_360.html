@@ -54,35 +54,13 @@
                 {% endif %}
               </li>
               {% endfor %}
-
-              {% comment %}
-              <li>
-                {% blocktrans count n_ids=grants_aggregates.id_count %}The file contains <strong>{{n_ids}} grant ID</strong>: {% plural %}The file contains <strong>{{n_ids}} grant IDs</strong>: {% endblocktrans %}
-                {% if grants_aggregates.unique_ids|length %}<a data-toggle="modal" data-target=".unique-ids">{% endif %}{% blocktrans count n_ids_unique=grants_aggregates.unique_ids|length %}{{n_ids_unique}} unique ID</strong></a>{% plural %}<strong>{{n_ids_unique}} unique IDs</strong>{% endblocktrans %}{% if grants_aggregates.unique_ids|length %}</a>{% endif %}
-                {% trans "and" %}
-                {% if grants_aggregates.duplicate_ids|length %}<a data-toggle="modal" data-target=".duplicate-ids">{% endif %}{% blocktrans count n_ids_duplicate=grants_aggregates.duplicate_ids|length %}<strong>{{n_ids_duplicate}} duplicate ID</strong>{% plural %}<strong>{{n_ids_duplicate}} duplicate IDs</strong>{% endblocktrans %}{% if grants_aggregates.duplicate_ids|length %}</a>{% endif %}.
-              </li>
-              <li>
-                {% blocktrans count n_funder_ids=grants_aggregates.distinct_funding_org_identifier|length %}The file contains <strong>{{n_funder_ids}} funding organisation ID</strong>: {% plural %}The file contains <strong>{{n_funder_ids}} funding organisation IDs</strong>: {% endblocktrans %}
-                {% if grants_aggregates.funding_org_identifier_prefixes|length %}<a data-toggle="modal" data-target=".funding-org-identifier-prefixes">{% endif %}{% blocktrans count n_good_org_prefixes=grants_aggregates.funding_org_identifier_prefixes|length %}<strong>{{n_good_org_prefixes}} good funding organisation prefix</strong></a>{% plural %}<strong>{{n_good_org_prefixes}} good funding organisation prefixes</strong>{% endblocktrans %}{% if grants_aggregates.funding_org_identifier_prefixes|length %}</a>{% endif %}
-                {% trans "and" %}
-                {% if grants_aggregates.funding_org_identifiers_unrecognised_prefixes|length %}<a data-toggle="modal" data-target=".funding-org-identifiers-unrecognised-prefixes">{% endif %}{% blocktrans count n_bad_org_prefixes=grants_aggregates.funding_org_identifiers_unrecognised_prefixes|length %}<strong>{{n_bad_org_prefixes}} unrecognised funding organisation prefix</strong></a>{% plural %}<strong>{{n_bad_org_prefixes}} unrecognised funding organisation prefixes</strong>{% endblocktrans %}{% if grants_aggregates.funding_org_identifiers_unrecognised_prefixes|length %}</a>{% endif %}.
-              </li>
-              <li>
-                {% blocktrans count n_recipient_ids=grants_aggregates.distinct_recipient_org_identifier|length %}The file contains <strong>{{n_recipient_ids}} recipient organisation ID</strong>: {% plural %}The file contains <strong>{{n_recipient_ids}} recipient organisation IDs</strong>: {% endblocktrans %}
-                {% if grants_aggregates.recipient_org_identifier_prefixes|length %}<a data-toggle="modal" data-target=".recipient-org-identifier-prefixes">{% endif %}{% blocktrans count n_good_org_prefixes=grants_aggregates.recipient_org_identifier_prefixes|length %}<strong>{{n_good_org_prefixes}} good recipient organisation prefix</strong></a>{% plural %}<strong>{{n_good_org_prefixes}} good recipient organisation prefixes</strong>{% endblocktrans %}{% if grants_aggregates.recipient_org_identifier_prefixes|length %}</a>{% endif %}
-                {% trans "and" %}
-                {% if grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length %}<a data-toggle="modal" data-target=".recipient-org-identifiers-unrecognised-prefixes">{% endif %}{% blocktrans count n_bad_org_prefixes=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length %}<strong>{{n_bad_org_prefixes}} unrecognised recipient organisation prefix</strong></a>{% plural %}<strong>{{n_bad_org_prefixes}} unrecognised recipient organisation prefixes</strong>{% endblocktrans %}{% if grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}</a>{% endif %}.
-              </li>
-              {% endcomment %}
-
               {% if csv_encoding and csv_encoding != "utf-8" %}
               <li>
               {% blocktrans %} This file is <strong>not 'utf-8'</strong> encoded (it is <em>{{csv_encoding}}</em> encoded).{% endblocktrans %}
               </li>
              {% endif %}
            </ul>
-        <div class="explore-help"> If anything looks wrong with this data please use the <em>Review</em> section below to identify potential issues. </div>
+           <div class="explore-help"> If anything looks wrong with this data please use the <em>Review</em> section below to identify potential issues. </div>
         {% if conversion == 'flattenable' %}
           <form method="post">
             <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% trans "Convert to Spreadsheet" %}</button>
@@ -92,16 +70,6 @@
         </div>
       </div>
     </div>
-
-  {% comment %}
-  {% cove_modal_list className="unique-ids" modalTitle="Unique IDs" itemList=grants_aggregates.unique_ids %}
-  {% cove_modal_list className="duplicate-ids" modalTitle="Duplicate IDs" itemList=grants_aggregates.duplicate_ids %}
-  {% cove_modal_list className="funding-org-identifier-prefixes" modalTitle="Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifier_prefixes %}
-  {% cove_modal_list className="funding-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifiers_unrecognised_prefixes %}
-  {% cove_modal_list className="recipient-org-identifier-prefixes" modalTitle="Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifier_prefixes %}
-  {% cove_modal_list className="recipient-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}
-  {% endcomment %}
-
   {% endblock data_supplied %}
 
   {% block conversion %}
@@ -212,6 +180,39 @@
     <div id="review-body" class="collapse">
       <div class="panel-body">
         <p class="explanation">{% trans "Review your data." %}</p>
+        <div class="explore-help">
+          The table below shows your data after it has been processed
+          {% if conversion_warning_messages or validation_errors or additional_fields_count %}
+            ;if anything looks wrong, it is probably related to the errors and/or warnings shown above
+          {% endif %}.
+        </div>
+        <ul class="left-space">
+          <li>
+            {% trans "Grant identifiers:" %} &nbsp;
+            <strong>
+              {% if grants_aggregates.unique_ids|length %}<a data-toggle="modal" data-target=".unique-ids">{% endif %}
+              {{ grants_aggregates.unique_ids|length}}
+              {% if grants_aggregates.unique_ids|length %}{% blocktrans count n_ids=grants_aggregates.unique_ids|length %} ID{% plural %} IDs{% endblocktrans %}</a>{% endif %}
+            </strong>
+          </li>
+          <li>
+            {% trans "Funder organisation identifiers:" %}&nbsp;
+            <strong>
+              {% if grants_aggregates.distinct_funding_org_identifier|length %}<a data-toggle="modal" data-target=".distinct-funding-org-identifier">{% endif %}
+              {{ grants_aggregates.distinct_funding_org_identifier|length}}
+              {% if grants_aggregates.distinct_funding_org_identifier|length %}{% blocktrans count n_ids=grants_aggregates.distinct_funding_org_identifier|length %} ID{% plural %} IDs{% endblocktrans %}</a>
+              {% endif %}
+            </strong>
+          </li>
+          <li>
+            {% trans "Recipient organisation identifiers:" %}&nbsp;
+            <strong>
+              {% if grants_aggregates.distinct_recipient_org_identifier|length %}<a data-toggle="modal" data-target=".distinct-recipient-org-identifier">{% endif %}
+              {{ grants_aggregates.distinct_recipient_org_identifier|length}}
+              {% if grants_aggregates.distinct_recipient_org_identifier|length %}{% blocktrans count n_ids=grants_aggregates.distinct_recipient_org_identifier|length %} ID{% plural %} IDs{% endblocktrans %}</a>{% endif %}
+            </strong>
+          </li>
+        </ul>
         <br>
         <div class="row">
           <div class="col-md-12">
@@ -251,6 +252,9 @@
       </div>
     </div>
   </div>
+  {% cove_modal_list className="unique-ids" modalTitle="Unique IDs" itemList=grants_aggregates.unique_ids %}
+  {% cove_modal_list className="distinct-funding-org-identifier" modalTitle="Funder Organisation IDs" itemList=grants_aggregates.distinct_funding_org_identifier %}
+  {% cove_modal_list className="distinct-recipient-org-identifier" modalTitle="Recipient Organisation IDs" itemList=grants_aggregates.distinct_recipient_org_identifier %}
   {% endblock review %}
 
   {% block download_and_share %}
@@ -319,8 +323,11 @@
 
 {% comment %}
 <!-- These components haven't been used in the UI redesign -->
-{% cove_modal_list className="distinct-funding-org-identifier" modalTitle="Funder Organisation IDs" itemList=grants_aggregates.distinct_funding_org_identifier %}
-{% cove_modal_list className="distinct-recipient-org-identifier" modalTitle="Recipient Organisation IDs" itemList=grants_aggregates.distinct_recipient_org_identifier %}
+{% cove_modal_list className="duplicate-id-modal" modalTitle="Duplicate IDs" itemList=grants_aggregates.duplicate_ids %}
+{% cove_modal_list className="funding-org-identifier-prefixes" modalTitle="Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifier_prefixes %}
+{% cove_modal_list className="funding-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifiers_unrecognised_prefixes %}
+{% cove_modal_list className="recipient-org-identifier-prefixes" modalTitle="Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifier_prefixes %}
+{% cove_modal_list className="recipient-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}
 <div class="modal fade distinct-funding-orgs" tabindex="-1" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
