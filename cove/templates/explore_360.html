@@ -54,6 +54,8 @@
                 {% endif %}
               </li>
               {% endfor %}
+
+              {% comment %}
               <li>
                 {% blocktrans count n_ids=grants_aggregates.id_count %}The file contains <strong>{{n_ids}} grant ID</strong>: {% plural %}The file contains <strong>{{n_ids}} grant IDs</strong>: {% endblocktrans %}
                 {% if grants_aggregates.unique_ids|length %}<a data-toggle="modal" data-target=".unique-ids">{% endif %}{% blocktrans count n_ids_unique=grants_aggregates.unique_ids|length %}{{n_ids_unique}} unique ID</strong></a>{% plural %}<strong>{{n_ids_unique}} unique IDs</strong>{% endblocktrans %}{% if grants_aggregates.unique_ids|length %}</a>{% endif %}
@@ -72,12 +74,15 @@
                 {% trans "and" %}
                 {% if grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length %}<a data-toggle="modal" data-target=".recipient-org-identifiers-unrecognised-prefixes">{% endif %}{% blocktrans count n_bad_org_prefixes=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length %}<strong>{{n_bad_org_prefixes}} unrecognised recipient organisation prefix</strong></a>{% plural %}<strong>{{n_bad_org_prefixes}} unrecognised recipient organisation prefixes</strong>{% endblocktrans %}{% if grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}</a>{% endif %}.
               </li>
+              {% endcomment %}
+
               {% if csv_encoding and csv_encoding != "utf-8" %}
               <li>
               {% blocktrans %} This file is <strong>not 'utf-8'</strong> encoded (it is <em>{{csv_encoding}}</em> encoded).{% endblocktrans %}
               </li>
              {% endif %}
            </ul>
+        <div class="explore-help"> If anything looks wrong with this data please use the <em>Review</em> section below to identify potential issues. </div>
         {% if conversion == 'flattenable' %}
           <form method="post">
             <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% trans "Convert to Spreadsheet" %}</button>
@@ -87,12 +92,16 @@
         </div>
       </div>
     </div>
+
+  {% comment %}
   {% cove_modal_list className="unique-ids" modalTitle="Unique IDs" itemList=grants_aggregates.unique_ids %}
   {% cove_modal_list className="duplicate-ids" modalTitle="Duplicate IDs" itemList=grants_aggregates.duplicate_ids %}
   {% cove_modal_list className="funding-org-identifier-prefixes" modalTitle="Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifier_prefixes %}
   {% cove_modal_list className="funding-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifiers_unrecognised_prefixes %}
   {% cove_modal_list className="recipient-org-identifier-prefixes" modalTitle="Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifier_prefixes %}
   {% cove_modal_list className="recipient-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}
+  {% endcomment %}
+
   {% endblock data_supplied %}
 
   {% block conversion %}
