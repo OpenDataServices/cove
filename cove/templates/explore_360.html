@@ -154,7 +154,7 @@
            {% trans "Invalid against Schema " %}<small>{% blocktrans count n_errors=validation_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</small>
         {% else %}
            <span class="font-tick tick" aria-hidden="true"></span>
-          {% trans "Valid against schema" %}
+          {% trans "Valid against Schema" %}
         {% endif %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
@@ -163,13 +163,13 @@
       <div class="panel-body">
         <p class="explanation">
         {% if validation_errors %}
-            {% trans "Sorry your data is invalid against " %}<a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas">360Giving JSON Package Schema</a>
+            {% trans "Sorry your data is invalid against" %}<a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas"> 360Giving JSON Package Schema</a>
         </p>
         <br>
         <p>{% trans "Validation <strong>errors</strong>:" %}</p>
         {% include "validation_table.html" %}
         {% else %}
-          {% trans "Congratulations! Your data is valid." %}
+          {% trans "Congratulations! Your data is valid against" %}<a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas"> 360Giving JSON Package Schema</a>
         </p>
         {% endif %}
       </div>
