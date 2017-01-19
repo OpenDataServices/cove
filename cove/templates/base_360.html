@@ -21,6 +21,12 @@
 {% block bootstrap_css %}
   <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/fonts/tick/tick.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/bootstrap-360.css' %}">
+  <noscript>
+    <style>
+      .collapse {display: initial !important;}
+      .glyphicon-collapse-down {display: none !important;}
+    </style>
+  </noscript>
 {% endblock %}
 
 {% block link %}
