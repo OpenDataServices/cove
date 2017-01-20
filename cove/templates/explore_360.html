@@ -131,14 +131,18 @@
       <div class="panel-body">
         <p class="explanation">
         {% if validation_errors %}
-            {% trans "Sorry your data is invalid against" %}<a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas"> 360Giving JSON Package Schema</a>
-        </p>
-        <br>
-        <p>{% trans "Validation <strong>errors</strong>:" %}</p>
-        {% include "validation_table.html" %}
+            {% trans "Sorry your data is invalid against" %}
         {% else %}
           {% trans "Congratulations! Your data is valid against" %}
+        {% endif %}
+        <a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas"> 360Giving JSON Package Schema</a>.
         </p>
+        <div class="explore-help">Validation ensures that your data is compliant with the basic requirements of the <a href="http://www.threesixtygiving.org/standard/">360Giving Standard</a>. If your data validates then it can be used by any user or application who knows how to work with 360Giving data.</div>
+        {% if validation_errors %}
+          <br>
+          <p class="explanation">&nbsp;{% trans "There are some <strong>validation errors</strong> in your data, please check them in the table below." %}</p>
+          <br>
+          {% include "validation_table.html" %}
         {% endif %}
       </div>
     </div>
@@ -183,7 +187,7 @@
         <div class="explore-help">
           The table below shows your data after it has been processed
           {% if conversion_warning_messages or validation_errors or additional_fields_count %}
-            ;if anything looks wrong, it is probably related to the errors and/or warnings shown above
+            ; if anything looks wrong, it is probably related to the errors and/or warnings shown above
           {% endif %}.
         </div>
         <ul class="left-space">
