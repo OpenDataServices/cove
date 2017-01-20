@@ -144,3 +144,7 @@ a.anchor::before {
 .key-facts .glyphicon-flag {
   color: #a94442;
 }
+
+.no-bottom-margin {
+  margin-bottom: 0px;
+}
