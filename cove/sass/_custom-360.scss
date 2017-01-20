@@ -71,6 +71,14 @@ ul.pagination a{
 	margin: 12px 35px;
 }
 
+.panel-body p.icon-indent {
+	text-indent: 20px;
+
+	& span {
+		color: #666 !important;
+	}
+}
+
 ////////////
 
 $web-font-path: "https://fonts.googleapis.com/css?family=Lato:400,700,400italic" !default;
