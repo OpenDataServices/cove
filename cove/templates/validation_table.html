@@ -5,9 +5,9 @@
 <thead> 
   <tr> 
     <th>{% trans 'Error Description' %}</th> 
-    <th width="15%" class="text-center">{% trans 'Error Count' %}</th> 
-    <th width="15%">{% trans 'First 3 Examples' %}</th> 
-    <th width="15%">{% trans 'Location of first 3 errors' %}</th> 
+    <th>{% trans 'Error Count' %}</th> 
+    <th>{% trans 'First 3 Examples' %}</th> 
+    <th>{% trans 'Location of first 3 errors' %}</th> 
     {% if file_type == 'xlsx' or file_type == 'csv' %}
       <th>{% trans 'Spreadsheet Location of first 3 errors' %}</th> 
     {% endif %}

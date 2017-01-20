@@ -319,7 +319,6 @@ def test_error_modal(server_url, browser, httpserver, source_filename, prefix):
         if section.get_attribute('data-toggle') == "collapse" and section.get_attribute('aria-expanded') != 'true':
             section.click()
         time.sleep(0.5)
-
     browser.find_element_by_css_selector('a[data-target=".validation-errors-1"]').click()
 
     modal = browser.find_element_by_css_selector('.validation-errors-1')
@@ -415,7 +414,7 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
     else:
         source_url = httpserver.url + '/' + source_filename
 
-    browser.get(server_url + '/ocds/?source_url=' + source_url)
+    browser.get(server_url + '/ocds?source_url=' + source_url)
 
     if source_filename.endswith('.json'):
         try:
