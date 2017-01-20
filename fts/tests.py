@@ -195,59 +195,26 @@ def test_accordion(server_url, browser, prefix):
     assert buttons() == [False, False, True]
 
 
-@pytest.mark.parametrize(('prefix', 'source_filename', 'expected_text', 'conversion_successful'), [
-    (PREFIX_OCDS, 'tenders_releases_2_releases.json', ['Convert'], True),
-    (PREFIX_OCDS, 'ocds_release_nulls.json', ['Convert', 'Save or Share these results'], True),
+@pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
+    ('tenders_releases_2_releases.json', ['Convert'], True),
+    ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], True),
     # Conversion should still work for files that don't validate against the schema
-    (PREFIX_OCDS, 'tenders_releases_2_releases_invalid.json', ['Convert',
-                                                               'Validation Errors',
-                                                               "'id' is missing but required",
-                                                               "Invalid 'uri' found"], True),
+    ('tenders_releases_2_releases_invalid.json', ['Convert',
+                                                  'Validation Errors',
+                                                  "'id' is missing but required",
+                                                  "Invalid 'uri' found"], True),
     # Test UTF-8 support
-    (PREFIX_OCDS, 'utf8.json', 'Convert', True),
+    ('utf8.json', 'Convert', True),
     # But we expect to see an error message if a file is not well formed JSON at all
-    (PREFIX_OCDS, 'tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
-    (PREFIX_OCDS, 'tenders_releases_2_releases.xlsx', 'Convert', True),
-    (PREFIX_OCDS, 'badfile.json', 'Statistics can not produced', True),
-    (PREFIX_360, 'WellcomeTrust-grants_fixed_2_grants.json', ['Convert',
-                                                           'Save or Share these results',
-                                                           'Unique Grant IDs: 2',
-                                                           'Duplicate IDs: 2',
-                                                           'Duplicate IDs: 2',
-                                                           'This file contains 4 grants',
-                                                           'Failed validation against',
-                                                           'There are 2 duplicate grant IDs in this package.',
-                                                           'Silent Signal',
-                                                           'Showing 1 to 4 of 4 entries',
-                                                           'Additional Fields',
-                                                           'Data source',
-                                                           'This file uses 7 additional fields not used in the standard.',
-                                                           'Recipient Org ID Prefixes: 1',
-                                                           'Unrecognised Recipient Org ID Prefixes: 1',
-                                                           'There is 1 unrecognised recipient organisation prefix in this package.',
-                                                           'Date is not in datetime format'], True),
-    (PREFIX_360, 'WellcomeTrust-grants_broken_grants.json', ['Convert',
-                                                           'Funder Organisation IDs: 2',
-                                                           'Unrecognised Funding Org ID Prefixes: 1',
-                                                           'There is 1 unrecognised funding organisation prefix in this package.'], True),
-    # Test a 360 spreadsheet with titles, rather than fields
-    (PREFIX_360, 'WellcomeTrust-grants_2_grants.xlsx', 'Convert', True),
-    # Test that titles that aren't in the rollup are converted correctly
-    # (See if statement in check_url_input_result_page).
-    (PREFIX_360, 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx', 'Convert', True),
-    # Test a 360 csv in cp1252 incoding
-    (PREFIX_360, 'WellcomeTrust-grants_2_grants_cp1252.csv', ['Convert', 'This file is not \'utf-8\' encoded (it is cp1252 encoded)'], True),
-    # Test a non-valid file.
-    (PREFIX_360, 'paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
-    # Test a unconvertable spreadsheet (blank file)
-    (PREFIX_360, 'bad.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
+    ('tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
+    ('tenders_releases_2_releases.xlsx', 'Convert', True),
+    ('badfile.json', 'Statistics can not produced', True),
     # Test unconvertable JSON (main sheet "releases" is missing)
-    (PREFIX_OCDS, 'unconvertable_json.json', 'could not be converted', False),
-    (PREFIX_OCDS, 'full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], True),
+    ('unconvertable_json.json', 'could not be converted', False),
+    ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], True),
     ])
-def test_URL_input(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
-    if not prefix:
-        pytest.skip()
+def test_URL_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
+    prefix = "/ocds/"
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -261,19 +228,19 @@ def test_URL_input(server_url, browser, httpserver, source_filename, prefix, exp
     time.sleep(0.5)
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
-    check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+    check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
     #refresh page to now check if tests still work after caching some data
     browser.get(browser.current_url)
 
     selected_examples = ['tenders_releases_2_releases_invalid.json', 'WellcomeTrust-grants_fixed_2_grants.xlsx', 'WellcomeTrust-grants_2_grants_cp1252.csv']
 
     if source_filename in selected_examples:
-        check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+        check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
         browser.get(server_url + prefix + '?source_url=' + source_url)
-        check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful)
+        check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
 
 
-def check_url_input_result_page(server_url, browser, httpserver, source_filename, prefix, expected_text, conversion_successful):
+def check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
     if source_filename.endswith('.json'):
         try:
             browser.find_element_by_name("flatten").click()
@@ -286,13 +253,8 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
     for text in expected_text:
         assert text in body_text
 
-    # We should still be in the correct app
-    if prefix == PREFIX_OCDS:
-        assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
-        # assert 'Release Table' in browser.find_element_by_tag_name('body').text
-    elif prefix == PREFIX_360:
-        assert 'Data Quality Tool' in browser.find_element_by_class_name('title360').text
-        assert '360 Giving' not in browser.find_element_by_tag_name('body').text
+    assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
+    # assert 'Release Table' in browser.find_element_by_tag_name('body').text
 
     if conversion_successful:
         if source_filename.endswith('.json'):
@@ -351,6 +313,13 @@ def test_error_modal(server_url, browser, httpserver, source_filename, prefix):
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
 
+    # Click and un-collapse all explore sections
+    all_sections = browser.find_elements_by_class_name('panel-heading')
+    for section in all_sections:
+        if section.get_attribute('data-toggle') == "collapse" and section.get_attribute('aria-expanded') != 'true':
+            section.click()
+        time.sleep(0.5)
+
     browser.find_element_by_css_selector('a[data-target=".validation-errors-1"]').click()
 
     modal = browser.find_element_by_css_selector('.validation-errors-1')
@@ -385,15 +354,23 @@ def test_check_schema_link_on_result_page(server_url, browser, httpserver, sourc
     
     # We should still be in the correct app
     if prefix == PREFIX_360:
+        # Click and un-collapse all explore sections
+        all_sections = browser.find_elements_by_class_name('panel-heading')
+        for section in all_sections:
+            if section.get_attribute('data-toggle') == "collapse" and section.get_attribute('aria-expanded') != 'true':
+                section.click()
+            time.sleep(0.5)
         schema_link = browser.find_element_by_link_text(expected_text)
         schema_link.click()
         browser.find_element_by_id('toc-360giving-json-schemas')
 
 
 @pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
-@pytest.mark.parametrize('prefix', [PREFIX_OCDS, PREFIX_360])
 @pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
-def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warning_texts, prefix, flatten_or_unflatten):
+def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warning_texts, flatten_or_unflatten):
+    """
+    TODO: We need the same kind of test for 360 in test_360.py
+    """
     # If we're testing a remove server then we can't run this test as we can't
     # set up the mocks
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -438,7 +415,7 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
     else:
         source_url = httpserver.url + '/' + source_filename
 
-    browser.get(server_url + prefix + '?source_url=' + source_url)
+    browser.get(server_url + '/ocds/?source_url=' + source_url)
 
     if source_filename.endswith('.json'):
         try:

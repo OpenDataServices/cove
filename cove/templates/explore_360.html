@@ -89,7 +89,6 @@
         <div class="panel-body">
           {% if conversion == 'unflatten' %}
             <p class="explanation">{% trans "In order to validate your data we needed to convert it to JSON." %}</p>
-            <br>
             <div class="explore-help">360Giving uses <a href="http://json-schema.org/">JSON Schema</a> to describe the standard in a technical way. In order to validate the data against the schema we have converted it to JSON and will perform all tests on the converted data. If there are conversion errors, the data may not look as you expect &mdash; check the <em>Review</em> section to see if the data appears as expected</div>
           {% else %}
             <p class="explanation">We have converted your JSON data into spreadsheet format.</p>
@@ -143,6 +142,9 @@
           <p class="explanation">&nbsp;{% trans "There are some <strong>validation errors</strong> in your data, please check them in the table below." %}</p>
           <br>
           {% include "validation_table.html" %}
+          {% for error, values in validation_errors %}
+             {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type %}
+          {% endfor %}
         {% endif %}
       </div>
     </div>
@@ -192,7 +194,7 @@
         </div>
         <ul class="left-space">
           <li>
-            {% trans "Grant identifiers:" %} &nbsp;
+            {% trans "Grant identifiers:" %}&nbsp;
             <strong>
               {% if grants_aggregates.unique_ids|length %}<a data-toggle="modal" data-target=".unique-ids">{% endif %}
               {{ grants_aggregates.unique_ids|length}}
