@@ -1,4 +1,4 @@
-{% extends 'explore.html' %}
+{% extends 'explore_ocds_base.html' %}
 {% load i18n %}
 
 
@@ -69,7 +69,7 @@
                {% else %}
                  {% trans "uploaded " %} 
                {% endif %}
-               {% trans "on " %} {{created_date}}
+               {% trans "on " %} {{created_datetime}}
             </li>
            </ul>
          </div>
@@ -86,7 +86,7 @@
 
 
 
-{% block explore_content %}
+{% block explore_additional_content %}
 <div class="row">
   {% if schema_url %}
 

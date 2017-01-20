@@ -1,4 +1,4 @@
-{% extends 'explore.html' %}
+{% extends 'explore_ocds_base.html' %}
 {% load i18n %}
 {% load cove_tags %}
 
@@ -70,7 +70,7 @@
                {% else %}
                  {% trans "uploaded " %} 
                {% endif %}
-               {% trans "on " %} {{created_date}}
+               {% trans "on " %} {{created_datetime}}
             </li>
            </ul>
          </div>
@@ -86,7 +86,7 @@
 
 
 
-{% block explore_content %}
+{% block explore_additional_content %}
 {% with releases_aggregates as ra %}
 {% if ra %}
 <div class="row">

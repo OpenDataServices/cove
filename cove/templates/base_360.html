@@ -19,7 +19,14 @@
 {% block strapline %}{% endblock %}
 
 {% block bootstrap_css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/fonts/tick/tick.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/bootstrap-360.css' %}">
+  <noscript>
+    <style>
+      .collapse {display: initial !important;}
+      .glyphicon-collapse-down {display: none !important;}
+    </style>
+  </noscript>
 {% endblock %}
 
 {% block link %}
@@ -35,9 +42,12 @@
     <h2 class="heading-in-panel" ><small>{% blocktrans %}How to use the {% endblocktrans %}{{ application_name }}</small></h2>
     {% comment %}Translators: Paragraph that describes the application{% endcomment %}
     <p>{% blocktrans %}Upload, paste or provide a link to data in the 360Giving Data Standard format, and this application will convert between JSON, Excel and CSV formats, allowing you to download the original file, and the converted versions.{% endblocktrans %}</p>
-
     <p>{% blocktrans %}You will also be able to inspect key information from the data that the application is able to find, so that you can check the data.{% endblocktrans %}</p>
-
+    <p>{% trans "This tool will:" %}</p>
+    <p class="icon-indent"><span class="font-tick tick"></span>{% trans "Check your data is valid. When it passes these checks, you will know that it is formatted for re-use" %}</p>
+    <p>{% trans "It <strong>will not</strong>:" %}</p>
+    <p class="icon-indent"><span class="font-tick cross"></span>{% blocktrans %} Check your data is accurate. Read about common data errors and how to check for them{% endblocktrans %} <a href="{% url 'cove:common_errors' %}">{% trans "here" %}</a>.</p>
+    <p class="icon-indent"><span class="font-tick cross"></span>{% blocktrans %} Check the data against your own open data policy. Read more about open data{% endblocktrans %} <a href="http://www.threesixtygiving.org/data/">{% trans "here" %}</a>.</p>
     <h3><small>{% blocktrans %}Formats{% endblocktrans %}</small></h3>
     <p>{% blocktrans %}The application accepts data in some of the formats given in the <a href="http://www.threesixtygiving.org/standard/">360Giving Data Standard guidance</a>.
     <br>Acceptable files are: {% endblocktrans %}</p>

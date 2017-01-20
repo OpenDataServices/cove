@@ -99,7 +99,8 @@ def explore(request, pk):
         "current_url": request.build_absolute_uri(),
         "source_url": data.source_url,
         "form_name": data.form_name,
-        "created_date": data.created.strftime("%A, %d %B %Y %I:%M%p %Z"),
+        "created_datetime": data.created.strftime("%A, %d %B %Y %I:%M%p %Z"),
+        "created_date": data.created.strftime("%A, %d %B %Y"),
     }
 
     if file_type == 'json':
@@ -133,7 +134,8 @@ def explore(request, pk):
     if schema_url:
         additional_fields = sorted(common.get_counts_additional_fields(schema_url, schema_name, json_data, context, request.current_app))
         context.update({
-            'data_only': additional_fields
+            'data_only': additional_fields,
+            'additional_fields_count': sum(item[2] for item in additional_fields)
         })
 
     cell_source_map = {}
@@ -158,6 +160,7 @@ def explore(request, pk):
         'file_type': file_type,
         'schema_url': schema_url + schema_name,
         'validation_errors': sorted(validation_errors.items()),
+        'validation_errors_count': sum(len(value) for value in validation_errors.values()),
         'json_data': json_data,  # Pass the JSON data to the template so we can display values that need little processing
         'first_render': not data.rendered,
         'common_error_types': []
