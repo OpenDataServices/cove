@@ -152,27 +152,57 @@
   {% endblock validation %}
 
   {% block additional_checks %}
-  {% if data_only %}
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#additional-checks-body">
       <h3 class="panel-title panel-title-explore"> 
         <span class="font-tick question" aria-hidden="true"></span>
-        {% trans "Additional Checks" %}{% if additional_fields_count %} <small>{% blocktrans count n_additional_fields=additional_fields_count %} Additional field{% plural %}{{n_additional_fields}} Additional fields{% endblocktrans %}</small>{% endif %}
+        {% trans "Additional Checks" %}{% if additional_checks_count %} <small>{% blocktrans count n_additional_checks=additional_checks_count %} Additional checks{% plural %}{{n_additional_checks}} Additional checks{% endblocktrans %}</small>{% endif %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
     <div id="additional-checks-body" class="collapse">
-      <div class="panel-body">
-        <p class="explanation"><strong>{% trans "Additional checks" %}</strong></p>
-      </div>
-      <div class="panel-body">
-        <p class="explanation">{% trans "<strong>Additional fields</strong> were found in your data." %}</p>
-        <p> {% trans "Please check them to see that they are intended additions and not just the result of spelling mistakes." %}</p>
-        {% include "additional_fields_table.html" %}
-      </div>
+        {% if additional_checks %}
+        <table class="table no-bottom-margin">
+        <thead> 
+          <tr> 
+            <th>{% trans 'Check Description' %}</th> 
+            <th>{% trans 'First 3 Locations' %}</th> 
+          </tr> 
+        </thead>
+        <tbody>
+        {% for message, json_location, spreadsheet_location in additional_checks %}
+        <tr>
+          <td>{{message}}</td>
+          {% if file_type == 'xlsx' or file_type == 'csv' %}
+            <td style="white-space: nowrap">
+              <ul class="list-unstyled">
+                {% for sheet, letter, row, header in spreadsheet_location|slice:":3" %}
+                <li> <b>Sheet:</b> {{sheet}} <b>Row:</b> {{row}} {% if header %} <b>Header:</b> {{header}} {% endif %} </li>
+                {% endfor %}
+              </ul>
+            </td>
+          {% else %}
+            <td>
+              <ul class="list-unstyled">
+                {% for value in json_location|slice:":3" %}
+                   <li> {{value}} </li>
+                {% endfor %}
+              </ul>
+            </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        {% endif %}
+
+        {% if data_only %}
+          <hr class="heading-in-panel">
+            <p class="left-space"> {% trans "<strong>Additional fields</strong> were found in your data. Please check them to see that they are intended additions and not just the result of spelling mistakes." %}</p>
+          {% include "additional_fields_table.html" %}
+        {% endif %}
     </div>
   </div>
-  {% endif %}
   {% endblock additional_checks %}
 
   {% block review %}
