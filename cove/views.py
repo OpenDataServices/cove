@@ -176,6 +176,8 @@ def explore(request, pk):
             view = 'explore_ocds-release.html'
     elif request.current_app == 'cove-360':
         context['grants_aggregates'] = threesixtygiving.get_grants_aggregates(json_data)
+        context['additional_checks'] = threesixtygiving.run_additional_checks(json_data, cell_source_map)
+        context['additional_checks_count'] = len(context['additional_checks']) + (1 if context['data_only'] else 0)
         context['common_error_types'] = ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
         view = 'explore_360.html'
 
