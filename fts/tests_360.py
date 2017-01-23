@@ -13,9 +13,9 @@ if not PREFIX_360:
     if not PREFIX_OCDS:
         # Use a default only if other env vars aren't supplied
         PREFIX_360 = '/360/'
-    #else:
+    else:
         # Otherwise assume we want to skip the 360 tests entirely
-        # ...
+        pytestmark = pytest.mark.skip()
 
 
 @pytest.fixture(scope="module")

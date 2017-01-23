@@ -214,7 +214,9 @@ def test_accordion(server_url, browser, prefix):
     ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], True),
     ])
 def test_URL_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
-    prefix = "/ocds/"
+    if PREFIX_360 and not PREFIX_OCDS:
+        pytest.skip()
+    prefix = PREFIX_OCDS
     with open(os.path.join('cove', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -414,7 +416,7 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
     else:
         source_url = httpserver.url + '/' + source_filename
 
-    browser.get(server_url + '/ocds?source_url=' + source_url)
+    browser.get(server_url + PREFIX_OCDS + '?source_url=' + source_url)
 
     if source_filename.endswith('.json'):
         try:
