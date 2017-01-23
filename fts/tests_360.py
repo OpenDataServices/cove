@@ -7,6 +7,17 @@ import os
 BROWSER = os.environ.get('BROWSER', 'Firefox')
 
 
+PREFIX_360 = os.environ.get('PREFIX_360', '')
+PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '')
+if not PREFIX_360:
+    if not PREFIX_OCDS:
+        # Use a default only if other env vars aren't supplied
+        PREFIX_360 = '/360/'
+    #else:
+        # Otherwise assume we want to skip the 360 tests entirely
+        # ...
+
+
 @pytest.fixture(scope="module")
 def browser(request):
     browser = getattr(webdriver, BROWSER)()
@@ -18,9 +29,9 @@ def browser(request):
 @pytest.fixture(scope="module")
 def server_url_360(request, live_server):
     if 'CUSTOM_SERVER_URL' in os.environ:
-        return os.environ['CUSTOM_SERVER_URL'] + '/360/'
+        return os.environ['CUSTOM_SERVER_URL'] + PREFIX_360
     else:
-        return live_server.url + '/360/'
+        return live_server.url + PREFIX_360
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
@@ -85,7 +96,7 @@ def test_explore_360_url_input(server_url_360, browser, httpserver, source_filen
         # Use urls pointing to GitHub if we have a custom (probably non local) server URL
         source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/master/cove/fixtures/' + source_filename
     else:
-        source_url = httpserver.url + '/360/' + source_filename
+        source_url = httpserver.url + PREFIX_360 + source_filename
 
     browser.get(server_url_360)
     browser.find_element_by_partial_link_text('Link').click()
