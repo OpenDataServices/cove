@@ -45,3 +45,41 @@ def datetime_or_date(instance):
     if result:
         return result
     return datetime.datetime.strptime(instance, "%Y-%m-%d")
+
+
+def get_generic_paths(path, flattened, obj):
+    '''Transform a dict into another dict with keys made of json paths.
+
+   Key are json paths (as tuples) with list indexes represented as '[]', which
+   means 'at an unspecified position in an array'. Values are dictionaries with
+   keys replacing '[]' with the specific index, eg:
+
+   {'a': 'I am', 'b': ['a', 'list'], 'c': [{'ca': 'ca1'}, {'ca': 'ca2'}, {'cb': 'cb'}]}
+
+   will produce:
+
+   {('a',): {('a',): I am'},
+    ('b', '[]''): {{(b, 0), 'a'}, {('b', 1): 'list'}},
+    ('c', '[]', 'ca'): {('c', 0, 'ca'): 'ca1', ('c', 1, 'ca'): 'ca2'},
+    ('c', '[]', 'cb'): {('c', 1, 'ca'): 'cb'}}
+    '''
+    if isinstance(obj, dict):
+        iterable = list(obj.items())
+        if not iterable:
+            flattened[path] = {}
+    else:
+        iterable = list(enumerate(obj))
+        if not iterable:
+            flattened[path] = []
+
+    for key, value in iterable:
+        if isinstance(value, (dict, list)):
+            get_generic_paths(path + (key,), flattened, value)
+        else:
+            generic_key = tuple('[]' if type(i) == int else i for i in path + (key,))
+            if flattened.get(generic_key):
+                flattened[generic_key][path + (key,)] = value
+            else:
+                flattened[generic_key] = {path + (key,): value}
+
+    return flattened

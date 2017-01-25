@@ -234,3 +234,36 @@ def get_schema_validation_errors(json_data, schema_url, schema_name, current_app
         unique_validator_key = [validator_type, message, path_no_number]
         validation_errors[json.dumps(unique_validator_key)].append(value)
     return dict(validation_errors)
+
+
+def get_schema_deprecated_paths(schema_url, schema_name, obj=None, current_path=(), deprecated_paths=[]):
+    '''Get a list of deprecated paths in a schema.
+
+    List indexes are represented as '[]', meaning 'at an unspecified index within a list'.
+    '''
+    release_schema = None
+    if schema_url and schema_url.startswith("http"):
+        release_schema = requests.get(schema_url + schema_name).text
+    elif schema_name:
+        with open(schema_url + schema_name) as schema_file:
+            release_schema = schema_file.read()
+
+    if release_schema:
+        obj = jsonref.loads(release_schema)
+
+    for prop, value in obj['properties'].items():
+        if current_path:
+            path = current_path + (prop,)
+        else:
+            path = (prop,)
+
+        if "deprecated_paths" in value:
+            deprecated_paths.append(path)
+
+        if value.get('type') == 'object':
+            get_schema_deprecated_paths('', '', value, path, deprecated_paths)
+        elif value.get('type') == 'array' and value['items'].get('properties'):
+            path += ('[]',)
+            get_schema_deprecated_paths('', '', value['items'], path, deprecated_paths)
+
+    return deprecated_paths
