@@ -236,7 +236,7 @@ def get_schema_validation_errors(json_data, schema_url, schema_name, current_app
     return dict(validation_errors)
 
 
-def get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path=(), deprecated_paths=[]):
+def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path=(), deprecated_paths=[]):
     '''Get a list of deprecated paths in a schema.
 
     List indexes are represented as '[]', meaning 'at an unspecified index within a list'.
@@ -261,15 +261,15 @@ def get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path=
                 deprecated_paths.append(path)
 
         if value.get('type') == 'object':
-            get_schema_deprecated_paths('', '', value, path, deprecated_paths)
+            _get_schema_deprecated_paths('', '', value, path, deprecated_paths)
         elif value.get('type') == 'array' and value['items'].get('properties'):
             path += ('[]',)
-            get_schema_deprecated_paths('', '', value['items'], path, deprecated_paths)
+            _get_schema_deprecated_paths('', '', value['items'], path, deprecated_paths)
 
     return deprecated_paths
 
 
-def get_release_generic_paths(json_data_name, json_data_url, obj=None, path=(), generic_paths={}):
+def _get_json_data_generic_paths(json_data_name, json_data_url, obj=None, path=(), generic_paths={}):
     '''Transform json data into a dictionary with keys made of json paths.
 
    Key are json paths (as tuples) with list indexes represented as '[]', which
@@ -305,7 +305,7 @@ def get_release_generic_paths(json_data_name, json_data_url, obj=None, path=(), 
 
     for key, value in iterable:
         if isinstance(value, (dict, list)):
-            get_release_generic_paths('', '', value, path + (key,), generic_paths)
+            _get_json_data_generic_paths('', '', value, path + (key,), generic_paths)
         else:
             generic_key = tuple('[]' if type(i) == int else i for i in path + (key,))
             if generic_paths.get(generic_key):

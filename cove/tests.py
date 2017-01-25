@@ -281,7 +281,7 @@ def test_get_schema_validation_errors():
 
 def test_get_schema_deprecated_paths():
     schema_w_deprecations = 'cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json'
-    deprecated_paths = c.get_schema_deprecated_paths(schema_w_deprecations, '')
+    deprecated_paths = c._get_schema_deprecated_paths(schema_w_deprecations, '')
     expected_results = [
         ('releases', '[]', 'initiationType'),
         ('releases', '[]', 'contracts', '[]', 'items', '[]', 'quantity'),
@@ -294,17 +294,17 @@ def test_get_schema_deprecated_paths():
         assert path in deprecated_paths
 
 
-def test_get_release_generic_paths():
+def test_get_json_data_generic_paths():
     data_release_w_deprecations = 'cove/fixtures/tenders_releases_2_releases_with_deprecated_fields.json'
-    generic_paths = c.get_release_generic_paths(data_release_w_deprecations, '')
+    generic_paths = c._get_json_data_generic_paths(data_release_w_deprecations, '')
     assert len(generic_paths.keys()) == 27
 
 
 def test_get_deprecated_fields():
     data_release_w_deprecations = 'cove/fixtures/tenders_releases_2_releases_with_deprecated_fields.json'
-    generic_paths = c.get_release_generic_paths(data_release_w_deprecations, '')
+    generic_paths = c._get_json_data_generic_paths(data_release_w_deprecations, '')
     schema_w_deprecations = 'cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json'
-    deprecated_schema_paths = c.get_schema_deprecated_paths(schema_w_deprecations, '')
+    deprecated_schema_paths = c._get_schema_deprecated_paths(schema_w_deprecations, '')
     deprecated_generic_paths_in_release = [path for path in deprecated_schema_paths if path in generic_paths]
     assert len(deprecated_generic_paths_in_release) == 2
     assert ('releases', '[]', 'initiationType') in deprecated_generic_paths_in_release
