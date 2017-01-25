@@ -257,8 +257,8 @@ def get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path=
         else:
             path = (prop,)
 
-        if "deprecated" in value:
-            deprecated_paths.append(path)
+        if "deprecated" in value and path not in deprecated_paths:
+                deprecated_paths.append(path)
 
         if value.get('type') == 'object':
             get_schema_deprecated_paths('', '', value, path, deprecated_paths)
