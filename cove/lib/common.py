@@ -236,7 +236,7 @@ def get_schema_validation_errors(json_data, schema_url, schema_name, current_app
     return dict(validation_errors)
 
 
-def get_schema_deprecated_paths(schema_url, schema_name, obj=None, current_path=(), deprecated_paths=[]):
+def get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path=(), deprecated_paths=[]):
     '''Get a list of deprecated paths in a schema.
 
     List indexes are represented as '[]', meaning 'at an unspecified index within a list'.
@@ -257,7 +257,7 @@ def get_schema_deprecated_paths(schema_url, schema_name, obj=None, current_path=
         else:
             path = (prop,)
 
-        if "deprecated_paths" in value:
+        if "deprecated" in value:
             deprecated_paths.append(path)
 
         if value.get('type') == 'object':
@@ -267,3 +267,50 @@ def get_schema_deprecated_paths(schema_url, schema_name, obj=None, current_path=
             get_schema_deprecated_paths('', '', value['items'], path, deprecated_paths)
 
     return deprecated_paths
+
+
+def get_release_generic_paths(json_data_name, json_data_url, obj=None, path=(), generic_paths={}):
+    '''Transform json data into a dictionary with keys made of json paths.
+
+   Key are json paths (as tuples) with list indexes represented as '[]', which
+   means 'at an unspecified position in an array'. Values are dictionaries with
+   keys replacing '[]' with the specific index, eg:
+
+   {'a': 'I am', 'b': ['a', 'list'], 'c': [{'ca': 'ca1'}, {'ca': 'ca2'}, {'cb': 'cb'}]}
+
+   will produce:
+
+   {('a',): {('a',): I am'},
+    ('b', '[]''): {{(b, 0), 'a'}, {('b', 1): 'list'}},
+    ('c', '[]', 'ca'): {('c', 0, 'ca'): 'ca1', ('c', 1, 'ca'): 'ca2'},
+    ('c', '[]', 'cb'): {('c', 1, 'ca'): 'cb'}}
+    '''
+    json_data = None
+    if json_data_url and json_data_url.startswith("http"):
+        json_data = requests.get(json_data_url + json_data_name).text
+    elif json_data_name:
+        with open(json_data_url + json_data_name) as schema_file:
+            json_data = schema_file.read()
+
+    obj = json.loads(json_data) if json_data else obj
+
+    if isinstance(obj, dict):
+        iterable = list(obj.items())
+        if not iterable:
+            generic_paths[path] = {}
+    else:
+        iterable = list(enumerate(obj))
+        if not iterable:
+            generic_paths[path] = []
+
+    for key, value in iterable:
+        if isinstance(value, (dict, list)):
+            get_release_generic_paths('', '', value, path + (key,), generic_paths)
+        else:
+            generic_key = tuple('[]' if type(i) == int else i for i in path + (key,))
+            if generic_paths.get(generic_key):
+                generic_paths[generic_key][path + (key,)] = value
+            else:
+                generic_paths[generic_key] = {path + (key,): value}
+
+    return generic_paths
