@@ -283,11 +283,11 @@ def test_get_schema_deprecated_paths():
     schema_w_deprecations = 'cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json'
     deprecated_paths = c._get_schema_deprecated_paths(schema_w_deprecations, '')
     expected_results = [
-        ('releases', '[]', 'initiationType'),
-        ('releases', '[]', 'contracts', '[]', 'items', '[]', 'quantity'),
-        ('releases', '[]', 'tender', 'items', '[]', 'quantity'),
-        ('releases', '[]', 'tender', 'hasEnquiries'),
-        ('releases', '[]', 'awards', '[]', 'items', '[]', 'quantity')
+        ('releases', 'initiationType'),
+        ('releases', 'contracts', 'items', 'quantity'),
+        ('releases', 'tender', 'items', 'quantity'),
+        ('releases', 'tender', 'hasEnquiries'),
+        ('releases', 'awards', 'items', 'quantity')
     ]
     assert len(deprecated_paths) == 5
     for path in expected_results:
@@ -298,29 +298,23 @@ def test_get_json_data_generic_paths():
     data_release_w_deprecations = 'cove/fixtures/tenders_releases_2_releases_with_deprecated_fields.json'
     generic_paths = c._get_json_data_generic_paths(data_release_w_deprecations, '')
     assert len(generic_paths.keys()) == 27
+    assert generic_paths[('releases', 'buyer', 'name')] == {
+        ('releases', 1, 'buyer', 'name'): 'Parks Canada',
+        ('releases', 0, 'buyer', 'name'): 'Agriculture & Agrifood Canada'
+    }
 
 
-def test_get_deprecated_fields():
-    data_release_w_deprecations = 'cove/fixtures/tenders_releases_2_releases_with_deprecated_fields.json'
-    generic_paths = c._get_json_data_generic_paths(data_release_w_deprecations, '')
+def test_get_json_data_deprecated_fields():
     schema_w_deprecations = 'cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json'
-    deprecated_schema_paths = c._get_schema_deprecated_paths(schema_w_deprecations, '')
-    deprecated_generic_paths_in_release = [path for path in deprecated_schema_paths if path in generic_paths]
-    assert len(deprecated_generic_paths_in_release) == 2
-    assert ('releases', '[]', 'initiationType') in deprecated_generic_paths_in_release
-    assert ('releases', '[]', 'tender', 'items', '[]', 'quantity') in deprecated_generic_paths_in_release
-    
-    deprecated_fields_in_release = {}
-    for path in deprecated_schema_paths:
-        if generic_paths.get(path):
-            for key, val in generic_paths[path].items():
-                deprecated_fields_in_release.update({key: val})
-    assert len(deprecated_fields_in_release.keys()) == 3
-    assert ('releases', 0, 'tender', 'items', 0, 'quantity') in deprecated_fields_in_release.keys()
-    assert ('releases', 1, 'initiationType') in deprecated_fields_in_release.keys()
-    assert ('releases', 0, 'initiationType') in deprecated_fields_in_release.keys()
-    assert 10 in deprecated_fields_in_release.values()
-    assert list(deprecated_fields_in_release.values()).count('tender') == 2
+    json_data_w_deprecations = 'cove/fixtures/tenders_releases_2_releases_with_deprecated_fields.json'
+
+    deprecated_fields_data = c.get_json_data_deprecated_fields(schema_w_deprecations, '', json_data_w_deprecations, '')
+    assert ('releases', 0, 'tender', 'items', 0, 'quantity') in deprecated_fields_data.keys()
+    assert ('releases', 1, 'initiationType') in deprecated_fields_data.keys()
+    assert ('releases', 0, 'initiationType') in deprecated_fields_data.keys()
+    assert len(deprecated_fields_data.keys()) == 3
+    assert 10 in deprecated_fields_data.values()
+    assert list(deprecated_fields_data.values()).count('tender') == 2
 
 
 @pytest.mark.django_db
