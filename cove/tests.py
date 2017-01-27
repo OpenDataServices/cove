@@ -295,8 +295,10 @@ def test_get_schema_deprecated_paths():
 
 
 def test_get_json_data_generic_paths():
-    data_release_w_deprecations = 'cove/fixtures/tenders_releases_2_releases_with_deprecated_fields.json'
-    generic_paths = c._get_json_data_generic_paths(data_release_w_deprecations, '')
+    with open('cove/fixtures/tenders_releases_2_releases_with_deprecated_fields.json') as fp:
+        json_data_w_deprecations = json.load(fp)
+
+    generic_paths = c._get_json_data_generic_paths(json_data_w_deprecations)
     assert len(generic_paths.keys()) == 27
     assert generic_paths[('releases', 'buyer', 'name')] == {
         ('releases', 1, 'buyer', 'name'): 'Parks Canada',
@@ -305,10 +307,11 @@ def test_get_json_data_generic_paths():
 
 
 def test_get_json_data_deprecated_fields():
-    schema_w_deprecations = 'cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json'
-    json_data_w_deprecations = 'cove/fixtures/tenders_releases_2_releases_with_deprecated_fields.json'
+    with open('cove/fixtures/tenders_releases_2_releases_with_deprecated_fields.json') as fp:
+        json_data_w_deprecations = json.load(fp)
 
-    deprecated_fields_data = c.get_json_data_deprecated_fields(schema_w_deprecations, '', json_data_w_deprecations, '')
+    schema_w_deprecations = 'cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json'
+    deprecated_fields_data = c.get_json_data_deprecated_fields(schema_w_deprecations, '', json_data_w_deprecations)
     assert ('releases', 0, 'tender', 'items', 0, 'quantity') in deprecated_fields_data.keys()
     assert ('releases', 1, 'initiationType') in deprecated_fields_data.keys()
     assert ('releases', 0, 'initiationType') in deprecated_fields_data.keys()

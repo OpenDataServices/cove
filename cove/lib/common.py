@@ -265,7 +265,7 @@ def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path
     return deprecated_paths
 
 
-def _get_json_data_generic_paths(json_data_name, json_data_url, obj=None, path=(), generic_paths={}):
+def _get_json_data_generic_paths(json_data, path=(), generic_paths={}):
     '''Transform json data into a dictionary with keys made of json paths.
 
    Key are json paths (as tuples). Values are dictionaries with keys including specific
@@ -280,28 +280,18 @@ def _get_json_data_generic_paths(json_data_name, json_data_url, obj=None, path=(
     ('c', 'ca'): {('c', 0, 'ca'): 'ca1', ('c', 1, 'ca'): 'ca2'},
     ('c', 'cb'): {('c', 1, 'ca'): 'cb'}}
     '''
-    json_data = None
-    if json_data_url and json_data_url.startswith("http"):
-        json_data = requests.get(json_data_url + json_data_name).text
-    elif json_data_name:
-        with open(json_data_url + json_data_name) as schema_file:
-            json_data = schema_file.read()
-
-    if json_data:
-        obj = json.loads(json_data)
-
-    if isinstance(obj, dict):
-        iterable = list(obj.items())
+    if isinstance(json_data, dict):
+        iterable = list(json_data.items())
         if not iterable:
             generic_paths[path] = {}
     else:
-        iterable = list(enumerate(obj))
+        iterable = list(enumerate(json_data))
         if not iterable:
             generic_paths[path] = []
 
     for key, value in iterable:
         if isinstance(value, (dict, list)):
-            _get_json_data_generic_paths('', '', value, path + (key,), generic_paths)
+            _get_json_data_generic_paths(value, path + (key,), generic_paths)
         else:
             generic_key = tuple(i for i in path + (key,) if type(i) != int)
             if generic_paths.get(generic_key):
@@ -312,9 +302,9 @@ def _get_json_data_generic_paths(json_data_name, json_data_url, obj=None, path=(
     return generic_paths
 
 
-def get_json_data_deprecated_fields(schema_name, schema_url, json_data_name, json_data_url):
+def get_json_data_deprecated_fields(schema_name, schema_url, json_data):
     deprecated_schema_paths = _get_schema_deprecated_paths(schema_name, schema_url)
-    paths_in_data = _get_json_data_generic_paths(json_data_name, json_data_url)
+    paths_in_data = _get_json_data_generic_paths(json_data)
     deprecated_paths_in_data = [path for path in deprecated_schema_paths if path in paths_in_data]
 
     deprecated_fields_in_data = {}
