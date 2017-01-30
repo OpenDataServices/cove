@@ -323,7 +323,7 @@ def get_json_data_deprecated_fields(schema_name, schema_url, json_data):
     deprecated_fields_output = OrderedDict()
     for field, paths in deprecated_fields.items():
         sorted_paths = tuple(sorted(paths.items(), key=lambda tup: tup[0]))
-        slashed_paths = tuple((("/".join((map(str, path[0]))), path[1]) for path in sorted_paths))
+        slashed_paths = tuple((("/".join((map(str, path[0][:-1]))), path[1]) for path in sorted_paths))
         deprecated_fields_output[field] = slashed_paths
 
     return deprecated_fields_output

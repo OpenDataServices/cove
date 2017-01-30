@@ -227,4 +227,12 @@
           $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
         });
   </script>
+  <script type="text/javascript">
+        $("#deprecatedFieldTable").on("hide.bs.collapse", function(){
+          $("#deprecated-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Deprecated Fields (fields in data not in schema)" %}');
+        });
+        $("#deprecatedFieldTable").on("show.bs.collapse", function(){
+          $("#deprecated-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Deprecated Fields (fields in data not in schema)" %}');
+        });
+  </script>
 {% endblock extrafooterscript %}
