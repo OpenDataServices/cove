@@ -312,18 +312,18 @@ def get_json_data_deprecated_fields(schema_name, schema_url, json_data):
     for generic_path in sorted(deprecated_paths_in_data, key=lambda tup: tup[-1]):
             deprecated_fields[generic_path[-1]] = paths_in_data[generic_path]
 
-    # Generate a tuple of sorted tuples (deprecated_fields values) with
+    # Generate a tuple of sorted string paths as deprecated_fields values, with
     # tuple[0] the path to field as a string and tuple[1] the actual data
     # for the deprecated field in the data set.
-    # eg: {
-    #   'field_a': (('/path/0/to/field/a', data), ...),
-    #   'field_b': (('/path/0/to/field/b', data)),
+    # eg: ordered_dict = {
+    #   'field_a': ('/path/0/to/field/a', '/path/1/to/field/a', ...),
+    #   'field_b': ('/path/0/to/field/b'),
     #   ...
     # }
     deprecated_fields_output = OrderedDict()
     for field, paths in deprecated_fields.items():
         sorted_paths = tuple(sorted(paths.items(), key=lambda tup: tup[0]))
-        slashed_paths = tuple((("/".join((map(str, path[0][:-1]))), path[1]) for path in sorted_paths))
+        slashed_paths = tuple(("/".join((map(str, path[0][:-1]))) for path in sorted_paths))
         deprecated_fields_output[field] = slashed_paths
 
     return deprecated_fields_output
