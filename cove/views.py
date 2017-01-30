@@ -161,7 +161,7 @@ def explore(request, pk):
         'schema_url': schema_url + schema_name,
         'validation_errors': sorted(validation_errors.items()),
         'validation_errors_count': sum(len(value) for value in validation_errors.values()),
-        'deprecated_fields': common.get_json_data_deprecated_fields('cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json', '', json_data),
+        'deprecated_fields': common.get_json_data_deprecated_fields(schema_name, schema_url, json_data),
         'json_data': json_data,  # Pass the JSON data to the template so we can display values that need little processing
         'first_render': not data.rendered,
         'common_error_types': []

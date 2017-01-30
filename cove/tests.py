@@ -314,13 +314,8 @@ def test_get_json_data_deprecated_fields():
     schema_w_deprecations = 'cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json'
     deprecated_data_fields = c.get_json_data_deprecated_fields(schema_w_deprecations, '', json_data_w_deprecations)
     expected_result = OrderedDict([
-        ('initiationType', OrderedDict([
-            (('releases', 0, 'initiationType'), 'tender'),
-            (('releases', 1, 'initiationType'), 'tender')
-        ])),
-        ('quantity', OrderedDict([
-            (('releases', 0, 'tender', 'items', 0, 'quantity'), 10)
-        ])),
+        ('initiationType', (('releases/0', 'tender'), ('releases/1', 'tender'))),
+        ('quantity', (('releases/0/tender/items/0', 10),))
     ])
     assert expected_result == deprecated_data_fields
 
