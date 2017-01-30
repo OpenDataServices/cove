@@ -311,13 +311,13 @@ def test_get_json_data_deprecated_fields():
         json_data_w_deprecations = json.load(fp)
 
     schema_w_deprecations = 'cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json'
-    deprecated_fields_data = c.get_json_data_deprecated_fields(schema_w_deprecations, '', json_data_w_deprecations)
-    assert ('releases', 0, 'tender', 'items', 0, 'quantity') in deprecated_fields_data.keys()
-    assert ('releases', 1, 'initiationType') in deprecated_fields_data.keys()
-    assert ('releases', 0, 'initiationType') in deprecated_fields_data.keys()
-    assert len(deprecated_fields_data.keys()) == 3
-    assert 10 in deprecated_fields_data.values()
-    assert list(deprecated_fields_data.values()).count('tender') == 2
+    deprecated_data_fields = c.get_json_data_deprecated_fields(schema_w_deprecations, '', json_data_w_deprecations)
+    expected_result = [
+        'releases/0/initiationType',
+        'releases/0/tender/items/0/quantity',
+        'releases/1/initiationType'
+    ]
+    assert expected_result == deprecated_data_fields
 
 
 @pytest.mark.django_db
