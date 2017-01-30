@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load cove_tags %}
+
+<table class="table">
+   <thead><tr> <th>{% trans 'Field' %}</th><th>{% trans 'Path(s) to Field' %}</th> <th>{% trans 'Usage Count' %}</th> </tr></thead>
+   <tbody>
+   {% for field, path in deprecated_fields.items %}
+      <tr>
+         <td>{{field}}</td> <td>{{path}}</td> <td>{{path|length}}</td>
+      </tr>
+   {% endfor %}
+   </tbody>
+</table>
