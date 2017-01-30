@@ -1,9 +1,10 @@
+import os
 import pytest
 import cove.views as v
 import cove.lib.common as c
 import cove.lib.ocds as ocds
-import os
 import json
+from collections import OrderedDict
 from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
@@ -312,11 +313,15 @@ def test_get_json_data_deprecated_fields():
 
     schema_w_deprecations = 'cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json'
     deprecated_data_fields = c.get_json_data_deprecated_fields(schema_w_deprecations, '', json_data_w_deprecations)
-    expected_result = [
-        'releases/0/initiationType',
-        'releases/0/tender/items/0/quantity',
-        'releases/1/initiationType'
-    ]
+    expected_result = OrderedDict([
+        ('initiationType', OrderedDict([
+            (('releases', 0, 'initiationType'), 'tender'),
+            (('releases', 1, 'initiationType'), 'tender')
+        ])),
+        ('quantity', OrderedDict([
+            (('releases', 0, 'tender', 'items', 0, 'quantity'), 10)
+        ])),
+    ])
     assert expected_result == deprecated_data_fields
 
 

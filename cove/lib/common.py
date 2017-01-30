@@ -307,8 +307,13 @@ def get_json_data_deprecated_fields(schema_name, schema_url, json_data):
     paths_in_data = _get_json_data_generic_paths(json_data)
     deprecated_paths_in_data = [path for path in deprecated_schema_paths if path in paths_in_data]
 
-    deprecated_fields_in_data = []
-    for generic_path in deprecated_paths_in_data:
-            deprecated_fields_in_data.extend(paths_in_data[generic_path].keys())
+    deprecated_fields = OrderedDict()
+    for generic_path in sorted(deprecated_paths_in_data, key=lambda tup: tup[-1]):
+            deprecated_fields[generic_path[-1]] = paths_in_data[generic_path]
 
-    return sorted(["/".join(map(str, path)) for path in deprecated_fields_in_data])
+    deprecated_fields = {
+        field: OrderedDict(sorted(paths.items(), key=lambda tup: tup[0]))
+        for field, paths in deprecated_fields.items()
+    }
+
+    return deprecated_fields
