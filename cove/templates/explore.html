@@ -24,10 +24,10 @@
 
 
 {% block extrafooterscript %}
-  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.min.js"></script>
   <script type="text/javascript">
     $( document ).ready(function() {
-        ZeroClipboard.config({swfPath: "http://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.swf"})
+        ZeroClipboard.config({swfPath: "https://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.swf"})
         var client = new ZeroClipboard( document.getElementById('copy-url-button') );
         rowCount = $('.result-table')[0].rows.length;
         if (rowCount < 10000) {
