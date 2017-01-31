@@ -261,7 +261,7 @@ def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path
     return deprecated_paths
 
 
-def _get_json_data_generic_paths(json_data, path=(), generic_paths={}):
+def _get_json_data_generic_paths(json_data, path=(), generic_paths=None):
     '''Transform json data into a dictionary with keys made of json paths.
 
    Key are json paths (as tuples). Values are dictionaries with keys including specific
@@ -276,6 +276,10 @@ def _get_json_data_generic_paths(json_data, path=(), generic_paths={}):
     ('c', 'ca'): {('c', 0, 'ca'): 'ca1', ('c', 1, 'ca'): 'ca2'},
     ('c', 'cb'): {('c', 1, 'ca'): 'cb'}}
     '''
+
+    if generic_paths is None:
+        generic_paths = {}
+
     if isinstance(json_data, dict):
         iterable = list(json_data.items())
         if not iterable:
