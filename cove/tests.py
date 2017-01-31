@@ -280,23 +280,8 @@ def test_get_schema_validation_errors():
         assert len(error_list) > 0
 
 
-def test_get_schema_deprecated_paths():
-    schema_w_deprecations = 'cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json'
-    deprecated_paths = c._get_schema_deprecated_paths(schema_w_deprecations, '')
-    expected_results = [
-        ('releases', 'initiationType'),
-        ('releases', 'contracts', 'items', 'quantity'),
-        ('releases', 'tender', 'items', 'quantity'),
-        ('releases', 'tender', 'hasEnquiries'),
-        ('releases', 'awards', 'items', 'quantity')
-    ]
-    assert len(deprecated_paths) == 5
-    for path in expected_results:
-        assert path in deprecated_paths
-
-
 def test_get_json_data_generic_paths():
-    with open('cove/fixtures/tenders_releases_2_releases_with_deprecated_fields.json') as fp:
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
         json_data_w_deprecations = json.load(fp)
 
     generic_paths = c._get_json_data_generic_paths(json_data_w_deprecations)
@@ -308,16 +293,39 @@ def test_get_json_data_generic_paths():
 
 
 def test_get_json_data_deprecated_fields():
-    with open('cove/fixtures/tenders_releases_2_releases_with_deprecated_fields.json') as fp:
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
         json_data_w_deprecations = json.load(fp)
 
-    schema_w_deprecations = 'cove/fixtures/release_package_schema_ref_release_schema_deprecated_fields.json'
+    schema_w_deprecations = os.path.join(
+        'cove',
+        'fixtures',
+        'release_package_schema_ref_release_schema_deprecated_fields.json'
+    )
     deprecated_data_fields = c.get_json_data_deprecated_fields(schema_w_deprecations, '', json_data_w_deprecations)
     expected_result = OrderedDict([
         ('initiationType', ('releases/0', 'releases/1')),
         ('quantity', ('releases/0/tender/items/0',))
     ])
     assert expected_result == deprecated_data_fields
+
+
+def test_get_schema_deprecated_paths():
+    schema_w_deprecations = os.path.join(
+        'cove',
+        'fixtures',
+        'release_package_schema_ref_release_schema_deprecated_fields.json'
+    )
+    deprecated_paths = c._get_schema_deprecated_paths(schema_w_deprecations, '')
+    expected_results = [
+        ('releases', 'initiationType'),
+        ('releases', 'contracts', 'items', 'quantity'),
+        ('releases', 'tender', 'items', 'quantity'),
+        ('releases', 'tender', 'hasEnquiries'),
+        ('releases', 'awards', 'items', 'quantity')
+    ]
+    assert len(deprecated_paths) == 5
+    for path in expected_results:
+        assert path in deprecated_paths
 
 
 @pytest.mark.django_db
