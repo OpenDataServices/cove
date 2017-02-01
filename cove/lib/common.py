@@ -236,8 +236,11 @@ def get_schema_validation_errors(json_data, schema_url, schema_name, current_app
     return dict(validation_errors)
 
 
-def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path=(), deprecated_paths=[]):
+def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path=(), deprecated_paths=None):
     '''Get a list of deprecated paths (as tuples) in a schema'''
+    if deprecated_paths is None:
+        deprecated_paths = []
+
     if schema_url and schema_url.startswith("http"):
         obj = jsonref.loads(requests.get(schema_url + schema_name).text)
     elif schema_name:
@@ -276,7 +279,6 @@ def _get_json_data_generic_paths(json_data, path=(), generic_paths=None):
     ('c', 'ca'): {('c', 0, 'ca'): 'ca1', ('c', 1, 'ca'): 'ca2'},
     ('c', 'cb'): {('c', 1, 'ca'): 'cb'}}
     '''
-
     if generic_paths is None:
         generic_paths = {}
 
