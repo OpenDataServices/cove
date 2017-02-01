@@ -90,7 +90,6 @@ def explore(request, pk):
         }, status=404)
 
     file_type = get_file_type(data.original_file)
-
     context = {
         "original_file": {
             "url": data.original_file.url,
@@ -102,7 +101,8 @@ def explore(request, pk):
         "created_datetime": data.created.strftime("%A, %d %B %Y %I:%M%p %Z"),
         "created_date": data.created.strftime("%A, %d %B %Y"),
     }
-
+    schema_version = request.cove_config['schema_version']
+    
     if file_type == 'json':
         # open the data first so we can inspect for record package
         with open(data.original_file.file.name, encoding='utf-8') as fp:
@@ -116,10 +116,14 @@ def explore(request, pk):
                     'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
+        if request.current_app == 'cove-ocds':
+            version = getattr(json_data, 'get', None) and json_data.get('version')
+            if version:
+                schema_version = version.replace('.', '__')
         if request.current_app == 'cove-ocds' and 'records' in json_data:
             context['conversion'] = None
         else:
-            context.update(convert_json(request, data))
+            context.update(convert_json(request, data, schema_version))
     else:
         context.update(convert_spreadsheet(request, data, file_type))
         with open(context['converted_path'], encoding='utf-8') as fp:
@@ -129,7 +133,6 @@ def explore(request, pk):
     schema_name = request.cove_config['schema_name']
 
     if request.current_app == 'cove-ocds':
-        schema_version = request.cove_config['schema_version']
         schema_url = schema_url.format(schema_version)
         schema_name = schema_name['record'] if 'records' in json_data else schema_name['release']
 

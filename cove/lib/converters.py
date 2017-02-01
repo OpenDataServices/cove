@@ -19,6 +19,7 @@ def convert_spreadsheet(request, data, file_type):
     cell_source_map_path = os.path.join(data.upload_dir(), 'cell_source_map.json')
     heading_source_map_path = os.path.join(data.upload_dir(), 'heading_source_map.json')
     encoding = 'utf-8'
+
     if file_type == 'csv':
         # flatten-tool expects a directory full of CSVs with file names
         # matching what xlsx titles would be.
@@ -40,6 +41,7 @@ def convert_spreadsheet(request, data, file_type):
                 encoding = 'latin_1'
     else:
         input_name = data.original_file.file.name
+
     try:
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
         if not os.path.exists(converted_path) or not os.path.exists(cell_source_map_path):
@@ -87,13 +89,14 @@ def convert_spreadsheet(request, data, file_type):
     return context
 
 
-def convert_json(request, data):
+def convert_json(request, data, schema_version=None):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'flattened')
     schema_url = request.cove_config['schema_url']
 
     if request.current_app == 'cove-ocds':
-        schema_url = schema_url.format(request.cove_config['schema_version'])
+        schema_version = schema_version or request.cove_config['schema_version']
+        schema_url = schema_url.format(schema_version)
 
     flatten_kwargs = dict(
         output_name=converted_path,
@@ -102,6 +105,7 @@ def convert_json(request, data):
         root_id=request.cove_config['root_id'],
         schema=schema_url + request.cove_config['item_schema_name'],
     )
+
     try:
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
         if not os.path.exists(converted_path + '.xlsx'):
