@@ -44,13 +44,16 @@ def convert_spreadsheet(request, data, file_type):
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
         if not os.path.exists(converted_path) or not os.path.exists(cell_source_map_path):
             with warnings.catch_warnings(record=True) as conversion_warnings:
+                schema_url = request.cove_config['schema_url']
+                if request.current_app == 'cove-ocds':
+                    schema_url = schema_url.format(request.cove_config['schema_version'])
                 flattentool.unflatten(
                     input_name,
                     output_name=converted_path,
                     input_format=file_type,
                     root_list_path=request.cove_config['root_list_path'],
                     root_id=request.cove_config['root_id'],
-                    schema=request.cove_config['schema_url'] + request.cove_config['item_schema_name'],
+                    schema=schema_url + request.cove_config['item_schema_name'],
                     convert_titles=True,
                     encoding=encoding,
                     cell_source_map=cell_source_map_path,
@@ -87,12 +90,17 @@ def convert_spreadsheet(request, data, file_type):
 def convert_json(request, data):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'flattened')
+    schema_url = request.cove_config['schema_url']
+
+    if request.current_app == 'cove-ocds':
+        schema_url = schema_url.format(request.cove_config['schema_version'])
+
     flatten_kwargs = dict(
         output_name=converted_path,
         main_sheet_name=request.cove_config['root_list_path'],
         root_list_path=request.cove_config['root_list_path'],
         root_id=request.cove_config['root_id'],
-        schema=request.cove_config['schema_url'] + request.cove_config['item_schema_name'],
+        schema=schema_url + request.cove_config['item_schema_name'],
     )
     try:
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')

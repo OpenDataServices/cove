@@ -129,6 +129,8 @@ def explore(request, pk):
     schema_name = request.cove_config['schema_name']
 
     if request.current_app == 'cove-ocds':
+        schema_version = request.cove_config['schema_version']
+        schema_url = schema_url.format(schema_version)
         schema_name = schema_name['record'] if 'records' in json_data else schema_name['release']
 
     if schema_url:
