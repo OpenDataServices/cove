@@ -92,7 +92,7 @@ COVE_CONFIG_BY_NAMESPACE = {
         'default': None
     },
     'schema_version_choices': {
-        'cove-ocds': ['1__1__0', '1__0__2'],
+        'cove-ocds': ('1__1__0', '1__0__2'),  # Keep descending order when adding new versions
         'cove-360': None,
         'default': None
     },
