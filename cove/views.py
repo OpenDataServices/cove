@@ -108,8 +108,19 @@ def explore(request, pk):
     if 'version' in request.POST:
         schema_version_user_choice = request.POST.get('version').replace('.', '__')
         schema_choices = request.cove_config['schema_version_choices']
-        if schema_choices and schema_version_user_choice in schema_choices:
-            schema_version = schema_version_user_choice
+        if schema_choices:
+            if schema_version_user_choice in schema_choices:
+                schema_version = schema_version_user_choice
+            else:
+                # This shouldn't really happened unless the user is doing something
+                # odd, like reseding manually the POST request with random data
+                raise CoveInputDataError(context={
+                    'sub_title': _("Something unexpected happened"),
+                    'link': 'cove:index',
+                    'link_text': _('Start Again'),
+                    'msg': _('We think you tried to run your data against an unreconigsed version of the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a valid choice for the schema version'.format(schema_version_user_choice)),
+                    'error': '{} is not a valid schema version'.format(schema_version_user_choice)
+                })
 
     if file_type == 'json':
         # open the data first so we can inspect for record package
@@ -147,7 +158,9 @@ def explore(request, pk):
         schema_name = schema_name['record'] if 'records' in json_data else schema_name['release']
         context.update({
             "data_uuid": pk,
-            "schema_version_choices": request.cove_config['schema_version_choices']
+            "schema_version_choices": [
+                choice.replace('__', '.') for choice in request.cove_config['schema_version_choices']
+            ]
         })
 
     if schema_url:
