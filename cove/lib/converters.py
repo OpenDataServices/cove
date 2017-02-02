@@ -13,12 +13,17 @@ from cove.lib.exceptions import CoveInputDataError
 logger = logging.getLogger(__name__)
 
 
-def convert_spreadsheet(request, data, file_type):
+def convert_spreadsheet(request, data, file_type, schema_version=None, replace=False):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
     cell_source_map_path = os.path.join(data.upload_dir(), 'cell_source_map.json')
     heading_source_map_path = os.path.join(data.upload_dir(), 'heading_source_map.json')
     encoding = 'utf-8'
+    schema_url = request.cove_config['schema_url']
+
+    if request.current_app == 'cove-ocds':
+        schema_version = schema_version or request.cove_config['schema_version']
+        schema_url = schema_url.format(schema_version)
 
     if file_type == 'csv':
         # flatten-tool expects a directory full of CSVs with file names
@@ -44,11 +49,8 @@ def convert_spreadsheet(request, data, file_type):
 
     try:
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
-        if not os.path.exists(converted_path) or not os.path.exists(cell_source_map_path):
+        if not os.path.exists(converted_path) or not os.path.exists(cell_source_map_path) or replace:
             with warnings.catch_warnings(record=True) as conversion_warnings:
-                schema_url = request.cove_config['schema_url']
-                if request.current_app == 'cove-ocds':
-                    schema_url = schema_url.format(request.cove_config['schema_version'])
                 flattentool.unflatten(
                     input_name,
                     output_name=converted_path,

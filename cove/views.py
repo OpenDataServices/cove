@@ -104,6 +104,7 @@ def explore(request, pk):
 
     schema_version = request.cove_config['schema_version']
     schema_version_user_choice = None
+    replace = False
 
     if 'version' in request.POST:
         schema_version_user_choice = request.POST.get('version').replace('.', '__')
@@ -111,6 +112,7 @@ def explore(request, pk):
         if schema_choices:
             if schema_version_user_choice in schema_choices:
                 schema_version = schema_version_user_choice
+                replace = True
             else:
                 # This shouldn't really happened unless the user is doing something
                 # odd, like reseding manually the POST request with random data
@@ -146,7 +148,7 @@ def explore(request, pk):
         else:
             context.update(convert_json(request, data, schema_version))
     else:
-        context.update(convert_spreadsheet(request, data, file_type))
+        context.update(convert_spreadsheet(request, data, file_type, schema_version, replace))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
@@ -180,7 +182,7 @@ def explore(request, pk):
             heading_source_map = json.load(heading_source_map_fp)
 
     validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors-2.json')
-    if os.path.exists(validation_errors_path):
+    if os.path.exists(validation_errors_path) and not replace:
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
