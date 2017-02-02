@@ -86,8 +86,13 @@ COVE_CONFIG_BY_NAMESPACE = {
                       'record': 'record-package-schema.json'},
         'default': None
     },
-    'schema_version': {
+    'schema_version': {  # Default schema version
         'cove-ocds': '1__0__2',
+        'cove-360': None,
+        'default': None
+    },
+    'schema_version_choices': {
+        'cove-ocds': ['1__1__0', '1__0__2'],
         'cove-360': None,
         'default': None
     },

@@ -101,8 +101,16 @@ def explore(request, pk):
         "created_datetime": data.created.strftime("%A, %d %B %Y %I:%M%p %Z"),
         "created_date": data.created.strftime("%A, %d %B %Y"),
     }
+
     schema_version = request.cove_config['schema_version']
-    
+    schema_version_user_choice = None
+
+    if 'version' in request.POST:
+        schema_version_user_choice = request.POST.get('version').replace('.', '__')
+        schema_choices = request.cove_config['schema_version_choices']
+        if schema_choices and schema_version_user_choice in schema_choices:
+            schema_version = schema_version_user_choice
+
     if file_type == 'json':
         # open the data first so we can inspect for record package
         with open(data.original_file.file.name, encoding='utf-8') as fp:
@@ -116,10 +124,12 @@ def explore(request, pk):
                     'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
-        if request.current_app == 'cove-ocds':
-            version = getattr(json_data, 'get', None) and json_data.get('version')
-            if version:
+        if request.current_app == 'cove-ocds' and not schema_version_user_choice:
+            try:
+                version = json_data.get('version')
                 schema_version = version.replace('.', '__')
+            except AttributeError:
+                pass
         if request.current_app == 'cove-ocds' and 'records' in json_data:
             context['conversion'] = None
         else:
@@ -135,6 +145,10 @@ def explore(request, pk):
     if request.current_app == 'cove-ocds':
         schema_url = schema_url.format(schema_version)
         schema_name = schema_name['record'] if 'records' in json_data else schema_name['release']
+        context.update({
+            "data_uuid": pk,
+            "schema_version_choices": request.cove_config['schema_version_choices']
+        })
 
     if schema_url:
         additional_fields = sorted(common.get_counts_additional_fields(schema_url, schema_name, json_data, context, request.current_app))

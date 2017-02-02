@@ -27,7 +27,7 @@
         {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Validation Errors</a> below.{% endblocktrans %}{% endif %}
         </div>
 
-         <div class="key-facts message">
+          <div class="key-facts message">
            <strong>At a glance</strong>
            <ul>
              {% if ra.release_count %}
@@ -73,17 +73,30 @@
                {% trans "on " %} {{created_datetime}}
             </li>
            </ul>
-         </div>
+          <br>
+          <strong>Validate same data against a different version of the schema</strong>
+          <div class="col-xs-6">
+            <form class="form-inline" action="{% url 'cove:explore' data_uuid %}" method="post">
+            {% csrf_token %}
+              <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect" name="version">
+              <option selected>Select version</option>
+              {% for version in schema_version_choices %}
+                <option value="{{ version }}">
+                    {{ version }}
+                </option>
+              {% endfor %}
+              </select>
+                {# Translators: Label of a button that triggers search #}
+                <input class="btn btn-primary" type="submit" value={% trans "Go" %} />
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
 {% endwith %}
 {% endblock %}
-
-
-
-
 
 
 {% block explore_additional_content %}
