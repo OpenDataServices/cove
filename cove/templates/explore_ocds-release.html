@@ -75,14 +75,15 @@
            </ul>
           <br>
           <strong>Validate same data against a different version of the schema</strong>
-          <div class="col-xs-6">
+          <br>
+          <br>
+          <div>
             <form class="form-inline" action="{% url 'cove:explore' data_uuid %}" method="post">
             {% csrf_token %}
-              <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect" name="version">
-              <option selected>Select version</option>
-              {% for version in schema_version_choices %}
-                <option value="{{ version }}">
-                    {{ version }}
+              <select class="form-control" name="version">
+              {% for version in version_choices %}
+                <option value="{{ version }}" {% if version == version_current %} disabled{% endif %}>
+                   {{ version }}{% if forloop.first %} (latest){% endif %}
                 </option>
               {% endfor %}
               </select>
@@ -233,7 +234,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.tender_doc_count %}
@@ -245,7 +246,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.tender_milestones_doc_count %}
@@ -257,7 +258,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.award_doc_count %}
@@ -269,7 +270,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.contract_doc_count %}
@@ -281,7 +282,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.implementation_doc_count %}
@@ -293,7 +294,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.implementation_milestones_doc_count %}
@@ -305,7 +306,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
         </tbody>
@@ -398,7 +399,7 @@
                   </li>
                   {% endif %} 
                 </ul>
-              </td>          
+              </td>
             </tr>
             {% endfor %}
           </tbody>

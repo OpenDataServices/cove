@@ -160,9 +160,10 @@ def explore(request, pk):
         schema_name = schema_name['record'] if 'records' in json_data else schema_name['release']
         context.update({
             "data_uuid": pk,
-            "schema_version_choices": [
+            "version_choices": [
                 choice.replace('__', '.') for choice in request.cove_config['schema_version_choices']
-            ]
+            ],
+            "version_current": schema_version.replace('__', '.'),
         })
 
     if schema_url:
