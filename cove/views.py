@@ -104,7 +104,7 @@ def explore(request, pk):
 
     schema_version = request.cove_config['schema_version']
     schema_version_user_choice = None
-    replace = False
+    replace_conversion = False
 
     if 'version' in request.POST:
         schema_version_user_choice = request.POST.get('version').replace('.', '__')
@@ -112,7 +112,7 @@ def explore(request, pk):
         if schema_choices:
             if schema_version_user_choice in schema_choices:
                 schema_version = schema_version_user_choice
-                replace = True
+                replace_conversion = True
             else:
                 # This shouldn't really happen unless the user resends manually
                 # the POST request with random data.
@@ -147,9 +147,15 @@ def explore(request, pk):
         if request.current_app == 'cove-ocds' and 'records' in json_data:
             context['conversion'] = None
         else:
-            context.update(convert_json(request, data, schema_version))
+            converted_path = os.path.join(data.upload_dir(), 'flattened')
+            # Replace the spreadsheet conversion only if it exists, ie. do not
+            # create a conversion if there wasn't one requested by the user.
+            if not os.path.exists(converted_path + '.xlsx') and replace_conversion:
+                replace_conversion = False
+            context.update(convert_json(request, data, schema_version, replace_conversion))
     else:
-        context.update(convert_spreadsheet(request, data, file_type, schema_version, replace))
+        # Always replace the json conversion when the schema version chosen changes.
+        context.update(convert_spreadsheet(request, data, file_type, schema_version, replace_conversion))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
@@ -184,7 +190,7 @@ def explore(request, pk):
             heading_source_map = json.load(heading_source_map_fp)
 
     validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors-2.json')
-    if os.path.exists(validation_errors_path) and not replace:
+    if os.path.exists(validation_errors_path) and not replace_conversion:
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:

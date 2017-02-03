@@ -91,7 +91,7 @@ def convert_spreadsheet(request, data, file_type, schema_version=None, replace=F
     return context
 
 
-def convert_json(request, data, schema_version=None):
+def convert_json(request, data, schema_version=None, replace=None):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'flattened')
     schema_url = request.cove_config['schema_url']
@@ -110,9 +110,9 @@ def convert_json(request, data, schema_version=None):
 
     try:
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
-        if not os.path.exists(converted_path + '.xlsx'):
+        if not os.path.exists(converted_path + '.xlsx') or replace:
             with warnings.catch_warnings(record=True) as conversion_warnings:
-                if request.POST.get('flatten'):
+                if request.POST.get('flatten') or replace:
                     flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
                 else:
                     return {'conversion': 'flattenable'}
@@ -132,7 +132,7 @@ def convert_json(request, data, schema_version=None):
                     output_name=converted_path + '-titles',
                     use_titles=True
                 ))
-                if not os.path.exists(converted_path + '-titles.xlsx'):
+                if not os.path.exists(converted_path + '-titles.xlsx') or replace:
                     flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
                     context['conversion_warning_messages_titles'] = [str(w.message) for w in conversion_warnings_titles]
                     with open(conversion_warning_cache_path_titles, 'w+') as fp:
