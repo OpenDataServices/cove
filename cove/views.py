@@ -118,8 +118,9 @@ def explore(request, pk):
                 # the POST request with random data.
                 raise CoveInputDataError(context={
                     'sub_title': _("Something unexpected happened"),
-                    'link': 'cove:index',
-                    'link_text': _('Start Again'),
+                    'link': 'cove:explore',
+                    'link_args': pk,
+                    'link_text': _('Try Again'),
                     'msg': _('We think you tried to run your data against an unreconigsed version of the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a valid choice for the schema version'.format(schema_version_user_choice)),
                     'error': '{} is not a valid schema version'.format(schema_version_user_choice)
                 })
