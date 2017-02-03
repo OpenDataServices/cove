@@ -4,6 +4,8 @@ import cove.lib.common as c
 import cove.lib.ocds as ocds
 import os
 import json
+from unittest.mock import patch
+from cove.lib.converters import convert_spreadsheet
 from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
@@ -360,12 +362,11 @@ def test_explore_schema_version(client, json_data):
     data.current_app = 'cove-ocds'
 
     resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
     if json_data[1]:
-        assert resp.status_code == 200
         assert '1__0__0' in resp.context['schema_url']
         assert resp.context['version_current'] == '1.0.0'
     else:
-        assert resp.status_code == 200
         assert '1__0__2' in resp.context['schema_url']
         assert resp.context['version_current'] == '1.0.2'
 
@@ -373,3 +374,29 @@ def test_explore_schema_version(client, json_data):
     assert resp.status_code == 200
     assert '1__0__1' in resp.context['schema_url']
     assert resp.context['version_current'] == '1.0.1'
+
+
+@pytest.mark.django_db
+@patch('cove.views.convert_spreadsheet', side_effect=convert_spreadsheet, autospec=True)
+def test_explore_schema_version_change_xlsx(mock_object, client):
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.xlsx'), 'rb') as fp:
+        data.original_file.save('test.xlsx', UploadedFile(fp))
+    data.current_app = 'cove-ocds'
+
+    resp = client.get(data.get_absolute_url())
+    args, kwargs = mock_object.call_args
+    assert resp.status_code == 200
+    assert resp.context["version_current"] == '1.0.2'
+    assert mock_object.called
+    assert args[-1] is False
+    assert '1__0__2' in args
+
+    mock_object.reset_mock()
+
+    resp = client.post(data.get_absolute_url(), {"version": "1.0.1"})
+    args, kwargs = mock_object.call_args
+    assert resp.status_code == 200
+    assert mock_object.called
+    assert args[-1] is True
+    assert '1__0__1' in args
