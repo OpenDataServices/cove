@@ -347,3 +347,29 @@ def test_explore_page_null_tag(client, current_app):
     data.current_app = current_app
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize('json_data', [
+    ('{"version": "1.0.0","releases": [{"ocid": "xx"}]}', True),
+    ('{"releases": [{"ocid": "xx"}]}', False)
+])
+def test_explore_schema_version(client, json_data):
+    data = SuppliedData.objects.create()
+    data.original_file.save('test.json', ContentFile(json_data[0]))
+    data.current_app = 'cove-ocds'
+
+    resp = client.get(data.get_absolute_url())
+    if json_data[1]:
+        assert resp.status_code == 200
+        assert '1__0__0' in resp.context['schema_url']
+        assert resp.context['version_current'] == '1.0.0'
+    else:
+        assert resp.status_code == 200
+        assert '1__0__2' in resp.context['schema_url']
+        assert resp.context['version_current'] == '1.0.2'
+
+    resp = client.post(data.get_absolute_url(), {"version": "1.0.1"})
+    assert resp.status_code == 200
+    assert '1__0__1' in resp.context['schema_url']
+    assert resp.context['version_current'] == '1.0.1'
