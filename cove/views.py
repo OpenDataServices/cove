@@ -114,8 +114,8 @@ def explore(request, pk):
                 schema_version = schema_version_user_choice
                 replace = True
             else:
-                # This shouldn't really happened unless the user is doing something
-                # odd, like reseding manually the POST request with random data
+                # This shouldn't really happen unless the user resends manually
+                # the POST request with random data.
                 raise CoveInputDataError(context={
                     'sub_title': _("Something unexpected happened"),
                     'link': 'cove:index',
