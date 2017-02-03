@@ -353,17 +353,17 @@ def test_explore_page_null_tag(client, current_app):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('json_data', [
-    ('{"version": "1.0.0","releases": [{"ocid": "xx"}]}', True),
-    ('{"releases": [{"ocid": "xx"}]}', False)
+    '{"version": "1.0.0","releases": [{"ocid": "xx"}]}',
+    '{"releases": [{"ocid": "xx"}]}'
 ])
 def test_explore_schema_version(client, json_data):
     data = SuppliedData.objects.create()
-    data.original_file.save('test.json', ContentFile(json_data[0]))
+    data.original_file.save('test.json', ContentFile(json_data))
     data.current_app = 'cove-ocds'
 
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
-    if json_data[1]:
+    if "version" in json_data:
         assert '1__0__0' in resp.context['schema_url']
         assert resp.context['version_current'] == '1.0.0'
     else:
