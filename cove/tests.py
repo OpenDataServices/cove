@@ -389,8 +389,8 @@ def test_explore_schema_version_change_xlsx(mock_object, client):
     assert resp.status_code == 200
     assert resp.context["version_current"] == '1.0.2'
     assert mock_object.called
-    assert args[-1] is False
-    assert '1__0__2' in args
+    assert kwargs["replace"] is False
+    assert kwargs["schema_version"] == '1__0__2'
 
     mock_object.reset_mock()
 
@@ -398,5 +398,5 @@ def test_explore_schema_version_change_xlsx(mock_object, client):
     args, kwargs = mock_object.call_args
     assert resp.status_code == 200
     assert mock_object.called
-    assert args[-1] is True
-    assert '1__0__1' in args
+    assert kwargs["replace"] is True
+    assert kwargs["schema_version"] == '1__0__1'

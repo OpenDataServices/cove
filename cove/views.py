@@ -150,12 +150,23 @@ def explore(request, pk):
             converted_path = os.path.join(data.upload_dir(), 'flattened')
             # Replace the spreadsheet conversion only if it exists, ie. do not
             # create a conversion if there wasn't one requested by the user.
-            if not os.path.exists(converted_path + '.xlsx') and replace_conversion:
+            if not os.path.exists(converted_path + '.xlsx'):
                 replace_conversion = False
-            context.update(convert_json(request, data, schema_version, replace_conversion))
+            context.update(convert_json(
+                request,
+                data,
+                schema_version=schema_version,
+                replace=replace_conversion
+            ))
     else:
         # Always replace the json conversion when the schema version chosen changes.
-        context.update(convert_spreadsheet(request, data, file_type, schema_version, replace_conversion))
+        context.update(convert_spreadsheet(
+            request,
+            data,
+            file_type,
+            schema_version=schema_version,
+            replace=replace_conversion
+        ))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
