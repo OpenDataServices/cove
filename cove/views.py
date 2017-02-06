@@ -154,21 +154,10 @@ def explore(request, pk):
             # create a conversion if there wasn't one requested by the user.
             if not os.path.exists(converted_path + '.xlsx'):
                 replace_conversion = False
-            context.update(convert_json(
-                request,
-                data,
-                schema_version=schema_version,
-                replace=replace_conversion
-            ))
+            context.update(convert_json(request, data, schema_version=schema_version, replace=replace_conversion))
     else:
         # Always replace json conversion when user chooses a different schema version.
-        context.update(convert_spreadsheet(
-            request,
-            data,
-            file_type,
-            schema_version=schema_version,
-            replace=replace_conversion
-        ))
+        context.update(convert_spreadsheet(request, data, file_type, schema_version=schema_version, replace=replace_conversion))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
