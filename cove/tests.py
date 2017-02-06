@@ -365,15 +365,15 @@ def test_explore_schema_version(client, json_data):
     assert resp.status_code == 200
     if "version" in json_data:
         assert '1__0__0' in resp.context['schema_url']
-        assert resp.context['version_current'] == '1.0.0'
+        assert resp.context['version_used'] == '1.0.0'
     else:
         assert '1__0__2' in resp.context['schema_url']
-        assert resp.context['version_current'] == '1.0.2'
+        assert resp.context['version_used'] == '1.0.2'
 
     resp = client.post(data.get_absolute_url(), {"version": "1.0.1"})
     assert resp.status_code == 200
     assert '1__0__1' in resp.context['schema_url']
-    assert resp.context['version_current'] == '1.0.1'
+    assert resp.context['version_used'] == '1.0.1'
 
 
 @pytest.mark.django_db
@@ -387,10 +387,10 @@ def test_explore_schema_version_change_xlsx(mock_object, client):
     resp = client.get(data.get_absolute_url())
     args, kwargs = mock_object.call_args
     assert resp.status_code == 200
-    assert resp.context["version_current"] == '1.0.2'
+    assert resp.context["version_used"] == '1.0.2'
     assert mock_object.called
     assert kwargs["replace"] is False
-    assert kwargs["schema_version"] == '1__0__2'
+    assert kwargs["schema_version"] == '1.0.2'
 
     mock_object.reset_mock()
 
@@ -399,4 +399,4 @@ def test_explore_schema_version_change_xlsx(mock_object, client):
     assert resp.status_code == 200
     assert mock_object.called
     assert kwargs["replace"] is True
-    assert kwargs["schema_version"] == '1__0__1'
+    assert kwargs["schema_version"] == '1.0.1'

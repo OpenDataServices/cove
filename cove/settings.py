@@ -87,12 +87,12 @@ COVE_CONFIG_BY_NAMESPACE = {
         'default': None
     },
     'schema_version': {  # Default schema version
-        'cove-ocds': '1__0__2',
+        'cove-ocds': '1.0.2',
         'cove-360': None,
         'default': None
     },
     'schema_version_choices': {
-        'cove-ocds': ('1__0__2', '1__0__1', '1__0__0'),  # Keep descending order when adding new versions
+        'cove-ocds': ('1.0.2', '1.0.1', '1.0.0'),  # Keep descending order when adding new versions
         'cove-360': None,
         'default': None
     },

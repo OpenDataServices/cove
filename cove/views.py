@@ -102,12 +102,14 @@ def explore(request, pk):
         "created_date": data.created.strftime("%A, %d %B %Y"),
     }
 
+    schema_url = request.cove_config['schema_url']
+    schema_name = request.cove_config['schema_name']
     schema_version = request.cove_config['schema_version']
     schema_version_user_choice = None
     replace_conversion = False
 
     if 'version' in request.POST:
-        schema_version_user_choice = request.POST.get('version').replace('.', '__')
+        schema_version_user_choice = request.POST.get('version')
         schema_choices = request.cove_config['schema_version_choices']
         if schema_choices:
             if schema_version_user_choice in schema_choices:
@@ -140,8 +142,8 @@ def explore(request, pk):
                 })
         if request.current_app == 'cove-ocds' and not schema_version_user_choice:
             try:
-                version = json_data.get('version')
-                schema_version = version.replace('.', '__')
+                if json_data.get('version'):
+                    schema_version = json_data['version']
             except AttributeError:
                 pass
         if request.current_app == 'cove-ocds' and 'records' in json_data:
@@ -170,18 +172,13 @@ def explore(request, pk):
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
-    schema_url = request.cove_config['schema_url']
-    schema_name = request.cove_config['schema_name']
-
     if request.current_app == 'cove-ocds':
-        schema_url = schema_url.format(schema_version)
+        schema_url = schema_url.format(schema_version.replace('.', '__'))
         schema_name = schema_name['record'] if 'records' in json_data else schema_name['release']
         context.update({
             "data_uuid": pk,
-            "version_choices": [
-                choice.replace('__', '.') for choice in request.cove_config['schema_version_choices']
-            ],
-            "version_current": schema_version.replace('__', '.'),
+            "version_choices": request.cove_config['schema_version_choices'],
+            "version_used": schema_version,
         })
 
     if schema_url:
