@@ -29,6 +29,9 @@ class SuppliedData(models.Model):
     modified = models.DateTimeField(auto_now=True, null=True)
     rendered = models.BooleanField(default=False)
 
+    # Last schema version applied to the stored data
+    schema_version = models.CharField(max_length=10, null=True, default='')
+
     form_name = models.CharField(
         max_length=20,
         choices=[

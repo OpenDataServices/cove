@@ -104,7 +104,7 @@ def explore(request, pk):
 
     schema_url = request.cove_config['schema_url']
     schema_name = request.cove_config['schema_name']
-    schema_version = request.cove_config['schema_version']
+    schema_version = data.schema_version or request.cove_config['schema_version']
     schema_version_user_choice = None
     replace_conversion = False
 
@@ -231,10 +231,12 @@ def explore(request, pk):
         context['common_error_types'] = ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
         view = 'explore_360.html'
 
-    rendered_response = render(request, view, context)
     if not data.rendered:
         data.rendered = True
-        data.save()
+    data.schema_version = schema_version
+    data.save()
+
+    rendered_response = render(request, view, context)
     return rendered_response
 
 
