@@ -108,7 +108,7 @@ def explore(request, pk):
     schema_version_user_choice = None
     replace_conversion = False
 
-    if 'version' in request.POST:
+    if 'version' in request.POST and request.POST['version'] != data.schema_version:
         schema_version_user_choice = request.POST.get('version')
         schema_choices = request.cove_config['schema_version_choices']
         if schema_choices:
@@ -161,7 +161,7 @@ def explore(request, pk):
                 replace=replace_conversion
             ))
     else:
-        # Always replace the json conversion when the schema version chosen changes.
+        # Always replace json conversion when user chooses a different schema version.
         context.update(convert_spreadsheet(
             request,
             data,
