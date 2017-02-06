@@ -1,5 +1,6 @@
 import pytest
 import requests
+from django.conf import settings
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 import time
@@ -15,6 +16,8 @@ if not PREFIX_360 and not PREFIX_OCDS:
 PREFIX_LIST = [prefix for prefix in (PREFIX_OCDS, PREFIX_360) if prefix]
 
 BROWSER = os.environ.get('BROWSER', 'Firefox')
+
+OCDS_SCHEMA_VERSION_CHOICES = list(settings.COVE_CONFIG_BY_NAMESPACE['schema_version_choices']['cove-ocds'])
 
 
 @pytest.fixture(scope="module")
@@ -196,7 +199,7 @@ def test_accordion(server_url, browser, prefix):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
-    ('tenders_releases_2_releases.json', ['Convert'], True),
+    ('tenders_releases_2_releases.json', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSION_CHOICES, True),
     ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], True),
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
@@ -207,7 +210,7 @@ def test_accordion(server_url, browser, prefix):
     ('utf8.json', 'Convert', True),
     # But we expect to see an error message if a file is not well formed JSON at all
     ('tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
-    ('tenders_releases_2_releases.xlsx', 'Convert', True),
+    ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSION_CHOICES, True),
     ('badfile.json', 'Statistics can not produced', True),
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', False),
