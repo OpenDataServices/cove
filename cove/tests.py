@@ -429,6 +429,7 @@ def test_explore_schema_version_change_with_json_to_xlsx(mock_object, client):
 
     # Convert to spreadsheet
     resp = client.post(data.get_absolute_url(), {"flatten": "true"})
+    assert kwargs["replace"] is False
     mock_object.reset_mock()
 
     # Do replace with version change now that it's been converted once
@@ -450,3 +451,23 @@ def test_explore_schema_version_change_with_json_to_xlsx(mock_object, client):
     assert resp.status_code == 200
     assert kwargs["replace"] is True
     mock_object.reset_mock()
+
+
+@pytest.mark.django_db
+def test_data_supplied_schema_version(client):
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.xlsx'), 'rb') as fp:
+        data.original_file.save('test.xlsx', UploadedFile(fp))
+    data.current_app = 'cove-ocds'
+    
+    assert data.schema_version == ''
+
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
+    assert resp.context['version_used'] == '1.0.2'
+    assert SuppliedData.objects.get(id=data.id).schema_version == '1.0.2'
+
+    resp = client.post(data.get_absolute_url(), {"version": "1.0.1"})
+    assert resp.status_code == 200
+    assert resp.context['version_used'] == '1.0.1'
+    assert SuppliedData.objects.get(id=data.id).schema_version == '1.0.1'
