@@ -176,7 +176,7 @@
     <div class="panel panel-warning">
       <div id="deprecated-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="deprecatedFieldTable" data-toggle="collapse" data-target="#deprecatedFieldTable">
         <h4 class="panel-title">
-          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Deprecated Fields" %}</span>
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Deprecated Fields" %}</span>&nbsp;<sup><span data-toggle="tooltip" title="Fields flagged as 'deprecated' will be either replaced or removed in future versions of the schema" class="glyphicon glyphicon-question-sign"></span></sup>
         </h4>
       </div>
       <div id="deprecatedFieldTable" class="collapse in">
@@ -212,27 +212,26 @@
 {% block extrafooterscript %}
   {{ block.super }} 
   <script type="text/javascript">
-        $("#validationTable").on("hide.bs.collapse", function(){
-          $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-down"></span>{% trans "Validation Errors" %}</h4>');
-        });
-        $("#validationTable").on("show.bs.collapse", function(){
-          $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Validation Errors" %}</h4>');
-        });
-  </script>
-  <script type="text/javascript">
-        $("#additionalFieldTable").on("hide.bs.collapse", function(){
-          $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
-        });
-        $("#additionalFieldTable").on("show.bs.collapse", function(){
-          $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
-        });
-  </script>
-  <script type="text/javascript">
-        $("#deprecatedFieldTable").on("hide.bs.collapse", function(){
-          $("#deprecated-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Deprecated Fields" %}');
-        });
-        $("#deprecatedFieldTable").on("show.bs.collapse", function(){
-          $("#deprecated-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Deprecated Fields" %}');
-        });
+      $("#validationTable").on("hide.bs.collapse", function(){
+        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-down"></span>{% trans "Validation Errors" %}</h4>');
+      });
+      $("#validationTable").on("show.bs.collapse", function(){
+        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Validation Errors" %}</h4>');
+      });
+      $("#additionalFieldTable").on("hide.bs.collapse", function(){
+        $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
+      });
+      $("#additionalFieldTable").on("show.bs.collapse", function(){
+        $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
+      });
+      $("#deprecatedFieldTable").on("hide.bs.collapse", function(){
+        $("#deprecated-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Deprecated Fields" %}');
+      });
+      $("#deprecatedFieldTable").on("show.bs.collapse", function(){
+        $("#deprecated-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Deprecated Fields" %}');
+      });
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
   </script>
 {% endblock extrafooterscript %}
