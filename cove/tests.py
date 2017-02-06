@@ -5,7 +5,7 @@ import cove.lib.ocds as ocds
 import os
 import json
 from unittest.mock import patch
-from cove.lib.converters import convert_spreadsheet
+from cove.lib.converters import convert_json, convert_spreadsheet
 from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
@@ -377,26 +377,76 @@ def test_explore_schema_version(client, json_data):
 
 
 @pytest.mark.django_db
-@patch('cove.views.convert_spreadsheet', side_effect=convert_spreadsheet, autospec=True)
-def test_explore_schema_version_change_xlsx(mock_object, client):
+@pytest.mark.parametrize(('file_type', 'converter', 'replace_after_post'), [
+    ('xlsx', convert_spreadsheet, True),
+    ('json', convert_json, False)
+])
+def test_explore_schema_version_change(client, file_type, converter, replace_after_post):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.xlsx'), 'rb') as fp:
-        data.original_file.save('test.xlsx', UploadedFile(fp))
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.{}'.format(file_type)), 'rb') as fp:
+        data.original_file.save('test.{}'.format(file_type), UploadedFile(fp))
+    data.current_app = 'cove-ocds'
+
+    with patch('cove.views.{}'.format(converter.__name__), side_effect=converter, autospec=True) as mock_object:
+        resp = client.get(data.get_absolute_url())
+        args, kwargs = mock_object.call_args
+        assert resp.status_code == 200
+        assert resp.context["version_used"] == '1.0.2'
+        assert mock_object.called
+        assert kwargs["schema_version"] == '1.0.2'
+        assert kwargs["replace"] is False
+        mock_object.reset_mock()
+
+        resp = client.post(data.get_absolute_url(), {"version": "1.0.1"})
+        args, kwargs = mock_object.call_args
+        assert resp.status_code == 200
+        assert resp.context["version_used"] == '1.0.1'
+        assert mock_object.called
+        assert kwargs["schema_version"] == '1.0.1'
+        assert kwargs["replace"] is replace_after_post
+
+
+@pytest.mark.django_db
+@patch('cove.views.convert_json', side_effect=convert_json, autospec=True)
+def test_explore_schema_version_change_with_json_to_xlsx(mock_object, client):
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
+        data.original_file.save('test.json', UploadedFile(fp))
     data.current_app = 'cove-ocds'
 
     resp = client.get(data.get_absolute_url())
     args, kwargs = mock_object.call_args
     assert resp.status_code == 200
-    assert resp.context["version_used"] == '1.0.2'
-    assert mock_object.called
-    assert kwargs["replace"] is False
     assert kwargs["schema_version"] == '1.0.2'
-
+    assert kwargs["replace"] is False
     mock_object.reset_mock()
 
     resp = client.post(data.get_absolute_url(), {"version": "1.0.1"})
     args, kwargs = mock_object.call_args
     assert resp.status_code == 200
-    assert mock_object.called
+    assert kwargs["replace"] is False
+    mock_object.reset_mock()
+
+    # Convert to spreadsheet
+    resp = client.post(data.get_absolute_url(), {"flatten": "true"})
+    mock_object.reset_mock()
+
+    # Do replace with version change now that it's been converted once
+    resp = client.post(data.get_absolute_url(), {"version": "1.0.0"})
+    args, kwargs = mock_object.call_args
+    assert resp.status_code == 200
     assert kwargs["replace"] is True
-    assert kwargs["schema_version"] == '1.0.1'
+    mock_object.reset_mock()
+
+    # Do not replace if the version does not changed
+    resp = client.post(data.get_absolute_url(), {"version": "1.0.0"})
+    args, kwargs = mock_object.call_args
+    assert resp.status_code == 200
+    assert kwargs["replace"] is False
+    mock_object.reset_mock()
+
+    resp = client.post(data.get_absolute_url(), {"version": "1.0.1"})
+    args, kwargs = mock_object.call_args
+    assert resp.status_code == 200
+    assert kwargs["replace"] is True
+    mock_object.reset_mock()
