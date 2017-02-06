@@ -13,12 +13,13 @@
 
 {% block converted_files %}
   <div class="col-md-6">
+  <div class="col-md-12">
     <div class="panel panel-primary">
       <div class="panel-heading">
         <h4 class="panel-title">Schema</h4>
       </div>
       <div class="panel-body">
-      <p>This data has been checked against <a href="{{ schema_url }}">Open Contracting Data Standard schema version {{ version_used }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
+      <p>This data has been checked against <a href="{{ schema_url }}">OCDS schema version <strong>{{ version_used }}</strong></a>. You can choose a different version of the schema to validate and explore your data.</p>
       <br>
       <strong>Validate and explore same data against a different version of the schema</strong>
       <br>
@@ -41,7 +42,7 @@
     </div>
   </div>
 <!--Download Converted Files-->
-  <div class="col-md-6">
+  <div class="col-md-12">
     <div class="panel {% if conversion_error %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
       <div class="panel-heading">
         <h4 class="panel-title">
@@ -114,6 +115,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 {% endblock %}
 
