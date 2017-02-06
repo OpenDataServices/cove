@@ -13,7 +13,6 @@
 
 {% block converted_files %}
   <div class="col-md-6">
-  <div class="col-md-12">
     <div class="panel panel-primary">
       <div class="panel-heading">
         <h4 class="panel-title">Schema</h4>
@@ -35,15 +34,14 @@
           {% endfor %}
           </select>
             {# Translators: Label of a button that triggers search #}
-            <input class="btn btn-primary" type="submit" value={% trans "Go" %} />
+            <input class="btn btn-primary" type="submit" value={% trans "Go" %} /><img id="small-loading" style="display: none; margin:0; margin-left:2%" class="spinner" src="//i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="spinner" width="20" height="20"> </span>
         </form>
       </div>
-      <div id="loading" style="display: none"> <h3> Loading: </h3> <img class="spinner" src="//i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="spinner" width="30" height="30"> </div>
       </div>
     </div>
   </div>
 <!--Download Converted Files-->
-  <div class="col-md-12">
+  <div class="col-md-6">
     <div class="panel {% if conversion_error %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
       <div class="panel-heading">
         <h4 class="panel-title">
@@ -116,7 +114,6 @@
         </div>
       </div>
     </div>
-  </div>
   </div>
 {% endblock %}
 
@@ -241,5 +238,8 @@
         $("#additionalFieldTable").on("show.bs.collapse", function(){
           $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
         });
+    $('form').submit(function() {
+        $('#small-loading').css({"display": "inline"});
+    });
   </script>
 {% endblock extrafooterscript %}
