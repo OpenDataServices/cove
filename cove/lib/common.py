@@ -310,25 +310,24 @@ def _get_json_data_generic_paths(json_data, path=(), generic_paths=None):
 def get_json_data_deprecated_fields(schema_name, schema_url, json_data):
     deprecated_schema_paths = _get_schema_deprecated_paths(schema_name, schema_url)
     paths_in_data = _get_json_data_generic_paths(json_data)
-    deprecated_paths_in_data = [path for path in deprecated_schema_paths if path in paths_in_data]
+    deprecated_paths_in_data = [path for path in deprecated_schema_paths if path[0] in paths_in_data]
 
     # Generate an OrderedDict sorted by deprecated field names (deprecated_fields keys)
+    # mapping to a unordered tuple of tuples:
+    # {deprecated_field: ((path, path... ), (version, description))}
     deprecated_fields = OrderedDict()
-    for generic_path in sorted(deprecated_paths_in_data, key=lambda tup: tup[-1]):
-            deprecated_fields[generic_path[-1]] = paths_in_data[generic_path]
+    for generic_path in sorted(deprecated_paths_in_data, key=lambda tup: tup[0][-1]):
+        deprecated_fields[generic_path[0][-1]] = (
+            tuple((key for key in paths_in_data[generic_path[0]].keys())),
+            generic_path[1]
+        )
 
-    # Generate a tuple of sorted string paths as deprecated_fields values, with
-    # tuple[0] the path to field as a string and tuple[1] the actual data
-    # for the deprecated field in the data set.
-    # eg: ordered_dict = {
-    #   'field_a': ('/path/0/to/field/a', '/path/1/to/field/a', ...),
-    #   'field_b': ('/path/0/to/field/b'),
-    #   ...
-    # }
+    # Order the path tuples in values for deprecated_fields
+    # (and then re-append (version, description) tuple).
     deprecated_fields_output = OrderedDict()
     for field, paths in deprecated_fields.items():
-        sorted_paths = tuple(sorted(paths.items(), key=lambda tup: tup[0]))
-        slashed_paths = tuple(("/".join((map(str, path[0][:-1]))) for path in sorted_paths))
-        deprecated_fields_output[field] = slashed_paths
+        sorted_paths = tuple(sorted(paths[0]))
+        slashed_paths = tuple(("/".join((map(str, sort_path[:-1]))) for sort_path in sorted_paths))
+        deprecated_fields_output[field] = {"paths": slashed_paths, "explanation": paths[1]}
 
     return deprecated_fields_output

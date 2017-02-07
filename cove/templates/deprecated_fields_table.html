@@ -2,12 +2,28 @@
 {% load cove_tags %}
 
 <table class="table">
-   <thead><tr> <th class="col-md-4">{% trans "Field" %}</th><th>{% trans "Path to Field" %}</th> <th class="col-md-2">{% trans "Usage Count" %}</th> </tr></thead>
+   <thead>
+      <tr>
+        <th class="col-md-3">{% trans "Field" %}</th>
+         <th>{% trans "Details" %}</th>
+         <th>{% trans "Path to Field" %}</th>
+         <th class="col-md-2">{% trans "Usage Count" %}</th>
+      </tr>
+   </thead>
+   <tfoot class="small-tfoot">
+      {% get_current_language as LANGUAGE_CODE %}
+      <tr><td colspan="4">
+         <small>Learn more about deprecated fields at <a href="http://standard.open-contracting.org/latest_version_patch/{{LANGUAGE_CODE}}/schema/deprecation/">http://standard.open-contracting.org/latest_version_patch/{{LANGUAGE_CODE}}/schema/deprecation/</a></small>
+      </td></tr>
+   </tfoot>
    <tbody>
-   {% for field, paths in deprecated_fields.items %}
+   {% for field, details in deprecated_fields.items %}
       <tr>
          <td>{{field}}</td>
-         <td>{% for path in paths %}<p>{{path}}</p>{% endfor %}</td>
+         {% blocktrans with version=details.explanation.0 description=details.explanation.1 %}
+         <td>Deprecated in {{version}}: {{description}}.</td>
+         {% endblocktrans %}
+         <td>{% for path in details.paths %}<p>{{path}}</p>{% endfor %}</td>
          <td>{{paths|length}}</td>
       </tr>
    {% endfor %}
