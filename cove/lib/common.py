@@ -237,7 +237,11 @@ def get_schema_validation_errors(json_data, schema_url, schema_name, current_app
 
 
 def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path=(), deprecated_paths=None):
-    '''Get a list of deprecated paths (as tuples) in a schema'''
+    '''Get a list of deprecated paths and explanations for deprecation in a schema.
+
+    Deprecated paths are given as tuples of tuples:
+    ((path, to, field), (deprecation_version, description))
+    '''
     if deprecated_paths is None:
         deprecated_paths = []
 
@@ -312,8 +316,8 @@ def get_json_data_deprecated_fields(schema_name, schema_url, json_data):
     paths_in_data = _get_json_data_generic_paths(json_data)
     deprecated_paths_in_data = [path for path in deprecated_schema_paths if path[0] in paths_in_data]
 
-    # Generate an OrderedDict sorted by deprecated field names (deprecated_fields keys)
-    # mapping to a unordered tuple of tuples:
+    # Generate an OrderedDict sorted by deprecated field names (keys) mapping
+    # to a unordered tuple of tuples:
     # {deprecated_field: ((path, path... ), (version, description))}
     deprecated_fields = OrderedDict()
     for generic_path in sorted(deprecated_paths_in_data, key=lambda tup: tup[0][-1]):
@@ -322,8 +326,7 @@ def get_json_data_deprecated_fields(schema_name, schema_url, json_data):
             generic_path[1]
         )
 
-    # Order the path tuples in values for deprecated_fields
-    # (and then re-append (version, description) tuple).
+    # Order the path tuples in values for deprecated_fields.
     deprecated_fields_output = OrderedDict()
     for field, paths in deprecated_fields.items():
         sorted_paths = tuple(sorted(paths[0]))

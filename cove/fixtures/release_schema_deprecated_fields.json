@@ -41,7 +41,7 @@
             "mergeStrategy": "ocdsVersion",
             "deprecated":{
                 "deprecatedVersion" : "1.1",
-                "description" : "Not a useful field as always has to be tender, perhaps you need an extension instead"
+                "description" : "Not a useful field as always has to be tender"
             }
         },
         "planning": { 

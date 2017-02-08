@@ -303,10 +303,15 @@ def test_get_json_data_deprecated_fields():
     )
     deprecated_data_fields = c.get_json_data_deprecated_fields(schema_w_deprecations, '', json_data_w_deprecations)
     expected_result = OrderedDict([
-        ('initiationType', ('releases/0', 'releases/1')),
-        ('quantity', ('releases/0/tender/items/0',))
+        ('initiationType', {"paths": ('releases/0', 'releases/1'),
+                            "explanation": ('1.1', 'Not a useful field as always has to be tender')}),
+        ('quantity', {"paths": ('releases/0/tender/items/0',),
+                      "explanation": ('1.1', 'Nobody cares about quantities')})
     ])
-    assert expected_result == deprecated_data_fields
+    for field_name in expected_result.keys():
+        assert field_name in deprecated_data_fields
+        assert expected_result[field_name]["paths"] == deprecated_data_fields[field_name]["paths"]
+        assert expected_result[field_name]["explanation"] == deprecated_data_fields[field_name]["explanation"]
 
 
 def test_get_schema_deprecated_paths():
@@ -317,11 +322,11 @@ def test_get_schema_deprecated_paths():
     )
     deprecated_paths = c._get_schema_deprecated_paths(schema_w_deprecations, '')
     expected_results = [
-        ('releases', 'initiationType'),
-        ('releases', 'contracts', 'items', 'quantity'),
-        ('releases', 'tender', 'items', 'quantity'),
-        ('releases', 'tender', 'hasEnquiries'),
-        ('releases', 'awards', 'items', 'quantity')
+        (('releases', 'initiationType'), ('1.1', 'Not a useful field as always has to be tender')),
+        (('releases', 'tender', 'hasEnquiries'), ('1.1', 'Deprecated just for fun')),
+        (('releases', 'contracts', 'items', 'quantity'), ('1.1', 'Nobody cares about quantities')),
+        (('releases', 'tender', 'items', 'quantity'), ('1.1', 'Nobody cares about quantities')),
+        (('releases', 'awards', 'items', 'quantity'), ('1.1', 'Nobody cares about quantities'))
     ]
     assert len(deprecated_paths) == 5
     for path in expected_results:
