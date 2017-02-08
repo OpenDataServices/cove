@@ -249,6 +249,7 @@ def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path
         loader = CustomJsonrefLoader(schema_url=schema_url)
         obj = loader.get_remote_json(schema_name)
     elif schema_name:
+        schema_url = schema_url or ''
         with open(schema_url + schema_name) as schema_file:
             obj = jsonref.load(schema_file)
 
@@ -265,9 +266,9 @@ def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path
                 ))
 
         if value.get('type') == 'object':
-            _get_schema_deprecated_paths('', '', value, path, deprecated_paths)
+            _get_schema_deprecated_paths(None, None, value, path, deprecated_paths)
         elif value.get('type') == 'array' and value['items'].get('properties'):
-            _get_schema_deprecated_paths('', '', value['items'], path, deprecated_paths)
+            _get_schema_deprecated_paths(None, None, value['items'], path, deprecated_paths)
 
     return deprecated_paths
 

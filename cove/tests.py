@@ -320,7 +320,7 @@ def test_get_schema_deprecated_paths():
         'fixtures',
         'release_package_schema_ref_release_schema_deprecated_fields.json'
     )
-    deprecated_paths = c._get_schema_deprecated_paths(schema_w_deprecations, '')
+    deprecated_paths = c._get_schema_deprecated_paths(schema_w_deprecations, None)
     expected_results = [
         (('releases', 'initiationType'), ('1.1', 'Not a useful field as always has to be tender')),
         (('releases', 'tender', 'hasEnquiries'), ('1.1', 'Deprecated just for fun')),
