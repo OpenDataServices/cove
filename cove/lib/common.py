@@ -246,7 +246,8 @@ def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path
         deprecated_paths = []
 
     if schema_url and schema_url.startswith("http"):
-        obj = jsonref.loads(requests.get(schema_url + schema_name).text)
+        loader = CustomJsonrefLoader(schema_url=schema_url)
+        obj = loader.get_remote_json(schema_name)
     elif schema_name:
         with open(schema_url + schema_name) as schema_file:
             obj = jsonref.load(schema_file)
