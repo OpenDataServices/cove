@@ -62,12 +62,12 @@
               </li>
               {% if not conversion_error %}
                 <li>
-                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}.xlsx">{{xlsx}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
+                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}.xlsx">{{xlsx}} <small>({{converted}} {{version_used}})</small></a> {{converted_file_size|filesizeformat }}
                 </li>
                 <!--Only show for 360Giving files-->
                 {% if request.cove_config.convert_titles %}
                   <li>
-                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({{converted}})</a> {{converted_file_size_titles|filesizeformat }}
+                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} <small>({{converted}} {{version_used}})</small></a> {{converted_file_size_titles|filesizeformat }}
                   </li>
                 {% endif %}
               {% endif %}
