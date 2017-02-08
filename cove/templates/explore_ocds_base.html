@@ -18,7 +18,7 @@
         <h4 class="panel-title">Schema</h4>
       </div>
       <div class="panel-body">
-      <p>This data has been checked against <a href="{{ schema_url }}">OCDS schema version <strong>{{ version_used }}</strong></a>. You can choose a different version of the schema to validate and explore your data.</p>
+      <p>This data has been checked against <a href="{{ schema_url }}">OCDS schema version {{ version_used }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
       <br>
       <strong>Validate and explore same data against a different version of the schema</strong>
       <br>
@@ -28,8 +28,8 @@
         {% csrf_token %}
           <select class="form-control" name="version">
           {% for version in version_choices %}
-            <option value="{{ version }}" {% if version == version_used %}selected{% endif %}>
-               {{ version }}{% if forloop.first %} (latest){% endif %}
+            <option value="{{ version.0 }}" {% if version.0 == version_used %}selected{% endif %}>
+               {{ version.0 }}
             </option>
           {% endfor %}
           </select>
@@ -92,7 +92,7 @@
                   {{original_file.size|filesizeformat }}
                 </li>
                 <li>
-                  <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
+                  <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span><small>{{JSON}} ({{converted}} {{version_used}})</small></a> {{converted_file_size|filesizeformat }}
                 </li>
             </ul>
 

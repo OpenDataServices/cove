@@ -13,16 +13,14 @@ from cove.lib.exceptions import CoveInputDataError
 logger = logging.getLogger(__name__)
 
 
-def convert_spreadsheet(request, data, file_type, schema_version, replace):
+def convert_spreadsheet(request, data, file_type, schema_url, replace):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
     cell_source_map_path = os.path.join(data.upload_dir(), 'cell_source_map.json')
     heading_source_map_path = os.path.join(data.upload_dir(), 'heading_source_map.json')
     encoding = 'utf-8'
-    
-    schema_url = request.cove_config['schema_url']
-    if schema_version:
-        schema_url = schema_url.format(schema_version.replace('.', '__'))
+    # 360 still uses request.cove_config['schema_url']
+    schema_url = schema_url or request.cove_config['schema_url']
 
     if file_type == 'csv':
         # flatten-tool expects a directory full of CSVs with file names
@@ -90,13 +88,11 @@ def convert_spreadsheet(request, data, file_type, schema_version, replace):
     return context
 
 
-def convert_json(request, data, schema_version, replace):
+def convert_json(request, data, schema_url, replace):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'flattened')
-
-    schema_url = request.cove_config['schema_url']
-    if schema_version:
-        schema_url = schema_url.format(schema_version.replace('.', '__'))
+    # cove-360 still uses request.cove_config['schema_url']
+    schema_url = schema_url or request.cove_config['schema_url']
 
     flatten_kwargs = dict(
         output_name=converted_path,

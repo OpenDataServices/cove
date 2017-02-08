@@ -37,7 +37,6 @@ env = environ.Env(  # set default values and casting
     SECRET_KEY=(str, secret_key),
     DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
     DEBUG_TOOLBAR=(bool, False),
-    SCHEMA_URL_OCDS=(str, 'http://standard.open-contracting.org/schema/{}/'),
     SCHEMA_URL_360=(str, 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/'),
 )
 
@@ -76,8 +75,8 @@ COVE_CONFIG_BY_NAMESPACE = {
         'default': _('Convert, Validate, Explore'),
     },
     'schema_url': {
+        'cove-ocds': None,
         'cove-360': env('SCHEMA_URL_360'),
-        'cove-ocds': env('SCHEMA_URL_OCDS'),
         'default': None
     },
     'schema_name': {
@@ -87,12 +86,15 @@ COVE_CONFIG_BY_NAMESPACE = {
         'default': None
     },
     'schema_version': {  # Default schema version
-        'cove-ocds': '1.0.2',
+        'cove-ocds': '1.0',
         'cove-360': None,
         'default': None
     },
     'schema_version_choices': {
-        'cove-ocds': ('1.0.2', '1.0.1', '1.0.0'),  # Keep descending order when adding new versions
+        'cove-ocds': [
+            ('1.0', 'http://standard.open-contracting.org/schema/1__0__2/'),
+            ('1.1-dev', 'http://standard.open-contracting.org/1.1-dev/en/')
+        ],
         'cove-360': None,
         'default': None
     },
