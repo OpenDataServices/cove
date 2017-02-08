@@ -65,7 +65,7 @@ def server_url_360(request, live_server):
                                             'Recipient organisation identifiers:  1 ID',
                                             '360G-wellcometrust-105177/Z/14/Z'], True),
     # Test conversion warnings are shown
-    ('tenders_releases_2_releases.xlsx', ['Converted to JSON 5 Warnings',
+    ('tenders_releases_2_releases.xlsx', ['Converted to JSON 5 Errors',
                                           'Invalid against Schema 76 Errors',
                                           'Conflict when merging field "ocid" for id "1" in sheet items'], True),
     # Test that titles that aren't in the rollup are converted correctly
