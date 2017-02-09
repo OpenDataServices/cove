@@ -176,12 +176,11 @@ def explore(request, pk):
             "version_used": schema_version,
         })
 
-    if schema_url:
-        additional_fields = sorted(common.get_counts_additional_fields(schema_url, schema_name, json_data, context, request.current_app))
-        context.update({
-            'data_only': additional_fields,
-            'additional_fields_count': sum(item[2] for item in additional_fields)
-        })
+    additional_fields = sorted(common.get_counts_additional_fields(schema_url, schema_name, json_data, context, request.current_app))
+    context.update({
+        'data_only': additional_fields,
+        'additional_fields_count': sum(item[2] for item in additional_fields)
+    })
 
     cell_source_map = {}
     heading_source_map = {}
@@ -197,7 +196,7 @@ def explore(request, pk):
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
-        validation_errors = common.get_schema_validation_errors(json_data, schema_url, schema_name, request.current_app, cell_source_map, heading_source_map) if schema_url else None
+        validation_errors = common.get_schema_validation_errors(json_data, schema_url, schema_name, request.current_app, cell_source_map, heading_source_map)
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 

@@ -89,7 +89,7 @@
                       <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{csv}} <small>({{original}})</small>
                   {% endif %}
                   </a> 
-                  {{original_file.size|filesizeformat }}
+                  <small>{{original_file.size|filesizeformat }}</small>
                 </li>
                 <li>
                   <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
