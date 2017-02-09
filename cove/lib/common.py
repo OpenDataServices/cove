@@ -113,7 +113,7 @@ class CustomJsonrefLoader(jsonref.JsonLoader):
                 return json.load(schema_file, **kwargs)
 
 
-def get_schema_fields(schema_url, schema_name):
+def get_schema_data(schema_url, schema_name):
     if schema_url[:4] == 'http':
         r = requests.get(schema_url + schema_name)
         json_text = r.text
@@ -121,7 +121,11 @@ def get_schema_fields(schema_url, schema_name):
         with open(schema_url + schema_name) as schema_file:
             json_text = schema_file.read()
 
-    return set(schema_dict_fields_generator(jsonref.loads(json_text, loader=CustomJsonrefLoader(schema_url=schema_url), object_pairs_hook=OrderedDict)))
+    return jsonref.loads(json_text, loader=CustomJsonrefLoader(schema_url=schema_url), object_pairs_hook=OrderedDict)
+
+
+def get_schema_fields(schema_url, schema_name):
+    return set(schema_dict_fields_generator(get_schema_data(schema_url, schema_name)))
 
 
 def get_counts_additional_fields(schema_url, schema_name, json_data, context, current_app):
@@ -245,13 +249,8 @@ def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path
     if deprecated_paths is None:
         deprecated_paths = []
 
-    if schema_url and schema_url.startswith("http"):
-        loader = CustomJsonrefLoader(schema_url=schema_url)
-        obj = loader.get_remote_json(schema_name)
-    elif schema_name:
-        schema_url = schema_url or ''
-        with open(schema_url + schema_name) as schema_file:
-            obj = jsonref.load(schema_file)
+    if schema_url:
+        obj = get_schema_data(schema_url, schema_name)
 
     for prop, value in obj['properties'].items():
         if current_path:
