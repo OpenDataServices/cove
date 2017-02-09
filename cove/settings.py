@@ -91,10 +91,10 @@ COVE_CONFIG_BY_NAMESPACE = {
         'default': None
     },
     'schema_version_choices': {
-        'cove-ocds': [
-            ('1.0', 'http://standard.open-contracting.org/schema/1__0__2/'),
-            ('1.1-dev', 'http://standard.open-contracting.org/1.1-dev/en/')
-        ],
+        'cove-ocds': {
+            '1.0': 'http://standard.open-contracting.org/schema/1__0__2/',
+            '1.1-dev': 'http://standard.open-contracting.org/1.1-dev/en/'
+        },
         'cove-360': None,
         'default': None
     },

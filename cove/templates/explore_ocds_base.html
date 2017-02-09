@@ -28,8 +28,8 @@
         {% csrf_token %}
           <select class="form-control" name="version">
           {% for version in version_choices %}
-            <option value="{{ version.0 }}" {% if version.0 == version_used %}selected{% endif %}>
-               {{ version.0 }}
+            <option value="{{ version }}" {% if version == version_used %}selected{% endif %}>
+               {{ version }}
             </option>
           {% endfor %}
           </select>
