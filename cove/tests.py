@@ -353,7 +353,7 @@ def test_explore_page_null_tag(client, current_app):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('json_data', [
-    '{"version": "1.1-dev","releases": [{"ocid": "xx"}]}',
+    '{"version": "1.1","releases": [{"ocid": "xx"}]}',
     '{"releases": [{"ocid": "xx"}]}'
 ])
 def test_explore_schema_version(client, json_data):

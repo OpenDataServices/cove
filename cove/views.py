@@ -103,15 +103,26 @@ def explore(request, pk):
     }
     
     schema_name = request.cove_config['schema_name']
-    schema_version = data.schema_version or request.cove_config['schema_version']
-    schema_version_choices = request.cove_config['schema_version_choices']
-    schema_user_choice = None
     replace_conversion = False
+
+    if request.current_app == 'cove-ocds':
+        schema_version = data.schema_version or request.cove_config['schema_version']
+        schema_version_choices = request.cove_config['schema_version_choices']
+        schema_version_display_choices = sorted(list({display for display, version in schema_version_choices.values()}))
+        schema_user_choice = None
+        schema_url = schema_version_choices[schema_version][1]
+        context.update({
+            "data_uuid": pk,
+            "version_choices": schema_version_display_choices
+        })
+    else:
+        schema_url = request.cove_config['schema_url']
 
     if 'version' in request.POST and request.POST['version'] != data.schema_version:
         schema_user_choice = request.POST.get('version')
-        if schema_user_choice in schema_version_choices:
+        if schema_user_choice in schema_version_display_choices:
             schema_version = schema_user_choice
+            schema_url = schema_version_choices[schema_user_choice][1]
             replace_conversion = True
         else:
             # This shouldn't really happen unless the user resends manually
@@ -124,15 +135,6 @@ def explore(request, pk):
                 'msg': _('We think you tried to run your data against an unreconigsed version of the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a valid choice for the schema version'.format(schema_user_choice)),
                 'error': '{} is not a valid schema version'.format(schema_user_choice)
             })
-
-    if request.current_app == 'cove-ocds':
-        schema_url = schema_version_choices[schema_version]
-        context.update({
-            "data_uuid": pk,
-            "version_choices": [version for version, url in schema_version_choices.items()]
-        })
-    else:
-        schema_url = request.cove_config['schema_url']
 
     if file_type == 'json':
         # open the data first so we can inspect for record package
@@ -151,8 +153,8 @@ def explore(request, pk):
             try:
                 version_field = json_data.get('version')
                 if version_field:
-                    schema_version = version_field
-                    schema_url = schema_version_choices[schema_version]
+                    schema_version = schema_version_choices[version_field][0]
+                    schema_url = schema_version_choices[version_field][1]
             except AttributeError:
                 pass
         if request.current_app == 'cove-ocds' and 'records' in json_data:
