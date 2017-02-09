@@ -296,12 +296,9 @@ def test_get_json_data_deprecated_fields():
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
         json_data_w_deprecations = json.load(fp)
 
-    schema_w_deprecations = os.path.join(
-        'cove',
-        'fixtures',
-        'release_package_schema_ref_release_schema_deprecated_fields.json'
-    )
-    deprecated_data_fields = c.get_json_data_deprecated_fields(schema_w_deprecations, '', json_data_w_deprecations)
+    schema_url = os.path.join('cove', 'fixtures/')
+    schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
+    deprecated_data_fields = c.get_json_data_deprecated_fields(schema_name, schema_url, json_data_w_deprecations)
     expected_result = OrderedDict([
         ('initiationType', {"paths": ('releases/0', 'releases/1'),
                             "explanation": ('1.1', 'Not a useful field as always has to be tender')}),
@@ -315,12 +312,9 @@ def test_get_json_data_deprecated_fields():
 
 
 def test_get_schema_deprecated_paths():
-    schema_w_deprecations = os.path.join(
-        'cove',
-        'fixtures',
-        'release_package_schema_ref_release_schema_deprecated_fields.json'
-    )
-    deprecated_paths = c._get_schema_deprecated_paths(schema_w_deprecations, None)
+    schema_url = os.path.join('cove', 'fixtures/')
+    schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
+    deprecated_paths = c._get_schema_deprecated_paths(schema_name, schema_url)
     expected_results = [
         (('releases', 'initiationType'), ('1.1', 'Not a useful field as always has to be tender')),
         (('releases', 'tender', 'hasEnquiries'), ('1.1', 'Deprecated just for fun')),
