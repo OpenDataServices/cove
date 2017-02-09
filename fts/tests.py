@@ -17,7 +17,7 @@ PREFIX_LIST = [prefix for prefix in (PREFIX_OCDS, PREFIX_360) if prefix]
 
 BROWSER = os.environ.get('BROWSER', 'Firefox')
 
-OCDS_SCHEMA_VERSION_CHOICES = list(settings.COVE_CONFIG_BY_NAMESPACE['schema_version_choices']['cove-ocds'])
+OCDS_SCHEMA_VERSIONS = list(settings.COVE_CONFIG_BY_NAMESPACE['schema_version_choices']['cove-ocds'].keys())
 
 
 @pytest.fixture(scope="module")
@@ -199,7 +199,7 @@ def test_accordion(server_url, browser, prefix):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
-    ('tenders_releases_2_releases.json', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSION_CHOICES, True),
+    ('tenders_releases_2_releases.json', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS, True),
     ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], True),
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
@@ -210,7 +210,7 @@ def test_accordion(server_url, browser, prefix):
     ('utf8.json', 'Convert', True),
     # But we expect to see an error message if a file is not well formed JSON at all
     ('tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
-    ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSION_CHOICES, True),
+    ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS, True),
     ('badfile.json', 'Statistics can not produced', True),
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', False),
@@ -266,18 +266,18 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
             assert 'JSON (Original)' in body_text
             original_file = browser.find_element_by_link_text("JSON (Original)").get_attribute("href")
             if 'record' not in source_filename:
-                converted_file = browser.find_element_by_link_text("Excel Spreadsheet (.xlsx) (Converted from Original)").get_attribute("href")
+                converted_file = browser.find_element_by_partial_link_text("Excel Spreadsheet (.xlsx) (Converted from Original using schema version").get_attribute("href")
                 assert "flattened.xlsx" in converted_file
         elif source_filename.endswith('.xlsx'):
             assert '(.xlsx) (Original)' in body_text
             original_file = browser.find_element_by_link_text("Excel Spreadsheet (.xlsx) (Original)").get_attribute("href")
-            converted_file = browser.find_element_by_link_text("JSON (Converted from Original)").get_attribute("href")
+            converted_file = browser.find_element_by_partial_link_text("JSON (Converted from Original using schema version").get_attribute("href")
             assert "unflattened.json" in converted_file
         elif source_filename.endswith('.csv'):
             assert '(.csv) (Original)' in body_text
             original_file = browser.find_element_by_link_text("CSV Spreadsheet (.csv) (Original)").get_attribute("href")
-            converted_file = browser.find_element_by_link_text("JSON (Converted from Original)").get_attribute("href")
-            assert "unflattened.json" in browser.find_element_by_link_text("JSON (Converted from Original)").get_attribute("href")
+            converted_file = browser.find_element_by_partial_link_text("JSON (Converted from Original using schema version").get_attribute("href")
+            assert "unflattened.json" in browser.find_element_by_partial_link_text("JSON (Converted from Original using schema version").get_attribute("href")
 
         assert source_filename in original_file
         assert '0 bytes' not in body_text

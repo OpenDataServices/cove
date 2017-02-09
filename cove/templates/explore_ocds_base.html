@@ -58,16 +58,16 @@
             <p>We have tried to convert your JSON into a spreadsheet format.</p><p>The results can be seen below.</p>
             <ul class="list-unstyled left-space">
               <li>
-                <a href="{{original_file.url}}">{{JSON}} ({{original}})</a> {{original_file.size|filesizeformat }}
+                <a href="{{original_file.url}}">{{JSON}} <small>({{original}})</a> {{original_file.size|filesizeformat }}</small>
               </li>
               {% if not conversion_error %}
                 <li>
-                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}.xlsx">{{xlsx}} <small>({{converted}} {{version_used}})</small></a> {{converted_file_size|filesizeformat }}
+                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}.xlsx">{{xlsx}} <small>({{converted}} {% trans "using schema version" %} {{version_used}})</a> {{converted_file_size|filesizeformat }}</small>
                 </li>
                 <!--Only show for 360Giving files-->
                 {% if request.cove_config.convert_titles %}
                   <li>
-                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} <small>({{converted}} {{version_used}})</small></a> {{converted_file_size_titles|filesizeformat }}
+                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} <small>({{converted}} {% trans "using schema version" %} {{version_used}})</a> {{converted_file_size_titles|filesizeformat }}</small>
                   </li>
                 {% endif %}
               {% endif %}
@@ -84,22 +84,22 @@
               <li>
                 <a href="{{original_file.url}}">
                   {% if file_type == 'xlsx' %}
-                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{xlsx}} ({{original}})
+                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{xlsx}} <small>({{original}})</small>
                   {% elif file_type == 'csv' %}
-                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{csv}} ({{original}})
+                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{csv}} <small>({{original}})</small>
                   {% endif %}
                   </a> 
                   {{original_file.size|filesizeformat }}
                 </li>
                 <li>
-                  <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span><small>{{JSON}} ({{converted}} {{version_used}})</small></a> {{converted_file_size|filesizeformat }}
+                  <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used}})</a> {{converted_file_size|filesizeformat }}</small>
                 </li>
             </ul>
 
           {% else %}
             <ul class="list-unstyled">
               <li>
-                <a href="{{original_file.url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} ({{original}})</a> {{original_file.size|filesizeformat }}
+                <a href="{{original_file.url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{original}})</a> {{original_file.size|filesizeformat }}</small>
                 {% if conversion == 'flattenable' %}
                   <br/>
                   <br/>
