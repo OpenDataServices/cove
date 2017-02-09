@@ -353,7 +353,7 @@ def test_explore_page_null_tag(client, current_app):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('json_data', [
-    '{"version": "1.0.0","releases": [{"ocid": "xx"}]}',
+    '{"version": "1.1-dev","releases": [{"ocid": "xx"}]}',
     '{"releases": [{"ocid": "xx"}]}'
 ])
 def test_explore_schema_version(client, json_data):
@@ -364,16 +364,19 @@ def test_explore_schema_version(client, json_data):
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
     if 'version' in json_data:
-        assert '1__0__0' in resp.context['schema_url']
-        assert resp.context['version_used'] == '1.0.0'
+        assert '1.1-dev' in resp.context['schema_url']
+        assert resp.context['version_used'] == '1.1-dev'
+        resp = client.post(data.get_absolute_url(), {'version': "1.0"})
+        assert resp.status_code == 200
+        assert '1__0__2' in resp.context['schema_url']
+        assert resp.context['version_used'] == '1.0'
     else:
         assert '1__0__2' in resp.context['schema_url']
-        assert resp.context['version_used'] == '1.0.2'
-
-    resp = client.post(data.get_absolute_url(), {'version': "1.0.1"})
-    assert resp.status_code == 200
-    assert '1__0__1' in resp.context['schema_url']
-    assert resp.context['version_used'] == '1.0.1'
+        assert resp.context['version_used'] == '1.0'
+        resp = client.post(data.get_absolute_url(), {'version': "1.1-dev"})
+        assert resp.status_code == 200
+        assert '1.1-dev' in resp.context['schema_url']
+        assert resp.context['version_used'] == '1.1-dev'
 
 
 @pytest.mark.django_db
@@ -391,18 +394,18 @@ def test_explore_schema_version_change(client, file_type, converter, replace_aft
         resp = client.get(data.get_absolute_url())
         args, kwargs = mock_object.call_args
         assert resp.status_code == 200
-        assert resp.context['version_used'] == '1.0.2'
+        assert resp.context['version_used'] == '1.0'
         assert mock_object.called
-        assert kwargs['schema_version'] == '1.0.2'
+        assert '1__0__2' in kwargs['schema_url']
         assert kwargs['replace'] is False
         mock_object.reset_mock()
 
-        resp = client.post(data.get_absolute_url(), {'version': '1.0.1'})
+        resp = client.post(data.get_absolute_url(), {'version': '1.1-dev'})
         args, kwargs = mock_object.call_args
         assert resp.status_code == 200
-        assert resp.context['version_used'] == '1.0.1'
+        assert resp.context['version_used'] == '1.1-dev'
         assert mock_object.called
-        assert kwargs['schema_version'] == '1.0.1'
+        assert '1.1-dev' in kwargs['schema_url']
         assert kwargs['replace'] is replace_after_post
 
 
@@ -417,11 +420,11 @@ def test_explore_schema_version_change_with_json_to_xlsx(mock_object, client):
     resp = client.get(data.get_absolute_url())
     args, kwargs = mock_object.call_args
     assert resp.status_code == 200
-    assert kwargs['schema_version'] == '1.0.2'
+    assert '1__0__2' in kwargs['schema_url']
     assert kwargs['replace'] is False
     mock_object.reset_mock()
 
-    resp = client.post(data.get_absolute_url(), {'version': '1.0.1'})
+    resp = client.post(data.get_absolute_url(), {'version': '1.1-dev'})
     args, kwargs = mock_object.call_args
     assert resp.status_code == 200
     assert kwargs['replace'] is False
@@ -433,20 +436,20 @@ def test_explore_schema_version_change_with_json_to_xlsx(mock_object, client):
     mock_object.reset_mock()
 
     # Do replace with version change now that it's been converted once
-    resp = client.post(data.get_absolute_url(), {'version': '1.0.0'})
+    resp = client.post(data.get_absolute_url(), {'version': '1.0'})
     args, kwargs = mock_object.call_args
     assert resp.status_code == 200
     assert kwargs['replace'] is True
     mock_object.reset_mock()
 
     # Do not replace if the version does not changed
-    resp = client.post(data.get_absolute_url(), {'version': '1.0.0'})
+    resp = client.post(data.get_absolute_url(), {'version': '1.0'})
     args, kwargs = mock_object.call_args
     assert resp.status_code == 200
     assert kwargs['replace'] is False
     mock_object.reset_mock()
 
-    resp = client.post(data.get_absolute_url(), {'version': '1.0.1'})
+    resp = client.post(data.get_absolute_url(), {'version': '1.1-dev'})
     args, kwargs = mock_object.call_args
     assert resp.status_code == 200
     assert kwargs['replace'] is True
@@ -464,10 +467,10 @@ def test_data_supplied_schema_version(client):
 
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
-    assert resp.context['version_used'] == '1.0.2'
-    assert SuppliedData.objects.get(id=data.id).schema_version == '1.0.2'
+    assert resp.context['version_used'] == '1.0'
+    assert SuppliedData.objects.get(id=data.id).schema_version == '1.0'
 
-    resp = client.post(data.get_absolute_url(), {'version': '1.0.1'})
+    resp = client.post(data.get_absolute_url(), {'version': '1.1-dev'})
     assert resp.status_code == 200
-    assert resp.context['version_used'] == '1.0.1'
-    assert SuppliedData.objects.get(id=data.id).schema_version == '1.0.1'
+    assert resp.context['version_used'] == '1.1-dev'
+    assert SuppliedData.objects.get(id=data.id).schema_version == '1.1-dev'
