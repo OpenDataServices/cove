@@ -30,7 +30,7 @@ class SuppliedData(models.Model):
     rendered = models.BooleanField(default=False)
 
     # Last schema version applied to the stored data
-    schema_version = models.CharField(max_length=10, null=True, default='')
+    schema_version = models.CharField(max_length=10)
 
     form_name = models.CharField(
         max_length=20,

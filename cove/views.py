@@ -227,7 +227,9 @@ def explore(request, pk):
 
     if not data.rendered:
         data.rendered = True
-    data.schema_version = schema_version
+    
+    if request.current_app == 'cove-ocds':
+        data.schema_version = schema_version
     data.save()
 
     rendered_response = render(request, view, context)
