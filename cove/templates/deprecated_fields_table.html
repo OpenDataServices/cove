@@ -25,7 +25,7 @@
          <td>Deprecated in {{version}}: {{description}}.</td>
          {% endblocktrans %}
          <td>{% for path in details.paths %}<p>{{path}}</p>{% endfor %}</td>
-         <td>{{paths|length}}</td>
+         <td>{{details.paths|length}}</td>
       </tr>
    {% endfor %}
    </tbody>
