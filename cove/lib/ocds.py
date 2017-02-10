@@ -99,8 +99,6 @@ def get_releases_aggregates(json_data):
     releases = tools.get_no_exception(json_data, 'releases', [])
     for release in releases:
         # ### Release Section ###
-        if not isinstance(release, dict):
-            continue
         release_count = release_count + 1
         ocid = release.get('ocid')
         release_id = release.get('id')
@@ -188,8 +186,6 @@ def get_releases_aggregates(json_data):
         # ### Contract section
         contracts = tools.get_no_exception(release, 'contracts', [])
         for contract in contracts:
-            if not isinstance(contract, dict):
-                continue
             contract_id = contract.get('id')
             contract_ocids.add(ocid)
             if contract_id:
