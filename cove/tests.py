@@ -1,9 +1,10 @@
+import os
 import pytest
 import cove.views as v
 import cove.lib.common as c
 import cove.lib.ocds as ocds
-import os
 import json
+from collections import OrderedDict
 from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
@@ -277,6 +278,53 @@ def test_get_schema_validation_errors():
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_invalid.json')) as fp:
         error_list = c.get_schema_validation_errors(json.load(fp), schema_url, schema_name, 'cove-ocds', {}, {})
         assert len(error_list) > 0
+
+
+def test_get_json_data_generic_paths():
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
+        json_data_w_deprecations = json.load(fp)
+
+    generic_paths = c._get_json_data_generic_paths(json_data_w_deprecations)
+    assert len(generic_paths.keys()) == 27
+    assert generic_paths[('releases', 'buyer', 'name')] == {
+        ('releases', 1, 'buyer', 'name'): 'Parks Canada',
+        ('releases', 0, 'buyer', 'name'): 'Agriculture & Agrifood Canada'
+    }
+
+
+def test_get_json_data_deprecated_fields():
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
+        json_data_w_deprecations = json.load(fp)
+
+    schema_url = os.path.join('cove', 'fixtures/')
+    schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
+    deprecated_data_fields = c.get_json_data_deprecated_fields(schema_name, schema_url, json_data_w_deprecations)
+    expected_result = OrderedDict([
+        ('initiationType', {"paths": ('releases/0', 'releases/1'),
+                            "explanation": ('1.1', 'Not a useful field as always has to be tender')}),
+        ('quantity', {"paths": ('releases/0/tender/items/0',),
+                      "explanation": ('1.1', 'Nobody cares about quantities')})
+    ])
+    for field_name in expected_result.keys():
+        assert field_name in deprecated_data_fields
+        assert expected_result[field_name]["paths"] == deprecated_data_fields[field_name]["paths"]
+        assert expected_result[field_name]["explanation"] == deprecated_data_fields[field_name]["explanation"]
+
+
+def test_get_schema_deprecated_paths():
+    schema_url = os.path.join('cove', 'fixtures/')
+    schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
+    deprecated_paths = c._get_schema_deprecated_paths(schema_name, schema_url)
+    expected_results = [
+        (('releases', 'initiationType'), ('1.1', 'Not a useful field as always has to be tender')),
+        (('releases', 'tender', 'hasEnquiries'), ('1.1', 'Deprecated just for fun')),
+        (('releases', 'contracts', 'items', 'quantity'), ('1.1', 'Nobody cares about quantities')),
+        (('releases', 'tender', 'items', 'quantity'), ('1.1', 'Nobody cares about quantities')),
+        (('releases', 'awards', 'items', 'quantity'), ('1.1', 'Nobody cares about quantities'))
+    ]
+    assert len(deprecated_paths) == 5
+    for path in expected_results:
+        assert path in deprecated_paths
 
 
 @pytest.mark.django_db

@@ -60,8 +60,13 @@
              {% endif %}
              {% if csv_encoding and csv_encoding != "utf-8" %}
              <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-              {% trans "This file is not 'utf-8' encoded (it is" %} <strong>{{csv_encoding}}</strong> {% trans "encoded)." %}
+                {% trans "This file is not 'utf-8' encoded (it is" %} <strong>{{csv_encoding}}</strong> {% trans "encoded)." %}
              </li>
+             {% endif %}
+             {% if deprecated_fields %}
+             <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                {% blocktrans count count=deprecated_fields|length %}This file uses {{count}} <a href="#deprecated-fields">deprecated field</a>.{% plural %} This file uses {{count}} <a href="#deprecated-fields">deprecated fields</a>.{% endblocktrans %}
+              </li>
              {% endif %}
              <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                {% trans "Data " %} 
@@ -80,11 +85,6 @@
 
 {% endwith %}
 {% endblock %}
-
-
-
-
-
 
 {% block explore_additional_content %}
 {% with releases_aggregates as ra %}
