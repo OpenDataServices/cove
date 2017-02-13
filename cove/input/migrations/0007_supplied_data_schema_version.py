@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='supplieddata',
             name='schema_version',
-            field=models.CharField(max_length=10),
+            field=models.CharField(max_length=10, default=''),
         ),
         migrations.AlterField(
             model_name='supplieddata',
