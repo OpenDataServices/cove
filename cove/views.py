@@ -134,7 +134,7 @@ def explore(request, pk):
                 'link': 'cove:explore',
                 'link_args': pk,
                 'link_text': _('Try Again'),
-                'msg': _('We think you tried to run your data against an unreconigsed version of the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a valid choice for the schema version'.format(schema_user_choice)),
+                'msg': _('We think you tried to run your data against an unrecognised version of the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a recognised choice for the schema version'.format(schema_user_choice)),
                 'error': '{} is not a valid schema version'.format(schema_user_choice)
             })
 
@@ -151,12 +151,22 @@ def explore(request, pk):
                     'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
+        print(json_data)
         if request.current_app == 'cove-ocds' and not schema_user_choice:
             try:
                 version_field = json_data.get('version')
-                if version_field and schema_version_choices.get(version_field):
-                    schema_version = version_field
-                    schema_url = schema_version_choices[version_field][1]
+                if version_field:
+                    if schema_version_choices.get(version_field):
+                        schema_version = version_field
+                        schema_url = schema_version_choices[version_field][1]
+                    else:
+                        raise CoveInputDataError(context={
+                            'sub_title': _("Wrong schema version"),
+                            'link': 'cove:index',
+                            'link_text': _('Try Again'),
+                            'msg': _('The value for the <em>"version"</em> field in your data is not a recognised OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a recognised schema version choice'.format(version_field)),
+                            'error': '{} is not a valid schema version'.format(version_field)
+                        })
             except AttributeError:
                 pass
         if request.current_app == 'cove-ocds' and 'records' in json_data:

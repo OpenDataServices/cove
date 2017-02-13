@@ -99,7 +99,7 @@
           {% else %}
             <ul class="list-unstyled">
               <li>
-                <a href="{{original_file.url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{original}})</small></a> <small>{original_file.size|filesizeformat }}</small>
+                <a href="{{original_file.url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
                 {% if conversion == 'flattenable' %}
                   <br/>
                   <br/>
