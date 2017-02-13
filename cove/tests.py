@@ -5,10 +5,12 @@ import cove.lib.ocds as ocds
 import os
 import json
 from unittest.mock import patch
-from cove.lib.converters import convert_json, convert_spreadsheet
 from cove.input.models import SuppliedData
+from cove.lib.converters import convert_json, convert_spreadsheet
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
+from django.utils.translation import ugettext_lazy
+
 
 EMPTY_RELEASE_AGGREGATE = {
     'award_doc_count': 0,
@@ -380,6 +382,16 @@ def test_explore_schema_version(client, json_data):
         assert '1.1' in resp.context['schema_url']
         assert resp.context['version_used'] == '1.1'
         assert resp.context['version_used_display'] == '1.1-dev'
+
+
+@pytest.mark.django_db
+def test_wrong_schema_version_in_data(client):
+    data = SuppliedData.objects.create()
+    data.original_file.save('test.json', ContentFile('{"version": "1.bad", "releases": [{"ocid": "xx"}]}'))
+    data.current_app = 'cove-ocds'
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
+    assert resp.context['sub_title'] == ugettext_lazy("Wrong schema version")
 
 
 @pytest.mark.django_db
