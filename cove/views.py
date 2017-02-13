@@ -108,19 +108,21 @@ def explore(request, pk):
     if request.current_app == 'cove-ocds':
         schema_version = data.schema_version or request.cove_config['schema_version']
         schema_version_choices = request.cove_config['schema_version_choices']
-        schema_version_display_choices = sorted(list({display for display, version in schema_version_choices.values()}))
+        schema_version_display_choices = tuple(
+            (version, display_url[0]) for version, display_url in schema_version_choices.items()
+        )  # ((version, display), ...)
         schema_user_choice = None
         schema_url = schema_version_choices[schema_version][1]
         context.update({
             "data_uuid": pk,
-            "version_choices": schema_version_display_choices
+            "version_display_choices": schema_version_display_choices
         })
     else:
         schema_url = request.cove_config['schema_url']
 
     if 'version' in request.POST and request.POST['version'] != data.schema_version:
         schema_user_choice = request.POST.get('version')
-        if schema_user_choice in schema_version_display_choices:
+        if schema_user_choice in schema_version_choices:
             schema_version = schema_user_choice
             schema_url = schema_version_choices[schema_user_choice][1]
             replace_conversion = True
@@ -152,8 +154,8 @@ def explore(request, pk):
         if request.current_app == 'cove-ocds' and not schema_user_choice:
             try:
                 version_field = json_data.get('version')
-                if version_field:
-                    schema_version = schema_version_choices[version_field][0]
+                if version_field and schema_version_choices.get(version_field):
+                    schema_version = version_field
                     schema_url = schema_version_choices[version_field][1]
             except AttributeError:
                 pass
@@ -176,6 +178,7 @@ def explore(request, pk):
         schema_name = schema_name['record'] if 'records' in json_data else schema_name['release']
         context.update({
             "version_used": schema_version,
+            "version_used_display": schema_version_choices[schema_version][0]
         })
 
     additional_fields = sorted(common.get_counts_additional_fields(schema_url, schema_name, json_data, context, request.current_app))
@@ -229,7 +232,6 @@ def explore(request, pk):
 
     if not data.rendered:
         data.rendered = True
-    
     if request.current_app == 'cove-ocds':
         data.schema_version = schema_version
     data.save()

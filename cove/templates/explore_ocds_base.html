@@ -18,7 +18,7 @@
         <h4 class="panel-title">Schema</h4>
       </div>
       <div class="panel-body">
-      <p>This data has been checked against <a href="{{ schema_url }}">OCDS schema version {{ version_used }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
+      <p>This data has been checked against <a href="{{ schema_url }}">OCDS schema version {{ version_used_display }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
       <br>
       <strong>Validate and explore same data against a different version of the schema</strong>
       <br>
@@ -27,9 +27,9 @@
         <form class="form-inline" action="{% url 'cove:explore' data_uuid %}" method="post">
         {% csrf_token %}
           <select class="form-control" name="version">
-          {% for version in version_choices %}
-            <option value="{{ version }}" {% if version == version_used %}selected{% endif %}>
-               {{ version }}
+          {% for version in version_display_choices %}
+            <option value="{{ version.0 }}" {% if version.0 == version_used %}selected{% endif %}>
+               {{ version.1 }}
             </option>
           {% endfor %}
           </select>
@@ -62,12 +62,12 @@
               </li>
               {% if not conversion_error %}
                 <li>
-                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}.xlsx">{{xlsx}} <small>({{converted}} {% trans "using schema version" %} {{version_used}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
+                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}.xlsx">{{xlsx}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
                 </li>
                 <!--Only show for 360Giving files-->
                 {% if request.cove_config.convert_titles %}
                   <li>
-                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} <small>({{converted}} {% trans "using schema version" %} {{version_used}})</small></a> <small>{{converted_file_size_titles|filesizeformat }}</small>
+                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size_titles|filesizeformat }}</small>
                   </li>
                 {% endif %}
               {% endif %}
@@ -92,7 +92,7 @@
                   <small>{{original_file.size|filesizeformat }}</small>
                 </li>
                 <li>
-                  <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
+                  <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
                 </li>
             </ul>
 
