@@ -73,7 +73,8 @@
 
   {% block howToUse %}
   {% endblock %}
-  
+
+  {% block moreInfo %}
   <div id="more-information" class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#more-information-body">
       <h3 class="panel-title"> {% blocktrans %}More Information {% endblocktrans %} <small> {% blocktrans %}click to see.{% endblocktrans %} </small></h3>
@@ -102,6 +103,7 @@
     </div>
     </div>
   </div>
+  {% endblock %}
 
   </div><!-- /.container -->
 

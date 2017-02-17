@@ -15,6 +15,7 @@ import os
 import warnings
 import environ
 import raven
+from collections import OrderedDict
 from django.utils.crypto import get_random_string
 from django.utils.translation import ugettext_lazy as _
 
@@ -37,7 +38,6 @@ env = environ.Env(  # set default values and casting
     SECRET_KEY=(str, secret_key),
     DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
     DEBUG_TOOLBAR=(bool, False),
-    SCHEMA_URL_OCDS=(str, 'http://standard.open-contracting.org/schema/1__0__2/'),
     SCHEMA_URL_360=(str, 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/'),
 )
 
@@ -76,14 +76,28 @@ COVE_CONFIG_BY_NAMESPACE = {
         'default': _('Convert, Validate, Explore'),
     },
     'schema_url': {
+        'cove-ocds': None,
         'cove-360': env('SCHEMA_URL_360'),
-        'cove-ocds': env('SCHEMA_URL_OCDS'),
         'default': None
     },
     'schema_name': {
         'cove-360': '360-giving-package-schema.json',
         'cove-ocds': {'release': 'release-package-schema.json',
                       'record': 'record-package-schema.json'},
+        'default': None
+    },
+    'schema_version': {  # Default schema version
+        'cove-ocds': '1.0',
+        'cove-360': None,
+        'default': None
+    },
+    'schema_version_choices': {
+        # {version: (display, url)}
+        'cove-ocds': OrderedDict((
+            ('1.0', ('1.0', 'http://standard.open-contracting.org/schema/1__0__2/')),
+            ('1.1', ('1.1-dev', 'http://standard.open-contracting.org/1.1-dev/en/')),
+        )),
+        'cove-360': None,
         'default': None
     },
     'item_schema_name': {  # Schema url for an individual item e.g. a single release or grant
