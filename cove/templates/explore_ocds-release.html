@@ -7,13 +7,12 @@
 {% with releases_aggregates as ra %}
 
 
-  <div class="col-md-6">
+  <div class="col-md-12">
     <div class="panel panel-primary">
       <div class="panel-heading">
         <h4 class="panel-title">{% trans 'Headlines' %}</h4>
       </div>
       <div class="panel-body">
-        
         {% if conversion_warning_messages or conversion_warning_messages_titles %}
           <div class="conversion message"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>{% blocktrans %}Please read the <a href="#conversion-warning">conversion warnings</a> below.{% endblocktrans %}</div>
         {% endif %} 
@@ -23,11 +22,11 @@
         {% else %} 
           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% trans "Passed " %} 
         {% endif %}
-        {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">{{ schema_url }}</a>.
+        {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">schema version {{ version_used_display }}</a>
         {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Validation Errors</a> below.{% endblocktrans %}{% endif %}
         </div>
 
-         <div class="key-facts message">
+          <div class="key-facts message">
            <strong>At a glance</strong>
            <ul>
              {% if ra.release_count %}
@@ -78,13 +77,14 @@
                {% trans "on " %} {{created_datetime}}
             </li>
            </ul>
-         </div>
+        </div>
       </div>
     </div>
   </div>
 
 {% endwith %}
 {% endblock %}
+
 
 {% block explore_additional_content %}
 {% with releases_aggregates as ra %}
@@ -220,7 +220,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.tender_doc_count %}
@@ -232,7 +232,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.tender_milestones_doc_count %}
@@ -244,7 +244,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.award_doc_count %}
@@ -256,7 +256,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.contract_doc_count %}
@@ -268,7 +268,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.implementation_doc_count %}
@@ -280,7 +280,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
           {% if ra.implementation_milestones_doc_count %}
@@ -292,7 +292,7 @@
                     <li> <b> {{doc_type}}: </b> {{count}} </li>
                  {% endfor %}
                </ul> 
-             </td>          
+             </td>
           </tr>
           {% endif %}
         </tbody>
@@ -385,7 +385,7 @@
                   </li>
                   {% endif %} 
                 </ul>
-              </td>          
+              </td>
             </tr>
             {% endfor %}
           </tbody>
