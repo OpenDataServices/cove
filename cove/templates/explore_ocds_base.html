@@ -12,7 +12,34 @@
 {% endblock %}
 
 {% block converted_files %}
-
+  <div class="col-md-6">
+    <div class="panel panel-warning">
+      <div class="panel-heading">
+        <h4 class="panel-title">Schema</h4>
+      </div>
+      <div class="panel-body">
+      <p>This data has been checked against <a href="{{ schema_url }}">OCDS schema version {{ version_used_display }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
+      <br>
+      <strong>Validate and explore same data against a different version of the schema</strong>
+      <br>
+      <br>
+      <div>
+        <form class="form-inline" action="{% url 'cove:explore' data_uuid %}" method="post">
+        {% csrf_token %}
+          <select class="form-control" name="version">
+          {% for version in version_display_choices %}
+            <option value="{{ version.0 }}" {% if version.0 == version_used %}selected{% endif %}>
+               {{ version.1 }}
+            </option>
+          {% endfor %}
+          </select>
+            {# Translators: Label of a button that triggers search #}
+            <input class="btn btn-primary" type="submit" value={% trans "Go" %} /><img id="small-loading" style="display: none; margin:0; margin-left:2%" class="spinner" src="//i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="spinner" width="20" height="20">
+        </form>
+      </div>
+      </div>
+    </div>
+  </div>
 <!--Download Converted Files-->
   <div class="col-md-6">
     <div class="panel {% if conversion_error %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
@@ -31,16 +58,16 @@
             <p>We have tried to convert your JSON into a spreadsheet format.</p><p>The results can be seen below.</p>
             <ul class="list-unstyled left-space">
               <li>
-                <a href="{{original_file.url}}">{{JSON}} ({{original}})</a> {{original_file.size|filesizeformat }}
+                <a href="{{original_file.url}}">{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
               </li>
               {% if not conversion_error %}
                 <li>
-                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}.xlsx">{{xlsx}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
+                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}.xlsx">{{xlsx}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
                 </li>
                 <!--Only show for 360Giving files-->
                 {% if request.cove_config.convert_titles %}
                   <li>
-                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({{converted}})</a> {{converted_file_size_titles|filesizeformat }}
+                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size_titles|filesizeformat }}</small>
                   </li>
                 {% endif %}
               {% endif %}
@@ -57,22 +84,22 @@
               <li>
                 <a href="{{original_file.url}}">
                   {% if file_type == 'xlsx' %}
-                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{xlsx}} ({{original}})
+                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{xlsx}} <small>({{original}})</small>
                   {% elif file_type == 'csv' %}
-                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{csv}} ({{original}})
+                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{csv}} <small>({{original}})</small>
                   {% endif %}
                   </a> 
-                  {{original_file.size|filesizeformat }}
+                  <small>{{original_file.size|filesizeformat }}</small>
                 </li>
                 <li>
-                  <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} ({{converted}})</a> {{converted_file_size|filesizeformat }}
+                  <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
                 </li>
             </ul>
 
           {% else %}
             <ul class="list-unstyled">
               <li>
-                <a href="{{original_file.url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} ({{original}})</a> {{original_file.size|filesizeformat }}
+                <a href="{{original_file.url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
                 {% if conversion == 'flattenable' %}
                   <br/>
                   <br/>
@@ -233,5 +260,8 @@
       $(function () {
         $('[data-toggle="tooltip"]').tooltip()
       })
+      $('form').submit(function() {
+          $('#small-loading').css({"display": "inline"});
+      });
   </script>
 {% endblock extrafooterscript %}

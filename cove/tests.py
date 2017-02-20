@@ -4,10 +4,14 @@ import cove.views as v
 import cove.lib.common as c
 import cove.lib.ocds as ocds
 import json
+from unittest.mock import patch
 from collections import OrderedDict
 from cove.input.models import SuppliedData
+from cove.lib.converters import convert_json, convert_spreadsheet
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
+from django.utils.translation import ugettext_lazy
+
 
 EMPTY_RELEASE_AGGREGATE = {
     'award_doc_count': 0,
@@ -395,3 +399,141 @@ def test_explore_page_null_tag(client, current_app):
     data.current_app = current_app
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize('json_data', [
+    '{"version": "1.1","releases": [{"ocid": "xx"}]}',
+    '{"releases": [{"ocid": "xx"}]}'
+])
+def test_explore_schema_version(client, json_data):
+    data = SuppliedData.objects.create()
+    data.original_file.save('test.json', ContentFile(json_data))
+    data.current_app = 'cove-ocds'
+
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
+    if 'version' in json_data:
+        assert '1.1' in resp.context['schema_url']
+        assert resp.context['version_used'] == '1.1'
+        assert resp.context['version_used_display'] == '1.1-dev'
+        resp = client.post(data.get_absolute_url(), {'version': "1.0"})
+        assert resp.status_code == 200
+        assert '1__0__2' in resp.context['schema_url']
+        assert resp.context['version_used'] == '1.0'
+    else:
+        assert '1__0__2' in resp.context['schema_url']
+        assert resp.context['version_used'] == '1.0'
+        assert resp.context['version_used_display'] == '1.0'
+        resp = client.post(data.get_absolute_url(), {'version': "1.1"})
+        assert resp.status_code == 200
+        assert '1.1' in resp.context['schema_url']
+        assert resp.context['version_used'] == '1.1'
+        assert resp.context['version_used_display'] == '1.1-dev'
+
+
+@pytest.mark.django_db
+def test_wrong_schema_version_in_data(client):
+    data = SuppliedData.objects.create()
+    data.original_file.save('test.json', ContentFile('{"version": "1.bad", "releases": [{"ocid": "xx"}]}'))
+    data.current_app = 'cove-ocds'
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
+    assert resp.context['sub_title'] == ugettext_lazy("Wrong schema version")
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(('file_type', 'converter', 'replace_after_post'), [
+    ('xlsx', convert_spreadsheet, True),
+    ('json', convert_json, False)
+])
+def test_explore_schema_version_change(client, file_type, converter, replace_after_post):
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.{}'.format(file_type)), 'rb') as fp:
+        data.original_file.save('test.{}'.format(file_type), UploadedFile(fp))
+    data.current_app = 'cove-ocds'
+
+    with patch('cove.views.{}'.format(converter.__name__), side_effect=converter, autospec=True) as mock_object:
+        resp = client.get(data.get_absolute_url())
+        args, kwargs = mock_object.call_args
+        assert resp.status_code == 200
+        assert resp.context['version_used'] == '1.0'
+        assert mock_object.called
+        assert '1__0__2' in kwargs['schema_url']
+        assert kwargs['replace'] is False
+        mock_object.reset_mock()
+
+        resp = client.post(data.get_absolute_url(), {'version': '1.1'})
+        args, kwargs = mock_object.call_args
+        assert resp.status_code == 200
+        assert resp.context['version_used'] == '1.1'
+        assert mock_object.called
+        assert '1.1' in kwargs['schema_url']
+        assert kwargs['replace'] is replace_after_post
+
+
+@pytest.mark.django_db
+@patch('cove.views.convert_json', side_effect=convert_json, autospec=True)
+def test_explore_schema_version_change_with_json_to_xlsx(mock_object, client):
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
+        data.original_file.save('test.json', UploadedFile(fp))
+    data.current_app = 'cove-ocds'
+
+    resp = client.get(data.get_absolute_url())
+    args, kwargs = mock_object.call_args
+    assert resp.status_code == 200
+    assert '1__0__2' in kwargs['schema_url']
+    assert kwargs['replace'] is False
+    mock_object.reset_mock()
+
+    resp = client.post(data.get_absolute_url(), {'version': '1.1'})
+    args, kwargs = mock_object.call_args
+    assert resp.status_code == 200
+    assert kwargs['replace'] is False
+    mock_object.reset_mock()
+
+    # Convert to spreadsheet
+    resp = client.post(data.get_absolute_url(), {'flatten': 'true'})
+    assert kwargs['replace'] is False
+    mock_object.reset_mock()
+
+    # Do replace with version change now that it's been converted once
+    resp = client.post(data.get_absolute_url(), {'version': '1.0'})
+    args, kwargs = mock_object.call_args
+    assert resp.status_code == 200
+    assert kwargs['replace'] is True
+    mock_object.reset_mock()
+
+    # Do not replace if the version does not changed
+    resp = client.post(data.get_absolute_url(), {'version': '1.0'})
+    args, kwargs = mock_object.call_args
+    assert resp.status_code == 200
+    assert kwargs['replace'] is False
+    mock_object.reset_mock()
+
+    resp = client.post(data.get_absolute_url(), {'version': '1.1'})
+    args, kwargs = mock_object.call_args
+    assert resp.status_code == 200
+    assert kwargs['replace'] is True
+    mock_object.reset_mock()
+
+
+@pytest.mark.django_db
+def test_data_supplied_schema_version(client):
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.xlsx'), 'rb') as fp:
+        data.original_file.save('test.xlsx', UploadedFile(fp))
+    data.current_app = 'cove-ocds'
+    
+    assert data.schema_version == ''
+
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
+    assert resp.context['version_used'] == '1.0'
+    assert SuppliedData.objects.get(id=data.id).schema_version == '1.0'
+
+    resp = client.post(data.get_absolute_url(), {'version': '1.1'})
+    assert resp.status_code == 200
+    assert resp.context['version_used'] == '1.1'
+    assert SuppliedData.objects.get(id=data.id).schema_version == '1.1'

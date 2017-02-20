@@ -90,7 +90,6 @@ def explore(request, pk):
         }, status=404)
 
     file_type = get_file_type(data.original_file)
-
     context = {
         "original_file": {
             "url": data.original_file.url,
@@ -102,6 +101,42 @@ def explore(request, pk):
         "created_datetime": data.created.strftime("%A, %d %B %Y %I:%M%p %Z"),
         "created_date": data.created.strftime("%A, %d %B %Y"),
     }
+    
+    schema_name = request.cove_config['schema_name']
+    replace_conversion = False
+
+    if request.current_app == 'cove-ocds':
+        schema_version = data.schema_version or request.cove_config['schema_version']
+        schema_version_choices = request.cove_config['schema_version_choices']
+        schema_version_display_choices = tuple(
+            (version, display_url[0]) for version, display_url in schema_version_choices.items()
+        )  # ((version, display), ...)
+        schema_user_choice = None
+        schema_url = schema_version_choices[schema_version][1]
+        context.update({
+            "data_uuid": pk,
+            "version_display_choices": schema_version_display_choices
+        })
+    else:
+        schema_url = request.cove_config['schema_url']
+
+    if 'version' in request.POST and request.POST['version'] != data.schema_version:
+        schema_user_choice = request.POST.get('version')
+        if schema_user_choice in schema_version_choices:
+            schema_version = schema_user_choice
+            schema_url = schema_version_choices[schema_user_choice][1]
+            replace_conversion = True
+        else:
+            # This shouldn't really happen unless the user resends manually
+            # the POST request with random data.
+            raise CoveInputDataError(context={
+                'sub_title': _("Something unexpected happened"),
+                'link': 'cove:explore',
+                'link_args': pk,
+                'link_text': _('Try Again'),
+                'msg': _('We think you tried to run your data against an unrecognised version of the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a recognised choice for the schema version'.format(schema_user_choice)),
+                'error': _('{} is not a valid schema version'.format(schema_user_choice))
+            })
 
     if file_type == 'json':
         # open the data first so we can inspect for record package
@@ -116,27 +151,50 @@ def explore(request, pk):
                     'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
+        if request.current_app == 'cove-ocds' and not schema_user_choice:
+            try:
+                version_field = json_data.get('version')
+                if version_field:
+                    if schema_version_choices.get(version_field):
+                        schema_version = version_field
+                        schema_url = schema_version_choices[version_field][1]
+                    else:
+                        raise CoveInputDataError(context={
+                            'sub_title': _("Wrong schema version"),
+                            'link': 'cove:index',
+                            'link_text': _('Try Again'),
+                            'msg': _('The value for the <em>"version"</em> field in your data is not a recognised OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a recognised schema version choice'.format(version_field)),
+                            'error': _('{} is not a valid schema version'.format(version_field))
+                        })
+            except AttributeError:
+                pass
         if request.current_app == 'cove-ocds' and 'records' in json_data:
             context['conversion'] = None
         else:
-            context.update(convert_json(request, data))
+            converted_path = os.path.join(data.upload_dir(), 'flattened')
+            # Replace the spreadsheet conversion only if it exists, ie. do not
+            # create a conversion if there wasn't one requested by the user.
+            if not os.path.exists(converted_path + '.xlsx'):
+                replace_conversion = False
+            context.update(convert_json(request, data, schema_url=schema_url, replace=replace_conversion))
     else:
-        context.update(convert_spreadsheet(request, data, file_type))
+        # Always replace json conversion when user chooses a different schema version.
+        context.update(convert_spreadsheet(request, data, file_type, schema_url=schema_url, replace=replace_conversion))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
-    schema_url = request.cove_config['schema_url']
-    schema_name = request.cove_config['schema_name']
-
     if request.current_app == 'cove-ocds':
         schema_name = schema_name['record'] if 'records' in json_data else schema_name['release']
-
-    if schema_url:
-        additional_fields = sorted(common.get_counts_additional_fields(schema_url, schema_name, json_data, context, request.current_app))
         context.update({
-            'data_only': additional_fields,
-            'additional_fields_count': sum(item[2] for item in additional_fields)
+            "version_used": schema_version,
+            "version_used_display": schema_version_choices[schema_version][0]
         })
+
+    additional_fields = sorted(common.get_counts_additional_fields(schema_url, schema_name, json_data, context, request.current_app))
+    context.update({
+        'data_only': additional_fields,
+        'additional_fields_count': sum(item[2] for item in additional_fields)
+    })
 
     cell_source_map = {}
     heading_source_map = {}
@@ -148,11 +206,11 @@ def explore(request, pk):
             heading_source_map = json.load(heading_source_map_fp)
 
     validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors-2.json')
-    if os.path.exists(validation_errors_path):
+    if os.path.exists(validation_errors_path) and not replace_conversion:
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
-        validation_errors = common.get_schema_validation_errors(json_data, schema_url, schema_name, request.current_app, cell_source_map, heading_source_map) if schema_url else None
+        validation_errors = common.get_schema_validation_errors(json_data, schema_url, schema_name, request.current_app, cell_source_map, heading_source_map)
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 
@@ -181,10 +239,13 @@ def explore(request, pk):
         context['common_error_types'] = ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
         view = 'explore_360.html'
 
-    rendered_response = render(request, view, context)
     if not data.rendered:
         data.rendered = True
-        data.save()
+    if request.current_app == 'cove-ocds':
+        data.schema_version = schema_version
+    data.save()
+
+    rendered_response = render(request, view, context)
     return rendered_response
 
 

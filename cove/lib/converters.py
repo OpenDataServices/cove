@@ -13,12 +13,15 @@ from cove.lib.exceptions import CoveInputDataError
 logger = logging.getLogger(__name__)
 
 
-def convert_spreadsheet(request, data, file_type):
+def convert_spreadsheet(request, data, file_type, schema_url, replace):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
     cell_source_map_path = os.path.join(data.upload_dir(), 'cell_source_map.json')
     heading_source_map_path = os.path.join(data.upload_dir(), 'heading_source_map.json')
     encoding = 'utf-8'
+    # 360 still uses request.cove_config['schema_url']
+    schema_url = schema_url or request.cove_config['schema_url']
+
     if file_type == 'csv':
         # flatten-tool expects a directory full of CSVs with file names
         # matching what xlsx titles would be.
@@ -40,9 +43,10 @@ def convert_spreadsheet(request, data, file_type):
                 encoding = 'latin_1'
     else:
         input_name = data.original_file.file.name
+
     try:
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
-        if not os.path.exists(converted_path) or not os.path.exists(cell_source_map_path):
+        if not os.path.exists(converted_path) or not os.path.exists(cell_source_map_path) or replace:
             with warnings.catch_warnings(record=True) as conversion_warnings:
                 flattentool.unflatten(
                     input_name,
@@ -50,7 +54,7 @@ def convert_spreadsheet(request, data, file_type):
                     input_format=file_type,
                     root_list_path=request.cove_config['root_list_path'],
                     root_id=request.cove_config['root_id'],
-                    schema=request.cove_config['schema_url'] + request.cove_config['item_schema_name'],
+                    schema=schema_url + request.cove_config['item_schema_name'],
                     convert_titles=True,
                     encoding=encoding,
                     cell_source_map=cell_source_map_path,
@@ -84,21 +88,25 @@ def convert_spreadsheet(request, data, file_type):
     return context
 
 
-def convert_json(request, data):
+def convert_json(request, data, schema_url, replace):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'flattened')
+    # cove-360 still uses request.cove_config['schema_url']
+    schema_url = schema_url or request.cove_config['schema_url']
+
     flatten_kwargs = dict(
         output_name=converted_path,
         main_sheet_name=request.cove_config['root_list_path'],
         root_list_path=request.cove_config['root_list_path'],
         root_id=request.cove_config['root_id'],
-        schema=request.cove_config['schema_url'] + request.cove_config['item_schema_name'],
+        schema=schema_url + request.cove_config['item_schema_name'],
     )
+
     try:
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
-        if not os.path.exists(converted_path + '.xlsx'):
+        if not os.path.exists(converted_path + '.xlsx') or replace:
             with warnings.catch_warnings(record=True) as conversion_warnings:
-                if request.POST.get('flatten'):
+                if request.POST.get('flatten') or replace:
                     flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
                 else:
                     return {'conversion': 'flattenable'}
@@ -118,7 +126,7 @@ def convert_json(request, data):
                     output_name=converted_path + '-titles',
                     use_titles=True
                 ))
-                if not os.path.exists(converted_path + '-titles.xlsx'):
+                if not os.path.exists(converted_path + '-titles.xlsx') or replace:
                     flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
                     context['conversion_warning_messages_titles'] = [str(w.message) for w in conversion_warnings_titles]
                     with open(conversion_warning_cache_path_titles, 'w+') as fp:
