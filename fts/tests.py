@@ -425,12 +425,12 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
 
     body_text = browser.find_element_by_tag_name('body').text
     if len(warning_texts) == 0:
+        assert 'conversion Errors' not in body_text
         assert 'Conversion Warnings' not in body_text
-        assert 'conversion errors' not in body_text
     else:
         assert warning_texts[0] in body_text
-        assert 'Conversion Warnings' in body_text
-        assert 'conversion errors' not in body_text
+        assert 'Conversion Errors' in body_text
+        assert 'conversion Warnings' not in body_text
 
 
 @pytest.mark.parametrize(('prefix'), PREFIX_LIST)
