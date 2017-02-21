@@ -172,7 +172,7 @@ def check_url_input_result_page(server_url_360, browser, httpserver, source_file
     # Only warnings raised with the DataErrorWarning class should be shown
     # This avoids displaying messages like "Discarded range with reserved name"
     # https://github.com/OpenDataServices/cove/issues/444
-    (False, ['Some warning', None])
+    (False, ['Some warning'])
 ])
 @pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
 def test_flattentool_warnings(server_url_360, browser, httpserver, monkeypatch, warning_args, flatten_or_unflatten, iserror):
