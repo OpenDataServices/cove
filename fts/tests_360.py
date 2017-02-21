@@ -4,6 +4,10 @@ from selenium import webdriver
 import time
 import os
 
+import flattentool
+import warnings
+from flattentool.exceptions import DataErrorWarning
+
 BROWSER = os.environ.get('BROWSER', 'Firefox')
 
 
@@ -162,9 +166,16 @@ def check_url_input_result_page(server_url_360, browser, httpserver, source_file
             assert int(converted_file_response.headers['content-length']) != 0
 
 
-@pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
+@pytest.mark.parametrize('iserror,warning_args', [
+    (False, []),
+    (True, ['Some warning', DataErrorWarning]),
+    # Only warnings raised with the DataErrorWarning class should be shown
+    # This avoids displaying messages like "Discarded range with reserved name"
+    # https://github.com/OpenDataServices/cove/issues/444
+    (False, ['Some warning', None])
+])
 @pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
-def test_flattentool_warnings(server_url_360, browser, httpserver, monkeypatch, warning_texts, flatten_or_unflatten):
+def test_flattentool_warnings(server_url_360, browser, httpserver, monkeypatch, warning_args, flatten_or_unflatten, iserror):
     # If we're testing a remove server then we can't run this test as we can't
     # set up the mocks
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -174,10 +185,6 @@ def test_flattentool_warnings(server_url_360, browser, httpserver, monkeypatch, 
     else:
         source_filename = 'example.xlsx'
 
-    import flattentool
-    import warnings
-    from flattentool.exceptions import DataErrorWarning
-
     def mockunflatten(input_name, output_name, *args, **kwargs):
         with open(kwargs['cell_source_map'], 'w') as fp:
             fp.write('{}')
@@ -185,14 +192,14 @@ def test_flattentool_warnings(server_url_360, browser, httpserver, monkeypatch, 
             fp.write('{}')
         with open(output_name, 'w') as fp:
             fp.write('{}')
-            for warning_text in warning_texts:
-                warnings.warn(warning_text, DataErrorWarning)
+            if warning_args:
+                warnings.warn(*warning_args)
 
     def mockflatten(input_name, output_name, *args, **kwargs):
         with open(output_name + '.xlsx', 'w') as fp:
             fp.write('{}')
-            for warning_text in warning_texts:
-                warnings.warn(warning_text, DataErrorWarning)
+            if warning_args:
+                warnings.warn(*warning_args)
 
     mocks = {
         'flatten': mockflatten,
@@ -213,14 +220,7 @@ def test_flattentool_warnings(server_url_360, browser, httpserver, monkeypatch, 
     body_text = browser.find_element_by_tag_name('body').text
     assert 'Warning' not in body_text
     conversion_title = browser.find_element_by_id('conversion-title')
-    if len(warning_texts) == 0:
-        if flatten_or_unflatten == 'flatten':
-            assert 'Converted to Spreadsheet 1 Error' not in body_text
-        else:
-            assert 'Converted to JSON 1 Error' not in body_text
-        # should be a tick
-        assert conversion_title.find_element_by_class_name('font-tick').get_attribute('class') == 'font-tick tick'
-    else:
+    if iserror:
         if flatten_or_unflatten == 'flatten':
             assert 'Converted to Spreadsheet 1 Error' in body_text
         else:
@@ -229,4 +229,11 @@ def test_flattentool_warnings(server_url_360, browser, httpserver, monkeypatch, 
         assert conversion_title.find_element_by_class_name('font-tick').get_attribute('class') == 'font-tick cross'
         conversion_title.click()
         time.sleep(0.5)
-        assert warning_texts[0] in browser.find_element_by_id('conversion-body').text
+        assert warning_args[0] in browser.find_element_by_id('conversion-body').text
+    else:
+        if flatten_or_unflatten == 'flatten':
+            assert 'Converted to Spreadsheet 1 Error' not in body_text
+        else:
+            assert 'Converted to JSON 1 Error' not in body_text
+        # should be a tick
+        assert conversion_title.find_element_by_class_name('font-tick').get_attribute('class') == 'font-tick tick'

@@ -370,10 +370,6 @@ def test_check_schema_link_on_result_page(server_url, browser, httpserver, sourc
         browser.find_element_by_id('toc-360giving-json-schemas')
 
 
-# TODO
-# OCDS tool should not say Warnings either
-# Test an actual bad XLSX (probably duplicate IDs)
-
 @pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
 @pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
 def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warning_texts, flatten_or_unflatten):
