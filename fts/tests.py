@@ -370,12 +370,13 @@ def test_check_schema_link_on_result_page(server_url, browser, httpserver, sourc
         browser.find_element_by_id('toc-360giving-json-schemas')
 
 
+# TODO
+# OCDS tool should not say Warnings either
+# Test an actual bad XLSX (probably duplicate IDs)
+
 @pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
 @pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
 def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warning_texts, flatten_or_unflatten):
-    """
-    TODO: We need the same kind of test for 360 in test_360.py
-    """
     # If we're testing a remove server then we can't run this test as we can't
     # set up the mocks
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -424,10 +425,7 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
     browser.get(server_url + PREFIX_OCDS + '?source_url=' + source_url)
 
     if source_filename.endswith('.json'):
-        try:
-            browser.find_element_by_name("flatten").click()
-        except NoSuchElementException:
-            pass
+        browser.find_element_by_name("flatten").click()
 
     body_text = browser.find_element_by_tag_name('body').text
     if len(warning_texts) == 0:

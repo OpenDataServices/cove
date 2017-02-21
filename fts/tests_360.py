@@ -55,7 +55,8 @@ def server_url_360(request, live_server):
                                                  '360G-wellcometrust-105177/Z/14/Z'], True),
     ('WellcomeTrust-grants_2_grants.xlsx', ['This file contains 2 grants from 1 funder to 1 recipient',
                                             'The grants were awarded in GBP with a total value of £331,495',
-                                            'Converted to JSON',
+                                            # check that there's no errors after the heading
+                                            'Converted to JSON\nIn order',
                                             'If there are conversion errors, the data may not look as you expect',
                                             'Invalid against Schema 7 Errors',
                                             '\'description\' is missing but required',
@@ -159,3 +160,73 @@ def check_url_input_result_page(server_url_360, browser, httpserver, source_file
                 assert grant1['classifications'][0]['title'] == 'Test'
             assert converted_file_response.status_code == 200
             assert int(converted_file_response.headers['content-length']) != 0
+
+
+@pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
+@pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
+def test_flattentool_warnings(server_url_360, browser, httpserver, monkeypatch, warning_texts, flatten_or_unflatten):
+    # If we're testing a remove server then we can't run this test as we can't
+    # set up the mocks
+    if 'CUSTOM_SERVER_URL' in os.environ:
+        pytest.skip()
+    if flatten_or_unflatten == 'flatten':
+        source_filename = 'example.json'
+    else:
+        source_filename = 'example.xlsx'
+
+    import flattentool
+    import warnings
+    from flattentool.exceptions import DataErrorWarning
+
+    def mockunflatten(input_name, output_name, *args, **kwargs):
+        with open(kwargs['cell_source_map'], 'w') as fp:
+            fp.write('{}')
+        with open(kwargs['heading_source_map'], 'w') as fp:
+            fp.write('{}')
+        with open(output_name, 'w') as fp:
+            fp.write('{}')
+            for warning_text in warning_texts:
+                warnings.warn(warning_text, DataErrorWarning)
+
+    def mockflatten(input_name, output_name, *args, **kwargs):
+        with open(output_name + '.xlsx', 'w') as fp:
+            fp.write('{}')
+            for warning_text in warning_texts:
+                warnings.warn(warning_text, DataErrorWarning)
+
+    mocks = {
+        'flatten': mockflatten,
+        'unflatten': mockunflatten
+    }
+    monkeypatch.setattr(flattentool, flatten_or_unflatten, mocks[flatten_or_unflatten])
+
+    # Actual input doesn't matter, as we override
+    # flattentool behaviour with a mock below
+    httpserver.serve_content('{}')
+    source_url = httpserver.url + '/' + source_filename
+
+    browser.get(server_url_360 + '?source_url=' + source_url)
+
+    if source_filename.endswith('.json'):
+        browser.find_element_by_name("flatten").click()
+
+    body_text = browser.find_element_by_tag_name('body').text
+    assert 'Warning' not in body_text
+    conversion_title = browser.find_element_by_id('conversion-title')
+    if len(warning_texts) == 0:
+        if flatten_or_unflatten == 'flatten':
+            assert 'Converted to Spreadsheet 1 Error' not in body_text
+        else:
+            assert 'Converted to JSON 1 Error' not in body_text
+        # should be a tick
+        assert conversion_title.find_element_by_class_name('font-tick').get_attribute('class') == 'font-tick tick'
+    else:
+        if flatten_or_unflatten == 'flatten':
+            assert 'Converted to Spreadsheet 1 Error' in body_text
+        else:
+            assert 'Converted to JSON 1 Error' in body_text
+        # should be a cross
+        assert conversion_title.find_element_by_class_name('font-tick').get_attribute('class') == 'font-tick cross'
+        conversion_title.click()
+        time.sleep(0.5)
+        assert warning_texts[0] in browser.find_element_by_id('conversion-body').text
