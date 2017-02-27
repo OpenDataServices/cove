@@ -1,5 +1,6 @@
 import pytest
 import requests
+from django.conf import settings
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 import time
@@ -15,6 +16,9 @@ if not PREFIX_360 and not PREFIX_OCDS:
 PREFIX_LIST = [prefix for prefix in (PREFIX_OCDS, PREFIX_360) if prefix]
 
 BROWSER = os.environ.get('BROWSER', 'Firefox')
+
+OCDS_SCHEMA_VERSIONS = settings.COVE_CONFIG_BY_NAMESPACE['schema_version_choices']['cove-ocds']
+OCDS_SCHEMA_VERSIONS_DISPLAY = list(display_url[0] for version, display_url in OCDS_SCHEMA_VERSIONS.items())
 
 
 @pytest.fixture(scope="module")
@@ -196,7 +200,7 @@ def test_accordion(server_url, browser, prefix):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
-    ('tenders_releases_2_releases.json', ['Convert'], True),
+    ('tenders_releases_2_releases.json', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, True),
     ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], True),
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
@@ -207,7 +211,7 @@ def test_accordion(server_url, browser, prefix):
     ('utf8.json', 'Convert', True),
     # But we expect to see an error message if a file is not well formed JSON at all
     ('tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
-    ('tenders_releases_2_releases.xlsx', 'Convert', True),
+    ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, True),
     ('badfile.json', 'Statistics can not produced', True),
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', False),
@@ -263,18 +267,18 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
             assert 'JSON (Original)' in body_text
             original_file = browser.find_element_by_link_text("JSON (Original)").get_attribute("href")
             if 'record' not in source_filename:
-                converted_file = browser.find_element_by_link_text("Excel Spreadsheet (.xlsx) (Converted from Original)").get_attribute("href")
+                converted_file = browser.find_element_by_partial_link_text("Excel Spreadsheet (.xlsx) (Converted from Original using schema version").get_attribute("href")
                 assert "flattened.xlsx" in converted_file
         elif source_filename.endswith('.xlsx'):
             assert '(.xlsx) (Original)' in body_text
             original_file = browser.find_element_by_link_text("Excel Spreadsheet (.xlsx) (Original)").get_attribute("href")
-            converted_file = browser.find_element_by_link_text("JSON (Converted from Original)").get_attribute("href")
+            converted_file = browser.find_element_by_partial_link_text("JSON (Converted from Original using schema version").get_attribute("href")
             assert "unflattened.json" in converted_file
         elif source_filename.endswith('.csv'):
             assert '(.csv) (Original)' in body_text
             original_file = browser.find_element_by_link_text("CSV Spreadsheet (.csv) (Original)").get_attribute("href")
-            converted_file = browser.find_element_by_link_text("JSON (Converted from Original)").get_attribute("href")
-            assert "unflattened.json" in browser.find_element_by_link_text("JSON (Converted from Original)").get_attribute("href")
+            converted_file = browser.find_element_by_partial_link_text("JSON (Converted from Original using schema version").get_attribute("href")
+            assert "unflattened.json" in browser.find_element_by_partial_link_text("JSON (Converted from Original using schema version").get_attribute("href")
 
         assert source_filename in original_file
         assert '0 bytes' not in body_text
@@ -369,9 +373,6 @@ def test_check_schema_link_on_result_page(server_url, browser, httpserver, sourc
 @pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
 @pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
 def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warning_texts, flatten_or_unflatten):
-    """
-    TODO: We need the same kind of test for 360 in test_360.py
-    """
     # If we're testing a remove server then we can't run this test as we can't
     # set up the mocks
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -385,6 +386,7 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
 
     import flattentool
     import warnings
+    from flattentool.exceptions import DataErrorWarning
 
     def mockunflatten(input_name, output_name, *args, **kwargs):
         with open(kwargs['cell_source_map'], 'w') as fp:
@@ -394,13 +396,13 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
         with open(output_name, 'w') as fp:
             fp.write('{}')
             for warning_text in warning_texts:
-                warnings.warn(warning_text)
+                warnings.warn(warning_text, DataErrorWarning)
 
     def mockflatten(input_name, output_name, *args, **kwargs):
         with open(output_name + '.xlsx', 'w') as fp:
             fp.write('{}')
             for warning_text in warning_texts:
-                warnings.warn(warning_text)
+                warnings.warn(warning_text, DataErrorWarning)
 
     mocks = {
         'flatten': mockflatten,
@@ -419,19 +421,16 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
     browser.get(server_url + PREFIX_OCDS + '?source_url=' + source_url)
 
     if source_filename.endswith('.json'):
-        try:
-            browser.find_element_by_name("flatten").click()
-        except NoSuchElementException:
-            pass
+        browser.find_element_by_name("flatten").click()
 
     body_text = browser.find_element_by_tag_name('body').text
     if len(warning_texts) == 0:
+        assert 'conversion Errors' not in body_text
         assert 'Conversion Warnings' not in body_text
-        assert 'conversion errors' not in body_text
     else:
         assert warning_texts[0] in body_text
-        assert 'Conversion Warnings' in body_text
-        assert 'conversion errors' not in body_text
+        assert 'Conversion Errors' in body_text
+        assert 'conversion Warnings' not in body_text
 
 
 @pytest.mark.parametrize(('prefix'), PREFIX_LIST)

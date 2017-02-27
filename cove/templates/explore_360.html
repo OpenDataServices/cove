@@ -19,7 +19,7 @@
            <p class="explanation">
              {% trans "A file was " %} 
              {% if source_url %}
-                {% trans "downloaded from " %} {{source_url}} 
+                {% trans "downloaded from " %} <a href="{{source_url}}">{{source_url}}</a>
              {% else %}
                {% trans "uploaded " %} 
              {% endif %}
@@ -76,11 +76,15 @@
   {% if conversion == 'unflatten' or conversion == 'flatten'%}
     <div class="panel panel-default">
       <div class="panel-heading" data-toggle="collapse" data-target="#conversion-body">
-        <h3 class="panel-title panel-title-explore"> 
-          <span class="font-tick tick" aria-hidden="true"></span>
+        <h3 class="panel-title panel-title-explore" id="conversion-title"> 
+          {% if conversion_warning_messages or conversion_error %}
+            <span class="font-tick cross" aria-hidden="true"></span>
+          {% else %}
+            <span class="font-tick tick" aria-hidden="true"></span>
+          {% endif %}
           {% trans "Converted to " %}{% if conversion == 'unflatten'%} JSON {% else %} Spreadsheet{% endif %}
           {% if conversion_warning_messages %}
-            <small>{% blocktrans count n_warnings=conversion_warning_messages|length %}{{n_warnings}} Warning.{% plural %}{{n_warnings}} Warnings.{% endblocktrans %}</small>
+            <small>{% blocktrans count n_warnings=conversion_warning_messages|length %}{{n_warnings}} Error{% plural %}{{n_warnings}} Errors{% endblocktrans %}</small>
           {% endif %}
           <span class="glyphicon glyphicon-collapse-down pull-right"></span>
         </h3>
@@ -99,7 +103,7 @@
           {% endif %}
           {% if conversion_warning_messages %}
             <br>
-            <p>{% trans "Conversion <strong>warnings:</strong>" %}</p>
+            <p>{% trans "Conversion <strong>errors:</strong>" %}</p>
             <ul class="left-space">
               {% for warning_message in conversion_warning_messages %}
                 <li>{{warning_message}}</li>

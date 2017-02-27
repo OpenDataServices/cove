@@ -99,8 +99,8 @@ def get_grants_aggregates(json_data):
         'id_count': id_count,
         'unique_ids': unique_ids,
         'duplicate_ids': duplicate_ids,
-        'max_award_date': max_award_date,
-        'min_award_date': min_award_date,
+        'max_award_date': max_award_date.split("T")[0],
+        'min_award_date': min_award_date.split("T")[0],
         'distinct_funding_org_identifier': distinct_funding_org_identifier,
         'distinct_recipient_org_identifier': distinct_recipient_org_identifier,
         'currencies': currencies,
@@ -173,7 +173,10 @@ class AdditionalTest():
 class ZeroAmountTest(AdditionalTest):
     def process(self, grant, grant_flat, path_prefix):
         try:
-            if grant['amountAwarded']:
+            # check for == 0 explicitly, as other falsey values will be caught
+            # by schema validation, and also showing a message about 0 value
+            # grants would be more confusing
+            if grant['amountAwarded'] == 0:
                 self.failed = True
                 self.json_locations.append(path_prefix + '/amountAwarded')
         except KeyError:
