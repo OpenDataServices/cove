@@ -5,12 +5,23 @@ import shutil
 import warnings
 import flattentool
 import json
+import flattentool.exceptions
 
 from django.utils.translation import ugettext_lazy as _
 
 from cove.lib.exceptions import CoveInputDataError
 
 logger = logging.getLogger(__name__)
+
+
+def filter_conversion_warnings(conversion_warnings):
+    out = []
+    for w in conversion_warnings:
+        if w.category is flattentool.exceptions.DataErrorWarning:
+            out.append(str(w.message))
+        else:
+            logger.warn(w)
+    return out
 
 
 def convert_spreadsheet(request, data, file_type, schema_url, replace):
@@ -60,7 +71,7 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace):
                     cell_source_map=cell_source_map_path,
                     heading_source_map=heading_source_map_path,
                 )
-                context['conversion_warning_messages'] = [str(w.message) for w in conversion_warnings]
+                context['conversion_warning_messages'] = filter_conversion_warnings(conversion_warnings)
             with open(conversion_warning_cache_path, 'w+') as fp:
                 json.dump(context['conversion_warning_messages'], fp)
         elif os.path.exists(conversion_warning_cache_path):
@@ -110,7 +121,7 @@ def convert_json(request, data, schema_url, replace):
                     flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
                 else:
                     return {'conversion': 'flattenable'}
-                context['conversion_warning_messages'] = [str(w.message) for w in conversion_warnings]
+                context['conversion_warning_messages'] = filter_conversion_warnings(conversion_warnings)
             with open(conversion_warning_cache_path, 'w+') as fp:
                 json.dump(context['conversion_warning_messages'], fp)
         elif os.path.exists(conversion_warning_cache_path):
@@ -128,7 +139,7 @@ def convert_json(request, data, schema_url, replace):
                 ))
                 if not os.path.exists(converted_path + '-titles.xlsx') or replace:
                     flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
-                    context['conversion_warning_messages_titles'] = [str(w.message) for w in conversion_warnings_titles]
+                    context['conversion_warning_messages_titles'] = filter_conversion_warnings(conversion_warnings_titles)
                     with open(conversion_warning_cache_path_titles, 'w+') as fp:
                         json.dump(context['conversion_warning_messages_titles'], fp)
                 elif os.path.exists(conversion_warning_cache_path_titles):

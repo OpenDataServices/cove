@@ -373,9 +373,6 @@ def test_check_schema_link_on_result_page(server_url, browser, httpserver, sourc
 @pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
 @pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
 def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warning_texts, flatten_or_unflatten):
-    """
-    TODO: We need the same kind of test for 360 in test_360.py
-    """
     # If we're testing a remove server then we can't run this test as we can't
     # set up the mocks
     if 'CUSTOM_SERVER_URL' in os.environ:
@@ -389,6 +386,7 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
 
     import flattentool
     import warnings
+    from flattentool.exceptions import DataErrorWarning
 
     def mockunflatten(input_name, output_name, *args, **kwargs):
         with open(kwargs['cell_source_map'], 'w') as fp:
@@ -398,13 +396,13 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
         with open(output_name, 'w') as fp:
             fp.write('{}')
             for warning_text in warning_texts:
-                warnings.warn(warning_text)
+                warnings.warn(warning_text, DataErrorWarning)
 
     def mockflatten(input_name, output_name, *args, **kwargs):
         with open(output_name + '.xlsx', 'w') as fp:
             fp.write('{}')
             for warning_text in warning_texts:
-                warnings.warn(warning_text)
+                warnings.warn(warning_text, DataErrorWarning)
 
     mocks = {
         'flatten': mockflatten,
@@ -423,19 +421,16 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
     browser.get(server_url + PREFIX_OCDS + '?source_url=' + source_url)
 
     if source_filename.endswith('.json'):
-        try:
-            browser.find_element_by_name("flatten").click()
-        except NoSuchElementException:
-            pass
+        browser.find_element_by_name("flatten").click()
 
     body_text = browser.find_element_by_tag_name('body').text
     if len(warning_texts) == 0:
+        assert 'conversion Errors' not in body_text
         assert 'Conversion Warnings' not in body_text
-        assert 'conversion errors' not in body_text
     else:
         assert warning_texts[0] in body_text
-        assert 'Conversion Warnings' in body_text
-        assert 'conversion errors' not in body_text
+        assert 'Conversion Errors' in body_text
+        assert 'conversion Warnings' not in body_text
 
 
 @pytest.mark.parametrize(('prefix'), PREFIX_LIST)
