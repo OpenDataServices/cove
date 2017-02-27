@@ -32,7 +32,7 @@
                {% blocktrans count n_funders=grants_aggregates.distinct_funding_org_identifier|length %}from <strong>{{n_funders}} funder</strong>{% plural %}from <strong>{{n_funders}} funders</strong>{% endblocktrans %}
                {% blocktrans count n_recipients=grants_aggregates.distinct_recipient_org_identifier|length %}to <strong>{{n_recipients}} recipient</strong>{% plural %}to <strong>{{n_recipients}} recipients</strong>{% endblocktrans %}
                {% if grants_aggregates.min_award_date == grants_aggregates.max_award_date %}
-                 {% blocktrans with start_date=grants_aggregates.min_award_date %} awarded on <strong>{{start_date}}</strong>.{% endblocktrans %}{% else %}{% blocktrans with start_date=grants_aggregates.min_award_date end_date=grants_aggregates.max_award_date %}awarded from <strong>{{start_date}} to {{end_date}}</strong>.{% endblocktrans %}
+                 {% blocktrans with start_date=grants_aggregates.min_award_date %} awarded on <strong>{{start_date}}</strong>.{% endblocktrans %}{% else %}{% blocktrans with start_date=grants_aggregates.min_award_date end_date=grants_aggregates.max_award_date %}awarded between <strong>{{start_date}}</strong> and <strong>{{end_date}}</strong>.{% endblocktrans %}
                {% endif %}
               </li>
               {% for currency_code, currency_aggregates in grants_aggregates.currencies.items %}
