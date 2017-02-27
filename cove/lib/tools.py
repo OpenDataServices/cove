@@ -1,5 +1,5 @@
-import strict_rfc3339
 import datetime
+import strict_rfc3339
 from functools import wraps  # use this to preserve function signatures and docstrings
 
 

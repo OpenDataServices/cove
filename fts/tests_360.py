@@ -4,7 +4,22 @@ from selenium import webdriver
 import time
 import os
 
+import flattentool
+import warnings
+from flattentool.exceptions import DataErrorWarning
+
 BROWSER = os.environ.get('BROWSER', 'Firefox')
+
+
+PREFIX_360 = os.environ.get('PREFIX_360', '')
+PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '')
+if not PREFIX_360:
+    if not PREFIX_OCDS:
+        # Use a default only if other env vars aren't supplied
+        PREFIX_360 = '/360/'
+    else:
+        # Otherwise assume we want to skip the 360 tests entirely
+        pytestmark = pytest.mark.skip()
 
 
 @pytest.fixture(scope="module")
@@ -18,9 +33,9 @@ def browser(request):
 @pytest.fixture(scope="module")
 def server_url_360(request, live_server):
     if 'CUSTOM_SERVER_URL' in os.environ:
-        return os.environ['CUSTOM_SERVER_URL'] + '/360/'
+        return os.environ['CUSTOM_SERVER_URL'] + PREFIX_360
     else:
-        return live_server.url + '/360/'
+        return live_server.url + PREFIX_360
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
@@ -44,7 +59,8 @@ def server_url_360(request, live_server):
                                                  '360G-wellcometrust-105177/Z/14/Z'], True),
     ('WellcomeTrust-grants_2_grants.xlsx', ['This file contains 2 grants from 1 funder to 1 recipient',
                                             'The grants were awarded in GBP with a total value of £331,495',
-                                            'Converted to JSON',
+                                            # check that there's no errors after the heading
+                                            'Converted to JSON\nIn order',
                                             'If there are conversion errors, the data may not look as you expect',
                                             'Invalid against Schema 7 Errors',
                                             '\'description\' is missing but required',
@@ -54,7 +70,7 @@ def server_url_360(request, live_server):
                                             'Recipient organisation identifiers:  1 ID',
                                             '360G-wellcometrust-105177/Z/14/Z'], True),
     # Test conversion warnings are shown
-    ('tenders_releases_2_releases.xlsx', ['Converted to JSON 5 Warnings',
+    ('tenders_releases_2_releases.xlsx', ['Converted to JSON 5 Errors',
                                           'Invalid against Schema 76 Errors',
                                           'Conflict when merging field "ocid" for id "1" in sheet items'], True),
     # Test that titles that aren't in the rollup are converted correctly
@@ -85,7 +101,7 @@ def test_explore_360_url_input(server_url_360, browser, httpserver, source_filen
         # Use urls pointing to GitHub if we have a custom (probably non local) server URL
         source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/master/cove/fixtures/' + source_filename
     else:
-        source_url = httpserver.url + '/360/' + source_filename
+        source_url = httpserver.url + PREFIX_360 + source_filename
 
     browser.get(server_url_360)
     browser.find_element_by_partial_link_text('Link').click()
@@ -148,3 +164,76 @@ def check_url_input_result_page(server_url_360, browser, httpserver, source_file
                 assert grant1['classifications'][0]['title'] == 'Test'
             assert converted_file_response.status_code == 200
             assert int(converted_file_response.headers['content-length']) != 0
+
+
+@pytest.mark.parametrize('iserror,warning_args', [
+    (False, []),
+    (True, ['Some warning', DataErrorWarning]),
+    # Only warnings raised with the DataErrorWarning class should be shown
+    # This avoids displaying messages like "Discarded range with reserved name"
+    # https://github.com/OpenDataServices/cove/issues/444
+    (False, ['Some warning'])
+])
+@pytest.mark.parametrize('flatten_or_unflatten', ['flatten', 'unflatten'])
+def test_flattentool_warnings(server_url_360, browser, httpserver, monkeypatch, warning_args, flatten_or_unflatten, iserror):
+    # If we're testing a remove server then we can't run this test as we can't
+    # set up the mocks
+    if 'CUSTOM_SERVER_URL' in os.environ:
+        pytest.skip()
+    if flatten_or_unflatten == 'flatten':
+        source_filename = 'example.json'
+    else:
+        source_filename = 'example.xlsx'
+
+    def mockunflatten(input_name, output_name, *args, **kwargs):
+        with open(kwargs['cell_source_map'], 'w') as fp:
+            fp.write('{}')
+        with open(kwargs['heading_source_map'], 'w') as fp:
+            fp.write('{}')
+        with open(output_name, 'w') as fp:
+            fp.write('{}')
+            if warning_args:
+                warnings.warn(*warning_args)
+
+    def mockflatten(input_name, output_name, *args, **kwargs):
+        with open(output_name + '.xlsx', 'w') as fp:
+            fp.write('{}')
+            if warning_args:
+                warnings.warn(*warning_args)
+
+    mocks = {
+        'flatten': mockflatten,
+        'unflatten': mockunflatten
+    }
+    monkeypatch.setattr(flattentool, flatten_or_unflatten, mocks[flatten_or_unflatten])
+
+    # Actual input doesn't matter, as we override
+    # flattentool behaviour with a mock below
+    httpserver.serve_content('{}')
+    source_url = httpserver.url + '/' + source_filename
+
+    browser.get(server_url_360 + '?source_url=' + source_url)
+
+    if source_filename.endswith('.json'):
+        browser.find_element_by_name("flatten").click()
+
+    body_text = browser.find_element_by_tag_name('body').text
+    assert 'Warning' not in body_text
+    conversion_title = browser.find_element_by_id('conversion-title')
+    if iserror:
+        if flatten_or_unflatten == 'flatten':
+            assert 'Converted to Spreadsheet 1 Error' in body_text
+        else:
+            assert 'Converted to JSON 1 Error' in body_text
+        # should be a cross
+        assert conversion_title.find_element_by_class_name('font-tick').get_attribute('class') == 'font-tick cross'
+        conversion_title.click()
+        time.sleep(0.5)
+        assert warning_args[0] in browser.find_element_by_id('conversion-body').text
+    else:
+        if flatten_or_unflatten == 'flatten':
+            assert 'Converted to Spreadsheet 1 Error' not in body_text
+        else:
+            assert 'Converted to JSON 1 Error' not in body_text
+        # should be a tick
+        assert conversion_title.find_element_by_class_name('font-tick').get_attribute('class') == 'font-tick tick'

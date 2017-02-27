@@ -173,7 +173,10 @@ class AdditionalTest():
 class ZeroAmountTest(AdditionalTest):
     def process(self, grant, grant_flat, path_prefix):
         try:
-            if grant['amountAwarded']:
+            # check for == 0 explicitly, as other falsey values will be caught
+            # by schema validation, and also showing a message about 0 value
+            # grants would be more confusing
+            if grant['amountAwarded'] == 0:
                 self.failed = True
                 self.json_locations.append(path_prefix + '/amountAwarded')
         except KeyError:
