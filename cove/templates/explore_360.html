@@ -19,7 +19,7 @@
            <p class="explanation">
              {% trans "A file was " %} 
              {% if source_url %}
-                {% trans "downloaded from " %} {{source_url}} 
+                {% trans "downloaded from " %} <a href="{{source_url}}">{{source_url}}</a>
              {% else %}
                {% trans "uploaded " %} 
              {% endif %}
