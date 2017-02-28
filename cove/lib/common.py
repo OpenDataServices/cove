@@ -62,6 +62,31 @@ class CustomRefResolver(RefResolver):
             return result
 
 
+class Schema():
+    def __init__(self, schema_url, schema_name, extensions=None):
+        self.schema_url = schema_url
+        self.schema_name = schema_name
+        self.extensions = extensions
+
+    @property
+    def _schema_data(self):
+        if self.schema_url[:4] == 'http':
+            r = requests.get(self.schema_url + self.schema_name)
+            return r.text
+        else:
+            with open(self.schema_url + self.schema_name) as schema_file:
+                return schema_file.read()
+
+    @property
+    def schema_data(self):
+        return jsonref.loads(self._schema_data, loader=CustomJsonrefLoader(schema_url=self.schema_url),
+                             object_pairs_hook=OrderedDict)
+
+    @property
+    def ref_schema_data(self):
+        return json.loads(self._schema_data)
+
+
 def unique_ids(validator, ui, instance, schema):
     if ui and validator.is_type(instance, "array"):
         non_unique_ids = set()
