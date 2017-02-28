@@ -821,7 +821,7 @@ msgstr ""
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
-"will be show a message that tells them the file has been removed."
+"will be shown a message that tells them the file has been removed."
 msgstr ""
 
 #: cove/templates/explore_360.html:11
