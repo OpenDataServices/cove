@@ -1,26 +1,69 @@
 import collections
 from collections import OrderedDict
-import requests
-import jsonref
 import json
-from flattentool.schema import get_property_type_set
-from jsonschema.exceptions import ValidationError
-from jsonschema.validators import Draft4Validator as validator
-from jsonschema import FormatChecker, RefResolver
+import requests
 import re
 
+from flattentool.schema import get_property_type_set
+import jsonref
+from jsonschema import FormatChecker, RefResolver
+from jsonschema.exceptions import ValidationError
+from jsonschema.validators import Draft4Validator as validator
+
 import cove.lib.tools as tools
+
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
 
 LANGUAGE_RE = re.compile("^(.*_(((([A-Za-z]{2,3}(-([A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-([A-Za-z]{4}))?(-([A-Za-z]{2}|[0-9]{3}))?(-([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-([0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(x(-[A-Za-z0-9]{1,8})+))?)|(x(-[A-Za-z0-9]{1,8})+)))$")
 
+validation_error_lookup = {"date-time": "Date is not in the correct format",
+                           "uri": "Invalid 'uri' found",
+                           "string": "Value is not a string",
+                           "integer": "Value is not a integer",
+                           "number": "Value is not a number",
+                           "object": "Value is not an object",
+                           "array": "Value is not an array"}
 
-def uniqueIds(validator, uI, instance, schema):
-    if (
-        uI and
-        validator.is_type(instance, "array")
-    ):
+
+class CustomJsonrefLoader(jsonref.JsonLoader):
+    def __init__(self, **kwargs):
+        self.schema_url = kwargs.pop('schema_url', None)
+        super().__init__(**kwargs)
+
+    def get_remote_json(self, uri, **kwargs):
+        # ignore url in ref apart from last part
+        uri = self.schema_url + uri.split('/')[-1]
+        if uri[:4] == 'http':
+            return super().get_remote_json(uri, **kwargs)
+        else:
+            with open(uri) as schema_file:
+                return json.load(schema_file, **kwargs)
+
+
+class CustomRefResolver(RefResolver):
+    def __init__(self, *args, **kw):
+        self.schema_url = kw.pop('schema_url')
+        super().__init__(*args, **kw)
+
+    def resolve_remote(self, uri):
+        uri = self.schema_url + uri.split('/')[-1]
+        document = self.store.get(uri)
+        if document:
+            return document
+
+        if self.schema_url.startswith("http"):
+            return super().resolve_remote(uri)
+        else:
+            with open(uri) as schema_file:
+                result = json.load(schema_file)
+            if self.cache_remote:
+                self.store[uri] = result
+            return result
+
+
+def unique_ids(validator, ui, instance, schema):
+    if ui and validator.is_type(instance, "array"):
         non_unique_ids = set()
         all_ids = set()
         for item in instance:
@@ -36,7 +79,7 @@ def uniqueIds(validator, uI, instance, schema):
             else:
                 # if there is any item without an id key, or the item is not a dict
                 # revert to original validator
-                for error in uniqueItemsValidator(validator, uI, instance, schema):
+                for error in uniqueItemsValidator(validator, ui, instance, schema):
                     yield error
                 return
 
@@ -53,7 +96,7 @@ def required_draft4(validator, required, instance, schema):
 
 
 validator.VALIDATORS.pop("patternProperties")
-validator.VALIDATORS["uniqueItems"] = uniqueIds
+validator.VALIDATORS["uniqueItems"] = unique_ids
 validator.VALIDATORS["required"] = required_draft4
 
 
@@ -98,21 +141,6 @@ def schema_dict_fields_generator(schema_dict):
                 yield '/' + property_name
 
 
-class CustomJsonrefLoader(jsonref.JsonLoader):
-    def __init__(self, **kwargs):
-        self.schema_url = kwargs.pop('schema_url', None)
-        super().__init__(**kwargs)
-
-    def get_remote_json(self, uri, **kwargs):
-        # ignore url in ref apart from last part
-        uri = self.schema_url + uri.split('/')[-1]
-        if uri[:4] == 'http':
-            return super().get_remote_json(uri, **kwargs)
-        else:
-            with open(uri) as schema_file:
-                return json.load(schema_file, **kwargs)
-
-
 def get_schema_data(schema_url, schema_name):
     if schema_url[:4] == 'http':
         r = requests.get(schema_url + schema_name)
@@ -144,36 +172,6 @@ def get_counts_additional_fields(schema_url, schema_name, json_data, context, cu
             data_only.add(field)
 
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
-
-
-class CustomRefResolver(RefResolver):
-    def __init__(self, *args, **kw):
-        self.schema_url = kw.pop('schema_url')
-        super().__init__(*args, **kw)
-
-    def resolve_remote(self, uri):
-        uri = self.schema_url + uri.split('/')[-1]
-        document = self.store.get(uri)
-        if document:
-            return document
-
-        if self.schema_url.startswith("http"):
-            return super().resolve_remote(uri)
-        else:
-            with open(uri) as schema_file:
-                result = json.load(schema_file)
-            if self.cache_remote:
-                self.store[uri] = result
-            return result
-
-
-validation_error_lookup = {"date-time": "Date is not in the correct format",
-                           "uri": "Invalid 'uri' found",
-                           "string": "Value is not a string",
-                           "integer": "Value is not a integer",
-                           "number": "Value is not a number",
-                           "object": "Value is not an object",
-                           "array": "Value is not an array"}
 
 
 def get_schema_validation_errors(json_data, schema_url, schema_name, current_app, cell_source_map, heading_source_map):
