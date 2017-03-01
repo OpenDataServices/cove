@@ -96,11 +96,6 @@ class Schema():
         return json.loads(self._release_text)
 
     @property
-    def _deref_release_data(self):
-        return jsonref.loads(self._release_text, loader=CustomJsonrefLoader(schema_url=self.package_host),
-                             object_pairs_hook=OrderedDict)
-
-    @property
     def extensions(self):
         return json.loads(self._package_text).get('extensions')
 
