@@ -92,11 +92,11 @@ class Schema():
         return requests.get(self.release_url).text
 
     @property
-    def ref_release_data(self):
+    def _ref_release_data(self):
         return json.loads(self._release_text)
 
     @property
-    def deref_release_data(self):
+    def _deref_release_data(self):
         return jsonref.loads(self._release_text, loader=CustomJsonrefLoader(schema_url=self.package_host),
                              object_pairs_hook=OrderedDict)
 
@@ -104,9 +104,9 @@ class Schema():
     def extensions(self):
         return json.loads(self._package_text).get('extensions')
 
-    def get_extended_release_data(self, deref=True):
+    def get_release_data(self, deref=True):
+        release_data = deepcopy(self._ref_release_data)
         if self.extensions:
-            extended_release_data = deepcopy(self.ref_release_data)
             for extension_url in self.extensions:
                 i = extension_url.rfind('/')
                 url = '{}/{}'.format(extension_url[:i], 'release-schema.json')
@@ -120,19 +120,18 @@ class Schema():
                 else:
                     self.extension_errors[url] = extension.status_code
                     continue
-                extended_release_data = json_merge_patch(extended_release_data, extension_data)
+                release_data = json_merge_patch(release_data, extension_data)
                 self.extended = True
 
-            if deref:
-                extended_schema_text = json.dumps(extended_release_data)
-                extended_release_data = jsonref.loads(
-                    extended_schema_text,
-                    loader=CustomJsonrefLoader(schema_url=self.package_host),
-                    object_pairs_hook=OrderedDict
-                )
-            return extended_release_data
+        if deref:
+            release_text = json.dumps(release_data)
+            release_data = jsonref.loads(
+                release_text,
+                loader=CustomJsonrefLoader(schema_url=self.package_host),
+                object_pairs_hook=OrderedDict
+            )
 
-        return None
+        return release_data
 
 
 def unique_ids(validator, ui, instance, schema):
