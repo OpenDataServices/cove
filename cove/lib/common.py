@@ -85,6 +85,10 @@ class Schema():
         return self.ref_schema_data.get('extensions') or None
 
     @property
+    def extension_errors(self):
+        return None
+
+    @property
     def deref_schema_data(self):
         return jsonref.loads(self._schema_data, loader=CustomJsonrefLoader(schema_url=self.schema_url),
                              object_pairs_hook=OrderedDict)
@@ -99,13 +103,25 @@ class Schema():
             for url in self.extensions:
                 i = url.rfind('/')
                 url = '{}/{}'.format(url[:i], 'release-schema.json')
-                extension_data = requests.get(url).text
-                schema_data = json_merge_patch(schema_data, extension_data)
+                extension = requests.get(url)
+                if extension.ok:
+                    try:
+                        extension_data = extension.json()
+                    except json.JSONDecodeError:
+                        continue
+                else:
+                    continue
+
+            extended_schema_data = json_merge_patch(schema_data, extension_data)
             if deref:
-                return jsonref.loads(schema_data, loader=CustomJsonrefLoader(schema_url=self.schema_url),
-                                     object_pairs_hook=OrderedDict)
-            else:
-                return json.loads(self._schema_data)
+                extended_schema_text = json.dumps(extended_schema_data)
+                extended_schema_data = jsonref.loads(
+                    extended_schema_text,
+                    loader=CustomJsonrefLoader(schema_url=self.schema_url),
+                    object_pairs_hook=OrderedDict
+                )
+            return extended_schema_data
+
         return None
 
 
