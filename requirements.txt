@@ -1,23 +1,28 @@
 pip==9.0.1
 Django==1.8.17 # rq.filter: <1.9
 -e git+https://github.com/OpenDataServices/flatten-tool.git@e7877fd544f4ca8e6077ba663c1cf4e408479b59#egg=flattentool
-django-bootstrap3==8.0.0
+django-bootstrap3==8.2.1
 django-debug-toolbar==1.6
-requests==2.12.4
+requests==2.13.0
+cached-property==1.3.0
 dealer==2.0.5
 django-environ==0.4.1
-jsonschema==2.5.1
-raven==5.32.0
+jsonschema==2.6.0
+json-merge-patch==0.1
+raven==6.0.0
 strict-rfc3339==0.7
 rfc3987==1.3.7
 rfc6266==0.0.4
 ## The following requirements were added by pip freeze:
+appdirs==1.4.2
 contextlib2==0.5.4
 et-xmlfile==1.0.1
 jdcal==1.3
 jsonref==0.1
 LEPL==5.1.3
 openpyxl==2.3.5
+packaging==16.8
+pyparsing==2.1.10
 pytz==2016.10
 schema==0.6.5
 six==1.10.0

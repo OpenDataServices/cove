@@ -5,9 +5,11 @@ Django<1.9
 django-bootstrap3
 django-debug-toolbar
 requests
+cached-property
 dealer
 django-environ
 jsonschema
+json-merge-patch
 raven
 strict-rfc3339
 rfc3987
