@@ -72,7 +72,7 @@ class Schema():
         self.package_url = urljoin(self.package_host, self.package_name)
 
     @cached_property
-    def _package_data(self):
+    def _package_text(self):
         if urlparse(self.package_url).scheme == 'http':
             return requests.get(self.package_url).text
         else:
@@ -81,9 +81,21 @@ class Schema():
 
     @cached_property
     def release_url(self):
-        releases = self._package_schema_data.get('releases')
-        url = releases and releases.get('items') and releases.get('items').get('$ref')
-        return url
+        releases = json.loads(self._package_text).get('releases')
+        return releases['items']['$ref']
+
+    @cached_property
+    def _release_text(self):
+        return requests.get(self.release_url).text
+
+    @property
+    def ref_release_data(self):
+        return json.loads(self._release_text)
+
+    @property
+    def deref_release_data(self):
+        return jsonref.loads(self._release_text, loader=CustomJsonrefLoader(schema_url=self.package_host),
+                             object_pairs_hook=OrderedDict)
 
     @property
     def extensions(self):
@@ -92,15 +104,6 @@ class Schema():
     @property
     def extension_errors(self):
         return None
-
-    @property
-    def deref_schema_data(self):
-        return jsonref.loads(self._package_data, loader=CustomJsonrefLoader(schema_url=self.package_host),
-                             object_pairs_hook=OrderedDict)
-
-    @property
-    def ref_schema_data(self):
-        return json.loads(self.pkg_schema_data)
 
     def get_extended_schema_data(self, deref=True):
         if self.extensions:
@@ -122,7 +125,7 @@ class Schema():
                 extended_schema_text = json.dumps(extended_schema_data)
                 extended_schema_data = jsonref.loads(
                     extended_schema_text,
-                    loader=CustomJsonrefLoader(schema_url=self.schema_host),
+                    loader=CustomJsonrefLoader(schema_url=self.package_host),
                     object_pairs_hook=OrderedDict
                 )
             return extended_schema_data
