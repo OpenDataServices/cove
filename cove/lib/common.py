@@ -66,18 +66,17 @@ class CustomRefResolver(RefResolver):
 
 
 class Schema():
-    def __init__(self, schema_name, schema_url=None):
-        self.schema_name = schema_name
-        self.schema_url = schema_url or ''
+    def __init__(self, package_name, package_host=None):
+        self.package_name = package_name
+        self.package_host = package_host or ''
+        self.package_url = urljoin(self.package_host, self.package_name)
 
     @cached_property
-    def _schema_data(self):
-        schema_full_url = urljoin(self.schema_url, self.schema_name)
-        if urlparse(schema_full_url).scheme == 'http':
-            r = requests.get(schema_full_url)
-            return r.text
+    def _package_data(self):
+        if urlparse(self.package_url).scheme == 'http':
+            return requests.get(self.package_url).text
         else:
-            with open(schema_full_url) as openfile:
+            with open(self.package_url) as openfile:
                 return openfile.read()
 
     @property
@@ -90,12 +89,12 @@ class Schema():
 
     @property
     def deref_schema_data(self):
-        return jsonref.loads(self._schema_data, loader=CustomJsonrefLoader(schema_url=self.schema_url),
+        return jsonref.loads(self._package_data, loader=CustomJsonrefLoader(schema_url=self.package_host),
                              object_pairs_hook=OrderedDict)
 
     @property
     def ref_schema_data(self):
-        return json.loads(self._schema_data)
+        return json.loads(self.pkg_schema_data)
 
     def get_extended_schema_data(self, deref=True):
         if self.extensions:
@@ -117,7 +116,7 @@ class Schema():
                 extended_schema_text = json.dumps(extended_schema_data)
                 extended_schema_data = jsonref.loads(
                     extended_schema_text,
-                    loader=CustomJsonrefLoader(schema_url=self.schema_url),
+                    loader=CustomJsonrefLoader(schema_url=self.schema_host),
                     object_pairs_hook=OrderedDict
                 )
             return extended_schema_data
