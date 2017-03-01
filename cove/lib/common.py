@@ -79,6 +79,12 @@ class Schema():
             with open(self.package_url) as openfile:
                 return openfile.read()
 
+    @cached_property
+    def release_url(self):
+        releases = self._package_schema_data.get('releases')
+        url = releases and releases.get('items') and releases.get('items').get('$ref')
+        return url
+
     @property
     def extensions(self):
         return self.ref_schema_data.get('extensions') or None
