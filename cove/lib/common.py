@@ -82,7 +82,11 @@ class Schema():
             with open(self.package_url) as openfile:
                 return openfile.read()
 
-    @cached_property
+    @property
+    def _ref_package_data(self):
+        return json.loads(self._package_text)
+
+    @property
     def release_url(self):
         releases = json.loads(self._package_text).get('releases')
         return releases['items']['$ref']
@@ -127,6 +131,18 @@ class Schema():
             )
 
         return release_data
+
+    def get_package_data(self, deref=True):
+        package_data = deepcopy(self._ref_package_data)
+        package_data['releases']['items'].update(self.get_release_data())
+        if deref:
+            package_text = json.dumps(package_data)
+            package_data = jsonref.loads(
+                package_text,
+                loader=CustomJsonrefLoader(schema_url=self.package_host),
+                object_pairs_hook=OrderedDict
+            )
+        return package_data
 
 
 def unique_ids(validator, ui, instance, schema):
