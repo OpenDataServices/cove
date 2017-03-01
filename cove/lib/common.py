@@ -1,6 +1,7 @@
 from cached_property import cached_property
 import collections
 from collections import OrderedDict
+from copy import deepcopy
 import json
 import requests
 import re
@@ -70,6 +71,8 @@ class Schema():
         self.package_name = package_name
         self.package_host = package_host or ''
         self.package_url = urljoin(self.package_host, self.package_name)
+        self.extended = False
+        self.extension_errors = {}
 
     @cached_property
     def _package_text(self):
@@ -101,34 +104,33 @@ class Schema():
     def extensions(self):
         return json.loads(self._package_text).get('extensions')
 
-    @property
-    def extension_errors(self):
-        return None
-
-    def get_extended_schema_data(self, deref=True):
+    def get_extended_release_data(self, deref=True):
         if self.extensions:
-            schema_data = self.ref_schema_data
-            for url in self.extensions:
-                i = url.rfind('/')
-                url = '{}/{}'.format(url[:i], 'release-schema.json')
+            extended_release_data = deepcopy(self.ref_release_data)
+            for extension_url in self.extensions:
+                i = extension_url.rfind('/')
+                url = '{}/{}'.format(extension_url[:i], 'release-schema.json')
                 extension = requests.get(url)
                 if extension.ok:
                     try:
                         extension_data = extension.json()
                     except json.JSONDecodeError:
+                        self.extension_errors[url] = 'Invalid JSON'
                         continue
                 else:
+                    self.extension_errors[url] = extension.status_code
                     continue
+                extended_release_data = json_merge_patch(extended_release_data, extension_data)
+                self.extended = True
 
-            extended_schema_data = json_merge_patch(schema_data, extension_data)
             if deref:
-                extended_schema_text = json.dumps(extended_schema_data)
-                extended_schema_data = jsonref.loads(
+                extended_schema_text = json.dumps(extended_release_data)
+                extended_release_data = jsonref.loads(
                     extended_schema_text,
                     loader=CustomJsonrefLoader(schema_url=self.package_host),
                     object_pairs_hook=OrderedDict
                 )
-            return extended_schema_data
+            return extended_release_data
 
         return None
 
