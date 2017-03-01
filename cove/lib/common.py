@@ -4,6 +4,7 @@ from collections import OrderedDict
 import json
 import requests
 import re
+from urllib.parse import urlparse, urljoin
 
 from flattentool.schema import get_property_type_set
 import json_merge_patch
@@ -71,12 +72,13 @@ class Schema():
 
     @cached_property
     def _schema_data(self):
-        if self.schema_url[:4] == 'http':
-            r = requests.get(self.schema_url + self.schema_name)
+        schema_full_url = urljoin(self.schema_url, self.schema_name)
+        if urlparse(schema_full_url).scheme == 'http':
+            r = requests.get(schema_full_url)
             return r.text
         else:
-            with open(self.schema_url + self.schema_name) as schema_file:
-                return schema_file.read()
+            with open(schema_full_url) as openfile:
+                return openfile.read()
 
     @property
     def extensions(self):
