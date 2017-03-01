@@ -99,7 +99,7 @@ class Schema():
 
     @property
     def extensions(self):
-        return self.ref_schema_data.get('extensions') or None
+        return json.loads(self._package_text).get('extensions')
 
     @property
     def extension_errors(self):
