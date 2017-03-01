@@ -1,3 +1,4 @@
+from cached_property import cached_property
 import collections
 from collections import OrderedDict
 import json
@@ -5,6 +6,7 @@ import requests
 import re
 
 from flattentool.schema import get_property_type_set
+import json_merge_patch
 import jsonref
 from jsonschema import FormatChecker, RefResolver
 from jsonschema.exceptions import ValidationError
@@ -63,12 +65,11 @@ class CustomRefResolver(RefResolver):
 
 
 class Schema():
-    def __init__(self, schema_url, schema_name, extensions=None):
-        self.schema_url = schema_url
+    def __init__(self, schema_name, schema_url=None):
         self.schema_name = schema_name
-        self.extensions = extensions
+        self.schema_url = schema_url or ''
 
-    @property
+    @cached_property
     def _schema_data(self):
         if self.schema_url[:4] == 'http':
             r = requests.get(self.schema_url + self.schema_name)
@@ -78,13 +79,32 @@ class Schema():
                 return schema_file.read()
 
     @property
-    def schema_data(self):
+    def extensions(self):
+        return self.ref_schema_data.get('extensions') or None
+
+    @property
+    def deref_schema_data(self):
         return jsonref.loads(self._schema_data, loader=CustomJsonrefLoader(schema_url=self.schema_url),
                              object_pairs_hook=OrderedDict)
 
     @property
     def ref_schema_data(self):
         return json.loads(self._schema_data)
+
+    def get_extended_schema_data(self, deref=True):
+        if self.extensions:
+            schema_data = self.ref_schema_data
+            for url in self.extensions:
+                i = url.rfind('/')
+                url = '{}/{}'.format(url[:i], 'release-schema.json')
+                extension_data = requests.get(url).text
+                schema_data = json_merge_patch(schema_data, extension_data)
+            if deref:
+                return jsonref.loads(schema_data, loader=CustomJsonrefLoader(schema_url=self.schema_url),
+                                     object_pairs_hook=OrderedDict)
+            else:
+                return json.loads(self._schema_data)
+        return None
 
 
 def unique_ids(validator, ui, instance, schema):
