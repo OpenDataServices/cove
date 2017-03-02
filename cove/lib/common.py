@@ -7,6 +7,7 @@ import requests
 import re
 from urllib.parse import urlparse, urljoin
 
+from django.conf import settings
 from flattentool.schema import get_property_type_set
 import json_merge_patch
 import jsonref
@@ -28,6 +29,9 @@ validation_error_lookup = {"date-time": "Date is not in the correct format",
                            "number": "Value is not a number",
                            "object": "Value is not an object",
                            "array": "Value is not an array"}
+
+config = settings.COVE_CONFIG_BY_NAMESPACE
+ocds_cove_config = {key: config[key]['cove-ocds'] if 'cove-ocds' in config[key] else config[key]['default']for key in config}
 
 
 class CustomJsonrefLoader(jsonref.JsonLoader):
@@ -67,13 +71,28 @@ class CustomRefResolver(RefResolver):
 
 
 class Schema():
-    def __init__(self, package_name, package_host=None, user_data=None):
-        self.package_name = package_name
-        self.package_host = package_host or ''
-        self.package_url = urljoin(self.package_host, self.package_name)
-        self.extensions = user_data and user_data.get('extensions')
+    def __init__(self, user_data=None, package_name=None, package_host=None):
+        self.extensions = []
         self.extension_errors = {}
         self.extended = False
+        self.version = ocds_cove_config['schema_version']  # default version
+        self.version_error = False
+
+        if user_data:
+            user_version = user_data.get('version')
+            if user_version:
+                version_choice = ocds_cove_config['schema_version_choices'].get(user_version)
+                if version_choice:
+                    self.version = user_version
+                    self.package_host = version_choice[1]
+                else:
+                    self.version_error = True
+                    self.package_host = ocds_cove_config['schema_version_choices'][self.version][0]
+        else:
+            self.package_name = package_name or ocds_cove_config['schema_name']['release']
+            self.package_host = package_host or ocds_cove_config['schema_version_choices'][self.version][1]
+
+        self.package_url = urljoin(self.package_host, self.package_name)
 
     @cached_property
     def _package_text(self):
@@ -141,8 +160,6 @@ class Schema():
             )
             package_data['properties']['releases']['items'].update(self.get_release_data())
         return package_data
-
-    
 
 
 def unique_ids(validator, ui, instance, schema):
