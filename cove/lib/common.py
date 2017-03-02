@@ -67,12 +67,13 @@ class CustomRefResolver(RefResolver):
 
 
 class Schema():
-    def __init__(self, package_name, package_host=None):
+    def __init__(self, package_name, package_host=None, user_data=None):
         self.package_name = package_name
         self.package_host = package_host or ''
         self.package_url = urljoin(self.package_host, self.package_name)
-        self.extended = False
+        self.extensions = user_data and user_data.get('extensions')
         self.extension_errors = {}
+        self.extended = False
 
     @cached_property
     def _package_text(self):
@@ -98,10 +99,6 @@ class Schema():
     @property
     def _ref_release_data(self):
         return json.loads(self._release_text)
-
-    @property
-    def extensions(self):
-        return json.loads(self._package_text).get('extensions')
 
     def get_release_data(self, deref=True):
         release_data = deepcopy(self._ref_release_data)
@@ -144,6 +141,8 @@ class Schema():
             )
             package_data['properties']['releases']['items'].update(self.get_release_data())
         return package_data
+
+    
 
 
 def unique_ids(validator, ui, instance, schema):
