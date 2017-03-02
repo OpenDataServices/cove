@@ -88,8 +88,8 @@ class Schema():
 
     @property
     def release_url(self):
-        releases = json.loads(self._package_text).get('releases')
-        return releases['items']['$ref']
+        properties = self._ref_package_data.get('properties')
+        return properties['releases']['items']['$ref']
 
     @cached_property
     def _release_text(self):
@@ -134,14 +134,15 @@ class Schema():
 
     def get_package_data(self, deref=True):
         package_data = deepcopy(self._ref_package_data)
-        package_data['releases']['items'].update(self.get_release_data())
         if deref:
+            package_data['properties']['releases']['items'] = {}
             package_text = json.dumps(package_data)
             package_data = jsonref.loads(
                 package_text,
                 loader=CustomJsonrefLoader(schema_url=self.package_host),
                 object_pairs_hook=OrderedDict
             )
+            package_data['properties']['releases']['items'].update(self.get_release_data())
         return package_data
 
 
