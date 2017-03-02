@@ -1,16 +1,16 @@
-from cached_property import cached_property
 import collections
+import json
+import re
+import requests
+from cached_property import cached_property
 from collections import OrderedDict
 from copy import deepcopy
-import json
-import requests
-import re
 from urllib.parse import urlparse, urljoin
 
-from django.conf import settings
-from flattentool.schema import get_property_type_set
 import json_merge_patch
 import jsonref
+from django.conf import settings
+from flattentool.schema import get_property_type_set
 from jsonschema import FormatChecker, RefResolver
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
