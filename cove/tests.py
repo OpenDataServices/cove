@@ -1,16 +1,18 @@
-import os
-import pytest
-import cove.views as v
-import cove.lib.common as c
-import cove.lib.ocds as ocds
 import json
-from unittest.mock import patch
+import os
 from collections import OrderedDict
-from cove.input.models import SuppliedData
-from cove.lib.converters import convert_json, convert_spreadsheet
+from unittest.mock import patch
+
+import pytest
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 from django.utils.translation import ugettext_lazy
+
+import cove.lib.common as c
+import cove.lib.ocds as ocds
+import cove.views as v
+from cove.input.models import SuppliedData
+from cove.lib.converters import convert_json, convert_spreadsheet
 
 
 EMPTY_RELEASE_AGGREGATE = {

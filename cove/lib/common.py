@@ -2,13 +2,13 @@ import collections
 import json
 import re
 import requests
-from cached_property import cached_property
 from collections import OrderedDict
 from copy import deepcopy
 from urllib.parse import urlparse, urljoin
 
 import json_merge_patch
 import jsonref
+from cached_property import cached_property
 from django.conf import settings
 from flattentool.schema import get_property_type_set
 from jsonschema import FormatChecker, RefResolver
