@@ -8,6 +8,8 @@ from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
 from jsonschema import FormatChecker, RefResolver
 import re
+import csv
+import functools
 
 import cove.lib.tools as tools
 
@@ -146,6 +148,28 @@ def get_counts_additional_fields(schema_url, schema_name, json_data, context, cu
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
 
 
+def add_is_codelist(obj):
+    ''' This is needed so that we can detect enums that are arrays as the jsonschema library does not
+    give you any parent information and the codelist property is on the parent in this case. Only applies to
+    release.tag in core schema at the moment.'''
+
+    for prop, value in obj['properties'].items():
+        if "codelist" in value:
+            if 'array' in value.get('type', ''):
+                value['items']['isCodelist'] = True
+            else:
+                value['isCodelist'] = True
+
+        if value.get('type') == 'object':
+            add_is_codelist(value)
+        elif value.get('type') == 'array' and value['items'].get('properties'):
+            add_is_codelist(value['items'])
+
+    for value in obj.get("definitions", {}).values():
+        if "properties" in value:
+            add_is_codelist(value)
+
+
 class CustomRefResolver(RefResolver):
     def __init__(self, *args, **kw):
         self.schema_url = kw.pop('schema_url')
@@ -158,13 +182,15 @@ class CustomRefResolver(RefResolver):
             return document
 
         if self.schema_url.startswith("http"):
-            return super().resolve_remote(uri)
+            result = super().resolve_remote(uri)
         else:
             with open(uri) as schema_file:
                 result = json.load(schema_file)
-            if self.cache_remote:
-                self.store[uri] = result
-            return result
+        
+        add_is_codelist(result)
+        self.store[uri] = result
+
+        return result
 
 
 validation_error_lookup = {"date-time": "Date is not in the correct format",
@@ -187,7 +213,8 @@ def get_schema_validation_errors(json_data, schema_url, schema_name, current_app
     format_checker = FormatChecker()
     if current_app == 'cove-360':
         format_checker.checkers['date-time'] = (tools.datetime_or_date, ValueError)
-    for n, e in enumerate(validator(schema, format_checker=format_checker, resolver=CustomRefResolver('', schema, schema_url=schema_url)).iter_errors(json_data)):
+    our_validator = validator(schema, format_checker=format_checker, resolver=CustomRefResolver('', schema, schema_url=schema_url))
+    for n, e in enumerate(our_validator.iter_errors(json_data)):
         message = e.message
         path = "/".join(str(item) for item in e.path)
         path_no_number = "/".join(str(item) for item in e.path if not isinstance(item, int))
@@ -230,6 +257,8 @@ def get_schema_validation_errors(json_data, schema_url, schema_name, current_app
                 value['header'] = heading[0][1]
             message = "'{}' is missing but required".format(field_name)
         if e.validator == 'enum':
+            if "isCodelist" in e.schema:
+                continue
             header = value.get('header')
             if not header:
                 header = e.path[-1]
@@ -342,3 +371,110 @@ def get_json_data_deprecated_fields(schema_name, schema_url, json_data):
         deprecated_fields_output[field] = {"paths": slashed_paths, "explanation": paths[1]}
 
     return deprecated_fields_output
+
+
+def _get_schema_codelist_paths(schema_name, schema_url, obj=None, current_path=(), codelist_paths=None):
+    '''Get a dict of codelist paths including the filename and if they are open.
+
+    codelist paths are given as tuples of tuples:
+        {("path", "to", "codelist"): (filename, open?), ..}
+    '''
+    if codelist_paths is None:
+        codelist_paths = {}
+
+    if schema_url:
+        obj = get_schema_data(schema_url, schema_name)
+
+    for prop, value in obj['properties'].items():
+        if current_path:
+            path = current_path + (prop,)
+        else:
+            path = (prop,)
+
+        if "codelist" in value and path not in codelist_paths:
+            codelist_paths[path] = (value['codelist'], value.get('openCodelist', False))
+
+        if value.get('type') == 'object':
+            _get_schema_codelist_paths(None, None, value, path, codelist_paths)
+        elif value.get('type') == 'array' and value['items'].get('properties'):
+            _get_schema_codelist_paths(None, None, value['items'], path, codelist_paths)
+
+    return codelist_paths
+
+
+@functools.lru_cache()
+def _load_codelists(codelist_url, unique_files):
+    codelists = {}
+    for codelist_file in unique_files:
+        try:
+            response = requests.get(codelist_url + codelist_file)
+            reader = csv.DictReader(line.decode("utf8") for line in response.iter_lines())
+            codelists[codelist_file] = {}
+            for record in reader:
+                code = record.get('Code') or record.get('code')
+                title = record.get('Title') or record.get('Title_en')
+                codelists[codelist_file][code] = title
+
+        except requests.exceptions.RequestException:
+            raise
+
+    return codelists
+
+
+def _generate_data_path(json_data, path=()):
+    for key, value in json_data.items():
+        if not value:
+            continue
+        if isinstance(value, list):
+            if isinstance(value[0], dict):
+                for num, item in enumerate(value):
+                    yield from _generate_data_path(item, path + (key, num))
+            else:
+                yield path + (key,), value
+        elif isinstance(value, dict):
+            yield from _generate_data_path(value, path + (key,))
+        else:
+            yield path + (key,), value
+
+
+def get_additional_codelist_values(schema_name, schema_url, codelist_url, json_data):
+    if not codelist_url:
+        return {}
+    codelist_schema_paths = _get_schema_codelist_paths(schema_name, schema_url)
+    unique_files = frozenset(value[0] for value in codelist_schema_paths.values())
+    codelists = _load_codelists(codelist_url, unique_files)
+
+    additional_codelist_values = {}
+    for path, values in _generate_data_path(json_data):
+        if not isinstance(values, list):
+            values = [values]
+
+        path_no_num = tuple(key for key in path if isinstance(key, str))
+
+        if path_no_num not in codelist_schema_paths:
+            continue
+
+        codelist, isopen = codelist_schema_paths[path_no_num]
+
+        codelist_values = codelists.get(codelist)
+        if not codelist_values:
+            continue
+
+        for value in values:
+            if value in codelist_values:
+                continue
+            if path_no_num not in additional_codelist_values:
+                additional_codelist_values[path_no_num] = {
+                    "path": "/".join(path_no_num[:-1]),
+                    "field": path_no_num[-1],
+                    "codelist": codelist,
+                    "codelist_url": codelist_url + codelist,
+                    "isopen": isopen,
+                    "values": set(),
+                    #"location_values": []
+                }
+
+            additional_codelist_values[path_no_num]['values'].add(value)
+            #additional_codelist_values[path_no_num]['location_values'].append((path, value))
+
+    return additional_codelist_values

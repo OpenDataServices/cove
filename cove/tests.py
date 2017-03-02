@@ -538,3 +538,32 @@ def test_data_supplied_schema_version(client):
     assert resp.status_code == 200
     assert resp.context['version_used'] == '1.1'
     assert SuppliedData.objects.get(id=data.id).schema_version == '1.1'
+
+
+def test_get_additional_codelist_values():
+    from django.conf import settings
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_codelists.json')) as fp:
+        json_data_w_additial_codelists = json.load(fp)
+
+    schema_url = settings.COVE_CONFIG_BY_NAMESPACE['schema_version_choices']['cove-ocds']['1.1'][1]
+    codelist_url = settings.COVE_CONFIG_BY_NAMESPACE['schema_codelists']['cove-ocds']['1.1']
+    schema_name = 'release-package-schema.json'
+    additional_codelist_values = c.get_additional_codelist_values(schema_name, schema_url, codelist_url, json_data_w_additial_codelists)
+
+    assert additional_codelist_values == {
+        ('releases', 'tag'): {
+            'codelist': 'releaseTag.csv',
+            'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1-dev/standard/schema/codelists/releaseTag.csv',
+            'field': 'tag',
+            'isopen': False,
+            'path': 'releases',
+            'values': {'oh no'}
+        },
+        ('releases', 'tender', 'items', 'classification', 'scheme'): {
+            'codelist': 'itemClassificationScheme.csv',
+            'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1-dev/standard/schema/codelists/itemClassificationScheme.csv',
+            'field': 'scheme',
+            'isopen': True,
+            'path': 'releases/tender/items/classification',
+            'values': {'GSINS'}}
+    }

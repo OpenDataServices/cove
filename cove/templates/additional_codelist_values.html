@@ -1,0 +1,20 @@
+{% load i18n %}
+{% load cove_tags %}
+
+<table class="table">
+   <thead>
+     <tr> 
+       <th>{% trans 'Field' %}</th> 
+       <th>{% trans 'Path to Field' %}</th> 
+       <th>{% trans 'Codelist' %}</th> 
+       <th>{% trans 'Additional Values Used' %}</th>
+     </tr>
+   </thead>
+   <tbody>
+   {% for path, detail in additional_codelist_values.items %}
+      <tr>
+        <td>{{detail.field}}</td> <td>{{detail.path}}</td> <td><a href="{{detail.codelist_url}}" >{{detail.codelist}}</td> <td>{{detail.values|join:", "}}</td>
+      </tr>
+   {% endfor %}
+   </tbody>
+</table>

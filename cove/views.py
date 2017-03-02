@@ -231,6 +231,9 @@ def explore(request, pk):
             view = 'explore_ocds-record.html'
         else:
             context['releases_aggregates'] = ocds.get_releases_aggregates(json_data, ignore_errors=bool(validation_errors))
+            additional_codelist_values = common.get_additional_codelist_values(schema_name, schema_url, request.cove_config['schema_codelists'].get(schema_version), json_data)
+            context['additional_open_codelist_values'] = {key: value for key, value in additional_codelist_values.items() if value['isopen']}
+            context['additional_closed_codelist_values'] = {key: value for key, value in additional_codelist_values.items() if not value['isopen']}
             view = 'explore_ocds-release.html'
     elif request.current_app == 'cove-360':
         context['grants_aggregates'] = threesixtygiving.get_grants_aggregates(json_data)

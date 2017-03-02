@@ -207,6 +207,8 @@ def test_accordion(server_url, browser, prefix):
                                                   'Validation Errors',
                                                   "'id' is missing but required",
                                                   "Invalid 'uri' found"], True),
+    ('tenders_releases_2_releases_codelists.json', ['oh no',
+                                                    'GSINS'], True),
     # Test UTF-8 support
     ('utf8.json', 'Convert', True),
     # But we expect to see an error message if a file is not well formed JSON at all

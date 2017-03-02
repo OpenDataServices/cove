@@ -100,6 +100,14 @@ COVE_CONFIG_BY_NAMESPACE = {
         'cove-360': None,
         'default': None
     },
+    'schema_codelists': {
+        # {version: codelist_dir}
+        'cove-ocds': OrderedDict((
+            ('1.1', 'https://raw.githubusercontent.com/open-contracting/standard/1.1-dev/standard/schema/codelists/'),
+        )),
+        'cove-360': None,
+        'default': None
+    },
     'item_schema_name': {  # Schema url for an individual item e.g. a single release or grant
         'cove-ocds': 'release-schema.json',
         'cove-360': '360-giving-schema.json',
