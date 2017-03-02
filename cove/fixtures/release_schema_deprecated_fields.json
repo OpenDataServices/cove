@@ -46,6 +46,10 @@
         },
         "planning": { 
             "title": "Planning",
+            "deprecated": {
+                "deprecatedVersion" : "1.1",
+                "description" : "Testing deprecation for objects with '$ref'"
+            },
             "description": "Information from the planning phase of the contracting process. This includes information related to the process of deciding what to contract for, when and how.",
             "$ref": "#/definitions/Planning"
         },

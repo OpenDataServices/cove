@@ -321,12 +321,13 @@ def test_get_schema_deprecated_paths():
     deprecated_paths = c._get_schema_deprecated_paths(schema_name, schema_url)
     expected_results = [
         (('releases', 'initiationType'), ('1.1', 'Not a useful field as always has to be tender')),
+        (('releases', 'planning',), ('1.1', "Testing deprecation for objects with '$ref'")),
         (('releases', 'tender', 'hasEnquiries'), ('1.1', 'Deprecated just for fun')),
         (('releases', 'contracts', 'items', 'quantity'), ('1.1', 'Nobody cares about quantities')),
         (('releases', 'tender', 'items', 'quantity'), ('1.1', 'Nobody cares about quantities')),
         (('releases', 'awards', 'items', 'quantity'), ('1.1', 'Nobody cares about quantities'))
     ]
-    assert len(deprecated_paths) == 5
+    assert len(deprecated_paths) == 6
     for path in expected_results:
         assert path in deprecated_paths
 
