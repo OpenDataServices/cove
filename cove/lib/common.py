@@ -4,6 +4,7 @@ import re
 import requests
 from collections import OrderedDict
 from copy import deepcopy
+from tempfile import NamedTemporaryFile
 from urllib.parse import urlparse, urljoin
 
 import json_merge_patch
@@ -127,7 +128,7 @@ class Schema():
             try:
                 extension = requests.get(url)
             except extension.exceptions.RequestException as e:
-                self.extension_errors[url] = e.__doc__
+                self.extension_errors[url] = str(e)
                 continue
             if extension.ok:
                 try:
@@ -168,6 +169,13 @@ class Schema():
             )
             package_schema_obj['properties']['releases']['items'].update(self.get_release_schema_obj())
         return package_schema_obj
+
+    def get_release_schema_temp_filename(self):
+        file = NamedTemporaryFile('r+U', delete=True)
+        release_schema_str = json.dumps(self.get_release_schema_obj())
+        file.write(release_schema_str)
+        file.flush()
+        return file.name
 
 
 def unique_ids(validator, ui, instance, schema):
