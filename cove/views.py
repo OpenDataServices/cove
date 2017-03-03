@@ -120,9 +120,13 @@ def explore(request, pk):
     else:
         schema_url = request.cove_config['schema_url']
 
+    validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors-2.json')
+
     if 'version' in request.POST and request.POST['version'] != data.schema_version:
         schema_user_choice = request.POST.get('version')
         if schema_user_choice in schema_version_choices:
+            if os.path.exists(validation_errors_path):
+                os.remove(validation_errors_path)
             schema_version = schema_user_choice
             schema_url = schema_version_choices[schema_user_choice][1]
             replace_conversion = True
@@ -205,8 +209,7 @@ def explore(request, pk):
         with open(os.path.join(data.upload_dir(), 'heading_source_map.json')) as heading_source_map_fp:
             heading_source_map = json.load(heading_source_map_fp)
 
-    validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors-2.json')
-    if os.path.exists(validation_errors_path) and not replace_conversion:
+    if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
