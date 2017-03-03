@@ -565,25 +565,29 @@ def test_schema_class_constructor(release_data, version, version_error, extensio
     assert schema.extensions == extensions
 
 
-GOOD_EXT = 'https://raw.githubusercontent.com/open-contracting/ocds_metrics_extension/master/extension.json'
-MISSING_HTTP_EXT = 'missing_http/extension.json'
+METRICS_EXT = 'https://raw.githubusercontent.com/open-contracting/ocds_metrics_extension/master/extension.json'
 UNKNOWN_URL_EXT = 'http://bad-url-for-extensions.com/extension.json'
 NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
 
 
 @pytest.mark.parametrize(('release_data', 'extensions', 'extension_errors', 'extended'), [
     (None, [], {}, False),
-    ({'extensions': [GOOD_EXT]}, [GOOD_EXT], {}, True),
     ({'extensions': [NOT_FOUND_URL_EXT]}, [NOT_FOUND_URL_EXT], {NOT_FOUND_URL_EXT: 404}, False),
     ({'extensions': [UNKNOWN_URL_EXT]}, [UNKNOWN_URL_EXT], {UNKNOWN_URL_EXT: 'Unknown URL'}, False),
-    ({'extensions': [UNKNOWN_URL_EXT, GOOD_EXT]}, [UNKNOWN_URL_EXT, GOOD_EXT], {UNKNOWN_URL_EXT: 'Unknown URL'}, True),
-    ({'extensions': [MISSING_HTTP_EXT]}, [MISSING_HTTP_EXT], {MISSING_HTTP_EXT: "Invalid URL '{0}': No schema supplied. Perhaps you meant http://{0}?".format(MISSING_HTTP_EXT.replace('extension', 'release-schema'))}, False),
-
+    ({'extensions': [METRICS_EXT]}, [METRICS_EXT], {}, True),
+    ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, [UNKNOWN_URL_EXT, METRICS_EXT], {UNKNOWN_URL_EXT: 'Unknown URL'}, True),
 ])
-def test_schema_extensions(release_data, extensions, extension_errors, extended):
+def test_schema_class_extensions(release_data, extensions, extension_errors, extended):
     schema = c.Schema(release_data=release_data)
     assert schema.extensions == extensions
 
-    schema.get_release_schema_obj()
+    release_schema_obj = schema.get_release_schema_obj()
     assert schema.extension_errors == extension_errors
     assert schema.extended == extended
+
+    if extended:
+        assert 'Metric' in release_schema_obj['definitions'].keys()
+        assert release_schema_obj['definitions']['Award']['properties'].get('agreedMetrics')
+    else:
+        assert 'Metric' not in release_schema_obj['definitions'].keys()
+        assert not release_schema_obj['definitions']['Award']['properties'].get('agreedMetrics')
