@@ -183,12 +183,13 @@ class Schema():
             package_schema_obj['properties']['releases']['items'].update(self.get_release_schema_obj())
         return package_schema_obj
 
-    def get_release_schema_temp_filename(self):
+    @property
+    def release_schema_temp_file(self):
         file = NamedTemporaryFile('r+U', delete=True)
         release_schema_str = json.dumps(self.get_release_schema_obj())
         file.write(release_schema_str)
         file.flush()
-        return file.name
+        return file
 
 
 def unique_ids(validator, ui, instance, schema):
