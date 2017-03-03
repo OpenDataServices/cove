@@ -71,31 +71,31 @@ class CustomRefResolver(RefResolver):
 
 
 class Schema():
-    def __init__(self, user_data=None, package_name=None, package_host=None):
+    def __init__(self, release_data=None):
+        self.version = ocds_cove_config['schema_version']  # default version
+        self.version_error = False
+        self.package_host = ocds_cove_config['schema_version_choices'][self.version][1]
         self.extensions = []
         self.extension_errors = {}
         self.extended = False
-        self.version = ocds_cove_config['schema_version']  # default version
-        self.version_error = False
 
-        if user_data:
-            user_version = user_data.get('version')
-            if user_version:
-                version_choice = ocds_cove_config['schema_version_choices'].get(user_version)
-                if version_choice:
-                    self.version = user_version
-                    self.package_host = version_choice[1]
+        if release_data:
+            self.extensions = release_data.get('extensions', [])
+            release_version = release_data.get('version')
+            if release_version:
+                version_choices = ocds_cove_config['schema_version_choices'].get(release_version)
+                if version_choices:
+                    self.version = release_version
+                    self.package_host = version_choices[1]
                 else:
                     self.version_error = True
-                    self.package_host = ocds_cove_config['schema_version_choices'][self.version][0]
-        else:
-            self.package_name = package_name or ocds_cove_config['schema_name']['release']
-            self.package_host = package_host or ocds_cove_config['schema_version_choices'][self.version][1]
+                    self.package_host = ocds_cove_config['schema_version_choices'][self.version][1]
 
+        self.package_name = ocds_cove_config['schema_name']['release']
         self.package_url = urljoin(self.package_host, self.package_name)
 
     @cached_property
-    def _package_text(self):
+    def _package_schema_str(self):
         if urlparse(self.package_url).scheme == 'http':
             return requests.get(self.package_url).text
         else:
@@ -103,24 +103,24 @@ class Schema():
                 return openfile.read()
 
     @property
-    def _ref_package_data(self):
-        return json.loads(self._package_text)
-
-    @property
-    def release_url(self):
-        properties = self._ref_package_data.get('properties')
-        return properties['releases']['items']['$ref']
+    def _package_schema_obj(self):
+        return json.loads(self._package_schema_str)
 
     @cached_property
-    def _release_text(self):
-        return requests.get(self.release_url).text
+    def _release_schema_str(self):
+        return requests.get(self.release_schema_url).text
 
     @property
-    def _ref_release_data(self):
-        return json.loads(self._release_text)
+    def _release_schema_obj(self):
+        return json.loads(self._release_schema_str)
 
-    def get_release_data(self, deref=True):
-        release_data = deepcopy(self._ref_release_data)
+    @property
+    def release_schema_url(self):
+        properties = self._package_schema_obj.get('properties')
+        return properties['releases']['items']['$ref']
+
+    def get_release_schema_obj(self, deref=False):
+        release_schema_obj = deepcopy(self._release_schema_obj)
         if self.extensions:
             for extension_url in self.extensions:
                 i = extension_url.rfind('/')
@@ -135,31 +135,31 @@ class Schema():
                 else:
                     self.extension_errors[url] = extension.status_code
                     continue
-                release_data = json_merge_patch(release_data, extension_data)
+                release_schema_obj = json_merge_patch(release_schema_obj, extension_data)
                 self.extended = True
 
         if deref:
-            release_text = json.dumps(release_data)
-            release_data = jsonref.loads(
+            release_text = json.dumps(release_schema_obj)
+            release_schema_obj = jsonref.loads(
                 release_text,
                 loader=CustomJsonrefLoader(schema_url=self.package_host),
                 object_pairs_hook=OrderedDict
             )
 
-        return release_data
+        return release_schema_obj
 
-    def get_package_data(self, deref=True):
-        package_data = deepcopy(self._ref_package_data)
+    def get_package_schema_obj(self, deref=False):
+        package_schema_obj = deepcopy(self._package_schema)
         if deref:
-            package_data['properties']['releases']['items'] = {}
-            package_text = json.dumps(package_data)
-            package_data = jsonref.loads(
+            package_schema_obj['properties']['releases']['items'] = {}
+            package_text = json.dumps(package_schema_obj)
+            package_schema_obj = jsonref.loads(
                 package_text,
                 loader=CustomJsonrefLoader(schema_url=self.package_host),
                 object_pairs_hook=OrderedDict
             )
-            package_data['properties']['releases']['items'].update(self.get_release_data())
-        return package_data
+            package_schema_obj['properties']['releases']['items'].update(self.get_release_schema_obj())
+        return package_schema_obj
 
 
 def unique_ids(validator, ui, instance, schema):
