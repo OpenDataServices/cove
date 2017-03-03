@@ -559,7 +559,7 @@ def test_schema_class_constructor(release_data, version, version_error, extensio
 
     assert schema.version == version
     assert schema.package_name == name
-    assert schema.package_host == host
+    assert schema.schema_host == host
     assert schema.package_url == url
     assert schema.version_error == version_error
     assert schema.extensions == extensions

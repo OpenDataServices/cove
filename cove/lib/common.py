@@ -76,7 +76,7 @@ class Schema():
         self.version = ocds_cove_config['schema_version']  # default version
         self.version_choices = ocds_cove_config['schema_version_choices']
         self.version_error = False
-        self.package_host = self.version_choices[self.version][1]
+        self.schema_host = self.version_choices[self.version][1]
         self.extensions = []
         self.extension_errors = {}
         self.extended = False
@@ -97,13 +97,13 @@ class Schema():
                 version_choice = self.version_choices.get(release_version)
                 if version_choice:
                     self.version = release_version
-                    self.package_host = version_choice[1]
+                    self.schema_host = version_choice[1]
                 else:
                     self.version_error = True
-                    self.package_host = self.version_choices[self.version][1]
+                    self.schema_host = self.version_choices[self.version][1]
 
         self.package_name = ocds_cove_config['schema_name']['release']
-        self.package_url = urljoin(self.package_host, self.package_name)
+        self.package_url = urljoin(self.schema_host, self.package_name)
 
     @cached_property
     def _package_schema_str(self):
@@ -164,7 +164,7 @@ class Schema():
             release_text = json.dumps(release_schema_obj)
             release_schema_obj = jsonref.loads(
                 release_text,
-                loader=CustomJsonrefLoader(schema_url=self.package_host),
+                loader=CustomJsonrefLoader(schema_url=self.schema_host),
                 object_pairs_hook=OrderedDict
             )
 
@@ -177,7 +177,7 @@ class Schema():
             package_text = json.dumps(package_schema_obj)
             package_schema_obj = jsonref.loads(
                 package_text,
-                loader=CustomJsonrefLoader(schema_url=self.package_host),
+                loader=CustomJsonrefLoader(schema_url=self.schema_host),
                 object_pairs_hook=OrderedDict
             )
             package_schema_obj['properties']['releases']['items'].update(self.get_release_schema_obj())
