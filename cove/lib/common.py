@@ -103,6 +103,8 @@ class Schema():
                     self.version_error = True
                     self.schema_host = self.version_choices[self.version][1]
 
+        self.record_schema_name = ocds_cove_config['schema_name']['release']
+        self.record_schema_url = urljoin(self.schema_host, self.record_schema_name)
         self.package_schema_name = ocds_cove_config['schema_name']['release']
         self.package_schema_url = urljoin(self.schema_host, self.package_schema_name)
         self.release_schema_name = ocds_cove_config['item_schema_name']
