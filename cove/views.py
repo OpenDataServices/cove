@@ -73,7 +73,7 @@ def explore(request, pk):
 
     try:
         data = SuppliedData.objects.get(pk=pk)
-    except (SuppliedData.DoesNotExist, ValueError):  # Catches: Primary key does not exist, and, badly formed hexadecimal UUID string
+    except (SuppliedData.DoesNotExist, ValueError):  # Catches: Primary key does not exist, and badly formed hexadecimal UUID string
         return render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
             'link': 'cove:index',
@@ -88,7 +88,9 @@ def explore(request, pk):
             'sub_title': _('Sorry, the page you are looking for is not available'),
             'link': 'cove:index',
             'link_text': _('Go to Home page'),
-            'msg': _('The data you were hoping to explore no longer exists.\n\nThis is because all data suplied to this website is automatically deleted after 7 days, and therefore the analysis of that data is no longer available.')
+            'msg': _('The data you were hoping to explore no longer exists.\n\nThis is because all '
+                     'data suplied to this website is automatically deleted after 7 days, and therefore '
+                     'the analysis of that data is no longer available.')
         }, status=404)
 
     file_type = get_file_type(data.original_file)
@@ -138,7 +140,10 @@ def explore(request, pk):
                 'link': 'cove:explore',
                 'link_args': pk,
                 'link_text': _('Try Again'),
-                'msg': _('We think you tried to run your data against an unrecognised version of the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a recognised choice for the schema version'.format(schema_version_user_choice)),
+                'msg': _('We think you tried to run your data against an unrecognised version of the '
+                         'schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
+                         '</span> <strong>Error message:</strong> <em>{}</em> is not a recognised choice for '
+                         'the schema version'.format(schema_version_user_choice)),
                 'error': _('{} is not a valid schema version'.format(schema_version_user_choice))
             })
 
@@ -152,7 +157,9 @@ def explore(request, pk):
                     'sub_title': _("Sorry we can't process that data"),
                     'link': 'cove:index',
                     'link_text': _('Try Again'),
-                    'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> {}'.format(err)),
+                    'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.'
+                             '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
+                             '</span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
 
@@ -168,7 +175,10 @@ def explore(request, pk):
                             'sub_title': _("Wrong schema version"),
                             'link': 'cove:index',
                             'link_text': _('Try Again'),
-                            'msg': _('The value for the <em>"version"</em> field in your data is not a recognised OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a recognised schema version choice'.format(version_field)),
+                            'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
+                                     'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
+                                     'aria-hidden="true"></span> <strong>Error message: </strong> <em>{}</em> '
+                                     'is not a recognised schema version choice'.format(version_field)),
                             'error': _('{} is not a valid schema version'.format(version_field))
                         })
             except AttributeError:
