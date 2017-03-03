@@ -127,20 +127,23 @@ class Schema():
 
             try:
                 extension = requests.get(url)
-            except extension.exceptions.RequestException as e:
-                self.extension_errors[url] = str(e)
+            except requests.exceptions.RequestException as e:
+                error_message = format(e)
+                if 'Name or service not known' in error_message:
+                    error_message = 'Unknown URL'
+                self.extension_errors[extension_url] = error_message
                 continue
             if extension.ok:
                 try:
                     extension_data = extension.json()
                 except json.JSONDecodeError:
-                    self.extension_errors[url] = 'Invalid JSON'
+                    self.extension_errors[extension_url] = 'Invalid JSON'
                     continue
             else:
-                self.extension_errors[url] = extension.status_code
+                self.extension_errors[extension_url] = extension.status_code
                 continue
 
-            schema_obj = json_merge_patch(schema_obj, extension_data)
+            schema_obj = json_merge_patch.merge(schema_obj, extension_data)
             self.extended = True
 
     def get_release_schema_obj(self, deref=False):

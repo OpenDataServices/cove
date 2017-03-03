@@ -14,7 +14,6 @@ import cove.views as v
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
 
-DEFAULT_OCDS_VERSION = c.ocds_cove_config['schema_version']
 
 EMPTY_RELEASE_AGGREGATE = {
     'award_doc_count': 0,
@@ -542,6 +541,9 @@ def test_data_supplied_schema_version(client):
     assert SuppliedData.objects.get(id=data.id).schema_version == '1.1'
 
 
+DEFAULT_OCDS_VERSION = c.ocds_cove_config['schema_version']
+
+
 @pytest.mark.parametrize(('release_data', 'version', 'version_error', 'extensions'), [
     (None, DEFAULT_OCDS_VERSION, False, []),
     ({'version': '1.1', 'releases': [{'ocid': 'xx'}]}, '1.1', False, []),
@@ -561,3 +563,27 @@ def test_schema_class_constructor(release_data, version, version_error, extensio
     assert schema.package_url == url
     assert schema.version_error == version_error
     assert schema.extensions == extensions
+
+
+GOOD_EXT = 'https://raw.githubusercontent.com/open-contracting/ocds_metrics_extension/master/extension.json'
+MISSING_HTTP_EXT = 'missing_http/extension.json'
+UNKNOWN_URL_EXT = 'http://bad-url-for-extensions.com/extension.json'
+NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
+
+
+@pytest.mark.parametrize(('release_data', 'extensions', 'extension_errors', 'extended'), [
+    (None, [], {}, False),
+    ({'extensions': [GOOD_EXT]}, [GOOD_EXT], {}, True),
+    ({'extensions': [NOT_FOUND_URL_EXT]}, [NOT_FOUND_URL_EXT], {NOT_FOUND_URL_EXT: 404}, False),
+    ({'extensions': [UNKNOWN_URL_EXT]}, [UNKNOWN_URL_EXT], {UNKNOWN_URL_EXT: 'Unknown URL'}, False),
+    ({'extensions': [UNKNOWN_URL_EXT, GOOD_EXT]}, [UNKNOWN_URL_EXT, GOOD_EXT], {UNKNOWN_URL_EXT: 'Unknown URL'}, True),
+    ({'extensions': [MISSING_HTTP_EXT]}, [MISSING_HTTP_EXT], {MISSING_HTTP_EXT: "Invalid URL '{0}': No schema supplied. Perhaps you meant http://{0}?".format(MISSING_HTTP_EXT.replace('extension', 'release-schema'))}, False),
+
+])
+def test_schema_extensions(release_data, extensions, extension_errors, extended):
+    schema = c.Schema(release_data=release_data)
+    assert schema.extensions == extensions
+
+    schema.get_release_schema_obj()
+    assert schema.extension_errors == extension_errors
+    assert schema.extended == extended
