@@ -72,25 +72,35 @@ class CustomRefResolver(RefResolver):
 
 
 class Schema():
-    def __init__(self, release_data=None):
+    def __init__(self, release_data=None, version=None):
         self.version = ocds_cove_config['schema_version']  # default version
+        self.version_choices = ocds_cove_config['schema_version_choices']
         self.version_error = False
-        self.package_host = ocds_cove_config['schema_version_choices'][self.version][1]
+        self.package_host = self.version_choices[self.version][1]
         self.extensions = []
         self.extension_errors = {}
         self.extended = False
 
+        if version:
+            try:
+                self.version_choices[version]
+                self.version = version
+            except KeyError:
+                version = None
+                print('Not a valid value for `version` argument: using version in the release '
+                      'data or the default version if version is missing in the release data')
+
         if release_data:
             self.extensions = release_data.get('extensions', [])
-            release_version = release_data.get('version')
+            release_version = version or release_data.get('version')
             if release_version:
-                version_choices = ocds_cove_config['schema_version_choices'].get(release_version)
-                if version_choices:
+                version_choice = self.version_choices.get(release_version)
+                if version_choice:
                     self.version = release_version
-                    self.package_host = version_choices[1]
+                    self.package_host = version_choice[1]
                 else:
                     self.version_error = True
-                    self.package_host = ocds_cove_config['schema_version_choices'][self.version][1]
+                    self.package_host = self.version_choices[self.version][1]
 
         self.package_name = ocds_cove_config['schema_name']['release']
         self.package_url = urljoin(self.package_host, self.package_name)
