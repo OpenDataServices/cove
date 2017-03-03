@@ -131,13 +131,14 @@ def get_prefixes(distinct_identifiers):
 
 
 def check_charity_number(charity_number):
+    charity_number = str(charity_number)
     is_int = True
     try:
-        int(str(charity_number))
+        int(charity_number)
     except ValueError:
         is_int = False
 
-    if len(str(charity_number)) in (6, 7) and is_int:
+    if len(charity_number) in (6, 7) and is_int:
         return True
 
     return False
@@ -151,9 +152,7 @@ def check_company_number(company_number):
     except ValueError:
         return False
 
-    if company_number[:2].isalpha() or company_number[:2].isdigit():
-        return True
-    return False
+    return True
 
 
 class AdditionalTest():
@@ -278,6 +277,9 @@ class RecipientOrgCharityNumber(AdditionalTest):
             count_failure = False
             for num, organization in enumerate(grant['recipientOrganization']):
                 charity_number = organization['charityNumber']
+                charity_number = str(charity_number)
+                if charity_number[:2].isalpha():
+                    charity_number = charity_number[2:]
                 if not check_charity_number(charity_number):
                     self.failed = True
                     count_failure = True
