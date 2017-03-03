@@ -119,25 +119,33 @@ class Schema():
         properties = self._package_schema_obj.get('properties')
         return properties['releases']['items']['$ref']
 
+    def apply_extensions(self, schema_obj):
+        for extension_url in self.extensions:
+            i = extension_url.rfind('/')
+            url = '{}/{}'.format(extension_url[:i], 'release-schema.json')
+
+            try:
+                extension = requests.get(url)
+            except extension.exceptions.RequestException as e:
+                self.extension_errors[url] = e.__doc__
+                continue
+            if extension.ok:
+                try:
+                    extension_data = extension.json()
+                except json.JSONDecodeError:
+                    self.extension_errors[url] = 'Invalid JSON'
+                    continue
+            else:
+                self.extension_errors[url] = extension.status_code
+                continue
+
+            schema_obj = json_merge_patch(schema_obj, extension_data)
+            self.extended = True
+
     def get_release_schema_obj(self, deref=False):
         release_schema_obj = deepcopy(self._release_schema_obj)
         if self.extensions:
-            for extension_url in self.extensions:
-                i = extension_url.rfind('/')
-                url = '{}/{}'.format(extension_url[:i], 'release-schema.json')
-                extension = requests.get(url)
-                if extension.ok:
-                    try:
-                        extension_data = extension.json()
-                    except json.JSONDecodeError:
-                        self.extension_errors[url] = 'Invalid JSON'
-                        continue
-                else:
-                    self.extension_errors[url] = extension.status_code
-                    continue
-                release_schema_obj = json_merge_patch(release_schema_obj, extension_data)
-                self.extended = True
-
+            self.apply_extensions(release_schema_obj)
         if deref:
             release_text = json.dumps(release_schema_obj)
             release_schema_obj = jsonref.loads(
