@@ -108,13 +108,14 @@ def explore(request, pk):
     replace_conversion = False
 
     if request.current_app == 'cove-ocds':
-        schema_version = data.schema_version or request.cove_config['schema_version']
-        schema_version_choices = request.cove_config['schema_version_choices']
+        schema_obj = common.Schema(data)
+        schema_version = schema_obj.version
+        schema_version_choices = schema_obj.version_choices
         schema_version_display_choices = tuple(
             (version, display_url[0]) for version, display_url in schema_version_choices.items()
-        )  # ((version, display), ...)
-        schema_user_choice = None
-        schema_url = schema_version_choices[schema_version][1]
+        )
+        schema_version_user_choice = None
+        schema_url = schema_obj.schema_host
         context.update({
             "data_uuid": pk,
             "version_display_choices": schema_version_display_choices
@@ -123,10 +124,11 @@ def explore(request, pk):
         schema_url = request.cove_config['schema_url']
 
     if 'version' in request.POST and request.POST['version'] != data.schema_version:
-        schema_user_choice = request.POST.get('version')
-        if schema_user_choice in schema_version_choices:
-            schema_version = schema_user_choice
-            schema_url = schema_version_choices[schema_user_choice][1]
+        schema_version_user_choice = request.POST.get('version')
+        if schema_version_user_choice in schema_version_choices:
+            schema_obj = common.Schema(data, version=schema_version_user_choice)
+            schema_version = schema_obj.version
+            schema_url = schema_obj.schema_host
             replace_conversion = True
         else:
             # This shouldn't really happen unless the user resends manually
@@ -136,8 +138,8 @@ def explore(request, pk):
                 'link': 'cove:explore',
                 'link_args': pk,
                 'link_text': _('Try Again'),
-                'msg': _('We think you tried to run your data against an unrecognised version of the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a recognised choice for the schema version'.format(schema_user_choice)),
-                'error': _('{} is not a valid schema version'.format(schema_user_choice))
+                'msg': _('We think you tried to run your data against an unrecognised version of the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is not a recognised choice for the schema version'.format(schema_version_user_choice)),
+                'error': _('{} is not a valid schema version'.format(schema_version_user_choice))
             })
 
     if file_type == 'json':
@@ -153,7 +155,8 @@ def explore(request, pk):
                     'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
-        if request.current_app == 'cove-ocds' and not schema_user_choice:
+
+        if request.current_app == 'cove-ocds' and not schema_version_user_choice:
             try:
                 version_field = json_data.get('version')
                 if version_field:
@@ -170,6 +173,7 @@ def explore(request, pk):
                         })
             except AttributeError:
                 pass
+
         if request.current_app == 'cove-ocds' and 'records' in json_data:
             context['conversion'] = None
         else:
@@ -178,10 +182,18 @@ def explore(request, pk):
             # create a conversion if there wasn't one requested by the user.
             if not os.path.exists(converted_path + '.xlsx'):
                 replace_conversion = False
-            context.update(convert_json(request, data, schema_url=schema_url, replace=replace_conversion))
+            if schema_obj.extended:
+                schema_location = schema_obj.release_schema_temp_file.name
+            else:
+                schema_location = schema_obj.release_schema_url
+            context.update(convert_json(request, data, schema_url=schema_location, replace=replace_conversion))
     else:
+        if schema_obj.extended:
+            schema_location = schema_obj.release_schema_temp_file.name
+        else:
+            schema_location = schema_obj.release_schema_url
         # Always replace json conversion when user chooses a different schema version.
-        context.update(convert_spreadsheet(request, data, file_type, schema_url=schema_url, replace=replace_conversion))
+        context.update(convert_spreadsheet(request, data, file_type, schema_url=schema_location, replace=replace_conversion))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
