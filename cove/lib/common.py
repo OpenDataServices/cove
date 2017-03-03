@@ -85,6 +85,7 @@ class Schema():
             try:
                 self.version_choices[version]
                 self.version = version
+                self.schema_host = self.version_choices[self.version][1]
             except KeyError:
                 version = None
                 print('Not a valid value for `version` argument: using version in the release '
@@ -102,15 +103,17 @@ class Schema():
                     self.version_error = True
                     self.schema_host = self.version_choices[self.version][1]
 
-        self.package_name = ocds_cove_config['schema_name']['release']
-        self.package_url = urljoin(self.schema_host, self.package_name)
+        self.package_schema_name = ocds_cove_config['schema_name']['release']
+        self.package_schema_url = urljoin(self.schema_host, self.package_schema_name)
+        self.release_schema_name = ocds_cove_config['item_schema_name']
+        self.release_schema_url = urljoin(self.schema_host, self.release_schema_name)
 
     @cached_property
     def _package_schema_str(self):
-        if urlparse(self.package_url).scheme == 'http':
-            return requests.get(self.package_url).text
+        if urlparse(self.package_schema_url).scheme == 'http':
+            return requests.get(self.package_schema_url).text
         else:
-            with open(self.package_url) as openfile:
+            with open(self.package_schema_url) as openfile:
                 return openfile.read()
 
     @property
@@ -124,11 +127,6 @@ class Schema():
     @property
     def _release_schema_obj(self):
         return json.loads(self._release_schema_str)
-
-    @property
-    def release_schema_url(self):
-        properties = self._package_schema_obj.get('properties')
-        return properties['releases']['items']['$ref']
 
     def apply_extensions(self, schema_obj):
         for extension_url in self.extensions:

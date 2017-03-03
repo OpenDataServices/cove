@@ -544,23 +544,27 @@ def test_data_supplied_schema_version(client):
 DEFAULT_OCDS_VERSION = c.ocds_cove_config['schema_version']
 
 
-@pytest.mark.parametrize(('release_data', 'version', 'version_error', 'extensions'), [
-    (None, DEFAULT_OCDS_VERSION, False, []),
-    ({'version': '1.1', 'releases': [{'ocid': 'xx'}]}, '1.1', False, []),
-    ({'version': '1.bad', 'releases': [{'ocid': 'xx'}]}, DEFAULT_OCDS_VERSION, True, []),
-    ({'extensions': ['a', 'b', 'c'], 'releases': [{'ocid': 'xx'}]}, DEFAULT_OCDS_VERSION, False, ['a', 'b', 'c']),
-    ({'version': '1.0', 'extensions': ['a', 'b'], 'releases': [{'ocid': 'xx'}]}, '1.0', False, ['a', 'b'])
+@pytest.mark.parametrize(('release_data', 'version_choice', 'version', 'version_error', 'extensions'), [
+    (None, None, DEFAULT_OCDS_VERSION, False, []),
+    (None, '1.1', '1.1', False, []),
+    ({'version': '1.1', 'releases': [{'ocid': 'xx'}]}, None, '1.1', False, []),
+    ({'version': '1.0', 'releases': [{'ocid': 'xx'}]}, '1.1', '1.1', False, []),
+    ({'version': '1.1', 'releases': [{'ocid': 'xx'}]}, '1.bad', '1.1', False, []),
+    ({'version': '1.bad', 'releases': [{'ocid': 'xx'}]}, '1.wrong', DEFAULT_OCDS_VERSION, True, []),
+    ({'version': '1.bad', 'releases': [{'ocid': 'xx'}]}, None, DEFAULT_OCDS_VERSION, True, []),
+    ({'extensions': ['a', 'b', 'c'], 'releases': [{'ocid': 'xx'}]}, None, DEFAULT_OCDS_VERSION, False, ['a', 'b', 'c']),
+    ({'version': '1.1', 'extensions': ['a', 'b'], 'releases': [{'ocid': 'xx'}]}, None, '1.1', False, ['a', 'b'])
 ])
-def test_schema_class_constructor(release_data, version, version_error, extensions):
-    schema = c.Schema(release_data=release_data)
+def test_schema_class_constructor(release_data, version_choice, version, version_error, extensions):
+    schema = c.Schema(release_data=release_data, version=version_choice)
     name = c.ocds_cove_config['schema_name']['release']
     host = c.ocds_cove_config['schema_version_choices'][version][1]
     url = host + name
 
     assert schema.version == version
-    assert schema.package_name == name
+    assert schema.package_schema_name == name
     assert schema.schema_host == host
-    assert schema.package_url == url
+    assert schema.package_schema_url == url
     assert schema.version_error == version_error
     assert schema.extensions == extensions
 
