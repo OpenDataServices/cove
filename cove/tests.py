@@ -544,19 +544,22 @@ def test_data_supplied_schema_version(client):
 DEFAULT_OCDS_VERSION = c.ocds_cove_config['schema_version']
 
 
-@pytest.mark.parametrize(('release_data', 'version_choice', 'version', 'version_error', 'extensions'), [
-    (None, None, DEFAULT_OCDS_VERSION, False, []),
-    (None, '1.1', '1.1', False, []),
-    ({'version': '1.1', 'releases': [{'ocid': 'xx'}]}, None, '1.1', False, []),
-    ({'version': '1.0', 'releases': [{'ocid': 'xx'}]}, '1.1', '1.1', False, []),
-    ({'version': '1.1', 'releases': [{'ocid': 'xx'}]}, '1.bad', '1.1', False, []),
-    ({'version': '1.bad', 'releases': [{'ocid': 'xx'}]}, '1.wrong', DEFAULT_OCDS_VERSION, True, []),
-    ({'version': '1.bad', 'releases': [{'ocid': 'xx'}]}, None, DEFAULT_OCDS_VERSION, True, []),
-    ({'extensions': ['a', 'b', 'c'], 'releases': [{'ocid': 'xx'}]}, None, DEFAULT_OCDS_VERSION, False, ['a', 'b', 'c']),
-    ({'version': '1.1', 'extensions': ['a', 'b'], 'releases': [{'ocid': 'xx'}]}, None, '1.1', False, ['a', 'b'])
+@pytest.mark.parametrize(('version_arg', 'extensions_arg', 'release_data', 'version', 'version_error', 'extensions'), [
+    (None, None, None, DEFAULT_OCDS_VERSION, False, []),
+    ('1.1', None, None, '1.1', False, []),
+    (None, None, {'version': '1.1'}, '1.1', False, []),
+    (None, ['a', 'b'], None, DEFAULT_OCDS_VERSION, False, ['a', 'b']),
+    (None, ['a', 'b'], {'extensions': ['c', 'd']}, DEFAULT_OCDS_VERSION, False, ['a', 'b']),
+    ('1.1', None, {'version': '1.0'}, '1.1', False, []),
+    ('1.1', None, {'version': '1.0'}, '1.1', False, []),
+    ('1.bad', None, {'version': '1.1'}, '1.1', False, []),
+    ('1.wrong', None, {'version': '1.bad'}, DEFAULT_OCDS_VERSION, True, []),
+    (None, None, {'version': '1.bad'}, DEFAULT_OCDS_VERSION, True, []),
+    (None, None, {'extensions': ['a', 'b']}, DEFAULT_OCDS_VERSION, False, ['a', 'b']),
+    (None, None, {'version': '1.1', 'extensions': ['a', 'b']}, '1.1', False, ['a', 'b'])
 ])
-def test_schema_class_constructor(release_data, version_choice, version, version_error, extensions):
-    schema = c.Schema(release_data=release_data, version=version_choice)
+def test_schema_class_constructor(version_arg, extensions_arg, release_data, version, version_error, extensions):
+    schema = c.Schema(version=version_arg, extensions=extensions_arg, release_data=release_data)
     name = c.ocds_cove_config['schema_name']['release']
     host = c.ocds_cove_config['schema_version_choices'][version][1]
     url = host + name

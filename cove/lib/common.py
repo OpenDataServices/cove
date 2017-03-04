@@ -72,12 +72,12 @@ class CustomRefResolver(RefResolver):
 
 
 class Schema():
-    def __init__(self, release_data=None, version=None):
+    def __init__(self, version=None, extensions=None, release_data=None):
         self.version = ocds_cove_config['schema_version']  # default version
         self.version_choices = ocds_cove_config['schema_version_choices']
         self.version_error = False
         self.schema_host = self.version_choices[self.version][1]
-        self.extensions = []
+        self.extensions = extensions or []
         self.extension_errors = {}
         self.extended = False
 
@@ -92,7 +92,7 @@ class Schema():
                       'data or the default version if version is missing in the release data')
 
         if release_data:
-            self.extensions = release_data.get('extensions', [])
+            self.extensions = extensions or release_data.get('extensions', [])
             release_version = version or release_data.get('version')
             if release_version:
                 version_choice = self.version_choices.get(release_version)
