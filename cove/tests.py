@@ -544,21 +544,23 @@ def test_data_supplied_schema_version(client):
 DEFAULT_OCDS_VERSION = c.ocds_cove_config['schema_version']
 
 
-@pytest.mark.parametrize(('version_arg', 'extensions_arg', 'release_data', 'version', 'version_error', 'extensions'), [
-    (None, None, None, DEFAULT_OCDS_VERSION, False, []),
-    ('1.1', None, None, '1.1', False, []),
-    (None, None, {'version': '1.1'}, '1.1', False, []),
-    (None, ['a', 'b'], None, DEFAULT_OCDS_VERSION, False, ['a', 'b']),
-    (None, ['a', 'b'], {'extensions': ['c', 'd']}, DEFAULT_OCDS_VERSION, False, ['a', 'b']),
-    ('1.1', None, {'version': '1.0'}, '1.1', False, []),
-    ('1.1', None, {'version': '1.0'}, '1.1', False, []),
-    ('1.bad', None, {'version': '1.1'}, '1.1', False, []),
-    ('1.wrong', None, {'version': '1.bad'}, DEFAULT_OCDS_VERSION, True, []),
-    (None, None, {'version': '1.bad'}, DEFAULT_OCDS_VERSION, True, []),
-    (None, None, {'extensions': ['a', 'b']}, DEFAULT_OCDS_VERSION, False, ['a', 'b']),
-    (None, None, {'version': '1.1', 'extensions': ['a', 'b']}, '1.1', False, ['a', 'b'])
+@pytest.mark.parametrize(('version_arg', 'extensions_arg', 'release_data', 'version',
+                          'invalid_version_argument', 'invalid_version_data', 'extensions'), [
+    (None, None, None, DEFAULT_OCDS_VERSION, False, False, []),
+    ('1.1', None, None, '1.1', False, False, []),
+    (None, None, {'version': '1.1'}, '1.1', False, False, []),
+    (None, ['a', 'b'], None, DEFAULT_OCDS_VERSION, False, False, ['a', 'b']),
+    (None, ['a', 'b'], {'extensions': ['c', 'd']}, DEFAULT_OCDS_VERSION, False, False, ['a', 'b']),
+    ('1.1', None, {'version': '1.0'}, '1.1', False, False, []),
+    ('1.1', None, {'version': '1.0'}, '1.1', False, False, []),
+    ('1.bad', None, {'version': '1.1'}, '1.1', True, False, []),
+    ('1.wrong', None, {'version': '1.bad'}, DEFAULT_OCDS_VERSION, True, True, []),
+    (None, None, {'version': '1.bad'}, DEFAULT_OCDS_VERSION, False, True, []),
+    (None, None, {'extensions': ['a', 'b']}, DEFAULT_OCDS_VERSION, False, False, ['a', 'b']),
+    (None, None, {'version': '1.1', 'extensions': ['a', 'b']}, '1.1', False, False, ['a', 'b'])
 ])
-def test_schema_class_constructor(version_arg, extensions_arg, release_data, version, version_error, extensions):
+def test_schema_class_constructor(version_arg, extensions_arg, release_data, version,
+                                  invalid_version_argument, invalid_version_data, extensions):
     schema = c.Schema(version=version_arg, extensions=extensions_arg, release_data=release_data)
     name = c.ocds_cove_config['schema_name']['release']
     host = c.ocds_cove_config['schema_version_choices'][version][1]
@@ -568,7 +570,8 @@ def test_schema_class_constructor(version_arg, extensions_arg, release_data, ver
     assert schema.package_schema_name == name
     assert schema.schema_host == host
     assert schema.package_schema_url == url
-    assert schema.version_error == version_error
+    assert schema.invalid_version_argument == invalid_version_argument
+    assert schema.invalid_version_data == invalid_version_data
     assert schema.extensions == extensions
 
 
@@ -580,9 +583,9 @@ NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
 @pytest.mark.parametrize(('release_data', 'extensions', 'extension_errors', 'extended'), [
     (None, [], {}, False),
     ({'extensions': [NOT_FOUND_URL_EXT]}, [NOT_FOUND_URL_EXT], {NOT_FOUND_URL_EXT: 404}, False),
-    ({'extensions': [UNKNOWN_URL_EXT]}, [UNKNOWN_URL_EXT], {UNKNOWN_URL_EXT: 'Unknown URL'}, False),
+    ({'extensions': [UNKNOWN_URL_EXT]}, [UNKNOWN_URL_EXT], {UNKNOWN_URL_EXT: 'Fetching failed'}, False),
     ({'extensions': [METRICS_EXT]}, [METRICS_EXT], {}, True),
-    ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, [UNKNOWN_URL_EXT, METRICS_EXT], {UNKNOWN_URL_EXT: 'Unknown URL'}, True),
+    ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, [UNKNOWN_URL_EXT, METRICS_EXT], {UNKNOWN_URL_EXT: 'Fetching failed'}, True),
 ])
 def test_schema_class_extensions(release_data, extensions, extension_errors, extended):
     schema = c.Schema(release_data=release_data)

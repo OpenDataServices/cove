@@ -148,11 +148,8 @@ class Schema():
 
             try:
                 extension = requests.get(url)
-            except requests.exceptions.RequestException as e:
-                error_message = format(e)
-                if 'Name or service not known' in error_message:
-                    error_message = 'Unknown URL'
-                self.extension_errors[extension_url] = error_message
+            except requests.exceptions.RequestException:
+                self.extension_errors[extension_url] = 'Fetching failed'
                 continue
             if extension.ok:
                 try:
