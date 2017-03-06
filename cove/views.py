@@ -115,9 +115,7 @@ def explore(request, pk):
 
     # OCDS only
     replace_conversion = False
-    schema_version_user_choice = request.request.POST.get('version')
-    if schema_version_user_choice and schema_version_user_choice == data.schema_version:
-        schema_version_user_choice = None
+    schema_version_user_choice = request.POST.get('version')
 
     if file_type == 'json':
         # open the data first so we can inspect for record package
@@ -135,8 +133,8 @@ def explore(request, pk):
                     'error': format(err)
                 })
             if request.current_app == 'cove-ocds':
-                schema_obj = Schema(version=schema_version_user_choice, release_data=json_data)
                 if schema_version_user_choice:
+                    schema_obj = Schema(version=schema_version_user_choice)
                     if schema_obj.invalid_version_argument:
                         # This shouldn't really happen unless the user resends manually
                         # the POST request with random data.
@@ -151,19 +149,23 @@ def explore(request, pk):
                                      'not a recognised choice for the schema version'.format(schema_version_user_choice)),
                             'error': _('{} is not a valid schema version'.format(schema_version_user_choice))
                         })
-                    else:
-                        replace_conversion = True
-                if schema_obj.invalid_version_data:
-                    raise CoveInputDataError(context={
-                        'sub_title': _("Wrong schema version"),
-                        'link': 'cove:index',
-                        'link_text': _('Try Again'),
-                        'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
-                                 'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
-                                 'aria-hidden="true"></span> <strong>Error message: </strong> <em>{}</em> '
-                                 'is not a recognised schema version choice'.format(json_data.get('version'))),
-                        'error': _('{} is not a valid schema version'.format(json_data.get('version')))
-                    })
+                elif json_data.get('version'):
+                    schema_obj = Schema(release_data=json_data)
+                    if schema_obj.invalid_version_data:
+                        raise CoveInputDataError(context={
+                            'sub_title': _("Wrong schema version"),
+                            'link': 'cove:index',
+                            'link_text': _('Try Again'),
+                            'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
+                                     'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
+                                     'aria-hidden="true"></span> <strong>Error message: </strong> <em>{}</em> '
+                                     'is not a recognised schema version choice'.format(json_data.get('version'))),
+                            'error': _('{} is not a valid schema version'.format(json_data.get('version')))
+                        })
+                elif data.schema_version:
+                    schema_obj = Schema(version=data.schema_version)
+                else:
+                    schema_obj = Schema()
 
             if request.current_app == 'cove-ocds' and 'records' in json_data:
                 context['conversion'] = None
@@ -171,8 +173,8 @@ def explore(request, pk):
                 converted_path = os.path.join(data.upload_dir(), 'flattened')
                 # Replace the spreadsheet conversion only if it exists already, ie. do not
                 # create a conversion if there wasn't one initially requested by the user.
-                if not os.path.exists(converted_path + '.xlsx'):
-                    replace_conversion = False
+                if os.path.exists(converted_path + '.xlsx') and schema_obj.version != data.schema_version:
+                    replace_conversion = True
                 if request.current_app == 'cove-ocds':
                     if schema_obj.extended:
                         schema_location = schema_obj.get_extended_release_schema_filepath(data.upload_dir())
@@ -187,7 +189,7 @@ def explore(request, pk):
             schema_obj = Schema(version=schema_version_user_choice)
             schema_location = schema_obj.release_schema_url
             # Replace json conversion when user chooses a different schema version.
-            if schema_obj.version != data.schema_version:
+            if data.schema_version and schema_obj.version != data.schema_version:
                 replace_conversion = True
         else:
             schema_location = schema_url + item_schema_name
