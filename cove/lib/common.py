@@ -4,7 +4,6 @@ import re
 import requests
 from collections import OrderedDict
 from copy import deepcopy
-from tempfile import NamedTemporaryFile
 from urllib.parse import urlparse, urljoin
 
 import json_merge_patch
@@ -191,13 +190,12 @@ class Schema():
             package_schema_obj['properties']['releases']['items'].update(self.get_release_schema_obj())
         return package_schema_obj
 
-    @property
-    def release_schema_temp_file(self):
-        file = NamedTemporaryFile('r+U', delete=True)
-        release_schema_str = json.dumps(self.get_release_schema_obj())
-        file.write(release_schema_str)
-        file.flush()
-        return file
+    def get_extended_release_schema_filepath(self, upload_dir):
+        filepath = urljoin(upload_dir, 'extended_release_schema.json')
+        with open(filepath, 'w') as fp:
+            release_schema_str = json.dumps(self.get_release_schema_obj())
+            fp.write(release_schema_str)
+        return fp.name
 
 
 def unique_ids(validator, ui, instance, schema):

@@ -3,6 +3,7 @@ import json
 import logging
 import os
 from datetime import timedelta
+from urllib.parse import urljoin
 
 from django.db.models.aggregates import Count
 from django.http import Http404
@@ -174,18 +175,18 @@ def explore(request, pk):
                     replace_conversion = False
                 if request.current_app == 'cove-ocds':
                     if schema_obj.extended:
-                        schema_location = schema_obj.release_schema_temp_file.name
+                        schema_location = schema_obj.get_extended_release_schema_filepath(data.upload_dir())
                     else:
                         schema_location = schema_obj.release_schema_url
                 else:
-                    schema_location = schema_url + item_schema_name
+                    schema_location = urljoin(schema_url, item_schema_name)
                 context.update(convert_json(request, data, schema_url=schema_location, replace=replace_conversion))
 
     else:
         if request.current_app == 'cove-ocds':
             schema_obj = Schema(version=schema_version_user_choice)
             schema_location = schema_obj.release_schema_url
-            # Always replace json conversion when user chooses a different schema version.
+            # Replace json conversion when user chooses a different schema version.
             if schema_obj.version != data.schema_version:
                 replace_conversion = True
         else:
