@@ -82,7 +82,7 @@ class Schema():
     def __init__(self, version=None, extensions=None, release_data=None):
         self.version = self.default_version
         self.version_error = False
-        self.schema_host = self.version_choices[version][1]
+        self.schema_host = self.version_choices[self.default_version][1]
         self.extensions = extensions or []
         self.extension_errors = {}
         self.extended = False
@@ -90,24 +90,25 @@ class Schema():
         if version:
             try:
                 self.version_choices[version]
-                self.version = version
-                self.schema_host = self.version_choices[self.version][1]
             except KeyError:
                 version = None
                 print('Not a valid value for `version` argument: using version in the release '
                       'data or the default version if version is missing in the release data')
+            else:
+                self.version = version
+                self.schema_host = self.version_choices[version][1]
 
         if release_data:
             self.extensions = extensions or release_data.get('extensions', [])
-            release_version = version or release_data.get('version')
-            if release_version:
-                version_choice = self.version_choices.get(release_version)
-                if version_choice:
-                    self.version = release_version
-                    self.schema_host = version_choice[1]
-                else:
-                    self.version_error = True
-                    self.schema_host = self.version_choices[self.version][1]
+            if not version:
+                release_version = release_data.get('version')
+                if release_version:
+                    version_choice = self.version_choices.get(release_version)
+                    if version_choice:
+                        self.version = release_version
+                        self.schema_host = version_choice[1]
+                    else:
+                        self.version_error = True
 
         self.record_schema_url = urljoin(self.schema_host, self.record_schema_name)
         self.package_schema_url = urljoin(self.schema_host, self.package_schema_name)
