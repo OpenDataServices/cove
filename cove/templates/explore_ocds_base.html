@@ -182,6 +182,22 @@
   </div>
 {% endif %}
 
+{% if additional_closed_codelist_values %}
+    <a name="additional-fields" class="anchor"></a>
+    <div class="panel panel-danger">
+      <div id="additional-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalClosedCodelist" data-toggle="collapse" data-target="#additionalClosedCodelist">
+        <h4 class="panel-title">
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Codelist Validation Errors' %}</span>
+        </h4>
+      </div>
+      <div id="additionalClosedCodelist" class="collapse in">
+        {% with additional_codelist_values=additional_closed_codelist_values %}
+        {% include "additional_codelist_values.html" %}
+        {% endwith%}
+      </div>
+    </div>
+{% endif %}
+
 
 
 {% if data_only %}
@@ -198,28 +214,13 @@
     </div>
 {% endif %}
 
-{% if additional_closed_codelist_values %}
-    <a name="additional-fields" class="anchor"></a>
-    <div class="panel panel-danger">
-      <div id="additional-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalClosedCodelist" data-toggle="collapse" data-target="#additionalClosedCodelist">
-        <h4 class="panel-title">
-          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Closed Codelist Values' %}</span>
-        </h4>
-      </div>
-      <div id="additionalClosedCodelist" class="collapse in">
-        {% with additional_codelist_values=additional_closed_codelist_values %}
-        {% include "additional_codelist_values.html" %}
-        {% endwith%}
-      </div>
-    </div>
-{% endif %}
 
 {% if additional_open_codelist_values %}
     <a name="additional-fields" class="anchor"></a>
     <div class="panel panel-warning">
       <div id="additional-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalOpenCodelist" data-toggle="collapse" data-target="#additionalOpenCodelist">
         <h4 class="panel-title">
-          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Open Codelist Values' %}</span>
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Codelist Values' %}</span>
         </h4>
       </div>
       <div id="additionalOpenCodelist" class="collapse in">

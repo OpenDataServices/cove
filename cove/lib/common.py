@@ -408,6 +408,7 @@ def _load_codelists(codelist_url, unique_files):
     for codelist_file in unique_files:
         try:
             response = requests.get(codelist_url + codelist_file)
+            response.raise_for_status()
             reader = csv.DictReader(line.decode("utf8") for line in response.iter_lines())
             codelists[codelist_file] = {}
             for record in reader:
@@ -416,7 +417,8 @@ def _load_codelists(codelist_url, unique_files):
                 codelists[codelist_file][code] = title
 
         except requests.exceptions.RequestException:
-            raise
+            codelists = {}
+            break
 
     return codelists
 
