@@ -14,6 +14,7 @@ import cove.lib.common as common
 import cove.lib.ocds as ocds
 import cove.lib.threesixtygiving as threesixtygiving
 from cove.input.models import SuppliedData
+from cove.lib.common import Schema
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError
 
@@ -105,47 +106,18 @@ def explore(request, pk):
         "created_datetime": data.created.strftime("%A, %d %B %Y %I:%M%p %Z"),
         "created_date": data.created.strftime("%A, %d %B %Y"),
     }
-    
+
+    # 360 only
     schema_name = request.cove_config['schema_name']
+    item_schema_name = request.cove_config['item_schema_name']
+    schema_url = request.cove_config['schema_url']
+
+    # OCDS only
     replace_conversion = False
-
-    if request.current_app == 'cove-ocds':
-        schema_obj = common.Schema(data)
-        schema_version = schema_obj.version
-        schema_version_choices = schema_obj.version_choices
-        schema_version_display_choices = tuple(
-            (version, display_url[0]) for version, display_url in schema_version_choices.items()
-        )
+    schema_version_user_choice = request.request.POST.get('version')
+    last_version_used = request.request.POST.get('version-used')
+    if schema_version_user_choice and schema_version_user_choice == last_version_used:
         schema_version_user_choice = None
-        schema_url = schema_obj.schema_host
-        context.update({
-            "data_uuid": pk,
-            "version_display_choices": schema_version_display_choices
-        })
-    else:
-        schema_url = request.cove_config['schema_url']
-
-    if 'version' in request.POST and request.POST['version'] != data.schema_version:
-        schema_version_user_choice = request.POST.get('version')
-        if schema_version_user_choice in schema_version_choices:
-            schema_obj = common.Schema(data, version=schema_version_user_choice)
-            schema_version = schema_obj.version
-            schema_url = schema_obj.schema_host
-            replace_conversion = True
-        else:
-            # This shouldn't really happen unless the user resends manually
-            # the POST request with random data.
-            raise CoveInputDataError(context={
-                'sub_title': _("Something unexpected happened"),
-                'link': 'cove:explore',
-                'link_args': pk,
-                'link_text': _('Try Again'),
-                'msg': _('We think you tried to run your data against an unrecognised version of the '
-                         'schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
-                         '</span> <strong>Error message:</strong> <em>{}</em> is not a recognised choice for '
-                         'the schema version'.format(schema_version_user_choice)),
-                'error': _('{} is not a valid schema version'.format(schema_version_user_choice))
-            })
 
     if file_type == 'json':
         # open the data first so we can inspect for record package
@@ -162,53 +134,84 @@ def explore(request, pk):
                              '</span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
-
-        if request.current_app == 'cove-ocds' and not schema_version_user_choice:
-            try:
-                version_field = json_data.get('version')
-                if version_field:
-                    if schema_version_choices.get(version_field):
-                        schema_version = version_field
-                        schema_url = schema_version_choices[version_field][1]
-                    else:
+            if request.current_app == 'cove-ocds':
+                schema_obj = Schema(version=schema_version_user_choice, release_data=json_data)
+                if schema_version_user_choice:
+                    if schema_obj.version_argument_error:
+                        # This shouldn't really happen unless the user resends manually
+                        # the POST request with random data.
                         raise CoveInputDataError(context={
-                            'sub_title': _("Wrong schema version"),
-                            'link': 'cove:index',
+                            'sub_title': _("Something unexpected happened"),
+                            'link': 'cove:explore',
+                            'link_args': pk,
                             'link_text': _('Try Again'),
-                            'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
-                                     'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
-                                     'aria-hidden="true"></span> <strong>Error message: </strong> <em>{}</em> '
-                                     'is not a recognised schema version choice'.format(version_field)),
-                            'error': _('{} is not a valid schema version'.format(version_field))
+                            'msg': _('We think you tried to run your data against an unrecognised version of '
+                                     'the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
+                                     'aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is '
+                                     'not a recognised choice for the schema version'.format(schema_version_user_choice)),
+                            'error': _('{} is not a valid schema version'.format(schema_version_user_choice))
                         })
-            except AttributeError:
-                pass
+                    else:
+                        replace_conversion = True
+                if schema_obj.version_data_error:
+                    raise CoveInputDataError(context={
+                        'sub_title': _("Wrong schema version"),
+                        'link': 'cove:index',
+                        'link_text': _('Try Again'),
+                        'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
+                                 'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
+                                 'aria-hidden="true"></span> <strong>Error message: </strong> <em>{}</em> '
+                                 'is not a recognised schema version choice'.format(json_data.get('version'))),
+                        'error': _('{} is not a valid schema version'.format(json_data.get('version')))
+                    })
 
-        if request.current_app == 'cove-ocds' and 'records' in json_data:
-            context['conversion'] = None
-        else:
-            converted_path = os.path.join(data.upload_dir(), 'flattened')
-            # Replace the spreadsheet conversion only if it exists, ie. do not
-            # create a conversion if there wasn't one requested by the user.
-            if not os.path.exists(converted_path + '.xlsx'):
-                replace_conversion = False
-            if schema_obj.extended:
-                schema_location = schema_obj.release_schema_temp_file.name
+            if request.current_app == 'cove-ocds' and 'records' in json_data:
+                context['conversion'] = None
             else:
-                schema_location = schema_obj.release_schema_url
-            context.update(convert_json(request, data, schema_url=schema_location, replace=replace_conversion))
+                converted_path = os.path.join(data.upload_dir(), 'flattened')
+                # Replace the spreadsheet conversion only if it exists, ie. do not
+                # create a conversion if there wasn't one requested by the user.
+                if not os.path.exists(converted_path + '.xlsx'):
+                    replace_conversion = False
+
+                if request.current_app == 'cove-ocds':
+                    if schema_obj.extended:
+                        schema_location = schema_obj.release_schema_temp_file.name
+                    else:
+                        schema_location = schema_obj.release_schema_url
+                else:
+                    schema_location = schema_url + item_schema_name
+                context.update(convert_json(request, data, schema_url=schema_location, replace=replace_conversion))
+
     else:
-        if schema_obj.extended:
-            schema_location = schema_obj.release_schema_temp_file.name
-        else:
+        if request.current_app == 'cove-ocds':
+            schema_obj = Schema(version=schema_version_user_choice)
             schema_location = schema_obj.release_schema_url
-        # Always replace json conversion when user chooses a different schema version.
+            # Always replace json conversion when user chooses a different schema version.
+            if schema_obj.version != last_version_used:
+                replace_conversion = True
+        else:
+            schema_location = schema_url + item_schema_name
         context.update(convert_spreadsheet(request, data, file_type, schema_url=schema_location, replace=replace_conversion))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
     if request.current_app == 'cove-ocds':
-        schema_name = schema_name['record'] if 'records' in json_data else schema_name['release']
+        schema_version = schema_obj.version
+        schema_version_choices = schema_obj.version_choices
+        schema_version_display_choices = tuple(
+            (version, display_url[0]) for version, display_url in schema_version_choices.items()
+        )
+        schema_url = schema_obj.schema_host
+        context.update({
+            "data_uuid": pk,
+            "version_display_choices": schema_version_display_choices
+        })
+    else:
+        schema_url = request.cove_config['schema_url']
+
+    if request.current_app == 'cove-ocds':
+        schema_name = schema_obj.record_schema_name if 'records' in json_data else schema_obj.package_schema_name
         context.update({
             "version_used": schema_version,
             "version_used_display": schema_version_choices[schema_version][0]
