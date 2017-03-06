@@ -115,8 +115,7 @@ def explore(request, pk):
     # OCDS only
     replace_conversion = False
     schema_version_user_choice = request.request.POST.get('version')
-    last_version_used = request.request.POST.get('version-used')
-    if schema_version_user_choice and schema_version_user_choice == last_version_used:
+    if schema_version_user_choice and schema_version_user_choice == data.schema_version:
         schema_version_user_choice = None
 
     if file_type == 'json':
@@ -169,11 +168,10 @@ def explore(request, pk):
                 context['conversion'] = None
             else:
                 converted_path = os.path.join(data.upload_dir(), 'flattened')
-                # Replace the spreadsheet conversion only if it exists, ie. do not
-                # create a conversion if there wasn't one requested by the user.
+                # Replace the spreadsheet conversion only if it exists already, ie. do not
+                # create a conversion if there wasn't one initially requested by the user.
                 if not os.path.exists(converted_path + '.xlsx'):
                     replace_conversion = False
-
                 if request.current_app == 'cove-ocds':
                     if schema_obj.extended:
                         schema_location = schema_obj.release_schema_temp_file.name
@@ -188,7 +186,7 @@ def explore(request, pk):
             schema_obj = Schema(version=schema_version_user_choice)
             schema_location = schema_obj.release_schema_url
             # Always replace json conversion when user chooses a different schema version.
-            if schema_obj.version != last_version_used:
+            if schema_obj.version != data.schema_version:
                 replace_conversion = True
         else:
             schema_location = schema_url + item_schema_name

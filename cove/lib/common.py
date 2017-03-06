@@ -100,7 +100,7 @@ class Schema():
                 self.version = version
                 self.schema_host = self.version_choices[version][1]
 
-        if release_data:
+        if isinstance(release_data, dict):
             self.extensions = extensions or release_data.get('extensions', [])
             if not version:
                 release_version = release_data.get('version')
