@@ -31,6 +31,7 @@ validation_error_lookup = {"date-time": "Date is not in the correct format",
                            "object": "Value is not an object",
                            "array": "Value is not an array"}
 
+
 config = settings.COVE_CONFIG_BY_NAMESPACE
 ocds_cove_config = {key: config[key]['cove-ocds'] if 'cove-ocds' in config[key] else config[key]['default']for key in config}
 
@@ -72,11 +73,16 @@ class CustomRefResolver(RefResolver):
 
 
 class Schema():
+    version_choices = ocds_cove_config['schema_version_choices']
+    default_version = ocds_cove_config['schema_version']
+    record_schema_name = ocds_cove_config['schema_name']['record']
+    package_schema_name = ocds_cove_config['schema_name']['release']
+    release_schema_name = ocds_cove_config['item_schema_name']
+
     def __init__(self, version=None, extensions=None, release_data=None):
-        self.version = ocds_cove_config['schema_version']  # default version
-        self.version_choices = ocds_cove_config['schema_version_choices']
+        self.version = self.default_version
         self.version_error = False
-        self.schema_host = self.version_choices[self.version][1]
+        self.schema_host = self.version_choices[version][1]
         self.extensions = extensions or []
         self.extension_errors = {}
         self.extended = False
@@ -103,12 +109,14 @@ class Schema():
                     self.version_error = True
                     self.schema_host = self.version_choices[self.version][1]
 
-        self.record_schema_name = ocds_cove_config['schema_name']['release']
         self.record_schema_url = urljoin(self.schema_host, self.record_schema_name)
-        self.package_schema_name = ocds_cove_config['schema_name']['release']
         self.package_schema_url = urljoin(self.schema_host, self.package_schema_name)
-        self.release_schema_name = ocds_cove_config['item_schema_name']
         self.release_schema_url = urljoin(self.schema_host, self.release_schema_name)
+
+    @classmethod
+    def default_release_schema_url(cls):
+        schema_host = cls.version_choices[cls.default_version][1]
+        return urljoin(schema_host, cls.release_schema_name)
 
     @cached_property
     def _package_schema_str(self):
