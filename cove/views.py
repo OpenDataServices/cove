@@ -137,7 +137,7 @@ def explore(request, pk):
             if request.current_app == 'cove-ocds':
                 schema_obj = Schema(version=schema_version_user_choice, release_data=json_data)
                 if schema_version_user_choice:
-                    if schema_obj.version_argument_error:
+                    if schema_obj.invalid_version_argument:
                         # This shouldn't really happen unless the user resends manually
                         # the POST request with random data.
                         raise CoveInputDataError(context={
@@ -153,7 +153,7 @@ def explore(request, pk):
                         })
                     else:
                         replace_conversion = True
-                if schema_obj.version_data_error:
+                if schema_obj.invalid_version_data:
                     raise CoveInputDataError(context={
                         'sub_title': _("Wrong schema version"),
                         'link': 'cove:index',

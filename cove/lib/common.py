@@ -81,8 +81,8 @@ class Schema():
 
     def __init__(self, version=None, extensions=None, release_data=None):
         self.version = self.default_version
-        self.version_argument_error = False
-        self.version_data_error = False
+        self.invalid_version_argument = False
+        self.invalid_version_data = False
         self.schema_host = self.version_choices[self.default_version][1]
         self.extensions = extensions or []
         self.extension_errors = {}
@@ -93,7 +93,7 @@ class Schema():
                 self.version_choices[version]
             except KeyError:
                 version = None
-                self.version_argument_error = True
+                self.invalid_version_argument = True
                 print('Not a valid value for `version` argument: using version in the release '
                       'data or the default version if version is missing in the release data')
             else:
@@ -110,7 +110,7 @@ class Schema():
                         self.version = release_version
                         self.schema_host = version_choice[1]
                     else:
-                        self.data_version_error = True
+                        self.invalid_version_data = True
 
         self.record_schema_url = urljoin(self.schema_host, self.record_schema_name)
         self.package_schema_url = urljoin(self.schema_host, self.package_schema_name)
