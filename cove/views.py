@@ -95,7 +95,7 @@ def explore_360(request, pk, data, context):
 
 
 def explore_ocds(request, pk, data, context):
-    schema_version_user_choice = request.POST.get('version')
+    post_version_choice = request.POST.get('version')
     file_type = context['file_type']
     replace = False
 
@@ -114,8 +114,8 @@ def explore_ocds(request, pk, data, context):
                              '</span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
-            if schema_version_user_choice:
-                schema_ocds = SchemaOCDS(select_version=schema_version_user_choice)
+            if post_version_choice:
+                schema_ocds = SchemaOCDS(select_version=post_version_choice)
                 if schema_ocds.invalid_version_argument:
                     # This shouldn't really happen unless the user resends manually
                     # the POST request with random data.
@@ -127,8 +127,8 @@ def explore_ocds(request, pk, data, context):
                         'msg': _('We think you tried to run your data against an unrecognised version of '
                                  'the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
                                  'aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is '
-                                 'not a recognised choice for the schema version'.format(schema_version_user_choice)),
-                        'error': _('{} is not a valid schema version'.format(schema_version_user_choice))
+                                 'not a recognised choice for the schema version'.format(post_version_choice)),
+                        'error': _('{} is not a valid schema version'.format(post_version_choice))
                     })
             elif isinstance(json_data, dict) and json_data.get('version'):
                 schema_ocds = SchemaOCDS(release_data=json_data)
@@ -162,7 +162,7 @@ def explore_ocds(request, pk, data, context):
                 context.update(convert_json(request, data, schema_url=url, replace=replace))
 
     else:
-        select_version = schema_version_user_choice or data.schema_version
+        select_version = post_version_choice or data.schema_version
         schema_ocds = SchemaOCDS(select_version=select_version)
         # Replace json conversion when user chooses a different schema version.
         if data.schema_version and schema_ocds.version != data.schema_version:

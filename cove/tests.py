@@ -482,12 +482,12 @@ def test_explore_schema_version_change_with_json_to_xlsx(mock_object, client):
         data.original_file.save('test.json', UploadedFile(fp))
     data.current_app = 'cove-ocds'
 
-    # resp = client.get(data.get_absolute_url())
-    # args, kwargs = mock_object.call_args
-    # assert resp.status_code == 200
-    # assert '1__0__2' in kwargs['schema_url']
-    # assert kwargs['replace'] is False
-    # mock_object.reset_mock()
+    resp = client.get(data.get_absolute_url())
+    args, kwargs = mock_object.call_args
+    assert resp.status_code == 200
+    assert '1__0__2' in kwargs['schema_url']
+    assert kwargs['replace'] is False
+    mock_object.reset_mock()
 
     resp = client.post(data.get_absolute_url(), {'version': '1.1'})
     args, kwargs = mock_object.call_args
@@ -586,7 +586,7 @@ NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
     ({'extensions': [METRICS_EXT]}, [METRICS_EXT], {}, True),
     ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, [UNKNOWN_URL_EXT, METRICS_EXT], {UNKNOWN_URL_EXT: 'Fetching failed'}, True),
 ])
-def test_schemaOCDS_extensions(release_data, extensions, extension_errors, extended):
+def test_SchemaOCDS_extensions(release_data, extensions, extension_errors, extended):
     schema = c.SchemaOCDS(release_data=release_data)
     assert schema.extensions == extensions
 
@@ -600,3 +600,12 @@ def test_schemaOCDS_extensions(release_data, extensions, extension_errors, exten
     else:
         assert 'Metric' not in release_schema_obj['definitions'].keys()
         assert not release_schema_obj['definitions']['Award']['properties'].get('agreedMetrics')
+
+
+def test_Schema360():
+    schema = c.Schema360()
+    assert schema.release_schema_name == c.cove_360_config['item_schema_name']
+    assert schema.package_schema_name == c.cove_360_config['schema_name']
+    assert schema.schema_host == c.cove_360_config['schema_url']
+    assert schema.release_schema_url == c.cove_360_config['schema_url'] + c.cove_360_config['item_schema_name']
+    assert schema.package_schema_url == c.cove_360_config['schema_url'] + c.cove_360_config['schema_name']
