@@ -150,15 +150,14 @@ def explore_ocds(request, pk, data, context):
                 context['conversion'] = None
             else:
                 converted_path = os.path.join(data.upload_dir(), 'flattened')
-                # Replace the spreadsheet conversion only if it exists already, ie. do not
-                # create a conversion if there wasn't one initially requested by the user.
+                # Replace the spreadsheet conversion only if it exists already.
                 if os.path.exists(converted_path + '.xlsx') and schema_ocds.version != data.schema_version:
                     replace = True
 
+                url = schema_ocds.release_schema_url
                 if schema_ocds.extended:
                     url = schema_ocds.get_extended_release_schema_filepath(data.upload_dir())
-                else:
-                    url = schema_ocds.release_schema_url
+
                 context.update(convert_json(request, data, schema_url=url, replace=replace))
 
     else:
@@ -185,14 +184,13 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
         schema_version_display_choices = tuple(
             (version, display_url[0]) for version, display_url in schema_version_choices.items()
         )
-        context.update({'version_used': schema_version,
-                        'version_display_choices': schema_version_display_choices,
-                        'version_used_display': schema_version_choices[schema_version][0]})
+        context.update({
+            'version_used': schema_version,
+            'version_display_choices': schema_version_display_choices,
+            'version_used_display': schema_version_choices[schema_version][0]}
+        )
 
-    schema_host = schema_obj.schema_host
-
-    additional_fields = sorted(common.get_counts_additional_fields(schema_host, schema_name, json_data,
-                               context, request.current_app))
+    additional_fields = sorted(common.get_counts_additional_fields(json_data, schema_obj, context, request.current_app))
     context.update({
         'data_only': additional_fields,
         'additional_fields_count': sum(item[2] for item in additional_fields)
@@ -212,7 +210,7 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
-        validation_errors = common.get_schema_validation_errors(json_data, schema_host, schema_name, request.current_app,
+        validation_errors = common.get_schema_validation_errors(json_data, schema_obj, request.current_app,
                                                                 cell_source_map, heading_source_map)
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
@@ -221,7 +219,7 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
         'schema_url': schema_obj.package_schema_url,
         'validation_errors': sorted(validation_errors.items()),
         'validation_errors_count': sum(len(value) for value in validation_errors.values()),
-        'deprecated_fields': common.get_json_data_deprecated_fields(schema_name, schema_host, json_data),
+        'deprecated_fields': common.get_json_data_deprecated_fields(json_data, schema_obj),
         'json_data': json_data,  # Pass the JSON data to the template so we can display values that need little processing
         'first_render': not data.rendered,
         'common_error_types': []
@@ -235,6 +233,7 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
         else:
             context['releases_aggregates'] = ocds.get_releases_aggregates(json_data, ignore_errors=bool(validation_errors))
             template = 'explore_ocds-release.html'
+
     elif request.current_app == 'cove-360':
         context['grants_aggregates'] = threesixtygiving.get_grants_aggregates(json_data)
         context['additional_checks'] = threesixtygiving.run_additional_checks(json_data, cell_source_map)

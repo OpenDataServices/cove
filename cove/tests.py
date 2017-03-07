@@ -276,13 +276,15 @@ def test_get_file_unrecognised_file_type():
 
 
 def test_get_schema_validation_errors():
-    schema_url = 'http://ocds.open-contracting.org/standard/r/1__0__RC/'
-    schema_name = 'release-package-schema.json'
+    schema_obj = c.SchemaOCDS()
+    schema_obj.schema_host = 'http://ocds.open-contracting.org/standard/r/1__0__RC/'
+    schema_obj.package_schema_url = os.path.join(schema_obj.schema_host, schema_obj.package_schema_name)
+
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
-        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, schema_name, 'cove-ocds', {}, {})
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_obj, 'cove-ocds', {}, {})
         assert len(error_list) == 0
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_invalid.json')) as fp:
-        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, schema_name, 'cove-ocds', {}, {})
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_obj, 'cove-ocds', {}, {})
         assert len(error_list) > 0
 
 
@@ -302,9 +304,11 @@ def test_get_json_data_deprecated_fields():
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
         json_data_w_deprecations = json.load(fp)
 
-    schema_url = os.path.join('cove', 'fixtures/')
-    schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
-    deprecated_data_fields = c.get_json_data_deprecated_fields(schema_name, schema_url, json_data_w_deprecations)
+    schema_obj = c.SchemaOCDS()
+    schema_obj.schema_host = os.path.join('cove', 'fixtures/')
+    schema_obj.package_schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
+    schema_obj.package_schema_url = os.path.join(schema_obj.schema_host, schema_obj.package_schema_name)
+    deprecated_data_fields = c.get_json_data_deprecated_fields(json_data_w_deprecations, schema_obj)
     expected_result = OrderedDict([
         ('initiationType', {"paths": ('releases/0', 'releases/1'),
                             "explanation": ('1.1', 'Not a useful field as always has to be tender')}),
@@ -318,9 +322,11 @@ def test_get_json_data_deprecated_fields():
 
 
 def test_get_schema_deprecated_paths():
-    schema_url = os.path.join('cove', 'fixtures/')
-    schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
-    deprecated_paths = c._get_schema_deprecated_paths(schema_name, schema_url)
+    schema_obj = c.SchemaOCDS()
+    schema_obj.schema_host = os.path.join('cove', 'fixtures/')
+    schema_obj.package_schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
+    schema_obj.package_schema_url = os.path.join(schema_obj.schema_host, schema_obj.package_schema_name)
+    deprecated_paths = c._get_schema_deprecated_paths(schema_obj)
     expected_results = [
         (('releases', 'initiationType'), ('1.1', 'Not a useful field as always has to be tender')),
         (('releases', 'tender', 'hasEnquiries'), ('1.1', 'Deprecated just for fun')),

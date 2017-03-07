@@ -74,24 +74,76 @@ class CustomRefResolver(RefResolver):
 
 class SchemaMixin():
     @cached_property
-    def _release_schema_str(self):
+    def release_schema_str(self):
         return requests.get(self.release_schema_url).text
 
     @cached_property
-    def _package_schema_str(self):
-        if urlparse(self.package_schema_url).scheme == 'http':
+    def package_schema_str(self):
+        uri_scheme = urlparse(self.package_schema_url).scheme
+        if uri_scheme == 'http' or uri_scheme == 'https':
             return requests.get(self.package_schema_url).text
         else:
-            with open(self.package_schema_url) as openfile:
-                return openfile.read()
+            with open(self.package_schema_url) as fp:
+                return fp.read()
 
     @property
-    def release_schema_obj(self):
-        return json.loads(self._release_schema_str)
+    def _release_schema_obj(self):
+        return json.loads(self.release_schema_str)
 
     @property
-    def package_schema_obj(self):
-        return json.loads(self._package_schema_str)
+    def _package_schema_obj(self):
+        return json.loads(self.package_schema_str)
+
+    def apply_extensions(self, schema_obj):
+        if not getattr(self, 'extensions', None):
+            return
+        for extension_url in self.extensions:
+            i = extension_url.rfind('/')
+            url = '{}/{}'.format(extension_url[:i], 'release-schema.json')
+
+            try:
+                extension = requests.get(url)
+            except requests.exceptions.RequestException:
+                self.extension_errors[extension_url] = 'Fetching failed'
+                continue
+            if extension.ok:
+                try:
+                    extension_data = extension.json()
+                except json.JSONDecodeError:
+                    self.extension_errors[extension_url] = 'Invalid JSON'
+                    continue
+            else:
+                self.extension_errors[extension_url] = extension.status_code
+                continue
+
+            schema_obj = json_merge_patch.merge(schema_obj, extension_data)
+            self.extended = True
+
+    def get_release_schema_obj(self, deref=False):
+        release_schema_obj = deepcopy(self._release_schema_obj)
+        if getattr(self, 'extensions', None) and self.extensions:
+            self.apply_extensions(release_schema_obj)
+        if deref:
+            release_text = json.dumps(release_schema_obj)
+            release_schema_obj = jsonref.loads(
+                release_text,
+                loader=CustomJsonrefLoader(schema_url=self.schema_host),
+                object_pairs_hook=OrderedDict
+            )
+        return release_schema_obj
+
+    def get_package_schema_obj(self, deref=False):
+        package_schema_obj = deepcopy(self._package_schema_obj)
+        if deref:
+            package_schema_obj['properties']['releases']['items'] = {}
+            package_text = json.dumps(package_schema_obj)
+            package_schema_obj = jsonref.loads(
+                package_text,
+                loader=CustomJsonrefLoader(schema_url=self.schema_host),
+                object_pairs_hook=OrderedDict
+            )
+            package_schema_obj['properties']['releases']['items'].update(self.get_release_schema_obj())
+        return package_schema_obj
 
 
 class Schema360(SchemaMixin):
@@ -149,56 +201,6 @@ class SchemaOCDS(SchemaMixin):
         self.release_schema_url = urljoin(self.schema_host, self.release_schema_name)
         self.package_schema_url = urljoin(self.schema_host, self.package_schema_name)
         self.record_schema_url = urljoin(self.schema_host, self.record_schema_name)
-
-    def apply_extensions(self, schema_obj):
-        for extension_url in self.extensions:
-            i = extension_url.rfind('/')
-            url = '{}/{}'.format(extension_url[:i], 'release-schema.json')
-
-            try:
-                extension = requests.get(url)
-            except requests.exceptions.RequestException:
-                self.extension_errors[extension_url] = 'Fetching failed'
-                continue
-            if extension.ok:
-                try:
-                    extension_data = extension.json()
-                except json.JSONDecodeError:
-                    self.extension_errors[extension_url] = 'Invalid JSON'
-                    continue
-            else:
-                self.extension_errors[extension_url] = extension.status_code
-                continue
-
-            schema_obj = json_merge_patch.merge(schema_obj, extension_data)
-            self.extended = True
-
-    def get_release_schema_obj(self, deref=False):
-        release_schema_obj = deepcopy(self.release_schema_obj)
-        if self.extensions:
-            self.apply_extensions(release_schema_obj)
-        if deref:
-            release_text = json.dumps(release_schema_obj)
-            release_schema_obj = jsonref.loads(
-                release_text,
-                loader=CustomJsonrefLoader(schema_url=self.schema_host),
-                object_pairs_hook=OrderedDict
-            )
-
-        return release_schema_obj
-
-    def get_package_schema_obj(self, deref=False):
-        package_schema_obj = deepcopy(self.package_schema_obj)
-        if deref:
-            package_schema_obj['properties']['releases']['items'] = {}
-            package_text = json.dumps(package_schema_obj)
-            package_schema_obj = jsonref.loads(
-                package_text,
-                loader=CustomJsonrefLoader(schema_url=self.schema_host),
-                object_pairs_hook=OrderedDict
-            )
-            package_schema_obj['properties']['releases']['items'].update(self.get_release_schema_obj())
-        return package_schema_obj
 
     def get_extended_release_schema_filepath(self, upload_dir):
         filepath = urljoin(upload_dir, 'extended_release_schema.json')
@@ -287,24 +289,18 @@ def schema_dict_fields_generator(schema_dict):
                 yield '/' + property_name
 
 
-def get_schema_data(schema_url, schema_name):
-    if schema_url[:4] == 'http':
-        r = requests.get(schema_url + schema_name)
-        json_text = r.text
-    else:
-        with open(schema_url + schema_name) as schema_file:
-            json_text = schema_file.read()
-
-    return jsonref.loads(json_text, loader=CustomJsonrefLoader(schema_url=schema_url), object_pairs_hook=OrderedDict)
+def get_schema_data(schema_obj):
+    json_text = schema_obj.package_schema_str
+    return jsonref.loads(json_text, loader=CustomJsonrefLoader(schema_url=schema_obj.schema_host), object_pairs_hook=OrderedDict)
 
 
-def get_schema_fields(schema_url, schema_name):
-    return set(schema_dict_fields_generator(get_schema_data(schema_url, schema_name)))
+def get_schema_fields(schema_obj):
+    return set(schema_dict_fields_generator(get_schema_data(schema_obj)))
 
 
-def get_counts_additional_fields(schema_url, schema_name, json_data, context, current_app):
+def get_counts_additional_fields(json_data, schema_obj, context, current_app):
     fields_present = get_fields_present(json_data)
-    schema_fields = get_schema_fields(schema_url, schema_name)
+    schema_fields = get_schema_fields(schema_obj)
     data_only_all = set(fields_present) - schema_fields
     data_only = set()
     for field in data_only_all:
@@ -320,18 +316,16 @@ def get_counts_additional_fields(schema_url, schema_name, json_data, context, cu
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
 
 
-def get_schema_validation_errors(json_data, schema_url, schema_name, current_app, cell_source_map, heading_source_map):
-    if schema_url.startswith("http"):
-        schema = requests.get(schema_url + schema_name).json()
-    else:
-        with open(schema_url + schema_name) as schema_file:
-            schema = json.load(schema_file)
-
+def get_schema_validation_errors(json_data, schema_obj, current_app, cell_source_map, heading_source_map):
+    package_schema_obj = schema_obj.get_package_schema_obj()
     validation_errors = collections.defaultdict(list)
     format_checker = FormatChecker()
+
     if current_app == 'cove-360':
         format_checker.checkers['date-time'] = (tools.datetime_or_date, ValueError)
-    for n, e in enumerate(validator(schema, format_checker=format_checker, resolver=CustomRefResolver('', schema, schema_url=schema_url)).iter_errors(json_data)):
+    
+    resolver = CustomRefResolver('', package_schema_obj, schema_url=schema_obj.schema_host)
+    for n, e in enumerate(validator(package_schema_obj, format_checker=format_checker, resolver=resolver).iter_errors(json_data)):
         message = e.message
         path = "/".join(str(item) for item in e.path)
         path_no_number = "/".join(str(item) for item in e.path if not isinstance(item, int))
@@ -384,7 +378,7 @@ def get_schema_validation_errors(json_data, schema_url, schema_name, current_app
     return dict(validation_errors)
 
 
-def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path=(), deprecated_paths=None):
+def _get_schema_deprecated_paths(schema_obj, obj=None, current_path=(), deprecated_paths=None):
     '''Get a list of deprecated paths and explanations for deprecation in a schema.
 
     Deprecated paths are given as tuples of tuples:
@@ -393,8 +387,8 @@ def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path
     if deprecated_paths is None:
         deprecated_paths = []
 
-    if schema_url:
-        obj = get_schema_data(schema_url, schema_name)
+    if schema_obj:
+        obj = get_schema_data(schema_obj)
 
     for prop, value in obj['properties'].items():
         if current_path:
@@ -409,9 +403,9 @@ def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path
                 ))
 
         if value.get('type') == 'object':
-            _get_schema_deprecated_paths(None, None, value, path, deprecated_paths)
+            _get_schema_deprecated_paths(None, value, path, deprecated_paths)
         elif value.get('type') == 'array' and value['items'].get('properties'):
-            _get_schema_deprecated_paths(None, None, value['items'], path, deprecated_paths)
+            _get_schema_deprecated_paths(None, value['items'], path, deprecated_paths)
 
     return deprecated_paths
 
@@ -456,8 +450,8 @@ def _get_json_data_generic_paths(json_data, path=(), generic_paths=None):
     return generic_paths
 
 
-def get_json_data_deprecated_fields(schema_name, schema_url, json_data):
-    deprecated_schema_paths = _get_schema_deprecated_paths(schema_name, schema_url)
+def get_json_data_deprecated_fields(json_data, schema_obj):
+    deprecated_schema_paths = _get_schema_deprecated_paths(schema_obj)
     paths_in_data = _get_json_data_generic_paths(json_data)
     deprecated_paths_in_data = [path for path in deprecated_schema_paths if path[0] in paths_in_data]
 
