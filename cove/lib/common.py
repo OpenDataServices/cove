@@ -78,30 +78,30 @@ class Schema():
     package_schema_name = ocds_cove_config['schema_name']['release']
     release_schema_name = ocds_cove_config['item_schema_name']
 
-    def __init__(self, version=None, extensions=None, release_data=None):
+    def __init__(self, select_version=None, release_data=None):
         self.version = self.default_version
         self.invalid_version_argument = False
         self.invalid_version_data = False
         self.schema_host = self.version_choices[self.default_version][1]
-        self.extensions = extensions or []
+        self.extensions = []
         self.extension_errors = {}
         self.extended = False
 
-        if version:
+        if select_version:
             try:
-                self.version_choices[version]
+                self.version_choices[select_version]
             except KeyError:
-                version = None
+                select_version = None
                 self.invalid_version_argument = True
                 print('Not a valid value for `version` argument: using version in the release '
                       'data or the default version if version is missing in the release data')
             else:
-                self.version = version
-                self.schema_host = self.version_choices[version][1]
+                self.version = select_version
+                self.schema_host = self.version_choices[select_version][1]
 
         if isinstance(release_data, dict):
-            self.extensions = extensions or release_data.get('extensions', [])
-            if not version:
+            self.extensions = release_data.get('extensions', [])
+            if not select_version:
                 release_version = release_data.get('version')
                 if release_version:
                     version_choice = self.version_choices.get(release_version)

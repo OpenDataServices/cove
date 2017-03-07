@@ -134,7 +134,7 @@ def explore(request, pk):
                 })
             if request.current_app == 'cove-ocds':
                 if schema_version_user_choice:
-                    schema_obj = Schema(version=schema_version_user_choice)
+                    schema_obj = Schema(select_version=schema_version_user_choice)
                     if schema_obj.invalid_version_argument:
                         # This shouldn't really happen unless the user resends manually
                         # the POST request with random data.
@@ -162,10 +162,8 @@ def explore(request, pk):
                                      'is not a recognised schema version choice'.format(json_data.get('version'))),
                             'error': _('{} is not a valid schema version'.format(json_data.get('version')))
                         })
-                elif data.schema_version:
-                    schema_obj = Schema(version=data.schema_version)
                 else:
-                    schema_obj = Schema()
+                    schema_obj = Schema(select_version=data.schema_version)
 
             if request.current_app == 'cove-ocds' and 'records' in json_data:
                 context['conversion'] = None
@@ -186,7 +184,8 @@ def explore(request, pk):
 
     else:
         if request.current_app == 'cove-ocds':
-            schema_obj = Schema(version=schema_version_user_choice)
+            select_version = schema_version_user_choice or data.schema_version
+            schema_obj = Schema(select_version=select_version)
             schema_location = schema_obj.release_schema_url
             # Replace json conversion when user chooses a different schema version.
             if data.schema_version and schema_obj.version != data.schema_version:
