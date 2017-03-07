@@ -132,7 +132,7 @@ class SchemaOCDS(SchemaMixin):
                 self.version = select_version
                 self.schema_host = self.version_choices[select_version][1]
 
-        if isinstance(release_data, dict):
+        if release_data:
             self.extensions = release_data.get('extensions', [])
             if not select_version:
                 release_version = release_data.get('version')
@@ -143,6 +143,8 @@ class SchemaOCDS(SchemaMixin):
                         self.schema_host = version_choice[1]
                     else:
                         self.invalid_version_data = True
+        else:
+            pass
 
         self.release_schema_url = urljoin(self.schema_host, self.release_schema_name)
         self.package_schema_url = urljoin(self.schema_host, self.package_schema_name)

@@ -558,8 +558,8 @@ DEFAULT_OCDS_VERSION = c.cove_ocds_config['schema_version']
     (None, {'extensions': ['a', 'b']}, DEFAULT_OCDS_VERSION, False, False, ['a', 'b']),
     (None, {'version': '1.1', 'extensions': ['a', 'b']}, '1.1', False, False, ['a', 'b'])
 ])
-def test_schema_class_constructor(select_version, release_data, version, invalid_version_argument,
-                                  invalid_version_data, extensions):
+def test_SchemaOCDS_constructor(select_version, release_data, version, invalid_version_argument,
+                                invalid_version_data, extensions):
     schema = c.SchemaOCDS(select_version=select_version, release_data=release_data)
     name = c.cove_ocds_config['schema_name']['release']
     host = c.cove_ocds_config['schema_version_choices'][version][1]
@@ -586,7 +586,7 @@ NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
     ({'extensions': [METRICS_EXT]}, [METRICS_EXT], {}, True),
     ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, [UNKNOWN_URL_EXT, METRICS_EXT], {UNKNOWN_URL_EXT: 'Fetching failed'}, True),
 ])
-def test_schema_class_extensions(release_data, extensions, extension_errors, extended):
+def test_schemaOCDS_extensions(release_data, extensions, extension_errors, extended):
     schema = c.SchemaOCDS(release_data=release_data)
     assert schema.extensions == extensions
 
