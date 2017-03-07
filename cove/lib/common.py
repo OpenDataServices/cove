@@ -95,7 +95,7 @@ class SchemaMixin():
         return json.loads(self.package_schema_str)
 
     def apply_extensions(self, schema_obj):
-        if not getattr(self, 'extensions', None):
+        if not self.extensions:
             return
         for extension_url in self.extensions:
             i = extension_url.rfind('/')
@@ -121,7 +121,7 @@ class SchemaMixin():
 
     def get_release_schema_obj(self, deref=False):
         release_schema_obj = deepcopy(self._release_schema_obj)
-        if getattr(self, 'extensions', None) and self.extensions:
+        if self.extensions:
             self.apply_extensions(release_schema_obj)
         if deref:
             release_text = json.dumps(release_schema_obj)
@@ -135,15 +135,25 @@ class SchemaMixin():
     def get_package_schema_obj(self, deref=False):
         package_schema_obj = deepcopy(self._package_schema_obj)
         if deref:
-            package_schema_obj['properties']['releases']['items'] = {}
-            package_text = json.dumps(package_schema_obj)
-            package_schema_obj = jsonref.loads(
-                package_text,
-                loader=CustomJsonrefLoader(schema_url=self.schema_host),
-                object_pairs_hook=OrderedDict
-            )
-            package_schema_obj['properties']['releases']['items'].update(self.get_release_schema_obj())
+            if self.extensions:
+                package_schema_obj['properties']['releases']['items'] = {}
+                package_text = json.dumps(package_schema_obj)
+                package_schema_obj = jsonref.loads(
+                    package_text,
+                    loader=CustomJsonrefLoader(schema_url=self.schema_host),
+                    object_pairs_hook=OrderedDict
+                )
+                package_schema_obj['properties']['releases']['items'].update(self.get_release_schema_obj(deref=True))
+            else:
+                package_schema_obj = jsonref.loads(
+                    self.package_schema_str,
+                    loader=CustomJsonrefLoader(schema_url=self.schema_host),
+                    object_pairs_hook=OrderedDict
+                )
         return package_schema_obj
+
+    def get_package_schema_fields(self):
+        return set(schema_dict_fields_generator(self.get_package_schema_obj(deref=True)))
 
 
 class Schema360(SchemaMixin):
@@ -152,6 +162,7 @@ class Schema360(SchemaMixin):
     schema_host = cove_360_config['schema_url']
     release_schema_url = urljoin(schema_host, release_schema_name)
     package_schema_url = urljoin(schema_host, package_schema_name)
+    extensions = []
 
 
 class SchemaOCDS(SchemaMixin):
@@ -289,18 +300,9 @@ def schema_dict_fields_generator(schema_dict):
                 yield '/' + property_name
 
 
-def get_schema_data(schema_obj):
-    json_text = schema_obj.package_schema_str
-    return jsonref.loads(json_text, loader=CustomJsonrefLoader(schema_url=schema_obj.schema_host), object_pairs_hook=OrderedDict)
-
-
-def get_schema_fields(schema_obj):
-    return set(schema_dict_fields_generator(get_schema_data(schema_obj)))
-
-
 def get_counts_additional_fields(json_data, schema_obj, context, current_app):
     fields_present = get_fields_present(json_data)
-    schema_fields = get_schema_fields(schema_obj)
+    schema_fields = schema_obj.get_package_schema_fields()
     data_only_all = set(fields_present) - schema_fields
     data_only = set()
     for field in data_only_all:
@@ -388,7 +390,7 @@ def _get_schema_deprecated_paths(schema_obj, obj=None, current_path=(), deprecat
         deprecated_paths = []
 
     if schema_obj:
-        obj = get_schema_data(schema_obj)
+        obj = schema_obj.get_package_schema_obj(deref=True)
 
     for prop, value in obj['properties'].items():
         if current_path:
