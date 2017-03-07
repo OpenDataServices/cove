@@ -15,7 +15,7 @@ import cove.lib.common as common
 import cove.lib.ocds as ocds
 import cove.lib.threesixtygiving as threesixtygiving
 from cove.input.models import SuppliedData
-from cove.lib.common import Schema
+from cove.lib.common import Schema360, SchemaOCDS
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError
 
@@ -134,7 +134,7 @@ def explore(request, pk):
                 })
             if request.current_app == 'cove-ocds':
                 if schema_version_user_choice:
-                    schema_obj = Schema(select_version=schema_version_user_choice)
+                    schema_obj = SchemaOCDS(select_version=schema_version_user_choice)
                     if schema_obj.invalid_version_argument:
                         # This shouldn't really happen unless the user resends manually
                         # the POST request with random data.
@@ -150,7 +150,7 @@ def explore(request, pk):
                             'error': _('{} is not a valid schema version'.format(schema_version_user_choice))
                         })
                 elif json_data.get('version'):
-                    schema_obj = Schema(release_data=json_data)
+                    schema_obj = SchemaOCDS(release_data=json_data)
                     if schema_obj.invalid_version_data:
                         raise CoveInputDataError(context={
                             'sub_title': _("Wrong schema version"),
@@ -163,7 +163,7 @@ def explore(request, pk):
                             'error': _('{} is not a valid schema version'.format(json_data.get('version')))
                         })
                 else:
-                    schema_obj = Schema(select_version=data.schema_version)
+                    schema_obj = SchemaOCDS(select_version=data.schema_version)
 
             if request.current_app == 'cove-ocds' and 'records' in json_data:
                 context['conversion'] = None
@@ -185,7 +185,7 @@ def explore(request, pk):
     else:
         if request.current_app == 'cove-ocds':
             select_version = schema_version_user_choice or data.schema_version
-            schema_obj = Schema(select_version=select_version)
+            schema_obj = SchemaOCDS(select_version=select_version)
             schema_location = schema_obj.release_schema_url
             # Replace json conversion when user chooses a different schema version.
             if data.schema_version and schema_obj.version != data.schema_version:

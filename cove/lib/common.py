@@ -32,7 +32,8 @@ validation_error_lookup = {"date-time": "Date is not in the correct format",
 
 
 config = settings.COVE_CONFIG_BY_NAMESPACE
-ocds_cove_config = {key: config[key]['cove-ocds'] if 'cove-ocds' in config[key] else config[key]['default']for key in config}
+cove_ocds_config = {key: config[key]['cove-ocds'] if 'cove-ocds' in config[key] else config[key]['default']for key in config}
+cove_360_config = {key: config[key]['cove-360'] if 'cove-360' in config[key] else config[key]['default']for key in config}
 
 
 class CustomJsonrefLoader(jsonref.JsonLoader):
@@ -71,18 +72,50 @@ class CustomRefResolver(RefResolver):
             return result
 
 
-class Schema():
-    version_choices = ocds_cove_config['schema_version_choices']
-    default_version = ocds_cove_config['schema_version']
-    record_schema_name = ocds_cove_config['schema_name']['record']
-    package_schema_name = ocds_cove_config['schema_name']['release']
-    release_schema_name = ocds_cove_config['item_schema_name']
+class SchemaMixin():
+    @cached_property
+    def _release_schema_str(self):
+        return requests.get(self.release_schema_url).text
+
+    @cached_property
+    def _package_schema_str(self):
+        if urlparse(self.package_schema_url).scheme == 'http':
+            return requests.get(self.package_schema_url).text
+        else:
+            with open(self.package_schema_url) as openfile:
+                return openfile.read()
+
+    @property
+    def release_schema_obj(self):
+        return json.loads(self._release_schema_str)
+
+    @property
+    def package_schema_obj(self):
+        return json.loads(self._package_schema_str)
+
+
+class Schema360(SchemaMixin):
+    release_schema_name = cove_360_config['item_schema_name']
+    package_schema_name = cove_360_config['schema_name']
+    schema_host = cove_360_config['schema_url']
+    release_schema_url = urljoin(schema_host, release_schema_name)
+    package_schema_url = urljoin(schema_host, package_schema_name)
+
+
+class SchemaOCDS(SchemaMixin):
+    release_schema_name = cove_ocds_config['item_schema_name']
+    package_schema_name = cove_ocds_config['schema_name']['release']
+    record_schema_name = cove_ocds_config['schema_name']['record']
+    version_choices = cove_ocds_config['schema_version_choices']
+    default_version = cove_ocds_config['schema_version']
+    default_schema_host = version_choices[default_version][1]
+    default_release_schema_url = urljoin(default_schema_host, release_schema_name)
 
     def __init__(self, select_version=None, release_data=None):
         self.version = self.default_version
         self.invalid_version_argument = False
         self.invalid_version_data = False
-        self.schema_host = self.version_choices[self.default_version][1]
+        self.schema_host = self.default_schema_host
         self.extensions = []
         self.extension_errors = {}
         self.extended = False
@@ -111,34 +144,9 @@ class Schema():
                     else:
                         self.invalid_version_data = True
 
-        self.record_schema_url = urljoin(self.schema_host, self.record_schema_name)
-        self.package_schema_url = urljoin(self.schema_host, self.package_schema_name)
         self.release_schema_url = urljoin(self.schema_host, self.release_schema_name)
-
-    @classmethod
-    def default_release_schema_url(cls):
-        schema_host = cls.version_choices[cls.default_version][1]
-        return urljoin(schema_host, cls.release_schema_name)
-
-    @cached_property
-    def _package_schema_str(self):
-        if urlparse(self.package_schema_url).scheme == 'http':
-            return requests.get(self.package_schema_url).text
-        else:
-            with open(self.package_schema_url) as openfile:
-                return openfile.read()
-
-    @property
-    def _package_schema_obj(self):
-        return json.loads(self._package_schema_str)
-
-    @cached_property
-    def _release_schema_str(self):
-        return requests.get(self.release_schema_url).text
-
-    @property
-    def _release_schema_obj(self):
-        return json.loads(self._release_schema_str)
+        self.package_schema_url = urljoin(self.schema_host, self.package_schema_name)
+        self.record_schema_url = urljoin(self.schema_host, self.record_schema_name)
 
     def apply_extensions(self, schema_obj):
         for extension_url in self.extensions:
@@ -164,7 +172,7 @@ class Schema():
             self.extended = True
 
     def get_release_schema_obj(self, deref=False):
-        release_schema_obj = deepcopy(self._release_schema_obj)
+        release_schema_obj = deepcopy(self.release_schema_obj)
         if self.extensions:
             self.apply_extensions(release_schema_obj)
         if deref:
@@ -178,7 +186,7 @@ class Schema():
         return release_schema_obj
 
     def get_package_schema_obj(self, deref=False):
-        package_schema_obj = deepcopy(self._package_schema)
+        package_schema_obj = deepcopy(self.package_schema_obj)
         if deref:
             package_schema_obj['properties']['releases']['items'] = {}
             package_text = json.dumps(package_schema_obj)

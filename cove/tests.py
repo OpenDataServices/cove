@@ -541,7 +541,7 @@ def test_data_supplied_schema_version(client):
     assert SuppliedData.objects.get(id=data.id).schema_version == '1.1'
 
 
-DEFAULT_OCDS_VERSION = c.ocds_cove_config['schema_version']
+DEFAULT_OCDS_VERSION = c.cove_ocds_config['schema_version']
 
 
 @pytest.mark.parametrize(('select_version', 'release_data', 'version', 'invalid_version_argument',
@@ -560,9 +560,9 @@ DEFAULT_OCDS_VERSION = c.ocds_cove_config['schema_version']
 ])
 def test_schema_class_constructor(select_version, release_data, version, invalid_version_argument,
                                   invalid_version_data, extensions):
-    schema = c.Schema(select_version=select_version, release_data=release_data)
-    name = c.ocds_cove_config['schema_name']['release']
-    host = c.ocds_cove_config['schema_version_choices'][version][1]
+    schema = c.SchemaOCDS(select_version=select_version, release_data=release_data)
+    name = c.cove_ocds_config['schema_name']['release']
+    host = c.cove_ocds_config['schema_version_choices'][version][1]
     url = host + name
 
     assert schema.version == version
@@ -587,7 +587,7 @@ NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
     ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, [UNKNOWN_URL_EXT, METRICS_EXT], {UNKNOWN_URL_EXT: 'Fetching failed'}, True),
 ])
 def test_schema_class_extensions(release_data, extensions, extension_errors, extended):
-    schema = c.Schema(release_data=release_data)
+    schema = c.SchemaOCDS(release_data=release_data)
     assert schema.extensions == extensions
 
     release_schema_obj = schema.get_release_schema_obj()
