@@ -1,5 +1,6 @@
 import collections
 import json
+import os
 import re
 import requests
 from collections import OrderedDict
@@ -94,63 +95,19 @@ class SchemaMixin():
     def _package_schema_obj(self):
         return json.loads(self.package_schema_str)
 
-    def apply_extensions(self, schema_obj):
-        if not self.extensions:
-            return
-        for extension_url in self.extensions:
-            i = extension_url.rfind('/')
-            url = '{}/{}'.format(extension_url[:i], 'release-schema.json')
-
-            try:
-                extension = requests.get(url)
-            except requests.exceptions.RequestException:
-                self.extension_errors[extension_url] = 'Fetching failed'
-                continue
-            if extension.ok:
-                try:
-                    extension_data = extension.json()
-                except json.JSONDecodeError:
-                    self.extension_errors[extension_url] = 'Invalid JSON'
-                    continue
-            else:
-                self.extension_errors[extension_url] = extension.status_code
-                continue
-
-            schema_obj = json_merge_patch.merge(schema_obj, extension_data)
-            self.extended = True
+    def deref_schema(self, schema_str):
+        return jsonref.loads(schema_str, loader=CustomJsonrefLoader(schema_url=self.schema_host),
+                             object_pairs_hook=OrderedDict)
 
     def get_release_schema_obj(self, deref=False):
-        release_schema_obj = deepcopy(self._release_schema_obj)
-        if self.extensions:
-            self.apply_extensions(release_schema_obj)
         if deref:
-            release_text = json.dumps(release_schema_obj)
-            release_schema_obj = jsonref.loads(
-                release_text,
-                loader=CustomJsonrefLoader(schema_url=self.schema_host),
-                object_pairs_hook=OrderedDict
-            )
-        return release_schema_obj
+            return self.deref_schema(self.release_schema_str)
+        return self._release_schema_obj
 
     def get_package_schema_obj(self, deref=False):
-        package_schema_obj = deepcopy(self._package_schema_obj)
         if deref:
-            if self.extensions:
-                package_schema_obj['properties']['releases']['items'] = {}
-                package_text = json.dumps(package_schema_obj)
-                package_schema_obj = jsonref.loads(
-                    package_text,
-                    loader=CustomJsonrefLoader(schema_url=self.schema_host),
-                    object_pairs_hook=OrderedDict
-                )
-                package_schema_obj['properties']['releases']['items'].update(self.get_release_schema_obj(deref=True))
-            else:
-                package_schema_obj = jsonref.loads(
-                    self.package_schema_str,
-                    loader=CustomJsonrefLoader(schema_url=self.schema_host),
-                    object_pairs_hook=OrderedDict
-                )
-        return package_schema_obj
+            return self.deref_schema(self.package_schema_str)
+        return self._package_schema_obj
 
     def get_package_schema_fields(self):
         return set(schema_dict_fields_generator(self.get_package_schema_obj(deref=True)))
@@ -162,7 +119,6 @@ class Schema360(SchemaMixin):
     schema_host = cove_360_config['schema_url']
     release_schema_url = urljoin(schema_host, release_schema_name)
     package_schema_url = urljoin(schema_host, package_schema_name)
-    extensions = []
 
 
 class SchemaOCDS(SchemaMixin):
@@ -213,8 +169,60 @@ class SchemaOCDS(SchemaMixin):
         self.package_schema_url = urljoin(self.schema_host, self.package_schema_name)
         self.record_schema_url = urljoin(self.schema_host, self.record_schema_name)
 
+    def apply_extensions(self, schema_obj):
+        if not self.extensions:
+            return
+        for extension_url in self.extensions:
+            i = extension_url.rfind('/')
+            url = '{}/{}'.format(extension_url[:i], 'release-schema.json')
+
+            try:
+                extension = requests.get(url)
+            except requests.exceptions.RequestException:
+                self.extension_errors[extension_url] = 'Fetching failed'
+                continue
+            if extension.ok:
+                try:
+                    extension_data = extension.json()
+                except json.JSONDecodeError:
+                    self.extension_errors[extension_url] = 'Invalid JSON'
+                    continue
+            else:
+                self.extension_errors[extension_url] = extension.status_code
+                continue
+
+            schema_obj = json_merge_patch.merge(schema_obj, extension_data)
+            self.extended = True
+
+    def get_release_schema_obj(self, deref=False):
+        release_schema_obj = self._release_schema_obj
+        if self.extensions:
+            release_schema_obj = deepcopy(self._release_schema_obj)
+            self.apply_extensions(release_schema_obj)
+        if deref:
+            if self.extended:
+                extended_release_schema_str = json.dumps(release_schema_obj)
+                release_schema_obj = self.deref_schema(extended_release_schema_str)
+            else:
+                release_schema_obj = self.deref_schema(self.release_schema_str)
+        return release_schema_obj
+
+    def get_package_schema_obj(self, deref=False):
+        package_schema_obj = self._package_schema_obj
+        if deref:
+            deref_release_schema_obj = self.get_release_schema_obj(deref=True)
+            if self.extended:
+                package_schema_obj = deepcopy(self._package_schema_obj)
+                package_schema_obj['properties']['releases']['items'] = {}
+                package_schema_str = json.dumps(package_schema_obj)
+                package_schema_obj = self.deref_schema(package_schema_str)
+                package_schema_obj['properties']['releases']['items'].update(deref_release_schema_obj)
+            else:
+                package_schema_obj = self.deref_schema(self.package_schema_str)
+        return package_schema_obj
+
     def get_extended_release_schema_filepath(self, upload_dir):
-        filepath = urljoin(upload_dir, 'extended_release_schema.json')
+        filepath = os.path.join(upload_dir, 'extended_release_schema.json')
         with open(filepath, 'w') as fp:
             release_schema_str = json.dumps(self.get_release_schema_obj())
             fp.write(release_schema_str)
