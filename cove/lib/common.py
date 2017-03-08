@@ -119,6 +119,7 @@ class Schema360(SchemaMixin):
     schema_host = cove_360_config['schema_url']
     release_schema_url = urljoin(schema_host, release_schema_name)
     package_schema_url = urljoin(schema_host, package_schema_name)
+    extensions = None
 
 
 class SchemaOCDS(SchemaMixin):
@@ -138,6 +139,8 @@ class SchemaOCDS(SchemaMixin):
         self.extensions = []
         self.extension_errors = {}
         self.extended = False
+        self.extended_schema_file = None
+        self.extended_schema_url = None
 
         if select_version:
             try:
@@ -179,16 +182,16 @@ class SchemaOCDS(SchemaMixin):
             try:
                 extension = requests.get(url)
             except requests.exceptions.RequestException:
-                self.extension_errors[extension_url] = 'Fetching failed'
+                self.extension_errors[extension_url] = 'fetching failed'
                 continue
             if extension.ok:
                 try:
                     extension_data = extension.json()
                 except json.JSONDecodeError:
-                    self.extension_errors[extension_url] = 'Invalid JSON'
+                    self.extension_errors[extension_url] = 'invalid JSON'
                     continue
             else:
-                self.extension_errors[extension_url] = extension.status_code
+                self.extension_errors[extension_url] = '{}: {}'.format(extension.status_code, extension.reason.lower())
                 continue
 
             schema_obj = json_merge_patch.merge(schema_obj, extension_data)
@@ -221,12 +224,13 @@ class SchemaOCDS(SchemaMixin):
                 package_schema_obj = self.deref_schema(self.package_schema_str)
         return package_schema_obj
 
-    def get_extended_release_schema_filepath(self, upload_dir):
+    def create_extended_release_schema_file(self, upload_dir, upload_url):
         filepath = os.path.join(upload_dir, 'extended_release_schema.json')
         with open(filepath, 'w') as fp:
-            release_schema_str = json.dumps(self.get_release_schema_obj())
+            release_schema_str = json.dumps(self.get_release_schema_obj(), indent=4)
             fp.write(release_schema_str)
-        return fp.name
+        self.extended_schema_file = filepath
+        self.extended_schema_url = urljoin(upload_url, 'extended_release_schema.json')
 
 
 def unique_ids(validator, ui, instance, schema):
@@ -412,7 +416,7 @@ def _get_schema_deprecated_paths(schema_obj, obj=None, current_path=(), deprecat
                     (value['deprecated']['deprecatedVersion'], value['deprecated']['description'])
                 ))
 
-        if value.get('type') == 'object':
+        if value.get('type') == 'object' and value.get('properties'):
             _get_schema_deprecated_paths(None, value, path, deprecated_paths)
         elif value.get('type') == 'array' and value['items'].get('properties'):
             _get_schema_deprecated_paths(None, value['items'], path, deprecated_paths)

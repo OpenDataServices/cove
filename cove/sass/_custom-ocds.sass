@@ -75,3 +75,19 @@ option:disabled
   line-height: 0 !important
   padding-top: 20px !important
   color:#777
+
+.font-tick
+  font-family: 'tick'
+  margin-right: 5px
+  &.tick
+    color: green
+    &::after
+      content: '\2713'
+  &.cross
+    color: red
+    &::after
+      content: '\2715'
+  &.question
+    color: orange
+    &::after
+      content: '?'

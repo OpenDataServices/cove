@@ -115,7 +115,7 @@ def explore_ocds(request, pk, data, context):
                     'error': format(err)
                 })
             if post_version_choice:
-                schema_ocds = SchemaOCDS(select_version=post_version_choice)
+                schema_ocds = SchemaOCDS(select_version=post_version_choice, release_data=json_data)
                 if schema_ocds.invalid_version_argument:
                     # This shouldn't really happen unless the user resends manually
                     # the POST request with random data.
@@ -130,8 +130,8 @@ def explore_ocds(request, pk, data, context):
                                  'not a recognised choice for the schema version'.format(post_version_choice)),
                         'error': _('{} is not a valid schema version'.format(post_version_choice))
                     })
-            elif isinstance(json_data, dict) and json_data.get('version'):
-                schema_ocds = SchemaOCDS(release_data=json_data)
+            elif isinstance(json_data, dict):
+                schema_ocds = SchemaOCDS(select_version=data.schema_version, release_data=json_data)
                 if schema_ocds.invalid_version_data:
                     raise CoveInputDataError(context={
                         'sub_title': _("Wrong schema version"),
@@ -155,8 +155,11 @@ def explore_ocds(request, pk, data, context):
                     replace = True
 
                 url = schema_ocds.release_schema_url
-                if schema_ocds.extended:
-                    url = schema_ocds.get_extended_release_schema_filepath(data.upload_dir())
+                if schema_ocds.extensions:
+                    schema_ocds.get_release_schema_obj()
+                    if schema_ocds.extended:
+                        schema_ocds.create_extended_release_schema_file(data.upload_dir(), data.upload_url())
+                        url = schema_ocds.extended_schema_file
 
                 context.update(convert_json(request, data, schema_url=url, replace=replace))
 
@@ -215,8 +218,18 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 
+    extensions = None
+    if schema_obj.extensions:
+        extensions = {
+            'extensions': schema_obj.extensions,
+            'extension_errors': schema_obj.extension_errors,
+            'is_extended_schema': schema_obj.extended,
+            'extended_schema_url': schema_obj.extended_schema_url
+        }
+
     context.update({
         'schema_url': schema_obj.package_schema_url,
+        'extensions': extensions,
         'validation_errors': sorted(validation_errors.items()),
         'validation_errors_count': sum(len(value) for value in validation_errors.values()),
         'deprecated_fields': common.get_json_data_deprecated_fields(json_data, schema_obj),

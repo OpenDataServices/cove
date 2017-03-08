@@ -587,10 +587,10 @@ NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
 
 @pytest.mark.parametrize(('release_data', 'extensions', 'extension_errors', 'extended'), [
     (None, [], {}, False),
-    ({'extensions': [NOT_FOUND_URL_EXT]}, [NOT_FOUND_URL_EXT], {NOT_FOUND_URL_EXT: 404}, False),
-    ({'extensions': [UNKNOWN_URL_EXT]}, [UNKNOWN_URL_EXT], {UNKNOWN_URL_EXT: 'Fetching failed'}, False),
+    ({'extensions': [NOT_FOUND_URL_EXT]}, [NOT_FOUND_URL_EXT], {NOT_FOUND_URL_EXT: '404: not found'}, False),
+    ({'extensions': [UNKNOWN_URL_EXT]}, [UNKNOWN_URL_EXT], {UNKNOWN_URL_EXT: 'fetching failed'}, False),
     ({'extensions': [METRICS_EXT]}, [METRICS_EXT], {}, True),
-    ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, [UNKNOWN_URL_EXT, METRICS_EXT], {UNKNOWN_URL_EXT: 'Fetching failed'}, True),
+    ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, [UNKNOWN_URL_EXT, METRICS_EXT], {UNKNOWN_URL_EXT: 'fetching failed'}, True),
 ])
 def test_SchemaOCDS_extensions(release_data, extensions, extension_errors, extended):
     schema = c.SchemaOCDS(release_data=release_data)

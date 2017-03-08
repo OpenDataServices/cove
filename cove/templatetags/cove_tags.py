@@ -27,3 +27,8 @@ def get_message_type(error):
 @register.filter(name='concat')
 def concat(arg1, arg2):
     return str(arg1) + str(arg2)
+
+
+@register.filter(name='get_value')
+def get_value(value, arg):
+    return value[arg]

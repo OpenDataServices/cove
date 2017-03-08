@@ -5,6 +5,14 @@
         "uri": "https://buyandsell.gc.ca", 
         "uid": null
     },
+    "extensions": [
+        "https://raw.githubusercontent.com/open-contracting/ocds_metrics_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting/ocds_extension_parties/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting/ocds_partyDetails_scale_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting/bad_path_to_extensions/extension.json",
+        "http://example.com/404/",
+        "badprotopcol://example.com"
+    ],
     "releases": [
         {
             "date": "2014-03-25T00:00:00.00Z", 
@@ -41,7 +49,7 @@
                 ], 
                 "tenderPeriod": {
                     "endDate": "2014-04-15T14:00:00.00Z"
-                },
+                }, 
                 "items": [
                     {
                         "id": "1", 
@@ -49,8 +57,7 @@
                             "scheme": "GSIN", 
                             "description": "F029: Other Animal Care and Control Services"
                         }, 
-                        "description": "Canine Control of the Canada Geese (14-2015)",
-                        "quantity": 10
+                        "description": "Canine Control of the Canada Geese (14-2015)"
                     }
                 ], 
                 "awardCriteriaDetails": null, 
