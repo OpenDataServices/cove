@@ -58,7 +58,7 @@
             <p>We have tried to convert your JSON into a spreadsheet format.</p><p>The results can be seen below.</p>
             <ul class="list-unstyled left-space">
               <li>
-                <a href="{{original_file.url}}">{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{original_file.url}}">{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
               </li>
               {% if not conversion_error %}
                 <li>
@@ -82,24 +82,25 @@
             <p>We have tried to convert your data into JSON format.</p><p>The results can be seen below.</p>
             <ul class="list-unstyled">
               <li>
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
                 <a href="{{original_file.url}}">
                   {% if file_type == 'xlsx' %}
-                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{xlsx}} <small>({{original}})</small>
+                    {{xlsx}} <small>({{original}})</small>
                   {% elif file_type == 'csv' %}
-                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{csv}} <small>({{original}})</small>
+                    {{csv}} <small>({{original}})</small>
                   {% endif %}
                   </a> 
                   <small>{{original_file.size|filesizeformat }}</small>
                 </li>
                 <li>
-                  <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
+                  <span class="glyphicon glyphicon-download" aria-hidden="true"><a href="{{converted_url}}"></span>{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
                 </li>
             </ul>
 
           {% else %}
             <ul class="list-unstyled">
               <li>
-                <a href="{{original_file.url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
+                <span class="glyphicon glyphicon-download" aria-hidden="true"><a href="{{original_file.url}}"></span>{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
                 {% if conversion == 'flattenable' %}
                   <br/>
                   <br/>
@@ -141,7 +142,7 @@
         {% else %}
           <p>All the extensions above were applied to extend the schema</p>
         {% endif %}
-        <a href="{{extensions.extended_schema_url}}"> <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Get a copy of the schema with extension patches applied</a>
+        <span class="glyphicon glyphicon-download" aria-hidden="true"></span> <a href="{{extensions.extended_schema_url}}"> &nbsp;Get a copy of the schema with extension patches applied</a>
       {% else %}
         <p>None of the extensions above could be applied. Your data has been validated against a schema with no extension.</p>
       {% endif %}
