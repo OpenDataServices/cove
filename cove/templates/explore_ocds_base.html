@@ -191,9 +191,13 @@
         </h4>
       </div>
       <div id="additionalClosedCodelist" class="collapse in">
+        <div class="panel-body">
+          The fields below use closed codelists. When using these fields, you <strong> must </strong> use one of the pre-defined codelist values. If you use a value that is not on the relevant codelist, your data will not pass validation.
         {% with additional_codelist_values=additional_closed_codelist_values %}
         {% include "additional_codelist_values.html" %}
         {% endwith%}
+          You may need to create a mapping between your local codes and the OCDS closed codelists to address these errors. In most cases, there will be a ‘detail’ field where you can also include your local codes. If you have already completed a mapping, please review the spelling and capitalisation used in these closed codelist fields.
+        </div>
       </div>
     </div>
 {% endif %}
@@ -223,10 +227,14 @@
           <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Codelist Values' %}</span>
         </h4>
       </div>
-      <div id="additionalOpenCodelist" class="collapse in">
-        {% with additional_codelist_values=additional_open_codelist_values %}
-        {% include "additional_codelist_values.html" %}
-        {% endwith%}
+      <div class="panel-body">
+        Your data contains a number of fields that use an open codelist. You should use values from the codelist whenever possible, but if the codelist does not provide the values you need, you are permitted to add additional values. The values below do not appear in the codelist; you should check that you intended these as additional values.
+        <div id="additionalOpenCodelist" class="collapse in">
+          {% with additional_codelist_values=additional_open_codelist_values %}
+          {% include "additional_codelist_values.html" %}
+          {% endwith%}
+        </div>
+        Make sure your list the definition of any additional codelist values you include within your <a href="http://standard.open-contracting.org/latest/en/implementation/publication_policy/">publication policy</a>, and if you believe they should be added as recommended values in the open codelist, please suggest this via the <a href="https://github.com/open-contracting/standard/issues/new"> OCDS issue tracker.</a>
       </div>
     </div>
 {% endif %}

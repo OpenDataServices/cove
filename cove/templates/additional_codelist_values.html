@@ -13,7 +13,7 @@
    <tbody>
    {% for path, detail in additional_codelist_values.items %}
       <tr>
-        <td>{{detail.field}}</td> <td>{{detail.path}}</td> <td><a href="{{detail.codelist_url}}" >{{detail.codelist}}</td> <td>{{detail.values|join:", "}}</td>
+        <td>{{detail.field}}</td> <td>{{detail.path}}</td> <td><a href="http://datapipes.okfnlabs.org/csv/html/?url={{detail.codelist_url}}" >{{detail.codelist}}</td> <td>{{detail.values|join:", "}}</td>
       </tr>
    {% endfor %}
    </tbody>
