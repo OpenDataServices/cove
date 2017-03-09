@@ -93,14 +93,14 @@
                   <small>{{original_file.size|filesizeformat }}</small>
                 </li>
                 <li>
-                  <span class="glyphicon glyphicon-download" aria-hidden="true"><a href="{{converted_url}}"></span>{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
+                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}">{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
                 </li>
             </ul>
 
           {% else %}
             <ul class="list-unstyled">
               <li>
-                <span class="glyphicon glyphicon-download" aria-hidden="true"><a href="{{original_file.url}}"></span>{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{original_file.url}}">{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
                 {% if conversion == 'flattenable' %}
                   <br/>
                   <br/>

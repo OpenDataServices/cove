@@ -131,6 +131,13 @@ class SchemaOCDS(SchemaMixin):
     default_release_schema_url = urljoin(default_schema_host, release_schema_name)
 
     def __init__(self, select_version=None, release_data=None):
+        '''Build the schema object using an specific OCDS schema version
+        
+        The version used will be select_version, release_data,get('version') or
+        default version, in that order. Invalid version choices in select_version or
+        release_data will be skipped and registered as self.invalid_version_argument
+        and self.invalid_version_data respectively.
+        '''
         self.version = self.default_version
         self.invalid_version_argument = False
         self.invalid_version_data = False
