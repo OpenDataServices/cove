@@ -141,7 +141,7 @@
         {% else %}
           <p>All the extensions above were applied to extend the schema</p>
         {% endif %}
-        <a href="{{extensions.extended_schema_url}}">Get a copy of the schema with extension patches applied</a>
+        <a href="{{extensions.extended_schema_url}}"> <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Get a copy of the schema with extension patches applied</a>
       {% else %}
         <p>None of the extensions above could be applied. Your data has been validated against a schema with no extension.</p>
       {% endif %}
