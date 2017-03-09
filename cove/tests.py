@@ -595,7 +595,8 @@ NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
 def test_SchemaOCDS_extensions(release_data, extensions, extension_errors, extended):
     schema = c.SchemaOCDS(release_data=release_data)
     assert schema.extensions == extensions
-
+    assert not schema.extended
+    
     release_schema_obj = schema.get_release_schema_obj()
     assert schema.extension_errors == extension_errors
     assert schema.extended == extended
@@ -606,6 +607,34 @@ def test_SchemaOCDS_extensions(release_data, extensions, extension_errors, exten
     else:
         assert 'Metric' not in release_schema_obj['definitions'].keys()
         assert not release_schema_obj['definitions']['Award']['properties'].get('agreedMetrics')
+
+
+@pytest.mark.django_db
+def test_SchemaOCDS_extended_release_schema_file():
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_1_release_with_extensions.json')) as fp:
+        data.original_file.save('test.json', UploadedFile(fp))
+        fp.seek(0)
+        json_data = json.load(fp)
+    schema = c.SchemaOCDS(release_data=json_data)
+    assert not schema.extended
+
+    schema.get_release_schema_obj()
+    assert schema.extended
+    assert not schema.extended_schema_file
+    assert not schema.extended_schema_url
+
+    schema.create_extended_release_schema_file(data.upload_dir(), data.upload_url())
+    assert schema.extended_schema_file == os.path.join(data.upload_dir(), 'extended_release_schema.json')
+    assert schema.extended_schema_url == os.path.join(data.upload_url(), 'extended_release_schema.json')
+
+    json_data = json.loads('{"extensions": [], "releases": [{"ocid": "xx"}]}')
+    schema = c.SchemaOCDS(release_data=json_data)
+    schema.get_release_schema_obj()
+    schema.create_extended_release_schema_file(data.upload_dir(), data.upload_url())
+    assert not schema.extended
+    assert not schema.extended_schema_file
+    assert not schema.extended_schema_url
 
 
 def test_Schema360():

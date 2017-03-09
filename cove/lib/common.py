@@ -119,7 +119,6 @@ class Schema360(SchemaMixin):
     schema_host = cove_360_config['schema_url']
     release_schema_url = urljoin(schema_host, release_schema_name)
     package_schema_url = urljoin(schema_host, package_schema_name)
-    extensions = None
 
 
 class SchemaOCDS(SchemaMixin):
@@ -225,6 +224,8 @@ class SchemaOCDS(SchemaMixin):
         return package_schema_obj
 
     def create_extended_release_schema_file(self, upload_dir, upload_url):
+        if not self.extended:
+            return
         filepath = os.path.join(upload_dir, 'extended_release_schema.json')
         with open(filepath, 'w') as fp:
             release_schema_str = json.dumps(self.get_release_schema_obj(), indent=4)

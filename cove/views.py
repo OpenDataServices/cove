@@ -216,7 +216,7 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
             validiation_error_fp.write(json.dumps(validation_errors))
 
     extensions = None
-    if schema_obj.extensions:
+    if getattr(schema_obj, 'extensions', None):
         extensions = {
             'extensions': schema_obj.extensions,
             'extension_errors': schema_obj.extension_errors,
