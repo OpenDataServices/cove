@@ -281,7 +281,7 @@ def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path
     if schema_url:
         obj = get_schema_data(schema_url, schema_name)
 
-    for prop, value in obj['properties'].items():
+    for prop, value in obj.get('properties', {}).items():
         if current_path:
             path = current_path + (prop,)
         else:
