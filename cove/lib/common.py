@@ -205,7 +205,10 @@ class SchemaOCDS(SchemaMixin):
 
     def get_release_schema_obj(self, deref=False):
         release_schema_obj = self._release_schema_obj
-        if self.extensions:
+        if self.extended_schema_file:
+            with open(self.extended_schema_file) as fp:
+                release_schema_obj = json.load(fp)
+        elif self.extensions:
             release_schema_obj = deepcopy(self._release_schema_obj)
             self.apply_extensions(release_schema_obj)
         if deref:
@@ -231,9 +234,9 @@ class SchemaOCDS(SchemaMixin):
         return package_schema_obj
 
     def create_extended_release_schema_file(self, upload_dir, upload_url):
-        if not self.extended:
-            return
         filepath = os.path.join(upload_dir, 'extended_release_schema.json')
+        if not self.extended or os.path.exists(filepath):
+            return
         with open(filepath, 'w') as fp:
             release_schema_str = json.dumps(self.get_release_schema_obj(), indent=4)
             fp.write(release_schema_str)
