@@ -243,6 +243,23 @@ class SchemaOCDS(SchemaMixin):
         self.extended_schema_file = filepath
         self.extended_schema_url = urljoin(upload_url, 'extended_release_schema.json')
 
+    @cached_property
+    def record_schema_str(self):
+        uri_scheme = urlparse(self.record_schema_url).scheme
+        if uri_scheme == 'http' or uri_scheme == 'https':
+            return requests.get(self.record_schema_url).text
+        else:
+            with open(self.record_schema_url) as fp:
+                return fp.read()
+
+    @property
+    def _record_schema_obj(self):
+        return json.loads(self.record_schema_str)
+
+    def get_record_schema_obj(self):
+        record_schema_obj = self._record_schema_obj
+        return record_schema_obj
+
 
 def unique_ids(validator, ui, instance, schema):
     if ui and validator.is_type(instance, "array"):
@@ -341,16 +358,20 @@ def get_counts_additional_fields(json_data, schema_obj, context, current_app):
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
 
 
-def get_schema_validation_errors(json_data, schema_obj, current_app, cell_source_map, heading_source_map):
-    package_schema_obj = schema_obj.get_package_schema_obj()
+def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app, cell_source_map, heading_source_map):
+    if schema_name == 'record-package-schema.json':
+        pkg_schema_obj = schema_obj.get_record_schema_obj()
+    else:
+        pkg_schema_obj = schema_obj.get_package_schema_obj()
+
     validation_errors = collections.defaultdict(list)
     format_checker = FormatChecker()
 
     if current_app == 'cove-360':
         format_checker.checkers['date-time'] = (tools.datetime_or_date, ValueError)
-    
-    resolver = CustomRefResolver('', package_schema_obj, schema_url=schema_obj.schema_host)
-    for n, e in enumerate(validator(package_schema_obj, format_checker=format_checker, resolver=resolver).iter_errors(json_data)):
+
+    resolver = CustomRefResolver('', pkg_schema_obj, schema_url=schema_obj.schema_host)
+    for n, e in enumerate(validator(pkg_schema_obj, format_checker=format_checker, resolver=resolver).iter_errors(json_data)):
         message = e.message
         path = "/".join(str(item) for item in e.path)
         path_no_number = "/".join(str(item) for item in e.path if not isinstance(item, int))

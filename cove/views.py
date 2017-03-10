@@ -210,7 +210,7 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
-        validation_errors = common.get_schema_validation_errors(json_data, schema_obj, request.current_app,
+        validation_errors = common.get_schema_validation_errors(json_data, schema_obj, schema_name, request.current_app,
                                                                 cell_source_map, heading_source_map)
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))

@@ -279,12 +279,13 @@ def test_get_schema_validation_errors():
     schema_obj = c.SchemaOCDS()
     schema_obj.schema_host = 'http://ocds.open-contracting.org/standard/r/1__0__RC/'
     schema_obj.package_schema_url = os.path.join(schema_obj.schema_host, schema_obj.package_schema_name)
+    schema_name = schema_obj.package_schema_name
 
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
-        error_list = c.get_schema_validation_errors(json.load(fp), schema_obj, 'cove-ocds', {}, {})
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_obj, schema_name, 'cove-ocds', {}, {})
         assert len(error_list) == 0
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_invalid.json')) as fp:
-        error_list = c.get_schema_validation_errors(json.load(fp), schema_obj, 'cove-ocds', {}, {})
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_obj, schema_name, 'cove-ocds', {}, {})
         assert len(error_list) > 0
 
 
