@@ -54,15 +54,17 @@ class CustomJsonrefLoader(jsonref.JsonLoader):
 
 class CustomRefResolver(RefResolver):
     def __init__(self, *args, **kw):
-        self.schema_url = kw.pop('schema_url')
+        self.schema_file = kw.pop('schema_file', None)
+        self.schema_url = kw.pop('schema_url', '')
         super().__init__(*args, **kw)
 
     def resolve_remote(self, uri):
-        uri = self.schema_url + uri.split('/')[-1]
+        schema_name = self.schema_file or uri.split('/')[-1]
+        uri = urljoin(self.schema_url, schema_name)
         document = self.store.get(uri)
+
         if document:
             return document
-
         if self.schema_url.startswith("http"):
             return super().resolve_remote(uri)
         else:
@@ -359,10 +361,9 @@ def get_counts_additional_fields(json_data, schema_obj, context, current_app):
 
 
 def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app, cell_source_map, heading_source_map):
+    pkg_schema_obj = schema_obj.get_package_schema_obj()
     if schema_name == 'record-package-schema.json':
         pkg_schema_obj = schema_obj.get_record_schema_obj()
-    else:
-        pkg_schema_obj = schema_obj.get_package_schema_obj()
 
     validation_errors = collections.defaultdict(list)
     format_checker = FormatChecker()
@@ -370,7 +371,11 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app
     if current_app == 'cove-360':
         format_checker.checkers['date-time'] = (tools.datetime_or_date, ValueError)
 
-    resolver = CustomRefResolver('', pkg_schema_obj, schema_url=schema_obj.schema_host)
+    if schema_obj.extended:
+        resolver = CustomRefResolver('', pkg_schema_obj, schema_file=schema_obj.extended_schema_file)
+    else:
+        resolver = CustomRefResolver('', pkg_schema_obj, schema_url=schema_obj.schema_host)
+
     for n, e in enumerate(validator(pkg_schema_obj, format_checker=format_checker, resolver=resolver).iter_errors(json_data)):
         message = e.message
         path = "/".join(str(item) for item in e.path)
