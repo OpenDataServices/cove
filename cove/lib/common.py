@@ -144,8 +144,8 @@ class SchemaOCDS(SchemaMixin):
         self.invalid_version_argument = False
         self.invalid_version_data = False
         self.schema_host = self.default_schema_host
-        self.extensions = []
-        self.extension_errors = {}
+        self.extensions = {}
+        self.invalid_extension = {}
         self.extended = False
         self.extended_schema_file = None
         self.extended_schema_url = None
@@ -163,7 +163,9 @@ class SchemaOCDS(SchemaMixin):
                 self.schema_host = self.version_choices[select_version][1]
 
         if release_data:
-            self.extensions = release_data.get('extensions', [])
+            data_extensions = release_data.get('extensions', {})
+            if data_extensions:
+                self.extensions = {ext: tuple() for ext in data_extensions}
             if not select_version:
                 release_version = release_data.get('version')
                 if release_version:
@@ -183,26 +185,30 @@ class SchemaOCDS(SchemaMixin):
     def apply_extensions(self, schema_obj):
         if not self.extensions:
             return
-        for extension_url in self.extensions:
-            i = extension_url.rfind('/')
-            url = '{}/{}'.format(extension_url[:i], 'release-schema.json')
+        for extensions_descriptor_url in self.extensions.keys():
+            i = extensions_descriptor_url.rfind('/')
+            url = '{}/{}'.format(extensions_descriptor_url[:i], 'release-schema.json')
 
             try:
                 extension = requests.get(url)
             except requests.exceptions.RequestException:
-                self.extension_errors[extension_url] = 'fetching failed'
+                self.invalid_extension[extensions_descriptor_url] = 'fetching failed'
                 continue
             if extension.ok:
                 try:
                     extension_data = extension.json()
                 except json.JSONDecodeError:
-                    self.extension_errors[extension_url] = 'invalid JSON'
+                    self.invalid_extension[extensions_descriptor_url] = 'invalid JSON'
                     continue
             else:
-                self.extension_errors[extension_url] = '{}: {}'.format(extension.status_code, extension.reason.lower())
+                self.invalid_extension[extensions_descriptor_url] = '{}: {}'.format(extension.status_code,
+                                                                            extension.reason.lower())
                 continue
 
             schema_obj = json_merge_patch.merge(schema_obj, extension_data)
+            extensions_descriptor = requests.get(extensions_descriptor_url).json()
+            self.extensions[extensions_descriptor_url] = (url, extensions_descriptor['name'],
+                                                          extensions_descriptor['description'])
             self.extended = True
 
     def get_release_schema_obj(self, deref=False):
@@ -371,7 +377,7 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app
     if current_app == 'cove-360':
         format_checker.checkers['date-time'] = (tools.datetime_or_date, ValueError)
 
-    if schema_obj.extended:
+    if getattr(schema_obj, 'extended', None):
         resolver = CustomRefResolver('', pkg_schema_obj, schema_file=schema_obj.extended_schema_file)
     else:
         resolver = CustomRefResolver('', pkg_schema_obj, schema_url=schema_obj.schema_host)

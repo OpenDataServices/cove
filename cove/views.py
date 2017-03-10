@@ -219,7 +219,7 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
     if getattr(schema_obj, 'extensions', None):
         extensions = {
             'extensions': schema_obj.extensions,
-            'extension_errors': schema_obj.extension_errors,
+            'invalid_extension': schema_obj.invalid_extension,
             'is_extended_schema': schema_obj.extended,
             'extended_schema_url': schema_obj.extended_schema_url
         }

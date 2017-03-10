@@ -8,7 +8,7 @@
     "extensions": [
         "https://raw.githubusercontent.com/open-contracting/bad_path_to_extensions/extension.json",
         "http://example.com/404/",
-        "badprotopcol://example.com"
+        "badprotocol://example.com"
     ],
     "releases": [
         {

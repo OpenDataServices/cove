@@ -553,17 +553,17 @@ DEFAULT_OCDS_VERSION = c.cove_ocds_config['schema_version']
 
 @pytest.mark.parametrize(('select_version', 'release_data', 'version', 'invalid_version_argument',
                           'invalid_version_data', 'extensions'), [
-    (None, None, DEFAULT_OCDS_VERSION, False, False, []),
-    ('1.1', None, '1.1', False, False, []),
-    (None, {'version': '1.1'}, '1.1', False, False, []),
-    (None, {'extensions': ['c', 'd']}, DEFAULT_OCDS_VERSION, False, False, ['c', 'd']),
-    ('1.1', {'version': '1.0'}, '1.1', False, False, []),
-    ('1.1', {'version': '1.0'}, '1.1', False, False, []),
-    ('1.bad', {'version': '1.1'}, '1.1', True, False, []),
-    ('1.wrong', {'version': '1.bad'}, DEFAULT_OCDS_VERSION, True, True, []),
-    (None, {'version': '1.bad'}, DEFAULT_OCDS_VERSION, False, True, []),
-    (None, {'extensions': ['a', 'b']}, DEFAULT_OCDS_VERSION, False, False, ['a', 'b']),
-    (None, {'version': '1.1', 'extensions': ['a', 'b']}, '1.1', False, False, ['a', 'b'])
+    (None, None, DEFAULT_OCDS_VERSION, False, False, {}),
+    ('1.1', None, '1.1', False, False, {}),
+    (None, {'version': '1.1'}, '1.1', False, False, {}),
+    (None, {'extensions': ['c', 'd']}, DEFAULT_OCDS_VERSION, False, False, {'c': (), 'd': ()}),
+    ('1.1', {'version': '1.0'}, '1.1', False, False, {}),
+    ('1.1', {'version': '1.0'}, '1.1', False, False, {}),
+    ('1.bad', {'version': '1.1'}, '1.1', True, False, {}),
+    ('1.wrong', {'version': '1.bad'}, DEFAULT_OCDS_VERSION, True, True, {}),
+    (None, {'version': '1.bad'}, DEFAULT_OCDS_VERSION, False, True, {}),
+    (None, {'extensions': ['a', 'b']}, DEFAULT_OCDS_VERSION, False, False, {'a': (), 'b': ()}),
+    (None, {'version': '1.1', 'extensions': ['a', 'b']}, '1.1', False, False, {'a': (), 'b': ()})
 ])
 def test_SchemaOCDS_constructor(select_version, release_data, version, invalid_version_argument,
                                 invalid_version_data, extensions):
@@ -586,20 +586,20 @@ UNKNOWN_URL_EXT = 'http://bad-url-for-extensions.com/extension.json'
 NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
 
 
-@pytest.mark.parametrize(('release_data', 'extensions', 'extension_errors', 'extended'), [
-    (None, [], {}, False),
-    ({'extensions': [NOT_FOUND_URL_EXT]}, [NOT_FOUND_URL_EXT], {NOT_FOUND_URL_EXT: '404: not found'}, False),
-    ({'extensions': [UNKNOWN_URL_EXT]}, [UNKNOWN_URL_EXT], {UNKNOWN_URL_EXT: 'fetching failed'}, False),
-    ({'extensions': [METRICS_EXT]}, [METRICS_EXT], {}, True),
-    ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, [UNKNOWN_URL_EXT, METRICS_EXT], {UNKNOWN_URL_EXT: 'fetching failed'}, True),
+@pytest.mark.parametrize(('release_data', 'extensions', 'invalid_extension', 'extended'), [
+    (None, {}, {}, False),
+    ({'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False),
+    ({'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False),
+    ({'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True),
+    ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True),
 ])
-def test_SchemaOCDS_extensions(release_data, extensions, extension_errors, extended):
+def test_SchemaOCDS_extensions(release_data, extensions, invalid_extension, extended):
     schema = c.SchemaOCDS(release_data=release_data)
     assert schema.extensions == extensions
     assert not schema.extended
     
     release_schema_obj = schema.get_release_schema_obj()
-    assert schema.extension_errors == extension_errors
+    assert schema.invalid_extension == invalid_extension
     assert schema.extended == extended
 
     if extended:

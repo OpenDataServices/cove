@@ -121,7 +121,7 @@
 </div><!--End Row -->
 
 {% if extensions %}
-  {% with ext=extensions.extensions ext_errors=extensions.extension_errors %}
+  {% with ext=extensions.extensions ext_errors=extensions.invalid_extension %}
   <a name="conversion-warning" class="anchor"></a>
   <div class="panel panel-warning">
     <div class="panel-heading">
@@ -130,22 +130,34 @@
       </h4>
     </div>
     <div class="panel-body">
-      <p>You data contains the following schema extensions:</p>
+      <p>You data contains the following schema extensions{% if not extensions.is_extended_schema %} but it wasn't possible to fetch them{% endif %}:</p>
       <ul>
-        {% for url in ext %}
-          <li class="list-unstyled"><a href="{{url}}" {% if url in ext_errors.keys %} class="text-warning"{% endif %}>{{url}}</a>{% if url in ext_errors.keys %} ({{ext_errors|get_value:url}}) &nbsp;&nbsp;<span class="font-tick cross"></span> {% else %} &nbsp;&nbsp;<span class="font-tick tick"></span>{% endif %}</li>
+        {% for ext_descriptor_url, ext_details in ext.items %}
+          {% if ext_details %}
+          <li><a href="{{ext_details.0}}">{{ext_details.1}}</a> &nbsp;&nbsp;<span class="font-tick tick"></span><p><small>{{ext_details.2}}</small><p></li>
+          {% endif %}
         {% endfor %}
       </ul>
+      {% if ext_errors %}
+      {% if extensions.is_extended_schema %}<p class="indent"> The following extensions failed:{% endif %}
+      <ul>
+        {% for ext_descriptor_url, error in ext_errors.items %}
+          <li><a href="{{ext_descriptor_url}}" class="text-warning">{{ext_descriptor_url}}</a>  &nbsp;&nbsp;<span class="font-tick cross"></span><p><small>{{error}}</small><p></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
       {% if extensions.is_extended_schema %}
         {% if ext_errors %}
           <p>Only those extensions successfully fetched were applied to extend the schema.</p>
         {% else %}
-          <p>All the extensions above were applied to extend the schema</p>
+          <p>All the extensions above were applied to extend the schema.</p>
         {% endif %}
         <span class="glyphicon glyphicon-download" aria-hidden="true"></span> <a href="{{extensions.extended_schema_url}}"> &nbsp;Get a copy of the schema with extension patches applied</a>
       {% else %}
         <p>None of the extensions above could be applied. Your data has been validated against a schema with no extensions.</p>
       {% endif %}
+
     </div>
   </div>
   {% endwith %}
