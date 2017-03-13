@@ -174,9 +174,9 @@ def explore_ocds(request, pk, data, context):
 
 
 def render_explore(request, data, json_data, schema_obj, context, replace_conversion):
-    schema_name = schema_obj.package_schema_name
+    schema_name = schema_obj.release_pkg_schema_name
     if 'records' in json_data:
-        schema_name = schema_obj.record_schema_name
+        schema_name = schema_obj.record_pkg_schema_name
 
     schema_version = getattr(schema_obj, 'version', None)
     schema_version_choices = getattr(schema_obj, 'version_choices', None)
@@ -227,7 +227,7 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
         }
 
     context.update({
-        'schema_url': schema_obj.package_schema_url,
+        'schema_url': schema_obj.release_pkg_schema_url,
         'extensions': extensions,
         'validation_errors': sorted(validation_errors.items()),
         'validation_errors_count': sum(len(value) for value in validation_errors.values()),

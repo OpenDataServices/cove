@@ -81,12 +81,12 @@ class SchemaMixin():
         return requests.get(self.release_schema_url).text
 
     @cached_property
-    def package_schema_str(self):
-        uri_scheme = urlparse(self.package_schema_url).scheme
+    def release_pkg_schema_str(self):
+        uri_scheme = urlparse(self.release_pkg_schema_url).scheme
         if uri_scheme == 'http' or uri_scheme == 'https':
-            return requests.get(self.package_schema_url).text
+            return requests.get(self.release_pkg_schema_url).text
         else:
-            with open(self.package_schema_url) as fp:
+            with open(self.release_pkg_schema_url) as fp:
                 return fp.read()
 
     @property
@@ -94,8 +94,8 @@ class SchemaMixin():
         return json.loads(self.release_schema_str)
 
     @property
-    def _package_schema_obj(self):
-        return json.loads(self.package_schema_str)
+    def _release_pkg_schema_obj(self):
+        return json.loads(self.release_pkg_schema_str)
 
     def deref_schema(self, schema_str):
         return jsonref.loads(schema_str, loader=CustomJsonrefLoader(schema_url=self.schema_host),
@@ -106,27 +106,27 @@ class SchemaMixin():
             return self.deref_schema(self.release_schema_str)
         return self._release_schema_obj
 
-    def get_package_schema_obj(self, deref=False):
+    def get_release_pkg_schema_obj(self, deref=False):
         if deref:
-            return self.deref_schema(self.package_schema_str)
-        return self._package_schema_obj
+            return self.deref_schema(self.release_pkg_schema_str)
+        return self._release_pkg_schema_obj
 
-    def get_package_schema_fields(self):
-        return set(schema_dict_fields_generator(self.get_package_schema_obj(deref=True)))
+    def get_release_pkg_schema_fields(self):
+        return set(schema_dict_fields_generator(self.get_release_pkg_schema_obj(deref=True)))
 
 
 class Schema360(SchemaMixin):
-    release_schema_name = cove_360_config['item_schema_name']
-    package_schema_name = cove_360_config['schema_name']
     schema_host = cove_360_config['schema_url']
+    release_schema_name = cove_360_config['item_schema_name']
+    release_pkg_schema_name = cove_360_config['schema_name']
     release_schema_url = urljoin(schema_host, release_schema_name)
-    package_schema_url = urljoin(schema_host, package_schema_name)
+    release_pkg_schema_url = urljoin(schema_host, release_pkg_schema_name)
 
 
 class SchemaOCDS(SchemaMixin):
     release_schema_name = cove_ocds_config['item_schema_name']
-    package_schema_name = cove_ocds_config['schema_name']['release']
-    record_schema_name = cove_ocds_config['schema_name']['record']
+    release_pkg_schema_name = cove_ocds_config['schema_name']['release']
+    record_pkg_schema_name = cove_ocds_config['schema_name']['record']
     version_choices = cove_ocds_config['schema_version_choices']
     default_version = cove_ocds_config['schema_version']
     default_schema_host = version_choices[default_version][1]
@@ -179,8 +179,8 @@ class SchemaOCDS(SchemaMixin):
             pass
 
         self.release_schema_url = urljoin(self.schema_host, self.release_schema_name)
-        self.package_schema_url = urljoin(self.schema_host, self.package_schema_name)
-        self.record_schema_url = urljoin(self.schema_host, self.record_schema_name)
+        self.release_pkg_schema_url = urljoin(self.schema_host, self.release_pkg_schema_name)
+        self.record_pkg_schema_url = urljoin(self.schema_host, self.record_pkg_schema_name)
 
     def apply_extensions(self, schema_obj):
         if not self.extensions:
@@ -227,18 +227,18 @@ class SchemaOCDS(SchemaMixin):
                 release_schema_obj = self.deref_schema(self.release_schema_str)
         return release_schema_obj
 
-    def get_package_schema_obj(self, deref=False):
-        package_schema_obj = self._package_schema_obj
+    def get_release_pkg_schema_obj(self, deref=False):
+        package_schema_obj = self._release_pkg_schema_obj
         if deref:
             deref_release_schema_obj = self.get_release_schema_obj(deref=True)
             if self.extended:
-                package_schema_obj = deepcopy(self._package_schema_obj)
+                package_schema_obj = deepcopy(self._release_pkg_schema_obj)
                 package_schema_obj['properties']['releases']['items'] = {}
-                package_schema_str = json.dumps(package_schema_obj)
-                package_schema_obj = self.deref_schema(package_schema_str)
+                release_pkg_schema_str = json.dumps(package_schema_obj)
+                package_schema_obj = self.deref_schema(release_pkg_schema_str)
                 package_schema_obj['properties']['releases']['items'].update(deref_release_schema_obj)
             else:
-                package_schema_obj = self.deref_schema(self.package_schema_str)
+                package_schema_obj = self.deref_schema(self.release_pkg_schema_str)
         return package_schema_obj
 
     def create_extended_release_schema_file(self, upload_dir, upload_url):
@@ -252,25 +252,25 @@ class SchemaOCDS(SchemaMixin):
         self.extended_schema_url = urljoin(upload_url, 'extended_release_schema.json')
 
     @cached_property
-    def record_schema_str(self):
-        uri_scheme = urlparse(self.record_schema_url).scheme
+    def record_pkg_schema_str(self):
+        uri_scheme = urlparse(self.record_pkg_schema_url).scheme
         if uri_scheme == 'http' or uri_scheme == 'https':
-            return requests.get(self.record_schema_url).text
+            return requests.get(self.record_pkg_schema_url).text
         else:
-            with open(self.record_schema_url) as fp:
+            with open(self.record_pkg_schema_url) as fp:
                 return fp.read()
 
     @property
-    def _record_schema_obj(self):
-        return json.loads(self.record_schema_str)
+    def _record_pkg_schema_obj(self):
+        return json.loads(self.record_pkg_schema_str)
 
-    def get_record_schema_obj(self, deref=False):
+    def get_record_pkg_schema_obj(self, deref=False):
         if deref:
-            return self.deref_schema(self.record_schema_str)
-        return self._record_schema_obj
+            return self.deref_schema(self.record_pkg_schema_str)
+        return self._record_pkg_schema_obj
 
-    def get_record_schema_fields(self):
-        return set(schema_dict_fields_generator(self.get_record_schema_obj(deref=True)))
+    def get_record_pkg_schema_fields(self):
+        return set(schema_dict_fields_generator(self.get_record_pkg_schema_obj(deref=True)))
 
 
 def unique_ids(validator, ui, instance, schema):
@@ -354,9 +354,9 @@ def schema_dict_fields_generator(schema_dict):
 
 def get_counts_additional_fields(json_data, schema_obj, schema_name, context, current_app):
     if schema_name == 'record-package-schema.json':
-        schema_fields = schema_obj.get_record_schema_fields()
+        schema_fields = schema_obj.get_record_pkg_schema_fields()
     else:
-        schema_fields = schema_obj.get_package_schema_fields()
+        schema_fields = schema_obj.get_release_pkg_schema_fields()
 
     fields_present = get_fields_present(json_data)
     data_only_all = set(fields_present) - schema_fields
@@ -376,9 +376,9 @@ def get_counts_additional_fields(json_data, schema_obj, schema_name, context, cu
 
 def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app, cell_source_map, heading_source_map):
     if schema_name == 'record-package-schema.json':
-        pkg_schema_obj = schema_obj.get_record_schema_obj()
+        pkg_schema_obj = schema_obj.get_record_pkg_schema_obj()
     else:
-        pkg_schema_obj = schema_obj.get_package_schema_obj()
+        pkg_schema_obj = schema_obj.get_release_pkg_schema_obj()
 
     validation_errors = collections.defaultdict(list)
     format_checker = FormatChecker()
@@ -454,7 +454,7 @@ def _get_schema_deprecated_paths(schema_obj, obj=None, current_path=(), deprecat
         deprecated_paths = []
 
     if schema_obj:
-        obj = schema_obj.get_package_schema_obj(deref=True)
+        obj = schema_obj.get_release_pkg_schema_obj(deref=True)
 
     for prop, value in obj['properties'].items():
         if current_path:
