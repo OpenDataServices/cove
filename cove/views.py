@@ -190,7 +190,8 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
             'version_used_display': schema_version_choices[schema_version][0]}
         )
 
-    additional_fields = sorted(common.get_counts_additional_fields(json_data, schema_obj, context, request.current_app))
+    additional_fields = sorted(common.get_counts_additional_fields(json_data, schema_obj, schema_name,
+                                                                   context, request.current_app))
     context.update({
         'data_only': additional_fields,
         'additional_fields_count': sum(item[2] for item in additional_fields)
@@ -210,8 +211,9 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
-        validation_errors = common.get_schema_validation_errors(json_data, schema_obj, schema_name, request.current_app,
-                                                                cell_source_map, heading_source_map)
+        validation_errors = common.get_schema_validation_errors(json_data, schema_obj, schema_name,
+                                                                request.current_app, cell_source_map,
+                                                                heading_source_map)
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 

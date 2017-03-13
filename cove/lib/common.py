@@ -135,7 +135,7 @@ class SchemaOCDS(SchemaMixin):
     def __init__(self, select_version=None, release_data=None):
         '''Build the schema object using an specific OCDS schema version
         
-        The version used will be select_version, release_data,get('version') or
+        The version used will be select_version, release_data.get('version') or
         default version, in that order. Invalid version choices in select_version or
         release_data will be skipped and registered as self.invalid_version_argument
         and self.invalid_version_data respectively.
@@ -264,9 +264,13 @@ class SchemaOCDS(SchemaMixin):
     def _record_schema_obj(self):
         return json.loads(self.record_schema_str)
 
-    def get_record_schema_obj(self):
-        record_schema_obj = self._record_schema_obj
-        return record_schema_obj
+    def get_record_schema_obj(self, deref=False):
+        if deref:
+            return self.deref_schema(self.record_schema_str)
+        return self._record_schema_obj
+
+    def get_record_schema_fields(self):
+        return set(schema_dict_fields_generator(self.get_record_schema_obj(deref=True)))
 
 
 def unique_ids(validator, ui, instance, schema):
@@ -348,9 +352,13 @@ def schema_dict_fields_generator(schema_dict):
                 yield '/' + property_name
 
 
-def get_counts_additional_fields(json_data, schema_obj, context, current_app):
+def get_counts_additional_fields(json_data, schema_obj, schema_name, context, current_app):
+    if schema_name == 'record-package-schema.json':
+        schema_fields = schema_obj.get_record_schema_fields()
+    else:
+        schema_fields = schema_obj.get_package_schema_fields()
+
     fields_present = get_fields_present(json_data)
-    schema_fields = schema_obj.get_package_schema_fields()
     data_only_all = set(fields_present) - schema_fields
     data_only = set()
     for field in data_only_all:
@@ -367,9 +375,10 @@ def get_counts_additional_fields(json_data, schema_obj, context, current_app):
 
 
 def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app, cell_source_map, heading_source_map):
-    pkg_schema_obj = schema_obj.get_package_schema_obj()
     if schema_name == 'record-package-schema.json':
         pkg_schema_obj = schema_obj.get_record_schema_obj()
+    else:
+        pkg_schema_obj = schema_obj.get_package_schema_obj()
 
     validation_errors = collections.defaultdict(list)
     format_checker = FormatChecker()
