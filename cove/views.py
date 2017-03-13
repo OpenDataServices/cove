@@ -272,10 +272,6 @@ def render_explore(request, data, json_data, schema_obj, context, replace_conver
 
 @CoveWebInputDataError.error_page
 def explore(request, pk):
-    if request.current_app == 'cove-resourceprojects':
-        import cove.dataload.views
-        return cove.dataload.views.data(request, pk)
-
     try:
         data = SuppliedData.objects.get(pk=pk)
     except (SuppliedData.DoesNotExist, ValueError):  # Catches: Primary key does not exist, and badly formed hexadecimal UUID string
