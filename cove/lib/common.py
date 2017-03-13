@@ -1,28 +1,283 @@
 import collections
-from collections import OrderedDict
-import requests
-import jsonref
-import json
-from flattentool.schema import get_property_type_set
-from jsonschema.exceptions import ValidationError
-from jsonschema.validators import Draft4Validator as validator
-from jsonschema import FormatChecker, RefResolver
-import re
 import csv
 import functools
+import json
+import os
+import re
+import requests
+from collections import OrderedDict
+from copy import deepcopy
+from urllib.parse import urlparse, urljoin
+
+import json_merge_patch
+import jsonref
+from cached_property import cached_property
+from django.conf import settings
+from flattentool.schema import get_property_type_set
+from jsonschema import FormatChecker, RefResolver
+from jsonschema.exceptions import ValidationError
+from jsonschema.validators import Draft4Validator as validator
 
 import cove.lib.tools as tools
+
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
 
 LANGUAGE_RE = re.compile("^(.*_(((([A-Za-z]{2,3}(-([A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-([A-Za-z]{4}))?(-([A-Za-z]{2}|[0-9]{3}))?(-([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-([0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(x(-[A-Za-z0-9]{1,8})+))?)|(x(-[A-Za-z0-9]{1,8})+)))$")
 
+validation_error_lookup = {'date-time': 'Date is not in the correct format',
+                           'uri': 'Invalid \'uri\' found',
+                           'string': 'Value is not a string',
+                           'integer': 'Value is not a integer',
+                           'number': 'Value is not a number',
+                           'object': 'Value is not an object',
+                           'array': 'Value is not an array'}
 
-def uniqueIds(validator, uI, instance, schema):
-    if (
-        uI and
-        validator.is_type(instance, "array")
-    ):
+
+config = settings.COVE_CONFIG_BY_NAMESPACE
+cove_ocds_config = {key: config[key]['cove-ocds'] if 'cove-ocds' in config[key] else config[key]['default']for key in config}
+cove_360_config = {key: config[key]['cove-360'] if 'cove-360' in config[key] else config[key]['default']for key in config}
+
+
+class CustomJsonrefLoader(jsonref.JsonLoader):
+    def __init__(self, **kwargs):
+        self.schema_url = kwargs.pop('schema_url', None)
+        super().__init__(**kwargs)
+
+    def get_remote_json(self, uri, **kwargs):
+        # ignore url in ref apart from last part
+        uri = self.schema_url + uri.split('/')[-1]
+        if uri[:4] == 'http':
+            return super().get_remote_json(uri, **kwargs)
+        else:
+            with open(uri) as schema_file:
+                return json.load(schema_file, **kwargs)
+
+
+class CustomRefResolver(RefResolver):
+    def __init__(self, *args, **kw):
+        self.schema_file = kw.pop('schema_file', None)
+        self.schema_url = kw.pop('schema_url', '')
+        super().__init__(*args, **kw)
+
+    def resolve_remote(self, uri):
+        schema_name = self.schema_file or uri.split('/')[-1]
+        uri = urljoin(self.schema_url, schema_name)
+        document = self.store.get(uri)
+
+        if document:
+            return document
+        if self.schema_url.startswith("http"):
+            return super().resolve_remote(uri)
+        else:
+            with open(uri) as schema_file:
+                result = json.load(schema_file)
+
+        add_is_codelist(result)
+        self.store[uri] = result
+        return result
+
+
+class SchemaMixin():
+    @cached_property
+    def release_schema_str(self):
+        return requests.get(self.release_schema_url).text
+
+    @cached_property
+    def release_pkg_schema_str(self):
+        uri_scheme = urlparse(self.release_pkg_schema_url).scheme
+        if uri_scheme == 'http' or uri_scheme == 'https':
+            return requests.get(self.release_pkg_schema_url).text
+        else:
+            with open(self.release_pkg_schema_url) as fp:
+                return fp.read()
+
+    @property
+    def _release_schema_obj(self):
+        return json.loads(self.release_schema_str)
+
+    @property
+    def _release_pkg_schema_obj(self):
+        return json.loads(self.release_pkg_schema_str)
+
+    def deref_schema(self, schema_str):
+        return jsonref.loads(schema_str, loader=CustomJsonrefLoader(schema_url=self.schema_host),
+                             object_pairs_hook=OrderedDict)
+
+    def get_release_schema_obj(self, deref=False):
+        if deref:
+            return self.deref_schema(self.release_schema_str)
+        return self._release_schema_obj
+
+    def get_release_pkg_schema_obj(self, deref=False):
+        if deref:
+            return self.deref_schema(self.release_pkg_schema_str)
+        return self._release_pkg_schema_obj
+
+    def get_release_pkg_schema_fields(self):
+        return set(schema_dict_fields_generator(self.get_release_pkg_schema_obj(deref=True)))
+
+
+class Schema360(SchemaMixin):
+    schema_host = cove_360_config['schema_url']
+    release_schema_name = cove_360_config['item_schema_name']
+    release_pkg_schema_name = cove_360_config['schema_name']
+    release_schema_url = urljoin(schema_host, release_schema_name)
+    release_pkg_schema_url = urljoin(schema_host, release_pkg_schema_name)
+
+
+class SchemaOCDS(SchemaMixin):
+    release_schema_name = cove_ocds_config['item_schema_name']
+    release_pkg_schema_name = cove_ocds_config['schema_name']['release']
+    record_pkg_schema_name = cove_ocds_config['schema_name']['record']
+    version_choices = cove_ocds_config['schema_version_choices']
+    default_version = cove_ocds_config['schema_version']
+    default_schema_host = version_choices[default_version][1]
+    default_release_schema_url = urljoin(default_schema_host, release_schema_name)
+
+    def __init__(self, select_version=None, release_data=None):
+        '''Build the schema object using an specific OCDS schema version
+        
+        The version used will be select_version, release_data.get('version') or
+        default version, in that order. Invalid version choices in select_version or
+        release_data will be skipped and registered as self.invalid_version_argument
+        and self.invalid_version_data respectively.
+        '''
+        self.version = self.default_version
+        self.invalid_version_argument = False
+        self.invalid_version_data = False
+        self.schema_host = self.default_schema_host
+        self.extensions = {}
+        self.invalid_extension = {}
+        self.extended = False
+        self.extended_schema_file = None
+        self.extended_schema_url = None
+
+        if select_version:
+            try:
+                self.version_choices[select_version]
+            except KeyError:
+                select_version = None
+                self.invalid_version_argument = True
+                print('Not a valid value for `version` argument: using version in the release '
+                      'data or the default version if version is missing in the release data')
+            else:
+                self.version = select_version
+                self.schema_host = self.version_choices[select_version][1]
+
+        if release_data:
+            data_extensions = release_data.get('extensions', {})
+            if data_extensions:
+                self.extensions = {ext: tuple() for ext in data_extensions}
+            if not select_version:
+                release_version = release_data.get('version')
+                if release_version:
+                    version_choice = self.version_choices.get(release_version)
+                    if version_choice:
+                        self.version = release_version
+                        self.schema_host = version_choice[1]
+                    else:
+                        self.invalid_version_data = True
+        else:
+            pass
+
+        self.release_schema_url = urljoin(self.schema_host, self.release_schema_name)
+        self.release_pkg_schema_url = urljoin(self.schema_host, self.release_pkg_schema_name)
+        self.record_pkg_schema_url = urljoin(self.schema_host, self.record_pkg_schema_name)
+
+    def apply_extensions(self, schema_obj):
+        if not self.extensions:
+            return
+        for extensions_descriptor_url in self.extensions.keys():
+            i = extensions_descriptor_url.rfind('/')
+            url = '{}/{}'.format(extensions_descriptor_url[:i], 'release-schema.json')
+
+            try:
+                extension = requests.get(url)
+            except requests.exceptions.RequestException:
+                self.invalid_extension[extensions_descriptor_url] = 'fetching failed'
+                continue
+            if extension.ok:
+                try:
+                    extension_data = extension.json()
+                except json.JSONDecodeError:
+                    self.invalid_extension[extensions_descriptor_url] = 'invalid JSON'
+                    continue
+            else:
+                self.invalid_extension[extensions_descriptor_url] = '{}: {}'.format(extension.status_code,
+                                                                                    extension.reason.lower())
+                continue
+
+            schema_obj = json_merge_patch.merge(schema_obj, extension_data)
+            extensions_descriptor = requests.get(extensions_descriptor_url).json()
+            self.extensions[extensions_descriptor_url] = (url, extensions_descriptor['name'],
+                                                          extensions_descriptor['description'])
+            self.extended = True
+
+    def get_release_schema_obj(self, deref=False):
+        release_schema_obj = self._release_schema_obj
+        if self.extended_schema_file:
+            with open(self.extended_schema_file) as fp:
+                release_schema_obj = json.load(fp)
+        elif self.extensions:
+            release_schema_obj = deepcopy(self._release_schema_obj)
+            self.apply_extensions(release_schema_obj)
+        if deref:
+            if self.extended:
+                extended_release_schema_str = json.dumps(release_schema_obj)
+                release_schema_obj = self.deref_schema(extended_release_schema_str)
+            else:
+                release_schema_obj = self.deref_schema(self.release_schema_str)
+        return release_schema_obj
+
+    def get_release_pkg_schema_obj(self, deref=False):
+        package_schema_obj = self._release_pkg_schema_obj
+        if deref:
+            deref_release_schema_obj = self.get_release_schema_obj(deref=True)
+            if self.extended:
+                package_schema_obj = deepcopy(self._release_pkg_schema_obj)
+                package_schema_obj['properties']['releases']['items'] = {}
+                release_pkg_schema_str = json.dumps(package_schema_obj)
+                package_schema_obj = self.deref_schema(release_pkg_schema_str)
+                package_schema_obj['properties']['releases']['items'].update(deref_release_schema_obj)
+            else:
+                package_schema_obj = self.deref_schema(self.release_pkg_schema_str)
+        return package_schema_obj
+
+    def create_extended_release_schema_file(self, upload_dir, upload_url):
+        filepath = os.path.join(upload_dir, 'extended_release_schema.json')
+        if not self.extended or os.path.exists(filepath):
+            return
+        with open(filepath, 'w') as fp:
+            release_schema_str = json.dumps(self.get_release_schema_obj(), indent=4)
+            fp.write(release_schema_str)
+        self.extended_schema_file = filepath
+        self.extended_schema_url = urljoin(upload_url, 'extended_release_schema.json')
+
+    @cached_property
+    def record_pkg_schema_str(self):
+        uri_scheme = urlparse(self.record_pkg_schema_url).scheme
+        if uri_scheme == 'http' or uri_scheme == 'https':
+            return requests.get(self.record_pkg_schema_url).text
+        else:
+            with open(self.record_pkg_schema_url) as fp:
+                return fp.read()
+
+    @property
+    def _record_pkg_schema_obj(self):
+        return json.loads(self.record_pkg_schema_str)
+
+    def get_record_pkg_schema_obj(self, deref=False):
+        if deref:
+            return self.deref_schema(self.record_pkg_schema_str)
+        return self._record_pkg_schema_obj
+
+    def get_record_pkg_schema_fields(self):
+        return set(schema_dict_fields_generator(self.get_record_pkg_schema_obj(deref=True)))
+
+
+def unique_ids(validator, ui, instance, schema):
+    if ui and validator.is_type(instance, "array"):
         non_unique_ids = set()
         all_ids = set()
         for item in instance:
@@ -38,7 +293,7 @@ def uniqueIds(validator, uI, instance, schema):
             else:
                 # if there is any item without an id key, or the item is not a dict
                 # revert to original validator
-                for error in uniqueItemsValidator(validator, uI, instance, schema):
+                for error in uniqueItemsValidator(validator, ui, instance, schema):
                     yield error
                 return
 
@@ -55,7 +310,7 @@ def required_draft4(validator, required, instance, schema):
 
 
 validator.VALIDATORS.pop("patternProperties")
-validator.VALIDATORS["uniqueItems"] = uniqueIds
+validator.VALIDATORS["uniqueItems"] = unique_ids
 validator.VALIDATORS["required"] = required_draft4
 
 
@@ -100,39 +355,13 @@ def schema_dict_fields_generator(schema_dict):
                 yield '/' + property_name
 
 
-class CustomJsonrefLoader(jsonref.JsonLoader):
-    def __init__(self, **kwargs):
-        self.schema_url = kwargs.pop('schema_url', None)
-        super().__init__(**kwargs)
-
-    def get_remote_json(self, uri, **kwargs):
-        # ignore url in ref apart from last part
-        uri = self.schema_url + uri.split('/')[-1]
-        if uri[:4] == 'http':
-            return super().get_remote_json(uri, **kwargs)
-        else:
-            with open(uri) as schema_file:
-                return json.load(schema_file, **kwargs)
-
-
-def get_schema_data(schema_url, schema_name):
-    if schema_url[:4] == 'http':
-        r = requests.get(schema_url + schema_name)
-        json_text = r.text
+def get_counts_additional_fields(json_data, schema_obj, schema_name, context, current_app):
+    if schema_name == 'record-package-schema.json':
+        schema_fields = schema_obj.get_record_pkg_schema_fields()
     else:
-        with open(schema_url + schema_name) as schema_file:
-            json_text = schema_file.read()
+        schema_fields = schema_obj.get_release_pkg_schema_fields()
 
-    return jsonref.loads(json_text, loader=CustomJsonrefLoader(schema_url=schema_url), object_pairs_hook=OrderedDict)
-
-
-def get_schema_fields(schema_url, schema_name):
-    return set(schema_dict_fields_generator(get_schema_data(schema_url, schema_name)))
-
-
-def get_counts_additional_fields(schema_url, schema_name, json_data, context, current_app):
     fields_present = get_fields_present(json_data)
-    schema_fields = get_schema_fields(schema_url, schema_name)
     data_only_all = set(fields_present) - schema_fields
     data_only = set()
     for field in data_only_all:
@@ -148,72 +377,24 @@ def get_counts_additional_fields(schema_url, schema_name, json_data, context, cu
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
 
 
-def add_is_codelist(obj):
-    ''' This is needed so that we can detect enums that are arrays as the jsonschema library does not
-    give you any parent information and the codelist property is on the parent in this case. Only applies to
-    release.tag in core schema at the moment.'''
-
-    for prop, value in obj['properties'].items():
-        if "codelist" in value:
-            if 'array' in value.get('type', ''):
-                value['items']['isCodelist'] = True
-            else:
-                value['isCodelist'] = True
-
-        if value.get('type') == 'object':
-            add_is_codelist(value)
-        elif value.get('type') == 'array' and value['items'].get('properties'):
-            add_is_codelist(value['items'])
-
-    for value in obj.get("definitions", {}).values():
-        if "properties" in value:
-            add_is_codelist(value)
-
-
-class CustomRefResolver(RefResolver):
-    def __init__(self, *args, **kw):
-        self.schema_url = kw.pop('schema_url')
-        super().__init__(*args, **kw)
-
-    def resolve_remote(self, uri):
-        uri = self.schema_url + uri.split('/')[-1]
-        document = self.store.get(uri)
-        if document:
-            return document
-
-        if self.schema_url.startswith("http"):
-            result = super().resolve_remote(uri)
-        else:
-            with open(uri) as schema_file:
-                result = json.load(schema_file)
-        
-        add_is_codelist(result)
-        self.store[uri] = result
-
-        return result
-
-
-validation_error_lookup = {"date-time": "Date is not in the correct format",
-                           "uri": "Invalid 'uri' found",
-                           "string": "Value is not a string",
-                           "integer": "Value is not a integer",
-                           "number": "Value is not a number",
-                           "object": "Value is not an object",
-                           "array": "Value is not an array"}
-
-
-def get_schema_validation_errors(json_data, schema_url, schema_name, current_app, cell_source_map, heading_source_map):
-    if schema_url.startswith("http"):
-        schema = requests.get(schema_url + schema_name).json()
+def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app, cell_source_map, heading_source_map):
+    if schema_name == 'record-package-schema.json':
+        pkg_schema_obj = schema_obj.get_record_pkg_schema_obj()
     else:
-        with open(schema_url + schema_name) as schema_file:
-            schema = json.load(schema_file)
+        pkg_schema_obj = schema_obj.get_release_pkg_schema_obj()
 
     validation_errors = collections.defaultdict(list)
     format_checker = FormatChecker()
+
     if current_app == 'cove-360':
         format_checker.checkers['date-time'] = (tools.datetime_or_date, ValueError)
-    our_validator = validator(schema, format_checker=format_checker, resolver=CustomRefResolver('', schema, schema_url=schema_url))
+
+    if getattr(schema_obj, 'extended', None):
+        resolver = CustomRefResolver('', pkg_schema_obj, schema_file=schema_obj.extended_schema_file)
+    else:
+        resolver = CustomRefResolver('', pkg_schema_obj, schema_url=schema_obj.schema_host)
+
+    our_validator = validator(pkg_schema_obj, format_checker=format_checker, resolver=resolver)
     for n, e in enumerate(our_validator.iter_errors(json_data)):
         message = e.message
         path = "/".join(str(item) for item in e.path)
@@ -269,7 +450,7 @@ def get_schema_validation_errors(json_data, schema_url, schema_name, current_app
     return dict(validation_errors)
 
 
-def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path=(), deprecated_paths=None):
+def _get_schema_deprecated_paths(schema_obj, obj=None, current_path=(), deprecated_paths=None):
     '''Get a list of deprecated paths and explanations for deprecation in a schema.
 
     Deprecated paths are given as tuples of tuples:
@@ -278,8 +459,8 @@ def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path
     if deprecated_paths is None:
         deprecated_paths = []
 
-    if schema_url:
-        obj = get_schema_data(schema_url, schema_name)
+    if schema_obj:
+        obj = schema_obj.get_release_pkg_schema_obj(deref=True)
 
     for prop, value in obj.get('properties', {}).items():
         if current_path:
@@ -301,9 +482,9 @@ def _get_schema_deprecated_paths(schema_name, schema_url, obj=None, current_path
                 ))
 
         if value.get('type') == 'object':
-            _get_schema_deprecated_paths(None, None, value, path, deprecated_paths)
+            _get_schema_deprecated_paths(None, value, path, deprecated_paths)
         elif value.get('type') == 'array' and value['items'].get('properties'):
-            _get_schema_deprecated_paths(None, None, value['items'], path, deprecated_paths)
+            _get_schema_deprecated_paths(None, value['items'], path, deprecated_paths)
 
     return deprecated_paths
 
@@ -348,8 +529,8 @@ def _get_json_data_generic_paths(json_data, path=(), generic_paths=None):
     return generic_paths
 
 
-def get_json_data_deprecated_fields(schema_name, schema_url, json_data):
-    deprecated_schema_paths = _get_schema_deprecated_paths(schema_name, schema_url)
+def get_json_data_deprecated_fields(json_data, schema_obj):
+    deprecated_schema_paths = _get_schema_deprecated_paths(schema_obj)
     paths_in_data = _get_json_data_generic_paths(json_data)
     deprecated_paths_in_data = [path for path in deprecated_schema_paths if path[0] in paths_in_data]
 
@@ -373,7 +554,29 @@ def get_json_data_deprecated_fields(schema_name, schema_url, json_data):
     return deprecated_fields_output
 
 
-def _get_schema_codelist_paths(schema_name, schema_url, obj=None, current_path=(), codelist_paths=None):
+def add_is_codelist(obj):
+    ''' This is needed so that we can detect enums that are arrays as the jsonschema library does not
+    give you any parent information and the codelist property is on the parent in this case. Only applies to
+    release.tag in core schema at the moment.'''
+
+    for prop, value in obj.get('properties', {}).items():
+        if "codelist" in value:
+            if 'array' in value.get('type', ''):
+                value['items']['isCodelist'] = True
+            else:
+                value['isCodelist'] = True
+
+        if value.get('type') == 'object':
+            add_is_codelist(value)
+        elif value.get('type') == 'array' and value['items'].get('properties'):
+            add_is_codelist(value['items'])
+
+    for value in obj.get("definitions", {}).values():
+        if "properties" in value:
+            add_is_codelist(value)
+
+
+def _get_schema_codelist_paths(schema_obj, obj=None, current_path=(), codelist_paths=None):
     '''Get a dict of codelist paths including the filename and if they are open.
 
     codelist paths are given as tuples of tuples:
@@ -382,10 +585,10 @@ def _get_schema_codelist_paths(schema_name, schema_url, obj=None, current_path=(
     if codelist_paths is None:
         codelist_paths = {}
 
-    if schema_url:
-        obj = get_schema_data(schema_url, schema_name)
+    if schema_obj:
+        obj = schema_obj.get_release_pkg_schema_obj(deref=True)
 
-    for prop, value in obj['properties'].items():
+    for prop, value in obj.get('properties', {}).items():
         if current_path:
             path = current_path + (prop,)
         else:
@@ -395,9 +598,9 @@ def _get_schema_codelist_paths(schema_name, schema_url, obj=None, current_path=(
             codelist_paths[path] = (value['codelist'], value.get('openCodelist', False))
 
         if value.get('type') == 'object':
-            _get_schema_codelist_paths(None, None, value, path, codelist_paths)
+            _get_schema_codelist_paths(None, value, path, codelist_paths)
         elif value.get('type') == 'array' and value['items'].get('properties'):
-            _get_schema_codelist_paths(None, None, value['items'], path, codelist_paths)
+            _get_schema_codelist_paths(None, value['items'], path, codelist_paths)
 
     return codelist_paths
 
@@ -439,10 +642,10 @@ def _generate_data_path(json_data, path=()):
             yield path + (key,), value
 
 
-def get_additional_codelist_values(schema_name, schema_url, codelist_url, json_data):
+def get_additional_codelist_values(schema_obj, codelist_url, json_data):
     if not codelist_url:
         return {}
-    codelist_schema_paths = _get_schema_codelist_paths(schema_name, schema_url)
+    codelist_schema_paths = _get_schema_codelist_paths(schema_obj)
     unique_files = frozenset(value[0] for value in codelist_schema_paths.values())
     codelists = _load_codelists(codelist_url, unique_files)
 

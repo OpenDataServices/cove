@@ -1,16 +1,18 @@
-import os
-import pytest
-import cove.views as v
-import cove.lib.common as c
-import cove.lib.ocds as ocds
 import json
-from unittest.mock import patch
+import os
 from collections import OrderedDict
-from cove.input.models import SuppliedData
-from cove.lib.converters import convert_json, convert_spreadsheet
+from unittest.mock import patch
+
+import pytest
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 from django.utils.translation import ugettext_lazy
+
+import cove.lib.common as c
+import cove.lib.ocds as ocds
+import cove.views as v
+from cove.input.models import SuppliedData
+from cove.lib.converters import convert_json, convert_spreadsheet
 
 
 EMPTY_RELEASE_AGGREGATE = {
@@ -274,13 +276,16 @@ def test_get_file_unrecognised_file_type():
 
 
 def test_get_schema_validation_errors():
-    schema_url = 'http://ocds.open-contracting.org/standard/r/1__0__RC/'
-    schema_name = 'release-package-schema.json'
+    schema_obj = c.SchemaOCDS()
+    schema_obj.schema_host = 'http://ocds.open-contracting.org/standard/r/1__0__RC/'
+    schema_obj.release_pkg_schema_url = os.path.join(schema_obj.schema_host, schema_obj.release_pkg_schema_name)
+    schema_name = schema_obj.release_pkg_schema_name
+
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
-        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, schema_name, 'cove-ocds', {}, {})
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_obj, schema_name, 'cove-ocds', {}, {})
         assert len(error_list) == 0
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_invalid.json')) as fp:
-        error_list = c.get_schema_validation_errors(json.load(fp), schema_url, schema_name, 'cove-ocds', {}, {})
+        error_list = c.get_schema_validation_errors(json.load(fp), schema_obj, schema_name, 'cove-ocds', {}, {})
         assert len(error_list) > 0
 
 
@@ -300,9 +305,11 @@ def test_get_json_data_deprecated_fields():
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
         json_data_w_deprecations = json.load(fp)
 
-    schema_url = os.path.join('cove', 'fixtures/')
-    schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
-    deprecated_data_fields = c.get_json_data_deprecated_fields(schema_name, schema_url, json_data_w_deprecations)
+    schema_obj = c.SchemaOCDS()
+    schema_obj.schema_host = os.path.join('cove', 'fixtures/')
+    schema_obj.release_pkg_schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
+    schema_obj.release_pkg_schema_url = os.path.join(schema_obj.schema_host, schema_obj.release_pkg_schema_name)
+    deprecated_data_fields = c.get_json_data_deprecated_fields(json_data_w_deprecations, schema_obj)
     expected_result = OrderedDict([
         ('initiationType', {"paths": ('releases/0', 'releases/1'),
                             "explanation": ('1.1', 'Not a useful field as always has to be tender')}),
@@ -316,9 +323,11 @@ def test_get_json_data_deprecated_fields():
 
 
 def test_get_schema_deprecated_paths():
-    schema_url = os.path.join('cove', 'fixtures/')
-    schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
-    deprecated_paths = c._get_schema_deprecated_paths(schema_name, schema_url)
+    schema_obj = c.SchemaOCDS()
+    schema_obj.schema_host = os.path.join('cove', 'fixtures/')
+    schema_obj.release_pkg_schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
+    schema_obj.release_pkg_schema_url = os.path.join(schema_obj.schema_host, schema_obj.release_pkg_schema_name)
+    deprecated_paths = c._get_schema_deprecated_paths(schema_obj)
     expected_results = [
         (('releases', 'initiationType'), ('1.1', 'Not a useful field as always has to be tender')),
         (('releases', 'planning',), ('1.1', "Testing deprecation for objects with '$ref'")),
@@ -545,10 +554,9 @@ def test_get_additional_codelist_values():
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_codelists.json')) as fp:
         json_data_w_additial_codelists = json.load(fp)
 
-    schema_url = settings.COVE_CONFIG_BY_NAMESPACE['schema_version_choices']['cove-ocds']['1.1'][1]
+    schema_obj = c.SchemaOCDS(select_version='1.1')
     codelist_url = settings.COVE_CONFIG_BY_NAMESPACE['schema_codelists']['cove-ocds']['1.1']
-    schema_name = 'release-package-schema.json'
-    additional_codelist_values = c.get_additional_codelist_values(schema_name, schema_url, codelist_url, json_data_w_additial_codelists)
+    additional_codelist_values = c.get_additional_codelist_values(schema_obj, codelist_url, json_data_w_additial_codelists)
 
     assert additional_codelist_values == {
         ('releases', 'tag'): {
@@ -567,3 +575,102 @@ def test_get_additional_codelist_values():
             'path': 'releases/tender/items/classification',
             'values': {'GSINS'}}
     }
+
+
+DEFAULT_OCDS_VERSION = c.cove_ocds_config['schema_version']
+
+
+@pytest.mark.parametrize(('select_version', 'release_data', 'version', 'invalid_version_argument',
+                          'invalid_version_data', 'extensions'), [
+    (None, None, DEFAULT_OCDS_VERSION, False, False, {}),
+    ('1.1', None, '1.1', False, False, {}),
+    (None, {'version': '1.1'}, '1.1', False, False, {}),
+    (None, {'extensions': ['c', 'd']}, DEFAULT_OCDS_VERSION, False, False, {'c': (), 'd': ()}),
+    ('1.1', {'version': '1.0'}, '1.1', False, False, {}),
+    ('1.1', {'version': '1.0'}, '1.1', False, False, {}),
+    ('1.bad', {'version': '1.1'}, '1.1', True, False, {}),
+    ('1.wrong', {'version': '1.bad'}, DEFAULT_OCDS_VERSION, True, True, {}),
+    (None, {'version': '1.bad'}, DEFAULT_OCDS_VERSION, False, True, {}),
+    (None, {'extensions': ['a', 'b']}, DEFAULT_OCDS_VERSION, False, False, {'a': (), 'b': ()}),
+    (None, {'version': '1.1', 'extensions': ['a', 'b']}, '1.1', False, False, {'a': (), 'b': ()})
+])
+def test_SchemaOCDS_constructor(select_version, release_data, version, invalid_version_argument,
+                                invalid_version_data, extensions):
+    schema = c.SchemaOCDS(select_version=select_version, release_data=release_data)
+    name = c.cove_ocds_config['schema_name']['release']
+    host = c.cove_ocds_config['schema_version_choices'][version][1]
+    url = host + name
+
+    assert schema.version == version
+    assert schema.release_pkg_schema_name == name
+    assert schema.schema_host == host
+    assert schema.release_pkg_schema_url == url
+    assert schema.invalid_version_argument == invalid_version_argument
+    assert schema.invalid_version_data == invalid_version_data
+    assert schema.extensions == extensions
+
+
+METRICS_EXT = 'https://raw.githubusercontent.com/open-contracting/ocds_metrics_extension/master/extension.json'
+UNKNOWN_URL_EXT = 'http://bad-url-for-extensions.com/extension.json'
+NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
+
+
+@pytest.mark.parametrize(('release_data', 'extensions', 'invalid_extension', 'extended'), [
+    (None, {}, {}, False),
+    ({'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False),
+    ({'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False),
+    ({'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True),
+    ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True),
+])
+def test_SchemaOCDS_extensions(release_data, extensions, invalid_extension, extended):
+    schema = c.SchemaOCDS(release_data=release_data)
+    assert schema.extensions == extensions
+    assert not schema.extended
+    
+    release_schema_obj = schema.get_release_schema_obj()
+    assert schema.invalid_extension == invalid_extension
+    assert schema.extended == extended
+
+    if extended:
+        assert 'Metric' in release_schema_obj['definitions'].keys()
+        assert release_schema_obj['definitions']['Award']['properties'].get('agreedMetrics')
+    else:
+        assert 'Metric' not in release_schema_obj['definitions'].keys()
+        assert not release_schema_obj['definitions']['Award']['properties'].get('agreedMetrics')
+
+
+@pytest.mark.django_db
+def test_SchemaOCDS_extended_release_schema_file():
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove', 'fixtures', 'tenders_releases_1_release_with_extensions.json')) as fp:
+        data.original_file.save('test.json', UploadedFile(fp))
+        fp.seek(0)
+        json_data = json.load(fp)
+    schema = c.SchemaOCDS(release_data=json_data)
+    assert not schema.extended
+
+    schema.get_release_schema_obj()
+    assert schema.extended
+    assert not schema.extended_schema_file
+    assert not schema.extended_schema_url
+
+    schema.create_extended_release_schema_file(data.upload_dir(), data.upload_url())
+    assert schema.extended_schema_file == os.path.join(data.upload_dir(), 'extended_release_schema.json')
+    assert schema.extended_schema_url == os.path.join(data.upload_url(), 'extended_release_schema.json')
+
+    json_data = json.loads('{"extensions": [], "releases": [{"ocid": "xx"}]}')
+    schema = c.SchemaOCDS(release_data=json_data)
+    schema.get_release_schema_obj()
+    schema.create_extended_release_schema_file(data.upload_dir(), data.upload_url())
+    assert not schema.extended
+    assert not schema.extended_schema_file
+    assert not schema.extended_schema_url
+
+
+def test_Schema360():
+    schema = c.Schema360()
+    assert schema.release_schema_name == c.cove_360_config['item_schema_name']
+    assert schema.release_pkg_schema_name == c.cove_360_config['schema_name']
+    assert schema.schema_host == c.cove_360_config['schema_url']
+    assert schema.release_schema_url == c.cove_360_config['schema_url'] + c.cove_360_config['item_schema_name']
+    assert schema.release_pkg_schema_url == c.cove_360_config['schema_url'] + c.cove_360_config['schema_name']
