@@ -11,13 +11,16 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import environ
 import os
 import warnings
-import environ
-import raven
 from collections import OrderedDict
+
+import raven
+
 from django.utils.crypto import get_random_string
 from django.utils.translation import ugettext_lazy as _
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -38,7 +41,7 @@ env = environ.Env(  # set default values and casting
     SECRET_KEY=(str, secret_key),
     DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
     DEBUG_TOOLBAR=(bool, False),
-    SCHEMA_URL_360=(str, 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/'),
+    # SCHEMA_URL_360=(str, 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/'),
 )
 
 PIWIK = {
@@ -55,86 +58,7 @@ MEDIA_URL = '/media/'
 
 DEALER_TYPE = 'git'
 
-PREFIX_MAP = env('PREFIX_MAP')
-
-
-COVE_CONFIG_BY_NAMESPACE = {
-    'base_template_name': {
-        'cove-ocds': 'base_ocds.html',
-        'cove-360': 'base_360.html',
-        'default': 'base_generic.html',
-    },
-    'application_name': {
-        'cove-ocds': _('Open Contracting Data Standard Validator'),
-        'cove-360': _('360Giving Data Quality Tool'),
-        'default': _('CoVE'),
-    },
-    'application_strapline': {
-        'cove-ocds': _('Validate and Explore your data.'),
-        'cove-360': _('Convert, Validate, Explore 360Giving Data'),
-        'default': _('Convert, Validate, Explore'),
-    },
-    'schema_url': {
-        'cove-ocds': None,
-        'cove-360': env('SCHEMA_URL_360'),
-        'default': None
-    },
-    'schema_name': {
-        'cove-360': '360-giving-package-schema.json',
-        'cove-ocds': {'release': 'release-package-schema.json',
-                      'record': 'record-package-schema.json'},
-        'default': None
-    },
-    'schema_version': {  # Default schema version
-        'cove-ocds': '1.0',
-        'cove-360': None,
-        'default': None
-    },
-    'schema_version_choices': {
-        # {version: (display, url)}
-        'cove-ocds': OrderedDict((
-            ('1.0', ('1.0', 'http://standard.open-contracting.org/schema/1__0__2/')),
-            ('1.1', ('1.1-dev', 'http://standard.open-contracting.org/1.1-dev/en/')),
-        )),
-        'cove-360': None,
-        'default': None
-    },
-    'schema_codelists': {
-        # {version: codelist_dir}
-        'cove-ocds': OrderedDict((
-            ('1.1', 'https://raw.githubusercontent.com/open-contracting/standard/1.1-dev/standard/schema/codelists/'),
-        )),
-        'cove-360': None,
-        'default': None
-    },
-    'item_schema_name': {  # Schema url for an individual item e.g. a single release or grant
-        'cove-ocds': 'release-schema.json',
-        'cove-360': '360-giving-schema.json',
-        'default': None
-    },
-    'root_list_path': {
-        'cove-ocds': 'releases',
-        'cove-360': 'grants',
-        'default': None
-    },
-    'root_id': {
-        'cove-ocds': 'ocid',
-        'default': ''
-    },
-    'convert_titles': {
-        'cove-360': True,
-        'default': False
-    },
-    'input_methods': {
-        'default': ['upload', 'url', 'text'],
-    },
-    'support_email': {
-        'cove-ocds': 'data@open-contracting.org',
-        'cove-360': 'support@threesixtygiving.org',
-        'default': 'code@opendataservices.coop',
-    },
-}
-
+# PREFIX_MAP = env('PREFIX_MAP')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
