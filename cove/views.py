@@ -1,4 +1,3 @@
-import functools
 import json
 import logging
 import os
@@ -16,54 +15,10 @@ import cove.lib.threesixtygiving as threesixtygiving
 from cove.input.models import SuppliedData
 from cove.lib.common import Schema360, SchemaOCDS
 from cove.lib.converters import convert_spreadsheet, convert_json
-from cove.lib.exceptions import CoveInputDataError
+from cove.lib.exceptions import CoveInputDataError, CoveWebInputDataError
+from cove.lib.tools import get_file_type
 
 logger = logging.getLogger(__name__)
-
-
-class CoveWebInputDataError(CoveInputDataError):
-    """
-    An error that we think is due to the data input by the user, rather than a
-    bug in the application. Returns nicely rendered HTML. Depends on Django
-    """
-    def __init__(self, context=None):
-        if context:
-            self.context = context
-
-    @staticmethod
-    def error_page(func):
-        @functools.wraps(func)
-        def wrapper(request, *args, **kwargs):
-            try:
-                return func(request, *args, **kwargs)
-            except CoveInputDataError as err:
-                return render(request, 'error.html', context=err.context)
-        return wrapper
-
-
-class UnrecognisedFileType(CoveInputDataError):
-    context = {
-        'sub_title': _("Sorry we can't process that data"),
-        'link': 'cove:index',
-        'link_text': _('Try Again'),
-        'msg': _('We did not recognise the file type.\n\nWe can only process json, csv and xlsx files.')
-    }
-
-
-def get_file_type(django_file):
-    name = django_file.name.lower()
-    if name.endswith('.json'):
-        return 'json'
-    elif name.endswith('.xlsx'):
-        return 'xlsx'
-    elif name.endswith('.csv'):
-        return 'csv'
-    else:
-        first_byte = django_file.read(1)
-        if first_byte in [b'{', b'[']:
-            return 'json'
-        else:
-            raise UnrecognisedFileType
 
 
 def explore_360(request, pk, data, context):

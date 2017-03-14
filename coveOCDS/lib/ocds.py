@@ -1,5 +1,6 @@
-import cove.lib.tools as tools
 import collections
+
+import cove.lib.tools as tools
 
 
 @tools.ignore_errors

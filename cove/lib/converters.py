@@ -1,13 +1,13 @@
-import os
-from flattentool.json_input import BadlyFormedJSONError
+import json
 import logging
+import os
 import shutil
 import warnings
-import flattentool
-import json
-import flattentool.exceptions
 
+import flattentool
+import flattentool.exceptions
 from django.utils.translation import ugettext_lazy as _
+from flattentool.json_input import BadlyFormedJSONError
 
 from cove.lib.exceptions import CoveInputDataError
 
@@ -85,7 +85,8 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace):
             'sub_title': _("Sorry we can't process that data"),
             'link': 'cove:index',
             'link_text': _('Try Again'),
-            'msg': _('We think you tried to supply a spreadsheet, but we failed to convert it to JSON.\n\nError message: {}'.format(repr(err)))
+            'msg': _('We think you tried to supply a spreadsheet, but we failed to convert it to JSON.'
+                     '\n\nError message: {}'.format(repr(err)))
         })
 
     context.update({
