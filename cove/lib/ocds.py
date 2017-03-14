@@ -112,13 +112,13 @@ def get_releases_aggregates(json_data):
         unique_ocids.add(release['ocid'])
         if 'tag' in release:
             tags.update(tools.to_list(release['tag']))
-        initiationType = release.get('initiationType')
-        if initiationType:
-            unique_initation_type.add(initiationType)
+        initiation_type = release.get('initiationType')
+        if initiation_type:
+            unique_initation_type.add(initiation_type)
 
-        releaseDate = release.get('date', '')
-        if releaseDate:
-            release_dates.append(str(releaseDate))
+        release_date = release.get('date', '')
+        if release_date:
+            release_dates.append(str(release_date))
 
         if 'language' in release:
             unique_lang.add(release['language'])
@@ -142,9 +142,9 @@ def get_releases_aggregates(json_data):
                 start_date = tender_period.get('startDate', '')
                 if start_date:
                     tender_dates.append(str(start_date))
-            procuringEntity = tender.get('procuringEntity')
-            if procuringEntity:
-                process_org(procuringEntity, unique_procuring_identifier, unique_procuring_name_no_id)
+            procuring_entity = tender.get('procuringEntity')
+            if procuring_entity:
+                process_org(procuring_entity, unique_procuring_identifier, unique_procuring_name_no_id)
             tenderers = tender.get('tenderers', [])
             for tenderer in tenderers:
                 process_org(tenderer, unique_tenderers_identifier, unique_tenderers_name_no_id)
@@ -216,8 +216,8 @@ def get_releases_aggregates(json_data):
     for release in releases:
         contracts = release.get('contracts', [])
         for contract in contracts:
-            awardID = contract.get('awardID')
-            if awardID not in unique_award_id:
+            award_id = contract.get('awardID')
+            if award_id not in unique_award_id:
                 contracts_without_awards.append(contract)
 
     unique_buyers_count = len(unique_buyers_identifier) + len(unique_buyers_name_no_id)
