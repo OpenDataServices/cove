@@ -105,7 +105,7 @@ def explore_ocds(request, pk, data):
         schema_name = schema_ocds.record_pkg_schema_name
         template = 'explore_ocds-record.html'
 
-    common_checks = common_checks_context(request, data, json_data, schema_ocds, schema_name, context)
+    common_checks = common_checks_context(request, data, json_data, schema_ocds, schema_name, context, fields_regex=True)
     validation_errors = common_checks['context']['validation_errors']
     context.update(common_checks['context'])
 

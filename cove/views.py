@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 def explore_data_context(request, pk):
     try:
         data = SuppliedData.objects.get(pk=pk)
-    except (SuppliedData.DoesNotExist, ValueError):  # Catches: Primary key does not exist, and badly formed hexadecimal UUID string
+    except (SuppliedData.DoesNotExist, ValueError):  # Catches primary key does not exist and badly formed UUID
         return render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
             'link': 'cove:index',
@@ -56,11 +56,7 @@ def explore_data_context(request, pk):
     return (context, data)
 
 
-def common_checks_context(request, data, json_data, schema_obj, schema_name, context):
-    # schema_name = schema_obj.release_pkg_schema_name
-    # if 'records' in json_data:
-    #     schema_name = schema_obj.record_pkg_schema_name
-
+def common_checks_context(data, json_data, schema_obj, schema_name, context, validation_checkers=None, fields_regex=False):
     schema_version = getattr(schema_obj, 'version', None)
     schema_version_choices = getattr(schema_obj, 'version_choices', None)
     if schema_version:
@@ -74,7 +70,7 @@ def common_checks_context(request, data, json_data, schema_obj, schema_name, con
         )
 
     additional_fields = sorted(common.get_counts_additional_fields(json_data, schema_obj, schema_name,
-                                                                   context, request.current_app))
+                                                                   context, fields_regex=fields_regex))
     context.update({
         'data_only': additional_fields,
         'additional_fields_count': sum(item[2] for item in additional_fields)
@@ -95,8 +91,8 @@ def common_checks_context(request, data, json_data, schema_obj, schema_name, con
             validation_errors = json.load(validiation_error_fp)
     else:
         validation_errors = common.get_schema_validation_errors(json_data, schema_obj, schema_name,
-                                                                request.current_app, cell_source_map,
-                                                                heading_source_map)
+                                                                cell_source_map, heading_source_map,
+                                                                add_checkers=validation_checkers)
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 
@@ -115,7 +111,7 @@ def common_checks_context(request, data, json_data, schema_obj, schema_name, con
         'validation_errors': sorted(validation_errors.items()),
         'validation_errors_count': sum(len(value) for value in validation_errors.values()),
         'deprecated_fields': common.get_json_data_deprecated_fields(json_data, schema_obj),
-        'json_data': json_data,  # Pass the JSON data to the template so we can display values that need little processing
+        'json_data': json_data,  # Pass data so we can display values that need little processing
         'first_render': not data.rendered,
         'common_error_types': []
     })

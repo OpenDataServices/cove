@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 
 from . lib import threesixtygiving
+from cove.lib.tools import datetime_or_date
 from cove.lib.common import Schema360
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, CoveWebInputDataError
@@ -41,7 +42,9 @@ def explore_360(request, pk, data, context):
             json_data = json.load(fp)
 
     schema_name = schema_360.release_pkg_schema_name
-    common_checks = common_checks_context(request, data, json_data, schema_360, schema_name, context)
+
+    checkers = {'date-time': (datetime_or_date, ValueError)}
+    common_checks = common_checks_context(request, data, json_data, schema_360, schema_name, context, validation_checkers=checkers)
     cell_source_map = common_checks['cell_source_map']
 
     context.update(common_checks['context'])

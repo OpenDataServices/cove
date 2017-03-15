@@ -18,8 +18,6 @@ from jsonschema import FormatChecker, RefResolver
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
 
-import cove.lib.tools as tools
-
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
 
@@ -298,7 +296,8 @@ def unique_ids(validator, ui, instance, schema):
                 return
 
         if non_unique_ids:
-            yield ValidationError("Non-unique ID Values (first 3 shown):  {}".format(", ".join(str(x) for x in list(non_unique_ids)[:3])))
+            msg = "Non-unique ID Values (first 3 shown):  {}"
+            yield ValidationError(msg.format(", ".join(str(x) for x in list(non_unique_ids)[:3])))
 
 
 def required_draft4(validator, required, instance, schema):
@@ -355,7 +354,7 @@ def schema_dict_fields_generator(schema_dict):
                 yield '/' + property_name
 
 
-def get_counts_additional_fields(json_data, schema_obj, schema_name, context, current_app):
+def get_counts_additional_fields(json_data, schema_obj, schema_name, context, fields_regex=False):
     if schema_name == 'record-package-schema.json':
         schema_fields = schema_obj.get_record_pkg_schema_fields()
     else:
@@ -369,7 +368,7 @@ def get_counts_additional_fields(json_data, schema_obj, schema_name, context, cu
         # only take fields with parent in schema (and top level fields)
         # to make results less verbose
         if not parent_field or parent_field in schema_fields:
-            if current_app == 'cove-ocds':
+            if fields_regex:
                 if LANGUAGE_RE.search(field.split('/')[-1]):
                     continue
             data_only.add(field)
@@ -377,7 +376,7 @@ def get_counts_additional_fields(json_data, schema_obj, schema_name, context, cu
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
 
 
-def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app, cell_source_map, heading_source_map):
+def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_source_map, heading_source_map, add_checkers=None):
     if schema_name == 'record-package-schema.json':
         pkg_schema_obj = schema_obj.get_record_pkg_schema_obj()
     else:
@@ -385,9 +384,8 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app
 
     validation_errors = collections.defaultdict(list)
     format_checker = FormatChecker()
-
-    if current_app == 'cove-360':
-        format_checker.checkers['date-time'] = (tools.datetime_or_date, ValueError)
+    if add_checkers:
+        format_checker.checkers.update(add_checkers)
 
     if getattr(schema_obj, 'extended', None):
         resolver = CustomRefResolver('', pkg_schema_obj, schema_file=schema_obj.extended_schema_file)
