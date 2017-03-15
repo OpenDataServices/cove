@@ -89,9 +89,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+    'raven.contrib.django.raven_compat',
     'cove',
     'cove.input',
-    'raven.contrib.django.raven_compat',
 )
 
 if env('DEBUG_TOOLBAR'):

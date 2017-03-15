@@ -8,7 +8,6 @@ DEALER_TYPE = settings.DEALER_TYPE
 SECRET_KEY = settings.SECRET_KEY
 DEBUG = settings.DEBUG
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
-INSTALLED_APPS = settings.INSTALLED_APPS
 MIDDLEWARE_CLASSES = settings.MIDDLEWARE_CLASSES
 ROOT_URLCONF = settings.ROOT_URLCONF
 TEMPLATES = settings.TEMPLATES
@@ -27,6 +26,8 @@ LOGGING = settings.LOGGING
 
 if getattr(settings, 'RAVEN_CONFIG', None):
     RAVEN_CONFIG = settings.RAVEN_CONFIG
+
+INSTALLED_APPS = settings.INSTALLED_APPS.append('cove-360')
 
 COVE_CONFIG = {
     'base_template_name': 'base_360.html',
