@@ -37,7 +37,6 @@ COVE_CONFIG = {
     'schema_name': '360-giving-package-schema.json',
     'schema_version': None,
     'schema_version_choices': None,
-    'schema_codelists': None,
     'item_schema_name': '360-giving-schema.json',
     'root_list_path': 'grants',
     'root_id': '',

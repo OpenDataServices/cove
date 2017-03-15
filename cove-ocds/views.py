@@ -6,7 +6,8 @@ from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 
 from lib.ocds import get_records_aggregates, get_releases_aggregates
-from cove.lib.common import SchemaOCDS, get_additional_codelist_values
+from lib.schema import SchemaOCDS
+from cove.lib.common import get_additional_codelist_values
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, CoveWebInputDataError
 from cove.views import explore_data_context, common_checks_context
@@ -27,8 +28,7 @@ def common_checks_ocds(context, db_data, json_data, schema_obj):
     if schema_name == 'record-package-schema.json':
         context['records_aggregates'] = get_records_aggregates(json_data, ignore_errors=bool(validation_errors))
     else:
-        schema_codelist = request.cove_config['schema_codelists'].get(schema_obj.version)
-        additional_codelist_values = get_additional_codelist_values(schema_obj, schema_codelist, json_data)
+        additional_codelist_values = get_additional_codelist_values(schema_obj, schema_obj.codelists, json_data)
         closed_codelist_values = {key: value for key, value in additional_codelist_values.items() if not value['isopen']}
         open_codelist_values = {key: value for key, value in additional_codelist_values.items() if value['isopen']}
 

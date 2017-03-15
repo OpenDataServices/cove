@@ -4,9 +4,9 @@ import logging
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 
-from . lib import threesixtygiving
+from . lib.threesixtygiving import get_grants_aggregates, run_additional_checks
+from . lib.schema import Schema360
 from cove.lib.tools import datetime_or_date
-from cove.lib.common import Schema360
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, CoveWebInputDataError
 from cove.views import explore_data_context, common_checks_context
@@ -22,8 +22,8 @@ def common_checks_360(context, db_data, json_data, schema_obj):
 
     context.update(common_checks['context'])
     context.update({
-        'grants_aggregates': threesixtygiving.get_grants_aggregates(json_data),
-        'additional_checks': threesixtygiving.run_additional_checks(json_data, cell_source_map),
+        'grants_aggregates': get_grants_aggregates(json_data),
+        'additional_checks': run_additional_checks(json_data, cell_source_map),
         'additional_checks_count': len(context['additional_checks']) + (1 if context['data_only'] else 0),
         'common_error_types': ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
     })
