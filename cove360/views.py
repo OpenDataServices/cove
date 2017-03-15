@@ -14,10 +14,27 @@ from cove.views import explore_data_context, common_checks_context
 logger = logging.getLogger(__name__)
 
 
+def common_checks_360(context, db_data, json_data, schema_obj):
+    schema_name = schema_obj.release_pkg_schema_name
+    checkers = {'date-time': (datetime_or_date, ValueError)}
+    common_checks = common_checks_context(db_data, json_data, schema_obj, schema_name, context, extra_checkers=checkers)
+    cell_source_map = common_checks['cell_source_map']
+
+    context.update(common_checks['context'])
+    context.update({
+        'grants_aggregates': threesixtygiving.get_grants_aggregates(json_data),
+        'additional_checks': threesixtygiving.run_additional_checks(json_data, cell_source_map),
+        'additional_checks_count': len(context['additional_checks']) + (1 if context['data_only'] else 0),
+        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
+    })
+
+    return context
+
+
 @CoveWebInputDataError.error_page
 def explore_360(request, pk, data, context):
     schema_360 = Schema360()
-    context, data = explore_data_context(request, pk)
+    context, db_data = explore_data_context(request, pk)
     file_type = context['file_type']
 
     if file_type == 'json':
@@ -35,26 +52,13 @@ def explore_360(request, pk, data, context):
                              '</span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
-            context.update(convert_json(request, data, schema_url=schema_360.release_schema_url, replace=False))
+            context.update(convert_json(request, data, schema_360.release_schema_url))
     else:
-        context.update(convert_spreadsheet(request, data, file_type, schema_url=schema_360.release_schema_url, replace=False))
+        context.update(convert_spreadsheet(request, data, file_type, schema_360.release_schema_url))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
-    schema_name = schema_360.release_pkg_schema_name
-
-    checkers = {'date-time': (datetime_or_date, ValueError)}
-    common_checks = common_checks_context(request, data, json_data, schema_360, schema_name, context, validation_checkers=checkers)
-    cell_source_map = common_checks['cell_source_map']
-
-    context.update(common_checks['context'])
-    context.update({
-        'grants_aggregates': threesixtygiving.get_grants_aggregates(json_data),
-        'additional_checks': threesixtygiving.run_additional_checks(json_data, cell_source_map),
-        'additional_checks_count': len(context['additional_checks']) + (1 if context['data_only'] else 0),
-        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
-    })
-
+    context = common_checks_360(context, db_data, json_data, schema_360)
     return render(request, 'explore_360.html', context)
 
 

@@ -24,7 +24,7 @@ def filter_conversion_warnings(conversion_warnings):
     return out
 
 
-def convert_spreadsheet(request, data, file_type, schema_url, replace):
+def convert_spreadsheet(request, data, file_type, schema_url, replace=False):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
     cell_source_map_path = os.path.join(data.upload_dir(), 'cell_source_map.json')
@@ -98,7 +98,7 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace):
     return context
 
 
-def convert_json(request, data, schema_url, replace):
+def convert_json(request, data, schema_url, replace=False):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'flattened')
 

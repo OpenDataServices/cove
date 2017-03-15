@@ -56,7 +56,7 @@ def explore_data_context(request, pk):
     return (context, data)
 
 
-def common_checks_context(data, json_data, schema_obj, schema_name, context, validation_checkers=None, fields_regex=False):
+def common_checks_context(data, json_data, schema_obj, schema_name, context, extra_checkers=None, fields_regex=False):
     schema_version = getattr(schema_obj, 'version', None)
     schema_version_choices = getattr(schema_obj, 'version_choices', None)
     if schema_version:
@@ -92,7 +92,7 @@ def common_checks_context(data, json_data, schema_obj, schema_name, context, val
     else:
         validation_errors = common.get_schema_validation_errors(json_data, schema_obj, schema_name,
                                                                 cell_source_map, heading_source_map,
-                                                                add_checkers=validation_checkers)
+                                                                extra_checkers=extra_checkers)
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 

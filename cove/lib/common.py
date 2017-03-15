@@ -376,7 +376,7 @@ def get_counts_additional_fields(json_data, schema_obj, schema_name, context, fi
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
 
 
-def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_source_map, heading_source_map, add_checkers=None):
+def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_map, heading_src_map, extra_checkers=None):
     if schema_name == 'record-package-schema.json':
         pkg_schema_obj = schema_obj.get_record_pkg_schema_obj()
     else:
@@ -384,8 +384,8 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_source
 
     validation_errors = collections.defaultdict(list)
     format_checker = FormatChecker()
-    if add_checkers:
-        format_checker.checkers.update(add_checkers)
+    if extra_checkers:
+        format_checker.checkers.update(extra_checkers)
 
     if getattr(schema_obj, 'extended', None):
         resolver = CustomRefResolver('', pkg_schema_obj, schema_file=schema_obj.extended_schema_file)
@@ -409,7 +409,7 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_source
                 message = new_message
 
         value = {"path": path}
-        cell_reference = cell_source_map.get(path)
+        cell_reference = cell_src_map.get(path)
 
         if cell_reference:
             first_reference = cell_reference[0]
@@ -430,7 +430,7 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_source
                     parent_name = e.path[-2]
 
                 field_name = str(parent_name) + ":" + e.message
-            heading = heading_source_map.get(path_no_number + '/' + e.message)
+            heading = heading_src_map.get(path_no_number + '/' + e.message)
             if heading:
                 field_name = heading[0][1]
                 value['header'] = heading[0][1]

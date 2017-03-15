@@ -15,11 +15,37 @@ from cove.views import explore_data_context, common_checks_context
 logger = logging.getLogger(__name__)
 
 
+def common_checks_ocds(context, db_data, json_data, schema_obj):
+    schema_name = schema_obj.release_pkg_schema_name
+    if 'records' in json_data:
+        schema_name = schema_obj.record_pkg_schema_name
+    common_checks = common_checks_context(db_data, json_data, schema_obj, schema_name, context, fields_regex=True)
+    validation_errors = common_checks['context']['validation_errors']
+
+    context.update(common_checks['context'])
+
+    if schema_name == 'record-package-schema.json':
+        context['records_aggregates'] = get_records_aggregates(json_data, ignore_errors=bool(validation_errors))
+    else:
+        schema_codelist = request.cove_config['schema_codelists'].get(schema_obj.version)
+        additional_codelist_values = get_additional_codelist_values(schema_obj, schema_codelist, json_data)
+        closed_codelist_values = {key: value for key, value in additional_codelist_values.items() if not value['isopen']}
+        open_codelist_values = {key: value for key, value in additional_codelist_values.items() if value['isopen']}
+
+        context.update({
+            context['releases_aggregates']: get_releases_aggregates(json_data, ignore_errors=bool(validation_errors)),
+            context['additional_closed_codelist_values']: closed_codelist_values,
+            context['additional_open_codelist_values']: open_codelist_values
+        })
+
+    return context
+
+
 @CoveWebInputDataError.error_page
 def explore_ocds(request, pk, data):
     post_version_choice = request.POST.get('version')
     replace = False
-    context, data = explore_data_context(request, pk)
+    context, db_data = explore_data_context(request, pk)
     file_type = context['file_type']
 
     if file_type == 'json':
@@ -86,7 +112,7 @@ def explore_ocds(request, pk, data):
                         schema_ocds.create_extended_release_schema_file(data.upload_dir(), data.upload_url())
                         url = schema_ocds.extended_schema_file
 
-                context.update(convert_json(request, data, schema_url=url, replace=replace))
+                context.update(convert_json(request, data, url, replace=replace))
 
     else:
         select_version = post_version_choice or data.schema_version
@@ -94,29 +120,10 @@ def explore_ocds(request, pk, data):
         # Replace json conversion when user chooses a different schema version.
         if data.schema_version and schema_ocds.version != data.schema_version:
             replace = True
-        context.update(convert_spreadsheet(request, data, file_type, schema_url=schema_ocds.release_schema_url, replace=replace))
+        context.update(convert_spreadsheet(request, data, file_type, schema_ocds.release_schema_url, replace=replace))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
-    schema_name = schema_ocds.release_pkg_schema_name
-    template = 'explore_ocds-release.html'
-
-    if 'records' in json_data:
-        schema_name = schema_ocds.record_pkg_schema_name
-        template = 'explore_ocds-record.html'
-
-    common_checks = common_checks_context(request, data, json_data, schema_ocds, schema_name, context, fields_regex=True)
-    validation_errors = common_checks['context']['validation_errors']
-    context.update(common_checks['context'])
-
-    if schema_name == 'record-package-schema.json':
-        context['records_aggregates'] = get_records_aggregates(json_data, ignore_errors=bool(validation_errors))
-    else:
-        additional_codelist_values = get_additional_codelist_values(schema_ocds, request.cove_config['schema_codelists'].get(schema_ocds.version), json_data)
-        context.update({
-            context['releases_aggregates']: get_releases_aggregates(json_data, ignore_errors=bool(validation_errors)),
-            context['additional_closed_codelist_values']: {key: value for key, value in additional_codelist_values.items() if not value['isopen']},
-            context['additional_open_codelist_values']: {key: value for key, value in additional_codelist_values.items() if value['isopen']}
-        })
-
+    template = 'explore_ocds-record.html' if 'records' in json_data else 'explore_ocds-release.html'
+    context = common_checks_ocds(context, db_data, json_data, schema_ocds)
     return render(request, template, context)
