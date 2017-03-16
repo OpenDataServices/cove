@@ -120,7 +120,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cove.context_processors.analytics'
+                'cove.context_processors.analytics',
+                'cove.context_processors.input_methods'
             ],
         },
     },

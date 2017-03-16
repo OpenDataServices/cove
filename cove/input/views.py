@@ -1,9 +1,15 @@
-from django.utils.translation import ugettext_lazy as _
-from django.shortcuts import render, redirect
-from django import forms
-from cove.input.models import SuppliedData
-from django.core.files.base import ContentFile
 import requests
+
+from django import forms
+from django.conf import settings
+from django.core.files.base import ContentFile
+from django.shortcuts import render, redirect
+from django.utils.translation import ugettext_lazy as _
+
+from cove.input.models import SuppliedData
+
+
+config = settings.COVE_CONFIG
 
 
 class UploadForm(forms.ModelForm):
@@ -66,14 +72,16 @@ def input(request):
                         'sub_title': _("Sorry we got a ConnectionError whilst trying to download that file"),
                         'link': 'index',
                         'link_text': _('Try Again'),
-                        'msg': _(str(err) + '\n\n Common reasons for this error include supplying a local development url that our servers can\'t access, or misconfigured SSL certificates.')
+                        'msg': _(str(err) + '\n\n Common reasons for this error include supplying a local '
+                                 'development url that our servers can\'t access, or misconfigured SSL certificates.')
                     })
                 except requests.HTTPError as err:
                     return render(request, 'error.html', context={
                         'sub_title': _("Sorry we got a HTTP Error whilst trying to download that file"),
                         'link': 'index',
                         'link_text': _('Try Again'),
-                        'msg': _(str(err) + '\n\n If you can access the file through a browser then the problem may be related to permissions, or you may be blocking certain user agents.')
+                        'msg': _(str(err) + '\n\n If you can access the file through a browser then the problem '
+                                 'may be related to permissions, or you may be blocking certain user agents.')
                     })
             elif form_name == 'text_form':
                 data.original_file.save('test.json', ContentFile(form['paste'].value()))

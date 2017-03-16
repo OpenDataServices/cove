@@ -6,3 +6,7 @@ def analytics(request):
         'piwik': settings.PIWIK,
         'google_analytics_id': settings.GOOGLE_ANALYTICS_ID
     }
+
+
+def input_methods(request):
+    return {'input_methods': settings.COVE_CONFIG.get('input_methods', [])}
