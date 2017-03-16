@@ -6,12 +6,14 @@ import warnings
 
 import flattentool
 import flattentool.exceptions
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from flattentool.json_input import BadlyFormedJSONError
 
 from cove.lib.exceptions import CoveInputDataError
 
 logger = logging.getLogger(__name__)
+config = settings.COVE_CONFIG
 
 
 def filter_conversion_warnings(conversion_warnings):
@@ -38,7 +40,7 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace=False):
         # a new directory, such that it fits this pattern.
         input_name = os.path.join(data.upload_dir(), 'csv_dir')
         os.makedirs(input_name, exist_ok=True)
-        destination = os.path.join(input_name, request.cove_config['root_list_path'] + '.csv')
+        destination = os.path.join(input_name, config['root_list_path'] + '.csv')
         shutil.copy(data.original_file.file.name, destination)
         try:
             with open(destination, encoding='utf-8') as main_sheet_file:
@@ -61,8 +63,8 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace=False):
                     input_name,
                     output_name=converted_path,
                     input_format=file_type,
-                    root_list_path=request.cove_config['root_list_path'],
-                    root_id=request.cove_config['root_id'],
+                    root_list_path=config['root_list_path'],
+                    root_id=config['root_id'],
                     schema=schema_url,
                     convert_titles=True,
                     encoding=encoding,
@@ -104,9 +106,9 @@ def convert_json(request, data, schema_url, replace=False):
 
     flatten_kwargs = dict(
         output_name=converted_path,
-        main_sheet_name=request.cove_config['root_list_path'],
-        root_list_path=request.cove_config['root_list_path'],
-        root_id=request.cove_config['root_id'],
+        main_sheet_name=config['root_list_path'],
+        root_list_path=config['root_list_path'],
+        root_id=config['root_id'],
         schema=schema_url
     )
 
@@ -128,7 +130,7 @@ def convert_json(request, data, schema_url, replace=False):
 
         conversion_warning_cache_path_titles = os.path.join(data.upload_dir(), 'conversion_warning_messages_titles.json')
 
-        if request.cove_config['convert_titles']:
+        if config['convert_titles']:
             with warnings.catch_warnings(record=True) as conversion_warnings_titles:
                 flatten_kwargs.update(dict(
                     output_name=converted_path + '-titles',

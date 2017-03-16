@@ -104,7 +104,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'dealer.contrib.django.Middleware'
+    'dealer.contrib.django.Middleware',
+    'cove.middleware.CoveConfigCurrentApp',
 )
 
 ROOT_URLCONF = ''

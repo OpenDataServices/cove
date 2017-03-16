@@ -31,6 +31,7 @@ INSTALLED_APPS = settings.INSTALLED_APPS + ('cove-ocds', )
 WSGI_APPLICATION = 'cove-ocds.wsgi.application'
 ROOT_URLCONF = 'cove-ocds.urls'
 COVE_CONFIG = {
+    'app_name': 'cove-ocds',
     'base_template_name': 'base_ocds.html',
     'application_name': 'Open Contracting Data Standard Validator',
     'application_strapline': 'Validate and Explore your data.',

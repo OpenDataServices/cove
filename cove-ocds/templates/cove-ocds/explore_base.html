@@ -1,4 +1,4 @@
-{% extends 'cove/explore.html' %}
+{% extends 'explore.html' %}
 {% load i18n %}
 {% load cove_tags %}
 {% block header_button %}
@@ -24,7 +24,7 @@
       <br>
       <br>
       <div>
-        <form class="form-inline" action="{% url 'cove:explore' data_uuid %}" method="post">
+        <form class="form-inline" action="{% url 'explore' data_uuid %}" method="post">
         {% csrf_token %}
           <select class="form-control" name="version">
           {% for version in version_display_choices %}

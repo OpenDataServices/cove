@@ -33,16 +33,16 @@ def common_checks_ocds(context, db_data, json_data, schema_obj):
         open_codelist_values = {key: value for key, value in additional_codelist_values.items() if value['isopen']}
 
         context.update({
-            context['releases_aggregates']: get_releases_aggregates(json_data, ignore_errors=bool(validation_errors)),
-            context['additional_closed_codelist_values']: closed_codelist_values,
-            context['additional_open_codelist_values']: open_codelist_values
+            'releases_aggregates': get_releases_aggregates(json_data, ignore_errors=bool(validation_errors)),
+            'additional_closed_codelist_values': closed_codelist_values,
+            'additional_open_codelist_values': open_codelist_values
         })
 
     return context
 
 
 @CoveWebInputDataError.error_page
-def explore_ocds(request, pk, data):
+def explore_ocds(request, pk):
     post_version_choice = request.POST.get('version')
     replace = False
     context, db_data = explore_data_context(request, pk)
@@ -50,7 +50,7 @@ def explore_ocds(request, pk, data):
 
     if file_type == 'json':
         # open the data first so we can inspect for record package
-        with open(data.original_file.file.name, encoding='utf-8') as fp:
+        with open(db_data.original_file.file.name, encoding='utf-8') as fp:
             try:
                 json_data = json.load(fp)
             except ValueError as err:
@@ -64,7 +64,7 @@ def explore_ocds(request, pk, data):
                     'error': format(err)
                 })
 
-            select_version = post_version_choice or data.schema_version
+            select_version = post_version_choice or db_data.schema_version
             schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data)
 
             if schema_ocds.invalid_version_argument:
@@ -96,11 +96,11 @@ def explore_ocds(request, pk, data):
             if 'records' in json_data:
                 context['conversion'] = None
             else:
-                converted_path = os.path.join(data.upload_dir(), 'flattened')
-                validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors-2.json')
+                converted_path = os.path.join(db_data.upload_dir(), 'flattened')
+                validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
 
                 # Replace the spreadsheet conversion only if it exists already.
-                if os.path.exists(converted_path + '.xlsx') and schema_ocds.version != data.schema_version:
+                if os.path.exists(converted_path + '.xlsx') and schema_ocds.version != db_data.schema_version:
                     replace = True
                     if os.path.exists(validation_errors_path):
                         os.remove(validation_errors_path)
@@ -109,21 +109,21 @@ def explore_ocds(request, pk, data):
                 if schema_ocds.extensions:
                     schema_ocds.get_release_schema_obj()
                     if schema_ocds.extended:
-                        schema_ocds.create_extended_release_schema_file(data.upload_dir(), data.upload_url())
+                        schema_ocds.create_extended_release_schema_file(db_data.upload_dir(), db_data.upload_url())
                         url = schema_ocds.extended_schema_file
 
-                context.update(convert_json(request, data, url, replace=replace))
+                context.update(convert_json(request, db_data, url, replace=replace))
 
     else:
-        select_version = post_version_choice or data.schema_version
+        select_version = post_version_choice or db_data.schema_version
         schema_ocds = SchemaOCDS(select_version=select_version)
         # Replace json conversion when user chooses a different schema version.
-        if data.schema_version and schema_ocds.version != data.schema_version:
+        if db_data.schema_version and schema_ocds.version != db_data.schema_version:
             replace = True
-        context.update(convert_spreadsheet(request, data, file_type, schema_ocds.release_schema_url, replace=replace))
+        context.update(convert_spreadsheet(request, db_data, file_type, schema_ocds.release_schema_url, replace=replace))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
-    template = 'explore_ocds-record.html' if 'records' in json_data else 'explore_ocds-release.html'
+    template = 'cove-ocds/explore_record.html' if 'records' in json_data else 'cove-ocds/explore_release.html'
     context = common_checks_ocds(context, db_data, json_data, schema_ocds)
     return render(request, template, context)
