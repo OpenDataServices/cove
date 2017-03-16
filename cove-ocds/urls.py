@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from cove import urlpatterns
+from cove.urls import urlpatterns
 
 
-urlpatterns += [url(r'^data/(.+)$', 'coveOCDS.views.explore', name='explore')]
+urlpatterns += [url(r'^data/(.+)$', 'cove-ocds.views.explore_ocds', name='explore')]

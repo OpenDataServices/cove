@@ -12,7 +12,6 @@ ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 MIDDLEWARE_CLASSES = settings.MIDDLEWARE_CLASSES
 ROOT_URLCONF = settings.ROOT_URLCONF
 TEMPLATES = settings.TEMPLATES
-WSGI_APPLICATION = settings.WSGI_APPLICATION
 DATABASES = settings.DATABASES
 LANGUAGE_CODE = settings.LANGUAGE_CODE
 TIME_ZONE = settings.TIME_ZONE
@@ -28,8 +27,9 @@ LOGGING = settings.LOGGING
 if getattr(settings, 'RAVEN_CONFIG', None):
     RAVEN_CONFIG = settings.RAVEN_CONFIG
 
-INSTALLED_APPS = settings.INSTALLED_APPS.append('cove-ocds')
-
+INSTALLED_APPS = settings.INSTALLED_APPS + ('cove-ocds', )
+WSGI_APPLICATION = 'cove-ocds.wsgi.application'
+ROOT_URLCONF = 'cove-ocds.urls'
 COVE_CONFIG = {
     'base_template_name': 'base_ocds.html',
     'application_name': 'Open Contracting Data Standard Validator',

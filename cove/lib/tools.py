@@ -2,7 +2,7 @@ import datetime
 import strict_rfc3339
 from functools import wraps  # use this to preserve function signatures and docstrings
 
-from exceptions import UnrecognisedFileType
+from . exceptions import UnrecognisedFileType
 
 
 def ignore_errors(f):

@@ -5,8 +5,8 @@ import os
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 
-from lib.ocds import get_records_aggregates, get_releases_aggregates
-from lib.schema import SchemaOCDS
+from . lib.ocds import get_records_aggregates, get_releases_aggregates
+from . lib.schema import SchemaOCDS
 from cove.lib.common import get_additional_codelist_values
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, CoveWebInputDataError
@@ -56,7 +56,7 @@ def explore_ocds(request, pk, data):
             except ValueError as err:
                 raise CoveInputDataError(context={
                     'sub_title': _("Sorry we can't process that data"),
-                    'link': 'cove:index',
+                    'link': 'index',
                     'link_text': _('Try Again'),
                     'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.'
                              '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
@@ -84,7 +84,7 @@ def explore_ocds(request, pk, data):
             if schema_ocds.invalid_version_data:
                 raise CoveInputDataError(context={
                     'sub_title': _("Wrong schema version"),
-                    'link': 'cove:index',
+                    'link': 'index',
                     'link_text': _('Try Again'),
                     'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
                              'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '

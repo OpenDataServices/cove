@@ -27,4 +27,6 @@ LOGGING = settings.LOGGING
 if getattr(settings, 'RAVEN_CONFIG', None):
     RAVEN_CONFIG = settings.RAVEN_CONFIG
 
-INSTALLED_APPS = settings.INSTALLED_APPS.append('cove-iati')
+INSTALLED_APPS = settings.INSTALLED_APPS + ('cove-iati', )
+WSGI_APPLICATION = 'cove-iati.wsgi.application'
+ROOT_URLCONF = 'cove-iati.urls'

@@ -27,8 +27,9 @@ LOGGING = settings.LOGGING
 if getattr(settings, 'RAVEN_CONFIG', None):
     RAVEN_CONFIG = settings.RAVEN_CONFIG
 
-INSTALLED_APPS = settings.INSTALLED_APPS.append('cove-360')
-
+INSTALLED_APPS = settings.INSTALLED_APPS + ('cove-360', )
+WSGI_APPLICATION = 'cove-360.wsgi.application'
+ROOT_URLCONF = 'cove-360.urls'
 COVE_CONFIG = {
     'base_template_name': 'base_360.html',
     'application_name': '360Giving Data Quality Tool',

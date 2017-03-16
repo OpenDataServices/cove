@@ -21,7 +21,7 @@ def explore_data_context(request, pk):
     except (SuppliedData.DoesNotExist, ValueError):  # Catches primary key does not exist and badly formed UUID
         return render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
-            'link': 'cove:index',
+            'link': 'index',
             'link_text': _('Go to Home page'),
             'msg': _("We don't seem to be able to find the data you requested.")
             }, status=404)
@@ -31,7 +31,7 @@ def explore_data_context(request, pk):
     except FileNotFoundError:
         return render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
-            'link': 'cove:index',
+            'link': 'index',
             'link_text': _('Go to Home page'),
             'msg': _('The data you were hoping to explore no longer exists.\n\nThis is because all '
                      'data suplied to this website is automatically deleted after 7 days, and therefore '

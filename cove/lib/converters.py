@@ -83,7 +83,7 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace=False):
             })
         raise CoveInputDataError({
             'sub_title': _("Sorry we can't process that data"),
-            'link': 'cove:index',
+            'link': 'index',
             'link_text': _('Try Again'),
             'msg': _('We think you tried to supply a spreadsheet, but we failed to convert it to JSON.'
                      '\n\nError message: {}'.format(repr(err)))
@@ -148,7 +148,7 @@ def convert_json(request, data, schema_url, replace=False):
     except BadlyFormedJSONError as err:
         raise CoveInputDataError(context={
             'sub_title': _("Sorry we can't process that data"),
-            'link': 'cove:index',
+            'link': 'index',
             'link_text': _('Try Again'),
             'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\nError message: {}'.format(err))
         })

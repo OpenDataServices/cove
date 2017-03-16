@@ -45,7 +45,7 @@ def explore_360(request, pk, data, context):
             except ValueError as err:
                 raise CoveInputDataError(context={
                     'sub_title': _("Sorry we can't process that data"),
-                    'link': 'cove:index',
+                    'link': 'index',
                     'link_text': _('Try Again'),
                     'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.'
                              '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'

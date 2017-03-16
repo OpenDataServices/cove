@@ -24,13 +24,11 @@ def handler500(request):
 def cause500(request):
     raise Exception
 
-
 urlpatterns = [
     url(r'^$', 'cove.input.views.input', name='index'),
     url(r'^terms', TemplateView.as_view(template_name='terms.html'), name='terms'),
     url(r'^stats', 'cove.views.stats', name='stats'),
     url(r'^test/500', cause500),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^i18n/', include('django.conf.urls.i18n')),
-    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-]
+    url(r'^i18n/', include('django.conf.urls.i18n'))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

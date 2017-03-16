@@ -37,7 +37,7 @@ class CoveWebInputDataError(CoveInputDataError):
 class UnrecognisedFileType(CoveInputDataError):
     context = {
         'sub_title': _("Sorry we can't process that data"),
-        'link': 'cove:index',
+        'link': 'index',
         'link_text': _('Try Again'),
         'msg': _('We did not recognise the file type.\n\nWe can only process json, csv and xlsx files.')
     }

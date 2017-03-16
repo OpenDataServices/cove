@@ -14,13 +14,10 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import environ
 import os
 import warnings
-from collections import OrderedDict
 
 import raven
 
 from django.utils.crypto import get_random_string
-from django.utils.translation import ugettext_lazy as _
-
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -107,11 +104,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'dealer.contrib.django.Middleware',
-    'cove.middleware.CoveConfigByNamespaceMiddleware',
+    'dealer.contrib.django.Middleware'
 )
 
-ROOT_URLCONF = 'cove.urls_multi'
+ROOT_URLCONF = ''
 
 TEMPLATES = [
     {
@@ -124,14 +120,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cove.context_processors.analytics',
-                'cove.context_processors.cove_namespace_context',
+                'cove.context_processors.analytics'
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'cove.wsgi.application'
+WSGI_APPLICATION = ''
 
 
 # Database
