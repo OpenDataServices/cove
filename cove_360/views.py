@@ -60,7 +60,7 @@ def explore_360(request, pk):
             json_data = json.load(fp)
 
     context = common_checks_360(context, db_data, json_data, schema_360)
-    return render(request, 'cove-360/explore.html', context)
+    return render(request, 'cove_360/explore.html', context)
 
 
 def common_errors(request):

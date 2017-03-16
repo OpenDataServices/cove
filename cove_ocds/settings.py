@@ -27,12 +27,12 @@ LOGGING = settings.LOGGING
 if getattr(settings, 'RAVEN_CONFIG', None):
     RAVEN_CONFIG = settings.RAVEN_CONFIG
 
-INSTALLED_APPS = settings.INSTALLED_APPS + ('cove-ocds', )
-WSGI_APPLICATION = 'cove-ocds.wsgi.application'
-ROOT_URLCONF = 'cove-ocds.urls'
+INSTALLED_APPS = settings.INSTALLED_APPS + ('cove_ocds', )
+WSGI_APPLICATION = 'cove_ocds.wsgi.application'
+ROOT_URLCONF = 'cove_ocds.urls'
 COVE_CONFIG = {
-    'app_name': 'cove-ocds',
-    'app_base_template': 'cove-ocds/base.html',
+    'app_name': 'cove_ocds',
+    'app_base_template': 'cove_ocds/base.html',
     'app_verbose_name': 'Open Contracting Data Standard Validator',
     'app_strapline': 'Validate and Explore your data.',
     'schema_name': {'release': 'release-package-schema.json', 'record': 'record-package-schema.json'},

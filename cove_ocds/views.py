@@ -124,6 +124,6 @@ def explore_ocds(request, pk):
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
-    template = 'cove-ocds/explore_record.html' if 'records' in json_data else 'cove-ocds/explore_release.html'
+    template = 'cove_ocds/explore_record.html' if 'records' in json_data else 'cove_ocds/explore_release.html'
     context = common_checks_ocds(context, db_data, json_data, schema_ocds)
     return render(request, template, context)

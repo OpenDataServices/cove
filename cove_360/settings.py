@@ -27,12 +27,12 @@ LOGGING = settings.LOGGING
 if getattr(settings, 'RAVEN_CONFIG', None):
     RAVEN_CONFIG = settings.RAVEN_CONFIG
 
-INSTALLED_APPS = settings.INSTALLED_APPS + ('cove-360', )
-WSGI_APPLICATION = 'cove-360.wsgi.application'
-ROOT_URLCONF = 'cove-360.urls'
+INSTALLED_APPS = settings.INSTALLED_APPS + ('cove_360', )
+WSGI_APPLICATION = 'cove_360.wsgi.application'
+ROOT_URLCONF = 'cove_360.urls'
 COVE_CONFIG = {
-    'app_name': 'cove-360',
-    'app_base_template': 'cove-360/base.html',
+    'app_name': 'cove_360',
+    'app_base_template': 'cove_360/base.html',
     'app_verbose_name': '360Giving Data Quality Tool',
     'app_strapline': 'Convert, Validate, Explore 360Giving Data',
     'schema_name': '360-giving-package-schema.json',
