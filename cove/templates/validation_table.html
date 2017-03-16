@@ -17,7 +17,7 @@
 {% for error, values in validation_errors %}
 <tr>
   {% if error|get_message_type in common_error_types %}
-  <td><a href="{% url 'cove:common_errors' %}#{{error|get_message_type}}"> {{error|get_message}} </a></td>
+  <td><a href="{% url 'common_errors' %}#{{error|get_message_type}}"> {{error|get_message}} </a></td>
   {% else %}
     <td>{{error|get_message}}</td> 
   {% endif %}

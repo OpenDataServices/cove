@@ -19,12 +19,13 @@ def common_checks_360(context, db_data, json_data, schema_obj):
     checkers = {'date-time': (datetime_or_date, ValueError)}
     common_checks = common_checks_context(db_data, json_data, schema_obj, schema_name, context, extra_checkers=checkers)
     cell_source_map = common_checks['cell_source_map']
+    additional_checks = run_additional_checks(json_data, cell_source_map)
 
     context.update(common_checks['context'])
     context.update({
         'grants_aggregates': get_grants_aggregates(json_data),
-        'additional_checks': run_additional_checks(json_data, cell_source_map),
-        'additional_checks_count': len(context['additional_checks']) + (1 if context['data_only'] else 0),
+        'additional_checks': additional_checks,
+        'additional_checks_count': len(additional_checks) + (1 if context['data_only'] else 0),
         'common_error_types': ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
     })
 
@@ -32,14 +33,14 @@ def common_checks_360(context, db_data, json_data, schema_obj):
 
 
 @CoveWebInputDataError.error_page
-def explore_360(request, pk, data, context):
+def explore_360(request, pk):
     schema_360 = Schema360()
     context, db_data = explore_data_context(request, pk)
     file_type = context['file_type']
 
     if file_type == 'json':
         # open the data first so we can inspect for record package
-        with open(data.original_file.file.name, encoding='utf-8') as fp:
+        with open(db_data.original_file.file.name, encoding='utf-8') as fp:
             try:
                 json_data = json.load(fp)
             except ValueError as err:
@@ -52,15 +53,15 @@ def explore_360(request, pk, data, context):
                              '</span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
-            context.update(convert_json(request, data, schema_360.release_schema_url))
+            context.update(convert_json(request, db_data, schema_360.release_schema_url))
     else:
-        context.update(convert_spreadsheet(request, data, file_type, schema_360.release_schema_url))
+        context.update(convert_spreadsheet(request, db_data, file_type, schema_360.release_schema_url))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
     context = common_checks_360(context, db_data, json_data, schema_360)
-    return render(request, 'explore_360.html', context)
+    return render(request, 'cove-360/explore.html', context)
 
 
 def common_errors(request):
-    return render(request, 'common_errors_360.html')
+    return render(request, 'common_errors.html')
