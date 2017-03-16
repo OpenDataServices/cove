@@ -87,4 +87,4 @@ def input(request):
                 data.original_file.save('test.json', ContentFile(form['paste'].value()))
             return redirect(data.get_absolute_url())
 
-    return render(request, 'datainput/input.html', {'forms': forms})
+    return render(request, 'input/input.html', {'forms': forms})

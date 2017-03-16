@@ -20,21 +20,21 @@ msgstr ""
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: cove/input/templates/datainput/input.html:15 cove/templates/stats.html:10
+#: cove/input/templates/input/input.html:15 cove/templates/stats.html:10
 msgid "Upload"
 msgstr "Subir"
 
-#: cove/input/templates/datainput/input.html:25
-#: cove/input/templates/datainput/input.html:48
-#: cove/input/templates/datainput/input.html:71
+#: cove/input/templates/input/input.html:25
+#: cove/input/templates/input/input.html:48
+#: cove/input/templates/input/input.html:71
 msgid "Submit"
 msgstr "Enviar"
 
-#: cove/input/templates/datainput/input.html:38 cove/templates/stats.html:11
+#: cove/input/templates/input/input.html:38 cove/templates/stats.html:11
 msgid "Link"
 msgstr "Enlazar"
 
-#: cove/input/templates/datainput/input.html:61 cove/templates/stats.html:12
+#: cove/input/templates/input/input.html:61 cove/templates/stats.html:12
 msgid "Paste"
 msgstr "Pegar"
 

@@ -32,6 +32,7 @@ WSGI_APPLICATION = 'cove-360.wsgi.application'
 ROOT_URLCONF = 'cove-360.urls'
 COVE_CONFIG = {
     'app_name': 'cove-360',
+    'app_base_template': 'cove-360/base.html',
     'app_verbose_name': '360Giving Data Quality Tool',
     'app_strapline': 'Convert, Validate, Explore 360Giving Data',
     'schema_name': '360-giving-package-schema.json',

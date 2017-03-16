@@ -32,6 +32,7 @@ WSGI_APPLICATION = 'cove-iati.wsgi.application'
 ROOT_URLCONF = 'cove-iati.urls'
 COVE_CONFIG = {
     'app_name': 'cove-iati',
+    'app_base_template': 'cove-iati/base.html',
     'app_verbose_name': None,
     'app_strapline': None,
     'schema_name': None,

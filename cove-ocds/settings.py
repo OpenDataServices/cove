@@ -32,6 +32,7 @@ WSGI_APPLICATION = 'cove-ocds.wsgi.application'
 ROOT_URLCONF = 'cove-ocds.urls'
 COVE_CONFIG = {
     'app_name': 'cove-ocds',
+    'app_base_template': 'cove-ocds/base.html',
     'app_verbose_name': 'Open Contracting Data Standard Validator',
     'app_strapline': 'Validate and Explore your data.',
     'schema_name': {'release': 'release-package-schema.json', 'record': 'record-package-schema.json'},
