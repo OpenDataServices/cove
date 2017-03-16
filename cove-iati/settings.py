@@ -30,3 +30,17 @@ if getattr(settings, 'RAVEN_CONFIG', None):
 INSTALLED_APPS = settings.INSTALLED_APPS + ('cove-iati', )
 WSGI_APPLICATION = 'cove-iati.wsgi.application'
 ROOT_URLCONF = 'cove-iati.urls'
+COVE_CONFIG = {
+    'app_name': 'cove-iati',
+    'app_verbose_name': None,
+    'app_strapline': None,
+    'schema_name': None,
+    'schema_item_name': None,
+    'schema_host': None,
+    'schema_version': None,
+    'root_list_path': None,
+    'root_id': None,
+    'convert_titles': False,
+    'input_methods': ['upload', 'url', 'text'],
+    'support_email': None
+}

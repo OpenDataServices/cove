@@ -669,8 +669,8 @@ def test_SchemaOCDS_extended_release_schema_file():
 
 def test_Schema360():
     schema = c.Schema360()
-    assert schema.release_schema_name == c.cove_360_config['item_schema_name']
+    assert schema.release_schema_name == c.cove_360_config['schema_item_name']
     assert schema.release_pkg_schema_name == c.cove_360_config['schema_name']
     assert schema.schema_host == c.cove_360_config['schema_url']
-    assert schema.release_schema_url == c.cove_360_config['schema_url'] + c.cove_360_config['item_schema_name']
+    assert schema.release_schema_url == c.cove_360_config['schema_url'] + c.cove_360_config['schema_item_name']
     assert schema.release_pkg_schema_url == c.cove_360_config['schema_url'] + c.cove_360_config['schema_name']

@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/style.css' %}">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.10/css/dataTables.bootstrap.min.css">
   
-  <title>{{ application_name }} {% block title %}{% endblock %}</title>
+  <title>{{ app_verbose_name }} {% block title %}{% endblock %}</title>
 </head>
 <body>
   {% block banner %}
@@ -29,8 +29,8 @@
     <div class="page-header">
         <div class="row">
           <div class="col-md-8">
-            {% block h1 %}<h1 class="application-name"><a href="{% url 'index' %}">{{ application_name }}</a></h1>{% endblock %}
-            {% block strapline %}<p>{{ application_strapline }}</p>{% endblock %}
+            {% block h1 %}<h1 class="application-name"><a href="{% url 'index' %}">{{ app_verbose_name }}</a></h1>{% endblock %}
+            {% block strapline %}<p>{{ app_strapline }}</p>{% endblock %}
           </div><!--col-md-8-->
           <div class="col-md-2">
             {% block language_select %}

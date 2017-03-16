@@ -15,7 +15,7 @@ config = settings.COVE_CONFIG
 
 
 class SchemaOCDS(SchemaJsonMixin):
-    release_schema_name = config['item_schema_name']
+    release_schema_name = config['schema_item_name']
     release_pkg_schema_name = config['schema_name']['release']
     record_pkg_schema_name = config['schema_name']['record']
     version_choices = config['schema_version_choices']

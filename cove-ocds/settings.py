@@ -32,11 +32,11 @@ WSGI_APPLICATION = 'cove-ocds.wsgi.application'
 ROOT_URLCONF = 'cove-ocds.urls'
 COVE_CONFIG = {
     'app_name': 'cove-ocds',
-    'base_template_name': 'base_ocds.html',
-    'application_name': 'Open Contracting Data Standard Validator',
-    'application_strapline': 'Validate and Explore your data.',
-    'schema_host': None,
+    'app_verbose_name': 'Open Contracting Data Standard Validator',
+    'app_strapline': 'Validate and Explore your data.',
     'schema_name': {'release': 'release-package-schema.json', 'record': 'record-package-schema.json'},
+    'schema_item_name': 'release-schema.json',
+    'schema_host': None,
     'schema_version': '1.0',
     'schema_version_choices': OrderedDict((  # {version: (display, url)}
         ('1.0', ('1.0', 'http://standard.open-contracting.org/schema/1__0__2/')),
@@ -45,7 +45,6 @@ COVE_CONFIG = {
     'schema_codelists': OrderedDict((  # {version: codelist_dir}
         ('1.1', 'https://raw.githubusercontent.com/open-contracting/standard/1.1-dev/standard/schema/codelists/'),
     )),
-    'item_schema_name': 'release-schema.json',
     'root_list_path': 'releases',
     'root_id': 'ocid',
     'convert_titles': False,
