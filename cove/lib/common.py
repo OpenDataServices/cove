@@ -9,7 +9,6 @@ from urllib.parse import urlparse, urljoin
 import jsonref
 import requests
 from cached_property import cached_property
-from django.conf import settings
 from flattentool.schema import get_property_type_set
 from jsonschema import FormatChecker, RefResolver
 from jsonschema.exceptions import ValidationError
@@ -459,6 +458,8 @@ def _load_codelists(codelist_url, unique_files):
 
 
 def _generate_data_path(json_data, path=()):
+    if not json_data:
+        return path
     for key, value in json_data.items():
         if not value:
             continue
