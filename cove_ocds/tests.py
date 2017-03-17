@@ -10,8 +10,8 @@ from django.utils.translation import ugettext_lazy
 
 import cove.lib.common as cove_common
 from . import settings
-from . lib.schema import SchemaOCDS
 from . lib.ocds import get_releases_aggregates
+from . lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
 
