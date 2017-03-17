@@ -1,10 +1,10 @@
 import os
 
 import pytest
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
 
-from . import settings
 from . lib.schema import Schema360
 from . lib.threesixtygiving import run_additional_checks
 from cove.input.models import SuppliedData

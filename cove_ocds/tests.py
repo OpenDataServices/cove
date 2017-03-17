@@ -4,12 +4,12 @@ from collections import OrderedDict
 from unittest.mock import patch
 
 import pytest
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
 from django.utils.translation import ugettext_lazy
 
 import cove.lib.common as cove_common
-from . import settings
 from . lib.ocds import get_releases_aggregates
 from . lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
