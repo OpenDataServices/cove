@@ -199,25 +199,44 @@ def test_accordion(server_url, browser, prefix):
     assert buttons() == [False, False, True]
 
 
-@pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
-    ('tenders_releases_2_releases.json', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, True),
-    ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], True),
+@pytest.mark.parametrize(('source_filename', 'expected_text', 'not_expected_text', 'conversion_successful'), [
+    ('tenders_releases_2_releases.json', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, ['Schema Extensions'], True),
+    ('tenders_releases_1_release_with_extensions.json', ['Schema Extensions',
+                                                         'Contract Parties (Organization structure)',
+                                                         'All the extensions above were applied',
+                                                         'copy of the schema with extension',
+                                                         'Validation Errors',
+                                                         '\'buyer:id\' is missing but required'], ['fetching failed'], True),
+    ('tenders_releases_1_release_with_invalid_extensions.json', ['Schema Extensions',
+                                                                 'https://raw.githubusercontent.com/open-contracting/',
+                                                                 'badprotocol://example.com',
+                                                                 '400: bad request',
+                                                                 'Only those extensions successfully fetched',
+                                                                 'copy of the schema with extension',
+                                                                 'Validation Errors'], ['All the extensions above were applied'], True),
+    ('tenders_releases_1_release_with_all_invalid_extensions.json', ['Schema Extensions',
+                                                                 'badprotocol://example.com',
+                                                                 'None of the extensions above could be applied',
+                                                                 '400: bad request'], ['copy of the schema with extension', 'Validation Errors'], True),
+    ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], [], True),
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
                                                   'Validation Errors',
                                                   "'id' is missing but required",
-                                                  "Invalid 'uri' found"], True),
+                                                  "Invalid 'uri' found"], [], True),
+    ('tenders_releases_2_releases_codelists.json', ['oh no',
+                                                    'GSINS'], [], True),
     # Test UTF-8 support
-    ('utf8.json', 'Convert', True),
+    ('utf8.json', 'Convert', [], True),
     # But we expect to see an error message if a file is not well formed JSON at all
-    ('tenders_releases_2_releases_not_json.json', 'not well formed JSON', False),
-    ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, True),
-    ('badfile.json', 'Statistics can not produced', True),
+    ('tenders_releases_2_releases_not_json.json', 'not well formed JSON', [], False),
+    ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, [], True),
+    ('badfile.json', 'Statistics can not produced', [], True),
     # Test unconvertable JSON (main sheet "releases" is missing)
-    ('unconvertable_json.json', 'could not be converted', False),
-    ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], True),
+    ('unconvertable_json.json', 'could not be converted', [], False),
+    ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], [], True),
     ])
-def test_URL_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
+def test_URL_input(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     if PREFIX_360 and not PREFIX_OCDS:
         pytest.skip()
     prefix = PREFIX_OCDS
@@ -234,19 +253,19 @@ def test_URL_input(server_url, browser, httpserver, source_filename, expected_te
     time.sleep(0.5)
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
-    check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
+    check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
     #refresh page to now check if tests still work after caching some data
     browser.get(browser.current_url)
 
     selected_examples = ['tenders_releases_2_releases_invalid.json', 'WellcomeTrust-grants_fixed_2_grants.xlsx', 'WellcomeTrust-grants_2_grants_cp1252.csv']
 
     if source_filename in selected_examples:
-        check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
+        check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
         browser.get(server_url + prefix + '?source_url=' + source_url)
-        check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
+        check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
 
 
-def check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
+def check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     if source_filename.endswith('.json'):
         try:
             browser.find_element_by_name("flatten").click()
@@ -258,6 +277,9 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
     for text in expected_text:
         assert text in body_text
+
+    for text in not_expected_text:
+        assert text not in body_text
 
     assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
     # assert 'Release Table' in browser.find_element_by_tag_name('body').text

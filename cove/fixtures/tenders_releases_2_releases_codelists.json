@@ -4,7 +4,7 @@
         "name": "Buyandsell.gc.ca", 
         "uri": "https://buyandsell.gc.ca", 
         "uid": null
-    },
+    }, 
     "releases": [
         {
             "date": "2014-03-25T00:00:00.00Z", 
@@ -41,7 +41,7 @@
                 ], 
                 "tenderPeriod": {
                     "endDate": "2014-04-15T14:00:00.00Z"
-                },
+                }, 
                 "items": [
                     {
                         "id": "1", 
@@ -49,8 +49,7 @@
                             "scheme": "GSIN", 
                             "description": "F029: Other Animal Care and Control Services"
                         }, 
-                        "description": "Canine Control of the Canada Geese (14-2015)",
-                        "quantity": 10
+                        "description": "Canine Control of the Canada Geese (14-2015)"
                     }
                 ], 
                 "awardCriteriaDetails": null, 
@@ -61,7 +60,7 @@
                 "id": "PW-14-00627094", 
                 "methodRationale": "Open"
             }, 
-            "tag": ["tender"], 
+            "tag": ["tender", "oh no"], 
             "buyer": {
                 "name": "Agriculture & Agrifood Canada"
             }
@@ -90,7 +89,7 @@
                     {
                         "id": "1", 
                         "classification": {
-                            "scheme": "GSIN", 
+                            "scheme": "GSINS", 
                             "description": "5131BI: Asphalt and Joint Sealing Services, 5131C: Highways, Roads, Railways,  Airfield Runways"
                         }, 
                         "description": "Clear Lake Campground Asphalt Paving - Riding Mountain National Park of Canada (5P404-13181)"
@@ -111,5 +110,6 @@
     ], 
     "uri": "https://github.com/open-contracting/sample-data/blob/master/buyandsell/ocds_data/tender_releases.json.zip", 
     "license": "http://data.gc.ca/eng/open-government-licence-canada", 
-    "publishedDate": "2014-11-07T00:00:00.00Z"
+    "publishedDate": "2014-11-07T00:00:00.00Z",
+    "version": "1.1"
 }
