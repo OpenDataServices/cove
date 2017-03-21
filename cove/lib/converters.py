@@ -30,8 +30,6 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace):
     cell_source_map_path = os.path.join(data.upload_dir(), 'cell_source_map.json')
     heading_source_map_path = os.path.join(data.upload_dir(), 'heading_source_map.json')
     encoding = 'utf-8'
-    # 360 still uses request.cove_config['schema_url']
-    schema_url = schema_url or request.cove_config['schema_url']
 
     if file_type == 'csv':
         # flatten-tool expects a directory full of CSVs with file names
@@ -65,7 +63,7 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace):
                     input_format=file_type,
                     root_list_path=request.cove_config['root_list_path'],
                     root_id=request.cove_config['root_id'],
-                    schema=schema_url + request.cove_config['item_schema_name'],
+                    schema=schema_url,
                     convert_titles=True,
                     encoding=encoding,
                     cell_source_map=cell_source_map_path,
@@ -102,15 +100,13 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace):
 def convert_json(request, data, schema_url, replace):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'flattened')
-    # cove-360 still uses request.cove_config['schema_url']
-    schema_url = schema_url or request.cove_config['schema_url']
 
     flatten_kwargs = dict(
         output_name=converted_path,
         main_sheet_name=request.cove_config['root_list_path'],
         root_list_path=request.cove_config['root_list_path'],
         root_id=request.cove_config['root_id'],
-        schema=schema_url + request.cove_config['item_schema_name'],
+        schema=schema_url
     )
 
     try:

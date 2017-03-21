@@ -58,7 +58,7 @@
             <p>We have tried to convert your JSON into a spreadsheet format.</p><p>The results can be seen below.</p>
             <ul class="list-unstyled left-space">
               <li>
-                <a href="{{original_file.url}}">{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{original_file.url}}">{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
               </li>
               {% if not conversion_error %}
                 <li>
@@ -82,24 +82,25 @@
             <p>We have tried to convert your data into JSON format.</p><p>The results can be seen below.</p>
             <ul class="list-unstyled">
               <li>
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
                 <a href="{{original_file.url}}">
                   {% if file_type == 'xlsx' %}
-                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{xlsx}} <small>({{original}})</small>
+                    {{xlsx}} <small>({{original}})</small>
                   {% elif file_type == 'csv' %}
-                      <span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{csv}} <small>({{original}})</small>
+                    {{csv}} <small>({{original}})</small>
                   {% endif %}
                   </a> 
                   <small>{{original_file.size|filesizeformat }}</small>
                 </li>
                 <li>
-                  <a href="{{converted_url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
+                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}">{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
                 </li>
             </ul>
 
           {% else %}
             <ul class="list-unstyled">
               <li>
-                <a href="{{original_file.url}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{original_file.url}}">{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
                 {% if conversion == 'flattenable' %}
                   <br/>
                   <br/>
@@ -119,12 +120,54 @@
 
 </div><!--End Row -->
 
+{% if extensions %}
+  {% with ext=extensions.extensions ext_errors=extensions.invalid_extension %}
+  <a name="conversion-warning" class="anchor"></a>
+  <div class="panel panel-warning">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        {% trans 'Schema Extensions' %}
+      </h4>
+    </div>
+    <div class="panel-body">
+      <p>You data contains the following schema extensions{% if not extensions.is_extended_schema %} but it wasn't possible to fetch them{% endif %}:</p>
+      <ul>
+        {% for ext_descriptor_url, ext_details in ext.items %}
+          {% if ext_details %}
+          <li><a href="{{ext_details.0}}">{{ext_details.1}}</a> &nbsp;&nbsp;<span class="font-tick tick"></span><p><small>{{ext_details.2}}</small><p></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      {% if ext_errors %}
+      {% if extensions.is_extended_schema %}<p class="indent"> The following extensions failed:{% endif %}
+      <ul>
+        {% for ext_descriptor_url, error in ext_errors.items %}
+          <li><a href="{{ext_descriptor_url}}" class="text-warning">{{ext_descriptor_url}}</a>  &nbsp;&nbsp;<span class="font-tick cross"></span><p><small>{{error}}</small><p></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if extensions.is_extended_schema %}
+        {% if ext_errors %}
+          <p>Only those extensions successfully fetched were applied to extend the schema.</p>
+        {% else %}
+          <p>All the extensions above were applied to extend the schema.</p>
+        {% endif %}
+        <span class="glyphicon glyphicon-download" aria-hidden="true"></span> <a href="{{extensions.extended_schema_url}}"> &nbsp;Get a copy of the schema with extension patches applied</a>
+      {% else %}
+        <p>None of the extensions above could be applied. Your data has been validated against a schema with no extensions.</p>
+      {% endif %}
+
+    </div>
+  </div>
+  {% endwith %}
+{% endif %}
+
 {% if conversion_warning_messages %}
   <a name="conversion-warning" class="anchor"></a>
   <div class="panel panel-warning">
     <div class="panel-heading">
       <h4 class="panel-title">
-        
         {% trans 'Conversion Errors' %}
       </h4>
     </div>
@@ -182,6 +225,26 @@
   </div>
 {% endif %}
 
+{% if additional_closed_codelist_values %}
+    <a name="additional-fields" class="anchor"></a>
+    <div class="panel panel-danger">
+      <div id="additional-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalClosedCodelist" data-toggle="collapse" data-target="#additionalClosedCodelist">
+        <h4 class="panel-title">
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Codelist Validation Errors' %}</span>
+        </h4>
+      </div>
+      <div id="additionalClosedCodelist" class="collapse in">
+        <div class="panel-body">
+          The fields below use closed codelists. When using these fields, you <strong> must </strong> use one of the pre-defined codelist values. If you use a value that is not on the relevant codelist, your data will not pass validation.
+        {% with additional_codelist_values=additional_closed_codelist_values %}
+        {% include "additional_codelist_values.html" %}
+        {% endwith%}
+          You may need to create a mapping between your local codes and the OCDS closed codelists to address these errors. In most cases, there will be a ‘detail’ field where you can also include your local codes. If you have already completed a mapping, please review the spelling and capitalisation used in these closed codelist fields.
+        </div>
+      </div>
+    </div>
+{% endif %}
+
 
 
 {% if data_only %}
@@ -197,6 +260,28 @@
       </div>
     </div>
 {% endif %}
+
+
+{% if additional_open_codelist_values %}
+    <a name="additional-fields" class="anchor"></a>
+    <div class="panel panel-warning">
+      <div id="additional-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalOpenCodelist" data-toggle="collapse" data-target="#additionalOpenCodelist">
+        <h4 class="panel-title">
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Codelist Values' %}</span>
+        </h4>
+      </div>
+      <div class="panel-body">
+        Your data contains a number of fields that use an open codelist. You should use values from the codelist whenever possible, but if the codelist does not provide the values you need, you are permitted to add additional values. The values below do not appear in the codelist; you should check that you intended these as additional values.
+        <div id="additionalOpenCodelist" class="collapse in">
+          {% with additional_codelist_values=additional_open_codelist_values %}
+          {% include "additional_codelist_values.html" %}
+          {% endwith%}
+        </div>
+        Make sure your list the definition of any additional codelist values you include within your <a href="http://standard.open-contracting.org/latest/en/implementation/publication_policy/">publication policy</a>, and if you believe they should be added as recommended values in the open codelist, please suggest this via the <a href="https://github.com/open-contracting/standard/issues/new"> OCDS issue tracker.</a>
+      </div>
+    </div>
+{% endif %}
+
 
 {% if deprecated_fields %}
     <a name="deprecated-fields" class="anchor"></a>

@@ -5,6 +5,11 @@
         "uri": "https://buyandsell.gc.ca", 
         "uid": null
     },
+    "extensions": [
+        "https://raw.githubusercontent.com/open-contracting/bad_path_to_extensions/extension.json",
+        "http://example.com/404/",
+        "badprotocol://example.com"
+    ],
     "releases": [
         {
             "date": "2014-03-25T00:00:00.00Z", 
@@ -41,7 +46,7 @@
                 ], 
                 "tenderPeriod": {
                     "endDate": "2014-04-15T14:00:00.00Z"
-                },
+                }, 
                 "items": [
                     {
                         "id": "1", 
@@ -49,8 +54,7 @@
                             "scheme": "GSIN", 
                             "description": "F029: Other Animal Care and Control Services"
                         }, 
-                        "description": "Canine Control of the Canada Geese (14-2015)",
-                        "quantity": 10
+                        "description": "Canine Control of the Canada Geese (14-2015)"
                     }
                 ], 
                 "awardCriteriaDetails": null, 
@@ -64,48 +68,6 @@
             "tag": ["tender"], 
             "buyer": {
                 "name": "Agriculture & Agrifood Canada"
-            }
-        }, 
-        {
-            "date": "2014-04-04T00:00:00.00Z", 
-            "language": "English", 
-            "id": "Buyandsell.gc.ca-2014-11-07-a76b0dd2-3dc8-4c52-bc36-cd0e42530602", 
-            "ocid": "PW-14-00629344", 
-            "initiationType": "tender", 
-            "tender": {
-                "documents": [
-                    {
-                        "url": "https://buyandsell.gc.ca/cds/public/2014/04/04/cb21d6397174fbba48c92edb694de76f/tender_document_5p404-13181.pdf", 
-                        "id": "https://buyandsell.gc.ca/cds/public/2014/04/04/cb21d6397174fbba48c92edb694de76f/tender_document_5p404-13181.pdf"
-                    }, 
-                    {
-                        "url": "https://buyandsell.gc.ca/cds/public/2014/04/04/370b7a9ab2bdd35086e6caed9b5226f9/fr_tender_document_5p404-13181.pdf", 
-                        "id": "https://buyandsell.gc.ca/cds/public/2014/04/04/370b7a9ab2bdd35086e6caed9b5226f9/fr_tender_document_5p404-13181.pdf"
-                    }
-                ], 
-                "tenderPeriod": {
-                    "endDate": "2014-04-22T00:00:00Z"
-                }, 
-                "items": [
-                    {
-                        "id": "1", 
-                        "classification": {
-                            "scheme": "GSIN", 
-                            "description": "5131BI: Asphalt and Joint Sealing Services, 5131C: Highways, Roads, Railways,  Airfield Runways"
-                        }, 
-                        "description": "Clear Lake Campground Asphalt Paving - Riding Mountain National Park of Canada (5P404-13181)"
-                    }
-                ], 
-                "awardCriteriaDetails": null, 
-                "procuringEntity": {
-                    "name": "Parks Canada"
-                }, 
-                "id": "PW-14-00629344", 
-                "methodRationale": "Open"
-            }, 
-            "tag": ["tender"], 
-            "buyer": {
-                "name": "Parks Canada"
             }
         }
     ], 
