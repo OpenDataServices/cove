@@ -15,7 +15,7 @@ def handler500(request):
     context = {
         'request': request,
     }
-    context.update(request.cove_config)
+    context.update(settings.COVE_CONFIG)
 
     t = loader.get_template('500.html')
     return HttpResponseServerError(t.render(Context(context)))

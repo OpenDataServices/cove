@@ -19,6 +19,12 @@ import raven
 
 from django.utils.crypto import get_random_string
 
+COVE_CONFIG = {
+    'app_name': 'test',
+    'app_base_template': 'base.html',
+    'input_methods': ['upload', 'url', 'text'],
+}
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#%^&*(-_=+)'
@@ -108,7 +114,7 @@ MIDDLEWARE_CLASSES = (
     'cove.middleware.CoveConfigCurrentApp',
 )
 
-ROOT_URLCONF = ''
+ROOT_URLCONF = 'cove.urls'
 
 TEMPLATES = [
     {

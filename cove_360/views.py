@@ -35,7 +35,9 @@ def common_checks_360(context, db_data, json_data, schema_obj):
 @CoveWebInputDataError.error_page
 def explore_360(request, pk):
     schema_360 = Schema360()
-    context, db_data = explore_data_context(request, pk)
+    context, db_data, error = explore_data_context(request, pk)
+    if error:
+        return error
     file_type = context['file_type']
 
     if file_type == 'json':
@@ -64,4 +66,4 @@ def explore_360(request, pk):
 
 
 def common_errors(request):
-    return render(request, 'common_errors.html')
+    return render(request, 'cove_360/common_errors.html')

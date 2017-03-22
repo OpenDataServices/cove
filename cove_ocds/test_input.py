@@ -2,13 +2,10 @@ import os
 import pytest
 import cove.input.views as v
 from cove.input.models import SuppliedData
-from django.conf import settings
-
 
 def fake_cove_middleware(request):
-    by_namespace = settings.COVE_CONFIG_BY_NAMESPACE
-    request.cove_config = {key: by_namespace[key]['default'] for key in by_namespace}
-    request.current_app = 'test'
+    request.current_app = 'cove_ocds'
+    request.current_app_base_template = 'cove_ocds/base.html'
     return request
 
 
@@ -45,7 +42,7 @@ def test_connection_error(rf):
 @pytest.mark.django_db
 def test_http_error(rf):
     resp = v.input(fake_cove_middleware(rf.post('/', {
-        'source_url': 'http://httpstat.us/404'
+        'source_url': 'http://google.co.uk/cove'
     })))
     assert b'Not Found' in resp.content
 

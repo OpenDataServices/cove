@@ -19,7 +19,7 @@ def explore_data_context(request, pk):
     try:
         data = SuppliedData.objects.get(pk=pk)
     except (SuppliedData.DoesNotExist, ValueError):  # Catches primary key does not exist and badly formed UUID
-        return render(request, 'error.html', {
+        return {}, None, render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
             'link': 'index',
             'link_text': _('Go to Home page'),
@@ -29,7 +29,7 @@ def explore_data_context(request, pk):
     try:
         data.original_file.file.name
     except FileNotFoundError:
-        return render(request, 'error.html', {
+        return {}, None, render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
             'link': 'index',
             'link_text': _('Go to Home page'),
@@ -53,7 +53,7 @@ def explore_data_context(request, pk):
         'created_date': data.created.strftime('%A, %d %B %Y'),
     }
 
-    return (context, data)
+    return (context, data, None)
 
 
 def common_checks_context(data, json_data, schema_obj, schema_name, context, extra_checkers=None, fields_regex=False):

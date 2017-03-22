@@ -1,7 +1,6 @@
 import requests
 
 from django import forms
-from django.conf import settings
 from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
@@ -9,7 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 from cove.input.models import SuppliedData
 
 
-config = settings.COVE_CONFIG
 
 
 class UploadForm(forms.ModelForm):

@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
-from cove.urls import urlpatterns
+from cove.urls import urlpatterns, handler500
+
 
 urlpatterns += [
     url(r'^data/(.+)$', 'cove_360.views.explore_360', name='explore'),

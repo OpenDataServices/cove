@@ -458,7 +458,7 @@ def _load_codelists(codelist_url, unique_files):
 
 
 def _generate_data_path(json_data, path=()):
-    if not json_data:
+    if not json_data or not isinstance(json_data, dict):
         return path
     for key, value in json_data.items():
         if not value:

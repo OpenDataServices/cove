@@ -45,7 +45,9 @@ def common_checks_ocds(context, db_data, json_data, schema_obj):
 def explore_ocds(request, pk):
     post_version_choice = request.POST.get('version')
     replace = False
-    context, db_data = explore_data_context(request, pk)
+    context, db_data, error = explore_data_context(request, pk)
+    if error:
+        return error
     file_type = context['file_type']
 
     if file_type == 'json':

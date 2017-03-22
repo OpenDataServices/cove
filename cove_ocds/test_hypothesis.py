@@ -1,5 +1,4 @@
-from cove.lib.ocds import get_releases_aggregates
-from cove.lib.threesixtygiving import get_grants_aggregates
+from cove_ocds.lib.ocds import get_releases_aggregates
 from hypothesis import given, assume, strategies as st, example, settings
 from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
@@ -19,21 +18,9 @@ general_json = st.recursive(st.floats() | st.integers() | st.booleans() | st.tex
     lambda children: st.lists(children) | st.dictionaries(st.text(), children))
 
 
-@pytest.mark.xfail
-@given(general_json)
-def test_get_grants_aggregates(json_data):
-    get_grants_aggregates(json_data)
-
-
 @given(general_json)
 def test_get_releases_aggregates(json_data):
     get_releases_aggregates(json_data)
-
-
-@given(general_json)
-def test_get_grants_aggregates_dict(json_data):
-    assume(type(json_data) is dict)
-    get_grants_aggregates(json_data)
 
 
 @given(general_json)
