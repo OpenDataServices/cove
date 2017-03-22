@@ -26,13 +26,6 @@ def browser(request):
 @pytest.fixture(scope="module")
 def server_url(request, live_server):
     if 'CUSTOM_SERVER_URL' in os.environ:
-        return os.environ['CUSTOM_SERVER_URL']
-    else:
-        return live_server.url
-
-@pytest.fixture(scope="module")
-def server_url(request, live_server):
-    if 'CUSTOM_SERVER_URL' in os.environ:
         return os.environ['CUSTOM_SERVER_URL'] + PREFIX_OCDS
     else:
         return live_server.url + PREFIX_OCDS
@@ -306,5 +299,3 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
         assert warning_texts[0] in body_text
         assert 'Conversion Errors' in body_text
         assert 'conversion Warnings' not in body_text
-
-

@@ -8,8 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 from cove.input.models import SuppliedData
 
 
-
-
 class UploadForm(forms.ModelForm):
     class Meta:
         model = SuppliedData

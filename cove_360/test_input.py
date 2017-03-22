@@ -3,6 +3,7 @@ import pytest
 import cove.input.views as v
 from cove.input.models import SuppliedData
 
+
 def fake_cove_middleware(request):
     request.current_app = 'cove_360'
     request.current_app_base_template = 'cove_360/base.html'

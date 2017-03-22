@@ -11,8 +11,8 @@ from flattentool.exceptions import DataErrorWarning
 
 BROWSER = os.environ.get('BROWSER', 'Firefox')
 
-
 PREFIX_360 = os.environ.get('PREFIX_360', '/')
+
 
 @pytest.fixture(scope="module")
 def browser(request):
@@ -268,6 +268,7 @@ def test_index_page_360_links(server_url, browser, link_text, url):
     href = link.get_attribute("href")
     assert url in href
 
+
 def test_common_index_elements(server_url, browser):
     browser.get(server_url)
     browser.find_element_by_css_selector('#more-information .panel-title').click()
@@ -316,6 +317,7 @@ def test_accordion(server_url, browser):
     browser.find_element_by_id('headingThree').click()
     time.sleep(0.5)
     assert buttons() == [False, False, True]
+
 
 @pytest.mark.parametrize(('source_filename'), [
     ('WellcomeTrust-grants_fixed_2_grants.json'),

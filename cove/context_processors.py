@@ -10,5 +10,4 @@ def analytics(request):
 
 def input_methods(request):
     return {'input_methods': settings.COVE_CONFIG.get('input_methods', []),
-            'app_verbose_name': settings.COVE_CONFIG.get('app_verbose_name', []),
-           }
+            'app_verbose_name': settings.COVE_CONFIG.get('app_verbose_name', [])}

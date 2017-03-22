@@ -1,9 +1,6 @@
 from cove_360.lib.threesixtygiving import get_grants_aggregates
-from hypothesis import given, assume, strategies as st, example, settings
-from cove.input.models import SuppliedData
-from django.core.files.base import ContentFile
+from hypothesis import given, assume, strategies as st
 import pytest
-import json
 
 
 """
@@ -28,4 +25,3 @@ def test_get_grants_aggregates(json_data):
 def test_get_grants_aggregates_dict(json_data):
     assume(type(json_data) is dict)
     get_grants_aggregates(json_data)
-

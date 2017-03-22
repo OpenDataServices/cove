@@ -24,6 +24,7 @@ def handler500(request):
 def cause500(request):
     raise Exception
 
+
 urlpatterns = [
     url(r'^$', 'cove.input.views.input', name='index'),
     url(r'^terms', TemplateView.as_view(template_name='terms.html'), name='terms'),

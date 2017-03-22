@@ -18,9 +18,11 @@ install:
 
 script:
   - "flake8 ."
-  - "DJANGO_SETTINGS_MODULE=cove.settings py.test cove --cov"
-  - "DJANGO_SETTINGS_MODULE=cove_360.settings py.test cove_360 --cov-append --cov"
+  - "DJANGO_SETTINGS_MODULE=cove.settings py.test cove --cov --cov-report="
+  - "DJANGO_SETTINGS_MODULE=cove_360.settings py.test cove_360 --cov-append --cov --cov-report="
   - "DJANGO_SETTINGS_MODULE=cove_ocds.settings py.test cove_ocds --cov-append --cov"
-  - "python manage.py migrate; python manage.py compilemessages; DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver & java -jar dist/vnu.jar http://localhost:8000/ http://localhost:8000/360/ http://localhost:8000/ocds/ 'http://localhost:8000/360/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove/fixtures/WellcomeTrust-grants_2_grants.csv' 'http://localhost:8000/ocds/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove/fixtures/tenders_releases_2_releases.json' 'http://localhost:8000/360/common_errors/'"
+  - "python manage.py migrate; python manage.py compilemessages" 
+  - "DJANGO_SETTINGS_MODULE=cove_360.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver & java -jar dist/vnu.jar 'http://localhost:8000/' 'http://localhost:8000/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove/fixtures/WellcomeTrust-grants_2_grants.csv' 'http://localhost:8000/common_errors/'"
+  - "DJANGO_SETTINGS_MODULE=cove_ocds.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver localhost:8001 & java -jar dist/vnu.jar http://localhost:8001/ 'http://localhost:8001/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove/fixtures/tenders_releases_2_releases.json'"
 
 after_success: coveralls
