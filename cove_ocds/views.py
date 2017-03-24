@@ -46,6 +46,7 @@ def explore_ocds(request, pk):
     post_version_choice = request.POST.get('version')
     replace = False
     context, db_data, error = explore_data_context(request, pk)
+    validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
     if error:
         return error
     file_type = context['file_type']
@@ -99,13 +100,13 @@ def explore_ocds(request, pk):
                 context['conversion'] = None
             else:
                 converted_path = os.path.join(db_data.upload_dir(), 'flattened')
-                validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
 
                 # Replace the spreadsheet conversion only if it exists already.
-                if os.path.exists(converted_path + '.xlsx') and schema_ocds.version != db_data.schema_version:
-                    replace = True
+                if schema_ocds.version != db_data.schema_version:
                     if os.path.exists(validation_errors_path):
                         os.remove(validation_errors_path)
+                    if os.path.exists(converted_path + '.xlsx'):
+                        replace = True
 
                 url = schema_ocds.release_schema_url
                 if schema_ocds.extensions:
@@ -122,6 +123,8 @@ def explore_ocds(request, pk):
         # Replace json conversion when user chooses a different schema version.
         if db_data.schema_version and schema_ocds.version != db_data.schema_version:
             replace = True
+            if os.path.exists(validation_errors_path):
+                os.remove(validation_errors_path)
         context.update(convert_spreadsheet(request, db_data, file_type, schema_url=schema_ocds.release_schema_url, replace=replace))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
