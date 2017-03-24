@@ -7,7 +7,7 @@ import time
 import os
 
 
-PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/')
+PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/validator/')
 
 BROWSER = os.environ.get('BROWSER', 'Firefox')
 

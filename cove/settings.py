@@ -39,7 +39,6 @@ env = environ.Env(  # set default values and casting
     PIWIK_SITE_ID=(str, ''),
     PIWIK_DIMENSION_MAP=(dict, {}),
     GOOGLE_ANALYTICS_ID=(str, ''),
-    PREFIX_MAP=(dict, {}),
     ALLOWED_HOSTS=(list, []),
     SECRET_KEY=(str, secret_key),
     DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
@@ -60,8 +59,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 DEALER_TYPE = 'git'
-
-# PREFIX_MAP = env('PREFIX_MAP')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
