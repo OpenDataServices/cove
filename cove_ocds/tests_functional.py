@@ -119,6 +119,18 @@ def test_accordion(server_url, browser):
     assert buttons() == [False, False, True]
 
 
+def test_500_error(server_url, browser):
+    browser.get(server_url + 'test/500')
+    # Check that our nice error message is there
+    assert 'Something went wrong' in browser.find_element_by_tag_name('body').text
+    # Check for the exclamation icon
+    # This helps to check that the theme including the css has been loaded
+    # properly
+    icon_span = browser.find_element_by_class_name('panel-danger').find_element_by_tag_name('span')
+    assert 'Glyphicons Halflings' in icon_span.value_of_css_property('font-family')
+    assert icon_span.value_of_css_property('color') == 'rgba(169, 68, 66, 1)'
+
+
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'not_expected_text', 'conversion_successful'), [
     ('tenders_releases_2_releases.json', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, ['Schema Extensions'], True),
     ('tenders_releases_1_release_with_extensions.json', ['Schema Extensions',
@@ -299,3 +311,16 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
         assert warning_texts[0] in body_text
         assert 'Conversion Errors' in body_text
         assert 'conversion Warnings' not in body_text
+
+
+def test_URL_invalid_dataset_request(server_url, browser):
+    # Test a badly formed hexadecimal UUID string
+    browser.get(server_url + 'data/0')
+    assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
+    # Test for well formed UUID that doesn't identify any dataset that exists
+    browser.get(server_url + 'data/38e267ce-d395-46ba-acbf-2540cdd0c810')
+    assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
+    assert '360 Giving' not in browser.find_element_by_tag_name('body').text
+    #363 - Tests there is padding round the 'go to home' button
+    success_button = browser.find_element_by_class_name('success-button')
+    assert success_button.value_of_css_property('padding-bottom') == '20px'

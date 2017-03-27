@@ -46,9 +46,9 @@ def explore_ocds(request, pk):
     post_version_choice = request.POST.get('version')
     replace = False
     context, db_data, error = explore_data_context(request, pk)
-    validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
     if error:
         return error
+    validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
     file_type = context['file_type']
 
     if file_type == 'json':
