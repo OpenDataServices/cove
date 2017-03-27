@@ -8,3 +8,7 @@ media
 .coverage
 htmlcov
 docs/_build
+.cache/*
+.hypothesis/*
+geckodriver.log
+ghostdriver.log

@@ -105,13 +105,13 @@ Run tests
 
 .. code:: bash
 
-    py.test
+   ./run_tests.sh
 
 To run functional tests with a different browser:
 
 .. code:: bash
 
-    BROWSER=Chrome py.test
+   BROWSER=Chrome ./run_tests.sh
 
 See http://selenium-python.readthedocs.io/api.html for browser options.
 

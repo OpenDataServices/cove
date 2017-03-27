@@ -2,23 +2,17 @@ import collections
 import csv
 import functools
 import json
-import os
 import re
-import requests
 from collections import OrderedDict
-from copy import deepcopy
 from urllib.parse import urlparse, urljoin
 
-import json_merge_patch
 import jsonref
+import requests
 from cached_property import cached_property
-from django.conf import settings
 from flattentool.schema import get_property_type_set
 from jsonschema import FormatChecker, RefResolver
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
-
-import cove.lib.tools as tools
 
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
@@ -32,11 +26,6 @@ validation_error_lookup = {'date-time': 'Date is not in the correct format',
                            'number': 'Value is not a number',
                            'object': 'Value is not an object',
                            'array': 'Value is not an array'}
-
-
-config = settings.COVE_CONFIG_BY_NAMESPACE
-cove_ocds_config = {key: config[key]['cove-ocds'] if 'cove-ocds' in config[key] else config[key]['default']for key in config}
-cove_360_config = {key: config[key]['cove-360'] if 'cove-360' in config[key] else config[key]['default']for key in config}
 
 
 class CustomJsonrefLoader(jsonref.JsonLoader):
@@ -78,7 +67,7 @@ class CustomRefResolver(RefResolver):
         return result
 
 
-class SchemaMixin():
+class SchemaJsonMixin():
     @cached_property
     def release_schema_str(self):
         return requests.get(self.release_schema_url).text
@@ -118,164 +107,6 @@ class SchemaMixin():
         return set(schema_dict_fields_generator(self.get_release_pkg_schema_obj(deref=True)))
 
 
-class Schema360(SchemaMixin):
-    schema_host = cove_360_config['schema_url']
-    release_schema_name = cove_360_config['item_schema_name']
-    release_pkg_schema_name = cove_360_config['schema_name']
-    release_schema_url = urljoin(schema_host, release_schema_name)
-    release_pkg_schema_url = urljoin(schema_host, release_pkg_schema_name)
-
-
-class SchemaOCDS(SchemaMixin):
-    release_schema_name = cove_ocds_config['item_schema_name']
-    release_pkg_schema_name = cove_ocds_config['schema_name']['release']
-    record_pkg_schema_name = cove_ocds_config['schema_name']['record']
-    version_choices = cove_ocds_config['schema_version_choices']
-    default_version = cove_ocds_config['schema_version']
-    default_schema_host = version_choices[default_version][1]
-    default_release_schema_url = urljoin(default_schema_host, release_schema_name)
-
-    def __init__(self, select_version=None, release_data=None):
-        '''Build the schema object using an specific OCDS schema version
-        
-        The version used will be select_version, release_data.get('version') or
-        default version, in that order. Invalid version choices in select_version or
-        release_data will be skipped and registered as self.invalid_version_argument
-        and self.invalid_version_data respectively.
-        '''
-        self.version = self.default_version
-        self.invalid_version_argument = False
-        self.invalid_version_data = False
-        self.schema_host = self.default_schema_host
-        self.extensions = {}
-        self.invalid_extension = {}
-        self.extended = False
-        self.extended_schema_file = None
-        self.extended_schema_url = None
-
-        if select_version:
-            try:
-                self.version_choices[select_version]
-            except KeyError:
-                select_version = None
-                self.invalid_version_argument = True
-                print('Not a valid value for `version` argument: using version in the release '
-                      'data or the default version if version is missing in the release data')
-            else:
-                self.version = select_version
-                self.schema_host = self.version_choices[select_version][1]
-
-        if release_data:
-            data_extensions = release_data.get('extensions', {})
-            if data_extensions:
-                self.extensions = {ext: tuple() for ext in data_extensions}
-            if not select_version:
-                release_version = release_data.get('version')
-                if release_version:
-                    version_choice = self.version_choices.get(release_version)
-                    if version_choice:
-                        self.version = release_version
-                        self.schema_host = version_choice[1]
-                    else:
-                        self.invalid_version_data = True
-        else:
-            pass
-
-        self.release_schema_url = urljoin(self.schema_host, self.release_schema_name)
-        self.release_pkg_schema_url = urljoin(self.schema_host, self.release_pkg_schema_name)
-        self.record_pkg_schema_url = urljoin(self.schema_host, self.record_pkg_schema_name)
-
-    def apply_extensions(self, schema_obj):
-        if not self.extensions:
-            return
-        for extensions_descriptor_url in self.extensions.keys():
-            i = extensions_descriptor_url.rfind('/')
-            url = '{}/{}'.format(extensions_descriptor_url[:i], 'release-schema.json')
-
-            try:
-                extension = requests.get(url)
-            except requests.exceptions.RequestException:
-                self.invalid_extension[extensions_descriptor_url] = 'fetching failed'
-                continue
-            if extension.ok:
-                try:
-                    extension_data = extension.json()
-                except json.JSONDecodeError:
-                    self.invalid_extension[extensions_descriptor_url] = 'invalid JSON'
-                    continue
-            else:
-                self.invalid_extension[extensions_descriptor_url] = '{}: {}'.format(extension.status_code,
-                                                                                    extension.reason.lower())
-                continue
-
-            schema_obj = json_merge_patch.merge(schema_obj, extension_data)
-            extensions_descriptor = requests.get(extensions_descriptor_url).json()
-            self.extensions[extensions_descriptor_url] = (url, extensions_descriptor['name'],
-                                                          extensions_descriptor['description'])
-            self.extended = True
-
-    def get_release_schema_obj(self, deref=False):
-        release_schema_obj = self._release_schema_obj
-        if self.extended_schema_file:
-            with open(self.extended_schema_file) as fp:
-                release_schema_obj = json.load(fp)
-        elif self.extensions:
-            release_schema_obj = deepcopy(self._release_schema_obj)
-            self.apply_extensions(release_schema_obj)
-        if deref:
-            if self.extended:
-                extended_release_schema_str = json.dumps(release_schema_obj)
-                release_schema_obj = self.deref_schema(extended_release_schema_str)
-            else:
-                release_schema_obj = self.deref_schema(self.release_schema_str)
-        return release_schema_obj
-
-    def get_release_pkg_schema_obj(self, deref=False):
-        package_schema_obj = self._release_pkg_schema_obj
-        if deref:
-            deref_release_schema_obj = self.get_release_schema_obj(deref=True)
-            if self.extended:
-                package_schema_obj = deepcopy(self._release_pkg_schema_obj)
-                package_schema_obj['properties']['releases']['items'] = {}
-                release_pkg_schema_str = json.dumps(package_schema_obj)
-                package_schema_obj = self.deref_schema(release_pkg_schema_str)
-                package_schema_obj['properties']['releases']['items'].update(deref_release_schema_obj)
-            else:
-                package_schema_obj = self.deref_schema(self.release_pkg_schema_str)
-        return package_schema_obj
-
-    def create_extended_release_schema_file(self, upload_dir, upload_url):
-        filepath = os.path.join(upload_dir, 'extended_release_schema.json')
-        if not self.extended or os.path.exists(filepath):
-            return
-        with open(filepath, 'w') as fp:
-            release_schema_str = json.dumps(self.get_release_schema_obj(), indent=4)
-            fp.write(release_schema_str)
-        self.extended_schema_file = filepath
-        self.extended_schema_url = urljoin(upload_url, 'extended_release_schema.json')
-
-    @cached_property
-    def record_pkg_schema_str(self):
-        uri_scheme = urlparse(self.record_pkg_schema_url).scheme
-        if uri_scheme == 'http' or uri_scheme == 'https':
-            return requests.get(self.record_pkg_schema_url).text
-        else:
-            with open(self.record_pkg_schema_url) as fp:
-                return fp.read()
-
-    @property
-    def _record_pkg_schema_obj(self):
-        return json.loads(self.record_pkg_schema_str)
-
-    def get_record_pkg_schema_obj(self, deref=False):
-        if deref:
-            return self.deref_schema(self.record_pkg_schema_str)
-        return self._record_pkg_schema_obj
-
-    def get_record_pkg_schema_fields(self):
-        return set(schema_dict_fields_generator(self.get_record_pkg_schema_obj(deref=True)))
-
-
 def unique_ids(validator, ui, instance, schema):
     if ui and validator.is_type(instance, "array"):
         non_unique_ids = set()
@@ -298,7 +129,8 @@ def unique_ids(validator, ui, instance, schema):
                 return
 
         if non_unique_ids:
-            yield ValidationError("Non-unique ID Values (first 3 shown):  {}".format(", ".join(str(x) for x in list(non_unique_ids)[:3])))
+            msg = "Non-unique ID Values (first 3 shown):  {}"
+            yield ValidationError(msg.format(", ".join(str(x) for x in list(non_unique_ids)[:3])))
 
 
 def required_draft4(validator, required, instance, schema):
@@ -355,7 +187,7 @@ def schema_dict_fields_generator(schema_dict):
                 yield '/' + property_name
 
 
-def get_counts_additional_fields(json_data, schema_obj, schema_name, context, current_app):
+def get_counts_additional_fields(json_data, schema_obj, schema_name, context, fields_regex=False):
     if schema_name == 'record-package-schema.json':
         schema_fields = schema_obj.get_record_pkg_schema_fields()
     else:
@@ -369,7 +201,7 @@ def get_counts_additional_fields(json_data, schema_obj, schema_name, context, cu
         # only take fields with parent in schema (and top level fields)
         # to make results less verbose
         if not parent_field or parent_field in schema_fields:
-            if current_app == 'cove-ocds':
+            if fields_regex:
                 if LANGUAGE_RE.search(field.split('/')[-1]):
                     continue
             data_only.add(field)
@@ -377,7 +209,7 @@ def get_counts_additional_fields(json_data, schema_obj, schema_name, context, cu
     return [('/'.join(key.split('/')[:-1]), key.split('/')[-1], fields_present[key]) for key in data_only]
 
 
-def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app, cell_source_map, heading_source_map):
+def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_map, heading_src_map, extra_checkers=None):
     if schema_name == 'record-package-schema.json':
         pkg_schema_obj = schema_obj.get_record_pkg_schema_obj()
     else:
@@ -385,9 +217,8 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app
 
     validation_errors = collections.defaultdict(list)
     format_checker = FormatChecker()
-
-    if current_app == 'cove-360':
-        format_checker.checkers['date-time'] = (tools.datetime_or_date, ValueError)
+    if extra_checkers:
+        format_checker.checkers.update(extra_checkers)
 
     if getattr(schema_obj, 'extended', None):
         resolver = CustomRefResolver('', pkg_schema_obj, schema_file=schema_obj.extended_schema_file)
@@ -411,7 +242,7 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app
                 message = new_message
 
         value = {"path": path}
-        cell_reference = cell_source_map.get(path)
+        cell_reference = cell_src_map.get(path)
 
         if cell_reference:
             first_reference = cell_reference[0]
@@ -432,7 +263,7 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, current_app
                     parent_name = e.path[-2]
 
                 field_name = str(parent_name) + ":" + e.message
-            heading = heading_source_map.get(path_no_number + '/' + e.message)
+            heading = heading_src_map.get(path_no_number + '/' + e.message)
             if heading:
                 field_name = heading[0][1]
                 value['header'] = heading[0][1]
@@ -627,6 +458,8 @@ def _load_codelists(codelist_url, unique_files):
 
 
 def _generate_data_path(json_data, path=()):
+    if not json_data or not isinstance(json_data, dict):
+        return path
     for key, value in json_data.items():
         if not value:
             continue

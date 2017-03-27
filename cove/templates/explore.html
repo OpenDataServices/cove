@@ -1,9 +1,9 @@
-{% extends 'base.html' %}
+{% extends request.current_app_base_template %}
 {% load i18n %}
 {% load cove_tags %}
 
 {% block header_button %}
-  <a href="{% url 'cove:index' %}" class="btn btn-large btn-success">{% trans 'Load New File' %}</a>
+  <a href="{% url 'index' %}" class="btn btn-large btn-success">{% trans 'Load New File' %}</a>
 {% endblock %}
 
 {% block content %}
