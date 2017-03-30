@@ -1,8 +1,8 @@
 pip==9.0.1
 Django==1.8.17 # rq.filter: <1.9
--e git+https://github.com/OpenDataServices/flatten-tool.git@e7877fd544f4ca8e6077ba663c1cf4e408479b59#egg=flattentool
+-e git+https://github.com/OpenDataServices/flatten-tool.git@fe7d34591de73d5848ba53e224d509a30a8ee067#egg=flattentool
 django-bootstrap3==8.2.1
-django-debug-toolbar==1.6
+django-debug-toolbar==1.7
 requests==2.13.0
 cached-property==1.3.0
 dealer==2.0.5
@@ -16,23 +16,23 @@ rfc6266==0.0.4
 
 
 flake8==3.3.0
-pytest==3.0.6
+pytest==3.0.7
 pytest-django==3.1.2
 pytest-cov==2.4.0
 pytest-localserver==0.3.6
 pytest-xdist==1.15.0
 coveralls==1.1
-selenium==2.53.6
+selenium==3.3.1
 transifex-client==0.12.4
 libsass==0.12.3
 Sphinx==1.5.3
 recommonmark==0.4.0
-hypothesis==3.6.1
+hypothesis==3.7.0
 ## The following requirements were added by pip freeze:
 alabaster==0.7.10
 apipkg==1.4
-appdirs==1.4.2
-Babel==2.3.4
+appdirs==1.4.3
+Babel==2.4.0
 CommonMark==0.5.4
 contextlib2==0.5.4
 coverage==4.3.4
@@ -45,19 +45,19 @@ jdcal==1.3
 Jinja2==2.9.5
 jsonref==0.1
 LEPL==5.1.3
-MarkupSafe==0.23
+MarkupSafe==1.0
 mccabe==0.6.1
 openpyxl==2.3.5
 packaging==16.8
-py==1.4.32
+py==1.4.33
 pycodestyle==2.3.1
 pyflakes==1.5.0
 Pygments==2.2.0
-pyparsing==2.1.10
-pytz==2016.10
+pyparsing==2.2.0
+pytz==2017.2
 schema==0.6.5
 six==1.10.0
 snowballstemmer==1.2.1
-sqlparse==0.2.2
+sqlparse==0.2.3
 urllib3==1.20
-Werkzeug==0.11.15
+Werkzeug==0.12.1
