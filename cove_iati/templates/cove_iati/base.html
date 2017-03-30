@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block h1 %}
+  <div class="row">
+    <div class="col-md-2">
+        <a href="{% url 'index' %}"><img src="" alt="Iati Logo" width=270 height=270 class="logo_iati"/></a>
+    </div>
+    <div class="col-md-5 col-md-offset-2">
+      <div class="titleiati"><a href="{% url 'index' %}">IATI Validator</a></div>
+      <div>Convert, Validate, Explore IATI Data</div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block language_select %}{% endblock %}
+
+{% block strapline %}{% endblock %}
+
+{% block bootstrap_css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/fonts/tick/tick.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/bootstrap-360.css' %}">
+  <noscript>
+    <style>
+      .collapse {display: initial !important;}
+      .glyphicon-collapse-down {display: none !important;}
+    </style>
+  </noscript>
+{% endblock %}
+
+{% block link %}
+{% endblock %}
+
+{% block howToUse %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    <h2 class="heading-in-panel" ><small>{% blocktrans %}How to use the {% endblocktrans %}{{ app_verbose_name }}</small></h2>
+    {% comment %}Translators: Paragraph that describes the application{% endcomment %}
+  </div>
+</div>
+{% endblock %}
+
