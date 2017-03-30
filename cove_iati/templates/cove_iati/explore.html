@@ -42,7 +42,7 @@
           {% else %}
             <span class="font-tick tick" aria-hidden="true"></span>
           {% endif %}
-          {% trans "Converted to " %}{% if conversion == 'unflatten'%} JSON {% else %} Spreadsheet{% endif %}
+          {% trans "Converted to " %}{% if conversion == 'unflatten'%} XML {% else %} Spreadsheet{% endif %}
           {% if conversion_warning_messages %}
             <small>{% blocktrans count n_warnings=conversion_warning_messages|length %}{{n_warnings}} Error{% plural %}{{n_warnings}} Errors{% endblocktrans %}</small>
           {% endif %}
@@ -52,7 +52,7 @@
       <div id="conversion-body" class="collapse">
         <div class="panel-body">
           {% if conversion == 'unflatten' %}
-            <p class="explanation">{% trans "" %}</p>
+            <p class="explanation">{% trans "In order to validate your data we needed to convert it to XML." %}</p>
           {% else %}
             <p class="explanation"></p>
             {% if conversion_error %}
@@ -136,7 +136,7 @@
           {% if not conversion_error %}
             {% if conversion == 'unflatten' %}
             <li>
-              <a href="{{converted_url}}">{{JSON}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
+              <a href="{{converted_url}}">{{XML}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
             </li>
             {% elif conversion == 'flatten' %}
             <li>

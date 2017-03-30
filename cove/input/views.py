@@ -29,6 +29,7 @@ class UrlForm(forms.ModelForm):
 class TextForm(forms.Form):
     paste = forms.CharField(label=_('Paste (JSON only)'), widget=forms.Textarea)
 
+
 default_form_classes = {
     'upload_form': UploadForm,
     'url_form': UrlForm,

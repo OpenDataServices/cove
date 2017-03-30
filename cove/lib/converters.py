@@ -26,9 +26,14 @@ def filter_conversion_warnings(conversion_warnings):
     return out
 
 
-def convert_spreadsheet(request, data, file_type, schema_url, replace=False):
+def convert_spreadsheet(request, data, file_type, schema_url=None, replace=False, xml=False):
     context = {}
-    converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
+    if xml:
+        output_file = 'unflattened.xml'
+        converted_path = os.path.join(data.upload_dir(), 'unflattened.xml')
+    else:
+        output_file = 'unflattened.json'
+        converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
     cell_source_map_path = os.path.join(data.upload_dir(), 'cell_source_map.json')
     heading_source_map_path = os.path.join(data.upload_dir(), 'heading_source_map.json')
     encoding = 'utf-8'
@@ -56,20 +61,30 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace=False):
         input_name = data.original_file.file.name
 
     try:
+        flattentool_options = {
+            "output_name": converted_path,
+            "input_format": file_type,
+            "root_list_path": config['root_list_path'],
+            "encoding": encoding,
+        }
+
+        if xml:
+            flattentool_options["xml"] = True
+        else:
+            flattentool_options.update({
+                "schema": schema_url,
+                "cell_source_map": cell_source_map_path,
+                "heading_source_map": heading_source_map_path,
+                "convert_titles": True,
+                "root_id": config['root_id'],
+            })
+
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
         if not os.path.exists(converted_path) or not os.path.exists(cell_source_map_path) or replace:
             with warnings.catch_warnings(record=True) as conversion_warnings:
                 flattentool.unflatten(
                     input_name,
-                    output_name=converted_path,
-                    input_format=file_type,
-                    root_list_path=config['root_list_path'],
-                    root_id=config['root_id'],
-                    schema=schema_url,
-                    convert_titles=True,
-                    encoding=encoding,
-                    cell_source_map=cell_source_map_path,
-                    heading_source_map=heading_source_map_path,
+                    **flattentool_options
                 )
                 context['conversion_warning_messages'] = filter_conversion_warnings(conversion_warnings)
             with open(conversion_warning_cache_path, 'w+') as fp:
@@ -94,7 +109,7 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace=False):
     context.update({
         'conversion': 'unflatten',
         'converted_path': converted_path,
-        'converted_url': '{}/unflattened.json'.format(data.upload_url()),
+        'converted_url': '{}/{}'.format(data.upload_url(), output_file),
         "csv_encoding": encoding
     })
     return context
