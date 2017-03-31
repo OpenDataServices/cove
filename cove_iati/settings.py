@@ -39,7 +39,7 @@ COVE_CONFIG = {
     'schema_item_name': None,
     'schema_host': None,
     'schema_version': None,
-    'root_list_path': None,
+    'root_list_path': 'iati-activity',
     'root_id': None,
     'convert_titles': False,
     'input_methods': ['upload', 'url', 'text'],
