@@ -133,9 +133,9 @@ class SchemaOCDS(SchemaJsonMixin):
                 package_schema_obj = self.deref_schema(self.release_pkg_schema_str)
         return package_schema_obj
 
-    def create_extended_release_schema_file(self, upload_dir, upload_url):
+    def create_extended_release_schema_file(self, upload_dir, upload_url, replace=False):
         filepath = os.path.join(upload_dir, 'extended_release_schema.json')
-        if not self.extended or os.path.exists(filepath):
+        if not self.extended or (os.path.exists(filepath) and not replace):
             return
         with open(filepath, 'w') as fp:
             release_schema_str = json.dumps(self.get_release_schema_obj(), indent=4)
