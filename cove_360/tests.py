@@ -373,6 +373,10 @@ def test_explore_page(client):
     assert resp.status_code == 200
     assert resp.context['conversion'] == 'flattenable'
 
+    # Check that what the repr of our SuppliedData object looks like
+    assert 'SuppliedData' in repr(data)
+    assert 'test.json' in repr(data)
+
     resp = client.post(data.get_absolute_url(), {'flatten': 'true'})
     assert resp.status_code == 200
     assert resp.context['conversion'] == 'flatten'
