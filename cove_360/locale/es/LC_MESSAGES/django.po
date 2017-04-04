@@ -1,0 +1,787 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Ben Webb <ben.webb@opendataservices.coop>, 2016
+# David Raznick <david.raznick@opendataservices.coop>, 2016
+# Oscar Montiel <oscar.montiel@okfn.org>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: CoVE\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-04-04 09:39+0000\n"
+"PO-Revision-Date: 2016-11-24 07:56+0000\n"
+"Last-Translator: Ben Webb <ben.webb@opendataservices.coop>\n"
+"Language-Team: Spanish (http://www.transifex.com/OpenDataServices/cove/"
+"language/es/)\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: cove_360/templates/cove_360/base.html:34
+msgid "360Giving"
+msgstr "360Giving"
+
+#: cove_360/templates/cove_360/base.html:35
+msgid "360Giving Data Standard"
+msgstr "Estándar de Datos 360Giving"
+
+#: cove_360/templates/cove_360/base.html:42
+msgid "How to use the "
+msgstr "Cómo utilizar el"
+
+#. Translators: Paragraph that describes the application
+#: cove_360/templates/cove_360/base.html:44
+msgid ""
+"Upload, paste or provide a link to data in the 360Giving Data Standard "
+"format, and this application will convert between JSON, Excel and CSV "
+"formats, allowing you to download the original file, and the converted "
+"versions."
+msgstr ""
+"Sube, pega o proporciona un enlace a los datos en el formato del Estándar de "
+"Datos 360Giving, y esta aplicación los convertirá entre JSON, Excel y CSV, "
+"esto te permitirá descargar el archivo original y las versiones convertidas."
+
+#: cove_360/templates/cove_360/base.html:45
+msgid ""
+"You will also be able to inspect key information from the data that the "
+"application is able to find, so that you can check the data."
+msgstr ""
+"También podrás inspeccionar información clave de los datos que la aplicación "
+"es capaz de encontrar, para que puedas comprobar los datos."
+
+#: cove_360/templates/cove_360/base.html:46
+#, fuzzy
+#| msgid "This tool helps you to:"
+msgid "This tool will:"
+msgstr "Esta herramienta te ayuda a:"
+
+#: cove_360/templates/cove_360/base.html:47
+msgid ""
+"Check your data is valid. When it passes these checks, you will know that it "
+"is formatted for re-use"
+msgstr ""
+
+#: cove_360/templates/cove_360/base.html:48
+msgid "It <strong>will not</strong>:"
+msgstr ""
+
+#: cove_360/templates/cove_360/base.html:49
+msgid ""
+" Check your data is accurate. Read about common data errors and how to check "
+"for them"
+msgstr ""
+
+#: cove_360/templates/cove_360/base.html:49
+#: cove_360/templates/cove_360/base.html:50
+msgid "here"
+msgstr ""
+
+#: cove_360/templates/cove_360/base.html:50
+msgid ""
+" Check the data against your own open data policy. Read more about open data"
+msgstr ""
+
+#: cove_360/templates/cove_360/base.html:51
+msgid "Formats"
+msgstr "Formatos"
+
+#: cove_360/templates/cove_360/base.html:52
+msgid ""
+"The application accepts data in some of the formats given in the <a href="
+"\"http://www.threesixtygiving.org/standard/\">360Giving Data Standard "
+"guidance</a>.\n"
+"    <br>Acceptable files are: "
+msgstr ""
+"La aplicación acepta datos en algunos de los formatos dados en la <a href="
+"\"http://www.threesixtygiving.org/standard/\">guía del Estándar de Datos "
+"360Giving.</a> <br> Los siguientes son archivos aceptados:"
+
+#: cove_360/templates/cove_360/base.html:55
+#, fuzzy
+#| msgid ""
+#| "Summary Spreadsheet - <a href=\"https://github.com/ThreeSixtyGiving/"
+#| "standard/raw/master/schema/summary-table/360-giving-schema-titles.xlsx"
+#| "\">Excel</a>, <a href=\"https://github.com/ThreeSixtyGiving/standard/raw/"
+#| "master/schema/summary-table/360-giving-schema-titles.csv/grants.csv"
+#| "\">CSV</a>"
+msgid ""
+"Summary Spreadsheet - <a href=\"https://github.com/ThreeSixtyGiving/standard/"
+"raw/master/schema/summary-table/360-giving-schema-titles.xlsx\">Excel</a>, "
+"<a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema/"
+"summary-table/360-giving-schema-titles.csv/grants.csv\">CSV</a> (UTF-8, "
+"Windows-1252 and ISO-8859-1 encodings supported)"
+msgstr ""
+"Hoja de cálculo de resumen - <a href=\"https://github.com/ThreeSixtyGiving/"
+"standard/raw/master/schema/summary-table/360-giving-schema-titles.xlsx"
+"\">Excel,</a> <a href=\"https://github.com/ThreeSixtyGiving/standard/raw/"
+"master/schema/summary-table/360-giving-schema-titles.csv/grants.csv\">CSV</a>"
+
+#: cove_360/templates/cove_360/base.html:56
+#, fuzzy
+#| msgid ""
+#| "JSON built to the <a href=\"http://www.threesixtygiving.org/standard/"
+#| "reference/#toc-360giving-json-schemas\">360Giving JSON schema</a>"
+msgid ""
+"JSON built to the <a href=\"http://www.threesixtygiving.org/standard/"
+"reference/#toc-360giving-json-schemas\">360Giving JSON schema</a> (UTF-8 "
+"encoding supported)"
+msgstr ""
+"JSON construido para el <a href=\"http://www.threesixtygiving.org/standard/"
+"reference/#toc-360giving-json-schemas\">esquema JSON 360Giving </a>"
+
+#: cove_360/templates/cove_360/base.html:57
+msgid ""
+"<a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema/"
+"multi-table/360-giving-schema-fields.xlsx\">Multi-table data package - "
+"Excel</a>"
+msgstr ""
+"<a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema/"
+"multi-table/360-giving-schema-fields.xlsx\">Paquete de datos de tablas "
+"múltiples - Excel</a>"
+
+#: cove_360/templates/cove_360/common_errors.html:6
+msgid "Common Errors"
+msgstr "Errores comunes"
+
+#: cove_360/templates/cove_360/common_errors.html:8
+msgid "Invalid 'uri' found"
+msgstr "No válido 'uri' encontrados"
+
+#: cove_360/templates/cove_360/common_errors.html:9
+msgid ""
+"This message means you have a problem, usually with a website address in "
+"your data.<br />Common mistakes include:"
+msgstr ""
+"Este mensaje significa que usted tiene un problema, por lo general con una "
+"dirección de Internet en sus datos. <br /> Los errores comunes incluyen:"
+
+#: cove_360/templates/cove_360/common_errors.html:11
+msgid ""
+"Not starting the address with 'http://' e.g. example.com is not a 'uri' but "
+"http://example.com is."
+msgstr ""
+"No iniciar la dirección con 'http: //' por ejemplo example.com no es una "
+"'uri' pero es http://example.com."
+
+#: cove_360/templates/cove_360/common_errors.html:12
+msgid ""
+"Having extra spaces at the start or end of the address - these should be "
+"removed"
+msgstr ""
+"Tener espacios extra al principio o al final de la dirección - deberán ser "
+"eliminados"
+
+#: cove_360/templates/cove_360/common_errors.html:13
+msgid ""
+"Putting more than one address in the same field e.g. \"http://example.com "
+"and http:example2.com\" is not a 'uri'"
+msgstr ""
+"Poner más de una dirección en el mismo campo, por ejemplo \"http://example."
+"com y http: example2.com\" no es una 'uri'"
+
+#: cove_360/templates/cove_360/common_errors.html:17
+#, fuzzy
+#| msgid "Date is not in datetime format"
+msgid "Date is not in the correct format"
+msgstr "La fecha no está en formato de fecha y hora"
+
+#: cove_360/templates/cove_360/common_errors.html:18
+#, fuzzy
+#| msgid ""
+#| "JSON built to the <a href=\"http://www.threesixtygiving.org/standard/"
+#| "reference/#toc-360giving-json-schemas\">360Giving JSON schema</a>"
+msgid ""
+"Dates should be in the formats defined by the <a href=\"http://www."
+"threesixtygiving.org/standard/reference/\">360Giving Standard</a>."
+msgstr ""
+"JSON construido para el <a href=\"http://www.threesixtygiving.org/standard/"
+"reference/#toc-360giving-json-schemas\">esquema JSON 360Giving </a>"
+
+#: cove_360/templates/cove_360/common_errors.html:19
+#, fuzzy
+#| msgid ""
+#| "The application accepts data in some of the formats given in the <a href="
+#| "\"http://www.threesixtygiving.org/standard/\">360Giving Data Standard "
+#| "guidance</a>.\n"
+#| "    <br>Acceptable files are: "
+msgid ""
+"Most dates should be in the YYYY-MM-DD format, but the <a href=\"http://www."
+"threesixtygiving.org/standard/reference/\">360Giving Standard</a> sets out "
+"the requirements for each field of the standard."
+msgstr ""
+"La aplicación acepta datos en algunos de los formatos dados en la <a href="
+"\"http://www.threesixtygiving.org/standard/\">guía del Estándar de Datos "
+"360Giving.</a> <br> Los siguientes son archivos aceptados:"
+
+#: cove_360/templates/cove_360/common_errors.html:20
+msgid "Other common errors include"
+msgstr ""
+
+#: cove_360/templates/cove_360/common_errors.html:22
+msgid "providing non-existent dates e.g. 2016-02-31 (31st February)"
+msgstr ""
+
+#: cove_360/templates/cove_360/common_errors.html:23
+msgid "non-date content in a date field (by accident)"
+msgstr ""
+
+#: cove_360/templates/cove_360/common_errors.html:25
+msgid "Datetimes (used for Last Modified fields)"
+msgstr ""
+
+#: cove_360/templates/cove_360/common_errors.html:26
+#, fuzzy
+#| msgid ""
+#| "A datetime format is a very specific form of a date and time that is "
+#| "specified by the 360Giving Standard."
+msgid ""
+"A datetime format is a very specific form of a date and time that is "
+"specified by the <a href=\"http://www.threesixtygiving.org/standard/"
+"reference/\">360Giving Standard</a>."
+msgstr ""
+"Un formato de fecha y hora es una forma muy específica de una fecha y hora "
+"que se especifica en la norma 360Giving."
+
+#: cove_360/templates/cove_360/common_errors.html:27
+msgid "A datetime should be in the form of YYYY-MM-DDThh:mm:ss±hh:mm where:"
+msgstr ""
+"Una fecha y hora debe estar en la forma de AAAA-MM-DDThh:mm:ss±hh:mm donde:"
+
+#: cove_360/templates/cove_360/common_errors.html:29
+msgid "YYYY represent a year e.g. 2016"
+msgstr "AAAA representa un ejemplo 2016"
+
+#: cove_360/templates/cove_360/common_errors.html:30
+msgid "MM represents a 2 digit month of the year e.g. 01 for January"
+msgstr "MM representa un mes de 2 dígitos del año por ejemplo, 01 para enero"
+
+#: cove_360/templates/cove_360/common_errors.html:31
+msgid "DD represents a 2 digit day of the month e.g. 01 for the 1st"
+msgstr "DD representa un día 2 dígitos del mes, por ejemplo 01 para la 1ª"
+
+#: cove_360/templates/cove_360/common_errors.html:32
+msgid "T is simply the letter 'T'"
+msgstr "T es simplemente la letra \"T\""
+
+#: cove_360/templates/cove_360/common_errors.html:33
+msgid "hh is a 2 digit representation of an hour e.g. 01 for 1AM, 13 for 1PM"
+msgstr ""
+"hh es una representación de 2 dígitos de una hora por ejemplo, 01 por 1am, "
+"13 de 13:00"
+
+#: cove_360/templates/cove_360/common_errors.html:34
+msgid "mm is a 2 digit representation of minutes in an hour e.g. 05 for 5 past"
+msgstr ""
+"mm es una representación de 2 dígitos de minutos en una hora, por ejemplo 05 "
+"para 5 pasado"
+
+#: cove_360/templates/cove_360/common_errors.html:35
+msgid "ss is a 2 digit representation of seconds"
+msgstr "ss es una representación 2 dígitos de segundo"
+
+#: cove_360/templates/cove_360/common_errors.html:36
+msgid ""
+"±hh:mm is a timezone offset from UTC. For most UK data producers this can "
+"simply be replaced with a 'Z'"
+msgstr ""
+"± hh: mm es un desplazamiento de zona horaria UTC. Para la mayoría de los "
+"productores de datos del Reino Unido esto simplemente se puede sustituir con "
+"una \"Z\""
+
+#: cove_360/templates/cove_360/common_errors.html:38
+msgid ""
+"Example: 2016-05-15T12:00:00Z is 12 noon on the 15th May 2016 in UTC time"
+msgstr ""
+"Ejemplo: 2016-05-15T12: 00: 00Z es las 12 horas del 15 de mayo de 2016 hora "
+"UTC"
+
+#: cove_360/templates/cove_360/common_errors.html:41
+msgid "(something) is missing but is required"
+msgstr "(Algo) no se encuentra, pero se requiere"
+
+#: cove_360/templates/cove_360/common_errors.html:42
+msgid ""
+"Many fields are required in the 360Giving data standard in order for others "
+"to make sense of the data supplied"
+msgstr ""
+"Muchos campos son necesarios en el estándar de datos 360Giving a fin de que "
+"otros para dar sentido a los datos suministrados"
+
+#: cove_360/templates/cove_360/common_errors.html:43
+msgid ""
+"If any of the following fields are missing the data is seen as invalid "
+"against the schema."
+msgstr ""
+"Si cualquiera de los siguientes campos faltan los datos se considera como no "
+"válida en el esquema."
+
+#: cove_360/templates/cove_360/common_errors.html:47
+msgid "Field"
+msgstr "Campo"
+
+#: cove_360/templates/cove_360/common_errors.html:47
+msgid "JSON value"
+msgstr "valor JSON"
+
+#: cove_360/templates/cove_360/common_errors.html:47
+msgid "Notes"
+msgstr "notas"
+
+#: cove_360/templates/cove_360/common_errors.html:47
+msgid "Documentation"
+msgstr "Documentación"
+
+#: cove_360/templates/cove_360/common_errors.html:52
+msgid "Every grant needs to specify the amount of money awarded"
+msgstr "Cada concesión tiene que especificar la cantidad de dinero otorgado"
+
+#: cove_360/templates/cove_360/common_errors.html:55
+msgid "Every grant needs to specify the date that it was awarded."
+msgstr ""
+"Cada concesión tiene que especificar la fecha en que se haya concedido."
+
+#: cove_360/templates/cove_360/common_errors.html:58
+msgid "Every grant needs to specify the currency that the grant was made in."
+msgstr ""
+"Cada concesión tiene que especificar la moneda que la concesión se hizo en."
+
+#: cove_360/templates/cove_360/common_errors.html:61
+msgid "Every grant needs a human readable description."
+msgstr "Cada concesión necesita una descripción legible por humanos."
+
+#: cove_360/templates/cove_360/common_errors.html:64
+msgid "Every grant needs a unique identifier so we can tell them apart"
+msgstr ""
+"Cada beca necesita un identificador único para que podamos distinguirlos"
+
+#: cove_360/templates/cove_360/common_errors.html:64
+#: cove_360/templates/cove_360/common_errors.html:82
+msgid "Grant Identifiers"
+msgstr "Grant Identificadores"
+
+#: cove_360/templates/cove_360/common_errors.html:67
+msgid "Every grant needs a funding organisation that makes the award."
+msgstr ""
+"Cada beca necesita una organización de la financiación que permite el premio."
+
+#: cove_360/templates/cove_360/common_errors.html:70
+msgid ""
+"Every organisation needs a unique identifier so we can tell them apart.."
+msgstr ""
+"Toda organización necesita un identificador único para que podamos "
+"distinguirlos .."
+
+#: cove_360/templates/cove_360/common_errors.html:70
+#: cove_360/templates/cove_360/common_errors.html:79
+msgid "Organisation Identifiers"
+msgstr "Identificadores Organización"
+
+#: cove_360/templates/cove_360/common_errors.html:73
+#: cove_360/templates/cove_360/common_errors.html:82
+msgid "Every organisation needs a human readable name."
+msgstr "Toda organización necesita un nombre legible por humanos."
+
+#: cove_360/templates/cove_360/common_errors.html:76
+msgid ""
+"Every grant needs a to specify an organisation to which the grant is awarded."
+msgstr ""
+"Cada beca necesita una para especificar una organización a la que se concede "
+"la subvención."
+
+#: cove_360/templates/cove_360/common_errors.html:79
+msgid "Every organisation a unique identifier so we can tell them apart."
+msgstr ""
+"Cada organización un identificador único para que podamos distinguirlos."
+
+#: cove_360/templates/cove_360/common_errors.html:85
+msgid "Every grant needs a human readable title."
+msgstr "Cada concesión necesita un título legible por humanos."
+
+#: cove_360/templates/cove_360/common_errors.html:92
+msgid "Invalid code found in (something)"
+msgstr "código no válido encontrado en (algo)"
+
+#: cove_360/templates/cove_360/common_errors.html:93
+msgid ""
+"In 360Giving data when we talk about currencies, countries and organisation "
+"types we ask publishers to use values from a predefined list. When we ask "
+"whether or not this grant was from an open call we expect either 'yes' or "
+"no' and nothing else. When we validate people's data, we check the values of "
+"those fields against those lists."
+msgstr ""
+"En los datos 360Giving cuando hablamos de monedas, países y tipos de "
+"organización que le pedimos a los editores a utilizar los valores de una "
+"lista predefinida. Cuando nos preguntamos si esta subvención era de una "
+"convocatoria abierta que esperamos sea \"sí\" o no \"y nada más. Cuando "
+"validamos los datos de las personas, comprobamos los valores de esos campos "
+"a esas notas."
+
+#: cove_360/templates/cove_360/common_errors.html:94
+msgid "This error tells us that we have found something not on the list."
+msgstr "Este error nos dice que hemos encontrado algo no está en la lista."
+
+#: cove_360/templates/cove_360/common_errors.html:95
+msgid ""
+"The lists are referenced in the 360Giving Grants Schema. See <a href="
+"\"http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-"
+"schemas\">360Giving JSON Schemas</a> for more information."
+msgstr ""
+"Las listas se hace referencia en el esquema 360Giving Subvenciones. Ver <a "
+"href=\"http://www.threesixtygiving.org/standard/reference/#toc-360giving-"
+"json-schemas\">360Giving JSON esquemas</a> para obtener más información."
+
+#: cove_360/templates/cove_360/common_errors.html:99
+msgid "Value is not a string"
+msgstr "El valor no es una cadena"
+
+#: cove_360/templates/cove_360/common_errors.html:100
+msgid "Data in the standard is expected to be provided in a certain format."
+msgstr ""
+"Los datos de la norma se espera que se presentará en un formato determinado."
+
+#: cove_360/templates/cove_360/common_errors.html:101
+msgid ""
+"Strings are generally text, but can contain other characters such as "
+"numbers. Sometimes spreadsheet software can alter the format of data so that "
+"it is no longer a string."
+msgstr ""
+"Las cadenas son generalmente texto, pero puede contener otros caracteres "
+"como números. A veces software de hoja de cálculo puede alterar el formato "
+"de los datos de modo que ya no es una cadena."
+
+#: cove_360/templates/cove_360/common_errors.html:102
+msgid ""
+"To fix these kinds of errors, check the field to make sure you are supplying "
+"a string."
+msgstr ""
+"Para solucionar este tipo de errores, compruebe el campo para asegurarse de "
+"que está proporcionando una cadena."
+
+#: cove_360/templates/cove_360/common_errors.html:106
+msgid "Value is not an integer"
+msgstr "El valor no es un número entero"
+
+#: cove_360/templates/cove_360/common_errors.html:107
+msgid ""
+"Integers are basically numbers (but they are not decimals like financial "
+"values)."
+msgstr ""
+"Los enteros son básicamente números (pero no son decimales como valores "
+"financieros)."
+
+#: cove_360/templates/cove_360/common_errors.html:108
+msgid ""
+"Data in the standard is expected to be provided in a certain format. "
+"Sometimes spreadsheet software can alter the format of data so that it is no "
+"longer a string."
+msgstr ""
+"Los datos de la norma se espera que se presentará en un formato determinado. "
+"A veces software de hoja de cálculo puede alterar el formato de los datos de "
+"modo que ya no es una cadena."
+
+#: cove_360/templates/cove_360/common_errors.html:109
+msgid ""
+"To fix these kinds of errors, check the field to make sure you are supplying "
+"an integer."
+msgstr ""
+"Para solucionar este tipo de errores, compruebe el campo para asegurarse de "
+"que está proporcionando un número entero."
+
+#: cove_360/templates/cove_360/explore.html:20
+msgid "A file was "
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:22
+msgid "downloaded from "
+msgstr "descargado desde"
+
+#: cove_360/templates/cove_360/explore.html:24
+msgid "uploaded "
+msgstr "subido"
+
+#: cove_360/templates/cove_360/explore.html:26
+msgid "on "
+msgstr "en"
+
+#: cove_360/templates/cove_360/explore.html:31
+#, fuzzy, python-format
+#| msgid "This file contains <strong>%(count)s release</strong>"
+#| msgid_plural "This file contains <strong>%(count)s releases</strong>"
+msgid " This file contains <strong>%(n_grants)s grant</strong>"
+msgid_plural "This file contains <strong>%(n_grants)s grants</strong> "
+msgstr[0] "Este archivo <strong>contiene %(count)s de liberación</strong>"
+msgstr[1] "Este archivo contiene <strong>%(count)s los comunicados</strong>"
+
+#: cove_360/templates/cove_360/explore.html:32
+#, fuzzy, python-format
+#| msgid "There is <strong>%(count)s unique OCID.</strong>"
+#| msgid_plural "There are <strong>%(count)s unique OCIDs.</strong>"
+msgid "from <strong>%(n_funders)s funder</strong>"
+msgid_plural "from <strong>%(n_funders)s funders</strong>"
+msgstr[0] "<strong>Hay %(count)s única OCID.</strong>"
+msgstr[1] "<strong>Hay %(count)s es OCIDs únicas.</strong>"
+
+#: cove_360/templates/cove_360/explore.html:33
+#, fuzzy, python-format
+#| msgid "This file contains <strong>%(count)s record.</strong>"
+#| msgid_plural "This file contains <strong>%(count)s record.</strong>"
+msgid "to <strong>%(n_recipients)s recipient</strong>"
+msgid_plural "to <strong>%(n_recipients)s recipients</strong>"
+msgstr[0] "Este archivo <strong>contiene %(count)s registro.</strong>"
+msgstr[1] "Este archivo <strong>contiene %(count)s registro.</strong>"
+
+#: cove_360/templates/cove_360/explore.html:35
+#, fuzzy, python-format
+#| msgid " describing <strong>%(count)s contracting process</strong>"
+#| msgid_plural " describing <strong>%(count)s contracting processes.</strong>"
+msgid " awarded on <strong>%(start_date)s</strong>."
+msgstr "<strong>describiendo %(count)s proceso de contratación</strong>"
+
+#: cove_360/templates/cove_360/explore.html:35
+#, python-format
+msgid ""
+"awarded between <strong>%(start_date)s</strong> and <strong>%(end_date)s</"
+"strong>."
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:42
+msgid "The grant"
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:44
+msgid "<strong>1 grant</strong>"
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:46
+#, python-format
+msgid ""
+" was awarded in <strong>%(currency_code)s</strong> with a value of <strong>"
+"%(currency_symbol)s%(amount_awarded)s</strong>."
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:49
+msgid "The grants"
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:51
+msgid "<strong>grants</strong>"
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:53
+#, python-format
+msgid ""
+" were awarded in <strong>%(currency_code)s</strong> with a total value of "
+"<strong>%(currency_symbol)s%(total_amount)s</strong> and individual awards "
+"ranging from <strong>%(currency_symbol)s%(min_amount)s</strong> (lowest) to "
+"<strong>%(currency_symbol)s%(max_amount)s</strong> (highest)."
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:59
+#, python-format
+msgid ""
+" This file is <strong>not 'utf-8'</strong> encoded (it is <em>"
+"%(csv_encoding)s</em> encoded)."
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:66
+msgid "Convert to Spreadsheet"
+msgstr "Convertir a hoja de cálculo"
+
+#: cove_360/templates/cove_360/explore.html:85
+#, fuzzy
+#| msgid "Convert"
+msgid "Converted to "
+msgstr "Convertir"
+
+#: cove_360/templates/cove_360/explore.html:87
+#, python-format
+msgid "%(n_warnings)s Error"
+msgid_plural "%(n_warnings)s Errors"
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove_360/templates/cove_360/explore.html:95
+msgid "In order to validate your data we needed to convert it to JSON."
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:100
+#, fuzzy, python-format
+#| msgid "The JSON could not be converted to Spreadsheet due to the error:"
+msgid ""
+"The JSON data could not be converted to spreadsheet due to the following "
+"error error: %(conversion_error)s"
+msgstr "El JSON no se pudo convertir a hoja de cálculo debido al error:"
+
+#: cove_360/templates/cove_360/explore.html:106
+msgid "Conversion <strong>errors:</strong>"
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:125
+#, fuzzy
+#| msgid "Validates against the schema?"
+msgid "Invalid against Schema "
+msgstr "¿Es válido contra el esquema?"
+
+#: cove_360/templates/cove_360/explore.html:125
+#, python-format
+msgid " %(n_errors)s Error."
+msgid_plural "%(n_errors)s Errors "
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove_360/templates/cove_360/explore.html:128
+#, fuzzy
+#| msgid "Validates against the schema?"
+msgid "Valid against Schema"
+msgstr "¿Es válido contra el esquema?"
+
+#: cove_360/templates/cove_360/explore.html:137
+msgid "Sorry your data is invalid against"
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:139
+msgid "Congratulations! Your data is valid against"
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:146
+msgid ""
+"There are some <strong>validation errors</strong> in your data, please check "
+"them in the table below."
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:163
+msgid "Additional Checks"
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:163
+#, python-format
+msgid " Additional checks"
+msgid_plural "%(n_additional_checks)s Additional checks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove_360/templates/cove_360/explore.html:172
+#, fuzzy
+#| msgid "Descriptions"
+msgid "Check Description"
+msgstr "Descripciones"
+
+#: cove_360/templates/cove_360/explore.html:173
+#, fuzzy
+#| msgid "Spreadsheet Location"
+msgid "First 3 Locations"
+msgstr "Localización de hoja de cálculo"
+
+#: cove_360/templates/cove_360/explore.html:205
+msgid ""
+"<strong>Additional fields</strong> were found in your data. Please check "
+"them to see that they are intended additions and not just the result of "
+"spelling mistakes."
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:216
+msgid "Review"
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:216
+#, python-format
+msgid "%(n_grants)s Grant"
+msgid_plural "%(n_grants)s Grants"
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove_360/templates/cove_360/explore.html:222
+msgid "Review your data."
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:231
+#, fuzzy
+#| msgid "Grant Identifiers"
+msgid "Grant identifiers:"
+msgstr "Grant Identificadores"
+
+#: cove_360/templates/cove_360/explore.html:235
+#: cove_360/templates/cove_360/explore.html:243
+#: cove_360/templates/cove_360/explore.html:252
+msgid " ID"
+msgid_plural " IDs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove_360/templates/cove_360/explore.html:239
+#, fuzzy
+#| msgid "Organisation Identifiers"
+msgid "Funder organisation identifiers:"
+msgstr "Identificadores Organización"
+
+#: cove_360/templates/cove_360/explore.html:248
+#, fuzzy
+#| msgid "Recipient Organisation IDs:"
+msgid "Recipient organisation identifiers:"
+msgstr "Receptores ID de la Organización:"
+
+#: cove_360/templates/cove_360/explore.html:262
+msgid "Grants Table"
+msgstr "Tabla de Subvenciones"
+
+#: cove_360/templates/cove_360/explore.html:304
+msgid "Download and Share"
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:311
+msgid "The following files are available to download:"
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:314
+#, fuzzy
+#| msgid "Original"
+msgid "Original file"
+msgstr "Original"
+
+#: cove_360/templates/cove_360/explore.html:334
+msgid "Use the following url to share these results:"
+msgstr "Utilice el siguiente enlace para compartir estos resultados:"
+
+#: cove_360/templates/cove_360/explore.html:340
+msgid ""
+"After 7 days all uploaded data is deleted from our servers, and the results "
+"will no longer be available. Anyone using the link to this page after that "
+"will be shown a message that tells them the file has been removed."
+msgstr ""
+"Después de 7 días todos los datos cargados se eliminan de nuestros "
+"servidores, y los resultados ya no estarán disponibles. Cualquier persona "
+"que use el enlace a esta página después de eso verá un mensaje avisando que "
+"el archivo se ha eliminado."
+
+#: cove_360/templates/cove_360/explore.html:341
+msgid ""
+"These results will be available for 7 days from the day the data was first "
+"uploaded. You can revisit these results until then."
+msgstr ""
+"Estos resultados estarán disponibles durante 7 días desde el día en que los "
+"datos se cargan. Puedes revisar estos resultados hasta entonces."
+
+#: cove_360/views.py:50
+msgid "Sorry we can't process that data"
+msgstr "Lo sentimos, no podemos procesar esos datos"
+
+#: cove_360/views.py:52
+msgid "Try Again"
+msgstr "Inténtalo de nuevo"
+
+#: cove_360/views.py:53
+msgid ""
+"We think you tried to upload a JSON file, but it is not well formed JSON.\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
+"span> <strong>Error message:</strong> {}"
+msgstr ""
+"Pensamos que está intentando enviar un archivo JSON, pero no está bien "
+"formado JSON\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
+"span> <strong>Mensaje de error:</strong> {}"
