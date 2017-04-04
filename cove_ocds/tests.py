@@ -620,3 +620,28 @@ def test_schema_ocds_extended_release_schema_file():
     assert not schema.extended
     assert not schema.extended_schema_file
     assert not schema.extended_schema_url
+
+
+@pytest.mark.django_db
+def test_schema_after_version_change(client):
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_extensions.json')) as fp:
+        data.original_file.save('test.json', UploadedFile(fp))
+
+    resp = client.post(data.get_absolute_url(), {'version': '1.1'})
+    assert resp.status_code == 200
+
+    with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
+        assert "procurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
+
+    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as valdiation_errors_fp:
+        assert "'version' is missing but required" in valdiation_errors_fp.read()
+
+    resp = client.post(data.get_absolute_url(), {'version': '1.0'})
+    assert resp.status_code == 200
+
+    with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
+        assert "procurementCategory" not in json.load(extended_release_fp)['definitions']['Tender']['properties']
+
+    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as valdiation_errors_fp:
+        assert "'version' is missing but required" not in valdiation_errors_fp.read()
