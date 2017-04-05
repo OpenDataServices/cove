@@ -2,13 +2,19 @@
 {% load i18n %}
 {% load static %}
 
+{% block banner %}
+  <div style="background-color: #3a3030; color: #eee; width: 100%; text-align: center; font-weight: bold; right: 0; left: 0">This tool is <em>alpha</em>. Please report any problems on <a href="https://github.com/OpenDataServices/cove/issues">GitHub issues</a>.</div>
+{% endblock %}
+
 {% block h1 %}
   <div class="row">
-    <div class="col-md-2">
-        <a href="{% url 'index' %}"><div class="page-header"><h1>IATI</h1></div></a>
+    <div class="col-md-2 aiti-title">
+        <a href="{% url 'index' %}">
+          <p>IATI </p><small>CoVE</small>
+        </a>
     </div>
-    <div class="col-md-5">
-      <div class="titleiati"><a href="{% url 'index' %}">IATI Validator</a></div>
+    <div class="col-md-5 aiti-strapline">
+      <div>IATI Validator</div>
       <div>Convert, Validate, Explore IATI Data</div>
     </div>
   </div>

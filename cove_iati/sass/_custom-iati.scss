@@ -10,7 +10,7 @@ body {
 }
 
 .panel-title.panel-title-explore {
-	cursor: pointer;
+	cursor: default;
 
 	& small {
 		font-weight: 100;
@@ -18,18 +18,19 @@ body {
 	}
 
 	& .glyphicon-collapse-down, & .glyphicon-collapse-up {
-		font-size:20px;
+		font-size:21px;
+		font-weight: 100;
 		padding-right: 0px;
-		line-height: 13px;
-		color: #93c54b;
+		line-height: 17px;
+		color: #688A35;
 	}
 
 	& span.glyphicon-save::before, {
-		color: #93c54b;
+		color: #688A35;
 	}
 
 	& span.glyphicon-list-alt::before {
-		color: #93c54b;
+		color: #688A35;
 		vertical-align: text-bottom;
 	}
 }
@@ -39,7 +40,7 @@ body {
 	margin-right: 5px;
 
 	&.tick {
-		color: green;
+		color: #688A35;
 
 		&::after {
 			content: '\2713';
@@ -80,12 +81,18 @@ ul.pagination a{
 	}
 }
 
-.page-header{
-	border-bottom:none;
+.aiti-title p {
+	font-size:40px;
+	line-height:30px;
 }
 
-.page-header h1 {
-	margin-top: -38px;
+.aiti-title small {
+	font-size:20px;
+	line-height:10px;
+}
+
+.aiti-strapline {
+	margin-top:-5px;
 }
 
 ////////////
