@@ -1,10 +1,20 @@
-# Translators:
-# Ben Webb <ben.webb@opendataservices.coop>, 2017
-# Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2017
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
 msgid ""
 msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-04-05 14:53+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -219,8 +229,8 @@ msgstr ""
 "360Giving</a>."
 
 #: cove_360/templates/cove_360/common_errors.html:27
-msgid "A datetime should be in the form of YYYY-MM-DDThh:mm:sshh:mm where:"
-msgstr "Una fecha/hora debe tener el formato AAAA-MM-DDThh:mm:sshh:mm con"
+msgid "A datetime should be in the form of YYYY-MM-DDThh:mm:ss±hh:mm where:"
+msgstr ""
 
 #: cove_360/templates/cove_360/common_errors.html:29
 msgid "YYYY represent a year e.g. 2016"
@@ -257,12 +267,9 @@ msgstr "ss es una representación 2 dígitos de segundo"
 
 #: cove_360/templates/cove_360/common_errors.html:36
 msgid ""
-"hh:mm is a timezone offset from UTC. For most UK data producers this can "
+"±hh:mm is a timezone offset from UTC. For most UK data producers this can "
 "simply be replaced with a 'Z'"
 msgstr ""
-"hh:mm como la compensación horaria del Tiempo Universal Coordinado o UTC.  "
-"Para la mayoria de productores de datos en el Reino Unido, puede ser "
-"simplemente reemplazada con una 'Z'"
 
 #: cove_360/templates/cove_360/common_errors.html:38
 msgid ""

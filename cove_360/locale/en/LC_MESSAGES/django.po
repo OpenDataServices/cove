@@ -1,3 +1,22 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-04-05 14:53+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
 #: cove_360/templates/cove_360/base.html:34
 msgid "360Giving"
 msgstr ""
@@ -163,7 +182,7 @@ msgid ""
 msgstr ""
 
 #: cove_360/templates/cove_360/common_errors.html:27
-msgid "A datetime should be in the form of YYYY-MM-DDThh:mm:sshh:mm where:"
+msgid "A datetime should be in the form of YYYY-MM-DDThh:mm:ss±hh:mm where:"
 msgstr ""
 
 #: cove_360/templates/cove_360/common_errors.html:29
@@ -196,7 +215,7 @@ msgstr ""
 
 #: cove_360/templates/cove_360/common_errors.html:36
 msgid ""
-"hh:mm is a timezone offset from UTC. For most UK data producers this can "
+"±hh:mm is a timezone offset from UTC. For most UK data producers this can "
 "simply be replaced with a 'Z'"
 msgstr ""
 
