@@ -5,9 +5,9 @@
 {% block h1 %}
   <div class="row">
     <div class="col-md-2">
-        <a href="{% url 'index' %}"><img src="" alt="Iati Logo" width=270 height=270 class="logo_iati"/></a>
+        <a href="{% url 'index' %}"><div class="page-header"><h1>IATI</h1></div></a>
     </div>
-    <div class="col-md-5 col-md-offset-2">
+    <div class="col-md-5">
       <div class="titleiati"><a href="{% url 'index' %}">IATI Validator</a></div>
       <div>Convert, Validate, Explore IATI Data</div>
     </div>
@@ -20,7 +20,7 @@
 
 {% block bootstrap_css %}
   <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/fonts/tick/tick.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/bootstrap-360.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/bootstrap-iati.css' %}">
   <noscript>
     <style>
       .collapse {display: initial !important;}

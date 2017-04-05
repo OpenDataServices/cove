@@ -34,7 +34,7 @@ COVE_CONFIG = {
     'app_name': 'cove_iati',
     'app_base_template': 'cove_iati/base.html',
     'app_verbose_name': 'IATI Validator',
-    'app_strapline': None,
+    'app_strapline': 'Convert, Validate, Explore IATI Data',
     'schema_name': None,
     'schema_item_name': None,
     'schema_host': None,
