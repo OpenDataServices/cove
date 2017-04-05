@@ -84,6 +84,7 @@ GRANTS = {
                                            'companyNumber': 'RC000659',
                                            'id': 'GB-CHC-10659',
                                            'name': 'UNIVERSITY OF LEICESTER'}],
+                'relatedActivity': ["", "360G-xxx"],
                 'title': 'Exceptional and Extraordinary: unruly bodies and minds '
                          'in the medical museum. '}]}
 
