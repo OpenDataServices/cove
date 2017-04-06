@@ -84,6 +84,7 @@ GRANTS = {
                                            'companyNumber': 'RC000659',
                                            'id': 'GB-CHC-10659',
                                            'name': 'UNIVERSITY OF LEICESTER'}],
+                'relatedActivity': ["", "360G-xxx"],
                 'title': 'Exceptional and Extraordinary: unruly bodies and minds '
                          'in the medical museum. '}]}
 
@@ -372,6 +373,10 @@ def test_explore_page(client):
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
     assert resp.context['conversion'] == 'flattenable'
+
+    # Check that what the repr of our SuppliedData object looks like
+    assert 'SuppliedData' in repr(data)
+    assert 'test.json' in repr(data)
 
     resp = client.post(data.get_absolute_url(), {'flatten': 'true'})
     assert resp.status_code == 200

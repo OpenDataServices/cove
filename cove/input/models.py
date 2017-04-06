@@ -80,3 +80,8 @@ class SuppliedData(models.Model):
                     ContentFile(r.content))
         else:
             raise ValueError('No source_url specified.')
+
+    def __repr__(self):
+        return "<SuppliedData source_url={} original_file.name={}>".format(
+            repr(self.source_url),
+            repr(self.original_file.name))

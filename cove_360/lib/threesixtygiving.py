@@ -446,7 +446,10 @@ def flatten_dict(grant, path=""):
     for key, value in sorted(grant.items()):
         if isinstance(value, list):
             for num, item in enumerate(value):
-                yield from flatten_dict(item, "{}/{}/{}".format(path, key, num))
+                if isinstance(item, dict):
+                    yield from flatten_dict(item, "{}/{}/{}".format(path, key, num))
+                else:
+                    yield ("{}/{}/{}".format(path, key, num), item)
         elif isinstance(value, dict):
             yield from flatten_dict(value, "{}/{}".format(path, key))
         else:
