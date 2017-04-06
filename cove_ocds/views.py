@@ -109,7 +109,7 @@ def explore_ocds(request, pk):
                 if schema_ocds.extensions:
                     schema_ocds.get_release_schema_obj()
                     if schema_ocds.extended:
-                        schema_ocds.create_extended_release_schema_file(db_data.upload_dir(), db_data.upload_url(), replace=True)
+                        schema_ocds.create_extended_release_schema_file(db_data.upload_dir(), db_data.upload_url(), replace=replace)
                         url = schema_ocds.extended_schema_file
 
                 replace_converted = replace and os.path.exists(converted_path + '.xlsx')
