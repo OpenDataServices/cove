@@ -9,9 +9,11 @@ body {
 	background-color: white
 }
 
-.panel-title.panel-title-explore {
-	cursor: default;
+.panel-heading.panel-heading-explore {
+	cursor: pointer;
+}
 
+.panel-title.panel-title-explore {
 	& small {
 		font-weight: 100;
 		font-size: 45%;
