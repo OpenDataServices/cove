@@ -103,19 +103,17 @@ def explore_ocds(request, pk):
 
                 # Replace the spreadsheet conversion only if it exists already.
                 if schema_ocds.version != db_data.schema_version:
-                    if os.path.exists(validation_errors_path):
-                        os.remove(validation_errors_path)
-                    if os.path.exists(converted_path + '.xlsx'):
-                        replace = True
+                    replace = True
 
                 url = schema_ocds.release_schema_url
                 if schema_ocds.extensions:
                     schema_ocds.get_release_schema_obj()
                     if schema_ocds.extended:
-                        schema_ocds.create_extended_release_schema_file(db_data.upload_dir(), db_data.upload_url())
+                        schema_ocds.create_extended_release_schema_file(db_data.upload_dir(), db_data.upload_url(), replace=replace)
                         url = schema_ocds.extended_schema_file
 
-                context.update(convert_json(request, db_data, schema_url=url, replace=replace))
+                replace_converted = replace and os.path.exists(converted_path + '.xlsx')
+                context.update(convert_json(request, db_data, schema_url=url, replace=replace_converted))
 
     else:
         select_version = post_version_choice or db_data.schema_version
@@ -123,12 +121,13 @@ def explore_ocds(request, pk):
         # Replace json conversion when user chooses a different schema version.
         if db_data.schema_version and schema_ocds.version != db_data.schema_version:
             replace = True
-            if os.path.exists(validation_errors_path):
-                os.remove(validation_errors_path)
         context.update(convert_spreadsheet(request, db_data, file_type, schema_url=schema_ocds.release_schema_url, replace=replace))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
+    if replace:
+        if os.path.exists(validation_errors_path):
+            os.remove(validation_errors_path)
     template = 'cove_ocds/explore_record.html' if 'records' in json_data else 'cove_ocds/explore_release.html'
     context = common_checks_ocds(context, db_data, json_data, schema_ocds)
     return render(request, template, context)

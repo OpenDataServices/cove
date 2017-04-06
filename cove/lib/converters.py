@@ -114,9 +114,10 @@ def convert_json(request, data, schema_url, replace=False):
 
     try:
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
-        if not os.path.exists(converted_path + '.xlsx') or replace:
+        conversion_exists = os.path.exists(converted_path + '.xlsx')
+        if not conversion_exists or replace:
             with warnings.catch_warnings(record=True) as conversion_warnings:
-                if request.POST.get('flatten') or replace:
+                if request.POST.get('flatten') or (replace and conversion_exists):
                     flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
                 else:
                     return {'conversion': 'flattenable'}
