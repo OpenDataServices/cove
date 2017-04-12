@@ -46,8 +46,8 @@
     <p>{% trans "This tool will:" %}</p>
     <p class="icon-indent"><span class="font-tick tick"></span>{% trans "Check your data is valid. When it passes these checks, you will know that it is formatted for re-use" %}</p>
     <p>{% trans "It <strong>will not</strong>:" %}</p>
-    <p class="icon-indent"><span class="font-tick cross"></span>{% blocktrans %} Check your data is accurate. Read about common data errors and how to check for them{% endblocktrans %} <a href="{% url 'common_errors' %}">{% trans "here" %}</a>.</p>
-    <p class="icon-indent"><span class="font-tick cross"></span>{% blocktrans %} Check the data against your own open data policy. Read more about open data{% endblocktrans %} <a href="http://www.threesixtygiving.org/data/">{% trans "here" %}</a>.</p>
+    <p class="icon-indent"><span class="font-tick cross"></span>{% blocktrans %} Check your data is accurate. Read about common data errors and how to check for them in the {% endblocktrans %}<a href="{% url 'common_errors' %}">{% trans "Common Errors " %}</a>{% trans "section" %}.</p>
+    <p class="icon-indent"><span class="font-tick cross"></span>{% blocktrans %} Check the data against your own open data policy. Read more about open data in {% endblocktrans %}<a href="http://www.threesixtygiving.org/data/">{% trans "Publishing and Using Open Grant Data " %}</a>{% trans "in 360Giving" %}.</p>
     <h3><small>{% blocktrans %}Formats{% endblocktrans %}</small></h3>
     <p>{% blocktrans %}The application accepts data in some of the formats given in the <a href="http://www.threesixtygiving.org/standard/">360Giving Data Standard guidance</a>.
     <br>Acceptable files are: {% endblocktrans %}</p>
