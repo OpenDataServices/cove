@@ -100,11 +100,20 @@ Currencies:
 
 <div class="col-md-4">
 <h4>Identifiers ({{grants_aggregates.distinct_recipient_org_identifier|length}})</h3>
-<ul class="list-group">
-{% for id in grants_aggregates.distinct_recipient_org_identifier %}
-   <li class="list-group-item">{{ id }}</li>
-{% endfor %}
-</ul>
+{% if grants_aggregates.distinct_recipient_org_identifier|length > 10 %}
+    <p>(random 10)</p>
+    <ul class="list-group">
+    {% for id in grants_aggregates.distinct_recipient_org_identifier|sample:10 %}
+        <li class="list-group-item">{{ id }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <ul class="list-group">
+    {% for id in grants_aggregates.distinct_recipient_org_identifier %}
+        <li class="list-group-item">{{ id }}</li>
+    {% endfor %}
+    {% endif %}
+    </ul>
 </div>
 
 <div class="col-md-4">
