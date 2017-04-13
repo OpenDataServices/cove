@@ -127,14 +127,23 @@ def explore_ocds(request, pk):
         metatab_data = get_spreadsheet_meta_data(db_data, metatab_schema_url, file_type=file_type)
         select_version = post_version_choice or db_data.schema_version
         schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
-
         if schema_ocds.invalid_version_data:
             raise_invalid_version_data(metatab_data.get('version'))
 
         # Replace json conversion when user chooses a different schema version.
         if db_data.schema_version and schema_ocds.version != db_data.schema_version:
             replace = True
-        context.update(convert_spreadsheet(request, db_data, file_type, schema_url=schema_ocds.release_schema_url, replace=replace))
+
+        pkg_url = schema_ocds.release_pkg_schema_url
+        url = schema_ocds.release_schema_url
+        if schema_ocds.extensions:
+            schema_ocds.get_release_schema_obj()
+            if schema_ocds.extended:
+                schema_ocds.create_extended_release_schema_file(db_data.upload_dir(), db_data.upload_url(), replace=replace)
+                url = schema_ocds.extended_schema_file
+
+        context.update(convert_spreadsheet(request, db_data, file_type, schema_url=url, pkg_schema_url=pkg_url, replace=replace))
+
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 

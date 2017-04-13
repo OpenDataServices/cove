@@ -26,7 +26,7 @@ def filter_conversion_warnings(conversion_warnings):
     return out
 
 
-def convert_spreadsheet(request, data, file_type, schema_url, replace=False):
+def convert_spreadsheet(request, data, file_type, schema_url, pkg_schema_url, metatab_name='Meta', replace=False):
     context = {}
     converted_path = os.path.join(data.upload_dir(), 'unflattened.json')
     cell_source_map_path = os.path.join(data.upload_dir(), 'cell_source_map.json')
@@ -70,6 +70,8 @@ def convert_spreadsheet(request, data, file_type, schema_url, replace=False):
                     encoding=encoding,
                     cell_source_map=cell_source_map_path,
                     heading_source_map=heading_source_map_path,
+                    metatab_name=metatab_name,
+                    metatab_schema=pkg_schema_url
                 )
                 context['conversion_warning_messages'] = filter_conversion_warnings(conversion_warnings)
             with open(conversion_warning_cache_path, 'w+') as fp:
