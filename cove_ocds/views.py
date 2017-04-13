@@ -41,6 +41,33 @@ def common_checks_ocds(context, db_data, json_data, schema_obj):
     return context
 
 
+def raise_invalid_version_data(version):
+    raise CoveInputDataError(context={
+        'sub_title': _("Wrong schema version"),
+        'link': 'index',
+        'link_text': _('Try Again'),
+        'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
+                 'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
+                 'aria-hidden="true"></span> <strong>Error message: </strong> <em>{}</em> '
+                 'is not a recognised schema version choice'.format(version)),
+        'error': _('{} is not a valid schema version'.format(version))
+    })
+
+
+def raise_invalid_version_argument(pk, version):
+    raise CoveInputDataError(context={
+        'sub_title': _("Something unexpected happened"),
+        'link': 'explore',
+        'link_args': pk,
+        'link_text': _('Try Again'),
+        'msg': _('We think you tried to run your data against an unrecognised version of '
+                 'the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
+                 'aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is '
+                 'not a recognised choice for the schema version'.format(version)),
+        'error': _('{} is not a valid schema version'.format(version))
+    })
+
+
 @CoveWebInputDataError.error_page
 def explore_ocds(request, pk):
     post_version_choice = request.POST.get('version')
@@ -69,32 +96,13 @@ def explore_ocds(request, pk):
 
             select_version = post_version_choice or db_data.schema_version
             schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data)
-
+            
             if schema_ocds.invalid_version_argument:
-                # This shouldn't really happen unless the user resends manually
-                # the POST request with random data.
-                raise CoveInputDataError(context={
-                    'sub_title': _("Something unexpected happened"),
-                    'link': 'cove:explore',
-                    'link_args': pk,
-                    'link_text': _('Try Again'),
-                    'msg': _('We think you tried to run your data against an unrecognised version of '
-                             'the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
-                             'aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is '
-                             'not a recognised choice for the schema version'.format(post_version_choice)),
-                    'error': _('{} is not a valid schema version'.format(post_version_choice))
-                })
+                # This shouldn't happen unless the user sends random POST data.
+                raise_invalid_version_argument(pk, post_version_choice)
+
             if schema_ocds.invalid_version_data:
-                raise CoveInputDataError(context={
-                    'sub_title': _("Wrong schema version"),
-                    'link': 'index',
-                    'link_text': _('Try Again'),
-                    'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
-                             'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
-                             'aria-hidden="true"></span> <strong>Error message: </strong> <em>{}</em> '
-                             'is not a recognised schema version choice'.format(json_data.get('version'))),
-                    'error': _('{} is not a valid schema version'.format(json_data.get('version')))
-                })
+                raise_invalid_version_data(json_data.get('version'))
 
             if 'records' in json_data:
                 context['conversion'] = None
