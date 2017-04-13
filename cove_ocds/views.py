@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from . lib.ocds import get_records_aggregates, get_releases_aggregates
 from . lib.schema import SchemaOCDS
-from cove.lib.common import get_additional_codelist_values
+from cove.lib.common import get_additional_codelist_values, get_spreadsheet_meta_data
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, CoveWebInputDataError
 from cove.views import explore_data_context, common_checks_context
@@ -116,8 +116,12 @@ def explore_ocds(request, pk):
                 context.update(convert_json(request, db_data, schema_url=url, replace=replace_converted))
 
     else:
+        # metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
+        # metatab_data = get_spreadsheet_meta_data(db_data, metatab_schema_url, file_type=file_type)
+
         select_version = post_version_choice or db_data.schema_version
         schema_ocds = SchemaOCDS(select_version=select_version)
+
         # Replace json conversion when user chooses a different schema version.
         if db_data.schema_version and schema_ocds.version != db_data.schema_version:
             replace = True
@@ -128,6 +132,7 @@ def explore_ocds(request, pk):
     if replace:
         if os.path.exists(validation_errors_path):
             os.remove(validation_errors_path)
+
     template = 'cove_ocds/explore_record.html' if 'records' in json_data else 'cove_ocds/explore_release.html'
     context = common_checks_ocds(context, db_data, json_data, schema_ocds)
     return render(request, template, context)

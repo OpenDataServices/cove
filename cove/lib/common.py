@@ -2,6 +2,7 @@ import collections
 import csv
 import functools
 import json
+import os
 import re
 from collections import OrderedDict
 from urllib.parse import urlparse, urljoin
@@ -10,6 +11,7 @@ import jsonref
 import requests
 from cached_property import cached_property
 from flattentool.schema import get_property_type_set
+from flattentool import unflatten
 from jsonschema import FormatChecker, RefResolver
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
@@ -516,3 +518,18 @@ def get_additional_codelist_values(schema_obj, codelist_url, json_data):
             #additional_codelist_values[path_no_num]['location_values'].append((path, value))
 
     return additional_codelist_values
+
+
+def get_spreadsheet_meta_data(data_object, schema, file_type='xlsx', name='Meta'):
+    input_name = data_object.original_file.file.name
+    output_name = os.path.join(data_object.upload_dir(), 'metatab.json')
+    unflatten(
+        input_name=input_name,
+        output_name=output_name,
+        input_format=file_type,
+        metatab_only=True,
+        metatab_schema=schema,
+        metatab_name=name
+    )
+    with open(output_name) as metatab_json:
+        return json.load(metatab_json)
