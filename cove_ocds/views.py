@@ -114,10 +114,7 @@ def explore_ocds(request, pk):
 
                 url = schema_ocds.release_schema_url
                 if schema_ocds.extensions:
-                    schema_ocds.get_release_schema_obj()
-                    if schema_ocds.extended:
-                        schema_ocds.create_extended_release_schema_file(db_data.upload_dir(), db_data.upload_url(), replace=replace)
-                        url = schema_ocds.extended_schema_file
+                    url = schema_ocds.get_extended_release_schema_url(db_data.upload_dir(), db_data.upload_url(), replace=replace)
 
                 replace_converted = replace and os.path.exists(converted_path + '.xlsx')
                 context.update(convert_json(request, db_data, schema_url=url, replace=replace_converted))
@@ -137,10 +134,7 @@ def explore_ocds(request, pk):
         pkg_url = schema_ocds.release_pkg_schema_url
         url = schema_ocds.release_schema_url
         if schema_ocds.extensions:
-            schema_ocds.get_release_schema_obj()
-            if schema_ocds.extended:
-                schema_ocds.create_extended_release_schema_file(db_data.upload_dir(), db_data.upload_url(), replace=replace)
-                url = schema_ocds.extended_schema_file
+            url = schema_ocds.get_extended_release_schema_url(db_data.upload_dir(), db_data.upload_url(), replace=replace)
 
         context.update(convert_spreadsheet(request, db_data, file_type, schema_url=url, pkg_schema_url=pkg_url, replace=replace))
 
