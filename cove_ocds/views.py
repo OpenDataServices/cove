@@ -41,19 +41,6 @@ def common_checks_ocds(context, db_data, json_data, schema_obj):
     return context
 
 
-def raise_invalid_version_data(version):
-    raise CoveInputDataError(context={
-        'sub_title': _("Wrong schema version"),
-        'link': 'index',
-        'link_text': _('Try Again'),
-        'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
-                 'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
-                 'aria-hidden="true"></span> <strong>Error message: </strong> <em>{}</em> '
-                 'is not a recognised schema version choice'.format(version)),
-        'error': _('{} is not a valid schema version'.format(version))
-    })
-
-
 def raise_invalid_version_argument(pk, version):
     raise CoveInputDataError(context={
         'sub_title': _("Something unexpected happened"),
@@ -64,6 +51,19 @@ def raise_invalid_version_argument(pk, version):
                  'the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
                  'aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is '
                  'not a recognised choice for the schema version'.format(version)),
+        'error': _('{} is not a valid schema version'.format(version))
+    })
+
+
+def raise_invalid_version_data(version):
+    raise CoveInputDataError(context={
+        'sub_title': _("Wrong schema version"),
+        'link': 'index',
+        'link_text': _('Try Again'),
+        'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
+                 'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
+                 'aria-hidden="true"></span> <strong>Error message: </strong> <em>{}</em> '
+                 'is not a recognised schema version choice'.format(version)),
         'error': _('{} is not a valid schema version'.format(version))
     })
 
@@ -100,7 +100,6 @@ def explore_ocds(request, pk):
             if schema_ocds.invalid_version_argument:
                 # This shouldn't happen unless the user sends random POST data.
                 raise_invalid_version_argument(pk, post_version_choice)
-
             if schema_ocds.invalid_version_data:
                 raise_invalid_version_data(json_data.get('version'))
 
@@ -124,11 +123,13 @@ def explore_ocds(request, pk):
                 context.update(convert_json(request, db_data, schema_url=url, replace=replace_converted))
 
     else:
-        # metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
-        # metatab_data = get_spreadsheet_meta_data(db_data, metatab_schema_url, file_type=file_type)
-
+        metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
+        metatab_data = get_spreadsheet_meta_data(db_data, metatab_schema_url, file_type=file_type)
         select_version = post_version_choice or db_data.schema_version
-        schema_ocds = SchemaOCDS(select_version=select_version)
+        schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
+
+        if schema_ocds.invalid_version_data:
+            raise_invalid_version_data(metatab_data.get('version'))
 
         # Replace json conversion when user chooses a different schema version.
         if db_data.schema_version and schema_ocds.version != db_data.schema_version:
