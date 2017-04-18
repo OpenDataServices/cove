@@ -70,12 +70,15 @@ def raise_invalid_version_data(version):
 
 @CoveWebInputDataError.error_page
 def explore_ocds(request, pk):
-    post_version_choice = request.POST.get('version')
-    replace = False
     context, db_data, error = explore_data_context(request, pk)
     if error:
         return error
-    validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
+
+    post_version_choice = request.POST.get('version')
+    replace = False
+    upload_dir = db_data.upload_dir()
+    upload_url = db_data.upload_url()
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
     file_type = context['file_type']
 
     if file_type == 'json':
@@ -106,15 +109,15 @@ def explore_ocds(request, pk):
             if 'records' in json_data:
                 context['conversion'] = None
             else:
-                converted_path = os.path.join(db_data.upload_dir(), 'flattened')
+                converted_path = os.path.join(upload_dir, 'flattened')
 
                 # Replace the spreadsheet conversion only if it exists already.
                 if schema_ocds.version != db_data.schema_version:
                     replace = True
 
-                url = schema_ocds.release_schema_url
                 if schema_ocds.extensions:
-                    url = schema_ocds.get_extended_release_schema_url(db_data.upload_dir(), db_data.upload_url(), replace=replace)
+                    schema_ocds.create_extended_release_schema_file(upload_dir, upload_url, replace=replace)
+                url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
 
                 replace_converted = replace and os.path.exists(converted_path + '.xlsx')
                 context.update(convert_json(request, db_data, schema_url=url, replace=replace_converted))
@@ -131,10 +134,10 @@ def explore_ocds(request, pk):
         if db_data.schema_version and schema_ocds.version != db_data.schema_version:
             replace = True
 
-        pkg_url = schema_ocds.release_pkg_schema_url
-        url = schema_ocds.release_schema_url
         if schema_ocds.extensions:
-            url = schema_ocds.get_extended_release_schema_url(db_data.upload_dir(), db_data.upload_url(), replace=replace)
+            schema_ocds.create_extended_release_schema_file(upload_dir, upload_url, replace=replace)
+        url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
+        pkg_url = schema_ocds.release_pkg_schema_url
 
         context.update(convert_spreadsheet(request, db_data, file_type, schema_url=url, pkg_schema_url=pkg_url, replace=replace))
 
