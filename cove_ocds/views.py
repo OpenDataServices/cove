@@ -116,7 +116,7 @@ def explore_ocds(request, pk):
                     replace = True
 
                 if schema_ocds.extensions:
-                    schema_ocds.create_extended_release_schema_file(upload_dir, upload_url, replace=replace)
+                    schema_ocds.create_extended_release_schema_file(upload_dir, upload_url)
                 url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
 
                 replace_converted = replace and os.path.exists(converted_path + '.xlsx')
@@ -124,7 +124,7 @@ def explore_ocds(request, pk):
 
     else:
         metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
-        metatab_data = get_spreadsheet_meta_data(db_data, metatab_schema_url, file_type=file_type)
+        metatab_data = get_spreadsheet_meta_data(request, db_data, metatab_schema_url, file_type=file_type)
         select_version = post_version_choice or db_data.schema_version
         schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
         if schema_ocds.invalid_version_data:
@@ -135,7 +135,7 @@ def explore_ocds(request, pk):
             replace = True
 
         if schema_ocds.extensions:
-            schema_ocds.create_extended_release_schema_file(upload_dir, upload_url, replace=replace)
+            schema_ocds.create_extended_release_schema_file(upload_dir, upload_url)
         url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
         pkg_url = schema_ocds.release_pkg_schema_url
 

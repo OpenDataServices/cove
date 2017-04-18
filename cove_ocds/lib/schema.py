@@ -133,24 +133,25 @@ class SchemaOCDS(SchemaJsonMixin):
                                                           extensions_descriptor['description'])
             self.extended = True
 
-    def create_extended_release_schema_file(self, upload_dir, upload_url, replace=False):
+    def create_extended_release_schema_file(self, upload_dir, upload_url):
         filepath = os.path.join(upload_dir, 'extended_release_schema.json')
 
-        if not self.extensions:
-            return
-
-        if replace and os.path.exists(filepath):
+        # Always replace any existing extended schema file
+        if os.path.exists(filepath):
             os.remove(filepath)
             self.extended_schema_file = None
             self.extended_schema_url = None
 
-        if not os.path.exists(filepath):
-            release_schema_obj = self.get_release_schema_obj()
-            if not self.extended:
-                return
-            with open(filepath, 'w') as fp:
-                release_schema_str = json.dumps(release_schema_obj, indent=4)
-                fp.write(release_schema_str)
+        if not self.extensions:
+            return
+
+        release_schema_obj = self.get_release_schema_obj()
+        if not self.extended:
+            return
+
+        with open(filepath, 'w') as fp:
+            release_schema_str = json.dumps(release_schema_obj, indent=4)
+            fp.write(release_schema_str)
 
         self.extended_schema_file = filepath
         self.extended_schema_url = urljoin(upload_url, 'extended_release_schema.json')

@@ -634,8 +634,8 @@ def test_schema_after_version_change(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "procurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as valdiation_errors_fp:
-        assert "'version' is missing but required" in valdiation_errors_fp.read()
+    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+        assert "'version' is missing but required" in validation_errors_fp.read()
 
     # test link is still there.
     resp = client.get(data.get_absolute_url())
@@ -645,8 +645,8 @@ def test_schema_after_version_change(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "procurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as valdiation_errors_fp:
-        assert "'version' is missing but required" in valdiation_errors_fp.read()
+    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+        assert "'version' is missing but required" in validation_errors_fp.read()
 
     resp = client.post(data.get_absolute_url(), {'version': '1.0'})
     assert resp.status_code == 200
@@ -654,5 +654,5 @@ def test_schema_after_version_change(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "procurementCategory" not in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as valdiation_errors_fp:
-        assert "'version' is missing but required" not in valdiation_errors_fp.read()
+    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+        assert "'version' is missing but required" not in validation_errors_fp.read()
