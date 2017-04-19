@@ -343,6 +343,8 @@ def test_URL_invalid_dataset_request(server_url, browser):
      '\'version\' is missing but required', 'methodRationale', 'version'),
     ('tenders_releases_1_release_with_invalid_extensions.json', 'validation against schema version 1.0',
      '\'version\' is missing but required', 'methodRationale', 'version'),
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'validation against schema version 1.1',
+     '\'version\' is missing but required', 'methodRationale', 'version')
 ])
 def test_URL_input_with_version(server_url, url_input_browser, httpserver, source_filename, expected, not_expected,
                                 expected_additional_field, not_expected_additional_field):
@@ -369,6 +371,8 @@ def test_URL_input_with_version(server_url, url_input_browser, httpserver, sourc
      '\'version\' is missing but required', 'version', 'publisher'),
     ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', '\'version\' is missing but required',
      'validation against schema version 1.0', 'methodRationale', 'version'),
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'validation against schema version 1.0',
+     '\'version\' is missing but required', 'version', 'publisher')
 ])
 def test_URL_input_with_version_change(server_url, url_input_browser, httpserver, select_version, source_filename, expected,
                                        not_expected, expected_additional_field, not_expected_additional_field):
@@ -393,3 +397,41 @@ def test_URL_input_with_version_change(server_url, url_input_browser, httpserver
     assert not_expected not in body_text
     assert expected_additional_field in additional_field_box
     assert not_expected_additional_field not in additional_field_box
+
+
+@pytest.mark.parametrize(('source_filename', 'expected', 'not_expected'), [
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', ['Party Scale',
+                                                                     'The metrics extension supports publication of forecasts',
+                                                                     'All the extensions above were applied to extend the schema',
+                                                                     'Get a copy of the schema with extension patches applied'],
+                                                                    ['The following extensions failed']),
+    ('tenders_releases_1_release_with_invalid_extensions.json', ['Party Scale',
+                                                                 'The metrics extension supports publication of forecasts',
+                                                                 'Get a copy of the schema with extension patches applied',
+                                                                 'The following extensions failed'],
+                                                                ['validated against a schema with no extensions']),
+    ('tenders_releases_1_release_with_all_invalid_extensions.json', ['None of the extensions above could be applied'],
+                                                                    ['Party Scale',
+                                                                     'Get a copy of the schema with extension patches applied']),
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', ['Party Scale',
+                                                                              'The metrics extension supports publication of forecasts',
+                                                                              'All the extensions above were applied to extend the schema',
+                                                                              'Get a copy of the schema with extension patches applied'],
+                                                                             ['The following extensions failed'])
+])
+def test_URL_input_with_extensions(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
+    browser = url_input_browser(source_filename)
+    schema_extension_box = browser.find_element_by_id('schema-extensions').text
+
+    for text in expected:
+        assert text in schema_extension_box
+    for text in not_expected:
+        assert text not in schema_extension_box
+
+    # Refresh page to check if tests still work after caching the data
+    browser.get(browser.current_url)
+
+    for text in expected:
+        assert text in schema_extension_box
+    for text in not_expected:
+        assert text not in schema_extension_box

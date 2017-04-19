@@ -123,7 +123,7 @@
 {% if extensions %}
   {% with ext=extensions.extensions ext_errors=extensions.invalid_extension %}
   <a name="conversion-warning" class="anchor"></a>
-  <div class="panel panel-warning">
+  <div class="panel panel-warning" id="schema-extensions">
     <div class="panel-heading">
       <h4 class="panel-title">
         {% trans 'Schema Extensions' %}
