@@ -597,7 +597,7 @@ def test_schema_ocds_extensions(release_data, extensions, invalid_extension, ext
 @pytest.mark.django_db
 def test_schema_ocds_extended_release_schema_file():
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_extensions.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_extensions_version_1_1.json')) as fp:
         data.original_file.save('test.json', UploadedFile(fp))
         fp.seek(0)
         json_data = json.load(fp)
@@ -625,7 +625,7 @@ def test_schema_ocds_extended_release_schema_file():
 @pytest.mark.django_db
 def test_schema_after_version_change(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_extensions.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_invalid_extensions.json')) as fp:
         data.original_file.save('test.json', UploadedFile(fp))
 
     resp = client.post(data.get_absolute_url(), {'version': '1.1'})
