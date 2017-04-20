@@ -9,7 +9,7 @@ from . lib.ocds import get_records_aggregates, get_releases_aggregates
 from . lib.schema import SchemaOCDS
 from cove.lib.common import get_additional_codelist_values, get_spreadsheet_meta_data
 from cove.lib.converters import convert_spreadsheet, convert_json
-from cove.lib.exceptions import CoveInputDataError, CoveWebInputDataError
+from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
 from cove.views import explore_data_context, common_checks_context
 
 
@@ -68,7 +68,7 @@ def raise_invalid_version_data(version):
     })
 
 
-@CoveWebInputDataError.error_page
+@cove_web_input_error
 def explore_ocds(request, pk):
     context, db_data, error = explore_data_context(request, pk)
     if error:
