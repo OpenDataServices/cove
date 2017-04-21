@@ -534,8 +534,10 @@ def get_spreadsheet_meta_data(request, data_object, schema, file_type='xlsx', na
         input_format=file_type,
         metatab_only=True,
         metatab_schema=schema,
-        metatab_name=name
+        metatab_name=name,
+        metatab_vertical_orientation=True
     )
 
-    with open(output_name) as metatab_json:
-        return json.load(metatab_json)
+    with open(output_name) as metatab_data:
+        metatab_json = json.load(metatab_data)
+    return metatab_json

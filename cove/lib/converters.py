@@ -71,7 +71,8 @@ def convert_spreadsheet(request, data, file_type, schema_url, pkg_schema_url=Non
                 cell_source_map=cell_source_map_path,
                 heading_source_map=heading_source_map_path,
                 metatab_name=metatab_name,
-                metatab_schema=pkg_schema_url
+                metatab_schema=pkg_schema_url,
+                metatab_vertical_orientation=True
             )
             context['conversion_warning_messages'] = filter_conversion_warnings(conversion_warnings)
         with open(conversion_warning_cache_path, 'w+') as fp:
