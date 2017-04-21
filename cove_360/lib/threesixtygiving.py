@@ -197,7 +197,7 @@ class RecipientOrg360GPrefix(AdditionalTest):
             pass
 
     def produce_message(self):
-        return "One or more of your grants have a Recipient Org:Identifier that is has a prefix of '360G'. If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
+        return "One or more of your grants have a Recipient Org:Identifier that starts '360G-'. If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
 
 
 class FundingOrg360GPrefix(AdditionalTest):
@@ -212,7 +212,7 @@ class FundingOrg360GPrefix(AdditionalTest):
             pass
 
     def produce_message(self):
-        return "One or more of your grants have a Funding Org:Identifier that is has a prefix of '360G'. If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
+        return "One or more of your grants have a Funding Org:Identifier that starts '360G-'. If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
 
 
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):

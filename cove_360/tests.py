@@ -278,15 +278,15 @@ RESULTS = [
      'data, so consider adding an explanation to the description of the grant.',
      ['grants/0/amountAwarded'],
      [['grants', 'Q', 2, 'Amount Awarded']]),
-    ('One or more of your grants have a Recipient Org:Identifier that is has a '
-     "prefix of '360G'. If the grant is from a recipient organisation that has an "
+    ('One or more of your grants have a Recipient Org:Identifier that starts '
+     "'360G-'. If the grant is from a recipient organisation that has an "
      'external identifier (such as a charity number, company number, or in the '
      'case of local authorities, geocodes), then this should be used instead. If '
      'no other identifier can be used, then this notice can be ignored.',
      ['grants/0/recipientOrganization/0/id'],
      [['grants', 'J', 2, 'Recipient Org:Identifier']]),
-    ('One or more of your grants have a Funding Org:Identifier that is has a '
-     "prefix of '360G'. If the grant is from a recipient organisation that has an "
+    ('One or more of your grants have a Funding Org:Identifier that starts '
+     "'360G-'. If the grant is from a recipient organisation that has an "
      'external identifier (such as a charity number, company number, or in the '
      'case of local authorities, geocodes), then this should be used instead. If '
      'no other identifier can be used, then this notice can be ignored.',
