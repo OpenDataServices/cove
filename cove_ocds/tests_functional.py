@@ -1,11 +1,12 @@
+import os
+import time
+
 import pytest
 import requests
 from django.conf import settings
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-import time
-import os
-
+from selenium.webdriver.support.ui import Select
 
 PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/validator/')
 
@@ -15,7 +16,7 @@ OCDS_SCHEMA_VERSIONS = settings.COVE_CONFIG['schema_version_choices']
 OCDS_SCHEMA_VERSIONS_DISPLAY = list(display_url[0] for version, display_url in OCDS_SCHEMA_VERSIONS.items())
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope='module')
 def browser(request):
     browser = getattr(webdriver, BROWSER)()
     browser.implicitly_wait(3)
@@ -23,13 +24,37 @@ def browser(request):
     return browser
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope='module')
 def server_url(request, live_server):
     if 'CUSTOM_SERVER_URL' in os.environ:
         return os.environ['CUSTOM_SERVER_URL'] + PREFIX_OCDS
     else:
         return live_server.url + PREFIX_OCDS
-    
+
+
+@pytest.fixture()
+def url_input_browser(request, server_url, browser, httpserver):
+    def _url_input_browser(source_filename, output_source_url=False):
+        with open(os.path.join('cove_ocds', 'fixtures', source_filename), 'rb') as fp:
+            httpserver.serve_content(fp.read())
+        if 'CUSTOM_SERVER_URL' in os.environ:
+            # Use urls pointing to GitHub if we have a custom (probably non local) server URL
+            source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/master/cove_ocds/fixtures/' + source_filename
+        else:
+            source_url = httpserver.url + '/' + source_filename
+
+        browser.get(server_url)
+        browser.find_element_by_partial_link_text('Link').click()
+        time.sleep(0.5)
+        browser.find_element_by_id('id_source_url').send_keys(source_url)
+        browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+
+        if output_source_url:
+            return browser, source_url
+        return browser
+
+    return _url_input_browser
+
 
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
     ('Open Contracting', 'We connect governments', 'h1', 'http://www.open-contracting.org/'),
@@ -39,7 +64,7 @@ def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector
     browser.get(server_url)
     footer = browser.find_element_by_id('footer')
     link = footer.find_element_by_link_text(link_text)
-    href = link.get_attribute("href")
+    href = link.get_attribute('href')
     assert url in href
     link.click()
     time.sleep(0.5)
@@ -133,12 +158,12 @@ def test_500_error(server_url, browser):
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'not_expected_text', 'conversion_successful'), [
     ('tenders_releases_2_releases.json', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, ['Schema Extensions'], True),
-    ('tenders_releases_1_release_with_extensions.json', ['Schema Extensions',
-                                                         'Contract Parties (Organization structure)',
-                                                         'All the extensions above were applied',
-                                                         'copy of the schema with extension',
-                                                         'Validation Errors',
-                                                         '\'buyer:id\' is missing but required'], ['fetching failed'], True),
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', ['Schema Extensions',
+                                                                     'Contract Parties (Organization structure)',
+                                                                     'All the extensions above were applied',
+                                                                     'copy of the schema with extension',
+                                                                     'Validation Errors',
+                                                                     '\'buyer:id\' is missing but required'], ['fetching failed'], True),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Schema Extensions',
                                                                  'https://raw.githubusercontent.com/open-contracting/',
                                                                  'badprotocol://example.com',
@@ -147,9 +172,9 @@ def test_500_error(server_url, browser):
                                                                  'copy of the schema with extension',
                                                                  'Validation Errors'], ['All the extensions above were applied'], True),
     ('tenders_releases_1_release_with_all_invalid_extensions.json', ['Schema Extensions',
-                                                                 'badprotocol://example.com',
-                                                                 'None of the extensions above could be applied',
-                                                                 '400: bad request'], ['copy of the schema with extension', 'Validation Errors'], True),
+                                                                     'badprotocol://example.com',
+                                                                     'None of the extensions above could be applied',
+                                                                     '400: bad request'], ['copy of the schema with extension', 'Validation Errors'], True),
     ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], [], True),
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
@@ -167,27 +192,15 @@ def test_500_error(server_url, browser):
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', [], False),
     ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], [], True),
-    ])
-def test_URL_input(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
-    with open(os.path.join('cove_ocds', 'fixtures', source_filename), 'rb') as fp:
-        httpserver.serve_content(fp.read())
-    if 'CUSTOM_SERVER_URL' in os.environ:
-        # Use urls pointing to GitHub if we have a custom (probably non local) server URL
-        source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/master/cove_ocds/fixtures/' + source_filename
-    else:
-        source_url = httpserver.url + '/' + source_filename
-
-    browser.get(server_url)
-    browser.find_element_by_partial_link_text('Link').click()
-    time.sleep(0.5)
-    browser.find_element_by_id('id_source_url').send_keys(source_url)
-    browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+])
+def test_URL_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
+    browser, source_url = url_input_browser(source_filename, output_source_url=True)
     check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
+
     #refresh page to now check if tests still work after caching some data
     browser.get(browser.current_url)
 
     selected_examples = ['tenders_releases_2_releases_invalid.json', 'WellcomeTrust-grants_fixed_2_grants.xlsx', 'WellcomeTrust-grants_2_grants_cp1252.csv']
-
     if source_filename in selected_examples:
         check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
         browser.get(server_url + '?source_url=' + source_url)
@@ -206,7 +219,6 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
     for text in expected_text:
         assert text in body_text
-
     for text in not_expected_text:
         assert text not in body_text
 
@@ -324,3 +336,102 @@ def test_URL_invalid_dataset_request(server_url, browser):
     #363 - Tests there is padding round the 'go to home' button
     success_button = browser.find_element_by_class_name('success-button')
     assert success_button.value_of_css_property('padding-bottom') == '20px'
+
+
+@pytest.mark.parametrize(('source_filename', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', 'validation against schema version 1.1',
+     '\'version\' is missing but required', 'methodRationale', 'version'),
+    ('tenders_releases_1_release_with_invalid_extensions.json', 'validation against schema version 1.0',
+     '\'version\' is missing but required', 'methodRationale', 'version'),
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'validation against schema version 1.1',
+     '\'version\' is missing but required', 'methodRationale', 'version')
+])
+def test_URL_input_with_version(server_url, url_input_browser, httpserver, source_filename, expected, not_expected,
+                                expected_additional_field, not_expected_additional_field):
+    browser = url_input_browser(source_filename)
+    body_text = browser.find_element_by_tag_name('body').text
+    additional_field_box = browser.find_element_by_id('additionalFieldTable').text
+
+    assert expected in body_text
+    assert not_expected not in body_text
+    assert expected_additional_field in additional_field_box
+    assert not_expected_additional_field not in additional_field_box
+
+    # Refresh page to check if tests still work after caching the data
+    browser.get(browser.current_url)
+
+    assert expected in body_text
+    assert not_expected not in body_text
+    assert expected_additional_field in additional_field_box
+    assert not_expected_additional_field not in additional_field_box
+
+
+@pytest.mark.parametrize(('source_filename', 'select_version', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', '1.0', 'validation against schema version 1.0',
+     '\'version\' is missing but required', 'version', 'publisher'),
+    ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', '\'version\' is missing but required',
+     'validation against schema version 1.0', 'methodRationale', 'version'),
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'validation against schema version 1.0',
+     '\'version\' is missing but required', 'version', 'publisher')
+])
+def test_URL_input_with_version_change(server_url, url_input_browser, httpserver, select_version, source_filename, expected,
+                                       not_expected, expected_additional_field, not_expected_additional_field):
+    browser = url_input_browser(source_filename)
+    select = Select(browser.find_element_by_name('version'))
+    select.select_by_value(select_version)
+    browser.find_element_by_css_selector(".btn-primary[value='Go']").click()
+    time.sleep(0.5)
+
+    body_text = browser.find_element_by_tag_name('body').text
+    additional_field_box = browser.find_element_by_id('additionalFieldTable').text
+
+    assert expected in body_text
+    assert not_expected not in body_text
+    assert expected_additional_field in additional_field_box
+    assert not_expected_additional_field not in additional_field_box
+
+    # Refresh page to check if tests still work after caching the data
+    browser.get(browser.current_url)
+
+    assert expected in body_text
+    assert not_expected not in body_text
+    assert expected_additional_field in additional_field_box
+    assert not_expected_additional_field not in additional_field_box
+
+
+@pytest.mark.parametrize(('source_filename', 'expected', 'not_expected'), [
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', ['Party Scale',
+                                                                     'The metrics extension supports publication of forecasts',
+                                                                     'All the extensions above were applied to extend the schema',
+                                                                     'Get a copy of the schema with extension patches applied'],
+                                                                    ['The following extensions failed']),
+    ('tenders_releases_1_release_with_invalid_extensions.json', ['Party Scale',
+                                                                 'The metrics extension supports publication of forecasts',
+                                                                 'Get a copy of the schema with extension patches applied',
+                                                                 'The following extensions failed'],
+                                                                ['validated against a schema with no extensions']),
+    ('tenders_releases_1_release_with_all_invalid_extensions.json', ['None of the extensions above could be applied'],
+                                                                    ['Party Scale',
+                                                                     'Get a copy of the schema with extension patches applied']),
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', ['Party Scale',
+                                                                              'The metrics extension supports publication of forecasts',
+                                                                              'All the extensions above were applied to extend the schema',
+                                                                              'Get a copy of the schema with extension patches applied'],
+                                                                             ['The following extensions failed'])
+])
+def test_URL_input_with_extensions(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
+    browser = url_input_browser(source_filename)
+    schema_extension_box = browser.find_element_by_id('schema-extensions').text
+
+    for text in expected:
+        assert text in schema_extension_box
+    for text in not_expected:
+        assert text not in schema_extension_box
+
+    # Refresh page to check if tests still work after caching the data
+    browser.get(browser.current_url)
+
+    for text in expected:
+        assert text in schema_extension_box
+    for text in not_expected:
+        assert text not in schema_extension_box
