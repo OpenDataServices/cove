@@ -232,7 +232,7 @@
             <strong>
               {% if grants_aggregates.unique_ids|length %}<a data-toggle="modal" data-target=".unique-ids">{% endif %}
               {{ grants_aggregates.unique_ids|length}}
-              {% if grants_aggregates.unique_ids|length %}{% blocktrans count n_ids=grants_aggregates.unique_ids|length %} ID{% plural %} IDs{% endblocktrans %}</a>{% endif %}
+              {% if grants_aggregates.unique_ids|length %}</a>{% endif %}
             </strong>
           </li>
           <li>
@@ -240,7 +240,7 @@
             <strong>
               {% if grants_aggregates.distinct_funding_org_identifier|length %}<a data-toggle="modal" data-target=".distinct-funding-org-identifier">{% endif %}
               {{ grants_aggregates.distinct_funding_org_identifier|length}}
-              {% if grants_aggregates.distinct_funding_org_identifier|length %}{% blocktrans count n_ids=grants_aggregates.distinct_funding_org_identifier|length %} ID{% plural %} IDs{% endblocktrans %}</a>
+              {% if grants_aggregates.distinct_funding_org_identifier|length %}</a>
               {% endif %}
             </strong>
           </li>
@@ -249,7 +249,7 @@
             <strong>
               {% if grants_aggregates.distinct_recipient_org_identifier|length %}<a data-toggle="modal" data-target=".distinct-recipient-org-identifier">{% endif %}
               {{ grants_aggregates.distinct_recipient_org_identifier|length}}
-              {% if grants_aggregates.distinct_recipient_org_identifier|length %}{% blocktrans count n_ids=grants_aggregates.distinct_recipient_org_identifier|length %} ID{% plural %} IDs{% endblocktrans %}</a>{% endif %}
+              {% if grants_aggregates.distinct_recipient_org_identifier|length %}</a>{% endif %}
             </strong>
           </li>
         </ul>
