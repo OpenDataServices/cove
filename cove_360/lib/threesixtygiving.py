@@ -156,17 +156,22 @@ def check_company_number(company_number):
 
 
 class AdditionalTest():
-
     def __init__(self, **kw):
         self.grants = kw['grants']
         self.json_locations = []
         self.failed = False
+        self.count = 0
+        self.heading = None
+        self.message = None
 
     def process(self, grant, grant_flat, path_prefix):
         pass
 
     def produce_message(self):
-        pass
+        return {
+            'heading': self.heading,
+            'message': self.message
+        }
 
 
 class ZeroAmountTest(AdditionalTest):
@@ -181,12 +186,11 @@ class ZeroAmountTest(AdditionalTest):
         except KeyError:
             pass
 
-    def produce_message(self):
-        return "One or more of your grants have a value of £0. It’s worth taking a look at these grants and deciding if they should be published. It’s unusual to have grants of £0, but there may be a reasonable explanation. Additional information on why these grants are £0 might be useful to anyone using the data, so consider adding an explanation to the description of the grant."
+        self.heading = "One or more of your grants have a value of £0"
+        self.message = "It’s worth taking a look at these grants and deciding if they should be published. It’s unusual to have grants of £0, but there may be a reasonable explanation. Additional information on why these grants are £0 might be useful to anyone using the data, so consider adding an explanation to the description of the grant."
 
 
 class RecipientOrg360GPrefix(AdditionalTest):
-
     def process(self, grant, grant_flat, path_prefix):
         try:
             for num, organization in enumerate(grant['recipientOrganization']):
@@ -196,12 +200,11 @@ class RecipientOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-    def produce_message(self):
-        return "One or more of your grants have a Recipient Org:Identifier that is has a prefix of '360G'. If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
+        self.heading = "One or more of your grants have a Recipient Org:Identifier that starts '360G-'"
+        self.message = "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
 
 
 class FundingOrg360GPrefix(AdditionalTest):
-
     def process(self, grant, grant_flat, path_prefix):
         try:
             for num, organization in enumerate(grant['fundingOrganization']):
@@ -211,15 +214,11 @@ class FundingOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-    def produce_message(self):
-        return "One or more of your grants have a Funding Org:Identifier that is has a prefix of '360G'. If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
+        self.heading = "One or more of your grants have a Funding Org:Identifier that starts '360G-'"
+        self.message = "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
 
 
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):
-    def __init__(self, **kw):
-        super().__init__(**kw)
-        self.count = 0
-
     def process(self, grant, grant_flat, path_prefix):
         try:
             count_failure = False
@@ -237,15 +236,11 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-    def produce_message(self):
-        return "{}% of your grants have a Recipient Org:Identifier that doesn’t draw from an external identification body, e.g. a charity number or a company number. Using external identifiers helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice.".format(int(round(self.count / len(self.grants) * 100)))
+        self.heading = "{}% of your grants have a Recipient Org:Identifier that doesn’t draw from an external identification body".format(int(round(self.count / len(self.grants) * 100)))
+        self.message = "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
-    def __init__(self, **kw):
-        super().__init__(**kw)
-        self.count = 0
-
     def process(self, grant, grant_flat, path_prefix):
         try:
             count_failure = False
@@ -263,15 +258,11 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-    def produce_message(self):
-        return "{}% of your grants have a Funding Org:Identifier that doesn’t draw from an external identification body, e.g. a charity number or a company number. Using external identifiers helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice.".format(int(round(self.count / len(self.grants) * 100)))
+        self.heading = "{}% of your grants have a Funding Org:Identifier that doesn’t draw from an external identification body".format(int(round(self.count / len(self.grants) * 100)))
+        self.message = "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
 
 
 class RecipientOrgCharityNumber(AdditionalTest):
-    def __init__(self, **kw):
-        super().__init__(**kw)
-        self.count = 0
-
     def process(self, grant, grant_flat, path_prefix):
         try:
             count_failure = False
@@ -290,15 +281,11 @@ class RecipientOrgCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-    def produce_message(self):
-        return "{} grant(s) have a value provided in the Recipient Org: Charity Number column, but the value doesn’t look like a charity number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field.".format(self.count)
+        self.heading = "{} grant{} ha{} a value provided in the Recipient Org: Charity Number column that doesn’t look like a charity number".format(self.count, '' if self.count == 1 else 's', 's' if self.count == 1 else 've')
+        self.message = "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 
 class RecipientOrgCompanyNumber(AdditionalTest):
-    def __init__(self, **kw):
-        super().__init__(**kw)
-        self.count = 0
-
     def process(self, grant, grant_flat, path_prefix):
         try:
             count_failure = False
@@ -314,50 +301,42 @@ class RecipientOrgCompanyNumber(AdditionalTest):
         except KeyError:
             pass
 
-    def produce_message(self):
-        return "{} grant(s) have a value provided in the Recipient Org: Company Number column, but the value doesn’t look like a company number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field.".format(self.count)
+        self.heading = "{} grant{} ha{} a value provided in the Recipient Org: Company Number column that doesn’t look like a company number".format(self.count, '' if self.count == 1 else 's', 's' if self.count == 1 else 've')
+        self.message = "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 
 class MoreThanOneFundingOrg(AdditionalTest):
-    def __init__(self, **kw):
-        super().__init__(**kw)
-        self.fundingOrganizationIds = set()
-
     def process(self, grant, grant_flat, path_prefix):
+        funding_organization_ids = set()
         try:
             for num, organization in enumerate(grant['fundingOrganization']):
-                self.fundingOrganizationIds.add(organization['id'])
+                funding_organization_ids.add(organization['id'])
         except KeyError:
             pass
-        if len(self.fundingOrganizationIds) > 1:
+
+        count = len(funding_organization_ids)
+        if count > 1:
             self.failed = True
 
-    def produce_message(self):
-        return "There are a total of {} funding organisation IDs listed. If you are expecting to be publishing data for multiple funders then this notice can be ignored, however if you are only publishing for a single funder then you should review your Funder ID column to see where multiple IDs have occurred.".format(len(self.fundingOrganizationIds))
+        self.heading = "There {} {} funding organisation ID{} listed".format('is' if count == 1 else 'are a total of', count, '' if count == 1 else 's')
+        self.message = "If you are expecting to be publishing data for multiple funders then this notice can be ignored, however if you are only publishing for a single funder then you should review your Funder ID column to see where multiple IDs have occurred."
 
 
 compiled_email_re = re.compile('[\w.-]+@[\w.-]+')
 
 
 class LooksLikeEmail(AdditionalTest):
-    def __init__(self, **kw):
-        super().__init__(**kw)
-
     def process(self, grant, grant_flat, path_prefix):
         for key, value in grant_flat.items():
             if isinstance(value, str) and compiled_email_re.search(value):
                 self.failed = True
                 self.json_locations.append(path_prefix + key)
 
-    def produce_message(self):
-        return "Some grants contain text that looks like an email address. This may indicate that the data contains personal data, use and distribution of which is restricted by the Data Protection Act. You should ensure that any personal data is included with the knowledge and consent of the person to whom it refers."
+        self.heading = "Some grants contain text that looks like an email address"
+        self.message = "This may indicate that the data contains personal data, use and distribution of which is restricted by the Data Protection Act. You should ensure that any personal data is included with the knowledge and consent of the person to whom it refers."
 
 
 class NoGrantProgramme(AdditionalTest):
-    def __init__(self, **kw):
-        super().__init__(**kw)
-        self.count = 0
-
     def process(self, grant, grant_flat, path_prefix):
         grant_programme = grant.get("grantProgramme")
         if not grant_programme:
@@ -365,15 +344,11 @@ class NoGrantProgramme(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-    def produce_message(self):
-        return "{} of the grant(s) do not contain any Grant Programme fields. Although not required by the 360Giving Standard, providing Grant Programme data if available helps users to better understand your data.".format(self.count)
+        self.heading = "{} grant{} do{} not contain any Grant Programme fields".format(self.count, '' if self.count == 1 else 's', 'es' if self.count == 1 else '')
+        self.message = "Although not required by the 360Giving Standard, providing Grant Programme data if available helps users to better understand your data."
 
 
 class NoBeneficiaryLocation(AdditionalTest):
-    def __init__(self, **kw):
-        super().__init__(**kw)
-        self.count = 0
-
     def process(self, grant, grant_flat, path_prefix):
         beneficiary_location = grant.get("beneficiaryLocation")
         if not beneficiary_location:
@@ -381,15 +356,11 @@ class NoBeneficiaryLocation(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-    def produce_message(self):
-        return "{} of the grants do not contain any beneficiary location fields. Although not required by the 360Giving Standard, providing beneficiary data if available helps users to understand your data and allows it to be used in tools that visualise grants geographically. ".format(self.count)
+        self.heading = "{} grant{} do{} not contain any beneficiary location fields".format(self.count, '' if self.count == 1 else 's', 'es' if self.count == 1 else '')
+        self.message = "Although not required by the 360Giving Standard, providing beneficiary data if available helps users to understand your data and allows it to be used in tools that visualise grants geographically."
 
 
 class TitleDescriptionSame(AdditionalTest):
-    def __init__(self, **kw):
-        super().__init__(**kw)
-        self.count = 0
-
     def process(self, grant, grant_flat, path_prefix):
         title = grant.get("title")
         description = grant.get("description")
@@ -398,14 +369,11 @@ class TitleDescriptionSame(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/description')
 
-    def produce_message(self):
-        return "{} grants have a title and description that are the same. Users may find that the data is less useful as they are unable to discover more about the grants. Consider including a more detailed description if you have one.".format(self.count)
+        self.heading = "{} grant{} ha{} a title and a description that are the same".format(self.count, '' if self.count == 1 else 's', 's' if self.count == 1 else 've')
+        self.message = "Users may find that the data is less useful as they are unable to discover more about the grants. Consider including a more detailed description if you have one."
 
 
 class OrganizationIdLooksInvalid(AdditionalTest):
-    def __init__(self, **kw):
-        super().__init__(**kw)
-
     def process(self, grant, grant_flat, path_prefix):
         for org_type in ("fundingOrganization", "recipientOrganization"):
             orgs = grant.get(org_type, [])
@@ -423,8 +391,8 @@ class OrganizationIdLooksInvalid(AdditionalTest):
                         self.failed = True
                         self.json_locations.append(id_location)
 
-    def produce_message(self):
-        return "Some grant(s) have funder or recipient organisation IDs that might not be valid for the registration agency that they refer to - for example, a GB-CHC ID that contains an invalid charity number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
+        self.heading = "Some grant(s) have funder or recipient organisation IDs that might not be valid"
+        self.message = "The IDs might not be valid for the registration agency that they refer to - for example, a 'GB-CHC' ID that contains an invalid charity number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 
 TEST_CLASSES = [ZeroAmountTest,

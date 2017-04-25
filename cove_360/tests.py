@@ -271,94 +271,98 @@ SOURCE_MAP = {
 
 
 RESULTS = [
-    ('One or more of your grants have a value of £0. It’s worth taking a look at '
-     'these grants and deciding if they should be published. It’s unusual to have '
-     'grants of £0, but there may be a reasonable explanation. Additional '
-     'information on why these grants are £0 might be useful to anyone using the '
-     'data, so consider adding an explanation to the description of the grant.',
+    ({'heading': "One or more of your grants have a value of £0",
+      'message': ("It’s worth taking a look at these grants and deciding if "
+                  "they should be published. It’s unusual to have grants of £0, but "
+                  "there may be a reasonable explanation. Additional information "
+                  "on why these grants are £0 might be useful to anyone using the data, "
+                  "so consider adding an explanation to the description of the grant.")},
      ['grants/0/amountAwarded'],
      [['grants', 'Q', 2, 'Amount Awarded']]),
-    ('One or more of your grants have a Recipient Org:Identifier that is has a '
-     "prefix of '360G'. If the grant is from a recipient organisation that has an "
-     'external identifier (such as a charity number, company number, or in the '
-     'case of local authorities, geocodes), then this should be used instead. If '
-     'no other identifier can be used, then this notice can be ignored.',
+    ({'heading': "One or more of your grants have a Recipient Org:Identifier that starts '360G-'",
+      'message': ("If the grant is from a recipient organisation that has an external "
+                  "identifier (such as a charity number, company number, or in the case "
+                  "of local authorities, geocodes), then this should be used instead. If "
+                  "no other identifier can be used, then this notice can be ignored.")},
      ['grants/0/recipientOrganization/0/id'],
      [['grants', 'J', 2, 'Recipient Org:Identifier']]),
-    ('One or more of your grants have a Funding Org:Identifier that is has a '
-     "prefix of '360G'. If the grant is from a recipient organisation that has an "
-     'external identifier (such as a charity number, company number, or in the '
-     'case of local authorities, geocodes), then this should be used instead. If '
-     'no other identifier can be used, then this notice can be ignored.',
+    ({'heading': "One or more of your grants have a Funding Org:Identifier that starts '360G-'",
+      'message': ("If the grant is from a recipient organisation that has an external "
+                  "identifier (such as a charity number, company number, or in the "
+                  "case of local authorities, geocodes), then this should be used instead. If "
+                  "no other identifier can be used, then this notice can be ignored.")},
      ['grants/1/fundingOrganization/0/id'],
      [['grants', 'V', 3, 'Funding Org:Identifier']]),
-    ('33% of your grants have a Recipient Org:Identifier that doesn’t draw from '
-     'an external identification body, e.g. a charity number or a company number. '
-     'Using external identifiers helps people using your data to match it up '
-     'against other data - for example to see who else has given grants to the '
-     'same recipient, even if they’re known by a different name. If the data '
-     'describes lots of grants to organisations that don’t have such identifiers '
-     'or individuals then you can ignore this notice.',
+    ({'heading': ("33% of your grants have a Recipient Org:Identifier that doesn’t draw from "
+                  "an external identification body"),
+      'message': ("Using external identifiers (e.g. a charity number or a company number) "
+                  "helps people using your data to match it up against other data - for "
+                  "example to see who else has given grants to the same recipient, even "
+                  "if they’re known by a different name. If the data describes lots of "
+                  "grants to organisations that don’t have such identifiers or individuals "
+                  "then you can ignore this notice.")},
      ['grants/1/recipientOrganization/0/id'],
      [['grants', 'J', 3, 'Recipient Org:Identifier']]),
-    ('33% of your grants have a Funding Org:Identifier that doesn’t draw from an '
-     'external identification body, e.g. a charity number or a company number. '
-     'Using external identifiers helps people using your data to match it up '
-     'against other data - for example to see who else has given grants to the '
-     'same recipient, even if they’re known by a different name. If the data '
-     'describes lots of grants to organisations that don’t have such identifiers '
-     'or individuals then you can ignore this notice.',
+    ({'heading': ("33% of your grants have a Funding Org:Identifier that doesn’t draw from "
+                  "an external identification body"),
+      'message': ("Using external identifiers (e.g. a charity number or a company number) "
+                  "helps people using your data to match it up against other data - for "
+                  "example to see who else has given grants to the same recipient, even "
+                  "if they’re known by a different name. If the data describes lots of "
+                  "grants to organisations that don’t have such identifiers or individuals "
+                  "then you can ignore this notice.")},
      ['grants/0/fundingOrganization/0/id'],
      [['grants', 'V', 2, 'Funding Org:Identifier']]),
-    ('1 grant(s) have a value provided in the Recipient Org: Charity Number '
-     'column, but the value doesn’t look like a charity number. Common causes of '
-     'this are missing leading digits, typos or incorrect values being entered '
-     'into this field.',
+    ({'heading': ("1 grant has a value provided in the Recipient Org: Charity Number column "
+                 "that doesn’t look like a charity number"),
+      'message': ("Common causes of this are missing leading digits, typos or incorrect "
+                  "values being entered into this field.")},
      ['grants/0/recipientOrganization/0/charityNumber'],
      [['grants', 'M', 2, 'Recipient Org:Charity Number']]),
-    ('1 grant(s) have a value provided in the Recipient Org: Company Number '
-     'column, but the value doesn’t look like a company number. Common causes of '
-     'this are missing leading digits, typos or incorrect values being entered '
-     'into this field.',
+    ({'heading': ("1 grant has a value provided in the Recipient Org: Company Number column "
+                  "that doesn’t look like a company number"),
+      'message': ("Common causes of this are missing leading digits, typos or incorrect "
+                  "values being entered into this field.")},
      ['grants/0/recipientOrganization/0/companyNumber'],
      [['grants', 'L', 2, 'Recipient Org:Company Number']]),
-    ('There are a total of 3 funding organisation IDs listed. If you are '
-     'expecting to be publishing data for multiple funders then this notice can '
-     'be ignored, however if you are only publishing for a single funder then you '
-     'should review your Funder ID column to see where multiple IDs have '
-     'occurred.',
+    ({'heading': "There is 1 funding organisation ID listed",
+      'message': ("If you are expecting to be publishing data for multiple funders then "
+                  "this notice can be ignored, however if you are only publishing for a "
+                  "single funder then you should review your Funder ID column to see where "
+                  "multiple IDs have occurred.")},
      [],
      []),
-    ('Some grants contain text that looks like an email address. This may '
-     'indicate that the data contains personal data, use and distribution of '
-     'which is restricted by the Data Protection Act. You should ensure that any '
-     'personal data is included with the knowledge and consent of the person to '
-     'whom it refers.',
+    ({'heading': "Some grants contain text that looks like an email address",
+      'message': ("This may indicate that the data contains personal data, use and "
+                  "distribution of which is restricted by the Data Protection Act. You "
+                  "should ensure that any personal data is included with the knowledge "
+                  "and consent of the person to whom it refers.")},
      ['grants/0/Grant type', 'grants/0/title'],
      [['grants', 'G', 2, 'Grant type'], ['grants', 'O', 2, 'Title']]),
-    ('1 of the grant(s) do not contain any Grant Programme fields. Although not '
-     'required by the 360Giving Standard, providing Grant Programme data if '
-     'available helps users to better understand your data.',
+    ({'heading': "1 grant does not contain any Grant Programme fields",
+     'message': ("Although not required by the 360Giving Standard, providing Grant "
+                 "Programme data if available helps users to better understand your data.")},
      ['grants/0/id'],
      [['grants', 'A', 2, 'Identifier']]),
-    ('3 of the grants do not contain any beneficiary location fields. Although '
-     'not required by the 360Giving Standard, providing beneficiary data if '
-     'available helps users to understand your data and allows it to be used in '
-     'tools that visualise grants geographically. ',
+    ({'heading': "3 grants do not contain any beneficiary location fields",
+      'message': ("Although not required by the 360Giving Standard, providing beneficiary "
+                  "data if available helps users to understand your data and allows it to be "
+                  "used in tools that visualise grants geographically.")},
      ['grants/0/id', 'grants/1/id', 'grants/2/id'],
      [['grants', 'A', 2, 'Identifier'],
       ['grants', 'A', 3, 'Identifier'],
       ['grants', 'A', 4, 'Identifier']]),
-    ('2 grants have a title and description that are the same. Users may find '
-     'that the data is less useful as they are unable to discover more about the '
-     'grants. Consider including a more detailed description if you have one.',
+    ({'heading': "2 grants have a title and a description that are the same",
+      'message': ("Users may find that the data is less useful as they are unable to "
+                  "discover more about the grants. Consider including a more detailed "
+                  "description if you have one.")},
      ['grants/1/description', 'grants/2/description'],
      [['grants', 'Z', 3, 'Description'], ['grants', 'Z', 4, 'Description']]),
-    ('Some grant(s) have funder or recipient organisation IDs that might not be '
-     'valid for the registration agency that they refer to - for example, a '
-     'GB-CHC ID that contains an invalid charity number. Common causes of this '
-     'are missing leading digits, typos or incorrect values being entered into '
-     'this field.',
+    ({'heading': "Some grant(s) have funder or recipient organisation IDs that might not be valid",
+      'message': ("The IDs might not be valid for the registration agency that they refer to "
+                  "- for example, a 'GB-CHC' ID that contains an invalid charity number. Common "
+                  "causes of this are missing leading digits, typos or incorrect values being "
+                  "entered into this field.")},
      ['grants/2/fundingOrganization/0/id', 'grants/2/recipientOrganization/0/id'],
      [['grants', 'V', 4, 'Funding Org:Identifier'],
       ['grants', 'J', 4, 'Recipient Org:Identifier']])
