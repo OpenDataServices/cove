@@ -1,9 +1,11 @@
-import cove.lib.tools as tools
-import requests
-from collections import defaultdict, OrderedDict
 import json
 import re
 import os
+from collections import defaultdict, OrderedDict
+
+import requests
+
+import cove.lib.tools as tools
 
 
 # JSON from link on http://iatistandard.org/202/codelists/OrganisationRegistrationAgency/
@@ -173,6 +175,17 @@ class AdditionalTest():
             'message': self.message
         }
 
+    def pluralize_heading(self, message, verb='have'):
+        noun = 'grant' if self.count == 1 else 'grants'
+        if verb == 'have':
+            verb = 'has' if self.count == 1 else verb
+        elif verb == 'do':
+            verb = 'does' if self.count == 1 else verb
+        else:
+            # Naively!
+            verb = verb + 's' if self.count == 1 else verb
+        return '{} {} {} {}'.format(self.count, noun, verb, message)
+
 
 class ZeroAmountTest(AdditionalTest):
     def process(self, grant, grant_flat, path_prefix):
@@ -183,10 +196,11 @@ class ZeroAmountTest(AdditionalTest):
             if grant['amountAwarded'] == 0:
                 self.failed = True
                 self.json_locations.append(path_prefix + '/amountAwarded')
+                self.count += 1
         except KeyError:
             pass
 
-        self.heading = "One or more of your grants have a value of £0"
+        self.heading = self.pluralize_heading('a value of £0')
         self.message = "It’s worth taking a look at these grants and deciding if they should be published. It’s unusual to have grants of £0, but there may be a reasonable explanation. Additional information on why these grants are £0 might be useful to anyone using the data, so consider adding an explanation to the description of the grant."
 
 
@@ -197,10 +211,11 @@ class RecipientOrg360GPrefix(AdditionalTest):
                 if organization['id'].lower().startswith('360g'):
                     self.failed = True
                     self.json_locations.append(path_prefix + '/recipientOrganization/{}/id'. format(num))
+                    self.count += 1
         except KeyError:
             pass
 
-        self.heading = "One or more of your grants have a Recipient Org:Identifier that starts '360G-'"
+        self.heading = self.pluralize_heading("a Recipient Org:Identifier that starts '360G-'")
         self.message = "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
 
 
@@ -211,10 +226,11 @@ class FundingOrg360GPrefix(AdditionalTest):
                 if organization['id'].lower().startswith('360g'):
                     self.failed = True
                     self.json_locations.append(path_prefix + '/fundingOrganization/{}/id'. format(num))
+                    self.count += 1
         except KeyError:
             pass
 
-        self.heading = "One or more of your grants have a Funding Org:Identifier that starts '360G-'"
+        self.heading = self.pluralize_heading("a Funding Org:Identifier that starts '360G-'")
         self.message = "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
 
 
@@ -281,7 +297,7 @@ class RecipientOrgCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = "{} grant{} ha{} a value provided in the Recipient Org: Charity Number column that doesn’t look like a charity number".format(self.count, '' if self.count == 1 else 's', 's' if self.count == 1 else 've')
+        self.heading = self.pluralize_heading("a value provided in the Recipient Org: Charity Number column that doesn’t look like a charity number")
         self.message = "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 
@@ -301,24 +317,24 @@ class RecipientOrgCompanyNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = "{} grant{} ha{} a value provided in the Recipient Org: Company Number column that doesn’t look like a company number".format(self.count, '' if self.count == 1 else 's', 's' if self.count == 1 else 've')
+        self.heading = self.pluralize_heading("a value provided in the Recipient Org: Company Number column that doesn’t look like a company number")
         self.message = "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 
 class MoreThanOneFundingOrg(AdditionalTest):
+    funding_organization_ids = set()
+
     def process(self, grant, grant_flat, path_prefix):
-        funding_organization_ids = set()
         try:
             for num, organization in enumerate(grant['fundingOrganization']):
-                funding_organization_ids.add(organization['id'])
+                self.funding_organization_ids.add(organization['id'])
         except KeyError:
             pass
 
-        count = len(funding_organization_ids)
-        if count > 1:
+        if len(self.funding_organization_ids) > 1:
             self.failed = True
 
-        self.heading = "There {} {} funding organisation ID{} listed".format('is' if count == 1 else 'are a total of', count, '' if count == 1 else 's')
+        self.heading = "There are {} funding organisation IDs listed".format(len(self.funding_organization_ids))
         self.message = "If you are expecting to be publishing data for multiple funders then this notice can be ignored, however if you are only publishing for a single funder then you should review your Funder ID column to see where multiple IDs have occurred."
 
 
@@ -331,8 +347,9 @@ class LooksLikeEmail(AdditionalTest):
             if isinstance(value, str) and compiled_email_re.search(value):
                 self.failed = True
                 self.json_locations.append(path_prefix + key)
+                self.count += 1
 
-        self.heading = "Some grants contain text that looks like an email address"
+        self.heading = self.pluralize_heading("text that looks like an email address", verb='contain')
         self.message = "This may indicate that the data contains personal data, use and distribution of which is restricted by the Data Protection Act. You should ensure that any personal data is included with the knowledge and consent of the person to whom it refers."
 
 
@@ -344,7 +361,7 @@ class NoGrantProgramme(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = "{} grant{} do{} not contain any Grant Programme fields".format(self.count, '' if self.count == 1 else 's', 'es' if self.count == 1 else '')
+        self.heading = self.pluralize_heading("not contain any Grant Programme fields", verb='do')
         self.message = "Although not required by the 360Giving Standard, providing Grant Programme data if available helps users to better understand your data."
 
 
@@ -356,7 +373,7 @@ class NoBeneficiaryLocation(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = "{} grant{} do{} not contain any beneficiary location fields".format(self.count, '' if self.count == 1 else 's', 'es' if self.count == 1 else '')
+        self.heading = self.pluralize_heading("not contain any beneficiary location fields", verb='do')
         self.message = "Although not required by the 360Giving Standard, providing beneficiary data if available helps users to understand your data and allows it to be used in tools that visualise grants geographically."
 
 
@@ -369,7 +386,7 @@ class TitleDescriptionSame(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/description')
 
-        self.heading = "{} grant{} ha{} a title and a description that are the same".format(self.count, '' if self.count == 1 else 's', 's' if self.count == 1 else 've')
+        self.heading = self.pluralize_heading("a title and a description that are the same")
         self.message = "Users may find that the data is less useful as they are unable to discover more about the grants. Consider including a more detailed description if you have one."
 
 
@@ -386,12 +403,14 @@ class OrganizationIdLooksInvalid(AdditionalTest):
                     if not check_charity_number(org_id[7:]):
                         self.failed = True
                         self.json_locations.append(id_location)
-                if org_id.upper().startswith('GB-COH-'):
+                        self.count += 1
+                elif org_id.upper().startswith('GB-COH-'):
                     if not check_company_number(org_id[7:]):
                         self.failed = True
                         self.json_locations.append(id_location)
+                        self.count += 1
 
-        self.heading = "Some grant(s) have funder or recipient organisation IDs that might not be valid"
+        self.heading = self.pluralize_heading("funder or recipient organisation IDs that might not be valid")
         self.message = "The IDs might not be valid for the registration agency that they refer to - for example, a 'GB-CHC' ID that contains an invalid charity number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 

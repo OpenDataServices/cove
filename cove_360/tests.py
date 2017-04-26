@@ -271,7 +271,7 @@ SOURCE_MAP = {
 
 
 RESULTS = [
-    ({'heading': "One or more of your grants have a value of £0",
+    ({'heading': "1 grant has a value of £0",
       'message': ("It’s worth taking a look at these grants and deciding if "
                   "they should be published. It’s unusual to have grants of £0, but "
                   "there may be a reasonable explanation. Additional information "
@@ -279,14 +279,14 @@ RESULTS = [
                   "so consider adding an explanation to the description of the grant.")},
      ['grants/0/amountAwarded'],
      [['grants', 'Q', 2, 'Amount Awarded']]),
-    ({'heading': "One or more of your grants have a Recipient Org:Identifier that starts '360G-'",
+    ({'heading': "1 grant has a Recipient Org:Identifier that starts '360G-'",
       'message': ("If the grant is from a recipient organisation that has an external "
                   "identifier (such as a charity number, company number, or in the case "
                   "of local authorities, geocodes), then this should be used instead. If "
                   "no other identifier can be used, then this notice can be ignored.")},
      ['grants/0/recipientOrganization/0/id'],
      [['grants', 'J', 2, 'Recipient Org:Identifier']]),
-    ({'heading': "One or more of your grants have a Funding Org:Identifier that starts '360G-'",
+    ({'heading': "1 grant has a Funding Org:Identifier that starts '360G-'",
       'message': ("If the grant is from a recipient organisation that has an external "
                   "identifier (such as a charity number, company number, or in the "
                   "case of local authorities, geocodes), then this should be used instead. If "
@@ -325,14 +325,14 @@ RESULTS = [
                   "values being entered into this field.")},
      ['grants/0/recipientOrganization/0/companyNumber'],
      [['grants', 'L', 2, 'Recipient Org:Company Number']]),
-    ({'heading': "There is 1 funding organisation ID listed",
+    ({'heading': "There are 3 funding organisation IDs listed",
       'message': ("If you are expecting to be publishing data for multiple funders then "
                   "this notice can be ignored, however if you are only publishing for a "
                   "single funder then you should review your Funder ID column to see where "
                   "multiple IDs have occurred.")},
      [],
      []),
-    ({'heading': "Some grants contain text that looks like an email address",
+    ({'heading': "2 grants contain text that looks like an email address",
       'message': ("This may indicate that the data contains personal data, use and "
                   "distribution of which is restricted by the Data Protection Act. You "
                   "should ensure that any personal data is included with the knowledge "
@@ -358,7 +358,7 @@ RESULTS = [
                   "description if you have one.")},
      ['grants/1/description', 'grants/2/description'],
      [['grants', 'Z', 3, 'Description'], ['grants', 'Z', 4, 'Description']]),
-    ({'heading': "Some grant(s) have funder or recipient organisation IDs that might not be valid",
+    ({'heading': "2 grants have funder or recipient organisation IDs that might not be valid",
       'message': ("The IDs might not be valid for the registration agency that they refer to "
                   "- for example, a 'GB-CHC' ID that contains an invalid charity number. Common "
                   "causes of this are missing leading digits, typos or incorrect values being "
