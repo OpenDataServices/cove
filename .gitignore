@@ -3,6 +3,7 @@
 *.mo
 *~
 .ve
+*.pyc
 __pycache__
 media
 .coverage

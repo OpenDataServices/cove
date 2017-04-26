@@ -2,6 +2,7 @@ import collections
 import csv
 import functools
 import json
+import os
 import re
 from collections import OrderedDict
 from urllib.parse import urlparse, urljoin
@@ -10,15 +11,16 @@ import jsonref
 import requests
 from cached_property import cached_property
 from flattentool.schema import get_property_type_set
+from flattentool import unflatten
 from jsonschema import FormatChecker, RefResolver
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
 
+from cove.lib.exceptions import cove_spreadsheet_conversion_error
+
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
-
 LANGUAGE_RE = re.compile("^(.*_(((([A-Za-z]{2,3}(-([A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-([A-Za-z]{4}))?(-([A-Za-z]{2}|[0-9]{3}))?(-([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-([0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(x(-[A-Za-z0-9]{1,8})+))?)|(x(-[A-Za-z0-9]{1,8})+)))$")
-
 validation_error_lookup = {'date-time': 'Date is not in the correct format',
                            'uri': 'Invalid \'uri\' found',
                            'string': 'Value is not a string',
@@ -516,3 +518,26 @@ def get_additional_codelist_values(schema_obj, codelist_url, json_data):
             #additional_codelist_values[path_no_num]['location_values'].append((path, value))
 
     return additional_codelist_values
+
+
+@cove_spreadsheet_conversion_error
+def get_spreadsheet_meta_data(request, data_object, schema, file_type='xlsx', name='Meta'):
+    if file_type == 'csv':
+        input_name = data_object.upload_dir()
+    else:
+        input_name = data_object.original_file.file.name
+    output_name = os.path.join(data_object.upload_dir(), 'metatab.json')
+
+    unflatten(
+        input_name=input_name,
+        output_name=output_name,
+        input_format=file_type,
+        metatab_only=True,
+        metatab_schema=schema,
+        metatab_name=name,
+        metatab_vertical_orientation=True
+    )
+
+    with open(output_name) as metatab_data:
+        metatab_json = json.load(metatab_data)
+    return metatab_json

@@ -597,7 +597,7 @@ def test_schema_ocds_extensions(release_data, extensions, invalid_extension, ext
 @pytest.mark.django_db
 def test_schema_ocds_extended_release_schema_file():
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_extensions.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_extensions_version_1_1.json')) as fp:
         data.original_file.save('test.json', UploadedFile(fp))
         fp.seek(0)
         json_data = json.load(fp)
@@ -625,17 +625,17 @@ def test_schema_ocds_extended_release_schema_file():
 @pytest.mark.django_db
 def test_schema_after_version_change(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_extensions.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_invalid_extensions.json')) as fp:
         data.original_file.save('test.json', UploadedFile(fp))
 
     resp = client.post(data.get_absolute_url(), {'version': '1.1'})
     assert resp.status_code == 200
 
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
-        assert "procurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
+        assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as valdiation_errors_fp:
-        assert "'version' is missing but required" in valdiation_errors_fp.read()
+    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+        assert "'version' is missing but required" in validation_errors_fp.read()
 
     # test link is still there.
     resp = client.get(data.get_absolute_url())
@@ -643,16 +643,16 @@ def test_schema_after_version_change(client):
     assert 'extended_release_schema.json' in resp.content.decode()
 
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
-        assert "procurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
+        assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as valdiation_errors_fp:
-        assert "'version' is missing but required" in valdiation_errors_fp.read()
+    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+        assert "'version' is missing but required" in validation_errors_fp.read()
 
     resp = client.post(data.get_absolute_url(), {'version': '1.0'})
     assert resp.status_code == 200
 
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
-        assert "procurementCategory" not in json.load(extended_release_fp)['definitions']['Tender']['properties']
+        assert "mainProcurementCategory" not in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as valdiation_errors_fp:
-        assert "'version' is missing but required" not in valdiation_errors_fp.read()
+    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+        assert "'version' is missing but required" not in validation_errors_fp.read()
