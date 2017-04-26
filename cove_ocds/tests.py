@@ -632,7 +632,7 @@ def test_schema_after_version_change(client):
     assert resp.status_code == 200
 
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
-        assert "procurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
+        assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
     with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
@@ -643,7 +643,7 @@ def test_schema_after_version_change(client):
     assert 'extended_release_schema.json' in resp.content.decode()
 
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
-        assert "procurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
+        assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
     with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
@@ -652,7 +652,7 @@ def test_schema_after_version_change(client):
     assert resp.status_code == 200
 
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
-        assert "procurementCategory" not in json.load(extended_release_fp)['definitions']['Tender']['properties']
+        assert "mainProcurementCategory" not in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
     with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
         assert "'version' is missing but required" not in validation_errors_fp.read()
