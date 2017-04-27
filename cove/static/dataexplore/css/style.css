@@ -1,6 +1,9 @@
 .page-header a {
-  /*background: url(http://ocds.wpengine.com/wp-content/uploads/2014/07/logo_web3.png) no-repeat !important;*/
   text-decoration:none;
+}
+
+.page-header a.underline:hover {
+  text-decoration:underline;
 }
 
 .page-header a.btn {
