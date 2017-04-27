@@ -175,7 +175,13 @@ class AdditionalTest():
             'message': self.message
         }
 
-    def pluralize_heading(self, message, verb='have'):
+    def format_heading_count(self, message, verb='have'):
+        '''Build a string with count of grants plus message
+        
+        The grant count phrase for the test is pluralized and
+        prepended to message, eg: 1 grant has + message,
+        2 grants have + message or 3 grants contain + message.
+        '''
         noun = 'grant' if self.count == 1 else 'grants'
         if verb == 'have':
             verb = 'has' if self.count == 1 else verb
@@ -200,7 +206,7 @@ class ZeroAmountTest(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.pluralize_heading('a value of £0')
+        self.heading = self.format_heading_count('a value of £0')
         self.message = "It’s worth taking a look at these grants and deciding if they should be published. It’s unusual to have grants of £0, but there may be a reasonable explanation. Additional information on why these grants are £0 might be useful to anyone using the data, so consider adding an explanation to the description of the grant."
 
 
@@ -215,7 +221,7 @@ class RecipientOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.pluralize_heading("a Recipient Org:Identifier that starts '360G-'")
+        self.heading = self.format_heading_count("a Recipient Org:Identifier that starts '360G-'")
         self.message = "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
 
 
@@ -230,7 +236,7 @@ class FundingOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.pluralize_heading("a Funding Org:Identifier that starts '360G-'")
+        self.heading = self.format_heading_count("a Funding Org:Identifier that starts '360G-'")
         self.message = "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
 
 
@@ -297,7 +303,7 @@ class RecipientOrgCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.pluralize_heading("a value provided in the Recipient Org: Charity Number column that doesn’t look like a charity number")
+        self.heading = self.format_heading_count("a value provided in the Recipient Org: Charity Number column that doesn’t look like a charity number")
         self.message = "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 
@@ -317,7 +323,7 @@ class RecipientOrgCompanyNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.pluralize_heading("a value provided in the Recipient Org: Company Number column that doesn’t look like a company number")
+        self.heading = self.format_heading_count("a value provided in the Recipient Org: Company Number column that doesn’t look like a company number")
         self.message = "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 
@@ -349,7 +355,7 @@ class LooksLikeEmail(AdditionalTest):
                 self.json_locations.append(path_prefix + key)
                 self.count += 1
 
-        self.heading = self.pluralize_heading("text that looks like an email address", verb='contain')
+        self.heading = self.format_heading_count("text that looks like an email address", verb='contain')
         self.message = "This may indicate that the data contains personal data, use and distribution of which is restricted by the Data Protection Act. You should ensure that any personal data is included with the knowledge and consent of the person to whom it refers."
 
 
@@ -361,7 +367,7 @@ class NoGrantProgramme(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.pluralize_heading("not contain any Grant Programme fields", verb='do')
+        self.heading = self.format_heading_count("not contain any Grant Programme fields", verb='do')
         self.message = "Although not required by the 360Giving Standard, providing Grant Programme data if available helps users to better understand your data."
 
 
@@ -373,7 +379,7 @@ class NoBeneficiaryLocation(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.pluralize_heading("not contain any beneficiary location fields", verb='do')
+        self.heading = self.format_heading_count("not contain any beneficiary location fields", verb='do')
         self.message = "Although not required by the 360Giving Standard, providing beneficiary data if available helps users to understand your data and allows it to be used in tools that visualise grants geographically."
 
 
@@ -386,7 +392,7 @@ class TitleDescriptionSame(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/description')
 
-        self.heading = self.pluralize_heading("a title and a description that are the same")
+        self.heading = self.format_heading_count("a title and a description that are the same")
         self.message = "Users may find that the data is less useful as they are unable to discover more about the grants. Consider including a more detailed description if you have one."
 
 
@@ -410,7 +416,7 @@ class OrganizationIdLooksInvalid(AdditionalTest):
                         self.json_locations.append(id_location)
                         self.count += 1
 
-        self.heading = self.pluralize_heading("funder or recipient organisation IDs that might not be valid")
+        self.heading = self.format_heading_count("funder or recipient organisation IDs that might not be valid")
         self.message = "The IDs might not be valid for the registration agency that they refer to - for example, a 'GB-CHC' ID that contains an invalid charity number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 
