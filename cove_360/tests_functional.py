@@ -101,6 +101,8 @@ def test_explore_360_url_input(server_url, browser, httpserver, source_filename,
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
 
+    data_url = browser.current_url
+
     # Click and un-collapse all explore sections
     all_sections = browser.find_elements_by_class_name('panel-heading')
     for section in all_sections:
@@ -110,6 +112,22 @@ def test_explore_360_url_input(server_url, browser, httpserver, source_filename,
 
     # Do the assertions
     check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
+
+    #refresh page to now check if tests still work after caching some data
+    browser.get(data_url)
+
+    if conversion_successful:
+        # Expand all sections with the expand all button this time
+        browser.find_element_by_link_text('Expand all').click()
+        time.sleep(0.5)
+
+    # Do the assertions again
+    check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
+
+    if conversion_successful:
+        # Check that the advanced view loads without errors
+        browser.get(data_url + '/advanced')
+        assert 'Advanced view' in browser.find_element_by_tag_name('body').text
 
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
