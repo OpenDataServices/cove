@@ -176,7 +176,7 @@
         <tbody>
         {% for message, json_location, spreadsheet_location in additional_checks %}
         <tr>
-          <td>{{message}}</td>
+          <td><strong>{{message.heading}}</strong><br>{{message.message}}</td>
           {% if file_type == 'xlsx' or file_type == 'csv' %}
             <td style="white-space: nowrap">
               <ul class="list-unstyled">
