@@ -48,7 +48,7 @@
   <td style="white-space: nowrap">
     <ul class="list-unstyled">
       {% for value in values|slice:":3" %}
-      <li> <b>Sheet:</b> {{value.sheet}} <b>Row:</b> {{value.row_number}} {% if value.header %} <b>Header:</b> {{value.header}} {% endif %} </li>
+      <li> <b>Sheet:</b> {{value.sheet}} <b>Row:</b> {{value.row_number}} {% if value.header %} <b>Column:</b> {{value.header}} {% endif %} </li>
       {% endfor %}
     </ul>
   </td>
