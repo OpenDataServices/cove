@@ -344,7 +344,7 @@ class MoreThanOneFundingOrg(AdditionalTest):
         self.message = "If you are expecting to be publishing data for multiple funders then this notice can be ignored, however if you are only publishing for a single funder then you should review your Funder ID column to see where multiple IDs have occurred."
 
 
-compiled_email_re = re.compile('[\w.-]+@[\w.-]+')
+compiled_email_re = re.compile('[\w.-]+@[\w.-]+\.[\w.-]+')
 
 
 class LooksLikeEmail(AdditionalTest):
