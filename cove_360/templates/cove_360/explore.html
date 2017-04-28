@@ -320,13 +320,11 @@
             </li>
             {% elif conversion == 'flatten' %}
             <li>
-              <a href="{{converted_url}}.xlsx">{{xlsx}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
+              <a href="{{converted_url}}-titles.xlsx">{{xlsx}} ({% trans converted %})</a> {{converted_file_size_titles|filesizeformat}}
             </li>
-              {% if request.cove_config.convert_titles %}
-              <li>
-                <a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({% trans converted %})</a> {{converted_file_size_titles|filesizeformat}}
-              </li>
-              {% endif %}
+            <li class="list-unstyled">
+              <sub>{% trans "You can also download an" %}<a href="{{converted_url}}.xlsx"> {% trans "Excel Spreadsheet (.xlsx) with JSON field names" %}</a> {% trans "instead of titles as column headers" %} ({{converted_file_size|filesizeformat}})</sub>
+            </li>
             {% endif %}
           {% endif %}
         </ul>
