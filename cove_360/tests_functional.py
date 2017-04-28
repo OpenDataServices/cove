@@ -80,12 +80,12 @@ def server_url(request, live_server):
 def test_explore_360_url_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
     """
     TODO Test sequence: uploading JSON, files to Download only original, click convert,
-    new http request, 'Data Supplied' collapse. 'Download and Share' uncollapsed,
+    new http request, 'Data Summary' collapse. 'Download and Share' uncollapsed,
     converted files added.
 
-    TODO Test file with grants in different currencies, check right text in 'Data Supplied'
+    TODO Test file with grants in different currencies, check right text in 'Data Summary'
 
-    TODO Test file with grants awarded on different dates, check right text in 'Data Supplied'
+    TODO Test file with grants awarded on different dates, check right text in 'Data Summary'
     """
     with open(os.path.join('cove_360', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
