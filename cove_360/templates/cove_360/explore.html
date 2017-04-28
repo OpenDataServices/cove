@@ -3,6 +3,15 @@
 {% load humanize %}
 {% load cove_tags %}
 
+{% block header_button %}
+{{block.super}}
+<div class="expand-collapse-all">
+<a href="#" onclick="$('.collapse').collapse('show')">Expand all</a>
+/
+<a href="#" onclick="$('.collapse').collapse('hide')">Collapse all</a>
+</div>
+{% endblock %}
+
 {% block explore_content %}
 
   {% block data_supplied %}

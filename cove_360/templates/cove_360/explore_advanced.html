@@ -1,0 +1,151 @@
+{% extends 'cove_360/base.html' %}
+{% load humanize %}
+{% load cove_tags %}
+
+{% block content %}
+
+<h2>Advanced view</h2>
+
+<div class="container">
+
+<div class="col-md-6">
+<table class="table">
+  <tr>
+    <th>Grants</th>
+    <td>{{grants_aggregates.count}}</td>
+  </tr>
+  <tr>
+    <th>Funders</th>
+    <td>{{grants_aggregates.distinct_funding_org_identifier|length}}</td>
+  </tr>
+  <tr>
+    <th>Recipients</th>
+    <td>{{grants_aggregates.distinct_recipient_org_identifier|length}}</td>
+  </td>
+  <tr>
+    <th>Start Date</th>
+    <td>{{grants_aggregates.min_award_date}}</td>
+  <td>
+  <tr>
+    <th>End Date</th>
+    <td>{{grants_aggregates.max_award_date}}</td>
+  <td>
+</table>
+</div>
+
+<div class="col-md-6">
+Currencies:
+
+<table class="table">
+  <tr>
+    <th>Currency</th>
+    <th>Grants</th>
+    <th>Total</th>
+    <th>Min</th>
+    <th>Max</th>
+  </tr>
+{% for currency_code, currency_aggregates in grants_aggregates.currencies.items %}
+  <tr>
+    <td>{{currency_code}}</td>
+    <td>{{currency_aggregates.count}}</td>
+    <td>{{currency_aggregates.total_amount|intcomma}}</td>
+    <td>{{currency_aggregates.min_amount|intcomma}}</td>
+    <td>{{currency_aggregates.max_amount|intcomma}}</td>
+  </tr>
+{% endfor %}
+</table>
+
+</div>
+
+</div>
+
+
+
+<div class="container">
+<h3>Funders</h3>
+
+<div class="col-md-4">
+<h4>Identifiers ({{grants_aggregates.distinct_funding_org_identifier|length}})</h3>
+<ul class="list-group">
+{% for id in grants_aggregates.distinct_funding_org_identifier %}
+   <li class="list-group-item">{{ id }}</li>
+{% endfor %}
+</ul>
+</div>
+
+<div class="col-md-4">
+<h4>Recognised Prefixes ({{grants_aggregates.funding_org_identifier_prefixes|length}})</h3>
+<ul class="list-group">
+{% for id in grants_aggregates.funding_org_identifier_prefixes %}
+   <li class="list-group-item">{{ id }}</li>
+{% endfor %}
+</ul>
+</div>
+
+<div class="col-md-4">
+<h4>Unrecognised Prefixes ({{grants_aggregates.funding_org_identifiers_unrecognised_prefixes|length}})</h3>
+<ul class="list-group">
+{% for id in grants_aggregates.funding_org_identifiers_unrecognised_prefixes %}
+   <li class="list-group-item">{{ id }}</li>
+{% endfor %}
+</ul>
+</div>
+</div>
+
+
+
+
+<div class="container">
+<h3>Recipients</h3>
+
+<div class="col-md-4">
+<h4>Identifiers ({{grants_aggregates.distinct_recipient_org_identifier|length}})</h3>
+{% if grants_aggregates.distinct_recipient_org_identifier|length > 10 %}
+    <p>(random 10)</p>
+    <ul class="list-group">
+    {% for id in grants_aggregates.distinct_recipient_org_identifier|sample:10 %}
+        <li class="list-group-item">{{ id }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <ul class="list-group">
+    {% for id in grants_aggregates.distinct_recipient_org_identifier %}
+        <li class="list-group-item">{{ id }}</li>
+    {% endfor %}
+    {% endif %}
+    </ul>
+</div>
+
+<div class="col-md-4">
+<h4>Recognised Prefixes ({{grants_aggregates.recipient_org_identifier_prefixes|length}})</h3>
+<ul class="list-group">
+{% for id in grants_aggregates.recipient_org_identifier_prefixes %}
+   <li class="list-group-item">{{ id }}</li>
+{% endfor %}
+</ul>
+</div>
+
+<div class="col-md-4">
+<h4>Unrecognised Prefixes ({{grants_aggregates.recipient_org_identifiers_unrecognised_prefixes|length}})</h3>
+<ul class="list-group">
+{% for id in grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}
+   <li class="list-group-item">{{ id }}</li>
+{% endfor %}
+</ul>
+</div>
+</div>
+
+
+
+
+{% cove_modal_list className="duplicate-id-modal" modalTitle="Duplicate IDs" itemList=grants_aggregates.duplicate_ids %}
+{% cove_modal_list className="unique-ids" modalTitle="Unique IDs" itemList=grants_aggregates.unique_ids %}
+
+{% endblock %}
+{% block h1 %}
+{% endblock %}
+{% block howToUse %}
+{% endblock %}
+{% block moreInfo %}
+{% endblock %}
+
