@@ -216,7 +216,7 @@ class RecipientOrg360GPrefix(AdditionalTest):
             for num, organization in enumerate(grant['recipientOrganization']):
                 if organization['id'].lower().startswith('360g'):
                     self.failed = True
-                    self.json_locations.append(path_prefix + '/recipientOrganization/{}/id'. format(num))
+                    self.json_locations.append(path_prefix + '/recipientOrganization/{}/id'.format(num))
                     self.count += 1
         except KeyError:
             pass
@@ -231,7 +231,7 @@ class FundingOrg360GPrefix(AdditionalTest):
             for num, organization in enumerate(grant['fundingOrganization']):
                 if organization['id'].lower().startswith('360g'):
                     self.failed = True
-                    self.json_locations.append(path_prefix + '/fundingOrganization/{}/id'. format(num))
+                    self.json_locations.append(path_prefix + '/fundingOrganization/{}/id'.format(num))
                     self.count += 1
         except KeyError:
             pass
@@ -251,7 +251,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
                 else:
                     self.failed = True
                     count_failure = True
-                    self.json_locations.append(path_prefix + '/recipientOrganization/{}/id'. format(num))
+                    self.json_locations.append(path_prefix + '/recipientOrganization/{}/id'.format(num))
 
             if count_failure:
                 self.count += 1
@@ -273,7 +273,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
                 else:
                     self.failed = True
                     count_failure = True
-                    self.json_locations.append(path_prefix + '/fundingOrganization/{}/id'. format(num))
+                    self.json_locations.append(path_prefix + '/fundingOrganization/{}/id'.format(num))
 
             if count_failure:
                 self.count += 1
@@ -296,7 +296,7 @@ class RecipientOrgCharityNumber(AdditionalTest):
                 if not check_charity_number(charity_number):
                     self.failed = True
                     count_failure = True
-                    self.json_locations.append(path_prefix + '/recipientOrganization/{}/charityNumber'. format(num))
+                    self.json_locations.append(path_prefix + '/recipientOrganization/{}/charityNumber'.format(num))
 
             if count_failure:
                 self.count += 1
@@ -316,7 +316,7 @@ class RecipientOrgCompanyNumber(AdditionalTest):
                 if not check_company_number(company_number):
                     self.failed = True
                     count_failure = True
-                    self.json_locations.append(path_prefix + '/recipientOrganization/{}/companyNumber'. format(num))
+                    self.json_locations.append(path_prefix + '/recipientOrganization/{}/companyNumber'.format(num))
 
             if count_failure:
                 self.count += 1
@@ -328,19 +328,22 @@ class RecipientOrgCompanyNumber(AdditionalTest):
 
 
 class MoreThanOneFundingOrg(AdditionalTest):
-    funding_organization_ids = set()
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.funding_organization_ids = []
 
     def process(self, grant, grant_flat, path_prefix):
         try:
             for num, organization in enumerate(grant['fundingOrganization']):
-                self.funding_organization_ids.add(organization['id'])
+                if organization['id'] not in self.funding_organization_ids:
+                    self.funding_organization_ids.append(organization['id'])
+                    self.json_locations.append(path_prefix + '/fundingOrganization/{}/id'.format(num))
         except KeyError:
             pass
-
         if len(self.funding_organization_ids) > 1:
             self.failed = True
 
-        self.heading = "There are {} funding organisation IDs listed".format(len(self.funding_organization_ids))
+        self.heading = "There are {} different funding organisation IDs listed".format(len(self.funding_organization_ids))
         self.message = "If you are expecting to be publishing data for multiple funders then this notice can be ignored, however if you are only publishing for a single funder then you should review your Funder ID column to see where multiple IDs have occurred."
 
 
