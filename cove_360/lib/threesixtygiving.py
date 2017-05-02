@@ -157,6 +157,20 @@ def check_company_number(company_number):
     return True
 
 
+def flatten_dict(grant, path=""):
+    for key, value in sorted(grant.items()):
+        if isinstance(value, list):
+            for num, item in enumerate(value):
+                if isinstance(item, dict):
+                    yield from flatten_dict(item, "{}/{}/{}".format(path, key, num))
+                else:
+                    yield ("{}/{}/{}".format(path, key, num), item)
+        elif isinstance(value, dict):
+            yield from flatten_dict(value, "{}/{}".format(path, key))
+        else:
+            yield ("{}/{}".format(path, key), value)
+
+
 class AdditionalTest():
     def __init__(self, **kw):
         self.grants = kw['grants']
@@ -166,7 +180,7 @@ class AdditionalTest():
         self.heading = None
         self.message = None
 
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         pass
 
     def produce_message(self):
@@ -194,7 +208,7 @@ class AdditionalTest():
 
 
 class ZeroAmountTest(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         try:
             # check for == 0 explicitly, as other falsey values will be caught
             # by schema validation, and also showing a message about 0 value
@@ -211,7 +225,7 @@ class ZeroAmountTest(AdditionalTest):
 
 
 class RecipientOrg360GPrefix(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         try:
             for num, organization in enumerate(grant['recipientOrganization']):
                 if organization['id'].lower().startswith('360g'):
@@ -226,7 +240,7 @@ class RecipientOrg360GPrefix(AdditionalTest):
 
 
 class FundingOrg360GPrefix(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         try:
             for num, organization in enumerate(grant['fundingOrganization']):
                 if organization['id'].lower().startswith('360g'):
@@ -241,7 +255,7 @@ class FundingOrg360GPrefix(AdditionalTest):
 
 
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         try:
             count_failure = False
             for num, organization in enumerate(grant['recipientOrganization']):
@@ -263,7 +277,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         try:
             count_failure = False
             for num, organization in enumerate(grant['fundingOrganization']):
@@ -285,7 +299,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
 
 
 class RecipientOrgCharityNumber(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         try:
             count_failure = False
             for num, organization in enumerate(grant['recipientOrganization']):
@@ -308,7 +322,7 @@ class RecipientOrgCharityNumber(AdditionalTest):
 
 
 class RecipientOrgCompanyNumber(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         try:
             count_failure = False
             for num, organization in enumerate(grant['recipientOrganization']):
@@ -332,10 +346,10 @@ class MoreThanOneFundingOrg(AdditionalTest):
         super().__init__(**kw)
         self.funding_organization_ids = []
 
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         try:
             for num, organization in enumerate(grant['fundingOrganization']):
-                if organization['id'] not in self.funding_organization_ids:
+                if organization.get('id') and organization.get('id') not in self.funding_organization_ids:
                     self.funding_organization_ids.append(organization['id'])
                     self.json_locations.append(path_prefix + '/fundingOrganization/{}/id'.format(num))
         except KeyError:
@@ -351,8 +365,9 @@ compiled_email_re = re.compile('[\w.-]+@[\w.-]+\.[\w.-]+')
 
 
 class LooksLikeEmail(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
-        for key, value in grant_flat.items():
+    def process(self, grant, path_prefix):
+        flattened_grant = OrderedDict(flatten_dict(grant))
+        for key, value in flattened_grant.items():
             if isinstance(value, str) and compiled_email_re.search(value):
                 self.failed = True
                 self.json_locations.append(path_prefix + key)
@@ -363,7 +378,7 @@ class LooksLikeEmail(AdditionalTest):
 
 
 class NoGrantProgramme(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         grant_programme = grant.get("grantProgramme")
         if not grant_programme:
             self.failed = True
@@ -375,7 +390,7 @@ class NoGrantProgramme(AdditionalTest):
 
 
 class NoBeneficiaryLocation(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         beneficiary_location = grant.get("beneficiaryLocation")
         if not beneficiary_location:
             self.failed = True
@@ -387,7 +402,7 @@ class NoBeneficiaryLocation(AdditionalTest):
 
 
 class TitleDescriptionSame(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         title = grant.get("title")
         description = grant.get("description")
         if title and description and title == description:
@@ -400,7 +415,7 @@ class TitleDescriptionSame(AdditionalTest):
 
 
 class OrganizationIdLooksInvalid(AdditionalTest):
-    def process(self, grant, grant_flat, path_prefix):
+    def process(self, grant, path_prefix):
         for org_type in ("fundingOrganization", "recipientOrganization"):
             orgs = grant.get(org_type, [])
             for num, org in enumerate(orgs):
@@ -423,33 +438,21 @@ class OrganizationIdLooksInvalid(AdditionalTest):
         self.message = "The IDs might not be valid for the registration agency that they refer to - for example, a 'GB-CHC' ID that contains an invalid charity number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 
-TEST_CLASSES = [ZeroAmountTest,
-                RecipientOrg360GPrefix,
-                FundingOrg360GPrefix,
-                RecipientOrgUnrecognisedPrefix,
-                FundingOrgUnrecognisedPrefix,
-                RecipientOrgCharityNumber,
-                RecipientOrgCompanyNumber,
-                MoreThanOneFundingOrg,
-                LooksLikeEmail,
-                NoGrantProgramme,
-                NoBeneficiaryLocation,
-                TitleDescriptionSame,
-                OrganizationIdLooksInvalid]
-
-
-def flatten_dict(grant, path=""):
-    for key, value in sorted(grant.items()):
-        if isinstance(value, list):
-            for num, item in enumerate(value):
-                if isinstance(item, dict):
-                    yield from flatten_dict(item, "{}/{}/{}".format(path, key, num))
-                else:
-                    yield ("{}/{}/{}".format(path, key, num), item)
-        elif isinstance(value, dict):
-            yield from flatten_dict(value, "{}/{}".format(path, key))
-        else:
-            yield ("{}/{}".format(path, key), value)
+TEST_CLASSES = [
+    ZeroAmountTest,
+    RecipientOrg360GPrefix,
+    FundingOrg360GPrefix,
+    RecipientOrgUnrecognisedPrefix,
+    FundingOrgUnrecognisedPrefix,
+    RecipientOrgCharityNumber,
+    RecipientOrgCompanyNumber,
+    MoreThanOneFundingOrg,
+    LooksLikeEmail,
+    NoGrantProgramme,
+    NoBeneficiaryLocation,
+    TitleDescriptionSame,
+    OrganizationIdLooksInvalid
+]
 
 
 def run_additional_checks(json_data, cell_source_map):
@@ -458,9 +461,8 @@ def run_additional_checks(json_data, cell_source_map):
     test_instances = [test_cls(grants=json_data['grants']) for test_cls in TEST_CLASSES]
 
     for num, grant in enumerate(json_data['grants']):
-        flattened_grant = OrderedDict(flatten_dict(grant))
         for test_instance in test_instances:
-            test_instance.process(grant, flattened_grant, 'grants/{}'.format(num))
+            test_instance.process(grant, 'grants/{}'.format(num))
 
     results = []
 
