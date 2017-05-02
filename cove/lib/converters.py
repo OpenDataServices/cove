@@ -77,6 +77,9 @@ def convert_spreadsheet(request, data, file_type, schema_url=None, pkg_schema_ur
             "heading_source_map": heading_source_map_path,
             "convert_titles": True,
             "root_id": config['root_id'],
+            "metatab_name": metatab_name,
+            "metatab_schema": pkg_schema_url,
+            "metatab_vertical_orientation": True
         })
 
     conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
