@@ -40,14 +40,14 @@ def server_url(request, live_server):
                                                   'There are some validation errors in your data, please check them in the table below',
                                                   'Value is not a string',
                                                   'Non-unique ID Values (first 3 shown)',
-                                                  'Grant identifiers:  2 IDs',
-                                                  'Funder organisation identifiers:  1 ID',
+                                                  'Grant identifiers:  2',
+                                                  'Funder organisation identifiers:  1',
                                                   '360G-wellcometrust-105182/Z/14/Z'], True),
     ('WellcomeTrust-grants_broken_grants.json', ['Invalid against Schema 18 Errors',
                                                  'Value is not a integer',
                                                  'Review 4 Grants',
-                                                 'Funder organisation identifiers:  2 IDs',
-                                                 'Recipient organisation identifiers:  2 IDs',
+                                                 'Funder organisation identifiers:  2',
+                                                 'Recipient organisation identifiers:  2',
                                                  '360G-wellcometrust-105177/Z/14/Z'], True),
     ('WellcomeTrust-grants_2_grants.xlsx', ['This file contains 2 grants from 1 funder to 1 recipient',
                                             'The grants were awarded in GBP with a total value of £331,495',
@@ -58,8 +58,8 @@ def server_url(request, live_server):
                                             '\'description\' is missing but required',
                                             'Sheet: grants Row: 2',
                                             'Review 2 Grants',
-                                            'Funder organisation identifiers:  1 ID',
-                                            'Recipient organisation identifiers:  1 ID',
+                                            'Funder organisation identifiers:  1',
+                                            'Recipient organisation identifiers:  1',
                                             '360G-wellcometrust-105177/Z/14/Z'], True),
     # Test conversion warnings are shown
     ('tenders_releases_2_releases.xlsx', ['Converted to JSON 5 Errors',
@@ -80,12 +80,12 @@ def server_url(request, live_server):
 def test_explore_360_url_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
     """
     TODO Test sequence: uploading JSON, files to Download only original, click convert,
-    new http request, 'Data Supplied' collapse. 'Download and Share' uncollapsed,
+    new http request, 'Data Summary' collapse. 'Download and Share' uncollapsed,
     converted files added.
 
-    TODO Test file with grants in different currencies, check right text in 'Data Supplied'
+    TODO Test file with grants in different currencies, check right text in 'Data Summary'
 
-    TODO Test file with grants awarded on different dates, check right text in 'Data Supplied'
+    TODO Test file with grants awarded on different dates, check right text in 'Data Summary'
     """
     with open(os.path.join('cove_360', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
@@ -101,6 +101,8 @@ def test_explore_360_url_input(server_url, browser, httpserver, source_filename,
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
 
+    data_url = browser.current_url
+
     # Click and un-collapse all explore sections
     all_sections = browser.find_elements_by_class_name('panel-heading')
     for section in all_sections:
@@ -110,6 +112,22 @@ def test_explore_360_url_input(server_url, browser, httpserver, source_filename,
 
     # Do the assertions
     check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
+
+    #refresh page to now check if tests still work after caching some data
+    browser.get(data_url)
+
+    if conversion_successful:
+        # Expand all sections with the expand all button this time
+        browser.find_element_by_link_text('Expand all').click()
+        time.sleep(0.5)
+
+    # Do the assertions again
+    check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
+
+    if conversion_successful:
+        # Check that the advanced view loads without errors
+        browser.get(data_url + '/advanced')
+        assert 'Advanced view' in browser.find_element_by_tag_name('body').text
 
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):

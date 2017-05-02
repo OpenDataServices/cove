@@ -10,7 +10,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from flattentool.json_input import BadlyFormedJSONError
 
-from cove.lib.exceptions import CoveInputDataError
+from cove.lib.exceptions import CoveInputDataError, cove_spreadsheet_conversion_error
 
 logger = logging.getLogger(__name__)
 config = settings.COVE_CONFIG
@@ -26,7 +26,8 @@ def filter_conversion_warnings(conversion_warnings):
     return out
 
 
-def convert_spreadsheet(request, data, file_type, schema_url=None, replace=False, xml=False):
+@cove_spreadsheet_conversion_error
+def convert_spreadsheet(request, data, file_type, schema_url=None, pkg_schema_url=None, metatab_name='Meta', replace=False, xml=False):
     context = {}
     if xml:
         output_file = 'unflattened.xml'
@@ -60,51 +61,39 @@ def convert_spreadsheet(request, data, file_type, schema_url=None, replace=False
     else:
         input_name = data.original_file.file.name
 
-    try:
-        flattentool_options = {
-            "output_name": converted_path,
-            "input_format": file_type,
-            "root_list_path": config['root_list_path'],
-            "encoding": encoding,
-        }
+    flattentool_options = {
+        "output_name": converted_path,
+        "input_format": file_type,
+        "root_list_path": config['root_list_path'],
+        "encoding": encoding,
+    }
 
-        if xml:
-            flattentool_options["xml"] = True
-        else:
-            flattentool_options.update({
-                "schema": schema_url,
-                "cell_source_map": cell_source_map_path,
-                "heading_source_map": heading_source_map_path,
-                "convert_titles": True,
-                "root_id": config['root_id'],
-            })
-
-        conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
-        if not os.path.exists(converted_path) or not os.path.exists(cell_source_map_path) or replace:
-            with warnings.catch_warnings(record=True) as conversion_warnings:
-                flattentool.unflatten(
-                    input_name,
-                    **flattentool_options
-                )
-                context['conversion_warning_messages'] = filter_conversion_warnings(conversion_warnings)
-            with open(conversion_warning_cache_path, 'w+') as fp:
-                json.dump(context['conversion_warning_messages'], fp)
-        elif os.path.exists(conversion_warning_cache_path):
-            with open(conversion_warning_cache_path) as fp:
-                context['conversion_warning_messages'] = json.load(fp)
-
-        context['converted_file_size'] = os.path.getsize(converted_path)
-    except Exception as err:
-        logger.exception(err, extra={
-            'request': request,
-            })
-        raise CoveInputDataError({
-            'sub_title': _("Sorry we can't process that data"),
-            'link': 'index',
-            'link_text': _('Try Again'),
-            'msg': _('We think you tried to supply a spreadsheet, but we failed to convert it to JSON.'
-                     '\n\nError message: {}'.format(repr(err)))
+    if xml:
+        flattentool_options["xml"] = True
+    else:
+        flattentool_options.update({
+            "schema": schema_url,
+            "cell_source_map": cell_source_map_path,
+            "heading_source_map": heading_source_map_path,
+            "convert_titles": True,
+            "root_id": config['root_id'],
         })
+
+    conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
+    if not os.path.exists(converted_path) or not os.path.exists(cell_source_map_path) or replace:
+        with warnings.catch_warnings(record=True) as conversion_warnings:
+            flattentool.unflatten(
+                input_name,
+                **flattentool_options
+            )
+            context['conversion_warning_messages'] = filter_conversion_warnings(conversion_warnings)
+        with open(conversion_warning_cache_path, 'w+') as fp:
+            json.dump(context['conversion_warning_messages'], fp)
+    elif os.path.exists(conversion_warning_cache_path):
+        with open(conversion_warning_cache_path) as fp:
+            context['conversion_warning_messages'] = json.load(fp)
+
+    context['converted_file_size'] = os.path.getsize(converted_path)
 
     context.update({
         'conversion': 'unflatten',
@@ -129,9 +118,10 @@ def convert_json(request, data, schema_url, replace=False):
 
     try:
         conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
-        if not os.path.exists(converted_path + '.xlsx') or replace:
+        conversion_exists = os.path.exists(converted_path + '.xlsx')
+        if not conversion_exists or replace:
             with warnings.catch_warnings(record=True) as conversion_warnings:
-                if request.POST.get('flatten') or replace:
+                if request.POST.get('flatten') or (replace and conversion_exists):
                     flattentool.flatten(data.original_file.file.name, **flatten_kwargs)
                 else:
                     return {'conversion': 'flattenable'}

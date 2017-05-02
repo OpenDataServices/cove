@@ -74,35 +74,6 @@ class SchemaOCDS(SchemaJsonMixin):
         self.release_pkg_schema_url = urljoin(self.schema_host, self.release_pkg_schema_name)
         self.record_pkg_schema_url = urljoin(self.schema_host, self.record_pkg_schema_name)
 
-    def apply_extensions(self, schema_obj):
-        if not self.extensions:
-            return
-        for extensions_descriptor_url in self.extensions.keys():
-            i = extensions_descriptor_url.rfind('/')
-            url = '{}/{}'.format(extensions_descriptor_url[:i], 'release-schema.json')
-
-            try:
-                extension = requests.get(url)
-            except requests.exceptions.RequestException:
-                self.invalid_extension[extensions_descriptor_url] = 'fetching failed'
-                continue
-            if extension.ok:
-                try:
-                    extension_data = extension.json()
-                except json.JSONDecodeError:
-                    self.invalid_extension[extensions_descriptor_url] = 'invalid JSON'
-                    continue
-            else:
-                self.invalid_extension[extensions_descriptor_url] = '{}: {}'.format(extension.status_code,
-                                                                                    extension.reason.lower())
-                continue
-
-            schema_obj = json_merge_patch.merge(schema_obj, extension_data)
-            extensions_descriptor = requests.get(extensions_descriptor_url).json()
-            self.extensions[extensions_descriptor_url] = (url, extensions_descriptor['name'],
-                                                          extensions_descriptor['description'])
-            self.extended = True
-
     def get_release_schema_obj(self, deref=False):
         release_schema_obj = self._release_schema_obj
         if self.extended_schema_file:
@@ -133,13 +104,55 @@ class SchemaOCDS(SchemaJsonMixin):
                 package_schema_obj = self.deref_schema(self.release_pkg_schema_str)
         return package_schema_obj
 
+    def apply_extensions(self, schema_obj):
+        if not self.extensions:
+            return
+        for extensions_descriptor_url in self.extensions.keys():
+            i = extensions_descriptor_url.rfind('/')
+            url = '{}/{}'.format(extensions_descriptor_url[:i], 'release-schema.json')
+
+            try:
+                extension = requests.get(url)
+            except requests.exceptions.RequestException:
+                self.invalid_extension[extensions_descriptor_url] = 'fetching failed'
+                continue
+            if extension.ok:
+                try:
+                    extension_data = extension.json()
+                except json.JSONDecodeError:
+                    self.invalid_extension[extensions_descriptor_url] = 'invalid JSON'
+                    continue
+            else:
+                self.invalid_extension[extensions_descriptor_url] = '{}: {}'.format(extension.status_code,
+                                                                                    extension.reason.lower())
+                continue
+
+            schema_obj = json_merge_patch.merge(schema_obj, extension_data)
+            extensions_descriptor = requests.get(extensions_descriptor_url).json()
+            self.extensions[extensions_descriptor_url] = (url, extensions_descriptor['name'],
+                                                          extensions_descriptor['description'])
+            self.extended = True
+
     def create_extended_release_schema_file(self, upload_dir, upload_url):
         filepath = os.path.join(upload_dir, 'extended_release_schema.json')
-        if not self.extended or os.path.exists(filepath):
+
+        # Always replace any existing extended schema file
+        if os.path.exists(filepath):
+            os.remove(filepath)
+            self.extended_schema_file = None
+            self.extended_schema_url = None
+
+        if not self.extensions:
             return
+
+        release_schema_obj = self.get_release_schema_obj()
+        if not self.extended:
+            return
+
         with open(filepath, 'w') as fp:
-            release_schema_str = json.dumps(self.get_release_schema_obj(), indent=4)
+            release_schema_str = json.dumps(release_schema_obj, indent=4)
             fp.write(release_schema_str)
+
         self.extended_schema_file = filepath
         self.extended_schema_url = urljoin(upload_url, 'extended_release_schema.json')
 

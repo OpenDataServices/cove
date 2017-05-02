@@ -1,7 +1,6 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
-from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
 from django.template import Context, loader
@@ -11,7 +10,7 @@ from django.http import HttpResponseServerError
 def handler500(request):
     """500 error handler which includes ``request`` in the context.
     """
-    
+
     context = {
         'request': request,
     }
@@ -32,4 +31,4 @@ urlpatterns = [
     url(r'^test/500', cause500),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^i18n/', include('django.conf.urls.i18n'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

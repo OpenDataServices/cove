@@ -3,6 +3,15 @@
 {% load humanize %}
 {% load cove_tags %}
 
+{% block header_button %}
+{{block.super}}
+<div class="expand-collapse-all">
+<a href="#" onclick="$('.collapse').collapse('show')">Expand all</a>
+/
+<a href="#" onclick="$('.collapse').collapse('hide')">Collapse all</a>
+</div>
+{% endblock %}
+
 {% block explore_content %}
 
   {% block data_supplied %}
@@ -10,7 +19,7 @@
       <div class="panel-heading" data-toggle="collapse" data-target="#data-supplied-body" {% if conversion == 'flattenable' %}aria-expanded="true"{% endif %}>
         <h3 class="panel-title panel-title-explore"> 
           <span class="font-tick tick" aria-hidden="true"></span>
-          Data Supplied
+          Data Summary
           <span class="pull-right glyphicon glyphicon-collapse-{% if conversion == 'flattenable' %}up{% else %}down{% endif %}"></span>
         </h3>
       </div>
@@ -176,7 +185,7 @@
         <tbody>
         {% for message, json_location, spreadsheet_location in additional_checks %}
         <tr>
-          <td>{{message}}</td>
+          <td><strong>{{message.heading}}</strong><br>{{message.message}}</td>
           {% if file_type == 'xlsx' or file_type == 'csv' %}
             <td style="white-space: nowrap">
               <ul class="list-unstyled">
@@ -232,7 +241,7 @@
             <strong>
               {% if grants_aggregates.unique_ids|length %}<a data-toggle="modal" data-target=".unique-ids">{% endif %}
               {{ grants_aggregates.unique_ids|length}}
-              {% if grants_aggregates.unique_ids|length %}{% blocktrans count n_ids=grants_aggregates.unique_ids|length %} ID{% plural %} IDs{% endblocktrans %}</a>{% endif %}
+              {% if grants_aggregates.unique_ids|length %}</a>{% endif %}
             </strong>
           </li>
           <li>
@@ -240,7 +249,7 @@
             <strong>
               {% if grants_aggregates.distinct_funding_org_identifier|length %}<a data-toggle="modal" data-target=".distinct-funding-org-identifier">{% endif %}
               {{ grants_aggregates.distinct_funding_org_identifier|length}}
-              {% if grants_aggregates.distinct_funding_org_identifier|length %}{% blocktrans count n_ids=grants_aggregates.distinct_funding_org_identifier|length %} ID{% plural %} IDs{% endblocktrans %}</a>
+              {% if grants_aggregates.distinct_funding_org_identifier|length %}</a>
               {% endif %}
             </strong>
           </li>
@@ -249,7 +258,7 @@
             <strong>
               {% if grants_aggregates.distinct_recipient_org_identifier|length %}<a data-toggle="modal" data-target=".distinct-recipient-org-identifier">{% endif %}
               {{ grants_aggregates.distinct_recipient_org_identifier|length}}
-              {% if grants_aggregates.distinct_recipient_org_identifier|length %}{% blocktrans count n_ids=grants_aggregates.distinct_recipient_org_identifier|length %} ID{% plural %} IDs{% endblocktrans %}</a>{% endif %}
+              {% if grants_aggregates.distinct_recipient_org_identifier|length %}</a>{% endif %}
             </strong>
           </li>
         </ul>
@@ -320,13 +329,11 @@
             </li>
             {% elif conversion == 'flatten' %}
             <li>
-              <a href="{{converted_url}}.xlsx">{{xlsx}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
+              <a href="{{converted_url}}-titles.xlsx">{{xlsx}} ({% trans converted %})</a> {{converted_file_size_titles|filesizeformat}}
             </li>
-              {% if request.cove_config.convert_titles %}
-              <li>
-                <a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({% trans converted %})</a> {{converted_file_size_titles|filesizeformat}}
-              </li>
-              {% endif %}
+            <li class="list-unstyled">
+              <sub>{% trans "You can also download an" %}<a href="{{converted_url}}.xlsx"> {% trans "Excel Spreadsheet (.xlsx) with JSON field names" %}</a> {% trans "instead of titles as column headers" %} ({{converted_file_size|filesizeformat}})</sub>
+            </li>
             {% endif %}
           {% endif %}
         </ul>
