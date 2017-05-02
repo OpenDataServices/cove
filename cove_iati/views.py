@@ -5,7 +5,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from cove.lib.converters import convert_spreadsheet
-from cove.lib.exceptions import CoveWebInputDataError
+from cove.lib.exceptions import cove_web_input_error
 from cove.views import explore_data_context
 
 from cove.input.models import SuppliedData
@@ -51,7 +51,7 @@ def input_iati(request):
     return input(request, form_classes=iati_form_classes, text_file_name='text.xml')
 
 
-@CoveWebInputDataError.error_page
+@cove_web_input_error
 def explore_iati(request, pk):
     #schema_360 = Schema360()
     context, db_data, error = explore_data_context(request, pk)
