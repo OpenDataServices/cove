@@ -1,3 +1,4 @@
+from lxml import etree
 import logging
 
 from django.shortcuts import render
@@ -59,9 +60,15 @@ def explore_iati(request, pk):
         return error
     file_type = context['file_type']
     if file_type != 'xml':
-        # open the data first so we can inspect for record package
         context.update(convert_spreadsheet(request, db_data, file_type, xml=True))
-        #with open(context['converted_path'], encoding='utf-8') as fp:
-        #    json_data = json.load(fp)
+
+        with open(context['converted_path']) as fp, open('IATI-Schemas/iati-activities-schema.xsd') as schema_fp:
+            tree = etree.parse(fp)
+            schema_tree = etree.parse(schema_fp)
+            schema = etree.XMLSchema(schema_tree)
+            schema.validate(tree)
+            for error in schema.error_log:
+                print(error)
+                print(error.path)
 
     return render(request, 'cove_iati/explore.html', context)

@@ -1,0 +1,3 @@
+-r requirements.in
+Cython==0.25.2
+-e git+https://github.com/lxml/lxml.git@dd8f17c958b5af133c5f4fe623d682952313e7ea#egg=lxml
