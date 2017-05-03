@@ -326,13 +326,15 @@ RESULTS = [
                   "values being entered into this field.")},
      ['grants/0/recipientOrganization/0/companyNumber'],
      [['grants', 'L', 2, 'Recipient Org:Company Number']]),
-    ({'heading': "There are 3 funding organisation IDs listed",
+    ({'heading': "There are 3 different funding organisation IDs listed",
       'message': ("If you are expecting to be publishing data for multiple funders then "
                   "this notice can be ignored, however if you are only publishing for a "
                   "single funder then you should review your Funder ID column to see where "
                   "multiple IDs have occurred.")},
-     [],
-     []),
+     ['grants/0/fundingOrganization/0/id', 'grants/1/fundingOrganization/0/id', 'grants/2/fundingOrganization/0/id'],
+     [['grants', 'V', 2, 'Funding Org:Identifier'],
+      ['grants', 'V', 3, 'Funding Org:Identifier'],
+      ['grants', 'V', 4, 'Funding Org:Identifier']]),
     ({'heading': "2 grants contain text that looks like an email address",
       'message': ("This may indicate that the data contains personal data, use and "
                   "distribution of which is restricted by the Data Protection Act. You "
