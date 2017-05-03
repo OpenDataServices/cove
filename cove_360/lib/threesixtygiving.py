@@ -414,6 +414,18 @@ class TitleDescriptionSame(AdditionalTest):
         self.message = "Users may find that the data is less useful as they are unable to discover more about the grants. Consider including a more detailed description if you have one."
 
 
+class TitleLength(AdditionalTest):
+    def process(self, grant, path_prefix):
+        title = grant.get("title", '')
+        if len(title) > 140:
+            self.failed = True
+            self.count += 1
+            self.json_locations.append(path_prefix + '/title')
+
+        self.heading = self.format_heading_count("a title longer than recommended")
+        self.message = "Titles for grant activities should be under 140 characters long."
+
+
 class OrganizationIdLooksInvalid(AdditionalTest):
     def process(self, grant, path_prefix):
         for org_type in ("fundingOrganization", "recipientOrganization"):
@@ -451,6 +463,7 @@ TEST_CLASSES = [
     NoGrantProgramme,
     NoBeneficiaryLocation,
     TitleDescriptionSame,
+    TitleLength,
     OrganizationIdLooksInvalid
 ]
 
