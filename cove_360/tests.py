@@ -57,8 +57,9 @@ GRANTS = {
                                            'companyNumber': 'RC000659',
                                            'id': 'GB-UNKNOW-RC000659',
                                            'name': 'UNIVERSITY OF LEICESTER'}],
-                'title': 'Exceptional and Extraordinary: unruly bodies and minds '
-                         'in the medical museum. '},
+                'title': ('Exceptional and Extraordinary: unruly bodies and minds in the medical '
+                          'museum - unique film, dance, performance and comedy commissions that draw '
+                          'on museum collections to explore our problematic attitudes towards difference')},
                {'Co-applicant(s)': ' ',
                 'Department': 'Department of Museum Studies',
                 'Full name of applicant': 'Prof Richard Sandell',
@@ -352,12 +353,16 @@ RESULTS = [
      [['grants', 'A', 2, 'Identifier'],
       ['grants', 'A', 3, 'Identifier'],
       ['grants', 'A', 4, 'Identifier']]),
-    ({'heading': "2 grants have a title and a description that are the same",
+    ({'heading': "1 grant has a title and a description that are the same",
       'message': ("Users may find that the data is less useful as they are unable to "
                   "discover more about the grants. Consider including a more detailed "
                   "description if you have one.")},
-     ['grants/1/description', 'grants/2/description'],
-     [['grants', 'Z', 3, 'Description'], ['grants', 'Z', 4, 'Description']]),
+     ['grants/2/description'],
+     [['grants', 'Z', 4, 'Description']]),
+    ({'heading': "1 grant has a title longer than recommended",
+      'message': "Titles for grant activities should be under 140 characters long."},
+     ['grants/1/title'],
+     [['grants', 'O', 3, 'Title']]),
     ({'heading': "2 grants have funder or recipient organisation IDs that might not be valid",
       'message': ("The IDs might not be valid for the registration agency that they refer to "
                   "- for example, a 'GB-CHC' ID that contains an invalid charity number. Common "
