@@ -91,7 +91,14 @@ Steps to installation:
     pip install -r requirements_dev.txt
     python manage.py migrate
     python manage.py compilemessages
-    python manage.py runserver
+
+Then, for 360Giving run:
+.. code:: bash
+    DJANGO_SETTINGS_MODULE=cove_360.settings python manage.py runserver
+
+Or for OCDS run:
+.. code:: bash
+    DJANGO_SETTINGS_MODULE=cove_ocds.settings python manage.py runserver
 
 Follow the instructions in your terminal to open the aplication in your browser.
 
