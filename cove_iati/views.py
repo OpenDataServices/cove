@@ -10,6 +10,7 @@ from cove.lib.exceptions import cove_web_input_error
 from cove.input.models import SuppliedData
 from cove.input.views import UrlForm, data_input
 from cove.views import explore_data_context
+from .lib.schema import SchemaIATI
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +45,7 @@ def data_input_iati(request):
 
 @cove_web_input_error
 def explore_iati(request, pk):
-    #schema_360 = Schema360()
+    schema_aiti = SchemaIATI()
     context, db_data, error = explore_data_context(request, pk)
     if error:
         return error
@@ -52,7 +53,7 @@ def explore_iati(request, pk):
     if file_type != 'xml':
         context.update(convert_spreadsheet(request, db_data, file_type, xml=True))
 
-        with open(context['converted_path']) as fp, open('IATI-Schemas/iati-activities-schema.xsd') as schema_fp:
+        with open(context['converted_path']) as fp, open(schema_aiti.activity_schema) as schema_fp:
             tree = etree.parse(fp)
             schema_tree = etree.parse(schema_fp)
             schema = etree.XMLSchema(schema_tree)
