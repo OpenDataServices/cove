@@ -37,7 +37,7 @@ default_form_classes = {
 }
 
 
-def input(request, form_classes=default_form_classes, text_file_name='test.json'):
+def data_input(request, form_classes=default_form_classes, text_file_name='test.json'):
     forms = {form_name: form_class() for form_name, form_class in form_classes.items()}
     request_data = None
     if "source_url" in request.GET:

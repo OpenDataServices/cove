@@ -5,8 +5,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 
-urlpatterns += [
-    url(r'^$', 'cove_iati.views.input_iati', name='index'),
+urlpatterns = [
+    url(r'^$', 'cove_iati.views.data_input_iati', name='index'),
     url(r'^data/(.+)$', 'cove_iati.views.explore_iati', name='explore'),
 ] + urlpatterns
 

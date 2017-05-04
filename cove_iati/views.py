@@ -1,16 +1,15 @@
-from lxml import etree
 import logging
 
 from django.shortcuts import render
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from lxml import etree
 
 from cove.lib.converters import convert_spreadsheet
 from cove.lib.exceptions import cove_web_input_error
-from cove.views import explore_data_context
-
 from cove.input.models import SuppliedData
-from cove.input.views import input
+from cove.input.views import UrlForm, data_input
+from cove.views import explore_data_context
 
 logger = logging.getLogger(__name__)
 
@@ -21,15 +20,6 @@ class UploadForm(forms.ModelForm):
         fields = ['original_file']
         labels = {
             'original_file': _('Upload a file (.csv, .xlsx, .xml)')
-        }
-
-
-class UrlForm(forms.ModelForm):
-    class Meta:
-        model = SuppliedData
-        fields = ['source_url']
-        labels = {
-            'source_url': _('Supply a URL')
         }
 
 
@@ -48,8 +38,8 @@ def common_checks_iati(context, db_data, json_data, schema_obj):
     return context
 
 
-def input_iati(request):
-    return input(request, form_classes=iati_form_classes, text_file_name='text.xml')
+def data_input_iati(request):
+    return data_input(request, form_classes=iati_form_classes, text_file_name='text.xml')
 
 
 @cove_web_input_error
