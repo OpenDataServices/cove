@@ -104,12 +104,10 @@
           <br>
           <p class="explanation">&nbsp;{% trans "There are some <strong>validation errors</strong> in your data, please check them in the table below." %}</p>
           <br>
-          {#
           {% include "validation_table.html" %}
           {% for error, values in validation_errors %}
              {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type %}
           {% endfor %}
-          #}
         {% endif %}
       </div>
     </div>

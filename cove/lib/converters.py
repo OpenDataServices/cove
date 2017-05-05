@@ -62,24 +62,24 @@ def convert_spreadsheet(request, data, file_type, schema_url=None, pkg_schema_ur
         input_name = data.original_file.file.name
 
     flattentool_options = {
-        "output_name": converted_path,
-        "input_format": file_type,
-        "root_list_path": config['root_list_path'],
-        "encoding": encoding,
+        'output_name': converted_path,
+        'input_format': file_type,
+        'root_list_path': config['root_list_path'],
+        'encoding': encoding,
+        'cell_source_map': cell_source_map_path,
+        'heading_source_map': heading_source_map_path,
+        'metatab_schema': pkg_schema_url,
+        'metatab_name': metatab_name,
+        'metatab_vertical_orientation': True
     }
 
     if xml:
-        flattentool_options["xml"] = True
+        flattentool_options['xml'] = True
     else:
         flattentool_options.update({
-            "schema": schema_url,
-            "cell_source_map": cell_source_map_path,
-            "heading_source_map": heading_source_map_path,
-            "convert_titles": True,
-            "root_id": config['root_id'],
-            "metatab_name": metatab_name,
-            "metatab_schema": pkg_schema_url,
-            "metatab_vertical_orientation": True
+            'schema': schema_url,
+            'convert_titles': True,
+            'root_id': config['root_id'],
         })
 
     conversion_warning_cache_path = os.path.join(data.upload_dir(), 'conversion_warning_messages.json')
