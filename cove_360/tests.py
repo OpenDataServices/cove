@@ -57,8 +57,9 @@ GRANTS = {
                                            'companyNumber': 'RC000659',
                                            'id': 'GB-UNKNOW-RC000659',
                                            'name': 'UNIVERSITY OF LEICESTER'}],
-                'title': 'Exceptional and Extraordinary: unruly bodies and minds '
-                         'in the medical museum. '},
+                'title': ('Exceptional and Extraordinary: unruly bodies and minds in the medical '
+                          'museum - unique film, dance, performance and comedy commissions that draw '
+                          'on museum collections to explore our problematic attitudes towards difference')},
                {'Co-applicant(s)': ' ',
                 'Department': 'Department of Museum Studies',
                 'Full name of applicant': 'Prof Richard Sandell',
@@ -325,13 +326,15 @@ RESULTS = [
                   "values being entered into this field.")},
      ['grants/0/recipientOrganization/0/companyNumber'],
      [['grants', 'L', 2, 'Recipient Org:Company Number']]),
-    ({'heading': "There are 3 funding organisation IDs listed",
+    ({'heading': "There are 3 different funding organisation IDs listed",
       'message': ("If you are expecting to be publishing data for multiple funders then "
                   "this notice can be ignored, however if you are only publishing for a "
                   "single funder then you should review your Funder ID column to see where "
                   "multiple IDs have occurred.")},
-     [],
-     []),
+     ['grants/0/fundingOrganization/0/id', 'grants/1/fundingOrganization/0/id', 'grants/2/fundingOrganization/0/id'],
+     [['grants', 'V', 2, 'Funding Org:Identifier'],
+      ['grants', 'V', 3, 'Funding Org:Identifier'],
+      ['grants', 'V', 4, 'Funding Org:Identifier']]),
     ({'heading': "2 grants contain text that looks like an email address",
       'message': ("This may indicate that the data contains personal data, use and "
                   "distribution of which is restricted by the Data Protection Act. You "
@@ -352,12 +355,16 @@ RESULTS = [
      [['grants', 'A', 2, 'Identifier'],
       ['grants', 'A', 3, 'Identifier'],
       ['grants', 'A', 4, 'Identifier']]),
-    ({'heading': "2 grants have a title and a description that are the same",
+    ({'heading': "1 grant has a title and a description that are the same",
       'message': ("Users may find that the data is less useful as they are unable to "
                   "discover more about the grants. Consider including a more detailed "
                   "description if you have one.")},
-     ['grants/1/description', 'grants/2/description'],
-     [['grants', 'Z', 3, 'Description'], ['grants', 'Z', 4, 'Description']]),
+     ['grants/2/description'],
+     [['grants', 'Z', 4, 'Description']]),
+    ({'heading': "1 grant has a title longer than recommended",
+      'message': "Titles for grant activities should be under 140 characters long."},
+     ['grants/1/title'],
+     [['grants', 'O', 3, 'Title']]),
     ({'heading': "2 grants have funder or recipient organisation IDs that might not be valid",
       'message': ("The IDs might not be valid for the registration agency that they refer to "
                   "- for example, a 'GB-CHC' ID that contains an invalid charity number. Common "

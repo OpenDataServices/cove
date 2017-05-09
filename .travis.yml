@@ -8,8 +8,9 @@ before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   # install Java 8 as required by vnu.jar
+  # install gettext for translations
   - sudo apt-get update
-  - sudo apt-get install oracle-java8-installer
+  - sudo apt-get install oracle-java8-installer gettext
   - sudo update-java-alternatives -s java-8-oracle
 
 install: 

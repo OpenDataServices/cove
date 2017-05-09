@@ -30,17 +30,22 @@ Planned deployment date:
 Before merge:
 - [ ] Re-run translations if any text has changed
 - [ ] Create a new branch `release-{{YYYYMM}}` if it doesn't exist.
-- [ ] Deploy to a subdomain on the dev server http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/ - redo this for any additional commits
+- [ ] Deploy to a subdomain on `cove-dev` for OCDS http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/
 - [ ] Check that the correct commit has been deployed using the link in the footer http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/
-- [ ] Run `CUSTOM_SERVER_URL=http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/ py.test fts` - redo this for each redeploy to the subomdain
+- [ ] Run `BROWSER=PhantomJS CUSTOM_SERVER_URL=http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/ DJANGO_SETTINGS_MODULE=cove_ocds.settings py.test cove_ocds/tests_functional.py` - redo this for each redeploy to the subomdain
+- [ ] Deploy to a subdomain on the 360 dev server http://release-{{YYYYMM}}.cove-360-dev.default.threesixtygiving.uk0.bigv.io/
+- [ ] Check that the correct commit has been deployed using the link in the footer http://release-{{YYYYMM}}.cove-360-dev.default.threesixtygiving.uk0.bigv.io/ 
+- [ ] Run `BROWSER=PhantomJS CUSTOM_SERVER_URL=http://release-{{YYYYMM}}.cove-360-dev.default.threesixtygiving.uk0.bigv.io/  DJANGO_SETTINGS_MODULE=cove_360.settings py.test cove_360/tests_functional.py` - redo this for each redeploy to the subomdain
+
+Steps above need redoing for additional commits.
 
 After merge:
-- [ ] Run salt highstate on `cove-live`
+- [ ] Run salt highstate on `cove-360-live`
 - [ ] Check that the correct commit has been deployed using the link in the footer http://cove.opendataservices.coop/
-- [ ] Run `CUSTOM_SERVER_URL=http://cove.opendataservices.coop/ PREFIX_360=/360/ py.test fts` on a local copy of the updated live branch
+- [ ] Run `BROWSER=PhantomJS CUSTOM_SERVER_URL=https://dataquality.threesixtygiving.org/ DJANGO_SETTINGS_MODULE=cove_360.settings py.test cove_360/tests_functional.py` on a local copy of the updated live branch
 - [ ] Run salt highstate on `cove-live-ocds`
 - [ ] Check that the correct commit has been deployed using the link in the footer http://standard.open-contracting.org/validator/
-- [ ] Run `CUSTOM_SERVER_URL=http://standard.open-contracting.org PREFIX_OCDS=/validator/ py.test fts ` on a local copy of the updated live branch
+- [ ] Run `BROWSER=PhantomJS CUSTOM_SERVER_URL=http://dev.cove.opendataservices.coop/ DJANGO_SETTINGS_MODULE=cove_ocds.settings py.test cove_ocds/tests_functional.py` on a local copy of the updated live branch
 - [ ] Check that changes on live are merged back into master too
 ```
 
