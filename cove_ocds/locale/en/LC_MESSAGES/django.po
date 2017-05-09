@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-05 14:53+0000\n"
+"POT-Creation-Date: 2017-05-03 11:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -663,31 +663,19 @@ msgstr ""
 msgid "Procuring Entity:"
 msgstr ""
 
-#: cove_ocds/tests.py:416 cove_ocds/views.py:89
+#: cove_ocds/tests.py:416 cove_ocds/views.py:60
 msgid "Wrong schema version"
 msgstr ""
 
-#: cove_ocds/views.py:61
-msgid "Sorry we can't process that data"
-msgstr ""
-
-#: cove_ocds/views.py:63 cove_ocds/views.py:80 cove_ocds/views.py:91
-msgid "Try Again"
-msgstr ""
-
-#: cove_ocds/views.py:64
-msgid ""
-"We think you tried to upload a JSON file, but it is not well formed JSON.\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
-"span> <strong>Error message:</strong> {}"
-msgstr ""
-
-#: cove_ocds/views.py:77
+#: cove_ocds/views.py:46
 msgid "Something unexpected happened"
 msgstr ""
 
-#: cove_ocds/views.py:81
+#: cove_ocds/views.py:49 cove_ocds/views.py:62 cove_ocds/views.py:93
+msgid "Try Again"
+msgstr ""
+
+#: cove_ocds/views.py:50
 msgid ""
 "We think you tried to run your data against an unrecognised version of the "
 "schema.\n"
@@ -697,11 +685,11 @@ msgid ""
 "for the schema version"
 msgstr ""
 
-#: cove_ocds/views.py:85 cove_ocds/views.py:96
+#: cove_ocds/views.py:54 cove_ocds/views.py:67
 msgid "{} is not a valid schema version"
 msgstr ""
 
-#: cove_ocds/views.py:92
+#: cove_ocds/views.py:63
 msgid ""
 "The value for the <em>\"version\"</em> field in your data is not a "
 "recognised OCDS schema version.\n"
@@ -709,4 +697,16 @@ msgid ""
 "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
 "span> <strong>Error message: </strong> <em>{}</em> is not a recognised "
 "schema version choice"
+msgstr ""
+
+#: cove_ocds/views.py:91
+msgid "Sorry we can't process that data"
+msgstr ""
+
+#: cove_ocds/views.py:94
+msgid ""
+"We think you tried to upload a JSON file, but it is not well formed JSON.\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
+"span> <strong>Error message:</strong> {}"
 msgstr ""

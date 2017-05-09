@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-05 14:53+0000\n"
+"POT-Creation-Date: 2017-05-03 11:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
@@ -729,33 +729,19 @@ msgstr "Comprador:"
 msgid "Procuring Entity:"
 msgstr "Entidad Contratante:"
 
-#: cove_ocds/tests.py:416 cove_ocds/views.py:89
+#: cove_ocds/tests.py:416 cove_ocds/views.py:60
 msgid "Wrong schema version"
 msgstr "Versión incorrecta del esquema"
 
-#: cove_ocds/views.py:61
-msgid "Sorry we can't process that data"
-msgstr "Lo sentimos, no podemos procesar esos datos"
-
-#: cove_ocds/views.py:63 cove_ocds/views.py:80 cove_ocds/views.py:91
-msgid "Try Again"
-msgstr "Inténtalo de nuevo"
-
-#: cove_ocds/views.py:64
-msgid ""
-"We think you tried to upload a JSON file, but it is not well formed JSON.\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Error message:</strong> {}"
-msgstr ""
-"Pensamos que está intentando enviar un archivo JSON, pero no está bien formado JSON\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Mensaje de error:</strong> {}"
-
-#: cove_ocds/views.py:77
+#: cove_ocds/views.py:46
 msgid "Something unexpected happened"
 msgstr "Ha sucedido algo inesperado "
 
-#: cove_ocds/views.py:81
+#: cove_ocds/views.py:49 cove_ocds/views.py:62 cove_ocds/views.py:93
+msgid "Try Again"
+msgstr "Inténtalo de nuevo"
+
+#: cove_ocds/views.py:50
 msgid ""
 "We think you tried to run your data against an unrecognised version of the schema.\n"
 "\n"
@@ -765,11 +751,11 @@ msgstr ""
 "\n"
 "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Mensaje del error:</strong> <em>{}</em> no es una opción reconocida como versión del esquema"
 
-#: cove_ocds/views.py:85 cove_ocds/views.py:96
+#: cove_ocds/views.py:54 cove_ocds/views.py:67
 msgid "{} is not a valid schema version"
 msgstr "{} no es una versión válida del esquema"
 
-#: cove_ocds/views.py:92
+#: cove_ocds/views.py:63
 msgid ""
 "The value for the <em>\"version\"</em> field in your data is not a recognised OCDS schema version.\n"
 "\n"
@@ -778,3 +764,17 @@ msgstr ""
 "El valor del campo <em>\"versión\"</em> en sus datos no es una versión reconocida del esquema del OCDS.\n"
 "\n"
 "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Mensaje del error: </strong> <em>{}</em> no es una opción reconocida como versión del esquema"
+
+#: cove_ocds/views.py:91
+msgid "Sorry we can't process that data"
+msgstr "Lo sentimos, no podemos procesar esos datos"
+
+#: cove_ocds/views.py:94
+msgid ""
+"We think you tried to upload a JSON file, but it is not well formed JSON.\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Error message:</strong> {}"
+msgstr ""
+"Pensamos que está intentando enviar un archivo JSON, pero no está bien formado JSON\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Mensaje de error:</strong> {}"
