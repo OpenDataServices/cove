@@ -85,6 +85,7 @@ def common_checks_context_iati(db_data, data_file, file_type):
         cell_source_map_paths = cell_source_map.keys()
         for error_path, error_message in errors_all.items():
             validation_key = json.dumps(['', error_message])
+            validation_errors[validation_key] = []
             for cell_path in cell_source_map_paths:
                 if validation_errors.get(validation_key) and len(validation_errors[validation_key]) == 3:
                     break
@@ -104,8 +105,6 @@ def common_checks_context_iati(db_data, data_file, file_type):
                         }
                     if validation_errors.get(validation_key):
                         validation_errors[validation_key].append(sources)
-                    else:
-                        validation_errors[validation_key] = [sources]
 
         print(validation_errors)
         with open(validation_errors_path, 'w+') as validation_error_fp:
