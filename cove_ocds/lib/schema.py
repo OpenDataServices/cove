@@ -54,7 +54,7 @@ class SchemaOCDS(SchemaJsonMixin):
                 self.version = select_version
                 self.schema_host = self.version_choices[select_version][1]
 
-        if release_data:
+        if hasattr(release_data, 'get'):
             data_extensions = release_data.get('extensions', {})
             if data_extensions:
                 self.extensions = {ext: tuple() for ext in data_extensions}
