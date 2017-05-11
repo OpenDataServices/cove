@@ -1,0 +1,352 @@
+{% extends 'explore.html' %}
+{% load i18n %}
+{% load cove_tags %}
+{% block header_button %}
+  <a href="{% url 'index' %}" class="btn btn-large btn-success">{% trans 'Load New File' %}</a>
+{% endblock %}
+
+{% block explore_content %}
+<div class="row">
+
+{% block key_facts %}
+{% endblock %}
+
+{% block converted_files %}
+  <div class="col-md-6">
+    <div class="panel panel-warning">
+      <div class="panel-heading">
+        <h4 class="panel-title">Schema</h4>
+      </div>
+      <div class="panel-body">
+      <p>This data has been checked against <a href="{{ schema_url }}">OCDS schema version {{ version_used_display }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
+      <br>
+      <strong>Validate and explore same data against a different version of the schema</strong>
+      <br>
+      <br>
+      <div>
+        <form class="form-inline" action="{% url 'explore' data_uuid %}" method="post">
+        {% csrf_token %}
+          <select class="form-control" name="version">
+          {% for version in version_display_choices %}
+            <option value="{{ version.0 }}" {% if version.0 == version_used %}selected{% endif %}>
+               {{ version.1 }}
+            </option>
+          {% endfor %}
+          </select>
+            {# Translators: Label of a button that triggers search #}
+            <input class="btn btn-primary" type="submit" value={% trans "Go" %} /><img id="small-loading" style="display: none; margin:0; margin-left:2%" class="spinner" src="//i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="spinner" width="20" height="20">
+        </form>
+      </div>
+      </div>
+    </div>
+  </div>
+<!--Download Converted Files-->
+  <div class="col-md-6">
+    <div class="panel {% if conversion_error %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          {% trans 'Convert' %}
+        </h4>
+      </div>
+          
+      <div class="panel-body">
+        <div class="conversion message">
+          {% if conversion_warning_messages or conversion_warning_messages_titles %}
+            <p><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>There were <a href="#conversion-warning">conversion warnings</a> when processing your file. The converted data may not represent your data as you want it to be.</p>
+          {% endif %}
+          {% if conversion == 'flatten' %}
+            <p>We have tried to convert your JSON into a spreadsheet format.</p><p>The results can be seen below.</p>
+            <ul class="list-unstyled left-space">
+              <li>
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{original_file.url}}">{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
+              </li>
+              {% if not conversion_error %}
+                <li>
+                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}.xlsx">{{xlsx}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
+                </li>
+                <!--Only show for 360Giving files-->
+                {% if request.cove_config.convert_titles %}
+                  <li>
+                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size_titles|filesizeformat }}</small>
+                  </li>
+                {% endif %}
+              {% endif %}
+            </ul>
+            {% if conversion_error %}
+                <p>{% blocktrans %}The JSON could not be converted to Spreadsheet due to the error:{% endblocktrans %} {{ conversion_error }}</p>
+
+                {% include 'error_extra.html' %}
+            {% endif %}
+          
+          {% elif conversion == 'unflatten' %}
+            <p>We have tried to convert your data into JSON format.</p><p>The results can be seen below.</p>
+            <ul class="list-unstyled">
+              <li>
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                <a href="{{original_file.url}}">
+                  {% if file_type == 'xlsx' %}
+                    {{xlsx}} <small>({{original}})</small>
+                  {% elif file_type == 'csv' %}
+                    {{csv}} <small>({{original}})</small>
+                  {% endif %}
+                  </a> 
+                  <small>{{original_file.size|filesizeformat }}</small>
+                </li>
+                <li>
+                  <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{converted_url}}">{{JSON}} <small>({{converted}} {% trans "using schema version" %} {{version_used_display}})</small></a> <small>{{converted_file_size|filesizeformat }}</small>
+                </li>
+            </ul>
+
+          {% else %}
+            <ul class="list-unstyled">
+              <li>
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span><a href="{{original_file.url}}">{{JSON}} <small>({{original}})</small></a> <small>{{original_file.size|filesizeformat }}</small>
+                {% if conversion == 'flattenable' %}
+                  <br/>
+                  <br/>
+                  <form method="post">
+                    <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm">{% blocktrans %}Convert to Spreadsheet{% endblocktrans %}</button>
+                    {% csrf_token %}
+                  </form>
+                {% endif %}
+              </li>
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+</div><!--End Row -->
+
+{% if extensions %}
+  {% with ext=extensions.extensions ext_errors=extensions.invalid_extension %}
+  <a name="conversion-warning" class="anchor"></a>
+  <div class="panel panel-warning" id="schema-extensions">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        {% trans 'Schema Extensions' %}
+      </h4>
+    </div>
+    <div class="panel-body">
+      <p>You data contains the following schema extensions{% if not extensions.is_extended_schema %} but it wasn't possible to fetch them{% endif %}:</p>
+      <ul>
+        {% for ext_descriptor_url, ext_details in ext.items %}
+          {% if ext_details %}
+          <li><a href="{{ext_details.0}}">{{ext_details.1}}</a> &nbsp;&nbsp;<span class="font-tick tick"></span><p><small>{{ext_details.2}}</small><p></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      {% if ext_errors %}
+      {% if extensions.is_extended_schema %}<p class="indent"> The following extensions failed:{% endif %}
+      <ul>
+        {% for ext_descriptor_url, error in ext_errors.items %}
+          <li><a href="{{ext_descriptor_url}}" class="text-warning">{{ext_descriptor_url}}</a>  &nbsp;&nbsp;<span class="font-tick cross"></span><p><small>{{error}}</small><p></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if extensions.is_extended_schema %}
+        {% if ext_errors %}
+          <p>Only those extensions successfully fetched were applied to extend the schema.</p>
+        {% else %}
+          <p>All the extensions above were applied to extend the schema.</p>
+        {% endif %}
+        <span class="glyphicon glyphicon-download" aria-hidden="true"></span> <a href="{{extensions.extended_schema_url}}"> &nbsp;Get a copy of the schema with extension patches applied</a>
+      {% else %}
+        <p>None of the extensions above could be applied. Your data has been validated against a schema with no extensions.</p>
+      {% endif %}
+
+    </div>
+  </div>
+  {% endwith %}
+{% endif %}
+
+{% if conversion_warning_messages %}
+  <a name="conversion-warning" class="anchor"></a>
+  <div class="panel panel-warning">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        {% trans 'Conversion Errors' %}
+      </h4>
+    </div>
+    <div class="panel-body">
+      {% if file_type == 'xlsx' or file_type == 'csv' %}
+        <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+      {% endif %}
+      <ul>
+        {% for warning_message in conversion_warning_messages %}
+          <li>{{warning_message}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
+
+
+{% if conversion_warning_messages_titles %}
+  <a name="conversion-warning" class="anchor"></a>
+  <div class="panel panel-warning">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        {% trans 'Conversion Errors (titles)' %}
+      </h4>
+    </div>
+    <div class="panel-body">
+    {% if file_type == 'xlsx' or file_type == 'csv' %}
+      <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+    {% endif %}
+    <ul>
+      {% for warning_message in conversion_warning_messages_titles %}
+        <li>{{warning_message}}</li>
+      {% endfor %}
+    </ul>
+    </div>
+  </div>
+{% endif %}
+
+{% if validation_errors %}
+  {% for error, values in validation_errors %}
+     {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type %}
+  {% endfor %}
+  
+
+  <a name="validation-errors" class="anchor"></a>
+  <div class="panel panel-danger">
+    <div id="validation-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
+      <h4 class="panel-title">
+        <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Validation Errors' %}
+      </h4>
+    </div>
+    <div id="validationTable" class="collapse in">
+      {% include "validation_table.html" %}
+    </div>
+  </div>
+{% endif %}
+
+{% if additional_closed_codelist_values %}
+    <a name="additional-fields" class="anchor"></a>
+    <div class="panel panel-danger">
+      <div id="additional-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalClosedCodelist" data-toggle="collapse" data-target="#additionalClosedCodelist">
+        <h4 class="panel-title">
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Codelist Validation Errors' %}</span>
+        </h4>
+      </div>
+      <div id="additionalClosedCodelist" class="collapse in">
+        <div class="panel-body">
+          The fields below use closed codelists. When using these fields, you <strong> must </strong> use one of the pre-defined codelist values. If you use a value that is not on the relevant codelist, your data will not pass validation.
+        {% with additional_codelist_values=additional_closed_codelist_values %}
+        {% include "additional_codelist_values.html" %}
+        {% endwith%}
+          You may need to create a mapping between your local codes and the OCDS closed codelists to address these errors. In most cases, there will be a ‘detail’ field where you can also include your local codes. If you have already completed a mapping, please review the spelling and capitalisation used in these closed codelist fields.
+        </div>
+      </div>
+    </div>
+{% endif %}
+
+
+
+{% if data_only %}
+    <a name="additional-fields" class="anchor"></a>
+    <div class="panel panel-warning">
+      <div id="additional-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalFieldTable" data-toggle="collapse" data-target="#additionalFieldTable">
+        <h4 class="panel-title">
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Fields (fields in data not in schema)' %}</span>
+        </h4>
+      </div>
+      <div id="additionalFieldTable" class="collapse in">
+        {% include "additional_fields_table.html" %}
+      </div>
+    </div>
+{% endif %}
+
+
+{% if additional_open_codelist_values %}
+    <a name="additional-fields" class="anchor"></a>
+    <div class="panel panel-warning">
+      <div id="additional-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalOpenCodelist" data-toggle="collapse" data-target="#additionalOpenCodelist">
+        <h4 class="panel-title">
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Codelist Values' %}</span>
+        </h4>
+      </div>
+      <div class="panel-body">
+        Your data contains a number of fields that use an open codelist. You should use values from the codelist whenever possible, but if the codelist does not provide the values you need, you are permitted to add additional values. The values below do not appear in the codelist; you should check that you intended these as additional values.
+        <div id="additionalOpenCodelist" class="collapse in">
+          {% with additional_codelist_values=additional_open_codelist_values %}
+          {% include "additional_codelist_values.html" %}
+          {% endwith%}
+        </div>
+        Make sure your list the definition of any additional codelist values you include within your <a href="http://standard.open-contracting.org/latest/en/implementation/publication_policy/">publication policy</a>, and if you believe they should be added as recommended values in the open codelist, please suggest this via the <a href="https://github.com/open-contracting/standard/issues/new"> OCDS issue tracker.</a>
+      </div>
+    </div>
+{% endif %}
+
+
+{% if deprecated_fields %}
+    <a name="deprecated-fields" class="anchor"></a>
+    <div class="panel panel-warning">
+      <div id="deprecated-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="deprecatedFieldTable" data-toggle="collapse" data-target="#deprecatedFieldTable">
+        <h4 class="panel-title">
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Deprecated Fields" %}</span>&nbsp;<sup><span data-toggle="tooltip" title="{% trans "Fields flagged as 'deprecated' will be either replaced or removed in future versions of the schema." %}"><strong>?</strong></span></sup>
+        </h4>
+      </div>
+      <div id="deprecatedFieldTable" class="collapse in">
+        {% include "deprecated_fields_table.html" %}
+      </div>
+    </div>
+    
+{% endif %}
+
+
+{% block explore_additional_content %}
+{% endblock %}
+
+{% block introduction %}
+{% endblock %}
+
+{% block howToUse %}
+{% endblock %}
+
+<div class="above-footer">
+  <h2>{% trans "Save or Share these results" %}</h2>
+  <p>{% blocktrans %}Use the following url to share these results:{% endblocktrans %}</p>
+  <div class="copy-div">
+      <span class="copy-span"> {{ current_url }} <span id="copy-url-button" title="Click to copy." data-clipboard-text={{ current_url }} class="btn copy-button glyphicon glyphicon-copy" aria-hidden="true"></span> </span>
+  </div>
+  {% comment %}Translators: Paragraph that describes the application{% endcomment %}
+  <p>{% blocktrans %}These results will be available for 7 days from the day the data was first uploaded. You can revisit these results until then.{% endblocktrans %}</p>
+  <p>{% blocktrans %}After 7 days all uploaded data is deleted from our servers, and the results will no longer be available. Anyone using the link to this page after that will be shown a message that tells them the file has been removed.{% endblocktrans %}</p>
+</div>
+
+{% endblock explore_content %}
+
+{% block extrafooterscript %}
+  {{ block.super }} 
+  <script type="text/javascript">
+      $("#validationTable").on("hide.bs.collapse", function(){
+        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-down"></span>{% trans "Validation Errors" %}</h4>');
+      });
+      $("#validationTable").on("show.bs.collapse", function(){
+        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Validation Errors" %}</h4>');
+      });
+      $("#additionalFieldTable").on("hide.bs.collapse", function(){
+        $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
+      });
+      $("#additionalFieldTable").on("show.bs.collapse", function(){
+        $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Additional Fields (fields in data not in schema)" %}');
+      });
+      $("#deprecatedFieldTable").on("hide.bs.collapse", function(){
+        $("#deprecated-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Deprecated Fields" %}');
+      });
+      $("#deprecatedFieldTable").on("show.bs.collapse", function(){
+        $("#deprecated-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Deprecated Fields" %}');
+      });
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
+      $('form').submit(function() {
+          $('#small-loading').css({"display": "inline"});
+      });
+  </script>
+{% endblock extrafooterscript %}

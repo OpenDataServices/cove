@@ -1,4 +1,5 @@
 from django import template
+import random
 import json
 
 register = template.Library()
@@ -27,3 +28,8 @@ def get_message_type(error):
 @register.filter(name='concat')
 def concat(arg1, arg2):
     return str(arg1) + str(arg2)
+
+
+@register.filter(name='sample')
+def sample(population, k):
+    return random.sample(population, k)

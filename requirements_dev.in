@@ -1,9 +1,6 @@
 -r requirements.in
 
 flake8
-# flake8 requires pyflakes <1.1
-pyflakes<1.1
-#^^ rq.filter: <1.1
 pytest
 pytest-django
 pytest-cov

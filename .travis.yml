@@ -2,13 +2,15 @@ language: python
 
 python:
   - "3.4"
+  - "3.5"
 
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   # install Java 8 as required by vnu.jar
+  # install gettext for translations
   - sudo apt-get update
-  - sudo apt-get install oracle-java8-installer
+  - sudo apt-get install oracle-java8-installer gettext
   - sudo update-java-alternatives -s java-8-oracle
 
 install: 
@@ -17,7 +19,11 @@ install:
 
 script:
   - "flake8 ."
-  - "py.test --cov cove -n 2"
-  - "python manage.py migrate; python manage.py compilemessages; DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver & java -jar dist/vnu.jar http://localhost:8000/ http://localhost:8000/360/ http://localhost:8000/ocds/ 'http://localhost:8000/360/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove/fixtures/WellcomeTrust-grants_2_grants.csv' 'http://localhost:8000/ocds/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove/fixtures/tenders_releases_2_releases.json' "
+  - "DJANGO_SETTINGS_MODULE=cove.settings py.test -n 2 cove --cov --cov-report="
+  - "DJANGO_SETTINGS_MODULE=cove_360.settings py.test -n 2 cove_360 --cov-append --cov --cov-report="
+  - "DJANGO_SETTINGS_MODULE=cove_ocds.settings py.test -n 2 cove_ocds --cov-append --cov"
+  - "python manage.py migrate; python manage.py compilemessages" 
+  - "DJANGO_SETTINGS_MODULE=cove_360.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver & java -jar dist/vnu.jar 'http://localhost:8000/' 'http://localhost:8000/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_360/fixtures/WellcomeTrust-grants_2_grants.csv' 'http://localhost:8000/common_errors/'"
+  - "DJANGO_SETTINGS_MODULE=cove_ocds.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver localhost:8001 & java -jar dist/vnu.jar http://localhost:8001/ 'http://localhost:8001/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_ocds/fixtures/tenders_releases_2_releases.json'"
 
 after_success: coveralls

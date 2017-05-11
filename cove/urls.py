@@ -1,5 +1,23 @@
-from django.conf.urls import url
+from django.conf.urls import include, url
+from django.contrib import admin
+from django.conf import settings
 from django.views.generic import TemplateView
+
+from django.template import Context, loader
+from django.http import HttpResponseServerError
+
+
+def handler500(request):
+    """500 error handler which includes ``request`` in the context.
+    """
+
+    context = {
+        'request': request,
+    }
+    context.update(settings.COVE_CONFIG)
+
+    t = loader.get_template('500.html')
+    return HttpResponseServerError(t.render(Context(context)))
 
 
 def cause500(request):
@@ -8,9 +26,9 @@ def cause500(request):
 
 urlpatterns = [
     url(r'^$', 'cove.input.views.input', name='index'),
-    url(r'^data/(.+)$', 'cove.views.explore', name='explore'),
-    url(r'^common_errors', 'cove.views.common_errors', name='common_errors'),
     url(r'^terms', TemplateView.as_view(template_name='terms.html'), name='terms'),
     url(r'^stats', 'cove.views.stats', name='stats'),
     url(r'^test/500', cause500),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^i18n/', include('django.conf.urls.i18n'))
 ]
