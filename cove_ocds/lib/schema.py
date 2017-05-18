@@ -48,8 +48,6 @@ class SchemaOCDS(SchemaJsonMixin):
             except KeyError:
                 select_version = None
                 self.invalid_version_argument = True
-                print('Not a valid value for `version` argument: using version in the release '
-                      'data or the default version if version is missing in the release data')
             else:
                 self.version = select_version
                 self.schema_host = self.version_choices[select_version][1]
