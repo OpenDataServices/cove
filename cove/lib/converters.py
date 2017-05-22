@@ -75,6 +75,7 @@ def convert_spreadsheet(request, data, file_type, schema_url=None, pkg_schema_ur
 
     if xml:
         flattentool_options['xml'] = True
+        flattentool_options['id_name'] = config.get('id_name', 'id')
     else:
         flattentool_options.update({
             'schema': schema_url,
