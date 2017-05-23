@@ -350,14 +350,14 @@ def _get_json_data_generic_paths(json_data, path=(), generic_paths=None):
             generic_paths[path] = []
 
     for key, value in iterable:
+        generic_key = tuple(i for i in path + (key,) if type(i) != int)
+        if generic_paths.get(generic_key):
+            generic_paths[generic_key][path + (key,)] = value
+        else:
+            generic_paths[generic_key] = {path + (key,): value}
+
         if isinstance(value, (dict, list)):
             _get_json_data_generic_paths(value, path + (key,), generic_paths)
-        else:
-            generic_key = tuple(i for i in path + (key,) if type(i) != int)
-            if generic_paths.get(generic_key):
-                generic_paths[generic_key][path + (key,)] = value
-            else:
-                generic_paths[generic_key] = {path + (key,): value}
 
     return generic_paths
 
@@ -366,7 +366,6 @@ def get_json_data_deprecated_fields(json_data, schema_obj):
     deprecated_schema_paths = _get_schema_deprecated_paths(schema_obj)
     paths_in_data = _get_json_data_generic_paths(json_data)
     deprecated_paths_in_data = [path for path in deprecated_schema_paths if path[0] in paths_in_data]
-
     # Generate an OrderedDict sorted by deprecated field names (keys) mapping
     # to a unordered tuple of tuples:
     # {deprecated_field: ((path, path... ), (version, description))}
