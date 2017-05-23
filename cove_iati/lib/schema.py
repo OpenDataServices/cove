@@ -6,6 +6,7 @@ from django.conf import settings
 
 config = settings.COVE_CONFIG
 
+current_dir = os.path.dirname(os.path.realpath(__file__))
 
 class SchemaIATI():
     default_schema_host = config['schema_host']
@@ -18,7 +19,7 @@ class SchemaIATI():
     def __init__(self, select_version=None):
         self.version = select_version or self.default_version
         self.schema_host = '{}/version-{}/'.format(self.default_schema_host, self.version)
-        self.schema_directory = os.path.join(config['app_name'], config['schema_directory'], self.version)
+        self.schema_directory = os.path.join(current_dir, '../../', config['app_name'], config['schema_directory'], self.version)
 
         if not os.path.isdir(self.schema_directory):
             os.makedirs(self.schema_directory)
