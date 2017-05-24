@@ -263,7 +263,7 @@ def test_get_json_data_generic_paths():
         json_data_w_deprecations = json.load(fp)
 
     generic_paths = cove_common._get_json_data_generic_paths(json_data_w_deprecations)
-    assert len(generic_paths.keys()) == 27
+    assert len(generic_paths.keys()) == 36
     assert generic_paths[('releases', 'buyer', 'name')] == {
         ('releases', 1, 'buyer', 'name'): 'Parks Canada',
         ('releases', 0, 'buyer', 'name'): 'Agriculture & Agrifood Canada'
@@ -672,3 +672,8 @@ def test_schema_after_version_change(client):
 
     with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
         assert "'version' is missing but required" not in validation_errors_fp.read()
+
+
+def test_corner_cases_for_deprecated_data_fields():
+    ''' TODO '''
+    pass

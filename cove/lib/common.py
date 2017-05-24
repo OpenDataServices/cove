@@ -351,6 +351,7 @@ def _get_json_data_generic_paths(json_data, path=(), generic_paths=None):
 
     for key, value in iterable:
         generic_key = tuple(i for i in path + (key,) if type(i) != int)
+        
         if generic_paths.get(generic_key):
             generic_paths[generic_key][path + (key,)] = value
         else:
@@ -380,7 +381,13 @@ def get_json_data_deprecated_fields(json_data, schema_obj):
     deprecated_fields_output = OrderedDict()
     for field, paths in deprecated_fields.items():
         sorted_paths = tuple(sorted(paths[0]))
-        slashed_paths = tuple(("/".join((map(str, sort_path[:-1]))) for sort_path in sorted_paths))
+
+        # Avoid adding terminal paths for array indexes as only whole arrays can be deprecated.
+        # TODO: check, is that true for all cases?
+        slashed_paths = tuple(
+            ("/".join((map(str, sort_path[:-1])))
+             for sort_path in sorted_paths if type(sort_path[-1]) != int)
+        )
         deprecated_fields_output[field] = {"paths": slashed_paths, "explanation": paths[1]}
 
     return deprecated_fields_output
