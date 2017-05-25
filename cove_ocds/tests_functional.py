@@ -439,3 +439,23 @@ def test_url_input_with_extensions(server_url, url_input_browser, httpserver, so
         assert text in schema_extension_box
     for text in not_expected:
         assert text not in schema_extension_box
+
+
+@pytest.mark.parametrize(('source_filename', 'expected', 'not_expected'), [
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', ['This file applies 3 valid extensions to the schema'],
+                                                                    ['Failed to apply']),
+    ('tenders_releases_1_release_with_invalid_extensions.json', ['Failed to apply 3 extensions to the schema',
+                                                                 'This file applies 3 valid extensions to the schema'],
+                                                                []),
+    ('tenders_releases_1_release_with_all_invalid_extensions.json', ['Failed to apply 3 extensions to the schema'],
+                                                                    ['This file applies',
+                                                                     'valid extensions to the schema'])
+])
+def test_url_input_extension_headlines(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
+    browser = url_input_browser(source_filename)
+    headlines_box_text = browser.find_element_by_class_name('panel-body').text
+
+    for text in expected:
+        assert text in headlines_box_text
+    for text in not_expected:
+        assert text not in headlines_box_text
