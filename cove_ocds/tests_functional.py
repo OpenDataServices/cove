@@ -404,20 +404,24 @@ def test_url_input_with_version_change(server_url, url_input_browser, httpserver
                                                                      'The metrics extension supports publication of forecasts',
                                                                      'All the extensions above were applied to extend the schema',
                                                                      'Get a copy of the schema with extension patches applied'],
-                                                                    ['The following extensions failed']),
+                                                                    ['The following extensions failed',
+                                                                     'extensions were not introduced in the schema until version 1.1.']),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Party Scale',
                                                                  'The metrics extension supports publication of forecasts',
                                                                  'Get a copy of the schema with extension patches applied',
-                                                                 'The following extensions failed'],
+                                                                 'The following extensions failed',
+                                                                 'extensions were not introduced in the schema until version 1.1.'],
                                                                 ['validated against a schema with no extensions']),
-    ('tenders_releases_1_release_with_all_invalid_extensions.json', ['None of the extensions above could be applied'],
+    ('tenders_releases_1_release_with_all_invalid_extensions.json', ['None of the extensions above could be applied',
+                                                                     'extensions were not introduced in the schema until version 1.1.'],
                                                                     ['Party Scale',
                                                                      'Get a copy of the schema with extension patches applied']),
     ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', ['Party Scale',
                                                                               'The metrics extension supports publication of forecasts',
                                                                               'All the extensions above were applied to extend the schema',
                                                                               'Get a copy of the schema with extension patches applied'],
-                                                                             ['The following extensions failed'])
+                                                                             ['The following extensions failed',
+                                                                              'extensions were not introduced in the schema until version 1.1.'])
 ])
 def test_url_input_with_extensions(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
     browser = url_input_browser(source_filename)
