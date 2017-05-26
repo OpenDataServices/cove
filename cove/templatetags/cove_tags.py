@@ -30,6 +30,11 @@ def concat(arg1, arg2):
     return str(arg1) + str(arg2)
 
 
+@register.filter
+def subtract(value, arg):
+    return value - arg
+
+
 @register.filter(name='sample')
 def sample(population, k):
     return random.sample(population, k)
