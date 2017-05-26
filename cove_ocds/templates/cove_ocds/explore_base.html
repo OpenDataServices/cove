@@ -130,6 +130,11 @@
       </h4>
     </div>
     <div class="panel-body">
+      {% if extensions and version_used_display == "1.0" %}
+        <div class="bg-danger in-panel-warning">
+          <small><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> &nbsp;Your data has been checked against schema version <strong>1.0</strong> and includes extensions but extensions were not introduced in the schema until version <strong>1.1</strong>.</small>
+        </div>
+      {% endif %}
       <p>You data contains the following schema extensions{% if not extensions.is_extended_schema %} but it wasn't possible to fetch them{% endif %}:</p>
       <ul>
         {% for ext_descriptor_url, ext_details in ext.items %}
