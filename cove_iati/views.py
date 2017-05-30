@@ -68,7 +68,7 @@ def common_checks_context_iati(db_data, data_file, file_type):
             indexes = ['/{}'.format(str(int(i[1:-1]) - 1)) for i in re.findall(r'\[\d+\]', error_path)]
             path = re.sub(r'\[\d+\]', '{}', error_path).format(*indexes)
             path = re.sub(r'/iati-activities/', '', path)
-            errors_all[path] = error_message
+            errors_all[path] = error_message.replace('Element ', '')
 
     if file_type != 'xml':
         with open(os.path.join(db_data.upload_dir(), 'cell_source_map.json')) as cell_source_map_fp:
@@ -76,7 +76,6 @@ def common_checks_context_iati(db_data, data_file, file_type):
 
     validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
 
-    print(cell_source_map)
     print(errors_all)
     if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validation_error_fp:
@@ -87,7 +86,7 @@ def common_checks_context_iati(db_data, data_file, file_type):
             validation_key = json.dumps(['', error_message])
             validation_errors[validation_key] = []
             for cell_path in cell_source_map_paths:
-                if validation_errors.get(validation_key) and len(validation_errors[validation_key]) == 3:
+                if len(validation_errors[validation_key]) == 3:
                     break
                 if error_path in cell_path:
                     if len(cell_source_map[cell_path][0]) == 2:
@@ -103,10 +102,8 @@ def common_checks_context_iati(db_data, data_file, file_type):
                             'header': cell_source_map[cell_path][0][3],
                             'path': cell_path
                         }
-                    if validation_errors.get(validation_key):
-                        validation_errors[validation_key].append(sources)
+                    validation_errors[validation_key].append(sources)
 
-        print(validation_errors)
         with open(validation_errors_path, 'w+') as validation_error_fp:
             validation_error_fp.write(json.dumps(validation_errors))
 
