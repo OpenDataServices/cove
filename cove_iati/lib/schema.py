@@ -8,6 +8,7 @@ config = settings.COVE_CONFIG
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
 
+
 class SchemaIATI():
     default_schema_host = config['schema_host']
     default_version = config['schema_version']

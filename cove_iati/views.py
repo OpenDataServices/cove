@@ -76,7 +76,6 @@ def common_checks_context_iati(db_data, data_file, file_type):
 
     validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
 
-    print(errors_all)
     if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validation_error_fp:
             validation_errors = json.load(validation_error_fp)
@@ -89,12 +88,7 @@ def common_checks_context_iati(db_data, data_file, file_type):
                 if len(validation_errors[validation_key]) == 3:
                     break
                 if error_path in cell_path:
-                    if len(cell_source_map[cell_path][0]) == 2:
-                        sources = {
-                            'sheet': cell_source_map[cell_path][0][0],
-                            'row_number': cell_source_map[cell_path][0][1],
-                        }
-                    else:
+                    if len(cell_source_map[cell_path][0]) > 2:
                         sources = {
                             'sheet': cell_source_map[cell_path][0][0],
                             "col_alpha": cell_source_map[cell_path][0][1],
@@ -102,7 +96,8 @@ def common_checks_context_iati(db_data, data_file, file_type):
                             'header': cell_source_map[cell_path][0][3],
                             'path': cell_path
                         }
-                    validation_errors[validation_key].append(sources)
+                        if sources not in validation_errors[validation_key]:
+                            validation_errors[validation_key].append(sources)
 
         with open(validation_errors_path, 'w+') as validation_error_fp:
             validation_error_fp.write(json.dumps(validation_errors))
