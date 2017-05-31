@@ -404,9 +404,9 @@ def test_explore_schema_version(client, json_data):
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
     if 'version' in json_data:
-        assert '1.1' in resp.context['schema_url']
+        assert '1__1' in resp.context['schema_url']
         assert resp.context['version_used'] == '1.1'
-        assert resp.context['version_used_display'] == '1.1-dev'
+        assert resp.context['version_used_display'] == '1.1'
         resp = client.post(data.get_absolute_url(), {'version': "1.0"})
         assert resp.status_code == 200
         assert '1__0__2' in resp.context['schema_url']
@@ -417,9 +417,9 @@ def test_explore_schema_version(client, json_data):
         assert resp.context['version_used_display'] == '1.0'
         resp = client.post(data.get_absolute_url(), {'version': "1.1"})
         assert resp.status_code == 200
-        assert '1.1' in resp.context['schema_url']
+        assert '1__1' in resp.context['schema_url']
         assert resp.context['version_used'] == '1.1'
-        assert resp.context['version_used_display'] == '1.1-dev'
+        assert resp.context['version_used_display'] == '1.1'
 
 
 @pytest.mark.django_db
@@ -458,7 +458,7 @@ def test_explore_schema_version_change(client, file_type, converter, replace_aft
         assert resp.status_code == 200
         assert resp.context['version_used'] == '1.1'
         assert mock_object.called
-        assert '1.1' in kwargs['schema_url']
+        assert '1__1' in kwargs['schema_url']
         assert kwargs['replace'] is replace_after_post
 
 
