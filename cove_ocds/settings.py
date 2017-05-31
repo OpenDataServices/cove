@@ -41,7 +41,7 @@ COVE_CONFIG = {
     'schema_version': '1.0',
     'schema_version_choices': OrderedDict((  # {version: (display, url)}
         ('1.0', ('1.0', 'http://standard.open-contracting.org/schema/1__0__2/')),
-        ('1.1', ('1.1-dev', 'http://standard.open-contracting.org/1.1-dev/en/')),
+        ('1.1', ('1.1', 'http://standard.open-contracting.org/schema/1__1__0/')),
     )),
     'schema_codelists': OrderedDict((  # {version: codelist_dir}
         ('1.1', 'https://raw.githubusercontent.com/open-contracting/standard/1.1-dev/standard/schema/codelists/'),
