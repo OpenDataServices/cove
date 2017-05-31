@@ -52,6 +52,8 @@ def common_checks_context_iati(db_data, data_file, file_type):
     schema_aiti = SchemaIATI()
     lxml_errors = {}
     validation_errors = {}
+    cell_source_map = {}
+    validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
 
     with open(data_file) as fp, open(schema_aiti.activity_schema) as schema_fp:
         tree = etree.parse(fp)
@@ -73,31 +75,33 @@ def common_checks_context_iati(db_data, data_file, file_type):
     if file_type != 'xml':
         with open(os.path.join(db_data.upload_dir(), 'cell_source_map.json')) as cell_source_map_fp:
             cell_source_map = json.load(cell_source_map_fp)
-
-    validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
+            cell_source_map_paths = cell_source_map.keys()
 
     if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validation_error_fp:
             validation_errors = json.load(validation_error_fp)
     else:
-        cell_source_map_paths = cell_source_map.keys()
         for error_path, error_message in errors_all.items():
             validation_key = json.dumps(['', error_message])
             validation_errors[validation_key] = []
-            for cell_path in cell_source_map_paths:
-                if len(validation_errors[validation_key]) == 3:
-                    break
-                if error_path in cell_path:
-                    if len(cell_source_map[cell_path][0]) > 2:
-                        sources = {
-                            'sheet': cell_source_map[cell_path][0][0],
-                            "col_alpha": cell_source_map[cell_path][0][1],
-                            'row_number': cell_source_map[cell_path][0][2],
-                            'header': cell_source_map[cell_path][0][3],
-                            'path': cell_path
-                        }
-                        if sources not in validation_errors[validation_key]:
-                            validation_errors[validation_key].append(sources)
+
+            if file_type != 'xml':
+                for cell_path in cell_source_map_paths:
+                    if len(validation_errors[validation_key]) == 3:
+                        break
+                    if error_path in cell_path:
+                        if len(cell_source_map[cell_path][0]) > 2:
+                            sources = {
+                                'sheet': cell_source_map[cell_path][0][0],
+                                "col_alpha": cell_source_map[cell_path][0][1],
+                                'row_number': cell_source_map[cell_path][0][2],
+                                'header': cell_source_map[cell_path][0][3],
+                                'path': cell_path
+                            }
+                            if sources not in validation_errors[validation_key]:
+                                validation_errors[validation_key].append(sources)
+            else:
+                validation_errors[validation_key].append({'path': error_path})
 
         with open(validation_errors_path, 'w+') as validation_error_fp:
             validation_error_fp.write(json.dumps(validation_errors))
@@ -108,7 +112,7 @@ def common_checks_context_iati(db_data, data_file, file_type):
         'validation_errors': sorted(validation_errors.items()),
         'validation_errors_count': sum(len(value) for value in validation_errors.values()),
         'cell_source_map': cell_source_map,
-        'first_render': not db_data.rendered,
+        'first_render': False
     }
 
 
