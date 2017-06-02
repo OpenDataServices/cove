@@ -102,6 +102,16 @@ Or for OCDS run:
 
 Follow the instructions in your terminal to open the aplication in your browser.
 
+Extra installation steps for IATI
+++++++++++++++++++++
+The following steps are for Ubuntu but equivilent packages are availible for other distros.
+
+.. code:: bash
+
+   sudo apt-get install build-essential libxml2-dev libxslt1-dev python3-dev
+   pip install -r requirements_iati.txt
+
+
 Deployment
 ==========
 
