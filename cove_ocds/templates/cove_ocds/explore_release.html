@@ -16,15 +16,20 @@
         {% if conversion_warning_messages or conversion_warning_messages_titles %}
           <div class="conversion message"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>{% blocktrans %}Please read the <a href="#conversion-warning">conversion warnings</a> below.{% endblocktrans %}</div>
         {% endif %} 
-        <div class="validation message">  
+        <div class="validation message">
         {% if validation_errors %}
           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span><b>{% trans "Failed " %}</b>
         {% else %} 
           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% trans "Passed " %} 
         {% endif %}
-        {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">schema version {{ version_used_display }}</a>
+        {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">schema version {{ version_used_display }}.</a>
         {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Validation Errors</a> below.{% endblocktrans %}{% endif %}
         </div>
+        {% if extensions and extensions.invalid_extension %}
+        <div class="message">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>{% blocktrans %}<strong>Failed </strong>to apply {% endblocktrans %}{% blocktrans count count=extensions.invalid_extension.keys|length %} {{count}} extension {% plural %}{{count}} extensions {% endblocktrans %}{% blocktrans %} to the schema.<br/>See <a href="#schema-extensions">Extensions</a> below.{% endblocktrans %}
+        </div>
+        {% endif %} 
 
           <div class="key-facts message">
            <strong>At a glance</strong>
@@ -45,13 +50,18 @@
                   {% trans "The license is" %} <a href="{{json_data.license}}">{{json_data.license}}</a>.
                 </li>
              {% endif %}
-              
+             {% if extensions and extensions.is_extended_schema %}
+                <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                  {% with n_invalid=extensions.invalid_extension.keys|length %}
+                    {% trans "This file applies" %}{% blocktrans count count=extensions.extensions.keys|length|subtract:n_invalid %}{{count}} valid <a href="#schema-extensions">extension</a>{% plural %} {{count}} valid <a href="#schema-extensions">extensions</a> {% endblocktrans %} {% trans "to the schema" %}.
+                  {% endwith %}
+                </li>
+             {% endif %}
              {% if ra.duplicate_release_ids %} 
                 <li><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
                   {% blocktrans count count=ra.duplicate_release_ids|length %}There is {{ count }} <a href="#key-field-info">duplicate release ID</a> in this package.{% plural %}There are {{ count }} <a href="#key-field-info">duplicate release IDs</a> in this package.{% endblocktrans %}
                 </li>
              {% endif %}
-             
             {% if data_only %}
             <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                 {% blocktrans count count=data_only|length %}This file uses {{count}} <a href="#additional-fields">additional field</a> not used in the standard.{% plural %}This file uses {{count}} <a href="#additional-fields">additional fields</a> not used in the standard.{% endblocktrans %}
@@ -74,7 +84,7 @@
                {% else %}
                  {% trans "uploaded " %} 
                {% endif %}
-               {% trans "on " %} {{created_datetime}}
+               {% trans "on " %} {{created_datetime}}.
             </li>
            </ul>
         </div>
@@ -193,7 +203,7 @@
 
 {% cove_modal_list className="buyer-orgs" modalTitle="Buyer Organizations" itemList=ra.unique_buyers %}
 {% cove_modal_list className="supplier-orgs" modalTitle="Supplier Organizations" itemList=ra.unique_suppliers %}
-{% cove_modal_list className="procuring-orgs" modalTitle="Pucuring Entities" itemList=ra.unique_procuring %}
+{% cove_modal_list className="procuring-orgs" modalTitle="Procuring Entities" itemList=ra.unique_procuring %}
 {% cove_modal_list className="tenderers-orgs" modalTitle="Tenderers" itemList=ra.unique_tenderers %}
 
 <div class="row">

@@ -51,7 +51,7 @@ def test_get_json_data_generic_paths():
         json_data_w_deprecations = json.load(fp)
 
     generic_paths = _get_json_data_generic_paths(json_data_w_deprecations)
-    assert len(generic_paths.keys()) == 27
+    assert len(generic_paths.keys()) == 36
     assert generic_paths[('releases', 'buyer', 'name')] == {
         ('releases', 1, 'buyer', 'name'): 'Parks Canada',
         ('releases', 0, 'buyer', 'name'): 'Agriculture & Agrifood Canada'
