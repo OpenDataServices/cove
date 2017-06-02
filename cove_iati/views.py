@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from lxml import etree
 
 from .lib.schema import SchemaIATI
+from .lib.iati_utils import sort_iati_xml_file
 from cove.lib.converters import convert_spreadsheet
 from cove.lib.exceptions import cove_web_input_error
 from cove.input.models import SuppliedData
@@ -130,6 +131,8 @@ def explore_iati(request, pk):
     if file_type != 'xml':
         context.update(convert_spreadsheet(request, db_data, file_type, xml=True))
         data_file = context['converted_path']
+        # sort converted xml
+        sort_iati_xml_file(context['converted_path'], context['converted_path'])
     else:
         data_file = db_data.original_file.file.name
 
