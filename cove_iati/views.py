@@ -99,8 +99,7 @@ def common_checks_context_iati(db_data, data_file, file_type):
                                 'header': cell_source_map[cell_path][0][3],
                                 'path': cell_path
                             }
-                            if sources not in validation_errors[validation_key]:
-                                validation_errors[validation_key].append(sources)
+                            validation_errors[validation_key].append(sources)
             else:
                 validation_errors[validation_key].append({'path': error_path})
 
