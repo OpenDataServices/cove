@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import re
 
 from django.shortcuts import render
 from django import forms
@@ -9,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from lxml import etree
 
 from .lib.schema import SchemaIATI
+from .lib.iati import format_lxml_errors, get_xml_validation_errors
 from .lib.iati_utils import sort_iati_xml_file
 from cove.lib.converters import convert_spreadsheet
 from cove.lib.exceptions import cove_web_input_error
@@ -52,7 +52,6 @@ iati_form_classes = {
 def common_checks_context_iati(db_data, data_file, file_type):
     schema_aiti = SchemaIATI()
     lxml_errors = {}
-    validation_errors = {}
     cell_source_map = {}
     validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
 
@@ -61,57 +60,20 @@ def common_checks_context_iati(db_data, data_file, file_type):
         schema_tree = etree.parse(schema_fp)
         schema = etree.XMLSchema(schema_tree)
         schema.validate(tree)
-
         for error in schema.error_log:
             lxml_errors[error.path] = error.message
-
-        # lxml uses path indexes starting from 1
-        errors_all = {}
-        for error_path, error_message in lxml_errors.items():
-            attribute = None
-            attr_start = error_message.find('attribute')
-            if attr_start != -1:
-                attribute = error_message[attr_start + len("attribute '"):]
-                attr_end = attribute.find("':")
-                attribute = attribute[:attr_end]
-            indexes = ['/{}'.format(str(int(i[1:-1]) - 1)) for i in re.findall(r'\[\d+\]', error_path)]
-
-            path = re.sub(r'\[\d+\]', '{}', error_path).format(*indexes)
-            path = re.sub(r'/iati-activities/', '', path)
-            if attribute:
-                path = '{}/@{}'.format(path, attribute)
-
-            errors_all[path] = error_message.replace('Element ', '')
+    errors_all = format_lxml_errors(lxml_errors)
 
     if file_type != 'xml':
         with open(os.path.join(db_data.upload_dir(), 'cell_source_map.json')) as cell_source_map_fp:
             cell_source_map = json.load(cell_source_map_fp)
-            cell_source_map_paths = cell_source_map.keys()
 
     if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validation_error_fp:
             validation_errors = json.load(validation_error_fp)
     else:
-        for error_path, error_message in errors_all.items():
-            validation_key = json.dumps(['', error_message])
-            validation_errors[validation_key] = []
+        validation_errors = get_xml_validation_errors(errors_all, file_type, cell_source_map)
 
-            if file_type != 'xml':
-                for cell_path in cell_source_map_paths:
-                    if len(validation_errors[validation_key]) == 3:
-                        break
-                    if error_path == cell_path:
-                        if len(cell_source_map[cell_path][0]) > 2:
-                            sources = {
-                                'sheet': cell_source_map[cell_path][0][0],
-                                "col_alpha": cell_source_map[cell_path][0][1],
-                                'row_number': cell_source_map[cell_path][0][2],
-                                'header': cell_source_map[cell_path][0][3],
-                                'path': cell_path
-                            }
-                            validation_errors[validation_key].append(sources)
-            else:
-                validation_errors[validation_key].append({'path': error_path})
         with open(validation_errors_path, 'w+') as validation_error_fp:
             validation_error_fp.write(json.dumps(validation_errors))
 
