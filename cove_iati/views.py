@@ -68,9 +68,19 @@ def common_checks_context_iati(db_data, data_file, file_type):
         # lxml uses path indexes starting from 1
         errors_all = {}
         for error_path, error_message in lxml_errors.items():
+            attribute = None
+            attr_start = error_message.find('attribute')
+            if attr_start != -1:
+                attribute = error_message[attr_start + len("attribute '"):]
+                attr_end = attribute.find("':")
+                attribute = attribute[:attr_end]
             indexes = ['/{}'.format(str(int(i[1:-1]) - 1)) for i in re.findall(r'\[\d+\]', error_path)]
+
             path = re.sub(r'\[\d+\]', '{}', error_path).format(*indexes)
             path = re.sub(r'/iati-activities/', '', path)
+            if attribute:
+                path = '{}/@{}'.format(path, attribute)
+
             errors_all[path] = error_message.replace('Element ', '')
 
     if file_type != 'xml':
@@ -90,7 +100,7 @@ def common_checks_context_iati(db_data, data_file, file_type):
                 for cell_path in cell_source_map_paths:
                     if len(validation_errors[validation_key]) == 3:
                         break
-                    if error_path in cell_path:
+                    if error_path == cell_path:
                         if len(cell_source_map[cell_path][0]) > 2:
                             sources = {
                                 'sheet': cell_source_map[cell_path][0][0],
@@ -102,7 +112,6 @@ def common_checks_context_iati(db_data, data_file, file_type):
                             validation_errors[validation_key].append(sources)
             else:
                 validation_errors[validation_key].append({'path': error_path})
-
         with open(validation_errors_path, 'w+') as validation_error_fp:
             validation_error_fp.write(json.dumps(validation_errors))
 
