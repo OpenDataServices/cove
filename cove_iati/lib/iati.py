@@ -44,12 +44,11 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
 
         if file_type != 'xml':
             cell_source_map_paths = cell_source_map.keys()
-            generic_error_path = re.sub(r'/\[\d+\]/', '', error_path)
-
+            generic_error_path = re.sub(r'/\d+', '', error_path)
             for cell_path in cell_source_map_paths:
                 if len(validation_errors[validation_key]) == 3:
                     break
-                generic_cell_path = re.sub(r'/\[\d+\]/', '', cell_path)
+                generic_cell_path = re.sub(r'/\d+', '', cell_path)
                 if generic_error_path == generic_cell_path:
                     if len(cell_source_map[cell_path][0]) > 2:
                         sources = {
