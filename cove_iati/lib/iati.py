@@ -2,49 +2,48 @@ import json
 import re
 
 
+def lxml_errors_generator(schema_error_log):
+    for error in schema_error_log:
+        yield {'path': error.path, 'message': error.message}
+
+
 def format_lxml_errors(lxml_errors):
     '''Convert lxml validation errors into structured errors'''
-    errors_all = {}
-    for error_path, error_message in lxml_errors.items():
-        # lxml uses path indexes starting from 1
-        indexes = ['/{}'.format(str(int(i[1:-1]) - 1)) for i in re.findall(r'\[\d+\]', error_path)]
+    for error in lxml_errors:
+        # lxml uses path indexes starting from 1 in square brackets
+        indexes = ['/{}'.format(str(int(i[1:-1]) - 1)) for i in re.findall(r'\[\d+\]', error['path'])]
 
         attribute = None
-        attr_start = error_message.find('attribute')
+        attr_start = error['message'].find('attribute')
         if attr_start != -1:
-            attribute = error_message[attr_start + len("attribute '"):]
+            attribute = error['message'][attr_start + len("attribute '"):]
             attr_end = attribute.find("':")
             attribute = attribute[:attr_end]
 
-        path = re.sub(r'\[\d+\]', '{}', error_path).format(*indexes)
+        path = re.sub(r'\[\d+\]', '{}', error['path']).format(*indexes)
         path = re.sub(r'/iati-activities/', '', path)
         if attribute:
             path = '{}/@{}'.format(path, attribute)
 
-        val_start = error_message.find(": '")
-        value = error_message[val_start + len(": '"):]
+        val_start = error['message'].find(": '")
+        value = error['message'][val_start + len(": '"):]
         val_end = value.find("'")
         value = value[:val_end]
-        message = error_message.replace('Element ', '').replace(": '{}'".format(value), '')
-        errors_all[path] = {
-            'message': message,
-            'attribute': attribute,
-            'value': value
-        }
+        message = error['message'].replace('Element ', '').replace(": '{}'".format(value), '')
 
-    return errors_all
+        yield {'path': path, 'message': message, 'value': value}
 
 
 def get_xml_validation_errors(errors, file_type, cell_source_map):
     validation_errors = {}
-    for error_path, error_message in errors.items():
-        validation_key = json.dumps(['', error_message['message']])
+    for error in errors:
+        validation_key = json.dumps(['', error['message']])
         if not validation_errors.get(validation_key):
             validation_errors[validation_key] = []
 
         if file_type != 'xml':
             cell_source_map_paths = cell_source_map.keys()
-            generic_error_path = re.sub(r'/\d+', '', error_path)
+            generic_error_path = re.sub(r'/\d+', '', error['path'])
             for cell_path in cell_source_map_paths:
                 if len(validation_errors[validation_key]) == 3:
                     break
@@ -57,10 +56,10 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
                             'row_number': cell_source_map[cell_path][0][2],
                             'header': cell_source_map[cell_path][0][3],
                             'path': cell_path,
-                            'value': error_message['value']
+                            'value': error['value']
                         }
                         validation_errors[validation_key].append(sources)
         else:
-            validation_errors[validation_key].append({'path': error_path})
+            validation_errors[validation_key].append({'path': error['path']})
 
     return validation_errors

@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from lxml import etree
 
 from .lib.schema import SchemaIATI
-from .lib.iati import format_lxml_errors, get_xml_validation_errors
+from .lib.iati import format_lxml_errors, get_xml_validation_errors, lxml_errors_generator
 from .lib.iati_utils import sort_iati_xml_file
 from cove.lib.converters import convert_spreadsheet
 from cove.lib.exceptions import cove_web_input_error
@@ -60,8 +60,8 @@ def common_checks_context_iati(db_data, data_file, file_type):
         schema_tree = etree.parse(schema_fp)
         schema = etree.XMLSchema(schema_tree)
         schema.validate(tree)
-        for error in schema.error_log:
-            lxml_errors[error.path] = error.message
+        lxml_errors = lxml_errors_generator(schema.error_log)
+
     errors_all = format_lxml_errors(lxml_errors)
 
     if file_type != 'xml':
