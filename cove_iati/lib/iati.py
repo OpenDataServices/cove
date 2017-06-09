@@ -3,6 +3,18 @@ import re
 
 
 def lxml_errors_generator(schema_error_log):
+    '''TODO: lxml does not include path indexes for single item sequences.
+ 
+    one activity in data:
+        iati-activities/iati-activity/activity-date/@iso-date
+    
+    two activities in data:
+        iati-activities/iati-activity[1]/activity-date/@iso-date
+        iati-activities/iati-activity[2]/activity-date/@iso-date
+    
+    This causes a problem when matching lxml error paths and cell source paths
+    as the latter does include an index position for sequences with a single item.
+    '''
     for error in schema_error_log:
         yield {'path': error.path, 'message': error.message}
 
@@ -36,19 +48,24 @@ def format_lxml_errors(lxml_errors):
 
 def get_xml_validation_errors(errors, file_type, cell_source_map):
     validation_errors = {}
+    if file_type != 'xml':
+        cell_source_map_paths = {}
+        for cell_path in cell_source_map.keys():
+            generic_cell_path = re.sub(r'/\d+', '', cell_path)
+            if cell_source_map_paths.get(generic_cell_path):
+                cell_source_map_paths[generic_cell_path].append(cell_path)
+            else:
+                cell_source_map_paths[generic_cell_path] = [cell_path]
+
     for error in errors:
         validation_key = json.dumps(['', error['message']])
         if not validation_errors.get(validation_key):
             validation_errors[validation_key] = []
 
         if file_type != 'xml':
-            cell_source_map_paths = cell_source_map.keys()
             generic_error_path = re.sub(r'/\d+', '', error['path'])
-            for cell_path in cell_source_map_paths:
-                if len(validation_errors[validation_key]) == 3:
-                    break
-                generic_cell_path = re.sub(r'/\d+', '', cell_path)
-                if generic_error_path == generic_cell_path:
+            for cell_path in cell_source_map_paths.get(generic_error_path, []):
+                if cell_path == error['path']:
                     if len(cell_source_map[cell_path][0]) > 2:
                         sources = {
                             'sheet': cell_source_map[cell_path][0][0],
@@ -59,6 +76,7 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
                             'value': error['value']
                         }
                         validation_errors[validation_key].append(sources)
+                        break
         else:
             validation_errors[validation_key].append({'path': error['path']})
 
