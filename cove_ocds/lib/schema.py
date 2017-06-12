@@ -129,8 +129,12 @@ class SchemaOCDS(SchemaJsonMixin):
 
             schema_obj = json_merge_patch.merge(schema_obj, extension_data)
             extensions_descriptor = requests.get(extensions_descriptor_url).json()
-            self.extensions[extensions_descriptor_url] = (url, extensions_descriptor['name'],
-                                                          extensions_descriptor['description'])
+            self.extensions[extensions_descriptor_url] = {
+                'url': url,
+                'name': extensions_descriptor.get('name'),
+                'description': extensions_descriptor.get('description'),
+                'documentation_url': extensions_descriptor.get('documentation_url', '')
+            }
             self.extended = True
 
     def create_extended_release_schema_file(self, upload_dir, upload_url):
