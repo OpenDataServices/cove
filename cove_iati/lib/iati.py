@@ -38,12 +38,15 @@ def format_lxml_errors(lxml_errors):
         path = re.sub(r'/iati-activities/', '', path)
         if attribute:
             path = '{}/@{}'.format(path, attribute)
-
-        val_start = error['message'].find(": '")
-        value = error['message'][val_start + len(": '"):]
-        val_end = value.find("'")
-        value = value[:val_end]
-        message = error['message'].replace('Element ', '').replace(": '{}'".format(value), '')
+        
+        message = error['message']
+        value = ''
+        if 'element is not expected' not in message:
+            val_start = error['message'].find(": '")
+            value = error['message'][val_start + len(": '"):]
+            val_end = value.find("'")
+            value = value[:val_end]
+        message = message.replace('Element ', '').replace(": '{}'".format(value), '')
 
         yield {'path': path, 'message': message, 'value': value}
 
@@ -108,7 +111,14 @@ def error_path_source(error, cell_source_paths, cell_source_map, missing_zeros=F
                 'path': cell_path,
                 'value': error['value']
             }
-
+        else:
+            source = {
+                'sheet': cell_source_map[cell_path][0][0],
+                'row_number': cell_source_map[cell_path][0][1],
+                'header': cell_path,
+                'path': cell_path,
+                'value': error['value']
+            }
     return source
 
 
