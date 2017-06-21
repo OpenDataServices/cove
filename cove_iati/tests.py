@@ -1,5 +1,5 @@
 import pytest
-from lxml import etree
+import defusedxml.lxml as etree
 
 from .lib import iati
 

@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 '''
 from collections import OrderedDict
-from lxml import etree as ET
+import defusedxml.lxml as ET
 
 # Namespaces necessary for opening schema files
 namespaces = {

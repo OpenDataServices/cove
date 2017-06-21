@@ -5,7 +5,8 @@ import os
 from django.shortcuts import render
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from lxml import etree
+import defusedxml.lxml as etree
+import lxml.etree
 
 from .lib.schema import SchemaIATI
 from .lib.iati import format_lxml_errors, get_xml_validation_errors, lxml_errors_generator
@@ -58,7 +59,7 @@ def common_checks_context_iati(db_data, data_file, file_type):
     with open(data_file) as fp, open(schema_aiti.activity_schema) as schema_fp:
         tree = etree.parse(fp)
         schema_tree = etree.parse(schema_fp)
-        schema = etree.XMLSchema(schema_tree)
+        schema = lxml.etree.XMLSchema(schema_tree)
         schema.validate(tree)
         lxml_errors = lxml_errors_generator(schema.error_log)
 
