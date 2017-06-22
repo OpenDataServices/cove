@@ -19,7 +19,7 @@
         <form method="POST" action="." enctype="multipart/form-data">{% csrf_token %}
             {% bootstrap_form forms.upload_form %}
             {% buttons %}
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary upload">
                     {% trans 'Submit' %}
                 </button>
             {% endbuttons %}
@@ -42,7 +42,7 @@
         <form method="POST" action="." id="fetchURL">{% csrf_token %}
             {% bootstrap_form forms.url_form %}
             {% buttons %}
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary link">
                     {% trans 'Submit' %}
                 </button>
             {% endbuttons %}
@@ -65,7 +65,7 @@
         <form method="POST" action=".">{% csrf_token %}
             {% bootstrap_form forms.text_form %}
             {% buttons %}
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary paste">
                     {% trans 'Submit' %}
                 </button>
             {% endbuttons %}
