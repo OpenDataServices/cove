@@ -1,5 +1,6 @@
 import pytest
 import defusedxml.lxml as etree
+import lxml.etree
 
 from .lib import iati
 
@@ -42,7 +43,7 @@ INVALID_DATA = '''
 def validated_data():
     def _validated_data(data):
         schema_xml = etree.XML(XML_SCHEMA)
-        schema_tree = etree.XMLSchema(schema_xml)
+        schema_tree = lxml.etree.XMLSchema(schema_xml)
         data_tree = etree.fromstring(data)
         schema_tree.validate(data_tree)
         return schema_tree
