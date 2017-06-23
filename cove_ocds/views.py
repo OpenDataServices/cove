@@ -27,6 +27,7 @@ def common_checks_ocds(context, db_data, json_data, schema_obj):
 
     if schema_name == 'record-package-schema.json':
         context['records_aggregates'] = get_records_aggregates(json_data, ignore_errors=bool(validation_errors))
+        context['schema_url'] = schema_obj.record_pkg_schema_url
     else:
         additional_codelist_values = get_additional_codelist_values(schema_obj, schema_obj.codelists, json_data)
         closed_codelist_values = {key: value for key, value in additional_codelist_values.items() if not value['isopen']}
@@ -106,14 +107,14 @@ def explore_ocds(request, pk):
             if schema_ocds.invalid_version_data:
                 raise_invalid_version_data(json_data.get('version'))
 
+            # Replace the spreadsheet conversion only if it exists already.
+            if schema_ocds.version != db_data.schema_version:
+                replace = True
+
             if 'records' in json_data:
                 context['conversion'] = None
             else:
                 converted_path = os.path.join(upload_dir, 'flattened')
-
-                # Replace the spreadsheet conversion only if it exists already.
-                if schema_ocds.version != db_data.schema_version:
-                    replace = True
 
                 if schema_ocds.extensions:
                     schema_ocds.create_extended_release_schema_file(upload_dir, upload_url)
