@@ -98,6 +98,7 @@ Then, for 360Giving run:
     DJANGO_SETTINGS_MODULE=cove_360.settings python manage.py runserver
 
 Or for OCDS run:
+
 .. code:: bash
 
     DJANGO_SETTINGS_MODULE=cove_ocds.settings python manage.py runserver
@@ -116,6 +117,7 @@ The following steps are for Ubuntu but equivalent packages are available for oth
    pip install -r requirements_iati.txt
 
 Then run the development server:
+
 .. code:: bash
 
     DJANGO_SETTINGS_MODULE=cove_iati.settings python manage.py runserver
