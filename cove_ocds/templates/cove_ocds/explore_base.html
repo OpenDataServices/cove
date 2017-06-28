@@ -139,7 +139,7 @@
       <ul>
         {% for ext_descriptor_url, ext_details in ext.items %}
           {% if ext_details %}
-          <li><a href="{{ext_details.0}}">{{ext_details.1}}</a> &nbsp;&nbsp;<span class="font-tick tick"></span><p><small>{{ext_details.2}}</small><p></li>
+          <li><a href="{% if ext_details.documentation_url %}{{ext_details.documentation_url}}{% else %}{{ext_details.url}}{% endif %}">{{ext_details.name}}</a> &nbsp;&nbsp;<span class="font-tick tick"></span><p><small>{{ext_details.description}}</small><p></li>
           {% endif %}
         {% endfor %}
       </ul>
