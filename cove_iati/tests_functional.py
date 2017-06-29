@@ -55,6 +55,8 @@ def test_accordion(server_url, browser):
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
     ('basic_iati_unordered_valid.xlsx', ['Valid against Schema'], True),
     ('basic_iati_unordered_invalid_iso_dates.xlsx', ['Invalid against Schema'], True),
+    # We should not server error when there's fields not in the schema
+    ('not_iati.csv', ['Data Supplied', 'Invalid against Schema'], True),
 ])
 def test_explore_iati_url_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
     with open(os.path.join('cove_iati', 'fixtures', source_filename), 'rb') as fp:
@@ -104,3 +106,6 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
     for text in expected_text:
         assert text in body_text
+
+    if conversion_successful:
+        assert 'Converted to XML' in body_text
