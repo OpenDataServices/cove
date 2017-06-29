@@ -12,7 +12,7 @@ from .lib.schema import SchemaIATI
 from .lib.iati import format_lxml_errors, get_xml_validation_errors, lxml_errors_generator
 from .lib.iati_utils import sort_iati_xml_file
 from cove.lib.converters import convert_spreadsheet
-from cove.lib.exceptions import cove_web_input_error
+from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
 from cove.input.models import SuppliedData
 from cove.input.views import data_input
 from cove.views import explore_data_context
@@ -57,7 +57,18 @@ def common_checks_context_iati(db_data, data_file, file_type):
     validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
 
     with open(data_file) as fp, open(schema_aiti.activity_schema) as schema_fp:
-        tree = etree.parse(fp)
+        try:
+            tree = etree.parse(fp)
+        except lxml.etree.XMLSyntaxError as err:
+            raise CoveInputDataError(context={
+                'sub_title': _("Sorry we can't process that data"),
+                'link': 'index',
+                'link_text': _('Try Again'),
+                'msg': _('We think you tried to upload a XML file, but it is not well formed XML.'
+                         '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
+                         '</span> <strong>Error message:</strong> {}'.format(err)),
+                'error': format(err)
+            })
         schema_tree = etree.parse(schema_fp)
         schema = lxml.etree.XMLSchema(schema_tree)
         schema.validate(tree)

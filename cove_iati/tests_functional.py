@@ -55,6 +55,7 @@ def test_accordion(server_url, browser):
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
     ('basic_iati_unordered_valid.xlsx', ['Valid against Schema'], True),
     ('basic_iati_unordered_invalid_iso_dates.xlsx', ['Invalid against Schema'], True),
+    ('bad.xml', ['We think you tried to upload a XML file'], False),
     # We should not server error when there's fields not in the schema
     ('not_iati.csv', ['Data Supplied', 'Invalid against Schema'], True),
 ])
