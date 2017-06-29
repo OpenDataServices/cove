@@ -56,6 +56,7 @@ def test_accordion(server_url, browser):
     ('basic_iati_unordered_valid.xlsx', ['Valid against Schema'], True),
     ('basic_iati_unordered_invalid_iso_dates.xlsx', ['Invalid against Schema'], True),
     ('bad.xml', ['We think you tried to upload a XML file'], False),
+    ('bad_spaces.csv', ['Converted to XML 2 Errors'], True),
     # We should not server error when there's fields not in the schema
     ('not_iati.csv', ['Data Supplied', 'Invalid against Schema'], True),
 ])
