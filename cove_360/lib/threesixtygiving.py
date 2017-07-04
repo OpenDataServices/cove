@@ -341,6 +341,48 @@ class RecipientOrgCompanyNumber(AdditionalTest):
         self.message = "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 
+class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
+    def process(self, grant, path_prefix):
+        try:
+            count_failure = False
+            for num, organization in enumerate(grant['recipientOrganization']):
+                has_id_number = organization.get('companyNumber') or organization.get('charityNumber')
+                if not has_id_number:
+                    self.failed = True
+                    count_failure = True
+                    self.json_locations.append(path_prefix + '/recipientOrganization/{}/id'.format(num))
+
+            if count_failure:
+                self.count += 1
+        except KeyError:
+            pass
+
+        self.heading = self.format_heading_count("not have either a Recipient Org:Company Number or a Recipient Org:Charity Number", verb="do")
+        self.message = "Providing one or both of these, if possible, makes it easier for users of your data to join up the data with other data sources to provide better insight into grant-making. You don’t need to do anything if your grants are to organisations that don’t have UK Company or UK Charity numbers."
+
+
+class IncompleteRecipientOrg(AdditionalTest):
+    def process(self, grant, path_prefix):
+        try:
+            count_failure = False
+            for num, organization in enumerate(grant['recipientOrganization']):
+                has_postal_code = organization.get('postalCode')
+                has_location_data = organization.get('location') and organization.get('location').get('geoCode') and organization.get('location').get('geoCodeType')
+                complete_recipient_org_data = has_postal_code and has_location_data
+                if not complete_recipient_org_data:
+                    self.failed = True
+                    count_failure = True
+                    self.json_locations.append(path_prefix + '/recipientOrganization/{}/id'.format(num))
+
+            if count_failure:
+                self.count += 1
+        except KeyError:
+            pass
+
+        self.heading = self.format_heading_count("incomplete recipient organisation information")
+        self.message = "Your data is missing Recipient Org: Postal Code, Recipient Org: Location:Geographic Code or Recipient Org: Location: Geographic Code Type. Knowing the geographic location of recipient organisations allows users of your data to understand your data and combine it with other data sets to form a broader picture of grant-making."
+
+
 class MoreThanOneFundingOrg(AdditionalTest):
     def __init__(self, **kw):
         super().__init__(**kw)
@@ -401,6 +443,20 @@ class NoBeneficiaryLocation(AdditionalTest):
         self.message = "Although not required by the 360Giving Standard, providing beneficiary data if available helps users to understand your data and allows it to be used in tools that visualise grants geographically."
 
 
+class IncompleteBeneficiaryLocation(AdditionalTest):
+    def process(self, grant, path_prefix):
+        beneficiary_location = grant.get("beneficiaryLocation")
+        if beneficiary_location:
+            complete_beneficiary_data = beneficiary_location.get('name') and beneficiary_location.get('geoCode') and beneficiary_location.get('geoCodeType')
+            if not complete_beneficiary_data:
+                self.failed = True
+                self.count += 1
+                self.json_locations.append(path_prefix + '/beneficiaryLocation')
+
+        self.heading = self.format_heading_count("incomplete beneficiary location information")
+        self.message = "Your data is missing Beneficiary Location: Name, Beneficiary Location: Geographical Code or Beneficiary Location: Geographical Code Type. Beneficiary location information allows users of the data to understand who ultimately benefitted from the grant, not just the location of the organisation that provided the service. If your beneficiaries are in the same place as the organisation that the money went to, stating this is useful for anyone using your data, as it cannot be inferred. "
+
+
 class TitleDescriptionSame(AdditionalTest):
     def process(self, grant, path_prefix):
         title = grant.get("title")
@@ -450,6 +506,42 @@ class OrganizationIdLooksInvalid(AdditionalTest):
         self.message = "The IDs might not be valid for the registration agency that they refer to - for example, a 'GB-CHC' ID that contains an invalid charity number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
 
 
+class NoLastModified(AdditionalTest):
+    def process(self, grant, path_prefix):
+        last_modified = grant.get("dateModified")
+        if not last_modified:
+            self.failed = True
+            self.count += 1
+            self.json_locations.append(path_prefix + '/id')
+
+        self.heading = self.format_heading_count("not have a Last Modified date", verb='do')
+        self.message = "Last Modified allows data users to reconcile discrepancies between versions of your data."
+
+
+class NoDataSource(AdditionalTest):
+    def process(self, grant, path_prefix):
+        data_source = grant.get("dataSource")
+        if not data_source:
+            self.failed = True
+            self.count += 1
+            self.json_locations.append(path_prefix + '/id')
+
+        self.heading = self.format_heading_count("not have a Data Source field", verb='do')
+        self.message = "Knowing where information came from is an important part of establishing trust in your data."
+
+
+class NoClassificationTitle(AdditionalTest):
+    def process(self, grant, path_prefix):
+        classification_title = grant.get("classification") and grant.get("classification").get('title')
+        if not classification_title:
+            self.failed = True
+            self.count += 1
+            self.json_locations.append(path_prefix + '/id')
+
+        self.heading = self.format_heading_count("not have a Classification: Title field", verb='do')
+        self.message = "This field allows you to describe how you classify the grant or have tagged it internally. Examples include classifying by sector (eg Healthcare) or target group (eg NEET)."
+
+
 TEST_CLASSES = [
     ZeroAmountTest,
     RecipientOrg360GPrefix,
@@ -458,13 +550,19 @@ TEST_CLASSES = [
     FundingOrgUnrecognisedPrefix,
     RecipientOrgCharityNumber,
     RecipientOrgCompanyNumber,
+    NoRecipientOrgCompanyCharityNumber,
+    IncompleteRecipientOrg,
     MoreThanOneFundingOrg,
     LooksLikeEmail,
     NoGrantProgramme,
     NoBeneficiaryLocation,
+    IncompleteBeneficiaryLocation,
     TitleDescriptionSame,
     TitleLength,
-    OrganizationIdLooksInvalid
+    OrganizationIdLooksInvalid,
+    NoLastModified,
+    NoDataSource,
+    NoClassificationTitle
 ]
 
 
