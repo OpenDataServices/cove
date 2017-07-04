@@ -1,0 +1,36 @@
+tenders_releases_2_releases.json
+Source: https://github.com/open-contracting/sample-data/tree/958fc30e827e980e750459e1b9a6fe09eb266d7d/buyandsell/ocds_data
+License: http://data.gc.ca/eng/open-government-licence-canada 
+(but truncated to only two releases)
+
+tenders_releases_2_releases.xlsx
+Source: Same data as tenders_releases_2_releases.json, but converted to xlsx using flatten-tool
+License: http://data.gc.ca/eng/open-government-licence-canada 
+
+tenders_releases_2_releases_invalid.json
+Source: Same data as tenders_releases_2_releases.json, but edited such that it doesn't validate against the schema.
+License: http://data.gc.ca/eng/open-government-licence-canada 
+
+tenders_releases_2_releases_not_json.json
+Source: Same data as tenders_releases_2_releases.json, but edited such that it is not well formed JSON.
+License: http://data.gc.ca/eng/open-government-licence-canada
+
+tenders_releases_2_releases_with_deprecated_fields.json
+Source: Same data as tenders_releases_2_releases.json, but edited such that it contain deprecated fields.
+License: http://data.gc.ca/eng/open-government-licence-canada
+
+tenders_releases_1_release_with_extensions_version_1_1.json
+Source: Same data as tenders_releases_2_releases.json, but edited such that it contains extensions.
+License: http://data.gc.ca/eng/open-government-licence-canada
+
+tenders_releases_1_release_with_invalid_extensions.json
+Source: Same data as tenders_releases_2_releases.json, but edited such that it contains invalid extensions.
+License: http://data.gc.ca/eng/open-government-licence-canada
+
+tenders_releases_1_release_with_all_invalid_extensions.json
+Source: Same data as tenders_releases_2_releases.json, but edited such that it contains valid and invalid extensions.
+License: http://data.gc.ca/eng/open-government-licence-canada
+
+ocds_release_nulls.json
+Adapted from://github.com/open-contracting/sample-data/blob/master/blank-template/release-template-1__0__0.json 
+

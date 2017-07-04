@@ -1,0 +1,394 @@
+{% extends 'explore.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load cove_tags %}
+
+{% block header_button %}
+{{block.super}}
+<div class="expand-collapse-all">
+<a href="#" onclick="$('.collapse').collapse('show')">Expand all</a>
+/
+<a href="#" onclick="$('.collapse').collapse('hide')">Collapse all</a>
+</div>
+{% endblock %}
+
+{% block explore_content %}
+
+  {% block data_supplied %}
+    <div class="panel panel-default">
+      <div class="panel-heading" data-toggle="collapse" data-target="#data-supplied-body" {% if conversion == 'flattenable' %}aria-expanded="true"{% endif %}>
+        <h3 class="panel-title panel-title-explore"> 
+          <span class="font-tick tick" aria-hidden="true"></span>
+          Data Summary
+          <span class="pull-right glyphicon glyphicon-collapse-{% if conversion == 'flattenable' %}up{% else %}down{% endif %}"></span>
+        </h3>
+      </div>
+      <div id="data-supplied-body" class="collapse {% if conversion == 'flattenable' %}in{% endif %}">
+        <div class="panel-body">
+           <p class="explanation">
+             {% trans "A file was " %} 
+             {% if source_url %}
+                {% trans "downloaded from " %} <a href="{{source_url}}">{{source_url}}</a>
+             {% else %}
+               {% trans "uploaded " %} 
+             {% endif %}
+             {% trans "on " %} {{created_date}}.
+           </p>
+           <br>
+           <ul class="left-space">
+             <li>
+               {% blocktrans count n_grants=grants_aggregates.count %} This file contains <strong>{{n_grants}} grant</strong>{% plural %}This file contains <strong>{{n_grants}} grants</strong> {% endblocktrans %}
+               {% blocktrans count n_funders=grants_aggregates.distinct_funding_org_identifier|length %}from <strong>{{n_funders}} funder</strong>{% plural %}from <strong>{{n_funders}} funders</strong>{% endblocktrans %}
+               {% blocktrans count n_recipients=grants_aggregates.distinct_recipient_org_identifier|length %}to <strong>{{n_recipients}} recipient</strong>{% plural %}to <strong>{{n_recipients}} recipients</strong>{% endblocktrans %}
+               {% if grants_aggregates.min_award_date == grants_aggregates.max_award_date %}
+                 {% blocktrans with start_date=grants_aggregates.min_award_date %} awarded on <strong>{{start_date}}</strong>.{% endblocktrans %}{% else %}{% blocktrans with start_date=grants_aggregates.min_award_date end_date=grants_aggregates.max_award_date %}awarded between <strong>{{start_date}}</strong> and <strong>{{end_date}}</strong>.{% endblocktrans %}
+               {% endif %}
+              </li>
+              {% for currency_code, currency_aggregates in grants_aggregates.currencies.items %}
+              <li>
+                {% if currency_aggregates.count == 1 %}
+                  {% if currency_aggregates.count == grants_aggregates.count %}
+                    {% trans "The grant" %}
+                  {% else %}
+                    {% trans "<strong>1 grant</strong>" %}
+                  {% endif %}
+                  {% blocktrans with amount_awarded=currency_aggregates.total_amount|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} was awarded in <strong>{{currency_code}}</strong> with a value of <strong>{{currency_symbol}}{{amount_awarded}}</strong>.{% endblocktrans %}
+                {% else %}
+                  {% if currency_aggregates.count == grants_aggregates.count %}
+                    {% trans "The grants" %}
+                  {% else %}
+                    <strong>{{currency_aggregates.count}}</strong> {% trans "<strong>grants</strong>" %}
+                  {% endif %}
+                  {% blocktrans with n_grants=currency_aggregates.count total_amount=currency_aggregates.total_amount|intcomma max_amount=currency_aggregates.max_amount|intcomma min_amount=currency_aggregates.min_amount|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} were awarded in <strong>{{currency_code}}</strong> with a total value of <strong>{{currency_symbol}}{{total_amount}}</strong> and individual awards ranging from <strong>{{currency_symbol}}{{min_amount}}</strong> (lowest) to <strong>{{currency_symbol}}{{max_amount}}</strong> (highest).{% endblocktrans %}
+                {% endif %}
+              </li>
+              {% endfor %}
+              {% if csv_encoding and csv_encoding != "utf-8" %}
+              <li>
+              {% blocktrans %} This file is <strong>not 'utf-8'</strong> encoded (it is <em>{{csv_encoding}}</em> encoded).{% endblocktrans %}
+              </li>
+             {% endif %}
+           </ul>
+           <div class="explore-help"> If anything looks wrong with this data please use the <em>Review</em> section below to identify potential issues. </div>
+        {% if conversion == 'flattenable' %}
+          <form method="post">
+            <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% trans "Convert to Spreadsheet" %}</button>
+            {% csrf_token %}
+          </form>
+        {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endblock data_supplied %}
+
+  {% block conversion %}
+  {% if conversion == 'unflatten' or conversion == 'flatten'%}
+    <div class="panel panel-default">
+      <div class="panel-heading" data-toggle="collapse" data-target="#conversion-body">
+        <h3 class="panel-title panel-title-explore" id="conversion-title"> 
+          {% if conversion_warning_messages or conversion_error %}
+            <span class="font-tick cross" aria-hidden="true"></span>
+          {% else %}
+            <span class="font-tick tick" aria-hidden="true"></span>
+          {% endif %}
+          {% trans "Converted to " %}{% if conversion == 'unflatten'%} JSON {% else %} Spreadsheet{% endif %}
+          {% if conversion_warning_messages %}
+            <small>{% blocktrans count n_warnings=conversion_warning_messages|length %}{{n_warnings}} Error{% plural %}{{n_warnings}} Errors{% endblocktrans %}</small>
+          {% endif %}
+          <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+        </h3>
+      </div>
+      <div id="conversion-body" class="collapse">
+        <div class="panel-body">
+          {% if conversion == 'unflatten' %}
+            <p class="explanation">{% trans "In order to validate your data we needed to convert it to JSON." %}</p>
+            <div class="explore-help">360Giving uses <a href="http://json-schema.org/">JSON Schema</a> to describe the standard in a technical way. In order to validate the data against the schema we have converted it to JSON and will perform all tests on the converted data. If there are conversion errors, the data may not look as you expect &mdash; check the <em>Review</em> section to see if the data appears as expected</div>
+          {% else %}
+            <p class="explanation">We have converted your JSON data into spreadsheet format.</p>
+            {% if conversion_error %}
+                <p>{% blocktrans %}The JSON data could not be converted to spreadsheet due to the following error error: {{conversion_error}}{% endblocktrans %}</p>
+                {% include 'error_extra.html' %}
+            {% endif %}
+          {% endif %}
+          {% if conversion_warning_messages %}
+            <br>
+            <p>{% trans "Conversion <strong>errors:</strong>" %}</p>
+            <ul class="left-space">
+              {% for warning_message in conversion_warning_messages %}
+                <li>{{warning_message}}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% endblock conversion %}
+
+  {% block validation %}
+  <div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" data-target="#validation-body">
+      <h3 class="panel-title panel-title-explore">
+        {% if validation_errors %}
+           <span class="font-tick cross" aria-hidden="true"></span>
+           {% trans "Invalid against Schema " %}<small>{% blocktrans count n_errors=validation_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</small>
+        {% else %}
+           <span class="font-tick tick" aria-hidden="true"></span>
+          {% trans "Valid against Schema" %}
+        {% endif %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="validation-body" class="collapse">
+      <div class="panel-body">
+        <p class="explanation">
+        {% if validation_errors %}
+            {% trans "Sorry your data is invalid against" %}
+        {% else %}
+          {% trans "Congratulations! Your data is valid against" %}
+        {% endif %}
+        <a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas"> 360Giving JSON Package Schema</a>.
+        </p>
+        <div class="explore-help">Validation ensures that your data is compliant with the basic requirements of the <a href="http://www.threesixtygiving.org/standard/">360Giving Standard</a>. If your data validates then it can be used by any user or application who knows how to work with 360Giving data.</div>
+        {% if validation_errors %}
+          <br>
+          <p class="explanation">&nbsp;{% trans "There are some <strong>validation errors</strong> in your data, please check them in the table below." %}</p>
+          <br>
+          {% include "validation_table.html" %}
+          {% for error, values in validation_errors %}
+             {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endblock validation %}
+
+  {% block additional_checks %}
+  <div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" data-target="#additional-checks-body">
+      <h3 class="panel-title panel-title-explore"> 
+        <span class="font-tick question" aria-hidden="true"></span>
+        {% trans "Additional Checks" %}{% if additional_checks_count %} <small>{% blocktrans count n_additional_checks=additional_checks_count %} Additional checks{% plural %}{{n_additional_checks}} Additional checks{% endblocktrans %}</small>{% endif %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="additional-checks-body" class="collapse">
+        {% if additional_checks %}
+        <table class="table no-bottom-margin">
+        <thead> 
+          <tr> 
+            <th>{% trans 'Check Description' %}</th> 
+            <th>{% trans 'First 3 Locations' %}</th> 
+          </tr> 
+        </thead>
+        <tbody>
+        {% for message, json_location, spreadsheet_location in additional_checks %}
+        <tr>
+          <td><strong>{{message.heading}}</strong><br>{{message.message}}</td>
+          {% if file_type == 'xlsx' or file_type == 'csv' %}
+            <td style="white-space: nowrap">
+              <ul class="list-unstyled">
+                {% for sheet, letter, row, header in spreadsheet_location|slice:":3" %}
+                <li> <b>Sheet:</b> {{sheet}} <b>Row:</b> {{row}} {% if header %} <b>Header:</b> {{header}} {% endif %} </li>
+                {% endfor %}
+              </ul>
+            </td>
+          {% else %}
+            <td>
+              <ul class="list-unstyled">
+                {% for value in json_location|slice:":3" %}
+                   <li> {{value}} </li>
+                {% endfor %}
+              </ul>
+            </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        {% endif %}
+
+        {% if data_only %}
+          <hr class="heading-in-panel">
+            <p class="left-space"> {% trans "<strong>Additional fields</strong> were found in your data. Please check them to see that they are intended additions and not just the result of spelling mistakes." %}</p>
+          {% include "additional_fields_table.html" %}
+        {% endif %}
+    </div>
+  </div>
+  {% endblock additional_checks %}
+
+  {% block review %}
+  <div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" data-target="#review-body">
+      <h3 class="panel-title panel-title-explore"><span class="glyphicon glyphicon-list-alt"></span>
+        {% trans "Review" %} <small>{% blocktrans count n_grants=grants_aggregates.count %}{{n_grants}} Grant{% plural %}{{n_grants}} Grants{% endblocktrans %}</small>
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="review-body" class="collapse">
+      <div class="panel-body">
+        <p class="explanation">{% trans "Review your data." %}</p>
+        <div class="explore-help">
+          The table below shows your data after it has been processed
+          {% if conversion_warning_messages or validation_errors or additional_fields_count %}
+            ; if anything looks wrong, it is probably related to the errors and/or warnings shown above
+          {% endif %}.
+        </div>
+        <ul class="left-space">
+          <li>
+            {% trans "Grant identifiers:" %}&nbsp;
+            <strong>
+              {% if grants_aggregates.unique_ids|length %}<a data-toggle="modal" data-target=".unique-ids">{% endif %}
+              {{ grants_aggregates.unique_ids|length}}
+              {% if grants_aggregates.unique_ids|length %}</a>{% endif %}
+            </strong>
+          </li>
+          <li>
+            {% trans "Funder organisation identifiers:" %}&nbsp;
+            <strong>
+              {% if grants_aggregates.distinct_funding_org_identifier|length %}<a data-toggle="modal" data-target=".distinct-funding-org-identifier">{% endif %}
+              {{ grants_aggregates.distinct_funding_org_identifier|length}}
+              {% if grants_aggregates.distinct_funding_org_identifier|length %}</a>
+              {% endif %}
+            </strong>
+          </li>
+          <li>
+            {% trans "Recipient organisation identifiers:" %}&nbsp;
+            <strong>
+              {% if grants_aggregates.distinct_recipient_org_identifier|length %}<a data-toggle="modal" data-target=".distinct-recipient-org-identifier">{% endif %}
+              {{ grants_aggregates.distinct_recipient_org_identifier|length}}
+              {% if grants_aggregates.distinct_recipient_org_identifier|length %}</a>{% endif %}
+            </strong>
+          </li>
+        </ul>
+        <br>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  {% trans 'Grants Table' %}
+                </h4>
+              </div>
+              <div class="panel-body">
+                  <table class="table table-striped result-table table-condensed">
+                    <thead>
+                      <tr>
+                        <th>id</th>
+                        <th>title</th>
+                        <th>currency</th>
+                        <th>amountAwarded</th>
+                        <th>dateModified</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for grant in json_data.grants|slice:":5000" %}
+                      <tr>
+                        <td>{{grant.id}}</td>
+                        <td>{{grant.title }}</td>
+                        <td>{{grant.currency}}</td>
+                        <td>{{grant.amountAwarded}}</td>
+                        <td>{{grant.dateModified}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% cove_modal_list className="unique-ids" modalTitle="Unique IDs" itemList=grants_aggregates.unique_ids %}
+  {% cove_modal_list className="distinct-funding-org-identifier" modalTitle="Funder Organisation IDs" itemList=grants_aggregates.distinct_funding_org_identifier %}
+  {% cove_modal_list className="distinct-recipient-org-identifier" modalTitle="Recipient Organisation IDs" itemList=grants_aggregates.distinct_recipient_org_identifier %}
+  {% endblock review %}
+
+  {% block download_and_share %}
+  <div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" data-target="#save-and-share-body">
+      <h3 class="panel-title panel-title-explore"><span class="glyphicon glyphicon-save"></span>
+        {% trans "Download and Share" %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="save-and-share-body" class="collapse {% if conversion == 'flatten' %}in{% endif %}">
+      <div class="panel-body">
+        <h4><span class="glyphicon glyphicon-download-alt"></span> Download</h4>
+        <p>{% trans "The following files are available to download:" %}</p>
+        <ul class="left-space">
+          <li>
+            <a href="{{original_file.url}}">{% trans "Original file" %} ({{file_type}})</a> {{original_file.size|filesizeformat}}
+          </li>
+          {% if not conversion_error %}
+            {% if conversion == 'unflatten' %}
+            <li>
+              <a href="{{converted_url}}">{{JSON}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
+            </li>
+            {% elif conversion == 'flatten' %}
+            <li>
+              <a href="{{converted_url}}-titles.xlsx">{{xlsx}} ({% trans converted %})</a> {{converted_file_size_titles|filesizeformat}}
+            </li>
+            <li class="list-unstyled">
+              <sub>{% trans "You can also download an" %}<a href="{{converted_url}}.xlsx"> {% trans "Excel Spreadsheet (.xlsx) with JSON field names" %}</a> {% trans "instead of titles as column headers" %} ({{converted_file_size|filesizeformat}})</sub>
+            </li>
+            {% endif %}
+          {% endif %}
+        </ul>
+        <h4><span class="glyphicon glyphicon-share"></span> Share</h4>
+        <p>{% trans "Use the following url to share these results:" %}</p>
+        <div class="copy-div">
+            <span class="copy-span"> {{ current_url }} <span id="copy-url-button" title="Click to copy." data-clipboard-text={{ current_url }} class="btn copy-button glyphicon glyphicon-copy" aria-hidden="true"></span> </span>
+        </div>
+        {% comment %}Translators: Paragraph that describes the application{% endcomment %}
+        <br>
+        <p>{% blocktrans %}After 7 days all uploaded data is deleted from our servers, and the results will no longer be available. Anyone using the link to this page after that will be shown a message that tells them the file has been removed.{% endblocktrans %}</p>
+        <p>{% blocktrans %}These results will be available for 7 days from the day the data was first uploaded. You can revisit these results until then.{% endblocktrans %}</p>
+      </div>
+    </div>
+  </div>
+  {% endblock download_and_share %}
+
+{% endblock explore_content %}
+
+{% block extrafooterscript %}
+  {{ block.super }} 
+  <script type="text/javascript">
+    $("[data-toggle='collapse']").click(function() {
+      var $this = $(this);
+      if($this.attr("aria-expanded") === "true"){
+        $this.find('.glyphicon-collapse-up').removeClass('glyphicon-collapse-up').addClass('glyphicon-collapse-down')
+      } else {
+        $this.find('.glyphicon-collapse-down').removeClass('glyphicon-collapse-down').addClass('glyphicon-collapse-up')
+      }
+    });
+  </script>
+{% endblock extrafooterscript %}
+
+
+{% comment %}
+<!-- These components haven't been used in the UI redesign -->
+{% cove_modal_list className="duplicate-id-modal" modalTitle="Duplicate IDs" itemList=grants_aggregates.duplicate_ids %}
+{% cove_modal_list className="funding-org-identifier-prefixes" modalTitle="Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifier_prefixes %}
+{% cove_modal_list className="funding-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifiers_unrecognised_prefixes %}
+{% cove_modal_list className="recipient-org-identifier-prefixes" modalTitle="Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifier_prefixes %}
+{% cove_modal_list className="recipient-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}
+<div class="modal fade distinct-funding-orgs" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         <h5 class="modal-title">Recipient Organisation IDs</h5>
+      </div>
+      <ul class="list-group">
+        {% for id in grants_aggregates.distinct_funding_org_identifier %}
+           <li class="list-group-item">{{ id }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+<!--  -->
+{% endcomment %}

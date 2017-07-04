@@ -11,12 +11,19 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import environ
 import os
 import warnings
-import environ
+
 import raven
+
 from django.utils.crypto import get_random_string
-from django.utils.translation import ugettext_lazy as _
+
+COVE_CONFIG = {
+    'app_name': 'test',
+    'app_base_template': 'base.html',
+    'input_methods': ['upload', 'url', 'text'],
+}
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -32,13 +39,11 @@ env = environ.Env(  # set default values and casting
     PIWIK_SITE_ID=(str, ''),
     PIWIK_DIMENSION_MAP=(dict, {}),
     GOOGLE_ANALYTICS_ID=(str, ''),
-    PREFIX_MAP=(dict, {}),
     ALLOWED_HOSTS=(list, []),
     SECRET_KEY=(str, secret_key),
     DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
     DEBUG_TOOLBAR=(bool, False),
-    SCHEMA_URL_OCDS=(str, 'http://standard.open-contracting.org/schema/1__0__2/'),
-    SCHEMA_URL_360=(str, 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/'),
+    # SCHEMA_URL_360=(str, 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/'),
 )
 
 PIWIK = {
@@ -54,67 +59,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 DEALER_TYPE = 'git'
-
-PREFIX_MAP = env('PREFIX_MAP')
-
-
-COVE_CONFIG_BY_NAMESPACE = {
-    'base_template_name': {
-        'cove-ocds': 'base_ocds.html',
-        'cove-360': 'base_360.html',
-        'cove-resourceprojects': 'base_resourceprojects.html',
-        'default': 'base_generic.html',
-    },
-    'application_name': {
-        'cove-ocds': _('Open Contracting Data Standard Validator'),
-        'cove-360': _('360Giving Data Quality Tool'),
-        'default': _('CoVE'),
-    },
-    'application_strapline': {
-        'cove-ocds': _('Validate and Explore your data.'),
-        'cove-360': _('Convert, Validate, Explore 360Giving Data'),
-        'default': _('Convert, Validate, Explore'),
-    },
-    'schema_url': {
-        'cove-360': env('SCHEMA_URL_360'),
-        'cove-ocds': env('SCHEMA_URL_OCDS'),
-        'default': None
-    },
-    'schema_name': {
-        'cove-360': '360-giving-package-schema.json',
-        'cove-ocds': {'release': 'release-package-schema.json',
-                      'record': 'record-package-schema.json'},
-        'default': None
-    },
-    'item_schema_name': {  # Schema url for an individual item e.g. a single release or grant
-        'cove-ocds': 'release-schema.json',
-        'cove-360': '360-giving-schema.json',
-        'default': None
-    },
-    'root_list_path': {
-        'cove-ocds': 'releases',
-        'cove-360': 'grants',
-        'default': None
-    },
-    'root_id': {
-        'cove-ocds': 'ocid',
-        'default': ''
-    },
-    'convert_titles': {
-        'cove-360': True,
-        'default': False
-    },
-    'input_methods': {
-        'default': ['upload', 'url', 'text'],
-        'cove-resourceprojects': ['upload', 'url']
-    },
-    'support_email': {
-        'cove-ocds': 'data@open-contracting.org',
-        'cove-360': 'support@threesixtygiving.org',
-        'default': 'code@opendataservices.coop',
-    },
-}
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -145,10 +89,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+    'raven.contrib.django.raven_compat',
     'cove',
     'cove.input',
-    'cove.dataload',
-    'raven.contrib.django.raven_compat',
 )
 
 if env('DEBUG_TOOLBAR'):
@@ -165,10 +108,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'dealer.contrib.django.Middleware',
-    'cove.middleware.CoveConfigByNamespaceMiddleware',
+    'cove.middleware.CoveConfigCurrentApp',
 )
 
-ROOT_URLCONF = 'cove.urls_multi'
+ROOT_URLCONF = 'cove.urls'
 
 TEMPLATES = [
     {
@@ -182,13 +125,13 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cove.context_processors.analytics',
-                'cove.context_processors.cove_namespace_context',
+                'cove.context_processors.input_methods'
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'cove.wsgi.application'
+WSGI_APPLICATION = ''
 
 
 # Database
@@ -228,7 +171,9 @@ LANGUAGES = (
     ('es', 'Spanish'),
 )
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale'),
+    os.path.join(BASE_DIR, 'cove', 'locale'),
+    os.path.join(BASE_DIR, 'cove_ocds', 'locale'),
+    os.path.join(BASE_DIR, 'cove_360', 'locale'),
 )
 
 
@@ -245,7 +190,7 @@ LOGGING = {
     },
     'handlers': {
         'sentry': {
-            'level': 'ERROR',
+            'level': 'WARNING',
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
         },
         'console': {

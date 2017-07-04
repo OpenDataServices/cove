@@ -1,13 +1,15 @@
 pip
 Django<1.9
 #^^ rq.filter: <1.9
--e git+https://github.com/OpenDataServices/flatten-tool.git@fc074cd0a4a25b925a05fc0dda0488f17d1c28d5#egg=flattentool
+-e git+https://github.com/OpenDataServices/flatten-tool.git@dc376d5b4199fb8c798f49230abde93609aa4ad0#egg=flattentool
 django-bootstrap3
 django-debug-toolbar
 requests
+cached-property
 dealer
 django-environ
 jsonschema
+json-merge-patch
 raven
 strict-rfc3339
 rfc3987

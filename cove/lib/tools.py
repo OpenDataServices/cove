@@ -1,6 +1,8 @@
-import strict_rfc3339
 import datetime
+import strict_rfc3339
 from functools import wraps  # use this to preserve function signatures and docstrings
+
+from . exceptions import UnrecognisedFileType
 
 
 def ignore_errors(f):
@@ -45,3 +47,21 @@ def datetime_or_date(instance):
     if result:
         return result
     return datetime.datetime.strptime(instance, "%Y-%m-%d")
+
+
+def get_file_type(file):
+    name = file.name.lower()
+    if name.endswith('.json'):
+        return 'json'
+    elif name.endswith('.xlsx'):
+        return 'xlsx'
+    elif name.endswith('.csv'):
+        return 'csv'
+    elif name.endswith('.xml'):
+        return 'xml'
+    else:
+        first_byte = file.read(1)
+        if first_byte in [b'{', b'[']:
+            return 'json'
+        else:
+            raise UnrecognisedFileType

@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load cove_tags %}
+
+<table class="table">
+   <thead><tr> <th class="col-md-4">{% trans 'Field' %}</th> <th>{% trans 'Path to Field' %}</th> <th class="col-md-2">{% trans 'Usage Count' %}</th> </tr></thead>
+   <tbody>
+   {% for path, error, count in data_only %}
+      <tr>
+         <td>{{error}}</td> <td>{{path}}</td> <td>{{count}}</td>
+      </tr>
+   {% endfor %}
+   </tbody>
+</table>

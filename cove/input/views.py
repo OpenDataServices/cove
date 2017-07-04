@@ -1,9 +1,11 @@
-from django.utils.translation import ugettext_lazy as _
-from django.shortcuts import render, redirect
-from django import forms
-from cove.input.models import SuppliedData
-from django.core.files.base import ContentFile
 import requests
+
+from django import forms
+from django.core.files.base import ContentFile
+from django.shortcuts import render, redirect
+from django.utils.translation import ugettext_lazy as _
+
+from cove.input.models import SuppliedData
 
 
 class UploadForm(forms.ModelForm):
@@ -28,14 +30,15 @@ class TextForm(forms.Form):
     paste = forms.CharField(label=_('Paste (JSON only)'), widget=forms.Textarea)
 
 
-def input(request):
-    form_classes = {
-        'upload_form': UploadForm,
-        'url_form': UrlForm,
-        'text_form': TextForm,
-    }
-    forms = {form_name: form_class() for form_name, form_class in form_classes.items()}
+default_form_classes = {
+    'upload_form': UploadForm,
+    'url_form': UrlForm,
+    'text_form': TextForm,
+}
 
+
+def data_input(request, form_classes=default_form_classes, text_file_name='test.json'):
+    forms = {form_name: form_class() for form_name, form_class in form_classes.items()}
     request_data = None
     if "source_url" in request.GET:
         request_data = request.GET
@@ -64,19 +67,21 @@ def input(request):
                 except requests.ConnectionError as err:
                     return render(request, 'error.html', context={
                         'sub_title': _("Sorry we got a ConnectionError whilst trying to download that file"),
-                        'link': 'cove:index',
+                        'link': 'index',
                         'link_text': _('Try Again'),
-                        'msg': _(str(err) + '\n\n Common reasons for this error include supplying a local development url that our servers can\'t access, or misconfigured SSL certificates.')
+                        'msg': _(str(err) + '\n\n Common reasons for this error include supplying a local '
+                                 'development url that our servers can\'t access, or misconfigured SSL certificates.')
                     })
                 except requests.HTTPError as err:
                     return render(request, 'error.html', context={
                         'sub_title': _("Sorry we got a HTTP Error whilst trying to download that file"),
-                        'link': 'cove:index',
+                        'link': 'index',
                         'link_text': _('Try Again'),
-                        'msg': _(str(err) + '\n\n If you can access the file through a browser then the problem may be related to permissions, or you may be blocking certain user agents.')
+                        'msg': _(str(err) + '\n\n If you can access the file through a browser then the problem '
+                                 'may be related to permissions, or you may be blocking certain user agents.')
                     })
             elif form_name == 'text_form':
-                data.original_file.save('test.json', ContentFile(form['paste'].value()))
+                data.original_file.save(text_file_name, ContentFile(form['paste'].value()))
             return redirect(data.get_absolute_url())
 
-    return render(request, 'datainput/input.html', {'forms': forms})
+    return render(request, 'input/input.html', {'forms': forms})

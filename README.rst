@@ -14,14 +14,12 @@ CoVE - Convert Validate & Explore
 .. image:: https://img.shields.io/badge/license-AGPLv3-blue.svg
     :target: https://github.com/OpenDataServices/cove/blob/master/AGPLv3.txt
 
-HuBoard "agile board" view of our issues: https://huboard.com/OpenDataServices/cove
+Development work on CoVE by Open Data Services is carried out in sprints. The issues for each sprint can be found at https://github.com/OpenDataServices/cove/projects . Other work is carried out from time to time, and contributions from the community are welcome. Outstanding issues for CoVE can be found at https://github.com/OpenDataServices/cove/issues . Please report any bugs!
 
 Introduction
 ============
 
 CoVE is an web application to Convert, Validate and Explore data following certain open data standards - currently 360Giving and the Open Contracting Data standard. http://cove.opendataservices.coop
-
-CoVE is current in an alpha/beta state.
 
 Why convert data?
 +++++++++++++++++
@@ -44,6 +42,11 @@ CoVE currently supports conversion from:
 * Excel to JSON (it uses the `flatten-tool <(https://github.com/OpenDataServices/flatten-tool>`_ for conversion)
 
 If a JSON schema is supplied, CoVE can use either field names, or user-friendly column titles.
+
+User Flows
+==========
+
+Overviews of how users flow through the application are maintained at https://docs.google.com/drawings/d/1pVbEu6dJaVk8t3NctjYuE5irsqltc9Th0gVQ_zeJyFA/edit and https://docs.google.com/drawings/d/1wFH4lZlBZWso7Tj_g7CyTF3YaFfnly59sVufpztmEg8/edit
 
 Release Cycle
 =============
@@ -88,9 +91,35 @@ Steps to installation:
     pip install -r requirements_dev.txt
     python manage.py migrate
     python manage.py compilemessages
-    python manage.py runserver
 
-Follow the instructions in your terminal to open the aplication in your browser.
+Then, for 360Giving run:
+
+.. code:: bash
+    DJANGO_SETTINGS_MODULE=cove_360.settings python manage.py runserver
+
+Or for OCDS run:
+.. code:: bash
+
+    DJANGO_SETTINGS_MODULE=cove_ocds.settings python manage.py runserver
+
+Follow the instructions in your terminal to open the application in your browser.
+
+Extra installation steps for IATI
++++++++++++++++++++++++++++++++++
+
+The following steps are for Ubuntu but equivalent packages are available for other distros.
+
+.. code:: bash
+
+   sudo apt-get install build-essential libxml2-dev libxslt1-dev python3-dev
+   pip install Cython
+   pip install -r requirements_iati.txt
+
+Then run the development server:
+.. code:: bash
+
+    DJANGO_SETTINGS_MODULE=cove_iati.settings python manage.py runserver
+
 
 Deployment
 ==========
@@ -102,13 +131,13 @@ Run tests
 
 .. code:: bash
 
-    py.test
+   ./run_tests.sh
 
 To run functional tests with a different browser:
 
 .. code:: bash
 
-    BROWSER=Chrome py.test
+   BROWSER=Chrome ./run_tests.sh
 
 See http://selenium-python.readthedocs.io/api.html for browser options.
 

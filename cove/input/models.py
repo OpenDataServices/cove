@@ -29,6 +29,9 @@ class SuppliedData(models.Model):
     modified = models.DateTimeField(auto_now=True, null=True)
     rendered = models.BooleanField(default=False)
 
+    # Last schema version applied to the stored data
+    schema_version = models.CharField(max_length=10, default='')
+
     form_name = models.CharField(
         max_length=20,
         choices=[
@@ -40,7 +43,7 @@ class SuppliedData(models.Model):
     )
 
     def get_absolute_url(self):
-        return reverse('cove:explore', args=(self.pk,), current_app=self.current_app)
+        return reverse('explore', args=(self.pk,), current_app=self.current_app)
 
     def upload_dir(self):
         return os.path.join(settings.MEDIA_ROOT, upload_to(self))
@@ -77,3 +80,8 @@ class SuppliedData(models.Model):
                     ContentFile(r.content))
         else:
             raise ValueError('No source_url specified.')
+
+    def __repr__(self):
+        return "<SuppliedData source_url={} original_file.name={}>".format(
+            repr(self.source_url),
+            repr(self.original_file.name))

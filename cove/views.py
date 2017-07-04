@@ -1,80 +1,27 @@
-from django.utils.translation import ugettext_lazy as _
-from django.shortcuts import render
-from cove.input.models import SuppliedData
-import os
 import json
 import logging
-import functools
-from django.db.models.aggregates import Count
-from django.utils import timezone
-from django.http import Http404
+import os
 from datetime import timedelta
+
+from django.db.models.aggregates import Count
+from django.shortcuts import render
+from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
+
 import cove.lib.common as common
-import cove.lib.ocds as ocds
-import cove.lib.threesixtygiving as threesixtygiving
-from cove.lib.converters import convert_spreadsheet, convert_json
-from cove.lib.exceptions import CoveInputDataError
+from cove.input.models import SuppliedData
+from cove.lib.tools import get_file_type
 
 logger = logging.getLogger(__name__)
 
 
-class CoveWebInputDataError(CoveInputDataError):
-    """
-    An error that we think is due to the data input by the user, rather than a
-    bug in the application. Returns nicely rendered HTML. Depends on Django
-    """
-    def __init__(self, context=None):
-        if context:
-            self.context = context
-
-    @staticmethod
-    def error_page(func):
-        @functools.wraps(func)
-        def wrapper(request, *args, **kwargs):
-            try:
-                return func(request, *args, **kwargs)
-            except CoveInputDataError as err:
-                return render(request, 'error.html', context=err.context)
-        return wrapper
-
-
-class UnrecognisedFileType(CoveInputDataError):
-    context = {
-        'sub_title': _("Sorry we can't process that data"),
-        'link': 'cove:index',
-        'link_text': _('Try Again'),
-        'msg': _('We did not recognise the file type.\n\nWe can only process json, csv and xlsx files.')
-    }
-
-
-def get_file_type(django_file):
-    name = django_file.name.lower()
-    if name.endswith('.json'):
-        return 'json'
-    elif name.endswith('.xlsx'):
-        return 'xlsx'
-    elif name.endswith('.csv'):
-        return 'csv'
-    else:
-        first_byte = django_file.read(1)
-        if first_byte in [b'{', b'[']:
-            return 'json'
-        else:
-            raise UnrecognisedFileType
-
-
-@CoveWebInputDataError.error_page
-def explore(request, pk):
-    if request.current_app == 'cove-resourceprojects':
-        import cove.dataload.views
-        return cove.dataload.views.data(request, pk)
-
+def explore_data_context(request, pk):
     try:
         data = SuppliedData.objects.get(pk=pk)
-    except (SuppliedData.DoesNotExist, ValueError):  # Catches: Primary key does not exist, and, badly formed hexadecimal UUID string
-        return render(request, 'error.html', {
+    except (SuppliedData.DoesNotExist, ValueError):  # Catches primary key does not exist and badly formed UUID
+        return {}, None, render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
-            'link': 'cove:index',
+            'link': 'index',
             'link_text': _('Go to Home page'),
             'msg': _("We don't seem to be able to find the data you requested.")
             }, status=404)
@@ -82,63 +29,56 @@ def explore(request, pk):
     try:
         data.original_file.file.name
     except FileNotFoundError:
-        return render(request, 'error.html', {
+        return {}, None, render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
-            'link': 'cove:index',
+            'link': 'index',
             'link_text': _('Go to Home page'),
-            'msg': _('The data you were hoping to explore no longer exists.\n\nThis is because all data suplied to this website is automatically deleted after 7 days, and therefore the analysis of that data is no longer available.')
+            'msg': _('The data you were hoping to explore no longer exists.\n\nThis is because all '
+                     'data suplied to this website is automatically deleted after 7 days, and therefore '
+                     'the analysis of that data is no longer available.')
         }, status=404)
 
     file_type = get_file_type(data.original_file)
-
     context = {
-        "original_file": {
-            "url": data.original_file.url,
-            "size": data.original_file.size
+        'original_file': {
+            'url': data.original_file.url,
+            'size': data.original_file.size
         },
-        "current_url": request.build_absolute_uri(),
-        "source_url": data.source_url,
-        "form_name": data.form_name,
-        "created_date": data.created.strftime("%A, %d %B %Y %I:%M%p %Z"),
+        'file_type': file_type,
+        'data_uuid': pk,
+        'current_url': request.build_absolute_uri(),
+        'source_url': data.source_url,
+        'form_name': data.form_name,
+        'created_datetime': data.created.strftime('%A, %d %B %Y %I:%M%p %Z'),
+        'created_date': data.created.strftime('%A, %d %B %Y'),
     }
 
-    if file_type == 'json':
-        # open the data first so we can inspect for record package
-        with open(data.original_file.file.name, encoding='utf-8') as fp:
-            try:
-                json_data = json.load(fp)
-            except ValueError as err:
-                raise CoveInputDataError(context={
-                    'sub_title': _("Sorry we can't process that data"),
-                    'link': 'cove:index',
-                    'link_text': _('Try Again'),
-                    'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message:</strong> {}'.format(err)),
-                    'error': format(err)
-                })
-        if request.current_app == 'cove-ocds' and 'records' in json_data:
-            context['conversion'] = None
-        else:
-            context.update(convert_json(request, data))
-    else:
-        context.update(convert_spreadsheet(request, data, file_type))
-        with open(context['converted_path'], encoding='utf-8') as fp:
-            json_data = json.load(fp)
+    return (context, data, None)
 
-    schema_url = request.cove_config['schema_url']
-    schema_name = request.cove_config['schema_name']
 
-    if request.current_app == 'cove-ocds':
-        schema_name = schema_name['record'] if 'records' in json_data else schema_name['release']
-
-    if schema_url:
-        additional_fields = sorted(common.get_counts_additional_fields(schema_url, schema_name, json_data, context, request.current_app))
+def common_checks_context(data, json_data, schema_obj, schema_name, context, extra_checkers=None, fields_regex=False):
+    schema_version = getattr(schema_obj, 'version', None)
+    schema_version_choices = getattr(schema_obj, 'version_choices', None)
+    if schema_version:
+        schema_version_display_choices = tuple(
+            (version, display_url[0]) for version, display_url in schema_version_choices.items()
+        )
         context.update({
-            'data_only': additional_fields
-        })
+            'version_used': schema_version,
+            'version_display_choices': schema_version_display_choices,
+            'version_used_display': schema_version_choices[schema_version][0]}
+        )
+
+    additional_fields = sorted(common.get_counts_additional_fields(json_data, schema_obj, schema_name,
+                                                                   context, fields_regex=fields_regex))
+    context.update({
+        'data_only': additional_fields,
+        'additional_fields_count': sum(item[2] for item in additional_fields)
+    })
 
     cell_source_map = {}
     heading_source_map = {}
-    if file_type != 'json':  # Assume it is csv or xlsx
+    if context['file_type'] != 'json':  # Assume it is csv or xlsx
         with open(os.path.join(data.upload_dir(), 'cell_source_map.json')) as cell_source_map_fp:
             cell_source_map = json.load(cell_source_map_fp)
 
@@ -150,37 +90,42 @@ def explore(request, pk):
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
     else:
-        validation_errors = common.get_schema_validation_errors(json_data, schema_url, schema_name, request.current_app, cell_source_map, heading_source_map) if schema_url else None
+        validation_errors = common.get_schema_validation_errors(json_data, schema_obj, schema_name,
+                                                                cell_source_map, heading_source_map,
+                                                                extra_checkers=extra_checkers)
         with open(validation_errors_path, 'w+') as validiation_error_fp:
             validiation_error_fp.write(json.dumps(validation_errors))
 
+    extensions = None
+    if getattr(schema_obj, 'extensions', None):
+        extensions = {
+            'extensions': schema_obj.extensions,
+            'invalid_extension': schema_obj.invalid_extension,
+            'is_extended_schema': schema_obj.extended,
+            'extended_schema_url': schema_obj.extended_schema_url
+        }
+
     context.update({
-        'file_type': file_type,
-        'schema_url': schema_url + schema_name,
+        'schema_url': schema_obj.release_pkg_schema_url,
+        'extensions': extensions,
         'validation_errors': sorted(validation_errors.items()),
-        'json_data': json_data,  # Pass the JSON data to the template so we can display values that need little processing
+        'validation_errors_count': sum(len(value) for value in validation_errors.values()),
+        'deprecated_fields': common.get_json_data_deprecated_fields(json_data, schema_obj),
+        'json_data': json_data,  # Pass data so we can display values that need little processing
         'first_render': not data.rendered,
         'common_error_types': []
     })
 
-    view = 'explore.html'
-    if request.current_app == 'cove-ocds':
-        if 'records' in json_data:
-            context['records_aggregates'] = ocds.get_records_aggregates(json_data, ignore_errors=bool(validation_errors))
-            view = 'explore_ocds-record.html'
-        else:
-            context['releases_aggregates'] = ocds.get_releases_aggregates(json_data, ignore_errors=bool(validation_errors))
-            view = 'explore_ocds-release.html'
-    elif request.current_app == 'cove-360':
-        context['grants_aggregates'] = threesixtygiving.get_grants_aggregates(json_data)
-        context['common_error_types'] = ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
-        view = 'explore_360.html'
-
-    rendered_response = render(request, view, context)
     if not data.rendered:
         data.rendered = True
-        data.save()
-    return rendered_response
+    if schema_version:
+        data.schema_version = schema_version
+    data.save()
+
+    return {
+        'context': context,
+        'cell_source_map': cell_source_map,
+    }
 
 
 def stats(request):
@@ -195,9 +140,3 @@ def stats(request):
             {x['form_name']: x['id__count'] for x in by_form.filter(created__gt=timezone.now() - timedelta(days=num_days))}
         ) for num_days in [1, 7, 30]],
     })
-
-
-def common_errors(request):
-    if request.current_app == 'cove-360':
-        return render(request, 'common_errors_360.html')
-    raise Http404('Common error page does not exist')
