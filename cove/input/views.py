@@ -30,14 +30,15 @@ class TextForm(forms.Form):
     paste = forms.CharField(label=_('Paste (JSON only)'), widget=forms.Textarea)
 
 
-def input(request):
-    form_classes = {
-        'upload_form': UploadForm,
-        'url_form': UrlForm,
-        'text_form': TextForm,
-    }
-    forms = {form_name: form_class() for form_name, form_class in form_classes.items()}
+default_form_classes = {
+    'upload_form': UploadForm,
+    'url_form': UrlForm,
+    'text_form': TextForm,
+}
 
+
+def data_input(request, form_classes=default_form_classes, text_file_name='test.json'):
+    forms = {form_name: form_class() for form_name, form_class in form_classes.items()}
     request_data = None
     if "source_url" in request.GET:
         request_data = request.GET
@@ -80,7 +81,7 @@ def input(request):
                                  'may be related to permissions, or you may be blocking certain user agents.')
                     })
             elif form_name == 'text_form':
-                data.original_file.save('test.json', ContentFile(form['paste'].value()))
+                data.original_file.save(text_file_name, ContentFile(form['paste'].value()))
             return redirect(data.get_absolute_url())
 
     return render(request, 'input/input.html', {'forms': forms})

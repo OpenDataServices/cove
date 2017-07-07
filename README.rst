@@ -93,14 +93,33 @@ Steps to installation:
     python manage.py compilemessages
 
 Then, for 360Giving run:
+
 .. code:: bash
     DJANGO_SETTINGS_MODULE=cove_360.settings python manage.py runserver
 
 Or for OCDS run:
 .. code:: bash
+
     DJANGO_SETTINGS_MODULE=cove_ocds.settings python manage.py runserver
 
-Follow the instructions in your terminal to open the aplication in your browser.
+Follow the instructions in your terminal to open the application in your browser.
+
+Extra installation steps for IATI
++++++++++++++++++++++++++++++++++
+
+The following steps are for Ubuntu but equivalent packages are available for other distros.
+
+.. code:: bash
+
+   sudo apt-get install build-essential libxml2-dev libxslt1-dev python3-dev
+   pip install Cython
+   pip install -r requirements_iati.txt
+
+Then run the development server:
+.. code:: bash
+
+    DJANGO_SETTINGS_MODULE=cove_iati.settings python manage.py runserver
+
 
 Deployment
 ==========

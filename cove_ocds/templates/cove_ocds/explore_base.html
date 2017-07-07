@@ -130,11 +130,16 @@
       </h4>
     </div>
     <div class="panel-body">
+      {% if extensions and version_used_display == "1.0" %}
+        <div class="bg-danger in-panel-warning">
+          <small><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> &nbsp;Your data has been checked against schema version <strong>1.0</strong> and includes extensions but extensions were not introduced in the schema until version <strong>1.1</strong>.</small>
+        </div>
+      {% endif %}
       <p>You data contains the following schema extensions{% if not extensions.is_extended_schema %} but it wasn't possible to fetch them{% endif %}:</p>
       <ul>
         {% for ext_descriptor_url, ext_details in ext.items %}
           {% if ext_details %}
-          <li><a href="{{ext_details.0}}">{{ext_details.1}}</a> &nbsp;&nbsp;<span class="font-tick tick"></span><p><small>{{ext_details.2}}</small><p></li>
+          <li><a href="{% if ext_details.documentation_url %}{{ext_details.documentation_url}}{% else %}{{ext_details.url}}{% endif %}">{{ext_details.name}}</a> &nbsp;&nbsp;<span class="font-tick tick"></span><p><small>{{ext_details.description}}</small><p></li>
           {% endif %}
         {% endfor %}
       </ul>
@@ -277,11 +282,10 @@
           {% include "additional_codelist_values.html" %}
           {% endwith%}
         </div>
-        Make sure your list the definition of any additional codelist values you include within your <a href="http://standard.open-contracting.org/latest/en/implementation/publication_policy/">publication policy</a>, and if you believe they should be added as recommended values in the open codelist, please suggest this via the <a href="https://github.com/open-contracting/standard/issues/new"> OCDS issue tracker.</a>
+        Make sure you list the definition of any additional codelist values you include within your <a href="http://standard.open-contracting.org/latest/en/implementation/publication_policy/">publication policy</a>, and if you believe they should be added as recommended values in the open codelist, please suggest this via the <a href="https://github.com/open-contracting/standard/issues/new"> OCDS issue tracker.</a>
       </div>
     </div>
 {% endif %}
-
 
 {% if deprecated_fields %}
     <a name="deprecated-fields" class="anchor"></a>
@@ -292,7 +296,7 @@
         </h4>
       </div>
       <div id="deprecatedFieldTable" class="collapse in">
-        {% include "deprecated_fields_table.html" %}
+        {% include "cove_ocds/deprecated_fields_table.html" %}
       </div>
     </div>
     

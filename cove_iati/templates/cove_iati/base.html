@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block banner %}
+  <div style="background-color: #3a3030; color: #eee; width: 100%; text-align: center; font-weight: bold; right: 0; left: 0">This tool is <em>alpha</em>. Please report any problems on <a href="https://github.com/OpenDataServices/cove/issues">GitHub issues</a>.</div>
+{% endblock %}
+
+{% block h1 %}
+  <div class="row">
+    <div class="col-md-2 aiti-title">
+        <a href="{% url 'index' %}">
+          <p>IATI </p><small>CoVE</small>
+        </a>
+    </div>
+    <div class="col-md-5 aiti-strapline">
+      <div>IATI Validator</div>
+      <div>Convert, Validate, Explore IATI Data</div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block language_select %}{% endblock %}
+
+{% block strapline %}{% endblock %}
+
+{% block theme %}
+  <p class="text-muted">{% blocktrans %}Bootstrap theme {% endblocktrans %}<a href="https://bootswatch.com/sandstone/"> Sandstone</a>{% blocktrans %}
+by Bootswatch{% endblocktrans %}</p>
+{% endblock %}
+
+{% block bootstrap_css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/fonts/tick/tick.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/bootstrap-iati.css' %}">
+  <noscript>
+    <style>
+      .collapse {display: initial !important;}
+      .glyphicon-collapse-down {display: none !important;}
+    </style>
+  </noscript>
+{% endblock %}
+
+{% block link %}
+{% endblock %}
+
+{% block howToUse %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    <h2 class="heading-in-panel" ><small>{% blocktrans %}How to use the {% endblocktrans %}{{ app_verbose_name }}</small></h2>
+    {% comment %}Translators: Paragraph that describes the application{% endcomment %}
+  </div>
+</div>
+{% endblock %}
+
