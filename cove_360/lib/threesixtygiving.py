@@ -447,14 +447,16 @@ class IncompleteBeneficiaryLocation(AdditionalTest):
     def process(self, grant, path_prefix):
         beneficiary_location = grant.get("beneficiaryLocation")
         if beneficiary_location:
-            complete_beneficiary_data = beneficiary_location.get('name') and beneficiary_location.get('geoCode') and beneficiary_location.get('geoCodeType')
-            if not complete_beneficiary_data:
-                self.failed = True
-                self.count += 1
-                self.json_locations.append(path_prefix + '/beneficiaryLocation')
+            for location_item in beneficiary_location:
+                complete_beneficiary_data = location_item.get('name') and location_item.get('geoCode') and location_item.get('geoCodeType')
+                if not complete_beneficiary_data:
+                    self.failed = True
+                    self.count += 1
+                    self.json_locations.append(path_prefix + '/beneficiaryLocation')
+                    break
 
         self.heading = self.format_heading_count("incomplete beneficiary location information")
-        self.message = "Your data is missing Beneficiary Location: Name, Beneficiary Location: Geographical Code or Beneficiary Location: Geographical Code Type. Beneficiary location information allows users of the data to understand who ultimately benefitted from the grant, not just the location of the organisation that provided the service. If your beneficiaries are in the same place as the organisation that the money went to, stating this is useful for anyone using your data, as it cannot be inferred. "
+        self.message = "Your data is missing Beneficiary Location: Name, Beneficiary Location: Geographical Code and/or Beneficiary Location: Geographical Code Type. Beneficiary location information allows users of the data to understand who ultimately benefitted from the grant, not just the location of the organisation that provided the service. If your beneficiaries are in the same place as the organisation that the money went to, stating this is useful for anyone using your data as it cannot be inferred."
 
 
 class TitleDescriptionSame(AdditionalTest):
