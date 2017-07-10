@@ -33,7 +33,7 @@ ROOT_URLCONF = 'cove_iati.urls'
 COVE_CONFIG = {
     'app_name': 'cove_iati',
     'app_base_template': 'cove_iati/base.html',
-    'app_verbose_name': 'IATI Validator',
+    'app_verbose_name': 'IATI CoVE',
     'app_strapline': 'Convert, Validate, Explore IATI Data',
     'core_schema': {'activity': 'iati-activities-schema.xsd', 'organization': 'iati-organisations-schema.xsd'},
     'supplementary_schema': {'common': 'iati-common.xsd', 'xml': 'xml.xsd'},
