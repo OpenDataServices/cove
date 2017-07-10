@@ -42,7 +42,7 @@ msgstr "Subir un archivo (.json, .csv, .xlsx)"
 
 #: cove/input/views.py:25
 msgid "Supply a URL"
-msgstr "Proporcione una dirección URL"
+msgstr "Proporcionar una dirección URL"
 
 #: cove/input/views.py:30
 msgid "Paste (JSON only)"
@@ -51,8 +51,8 @@ msgstr "Pegar (sólo JSON)"
 #: cove/input/views.py:68
 msgid "Sorry we got a ConnectionError whilst trying to download that file"
 msgstr ""
-"En este momento tenemos un ConnectionError mismo tiempo tratando de "
-"descargar el archivo"
+"Lo sentimos, al tratar de descargar el archivo hemos encontrado un "
+"ConnectionError"
 
 #: cove/input/views.py:70 cove/input/views.py:78 cove/lib/converters.py:146
 #: cove/lib/exceptions.py:25 cove/lib/exceptions.py:52
@@ -67,13 +67,13 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Las razones más comunes de este error incluyen el suministro de una URL desarrollo local que nuestros servidores no pueden acceder o certificados SSL mal configurados."
+"Las causas más comunes de este tipo de error son el uso de una direccción URL para desarrollo local que nuestros servidores no pueden acceder o el uso de certificados SSL mal configurados."
 
 #: cove/input/views.py:76
 msgid "Sorry we got a HTTP Error whilst trying to download that file"
 msgstr ""
-"En este momento tenemos un error de HTTP al mismo tiempo tratando de "
-"descargar el archivo"
+"Lo sentimos, al tratar de descargar el archivo hemos encontrado un HTTP "
+"Error"
 
 #: cove/input/views.py:79
 msgid ""
@@ -83,7 +83,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Si se puede acceder al archivo a través de un navegador entonces el problema puede estar relacionado con los permisos, o puede estar bloqueando ciertas aplicaciones de usuario."
+"Si se puede acceder al archivo a través de un navegador entonces el problema puede estar relacionado con los permisos de acceso , o puede ser que usted esté bloqueando ciertas aplicaciones de usuario."
 
 #: cove/lib/converters.py:144 cove/lib/exceptions.py:23
 #: cove/lib/exceptions.py:50
@@ -96,9 +96,9 @@ msgid ""
 "\n"
 "Error message: {}"
 msgstr ""
-"Pensamos que ha intentado cargar un archivo JSON, pero no es un JSON bien formado.\n"
+"Creemos que ha intentado subir un archivo JSON, pero el archivo no es JSON bien formado.\n"
 "\n"
-"Mensaje de error: {}"
+"Mensaje del error: {}"
 
 #: cove/lib/exceptions.py:26
 msgid ""
@@ -106,9 +106,9 @@ msgid ""
 "\n"
 "We can only process json, csv and xlsx files."
 msgstr ""
-"No se reconoce el tipo de archivo. \n"
+"No hemos podido reconocer ese tipo de archivo.\n"
 "\n"
-"Sólo podemos procesar archivos JSON, CSV y xlsx."
+"Sólo podemos procesar archivos json, csv y xlsx."
 
 #: cove/lib/exceptions.py:53
 msgid ""
@@ -116,9 +116,9 @@ msgid ""
 "\n"
 "Error message: {}"
 msgstr ""
-"Creemos que se trató de suministrar una hoja de cálculo, pero no hemos podido convertirlo a JSON.\n"
+"Creemos que ha tratado de suministrar una hoja de cálculo, pero no hemos podido convertirla a JSON.\n"
 "\n"
-"Mensaje de error: {}"
+"Mensaje del error: {}"
 
 #: cove/templates/500.html:8
 msgid "Internal Server Error"
@@ -129,19 +129,19 @@ msgid ""
 "Something went wrong with your request. This could be due to a bug in the "
 "application and/or the data you supplied."
 msgstr ""
-"Algo salió mal con tu solicitud. Esto podría ser debido a un error en la "
-"aplicación y / o los datos que proporcionaste."
+"Algo ha ido mal con su petición al servidor. Esto podría ser debido a un "
+"error en la aplicación o en los datos proporcionados."
 
 #: cove/templates/500.html:14
 msgid ""
 "This error has been automatically reported to our development team. If you "
 msgstr ""
-"Este error se ha informado de forma automática a nuestro equipo de "
-"desarrollo. Si tu"
+"Nuestro equipo de desarrollo ha sido informado de este error de forma "
+"automática. Si usted"
 
 #: cove/templates/500.html:14
 msgid "please reference this error as "
-msgstr "por favor haz referencia a este error como"
+msgstr "por favor haga referencia a este error como"
 
 #: cove/templates/additional_codelist_values.html:7
 #: cove/templates/additional_fields_table.html:5
@@ -163,7 +163,7 @@ msgstr "Valores Adicionales Usados"
 
 #: cove/templates/additional_fields_table.html:5
 msgid "Usage Count"
-msgstr "Total de usos"
+msgstr "Número total de usos"
 
 #. Translators: Label of a button that triggers search
 #: cove/templates/base.html:52
@@ -176,7 +176,7 @@ msgstr "Más información"
 
 #: cove/templates/base.html:80
 msgid "click to see."
-msgstr "clic para ver."
+msgstr "haga clic para ver."
 
 #: cove/templates/base.html:86
 msgid "What happens to the data I provide to this site?"
@@ -187,24 +187,24 @@ msgid ""
 "We retain the data you upload or paste to this site, on our server, for 7 "
 "days."
 msgstr ""
-"Conservamos los datos que cargas o pegas a este sitio en nuestro servidor "
-"durante 7 días."
+"Los datos subidos o pegado en este sitio son conservados en nuestros "
+"servidores durante 7 días."
 
 #: cove/templates/base.html:88
 msgid ""
 "If you supply a link, we fetch the data from that link and store it on our "
 "server for 7 days."
 msgstr ""
-"Si proporciona un enlace, buscamos los datos de ese enlace y los almacenamos"
-" en nuestro servidor durante 7 días."
+"Si proporciona un enlace, obtenemos los datos de ese enlace y los "
+"almacenamos en nuestros servidores durante 7 días."
 
 #: cove/templates/base.html:89
 msgid ""
 "We delete all data older than 7 days from our servers daily, retaining none "
 "of the original data."
 msgstr ""
-"Borramos todos los datos de más de 7 días desde nuestros servidores "
-"diariamente, no conservamos ninguno de los datos originales."
+"Diariamente borramos todos los datos de más de 7 días de nuestros "
+"servidores, sin guardar ninguna copia de los datos originales."
 
 #: cove/templates/base.html:90
 msgid ""
@@ -212,9 +212,9 @@ msgid ""
 "understand how people are using this application, what types of data are "
 "being supplied, what common errors exist and so on."
 msgstr ""
-"Mientras los datos están en nuestros servidores podemos acceder a esos datos"
-" para ayudarnos a entender cómo las personas usan esta aplicación, lQué tipo"
-" de datos se están suministrando, los errores comunes que existen, etc."
+"Mientras los datos están en nuestros servidores podemos acceder a ellos para"
+" ayudarnos a entender cómo las personas usan esta aplicación, los tipos de "
+"datos suministrados, los errores  más comunes que existen, etc."
 
 #: cove/templates/base.html:91
 msgid ""
@@ -222,7 +222,7 @@ msgid ""
 "some data may be retained longer. We have no intention of using this data "
 "for anything other than server recovery in an emergency."
 msgstr ""
-"También podemos conservar los datos en las copias de seguridad de nuestros "
+"También podemos conservar datos en las copias de seguridad de nuestros "
 "servidores, lo que significa que algunos datos pueden ser retenidos por más "
 "tiempo. No tenemos ninguna intención de utilizar estos datos para nada que "
 "no sea la recuperación del servidor en caso de emergencia."
@@ -235,9 +235,9 @@ msgid ""
 "supplied and so on. "
 msgstr ""
 "Guardamos algunos metadatos sobre los datos suministrados a este sitio. Los "
-"detalles se pueden encontrar en el código, pero pueden incluir información "
-"sobre si el archivo fue subido, vinculado o pegado, el tamaño del archivo, "
-"la fecha / hora en que se suministra y así sucesivamente."
+"detalles se pueden encontrar en el código. Estos metadatos pueden incluir "
+"información sobre si el archivo fue subido, enlazado o pegado, el tamaño del"
+" archivo, la fecha y hora en que se suministró, etc..."
 
 #: cove/templates/base.html:94
 msgid "Why do you delete data after 7 days?"
@@ -251,24 +251,25 @@ msgid ""
 "to share results with colleagues, but also allows data to disappear over "
 "time to save people having to clean up after themselves."
 msgstr ""
-"Este es un servicio que permite a la gente a explorar datos legibles por "
-"computadora. Como tal no vemos la necesidad de almacenar y reunir todo lo "
-"que la gente subre al sitio por siempre. Hemos optado por 7 días como un "
-"tiempo práctico que permite a la gente compartir los resultados con colegas,"
-" pero también permite que los datos desaparezcan con el tiempo para ahorrar "
-"a las personas tener que hacer una limpieza ellos mismos."
+"Este es un servicio que permite a la gente explorar datos que una "
+"computadora puede leer. Como tal no vemos la necesidad de almacenar para "
+"siempre todo lo que los usuarios suben al sitio. Hemos optado por 7 días por"
+" razones prácticas, al ser un periodo de que permite a la gente compartir "
+"los resultados con colegas a la vez que asegura que los datos desaparezcan "
+"después de cierto tiempo, lo cual elimina la necesidad tener que hacer "
+"periodicamente una limpieza manual de los datos almacenados. "
 
 #: cove/templates/base.html:96
 msgid ""
 "We believe that deleting supplied data after 7 days provides a level of "
 "privacy for the users of this service. "
 msgstr ""
-"Creemos que la supresión de los datos suministrados después de 7 días "
+"Creemos que el borrado de los datos suministrados después de 7 días "
 "proporciona un nivel de privacidad para los usuarios de este servicio."
 
 #: cove/templates/base.html:100
 msgid "Why provide converted versions?"
-msgstr "¿Por qué ofrecer versiones convertidas?"
+msgstr "¿Por qué ofrecen versiones convertidas?"
 
 #: cove/templates/base.html:101
 msgid "The W3C"
@@ -284,10 +285,10 @@ msgid ""
 " of different users, for example, developers may want JSON, researchers "
 "might prefer a spreadsheet format."
 msgstr ""
-"recomienda poner los datos abiertos disponibles en una variedad de formatos "
-"para satisfacer las necesidades de los distintos usuarios, por ejemplo, los "
-"desarrolladores pueden requerir JSON, los investigadores podrían preferir un"
-" formato de hoja de cálculo."
+"recomienda ofrecer los datos abiertos en una variedad de formatos para "
+"satisfacer las necesidades de los distintos usuarios. Por ejemplo, los "
+"desarrolladores pueden requerir JSON, mientras los investigadores puede que "
+"prefieran un formato de hoja de cálculo."
 
 #: cove/templates/base.html:114
 msgid "About"
@@ -349,13 +350,13 @@ msgid ""
 "href=\"https://github.com/OpenDataServices/cove/issues\">file an issue "
 "publicly on GitHub</a> or "
 msgstr ""
-"Si crees que esto es un error, puedes <a "
+"Si cree que esto es un error, puede <a "
 "href=\"https://github.com/OpenDataServices/cove/issues\">presentar un issue "
 "públicamente en GitHub</a> o"
 
 #: cove/templates/error_extra.html:2
 msgid "get in touch via email"
-msgstr "ponerte en contacto a través de correo electrónico"
+msgstr "ponerse en contacto a través de correo electrónico"
 
 #: cove/templates/error_extra.html:2
 msgid "referencing this error as "
@@ -401,7 +402,7 @@ msgstr "Ubicación"
 
 #: cove/templates/modal_errors.html:16
 msgid "Spreadsheet Location"
-msgstr "Localización de hoja de cálculo"
+msgstr "Localización de la hoja de cálculo"
 
 #: cove/templates/multi_index.html:12
 msgid "360Giving Logo"
@@ -418,9 +419,9 @@ msgid ""
 " that make grant-making more effective."
 msgstr ""
 "360Giving proporciona soporte para que los subvencionadores publiquen sus "
-"datos de subvenciones abiertamente, entender sus datos, y utilizar los datos"
-" para crear herramientas en línea que hagan las decisiones sobre donaciones "
-"más eficaces."
+"datos de subvenciones abiertamente, y también para que entiendan mejor sus "
+"datos y los utilicen para crear herramientas en línea que hagan las "
+"decisiones sobre donaciones más eficaces."
 
 #: cove/templates/multi_index.html:16
 msgid "360Giving Data Quality Tool"
@@ -455,7 +456,7 @@ msgid ""
 "help."
 msgstr ""
 "La creación y uso de Datos Abiertos se hace más fácil cuando hay buenas "
-"herramientas para ayudar."
+"herramientas de ayuda."
 
 #: cove/templates/multi_index.html:36
 msgid "CoVE exisits to help people:"
@@ -472,8 +473,8 @@ msgstr "Validar datos contrastándolos con las reglas"
 #: cove/templates/multi_index.html:40
 msgid "Explore data, that machines find easy, but humans find harder to read"
 msgstr ""
-"Explorar los datos que las máquinas pueden leer fácilmente, pero humanos no "
-"tanto"
+"Explorar datos que son faciles de leer para una máquina pero dificiles para "
+"los humanos"
 
 #: cove/templates/stats.html:4
 msgid "Usage stats"
@@ -532,7 +533,7 @@ msgid ""
 " Co-operative Limited page at Open Corporates</a>. The term 'you' refers to "
 "the user or viewer of our website."
 msgstr ""
-"El término «Limited Abrir Data Services Cooperativa\" o \"nosotros\" se "
+"El término \"Open Data Services Co-operative Limited\" o \"nosotros\" se "
 "refiere al propietario del sitio web. Nuestro número de registro de la "
 "empresa es 09506232. Nuestro domicilio social es 32 Church Road, Hove, East "
 "Sussex, Inglaterra, BN3 2FN. Hay más información de la compañía en <a "
@@ -563,13 +564,13 @@ msgid ""
 "  From time to time this website may also include links to other websites. These links are provided for your convenience to provide further information. They do not signify that we endorse the website(s). We have no responsibility for the content of the linked website(s).\n"
 "  Your use of this website and any dispute arising out of such use of the website is subject to the laws of England, Northern Ireland, Scotland and Wales."
 msgstr ""
-"Ni nosotros ni ningún tercero ofrece ninguna garantía en cuanto a la exactitud, puntualidad, rendimiento, integridad o adecuación de la información y los materiales encontrados u ofrecidos en este sitio para cualquier propósito en particular. Usted reconoce que dicha información y materiales pueden contener inexactitudes o errores y expreso excluimos la responsabilidad por cualquier inexactitud o errores en la máxima medida permitida por la ley.\n"
-"El uso de cualquier información o material en este sitio web es bajo su propio riesgo, por lo cual no se hace responsable. Será su propia responsabilidad garantizar que cualquier producto, servicio o información disponible a través de este sitio Web  cumpla con sus necesidades específicas. \n"
+"Ni nosotros ni ningún tercero ofrece ninguna garantía en cuanto a la exactitud, puntualidad, rendimiento, integridad o adecuación de la información y los materiales encontrados u ofrecidos en este sitio para cualquier propósito en particular. Usted reconoce que dicha información y materiales pueden contener inexactitudes o errores y expresamente excluimos la responsabilidad por cualquier inexactitud o errores en la máxima medida permitida por la ley.\n"
+"El uso de cualquier información o material en este sitio web es bajo su propio riesgo, por lo cual no nos hacemos responsable. Será su propia responsabilidad garantizar que cualquier producto, servicio o información disponible a través de este sitio Web cumpla con sus necesidades específicas. \n"
 "Este sitio web contiene material que es propiedad de o licenciadas a nosotros. Este material incluye, pero no se limita a, el diseño, presentación, apariencia y gráficos. La reproducción está prohibida salvo de conformidad con la nota de copyright, que forma parte de estos términos y condiciones. \n"
 "Todas las marcas reproducidas en esta página web que no son propiedad de, o con licencia para el operador son reconocidas en el sitio web. \n"
-"El uso no autorizado de este sitio web puede dar lugar a una reclamación por daños y perjuicios y / o constituir un delito penal. \n"
-"En ocasiones este sitio también puede incluir enlaces a otros sitios web. Estos vínculos se proporcionan para su conveniencia para proporcionar más información. Esto no significa que estamos de acuerdo con el sitio web (s). No tenemos ninguna responsabilidad por el contenido del sitio web vinculado (s). \n"
-"El uso de este sitio web y cualquier disputa que surja de ese uso de la página web está sujeto a las leyes de Inglaterra, Irlanda del Norte, Escocia y Gales."
+"El uso no autorizado de este sitio web puede dar lugar a una reclamación por daños y perjuicios o constituir un delito penal o ambos. \n"
+"En ocasiones este sitio también puede incluir enlaces a otros sitios web. Estos vínculos se proporcionan para su conveniencia para proporcionar más información. Esto no significa que estemos de acuerdo con el sitio o los sitios web(s). No tenemos ninguna responsabilidad por el contenido del sitio o los sitios web enlazado(s). \n"
+"El uso de este sitio web y cualquier disputa que surja del uso de la página web está sujeto a las leyes de Inglaterra, Irlanda del Norte, Escocia y Gales."
 
 #: cove/templates/terms.html:27
 msgid "How we use cookies"
@@ -595,11 +596,11 @@ msgid ""
 "than the data you choose to share with us."
 msgstr ""
 "Las cookies permiten que las aplicaciones web respondan a usted como "
-"individuo. La aplicación web puede adaptar sus operaciones a sus "
-"necesidades, gustos y disgustos al reunir y recordar la información acerca "
-"de sus preferencias. Una cookie de ninguna manera nos da acceso a su "
-"computadora ni a ninguna información sobre usted, excepto los datos que "
-"usted decida compartir con nosotros."
+"individuo. La aplicación web puede adaptar sus operaciones a sus necesidades"
+" y gustos al reunir y recordar la información acerca de sus preferencias. "
+"Una cookie de ninguna manera nos da acceso a su computadora ni a ninguna "
+"información sobre usted, excepto los datos que usted decida compartir con "
+"nosotros."
 
 #: cove/templates/terms.html:32
 msgid ""
@@ -694,8 +695,7 @@ msgid ""
 " we can save the things you have done, e.g. select a language)"
 msgstr ""
 "sessionid - (obtendrá esto si usted interactúa con la aplicación, de manera "
-"que podemos salvar las cosas que ha hecho, por ejemplo, seleccionar un "
-"idioma)"
+"que podemos salvar sus acciones, por ejemplo, seleccionar un idioma)"
 
 #: cove/templates/terms.html:60
 msgid ""
@@ -725,9 +725,8 @@ msgid ""
 "If you have set your web browser to \"I do not want to be tracked\" "
 "(DoNotTrack is enabled) then Piwik will not track your visit."
 msgstr ""
-"Si ha configurado su navegador para que \"no quiero ser rastreado\" "
-"(DoNotTrack está habilitado) entonces Piwik no hará un seguimiento de su "
-"visita."
+"Si ha configurado su navegador con \"no quiero ser rastreado\" (DoNotTrack "
+"está habilitado) entonces Piwik no hará un seguimiento de su visita."
 
 #: cove/templates/terms.html:68
 msgid "Piwik also it’s own opt out mechanism:"
@@ -934,7 +933,7 @@ msgid ""
 msgstr ""
 "Si usted cree que cualquier información que tenemos sobre usted es "
 "incorrecta o está incompleta, por favor escríbanos o envíenos un correo "
-"electrónico tan pronto como sea posible a la dirección anterior. A la "
+"electrónico tan pronto como sea posible a la dirección anterior. A la mayor "
 "brevedad se corregirá cualquier información que sea incorrecta."
 
 #: cove/templates/terms.html:109
@@ -1006,11 +1005,11 @@ msgstr "3 primeros ejemplos"
 
 #: cove/templates/validation_table.html:10
 msgid "Location of first 3 errors"
-msgstr "Ubicación de los primeros 3 errores"
+msgstr "Ubicación de los 3 primeros errores"
 
 #: cove/templates/validation_table.html:12
 msgid "Spreadsheet Location of first 3 errors"
-msgstr "Hoja de cálculo de la ubicación de los primeros 3 errores"
+msgstr " Ubicación de los 3 primeros errores en la hoja de cálculo"
 
 #: cove/views.py:23 cove/views.py:33
 msgid "Sorry, the page you are looking for is not available"
@@ -1030,6 +1029,6 @@ msgid ""
 "\n"
 "This is because all data suplied to this website is automatically deleted after 7 days, and therefore the analysis of that data is no longer available."
 msgstr ""
-"Los datos que usted quería explorar ya no existe.\n"
+"Los datos que usted quería explorar ya no existen.\n"
 "\n"
 "Esto se debe a que todos los datos suministrados a este sitio web se borran automáticamente después de 7 días, y por lo tanto el análisis de esos datos ya no está disponible."
