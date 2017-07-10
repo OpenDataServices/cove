@@ -297,7 +297,7 @@ RESULTS = [
                   "no other identifier can be used, then this notice can be ignored.")},
      ['grants/1/fundingOrganization/0/id'],
      [['grants', 'V', 3, 'Funding Org:Identifier']]),
-    ({'heading': ("33% of your grants have a Recipient Org:Identifier that doesn’t draw from "
+    ({'heading': ("1 grant has a Recipient Org:Identifier that doesn’t draw from "
                   "an external identification body"),
       'message': ("Using external identifiers (e.g. a charity number or a company number) "
                   "helps people using your data to match it up against other data - for "
@@ -307,7 +307,7 @@ RESULTS = [
                   "then you can ignore this notice.")},
      ['grants/1/recipientOrganization/0/id'],
      [['grants', 'J', 3, 'Recipient Org:Identifier']]),
-    ({'heading': ("33% of your grants have a Funding Org:Identifier that doesn’t draw from "
+    ({'heading': ("1 grant has a Funding Org:Identifier that doesn’t draw from "
                   "an external identification body"),
       'message': ("Using external identifiers (e.g. a charity number or a company number) "
                   "helps people using your data to match it up against other data - for "

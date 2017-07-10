@@ -272,7 +272,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = "{}% of your grants have a Recipient Org:Identifier that doesn’t draw from an external identification body".format(int(round(self.count / len(self.grants) * 100)))
+        self.heading = self.format_heading_count("a Recipient Org:Identifier that doesn’t draw from an external identification body")
         self.message = "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
 
 
@@ -294,7 +294,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = "{}% of your grants have a Funding Org:Identifier that doesn’t draw from an external identification body".format(int(round(self.count / len(self.grants) * 100)))
+        self.heading = self.format_heading_count("a Funding Org:Identifier that doesn’t draw from an external identification body")
         self.message = "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
 
 
