@@ -73,6 +73,12 @@ GRANTS = {
                 'amountAwarded': 178990,
                 'awardDate': '24/07/2014',
                 'currency': 'GBP',
+                "beneficiaryLocation": [{
+                    "name": "Gateshed",
+                    "geoCodeType": "MD",
+                    "geoCode": "E08000037",
+                    
+                }],
                 'dateModified': '13-03-2015',
                 'description': 'Exceptional and Extraordinary: unruly bodies and '
                                'minds in the medical museum. ',
@@ -83,8 +89,6 @@ GRANTS = {
                 'id': '360G-wellcometrust-105183/Z/14/Z',
                 'plannedDates': [{'duration': '25'}],
                 'recipientOrganization': [{'addressLocality': 'Leicester ',
-                                           'charityNumber': 'SC012345',
-                                           'companyNumber': 'RC000659',
                                            'id': 'GB-CHC-10659',
                                            'name': 'UNIVERSITY OF LEICESTER'}],
                 'relatedActivity': ["", "360G-xxx"],
@@ -329,6 +333,13 @@ RESULTS = [
                   "values being entered into this field.")},
      ['grants/0/recipientOrganization/0/companyNumber'],
      [['grants', 'L', 2, 'Recipient Org:Company Number']]),
+    ({'heading': "1 grant does not have either a Recipient Org:Company Number or a Recipient Org:Charity Number",
+      'message': ("Providing one or both of these, if possible, makes it easier for users of "
+                  "your data to join up the data with other data sources to provide better "
+                  "insight into grant-making. You don’t need to do anything if your grants are "
+                  "to organisations that don’t have UK Company or UK Charity numbers.")},
+     ['grants/2/recipientOrganization/0/id'],
+     [['grants', 'J', 4, 'Recipient Org:Identifier']]),
     ({'heading': "3 grants have incomplete recipient organisation information",
       'message': ("Your data is missing Recipient Org: Postal Code, Recipient Org: Location:Geographic "
                   "Code or Recipient Org: Location: Geographic Code Type. Knowing the geographic location "
@@ -358,12 +369,12 @@ RESULTS = [
                  "Programme data if available helps users to better understand your data.")},
      ['grants/0/id'],
      [['grants', 'A', 2, 'Identifier']]),
-    ({'heading': "2 grants do not contain any beneficiary location fields",
+    ({'heading': "1 grant does not contain any beneficiary location fields",
       'message': ("Although not required by the 360Giving Standard, providing beneficiary "
                   "data if available helps users to understand your data and allows it to be "
                   "used in tools that visualise grants geographically.")},
-     ['grants/1/id', 'grants/2/id'],
-     [['grants', 'A', 3, 'Identifier'], ['grants', 'A', 4, 'Identifier']]),
+     ['grants/1/id'],
+     [['grants', 'A', 3, 'Identifier']]),
     ({'heading': "1 grant has incomplete beneficiary location information",
       'message': ("Your data is missing Beneficiary Location: Name, Beneficiary Location: "
                   "Geographical Code and/or Beneficiary Location: Geographical Code Type. "
