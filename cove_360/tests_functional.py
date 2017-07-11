@@ -275,10 +275,10 @@ def test_index_page_360(server_url, browser):
   
 @pytest.mark.parametrize(('link_text', 'url'), [
     ('360Giving Data Standard guidance', 'http://www.threesixtygiving.org/standard/'),
-    ('Excel', 'https://github.com/ThreeSixtyGiving/standard/raw/master/schema/summary-table/360-giving-schema-titles.xlsx'),
-    ('CSV', 'https://github.com/ThreeSixtyGiving/standard/raw/master/schema/summary-table/360-giving-schema-titles.csv/grants.csv'),
+    ('Excel', 'https://threesixtygiving-standard.readthedocs.io/en/latest/_static/summary-table/360-giving-schema-titles.xlsx'),
+    ('CSV', 'https://threesixtygiving-standard.readthedocs.io/en/latest/templates-csv'),
     ('360Giving JSON schema', 'http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas'),
-    ('Multi-table data package - Excel', 'https://github.com/ThreeSixtyGiving/standard/raw/master/schema/multi-table/360-giving-schema-fields.xlsx')
+    ('Multi-table data package - Excel', 'https://threesixtygiving-standard.readthedocs.io/en/latest/_static/multi-table/360-giving-schema-fields.xlsx')
     ])
 def test_index_page_360_links(server_url, browser, link_text, url):
     browser.get(server_url)
