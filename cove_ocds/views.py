@@ -17,11 +17,11 @@ from cove.views import explore_data_context, common_checks_context
 logger = logging.getLogger(__name__)
 
 
-def common_checks_ocds(context, db_data, json_data, schema_obj):
+def common_checks_ocds(context, upload_dir, json_data, schema_obj):
     schema_name = schema_obj.release_pkg_schema_name
     if 'records' in json_data:
         schema_name = schema_obj.record_pkg_schema_name
-    common_checks = common_checks_context(db_data, json_data, schema_obj, schema_name, context, fields_regex=True)
+    common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context, fields_regex=True)
     validation_errors = common_checks['context']['validation_errors']
 
     context.update(common_checks['context'])
@@ -131,15 +131,12 @@ def explore_ocds(request, pk):
                 url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
 
                 replace_converted = replace and os.path.exists(converted_path + '.xlsx')
-                context.update(convert_json(request, db_data, schema_url=url, replace=replace_converted))
+                context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name, schema_url=url, replace=replace_converted, request=request, flatten=request.POST.get('flatten')))
 
     else:
         # Use the lowest release pkg schema version accepting 'version' field
         metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
-        metatab_data = get_spreadsheet_meta_data(request, db_data, metatab_schema_url, file_type=file_type)
-        if 'version' not in metatab_data:
-            metatab_data['version'] = '1.0'
-
+        metatab_data = get_spreadsheet_meta_data(db_data.upload_dir(), db_data.original_file.file.name, metatab_schema_url, file_type=file_type)
         select_version = post_version_choice or db_data.schema_version
 
         schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
@@ -162,7 +159,7 @@ def explore_ocds(request, pk):
         url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
         pkg_url = schema_ocds.release_pkg_schema_url
 
-        context.update(convert_spreadsheet(request, db_data, file_type, schema_url=url, pkg_schema_url=pkg_url, replace=replace))
+        context.update(convert_spreadsheet(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name, file_type, schema_url=url, pkg_schema_url=pkg_url, replace=replace))
 
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
@@ -171,7 +168,16 @@ def explore_ocds(request, pk):
         if os.path.exists(validation_errors_path):
             os.remove(validation_errors_path)
 
-    context = common_checks_ocds(context, db_data, json_data, schema_ocds)
+    context = common_checks_ocds(context, db_data.upload_dir(), json_data, schema_ocds)
+    context['first_render'] = not db_data.rendered
+    schema_version = getattr(schema_ocds, 'version', None)
+
+    if schema_version:
+        db_data.schema_version = schema_version
+    if not db_data.rendered:
+        db_data.rendered = True
+
+    db_data.save()
 
     if 'records' in json_data:
         template = 'cove_ocds/explore_record.html'

@@ -533,12 +533,12 @@ def get_additional_codelist_values(schema_obj, codelist_url, json_data):
 
 
 @cove_spreadsheet_conversion_error
-def get_spreadsheet_meta_data(request, data_object, schema, file_type='xlsx', name='Meta'):
+def get_spreadsheet_meta_data(upload_dir, file_name, schema, file_type='xlsx', name='Meta'):
     if file_type == 'csv':
-        input_name = data_object.upload_dir()
+        input_name = upload_dir
     else:
-        input_name = data_object.original_file.file.name
-    output_name = os.path.join(data_object.upload_dir(), 'metatab.json')
+        input_name = file_name
+    output_name = os.path.join(upload_dir, 'metatab.json')
 
     unflatten(
         input_name=input_name,

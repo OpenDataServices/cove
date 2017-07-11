@@ -16,10 +16,9 @@ class CoveCommandBase(BaseCommand):
             output_dir = file.split('/')[-1].split('.')[0]
 
         try:
-            os.mkdirs(output_dir)
+            os.makedirs(output_dir)
         except OSError:
-            print("Directory {} already exists")
+            self.stdout.write("Directory {} already exists".format(output_dir))
             sys.exit(1)
 
         self.output_dir = output_dir
-        

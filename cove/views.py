@@ -56,7 +56,7 @@ def explore_data_context(request, pk):
     return (context, data, None)
 
 
-def common_checks_context(data, json_data, schema_obj, schema_name, context, extra_checkers=None, fields_regex=False):
+def common_checks_context(upload_dir, json_data, schema_obj, schema_name, context, extra_checkers=None, fields_regex=False):
     schema_version = getattr(schema_obj, 'version', None)
     schema_version_choices = getattr(schema_obj, 'version_choices', None)
     if schema_version:
@@ -79,13 +79,13 @@ def common_checks_context(data, json_data, schema_obj, schema_name, context, ext
     cell_source_map = {}
     heading_source_map = {}
     if context['file_type'] != 'json':  # Assume it is csv or xlsx
-        with open(os.path.join(data.upload_dir(), 'cell_source_map.json')) as cell_source_map_fp:
+        with open(os.path.join(upload_dir, 'cell_source_map.json')) as cell_source_map_fp:
             cell_source_map = json.load(cell_source_map_fp)
 
-        with open(os.path.join(data.upload_dir(), 'heading_source_map.json')) as heading_source_map_fp:
+        with open(os.path.join(upload_dir, 'heading_source_map.json')) as heading_source_map_fp:
             heading_source_map = json.load(heading_source_map_fp)
 
-    validation_errors_path = os.path.join(data.upload_dir(), 'validation_errors-2.json')
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
     if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validiation_error_fp:
             validation_errors = json.load(validiation_error_fp)
@@ -112,15 +112,8 @@ def common_checks_context(data, json_data, schema_obj, schema_name, context, ext
         'validation_errors_count': sum(len(value) for value in validation_errors.values()),
         'deprecated_fields': common.get_json_data_deprecated_fields(json_data, schema_obj),
         'json_data': json_data,  # Pass data so we can display values that need little processing
-        'first_render': not data.rendered,
         'common_error_types': []
     })
-
-    if not data.rendered:
-        data.rendered = True
-    if schema_version:
-        data.schema_version = schema_version
-    data.save()
 
     return {
         'context': context,
