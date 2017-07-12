@@ -204,27 +204,36 @@ def test_500_error(server_url, browser):
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', [], False),
     ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], [], True),
+    ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 100.100 which is not recognised',
+                                                                   'validated against the current default version.'], [], False),
+    ('tenders_releases_1_release_with_bad_version.json', ['"version" field in your data is not a recognised OCDS schema version',
+                                                          '123 is not a recognised schema version choice'], [], False),
+    ('tenders_releases_1_release_with_patch_in_version.json', ['"version" field in your data follows the major.minor.patch pattern',
+                                                               '100.100.0 format does not comply with the schema'], [], False),
 ])
 def test_url_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     browser, source_url = url_input_browser(source_filename, output_source_url=True)
     check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
 
-    #refresh page to now check if tests still work after caching some data
-    browser.get(browser.current_url)
+    selected_examples = ['tenders_releases_2_releases_invalid.json']
 
-    selected_examples = ['tenders_releases_2_releases_invalid.json', 'WellcomeTrust-grants_fixed_2_grants.xlsx', 'WellcomeTrust-grants_2_grants_cp1252.csv']
     if source_filename in selected_examples:
+        #refresh page to now check if tests still work after caching some data
+        browser.get(browser.current_url)
         check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
         browser.get(server_url + '?source_url=' + source_url)
         check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
 
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
-    if source_filename.endswith('.json'):
+    dont_convert = ['tenders_releases_1_release_with_unrecognized_version.json']  # avoid page refresh
+
+    if source_filename.endswith('.json') and source_filename not in dont_convert:
         try:
             browser.find_element_by_name("flatten").click()
         except NoSuchElementException:
             pass
+
     body_text = browser.find_element_by_tag_name('body').text
     if isinstance(expected_text, str):
         expected_text = [expected_text]

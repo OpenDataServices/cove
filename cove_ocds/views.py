@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
@@ -69,6 +70,22 @@ def raise_invalid_version_data(version):
     })
 
 
+def raise_invalid_version_data_with_patch(version):
+    raise CoveInputDataError(context={
+        'sub_title': _("Version format does not comply with the schema"),
+        'link': 'index',
+        'link_text': _('Try Again'),
+        'msg': _('The value for the <em>"version"</em> field in your data follows the '
+                 '<em>major.minor.patch</em> pattern but according to the schema the patch digit '
+                 'shouldn\'t be included (e.g. <em>"1.1.0"</em> should appear as <em>"1.1"</em> in '
+                 'your data).\n\nPlease get rid of the patch digit and try again. Data will be '
+                 'validated using the latest patch available for the major.minor version selected.'
+                 ' \n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>'
+                 'Error message: </strong> <em>{}</em> format does not comply with the schema'.format(version)),
+        'error': _('{} is not a valid schema version'.format(version))
+    })
+
+
 @cove_web_input_error
 def explore_ocds(request, pk):
     context, db_data, error = explore_data_context(request, pk)
@@ -100,12 +117,18 @@ def explore_ocds(request, pk):
 
             select_version = post_version_choice or db_data.schema_version
             schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data)
-            
+
             if schema_ocds.invalid_version_argument:
                 # This shouldn't happen unless the user sends random POST data.
                 raise_invalid_version_argument(pk, post_version_choice)
             if schema_ocds.invalid_version_data:
-                raise_invalid_version_data(json_data.get('version'))
+                version_in_data = json_data.get('version')
+                if re.compile('^\d+\.\d+$').match(version_in_data):
+                    context['unrecognized_version_data'] = version_in_data
+                elif re.compile('^\d+\.\d+.\d+$').match(version_in_data):
+                    raise_invalid_version_data_with_patch(json_data.get('version'))
+                else:
+                    raise_invalid_version_data(json_data.get('version'))
 
             # Replace the spreadsheet conversion only if it exists already.
             if schema_ocds.version != db_data.schema_version:
