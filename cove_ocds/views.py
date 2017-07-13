@@ -78,10 +78,10 @@ def raise_invalid_version_data_with_patch(version):
         'msg': _('The value for the <em>"version"</em> field in your data follows the '
                  '<em>major.minor.patch</em> pattern but according to the schema the patch digit '
                  'shouldn\'t be included (e.g. <em>"1.1.0"</em> should appear as <em>"1.1"</em> in '
-                 'your data).\n\nPlease get rid of the patch digit and try again. Data will be '
-                 'validated using the latest patch available for the major.minor version selected.'
-                 ' \n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>'
-                 'Error message: </strong> <em>{}</em> format does not comply with the schema'.format(version)),
+                 'your data as the validator always uses the latest patch release for a major.minor '
+                 'version).\n\nPlease get rid of the patch digit and try again.\n\n<span class="glyphicon '
+                 'glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message: '
+                 '</strong> <em>{}</em> format does not comply with the schema'.format(version)),
         'error': _('{} is not a valid schema version'.format(version))
     })
 
