@@ -12,6 +12,7 @@ PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/validator/')
 
 BROWSER = os.environ.get('BROWSER', 'Firefox')
 
+OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
 OCDS_SCHEMA_VERSIONS = settings.COVE_CONFIG['schema_version_choices']
 OCDS_SCHEMA_VERSIONS_DISPLAY = list(display_url[0] for version, display_url in OCDS_SCHEMA_VERSIONS.items())
 
@@ -157,7 +158,8 @@ def test_500_error(server_url, browser):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'not_expected_text', 'conversion_successful'), [
-    ('tenders_releases_2_releases.json', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, ['Schema Extensions'], True),
+    ('tenders_releases_2_releases.json', ['Convert', 'Schema', 'OCDS schema version 1.0. You can'] + OCDS_SCHEMA_VERSIONS_DISPLAY,
+                                         ['Schema Extensions'], True),
     ('tenders_releases_1_release_with_extensions_version_1_1.json', ['Schema Extensions',
                                                                      'Contract Parties (Organization structure)',
                                                                      'All the extensions above were applied',
@@ -204,7 +206,9 @@ def test_500_error(server_url, browser):
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', [], False),
     ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], [], True),
+    # Test "version" value in data
     ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 100.100 which is not recognised',
+                                                                   'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
                                                                    'validated against the current default version.'], [], False),
     ('tenders_releases_1_release_with_bad_version.json', ['"version" field in your data is not a recognised OCDS schema version',
                                                           '123 is not a recognised schema version choice'], [], False),
