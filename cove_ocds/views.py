@@ -126,9 +126,9 @@ def explore_ocds(request, pk):
                 if re.compile('^\d+\.\d+$').match(version_in_data):
                     context['unrecognized_version_data'] = version_in_data
                 elif re.compile('^\d+\.\d+.\d+$').match(version_in_data):
-                    raise_invalid_version_data_with_patch(json_data.get('version'))
+                    raise_invalid_version_data_with_patch(version_in_data)
                 else:
-                    raise_invalid_version_data(json_data.get('version'))
+                    raise_invalid_version_data(version_in_data)
 
             # Replace the spreadsheet conversion only if it exists already.
             if schema_ocds.version != db_data.schema_version:
@@ -147,10 +147,18 @@ def explore_ocds(request, pk):
                 context.update(convert_json(request, db_data, schema_url=url, replace=replace_converted))
 
     else:
+        # Use the lowest release pkg schema version accepting 'version' field
         metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
         metatab_data = get_spreadsheet_meta_data(request, db_data, metatab_schema_url, file_type=file_type)
+        if 'version' not in metatab_data:
+            metatab_data['version'] = '1.0'
+
         select_version = post_version_choice or db_data.schema_version
+
         schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
+        if schema_ocds.invalid_version_argument:
+            # This shouldn't happen unless the user sends random POST data.
+            raise_invalid_version_argument(pk, post_version_choice)
         if schema_ocds.invalid_version_data:
             raise_invalid_version_data(metatab_data.get('version'))
 
