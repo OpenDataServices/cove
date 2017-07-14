@@ -207,11 +207,9 @@ def test_500_error(server_url, browser):
     ('unconvertable_json.json', 'could not be converted', [], False),
     ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], [], True),
     # Test "version" value in data
-    ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 100.100 which is not recognised',
+    ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 123.123 which is not recognised',
                                                                    'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
                                                                    'validated against the current default version.'], [], False),
-    ('tenders_releases_1_release_with_bad_version.json', ['"version" field in your data is not a recognised OCDS schema version',
-                                                          '123 is not a recognised schema version choice'], [], False),
     ('tenders_releases_1_release_with_patch_in_version.json', ['"version" field in your data follows the major.minor.patch pattern',
                                                                '100.100.0 format does not comply with the schema'], [], False),
 ])

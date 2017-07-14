@@ -57,19 +57,6 @@ def raise_invalid_version_argument(pk, version):
     })
 
 
-def raise_invalid_version_data(version):
-    raise CoveInputDataError(context={
-        'sub_title': _("Wrong schema version"),
-        'link': 'index',
-        'link_text': _('Try Again'),
-        'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
-                 'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
-                 'aria-hidden="true"></span> <strong>Error message: </strong> <em>{}</em> '
-                 'is not a recognised schema version choice'.format(version)),
-        'error': _('{} is not a valid schema version'.format(version))
-    })
-
-
 def raise_invalid_version_data_with_patch(version):
     raise CoveInputDataError(context={
         'sub_title': _("Version format does not comply with the schema"),
@@ -123,12 +110,10 @@ def explore_ocds(request, pk):
                 raise_invalid_version_argument(pk, post_version_choice)
             if schema_ocds.invalid_version_data:
                 version_in_data = json_data.get('version')
-                if re.compile('^\d+\.\d+$').match(version_in_data):
-                    context['unrecognized_version_data'] = version_in_data
-                elif re.compile('^\d+\.\d+.\d+$').match(version_in_data):
+                if re.compile('^\d+\.\d+\.\d+$').match(version_in_data):
                     raise_invalid_version_data_with_patch(version_in_data)
                 else:
-                    raise_invalid_version_data(version_in_data)
+                    context['unrecognized_version_data'] = version_in_data
 
             # Replace the spreadsheet conversion only if it exists already.
             if schema_ocds.version != db_data.schema_version:
@@ -160,7 +145,11 @@ def explore_ocds(request, pk):
             # This shouldn't happen unless the user sends random POST data.
             raise_invalid_version_argument(pk, post_version_choice)
         if schema_ocds.invalid_version_data:
-            raise_invalid_version_data(metatab_data.get('version'))
+            version_in_data = metatab_data.get('version')
+            if re.compile('^\d+\.\d+\.\d+$').match(version_in_data):
+                raise_invalid_version_data_with_patch(version_in_data)
+            else:
+                context['unrecognized_version_data'] = version_in_data
 
         # Replace json conversion when user chooses a different schema version.
         if db_data.schema_version and schema_ocds.version != db_data.schema_version:

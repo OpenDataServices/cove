@@ -7,7 +7,6 @@ import pytest
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
-from django.utils.translation import ugettext_lazy
 
 import cove.lib.common as cove_common
 from . lib.ocds import get_releases_aggregates
@@ -15,6 +14,8 @@ from . lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
 
+
+OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
 
 EMPTY_RELEASE_AGGREGATE = {
     'award_doc_count': 0,
@@ -452,7 +453,7 @@ def test_wrong_schema_version_in_data(client):
     data.current_app = 'cove_ocds'
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
-    assert resp.context['sub_title'] == ugettext_lazy("Wrong schema version")
+    assert resp.context['version_used'] == OCDS_DEFAULT_SCHEMA_VERSION
 
 
 @pytest.mark.django_db
