@@ -54,6 +54,7 @@ def produce_json_output(output_dir, file):
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
-    context = common_checks_ocds(context, output_dir, json_data, schema_ocds)
+    context = common_checks_ocds(context, output_dir, json_data, schema_ocds, api=True)
+    context.pop('json_data', None)
 
     return context

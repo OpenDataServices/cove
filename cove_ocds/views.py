@@ -17,11 +17,12 @@ from cove.views import explore_data_context, common_checks_context
 logger = logging.getLogger(__name__)
 
 
-def common_checks_ocds(context, upload_dir, json_data, schema_obj):
+def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False):
     schema_name = schema_obj.release_pkg_schema_name
     if 'records' in json_data:
         schema_name = schema_obj.record_pkg_schema_name
-    common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context, fields_regex=True)
+    common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context,
+                                          fields_regex=True, api=api)
     validation_errors = common_checks['context']['validation_errors']
 
     context.update(common_checks['context'])

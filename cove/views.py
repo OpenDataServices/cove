@@ -56,18 +56,20 @@ def explore_data_context(request, pk):
     return (context, data, None)
 
 
-def common_checks_context(upload_dir, json_data, schema_obj, schema_name, context, extra_checkers=None, fields_regex=False):
+def common_checks_context(upload_dir, json_data, schema_obj, schema_name, context, extra_checkers=None, fields_regex=False, api=False):
     schema_version = getattr(schema_obj, 'version', None)
     schema_version_choices = getattr(schema_obj, 'version_choices', None)
+
     if schema_version:
         schema_version_display_choices = tuple(
             (version, display_url[0]) for version, display_url in schema_version_choices.items()
         )
-        context.update({
-            'version_used': schema_version,
-            'version_display_choices': schema_version_display_choices,
-            'version_used_display': schema_version_choices[schema_version][0]}
-        )
+        context['version_used'] = schema_version
+        if not api:
+            context.update({
+                'version_display_choices': schema_version_display_choices,
+                'version_used_display': schema_version_choices[schema_version][0]}
+            )
 
     additional_fields = sorted(common.get_counts_additional_fields(json_data, schema_obj, schema_name,
                                                                    context, fields_regex=fields_regex))
