@@ -149,6 +149,19 @@ def explore_ocds(request, pk):
         if os.path.exists(validation_errors_path):
             os.remove(validation_errors_path)
 
-    template = 'cove_ocds/explore_record.html' if 'records' in json_data else 'cove_ocds/explore_release.html'
     context = common_checks_ocds(context, db_data, json_data, schema_ocds)
+
+    if 'records' in json_data:
+        template = 'cove_ocds/explore_record.html'
+        if hasattr(json_data, 'get') and hasattr(json_data.get('records'), '__iter__'):
+            context['records'] = json_data['records']
+        else:
+            context['records'] = []
+    else:
+        template = 'cove_ocds/explore_release.html'
+        if hasattr(json_data, 'get') and hasattr(json_data.get('releases'), '__iter__'):
+            context['releases'] = json_data['releases']
+        else:
+            context['releases'] = []
+
     return render(request, template, context)
