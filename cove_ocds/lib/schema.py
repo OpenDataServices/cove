@@ -7,6 +7,8 @@ import json_merge_patch
 import requests
 from cached_property import cached_property
 from django.conf import settings
+from django.utils import translation
+
 
 from cove.lib.common import SchemaJsonMixin, schema_dict_fields_generator
 
@@ -127,12 +129,27 @@ class SchemaOCDS(SchemaJsonMixin):
 
             schema_obj = json_merge_patch.merge(schema_obj, extension_data)
             extensions_descriptor = requests.get(extensions_descriptor_url).json()
-            self.extensions[extensions_descriptor_url] = {
-                'url': url,
-                'name': extensions_descriptor.get('name'),
-                'description': extensions_descriptor.get('description'),
-                'documentation_url': extensions_descriptor.get('documentation_url', '')
-            }
+            cur_language = translation.get_language()
+
+            extension_description = {'url': url}
+
+            # Section to be removed when extensions conform to new schema
+            old_documentation_url = extensions_descriptor.get('documentation_url', '')
+            if old_documentation_url and 'documentationUrl' not in extensions_descriptor:
+                extensions_descriptor['documentationUrl'] = {'en': old_documentation_url}
+            # End section
+
+            for field in ['description', 'name', 'documentationUrl']:
+                field_object = extensions_descriptor.get(field, {})
+                if isinstance(field_object, str):
+                    field_value = field_object
+                else:
+                    field_value = field_object.get(cur_language)
+                    if not field_value:
+                        field_value = field_object.get('en', '')
+                extension_description[field] = field_value
+
+            self.extensions[extensions_descriptor_url] = extension_description
             self.extended = True
 
     def create_extended_release_schema_file(self, upload_dir, upload_url):
