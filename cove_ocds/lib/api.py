@@ -5,11 +5,12 @@ from cove_ocds.views import common_checks_ocds
 from cove.lib.common import get_spreadsheet_meta_data
 from cove.lib.converters import convert_spreadsheet, convert_json
 
+
 class APIException(Exception):
     pass
 
-def produce_json_output(output_dir, file):
 
+def produce_json_output(output_dir, file):
     context = {}
     file_type = get_file_type(file)
     context = {"file_type": file_type}
@@ -18,7 +19,7 @@ def produce_json_output(output_dir, file):
         with open(file, encoding='utf-8') as fp:
             try:
                 json_data = json.load(fp)
-            except ValueError as err:
+            except ValueError:
                 raise APIException('The file looks like invalid json')
 
             schema_ocds = SchemaOCDS(release_data=json_data)
@@ -53,8 +54,6 @@ def produce_json_output(output_dir, file):
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
-
     context = common_checks_ocds(context, output_dir, json_data, schema_ocds)
 
     return context
-
