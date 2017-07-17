@@ -683,6 +683,9 @@ def test_schema_after_version_change_record(client):
     resp = client.post(data.get_absolute_url(), {'version': '1.1'})
     assert resp.status_code == 200
 
+    # Cove doesn't extend schema for record files (yet). The commented out assertions in this test
+    # are a reminder of that: https://github.com/OpenDataServices/cove/issues/747
+
     #with open(os.path.join(data.upload_dir(), 'extended_record_schema.json')) as extended_record_fp:
     #    assert "mainProcurementCategory" in json.load(extended_record_fp)['definitions']['Tender']['properties']
 
