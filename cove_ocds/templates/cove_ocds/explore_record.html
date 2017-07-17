@@ -117,7 +117,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          {% blocktrans %}Unique OCIDs{% endblocktrans %}({{records_aggregates.unique_ocids}})
+          {% blocktrans %}Unique OCIDs{% endblocktrans %} ({{records_aggregates.unique_ocids|length}})
         </h4>
       </div>
       <div class="panel-body">
@@ -143,7 +143,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for record in json_data.records %}
+        {% for record in records %}
         <tr>
           <td>{{ record.ocid }}</td>
           <td>{{ record.releases|length }}</td>

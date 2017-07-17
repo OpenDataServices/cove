@@ -105,10 +105,17 @@ def sort_iati_element(element, schema_subdict):
     children = list(element)
     for child in children:
         element.remove(child)
-    for child in sorted(children,
-           key=lambda x: list(schema_subdict.keys()).index(x.tag)):
+    keys = list(schema_subdict.keys())
+
+    def index_key(x):
+        if x.tag in keys:
+            return keys.index(x.tag)
+        else:
+            return len(keys) + 1
+
+    for child in sorted(children, key=index_key):
         element.append(child)
-        sort_iati_element(child, schema_subdict[child.tag])
+        sort_iati_element(child, schema_subdict.get(child.tag, {}))
 
 
 def sort_iati_xml_file(input_file, output_file):
