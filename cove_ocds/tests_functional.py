@@ -209,9 +209,12 @@ def test_500_error(server_url, browser):
     # Test "version" value in data
     ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 123.123 which is not recognised',
                                                                    'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
-                                                                   'validated against the current default version.'], [], False),
+                                                                   'validated against the current default version.',
+                                                                   'Convert to Spreadsheet'],
+                                                                  ['Additional Fields (fields in data not in schema)', 'Error message'], False),
     ('tenders_releases_1_release_with_patch_in_version.json', ['"version" field in your data follows the major.minor.patch pattern',
-                                                               '100.100.0 format does not comply with the schema'], [], False),
+                                                               '100.100.0 format does not comply with the schema',
+                                                               'Error message'], ['Convert to Spreadsheet'], False),
 ])
 def test_url_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     browser, source_url = url_input_browser(source_filename, output_source_url=True)
