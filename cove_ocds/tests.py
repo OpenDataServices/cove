@@ -341,6 +341,7 @@ def test_get_schema_deprecated_paths():
     '{"version": "1.1", "records" : true}',
     '{"version": "1.1", "records" : "test"}',
     '{"version": "1.1", "records" : {"version": "1.1", "a":"b"}}',
+    '{"version": "1.1", "releases":{"buyer":{"additionalIdentifiers":[]}}}',
 ])
 def test_explore_page(client, json_data):
     data = SuppliedData.objects.create()
@@ -737,6 +738,17 @@ def test_schema_after_version_change_record(client):
         assert "'version' is missing but required" not in validation_errors_fp.read()
 
 
-def test_corner_cases_for_deprecated_data_fields():
-    ''' TODO '''
-    pass
+@pytest.mark.parametrize('json_data', [
+    '{"version":"1.1", "releases":{"buyer":{"additionalIdentifiers":[]}, "initiationType": "tender"}}',
+    # TODO: add more ...
+])
+def test_corner_cases_for_deprecated_data_fields(json_data):
+    data = json.loads(json_data)
+    schema = SchemaOCDS(release_data=data)
+    deprecated_fields = cove_common.get_json_data_deprecated_fields(data, schema)
+
+    assert deprecated_fields['additionalIdentifiers']['explanation'][0] == '1.1'
+    assert 'parties section at the top level of a release' in deprecated_fields['additionalIdentifiers']['explanation'][1]
+    assert deprecated_fields['additionalIdentifiers']['paths'] == ('releases/buyer',)
+    assert len(deprecated_fields.keys()) == 1
+    assert len(deprecated_fields['additionalIdentifiers']['paths']) == 1
