@@ -7,7 +7,6 @@ import pytest
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
-from django.utils.translation import ugettext_lazy
 
 import cove.lib.common as cove_common
 from . lib.ocds import get_releases_aggregates
@@ -15,6 +14,8 @@ from . lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
 
+
+OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
 
 EMPTY_RELEASE_AGGREGATE = {
     'award_doc_count': 0,
@@ -416,7 +417,8 @@ def test_explore_page_null_tag(client):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('json_data', [
-    '{"version": "1.1","releases": [{"ocid": "xx"}]}',
+    '{"version": "1.1", "releases": [{"ocid": "xx"}]}',
+    '{"version": "112233", "releases": [{"ocid": "xx"}]}',
     '{"releases": [{"ocid": "xx"}]}'
 ])
 def test_explore_schema_version(client, json_data):
@@ -426,23 +428,23 @@ def test_explore_schema_version(client, json_data):
 
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
-    if 'version' in json_data:
-        assert '1__1' in resp.context['schema_url']
-        assert resp.context['version_used'] == '1.1'
-        assert resp.context['version_used_display'] == '1.1'
-        resp = client.post(data.get_absolute_url(), {'version': "1.0"})
-        assert resp.status_code == 200
-        assert '1__0__2' in resp.context['schema_url']
-        assert resp.context['version_used'] == '1.0'
-    else:
-        assert '1__0__2' in resp.context['schema_url']
+    if 'version' not in json_data:
+        assert '1__0' in resp.context['schema_url']
         assert resp.context['version_used'] == '1.0'
         assert resp.context['version_used_display'] == '1.0'
         resp = client.post(data.get_absolute_url(), {'version': "1.1"})
         assert resp.status_code == 200
-        assert '1__1' in resp.context['schema_url']
+        assert '1__1__0' in resp.context['schema_url']
+        assert resp.context['version_used'] == '1.1'
+    else:
+        assert '1__1__0' in resp.context['schema_url']
         assert resp.context['version_used'] == '1.1'
         assert resp.context['version_used_display'] == '1.1'
+        resp = client.post(data.get_absolute_url(), {'version': "1.0"})
+        assert resp.status_code == 200
+        assert '1__0' in resp.context['schema_url']
+        assert resp.context['version_used'] == '1.0'
+        assert resp.context['version_used_display'] == '1.0'
 
 
 @pytest.mark.django_db
@@ -452,7 +454,7 @@ def test_wrong_schema_version_in_data(client):
     data.current_app = 'cove_ocds'
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
-    assert resp.context['sub_title'] == ugettext_lazy("Wrong schema version")
+    assert resp.context['version_used'] == OCDS_DEFAULT_SCHEMA_VERSION
 
 
 @pytest.mark.django_db
@@ -481,7 +483,7 @@ def test_explore_schema_version_change(client, file_type, converter, replace_aft
         assert resp.status_code == 200
         assert resp.context['version_used'] == '1.1'
         assert mock_object.called
-        assert '1__1' in kwargs['schema_url']
+        assert '1__1__0' in kwargs['schema_url']
         assert kwargs['replace'] is replace_after_post
 
 
@@ -582,19 +584,18 @@ def test_get_additional_codelist_values():
 @pytest.mark.parametrize(('select_version', 'release_data', 'version', 'invalid_version_argument',
                           'invalid_version_data', 'extensions'), [
     (None, None, DEFAULT_OCDS_VERSION, False, False, {}),
-    ('1.1', None, '1.1', False, False, {}),
+    ('1.0', None, '1.0', False, False, {}),
     (None, {'version': '1.1'}, '1.1', False, False, {}),
-    (None, {'extensions': ['c', 'd']}, DEFAULT_OCDS_VERSION, False, False, {'c': (), 'd': ()}),
-    ('1.1', {'version': '1.0'}, '1.1', False, False, {}),
+    (None, {'version': '1.1', 'extensions': ['c', 'd']}, '1.1', False, False, {'c': (), 'd': ()}),
     ('1.1', {'version': '1.0'}, '1.1', False, False, {}),
     ('1.bad', {'version': '1.1'}, '1.1', True, False, {}),
     ('1.wrong', {'version': '1.bad'}, DEFAULT_OCDS_VERSION, True, True, {}),
     (None, {'version': '1.bad'}, DEFAULT_OCDS_VERSION, False, True, {}),
-    (None, {'extensions': ['a', 'b']}, DEFAULT_OCDS_VERSION, False, False, {'a': (), 'b': ()}),
+    (None, {'extensions': ['a', 'b']}, '1.0', False, False, {'a': (), 'b': ()}),
     (None, {'version': '1.1', 'extensions': ['a', 'b']}, '1.1', False, False, {'a': (), 'b': ()})
 ])
 def test_schema_ocds_constructor(select_version, release_data, version, invalid_version_argument,
-                              invalid_version_data, extensions):
+                                 invalid_version_data, extensions):
     schema = SchemaOCDS(select_version=select_version, release_data=release_data)
     name = settings.COVE_CONFIG['schema_name']['release']
     host = settings.COVE_CONFIG['schema_version_choices'][version][1]
@@ -611,10 +612,10 @@ def test_schema_ocds_constructor(select_version, release_data, version, invalid_
 
 @pytest.mark.parametrize(('release_data', 'extensions', 'invalid_extension', 'extended'), [
     (None, {}, {}, False),
-    ({'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False),
-    ({'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False),
-    ({'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True),
-    ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True),
+    ({'version': '1.1', 'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False),
+    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False),
+    ({'version': '1.1', 'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True),
+    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True),
 ])
 def test_schema_ocds_extensions(release_data, extensions, invalid_extension, extended):
     schema = SchemaOCDS(release_data=release_data)
@@ -652,7 +653,7 @@ def test_schema_ocds_extended_release_schema_file():
     assert schema.extended_schema_file == os.path.join(data.upload_dir(), 'extended_release_schema.json')
     assert schema.extended_schema_url == os.path.join(data.upload_url(), 'extended_release_schema.json')
 
-    json_data = json.loads('{"extensions": [], "releases": [{"ocid": "xx"}]}')
+    json_data = json.loads('{"version": "1.1", "extensions": [], "releases": [{"ocid": "xx"}]}')
     schema = SchemaOCDS(release_data=json_data)
     schema.get_release_schema_obj()
     schema.create_extended_release_schema_file(data.upload_dir(), data.upload_url())
