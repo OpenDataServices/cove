@@ -23,7 +23,6 @@ class SchemaOCDS(SchemaJsonMixin):
     version_choices = config['schema_version_choices']
     default_version = config['schema_version']
     default_schema_host = version_choices[default_version][1]
-    default_release_schema_url = urljoin(default_schema_host, release_schema_name)
 
     def __init__(self, select_version=None, release_data=None):
         '''Build the schema object using an specific OCDS schema version
@@ -34,9 +33,14 @@ class SchemaOCDS(SchemaJsonMixin):
         and self.invalid_version_data respectively.
         '''
         self.version = self.default_version
+        self.schema_host = self.default_schema_host
+
+        if release_data and 'version' not in release_data:
+            self.version = '1.0'
+            self.schema_host = self.version_choices['1.0'][1]
+
         self.invalid_version_argument = False
         self.invalid_version_data = False
-        self.schema_host = self.default_schema_host
         self.extensions = {}
         self.invalid_extension = {}
         self.extended = False
@@ -59,7 +63,7 @@ class SchemaOCDS(SchemaJsonMixin):
             if data_extensions:
                 self.extensions = {ext: tuple() for ext in data_extensions}
             if not select_version:
-                release_version = release_data.get('version')
+                release_version = release_data and release_data.get('version')
                 if release_version:
                     version_choice = self.version_choices.get(release_version)
                     if version_choice:

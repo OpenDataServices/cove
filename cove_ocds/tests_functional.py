@@ -12,6 +12,7 @@ PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/validator/')
 
 BROWSER = os.environ.get('BROWSER', 'Firefox')
 
+OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
 OCDS_SCHEMA_VERSIONS = settings.COVE_CONFIG['schema_version_choices']
 OCDS_SCHEMA_VERSIONS_DISPLAY = list(display_url[0] for version, display_url in OCDS_SCHEMA_VERSIONS.items())
 
@@ -157,7 +158,8 @@ def test_500_error(server_url, browser):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'not_expected_text', 'conversion_successful'), [
-    ('tenders_releases_2_releases.json', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, ['Schema Extensions'], True),
+    ('tenders_releases_2_releases.json', ['Convert', 'Schema', 'OCDS schema version 1.0. You can'] + OCDS_SCHEMA_VERSIONS_DISPLAY,
+                                         ['Schema Extensions'], True),
     ('tenders_releases_1_release_with_extensions_version_1_1.json', ['Schema Extensions',
                                                                      'Contract Parties (Organization structure)',
                                                                      'All the extensions above were applied',
@@ -204,27 +206,47 @@ def test_500_error(server_url, browser):
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', [], False),
     ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], [], True),
+    # Test "version" value in data
+    ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 123.123 which is not recognised',
+                                                                   'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
+                                                                   'validated against the current default version.',
+                                                                   'Convert to Spreadsheet'],
+                                                                  ['Additional Fields (fields in data not in schema)', 'Error message'], False),
+    ('tenders_releases_1_release_with_wrong_version_type.json', ['Your data specifies a version 1000 (it must be a string) which is not recognised',
+                                                                 'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
+                                                                 'Convert to Spreadsheet'],
+                                                                ['Additional Fields (fields in data not in schema)', 'Error message'], False),
+    ('tenders_releases_1_release_with_patch_in_version.json', ['"version" field in your data follows the major.minor.patch pattern',
+                                                               '100.100.0 format does not comply with the schema',
+                                                               'Error message'], ['Convert to Spreadsheet'], False),
 ])
 def test_url_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     browser, source_url = url_input_browser(source_filename, output_source_url=True)
     check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
 
-    #refresh page to now check if tests still work after caching some data
-    browser.get(browser.current_url)
+    selected_examples = ['tenders_releases_2_releases_invalid.json']
 
-    selected_examples = ['tenders_releases_2_releases_invalid.json', 'WellcomeTrust-grants_fixed_2_grants.xlsx', 'WellcomeTrust-grants_2_grants_cp1252.csv']
     if source_filename in selected_examples:
+        #refresh page to now check if tests still work after caching some data
+        browser.get(browser.current_url)
         check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
         browser.get(server_url + '?source_url=' + source_url)
         check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
 
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
-    if source_filename.endswith('.json'):
+    # Avoid page refresh
+    dont_convert = [
+        'tenders_releases_1_release_with_unrecognized_version.json',
+        'tenders_releases_1_release_with_wrong_version_type.json'
+    ]
+
+    if source_filename.endswith('.json') and source_filename not in dont_convert:
         try:
             browser.find_element_by_name("flatten").click()
         except NoSuchElementException:
             pass
+
     body_text = browser.find_element_by_tag_name('body').text
     if isinstance(expected_text, str):
         expected_text = [expected_text]
