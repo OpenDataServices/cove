@@ -110,9 +110,11 @@ def explore_ocds(request, pk):
                 raise_invalid_version_argument(pk, post_version_choice)
             if schema_ocds.invalid_version_data:
                 version_in_data = json_data.get('version')
-                if re.compile('^\d+\.\d+\.\d+$').match(version_in_data):
+                if isinstance(version_in_data, str) and re.compile('^\d+\.\d+\.\d+$').match(version_in_data):
                     raise_invalid_version_data_with_patch(version_in_data)
                 else:
+                    if not isinstance(version_in_data, str):
+                        version_in_data = '{} (it must be a string)'.format(str(version_in_data))
                     context['unrecognized_version_data'] = version_in_data
 
             # Replace the spreadsheet conversion only if it exists already.

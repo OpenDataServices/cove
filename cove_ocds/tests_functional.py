@@ -212,6 +212,10 @@ def test_500_error(server_url, browser):
                                                                    'validated against the current default version.',
                                                                    'Convert to Spreadsheet'],
                                                                   ['Additional Fields (fields in data not in schema)', 'Error message'], False),
+    ('tenders_releases_1_release_with_wrong_version_type.json', ['Your data specifies a version 1000 (it must be a string) which is not recognised',
+                                                                 'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
+                                                                 'Convert to Spreadsheet'],
+                                                                ['Additional Fields (fields in data not in schema)', 'Error message'], False),
     ('tenders_releases_1_release_with_patch_in_version.json', ['"version" field in your data follows the major.minor.patch pattern',
                                                                '100.100.0 format does not comply with the schema',
                                                                'Error message'], ['Convert to Spreadsheet'], False),
@@ -231,7 +235,11 @@ def test_url_input(server_url, url_input_browser, httpserver, source_filename, e
 
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
-    dont_convert = ['tenders_releases_1_release_with_unrecognized_version.json']  # avoid page refresh
+    # Avoid page refresh
+    dont_convert = [
+        'tenders_releases_1_release_with_unrecognized_version.json',
+        'tenders_releases_1_release_with_wrong_version_type.json'
+    ]
 
     if source_filename.endswith('.json') and source_filename not in dont_convert:
         try:
