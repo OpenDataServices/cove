@@ -6,72 +6,16 @@ import re
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 
-from . lib.ocds import get_records_aggregates, get_releases_aggregates
+from . lib.exceptions import raise_invalid_version_argument, raise_invalid_version_data_with_patch
+from . lib.ocds import common_checks_ocds
 from . lib.schema import SchemaOCDS
-from cove.lib.common import get_additional_codelist_values, get_spreadsheet_meta_data
+from cove.lib.common import get_spreadsheet_meta_data
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
-from cove.views import explore_data_context, common_checks_context
+from cove.views import explore_data_context
 
 
 logger = logging.getLogger(__name__)
-
-
-def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False):
-    schema_name = schema_obj.release_pkg_schema_name
-    if 'records' in json_data:
-        schema_name = schema_obj.record_pkg_schema_name
-    common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context,
-                                          fields_regex=True, api=api)
-    validation_errors = common_checks['context']['validation_errors']
-
-    context.update(common_checks['context'])
-
-    if schema_name == 'record-package-schema.json':
-        context['records_aggregates'] = get_records_aggregates(json_data, ignore_errors=bool(validation_errors))
-        context['schema_url'] = schema_obj.record_pkg_schema_url
-    else:
-        additional_codelist_values = get_additional_codelist_values(schema_obj, schema_obj.codelists, json_data)
-        closed_codelist_values = {key: value for key, value in additional_codelist_values.items() if not value['isopen']}
-        open_codelist_values = {key: value for key, value in additional_codelist_values.items() if value['isopen']}
-
-        context.update({
-            'releases_aggregates': get_releases_aggregates(json_data, ignore_errors=bool(validation_errors)),
-            'additional_closed_codelist_values': closed_codelist_values,
-            'additional_open_codelist_values': open_codelist_values
-        })
-
-    return context
-
-
-def raise_invalid_version_argument(pk, version):
-    raise CoveInputDataError(context={
-        'sub_title': _("Something unexpected happened"),
-        'link': 'explore',
-        'link_args': pk,
-        'link_text': _('Try Again'),
-        'msg': _('We think you tried to run your data against an unrecognised version of '
-                 'the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
-                 'aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is '
-                 'not a recognised choice for the schema version'.format(version)),
-        'error': _('{} is not a valid schema version'.format(version))
-    })
-
-
-def raise_invalid_version_data_with_patch(version):
-    raise CoveInputDataError(context={
-        'sub_title': _("Version format does not comply with the schema"),
-        'link': 'index',
-        'link_text': _('Try Again'),
-        'msg': _('The value for the <em>"version"</em> field in your data follows the '
-                 '<em>major.minor.patch</em> pattern but according to the schema the patch digit '
-                 'shouldn\'t be included (e.g. <em>"1.1.0"</em> should appear as <em>"1.1"</em> in '
-                 'your data as the validator always uses the latest patch release for a major.minor '
-                 'version).\n\nPlease get rid of the patch digit and try again.\n\n<span class="glyphicon '
-                 'glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message: '
-                 '</strong> <em>{}</em> format does not comply with the schema'.format(version)),
-        'error': _('{} is not a valid schema version'.format(version))
-    })
 
 
 @cove_web_input_error

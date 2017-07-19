@@ -6,6 +6,8 @@ from collections import defaultdict, OrderedDict
 import requests
 
 import cove.lib.tools as tools
+from cove.lib.common import common_checks_context
+from cove.lib.tools import datetime_or_date
 
 
 # JSON from link on http://iatistandard.org/202/codelists/OrganisationRegistrationAgency/
@@ -111,6 +113,24 @@ def get_grants_aggregates(json_data):
         'funding_org_identifier_prefixes': funding_org_identifier_prefixes,
         'funding_org_identifiers_unrecognised_prefixes': funding_org_identifiers_unrecognised_prefixes
     }
+
+
+def common_checks_360(context, upload_dir, json_data, schema_obj):
+    schema_name = schema_obj.release_pkg_schema_name
+    checkers = {'date-time': (datetime_or_date, ValueError)}
+    common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context, extra_checkers=checkers)
+    cell_source_map = common_checks['cell_source_map']
+    additional_checks = run_additional_checks(json_data, cell_source_map)
+
+    context.update(common_checks['context'])
+    context.update({
+        'grants_aggregates': get_grants_aggregates(json_data),
+        'additional_checks': additional_checks,
+        'additional_checks_count': len(additional_checks) + (1 if context['data_only'] else 0),
+        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
+    })
+
+    return context
 
 
 def get_prefixes(distinct_identifiers):

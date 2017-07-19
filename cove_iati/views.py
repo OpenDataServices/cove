@@ -1,18 +1,14 @@
-import json
 import logging
-import os
 
 from django.shortcuts import render
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-import defusedxml.lxml as etree
-import lxml.etree
 
 from .lib.schema import SchemaIATI
-from .lib.iati import format_lxml_errors, get_xml_validation_errors, lxml_errors_generator
+from .lib.iati import common_checks_context_iati
 from .lib.iati_utils import sort_iati_xml_file
 from cove.lib.converters import convert_spreadsheet
-from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
+from cove.lib.exceptions import cove_web_input_error
 from cove.input.models import SuppliedData
 from cove.input.views import data_input
 from cove.views import explore_data_context
@@ -48,52 +44,6 @@ iati_form_classes = {
     'url_form': UrlForm,
     'text_form': TextForm,
 }
-
-
-def common_checks_context_iati(upload_dir, data_file, file_type):
-    schema_aiti = SchemaIATI()
-    lxml_errors = {}
-    cell_source_map = {}
-    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
-
-    with open(data_file) as fp, open(schema_aiti.activity_schema) as schema_fp:
-        try:
-            tree = etree.parse(fp)
-        except lxml.etree.XMLSyntaxError as err:
-            raise CoveInputDataError(context={
-                'sub_title': _("Sorry we can't process that data"),
-                'link': 'index',
-                'link_text': _('Try Again'),
-                'msg': _('We think you tried to upload a XML file, but it is not well formed XML.'
-                         '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
-                         '</span> <strong>Error message:</strong> {}'.format(err)),
-                'error': format(err)
-            })
-        schema_tree = etree.parse(schema_fp)
-        schema = lxml.etree.XMLSchema(schema_tree)
-        schema.validate(tree)
-        lxml_errors = lxml_errors_generator(schema.error_log)
-
-    errors_all = format_lxml_errors(lxml_errors)
-
-    if file_type != 'xml':
-        with open(os.path.join(upload_dir, 'cell_source_map.json')) as cell_source_map_fp:
-            cell_source_map = json.load(cell_source_map_fp)
-
-    if os.path.exists(validation_errors_path):
-        with open(validation_errors_path) as validation_error_fp:
-            validation_errors = json.load(validation_error_fp)
-    else:
-        validation_errors = get_xml_validation_errors(errors_all, file_type, cell_source_map)
-
-        with open(validation_errors_path, 'w+') as validation_error_fp:
-            validation_error_fp.write(json.dumps(validation_errors))
-
-    return {
-        'validation_errors': sorted(validation_errors.items()),
-        'validation_errors_count': sum(len(value) for value in validation_errors.values()),
-        'cell_source_map': cell_source_map
-    }
 
 
 def data_input_iati(request):
