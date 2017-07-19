@@ -166,9 +166,10 @@ def common_checks_context(upload_dir, json_data, schema_obj, schema_name, contex
         'validation_errors': sorted(validation_errors.items()),
         'validation_errors_count': sum(len(value) for value in validation_errors.values()),
         'deprecated_fields': get_json_data_deprecated_fields(json_data, schema_obj),
-        'json_data': json_data,  # Pass data so we can display values that need little processing
         'common_error_types': []
     })
+    if not api:
+        context['json_data'] = json_data
 
     return {
         'context': context,

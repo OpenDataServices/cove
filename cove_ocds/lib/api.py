@@ -1,7 +1,8 @@
 import json
+
+from .ocds import common_checks_ocds
 from cove.lib.tools import get_file_type
 from cove_ocds.lib.schema import SchemaOCDS
-from cove_ocds.views import common_checks_ocds
 from cove.lib.common import get_spreadsheet_meta_data
 from cove.lib.converters import convert_spreadsheet, convert_json
 
@@ -55,6 +56,5 @@ def produce_json_output(output_dir, file):
             json_data = json.load(fp)
 
     context = common_checks_ocds(context, output_dir, json_data, schema_ocds, api=True)
-    context.pop('json_data', None)
 
     return context
