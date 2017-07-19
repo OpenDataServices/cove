@@ -328,6 +328,7 @@ def test_get_schema_deprecated_paths():
     '{"releases" : "test"}',
     '{"releases" : null}',
     '{"releases" : {"a":"b"}}',
+    '{"releases" : [["test"]]}',
     '{"records":{}}',
     '{"records" : 1.0}',
     '{"records" : 2}',
@@ -335,6 +336,7 @@ def test_get_schema_deprecated_paths():
     '{"records" : "test"}',
     '{"records" : null}',
     '{"records" : {"a":"b"}}',
+    '{"records" : [["test"]]}',
     '{"version": "1.1", "releases" : 1.0}',
     '{"version": "1.1", "releases" : 2}',
     '{"version": "1.1", "releases" : true}',
@@ -405,7 +407,7 @@ def test_explore_unconvertable_spreadsheet(client):
 @pytest.mark.django_db
 def test_explore_unconvertable_json(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove', 'fixtures', 'unconvertable_json.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'unconvertable_json.json')) as fp:
         data.original_file.save('unconvertable_json.json', UploadedFile(fp))
     resp = client.post(data.get_absolute_url(), {'flatten': 'true'})
     assert resp.status_code == 200

@@ -568,6 +568,7 @@ TEST_CLASSES = [
 ]
 
 
+@tools.ignore_errors
 def run_additional_checks(json_data, cell_source_map):
     if 'grants' not in json_data:
         return []
