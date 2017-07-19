@@ -7,12 +7,12 @@ from . exceptions import UnrecognisedFileType
 
 def ignore_errors(f):
     @wraps(f)
-    def ignore(json_data, *args, ignore_errors=False, **kwargs):
+    def ignore(json_data, *args, ignore_errors=False, return_on_error={}, **kwargs):
         if ignore_errors:
             try:
-                return f(json_data)
+                return f(json_data, *args, **kwargs)
             except (KeyError, TypeError, IndexError, AttributeError):
-                return {}
+                return return_on_error
         else:
             return f(json_data, *args, **kwargs)
     return ignore

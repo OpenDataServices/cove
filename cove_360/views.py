@@ -19,13 +19,14 @@ def common_checks_360(context, db_data, json_data, schema_obj):
     checkers = {'date-time': (datetime_or_date, ValueError)}
     common_checks = common_checks_context(db_data, json_data, schema_obj, schema_name, context, extra_checkers=checkers)
     cell_source_map = common_checks['cell_source_map']
-    additional_checks = run_additional_checks(json_data, cell_source_map, ignore_errors=True)
+    additional_checks = run_additional_checks(json_data, cell_source_map, ignore_errors=True, return_on_error=None)
 
     context.update(common_checks['context'])
     context.update({
         'grants_aggregates': get_grants_aggregates(json_data, ignore_errors=True),
+        'additional_checks_errored': additional_checks is None,
         'additional_checks': additional_checks,
-        'additional_checks_count': len(additional_checks) + (1 if context['data_only'] else 0),
+        'additional_checks_count': (len(additional_checks) if additional_checks else 0) + (1 if context['data_only'] else 0),
         'common_error_types': ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
     })
 
