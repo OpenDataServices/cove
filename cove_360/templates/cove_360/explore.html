@@ -283,7 +283,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {% for grant in json_data.grants|slice:":5000" %}
+                      {% for grant in grants|slice:":5000" %}
                       <tr>
                         <td>{{grant.id}}</td>
                         <td>{{grant.title }}</td>
