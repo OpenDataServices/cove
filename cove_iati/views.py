@@ -50,11 +50,11 @@ iati_form_classes = {
 }
 
 
-def common_checks_context_iati(db_data, data_file, file_type):
+def common_checks_context_iati(upload_dir, data_file, file_type):
     schema_aiti = SchemaIATI()
     lxml_errors = {}
     cell_source_map = {}
-    validation_errors_path = os.path.join(db_data.upload_dir(), 'validation_errors-2.json')
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
 
     with open(data_file) as fp, open(schema_aiti.activity_schema) as schema_fp:
         try:
@@ -77,7 +77,7 @@ def common_checks_context_iati(db_data, data_file, file_type):
     errors_all = format_lxml_errors(lxml_errors)
 
     if file_type != 'xml':
-        with open(os.path.join(db_data.upload_dir(), 'cell_source_map.json')) as cell_source_map_fp:
+        with open(os.path.join(upload_dir, 'cell_source_map.json')) as cell_source_map_fp:
             cell_source_map = json.load(cell_source_map_fp)
 
     if os.path.exists(validation_errors_path):
@@ -89,13 +89,10 @@ def common_checks_context_iati(db_data, data_file, file_type):
         with open(validation_errors_path, 'w+') as validation_error_fp:
             validation_error_fp.write(json.dumps(validation_errors))
 
-    db_data.rendered = True
-
     return {
         'validation_errors': sorted(validation_errors.items()),
         'validation_errors_count': sum(len(value) for value in validation_errors.values()),
-        'cell_source_map': cell_source_map,
-        'first_render': False
+        'cell_source_map': cell_source_map
     }
 
 
@@ -111,12 +108,19 @@ def explore_iati(request, pk):
 
     file_type = context['file_type']
     if file_type != 'xml':
-        context.update(convert_spreadsheet(request, db_data, file_type, xml=True))
+        schema_iati = SchemaIATI()
+        context.update(convert_spreadsheet(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
+                       file_type, schema_iati.activity_schema, xml=True))
         data_file = context['converted_path']
         # sort converted xml
         sort_iati_xml_file(context['converted_path'], context['converted_path'])
     else:
         data_file = db_data.original_file.file.name
 
-    context.update(common_checks_context_iati(db_data, data_file, file_type))
+    context.update(common_checks_context_iati(db_data.upload_dir(), data_file, file_type))
+    context['first_render'] = not db_data.rendered
+
+    if not db_data.rendered:
+        db_data.rendered = True
+
     return render(request, 'cove_iati/explore.html', context)
