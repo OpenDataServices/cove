@@ -102,6 +102,14 @@ def explore_ocds(request, pk):
                     'error': format(err)
                 })
 
+            if not isinstance(json_data, dict):
+                raise CoveInputDataError(context={
+                    'sub_title': _("Sorry we can't process that data"),
+                    'link': 'index',
+                    'link_text': _('Try Again'),
+                    'msg': _('OCDS JSON should have an object as the top level, the JSON you supplied does not.'),
+                })
+
             select_version = post_version_choice or db_data.schema_version
             schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data)
 

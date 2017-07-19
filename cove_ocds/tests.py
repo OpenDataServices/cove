@@ -315,15 +315,20 @@ def test_get_schema_deprecated_paths():
 @pytest.mark.parametrize('json_data', [
     # A selection of JSON strings we expect to give a 200 status code, even
     # though some of them aren't valid OCDS
+    'true',
+    'null',
+    '1',
     '{}',
     '[]',
     '[[]]',
+    '{"releases":{}}',
     '{"releases" : 1.0}',
     '{"releases" : 2}',
     '{"releases" : true}',
     '{"releases" : "test"}',
     '{"releases" : null}',
     '{"releases" : {"a":"b"}}',
+    '{"records":{}}',
     '{"records" : 1.0}',
     '{"records" : 2}',
     '{"records" : true}',
@@ -354,7 +359,7 @@ def test_explore_page(client, json_data):
 @pytest.mark.django_db
 def test_explore_page_convert(client):
     data = SuppliedData.objects.create()
-    data.original_file.save('test.json', ContentFile('{}'))
+    data.original_file.save('test.json', ContentFile('{"releases":[]}'))
     data.current_app = 'cove_ocds'
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
