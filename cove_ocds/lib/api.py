@@ -1,4 +1,5 @@
 import json
+import re
 
 from .ocds import common_checks_ocds
 from cove.lib.tools import get_file_type
@@ -55,6 +56,50 @@ def produce_json_output(output_dir, file):
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
-    context = common_checks_ocds(context, output_dir, json_data, schema_ocds, api=True)
+    context = context_api_transform(common_checks_ocds(context, output_dir, json_data, schema_ocds, api=True))
+
+    return context
+
+
+def context_api_transform(context):
+    validation_errors = context.get('validation_errors')
+    additional_fields = context.pop('data_only')
+
+    if validation_errors:
+        context['validation_errors'] = {
+            'error_fields': {},
+            'validation_errors_count': context.pop('validation_errors_count')
+        }
+        for error_group in validation_errors:
+            error_strings = [re.sub('(\[?|\s?)\"\]?', '', err) for err in error_group[0].split(',')]
+            field = error_strings.pop(2)
+            context['validation_errors']['error_fields'][field] = {
+                'type_description': error_strings,
+                'error_count': len(error_group[1]),
+                'paths_values': []
+            }
+            for path_data in error_group[1]:
+                values_list = [v for k, v in path_data.items()]
+                if len(values_list) != 2:
+                    values_list.append('')
+                context['validation_errors']['error_fields'][field]['paths_values'].append(values_list)
+
+    else:
+        context.pop('validation_errors_count')
+
+    if additional_fields:
+        context['additional_fields'] = {
+            "fields": {},
+            'additional_fields_count': context.pop('additional_fields_count')
+        }
+        for field_group in additional_fields:
+            field = field_group[1]
+            context['additional_fields']['fields'][field] = {
+                'path': field_group[0],
+                'usage_count': field_group[2]
+            }
+    else:
+        context['additional_fields'] = {}
+        context.pop('additional_fields_count', None)
 
     return context
