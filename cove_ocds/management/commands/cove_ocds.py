@@ -24,12 +24,14 @@ class Command(BaseCommand):
         parser.add_argument('--delete', '-d', action='store_true', help='Delete existing directory if it exits')
         parser.add_argument('--exclude-file', '-e', action='store_true', help='Do not include the file in the output directory')
         parser.add_argument('--schema-version', '-s', default='', help='Version of schema to be used')
+        parser.add_argument('--convert', '-c', action='store_true', help='Convert data from nested (json) to flat format (spreadsheet)')
 
     def handle(self, file, *args, **options):
         delete = options.get('delete')
         output_dir = options.get('output_dir')
         exclude_file = options.get('exclude_file')
         schema_version = options.get('schema_version')
+        convert = options.get('convert')
 
         if not output_dir:
             output_dir = file.split('/')[-1].split('.')[0]
@@ -43,7 +45,7 @@ class Command(BaseCommand):
         os.makedirs(output_dir)
 
         try:
-            result = produce_json_output(output_dir, file, schema_version)
+            result = produce_json_output(output_dir, file, schema_version, convert)
         except APIException as e:
             self.stdout.write(str(e))
             sys.exit(1)

@@ -12,7 +12,7 @@ class APIException(Exception):
     pass
 
 
-def produce_json_output(output_dir, file, schema_version):
+def produce_json_output(output_dir, file, schema_version, convert):
     context = {}
     file_type = get_file_type(file)
     context = {"file_type": file_type}
@@ -30,8 +30,8 @@ def produce_json_output(output_dir, file, schema_version):
                 schema_ocds.create_extended_release_schema_file(output_dir, "")
 
             url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
-
-            context.update(convert_json(output_dir, '', file, schema_url=url, flatten=True))
+            if convert:
+                context.update(convert_json(output_dir, '', file, schema_url=url, flatten=True, cache=False))
 
     else:
         metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
