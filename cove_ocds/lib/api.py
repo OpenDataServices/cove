@@ -1,5 +1,7 @@
 import json
+import os
 import re
+import shutil
 
 from .ocds import common_checks_ocds
 from cove.lib.tools import get_file_type
@@ -30,38 +32,49 @@ def produce_json_output(output_dir, file, schema_version, convert):
                 raise APIException('\033[1;31mThe schema version in your data is not valid. Accepted values: {}\033[1;m'.format(
                     str(list(schema_ocds.version_choices.keys()))
                 ))
-
             if schema_ocds.extensions:
                 schema_ocds.create_extended_release_schema_file(output_dir, "")
 
             url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
+
             if convert:
                 context.update(convert_json(output_dir, '', file, schema_url=url, flatten=True, cache=False))
+                # Remove unwanted folder in the output
+                # TODO: do this by no creating the folder in the first place
+                shutil.rmtree(os.path.join(output_dir, 'flattened'))
 
     else:
         metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
         metatab_data = get_spreadsheet_meta_data(output_dir, file, metatab_schema_url, file_type=file_type)
-
         schema_ocds = SchemaOCDS(release_data=metatab_data)
 
-        #if schema_ocds.invalid_version_data:
-        #    raise_invalid_version_data(metatab_data.get('version'))
-
-        # Replace json conversion when user chooses a different schema version.
-        #if db_data.schema_version and schema_ocds.version != db_data.schema_version:
-        #    replace = True
-
+        if schema_ocds.invalid_version_data:
+            raise APIException('\033[1;31mThe schema version in your data is not valid. Accepted values: {}\033[1;m'.format(
+                str(list(schema_ocds.version_choices.keys()))
+            ))
         if schema_ocds.extensions:
             schema_ocds.create_extended_release_schema_file(output_dir, '')
+
         url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
         pkg_url = schema_ocds.release_pkg_schema_url
 
-        context.update(convert_spreadsheet(output_dir, '', file, file_type, schema_url=url, pkg_schema_url=pkg_url))
+        context.update(convert_spreadsheet(output_dir, '', file, file_type, schema_url=url, pkg_schema_url=pkg_url, cache=False))
 
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
     context = context_api_transform(common_checks_ocds(context, output_dir, json_data, schema_ocds, api=True, cache=False))
+
+    if file_type == 'xlsx':
+        # Remove unwanted files in the output
+        # TODO: do this by no writing the files in the first place
+        os.remove(os.path.join(output_dir, 'heading_source_map.json'))
+        os.remove(os.path.join(output_dir, 'cell_source_map.json'))
+
+        if not convert:
+            # We have to convert spreadsheet to json to validate the data, so for 'no conversion'
+            # in the output just remove the converted json file from the directory
+            os.remove(os.path.join(output_dir, 'unflattened.json'))
 
     return context
 
@@ -97,8 +110,8 @@ def context_api_transform(context):
 
     if extensions:
         invalid_extensions = extensions.get('invalid_extension')
-
         context['extensions']['extensions'] = []
+
         for key, value in extensions['extensions'].items():
             if key not in invalid_extensions:
                 context['extensions']['extensions'].append(value)

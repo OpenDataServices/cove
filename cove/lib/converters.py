@@ -27,7 +27,8 @@ def filter_conversion_warnings(conversion_warnings):
 
 
 @cove_spreadsheet_conversion_error
-def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url=None, pkg_schema_url=None, metatab_name='Meta', replace=False, xml=False):
+def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url=None, pkg_schema_url=None,
+                        metatab_name='Meta', replace=False, xml=False,cache=True):
     context = {}
     if xml:
         output_file = 'unflattened.xml'
@@ -91,8 +92,11 @@ def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url
                 **flattentool_options
             )
             context['conversion_warning_messages'] = filter_conversion_warnings(conversion_warnings)
-        with open(conversion_warning_cache_path, 'w+') as fp:
-            json.dump(context['conversion_warning_messages'], fp)
+
+        if cache:
+            with open(conversion_warning_cache_path, 'w+') as fp:
+                json.dump(context['conversion_warning_messages'], fp)
+
     elif os.path.exists(conversion_warning_cache_path):
         with open(conversion_warning_cache_path) as fp:
             context['conversion_warning_messages'] = json.load(fp)
