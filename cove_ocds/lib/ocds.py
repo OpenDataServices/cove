@@ -338,12 +338,12 @@ def get_releases_aggregates(json_data):
     )
 
 
-def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False):
+def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, cache=True):
     schema_name = schema_obj.release_pkg_schema_name
     if 'records' in json_data:
         schema_name = schema_obj.record_pkg_schema_name
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context,
-                                          fields_regex=True, api=api)
+                                          fields_regex=True, api=api, cache=cache)
     validation_errors = common_checks['context']['validation_errors']
 
     context.update(common_checks['context'])

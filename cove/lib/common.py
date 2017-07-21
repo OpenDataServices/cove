@@ -109,7 +109,8 @@ class SchemaJsonMixin():
         return set(schema_dict_fields_generator(self.get_release_pkg_schema_obj(deref=True)))
 
 
-def common_checks_context(upload_dir, json_data, schema_obj, schema_name, context, extra_checkers=None, fields_regex=False, api=False):
+def common_checks_context(upload_dir, json_data, schema_obj, schema_name, context, extra_checkers=None,
+                          fields_regex=False, api=False, cache=True):
     schema_version = getattr(schema_obj, 'version', None)
     schema_version_choices = getattr(schema_obj, 'version_choices', None)
 
@@ -142,14 +143,15 @@ def common_checks_context(upload_dir, json_data, schema_obj, schema_name, contex
 
     validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
     if os.path.exists(validation_errors_path):
-        with open(validation_errors_path) as validiation_error_fp:
-            validation_errors = json.load(validiation_error_fp)
+        with open(validation_errors_path) as validation_error_fp:
+            validation_errors = json.load(validation_error_fp)
     else:
         validation_errors = get_schema_validation_errors(json_data, schema_obj, schema_name,
                                                          cell_source_map, heading_source_map,
                                                          extra_checkers=extra_checkers)
-        with open(validation_errors_path, 'w+') as validiation_error_fp:
-            validiation_error_fp.write(json.dumps(validation_errors))
+        if cache:
+            with open(validation_errors_path, 'w+') as validation_error_fp:
+                validation_error_fp.write(json.dumps(validation_errors))
 
     extensions = None
     if getattr(schema_obj, 'extensions', None):

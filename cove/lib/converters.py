@@ -130,9 +130,11 @@ def convert_json(upload_dir, upload_url, file_name, schema_url, replace=False, r
                 else:
                     return {'conversion': 'flattenable'}
                 context['conversion_warning_messages'] = filter_conversion_warnings(conversion_warnings)
+
             if cache:
                 with open(conversion_warning_cache_path, 'w+') as fp:
                     json.dump(context['conversion_warning_messages'], fp)
+
         elif os.path.exists(conversion_warning_cache_path):
             with open(conversion_warning_cache_path) as fp:
                 context['conversion_warning_messages'] = json.load(fp)
