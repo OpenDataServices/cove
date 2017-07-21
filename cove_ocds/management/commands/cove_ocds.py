@@ -1,9 +1,11 @@
 import json
 import os
+import shutil
 import sys
 
+from django.core.management.base import BaseCommand
+
 from cove_ocds.lib.api import produce_json_output, APIException
-from cove.lib.command_base import CoveCommandBase
 
 
 class SetEncoder(json.JSONEncoder):
@@ -13,22 +15,41 @@ class SetEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-class Command(CoveCommandBase):
+class Command(BaseCommand):
     help = 'Run Command Line version of Cove OCDS'
 
     def add_arguments(self, parser):
-        super().add_arguments(parser)
+        parser.add_argument('file', help='File to be processed by Cove')
+        parser.add_argument('--output-dir', '-o', default='', help='Directory where output is created, defaults to the name of the file')
+        parser.add_argument('--delete', '-d', action='store_true', help='Delete existing directory if it exits')
+        parser.add_argument('--exclude-file', '-e', action='store_true', help='Do not include the file in the output directory')
         parser.add_argument('--schema-version', '-s', default='', help='Version of schema to be used')
 
     def handle(self, file, *args, **options):
-        super().handle(file, *args, **options)
+        delete = options.get('delete')
+        output_dir = options.get('output_dir')
+        exclude_file = options.get('exclude_file')
         schema_version = options.get('schema_version')
 
+        if not output_dir:
+            output_dir = file.split('/')[-1].split('.')[0]
+
+        if os.path.exists(output_dir):
+            if delete:
+                shutil.rmtree(output_dir)
+            else:
+                self.stdout.write('Directory {} already exists'.format(output_dir))
+                sys.exit(1)
+        os.makedirs(output_dir)
+
         try:
-            result = produce_json_output(self.output_dir, file, schema_version)
+            result = produce_json_output(output_dir, file, schema_version)
         except APIException as e:
             self.stdout.write(str(e))
             sys.exit(1)
 
-        with open(os.path.join(self.output_dir, "results.json"), 'w+') as result_file:
+        with open(os.path.join(output_dir, "results.json"), 'w+') as result_file:
             json.dump(result, result_file, indent=2, cls=SetEncoder)
+
+        if not exclude_file:
+            shutil.copy2(file, output_dir)
