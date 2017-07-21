@@ -43,6 +43,8 @@ def update_docs(document_parent, counter):
 
 
 def datetime_or_date(instance):
+    if not instance:
+        raise ValueError
     result = strict_rfc3339.validate_rfc3339(instance)
     if result:
         return result

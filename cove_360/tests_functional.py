@@ -76,6 +76,14 @@ def server_url(request, live_server):
     ('paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
     # Test a unconvertable spreadsheet (blank file)
     ('bad.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
+    ('nulls.json', [
+        'Value is not an array',
+        'Date is not in the correct format',
+        'Invalid code found in \'countryCode\'',
+        'Value is not a number',
+        'Value is not a string',
+    ], True),
+
 ])
 def test_explore_360_url_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
     """
