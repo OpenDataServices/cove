@@ -25,7 +25,12 @@ def produce_json_output(output_dir, file, schema_version, convert):
                 raise APIException('The file looks like invalid json')
 
             schema_ocds = SchemaOCDS(schema_version, json_data)
-            
+
+            if schema_ocds.invalid_version_data:
+                raise APIException('\033[1;31mThe schema version in your data is not valid. Accepted values: {}\033[1;m'.format(
+                    str(list(schema_ocds.version_choices.keys()))
+                ))
+
             if schema_ocds.extensions:
                 schema_ocds.create_extended_release_schema_file(output_dir, "")
 

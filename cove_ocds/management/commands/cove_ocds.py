@@ -3,7 +3,8 @@ import os
 import shutil
 import sys
 
-from django.core.management.base import BaseCommand
+from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
 
 from cove_ocds.lib.api import produce_json_output, APIException
 
@@ -30,8 +31,14 @@ class Command(BaseCommand):
         delete = options.get('delete')
         output_dir = options.get('output_dir')
         exclude_file = options.get('exclude_file')
-        schema_version = options.get('schema_version')
         convert = options.get('convert')
+        schema_version = options.get('schema_version')
+
+        version_choices = settings.COVE_CONFIG['schema_version_choices']
+        if schema_version and schema_version not in version_choices:
+            raise CommandError('Value for schema version option is not valid. Accepted values: {}'.format(
+                str(list(version_choices.keys()))
+            ))
 
         if not output_dir:
             output_dir = file.split('/')[-1].split('.')[0]
