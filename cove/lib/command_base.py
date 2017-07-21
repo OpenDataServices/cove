@@ -14,7 +14,9 @@ class CoveCommandBase(BaseCommand):
         parser.add_argument('--exclude-file', '-e', action='store_true', help='Do not include the file in the output directory')
 
     def handle(self, file, *args, **options):
-        output_dir = options.get('output-dir')
+        output_dir = options.get('output_dir')
+        exclude_file = options.get('exclude_file')
+
         if not output_dir:
             output_dir = file.split('/')[-1].split('.')[0]
 
@@ -26,5 +28,7 @@ class CoveCommandBase(BaseCommand):
                 sys.exit(1)
 
         os.makedirs(output_dir)
-
         self.output_dir = output_dir
+
+        if not exclude_file:
+            shutil.copy2(file, self.output_dir)
