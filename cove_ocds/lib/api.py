@@ -67,13 +67,13 @@ def produce_json_output(output_dir, file, schema_version, convert):
 
     if file_type == 'xlsx':
         # Remove unwanted files in the output
-        # TODO: do this by no writing the files in the first place
+        # TODO: Do this by no writing the files in the first place
         os.remove(os.path.join(output_dir, 'heading_source_map.json'))
         os.remove(os.path.join(output_dir, 'cell_source_map.json'))
 
         if not convert:
             # We have to convert spreadsheet to json to validate the data, so for 'no conversion'
-            # in the output just remove the converted json file from the directory
+            # in the output just remove the to_json_conversion file from the directory
             os.remove(os.path.join(output_dir, 'unflattened.json'))
 
     return context

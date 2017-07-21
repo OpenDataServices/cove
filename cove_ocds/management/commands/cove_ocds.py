@@ -21,11 +21,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('file', help='File to be processed by Cove')
-        parser.add_argument('--output-dir', '-o', default='', help='Directory where output is created, defaults to the name of the file')
+        parser.add_argument('--output-dir', '-o', default='', help='Directory where the output is created, defaults to the name of the file')
         parser.add_argument('--delete', '-d', action='store_true', help='Delete existing directory if it exits')
         parser.add_argument('--exclude-file', '-e', action='store_true', help='Do not include the file in the output directory')
-        parser.add_argument('--schema-version', '-s', default='', help='Version of schema to be used')
-        parser.add_argument('--convert', '-c', action='store_true', help='Convert data from nested (json) to flat format (spreadsheet)')
+        parser.add_argument('--schema-version', '-s', default='', help='Version of the schema to validate the data')
+        parser.add_argument('--convert', '-c', action='store_true', help='Convert data from nested (json) to flat format (spreadsheet) or vice versa')
 
     def handle(self, file, *args, **options):
         delete = options.get('delete')

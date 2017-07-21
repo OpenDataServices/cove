@@ -221,3 +221,26 @@ Then, run ``./update_requirements --new-only`` this will populate ``requirements
 WARNING: The ``./update_requirements`` script will delete and recreate your current ``.ve`` directory.
 
 ``./update_requirements`` without any flags will update all pinned requirements to the latest version. Generally we don't want to do this at the same time as adding a new dependency, to make testing any problems easier.
+
+
+Command Line Interface
+======================
+CoVE for OCDS can be run from the command line. To get a JSON file with validation errors plus other key information you can use the following command:
+
+.. code:: bash
+
+    ./ocds-cli.py --options file-name
+
+``file-name`` can be a JSON or an Excel file.
+
+Options:
+
+``--output-dir -o``  Directory where the output is created, defaults to the name of the file. 
+
+``--exclude-file -e``  Do not include the file in the output directory.
+
+``--delete -d`` Delete existing directory if it exists.
+
+``--schema-version -s``  Version of the schema to validate the data.
+
+``--convert -c``  Convert data from nested (JSON) to flat format (Excel) or vice versa.
