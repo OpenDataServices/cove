@@ -12,7 +12,7 @@ class APIException(Exception):
     pass
 
 
-def produce_json_output(output_dir, file):
+def produce_json_output(output_dir, file, schema_version):
     context = {}
     file_type = get_file_type(file)
     context = {"file_type": file_type}
@@ -24,7 +24,7 @@ def produce_json_output(output_dir, file):
             except ValueError:
                 raise APIException('The file looks like invalid json')
 
-            schema_ocds = SchemaOCDS(release_data=json_data)
+            schema_ocds = SchemaOCDS(schema_version, json_data)
             
             if schema_ocds.extensions:
                 schema_ocds.create_extended_release_schema_file(output_dir, "")
@@ -63,43 +63,59 @@ def produce_json_output(output_dir, file):
 
 def context_api_transform(context):
     validation_errors = context.get('validation_errors')
+    context['validation_errors'] = []
+    context.pop('validation_errors_count')
+
+    extensions = context.get('extensions')
+    context['extensions'] = {}
+
+    deprecated_fields = context.get('deprecated_fields')
+    context['deprecated_fields'] = []
+
     additional_fields = context.pop('data_only')
+    context['additional_fields'] = []
+    context.pop('additional_fields_count')
 
     if validation_errors:
-        context['validation_errors'] = {
-            'error_fields': {},
-            'validation_errors_count': context.pop('validation_errors_count')
-        }
         for error_group in validation_errors:
-            error_strings = [re.sub('(\[?|\s?)\"\]?', '', err) for err in error_group[0].split(',')]
-            field = error_strings.pop(2)
-            context['validation_errors']['error_fields'][field] = {
-                'type_description': error_strings,
-                'error_count': len(error_group[1]),
-                'paths_values': []
-            }
-            for path_data in error_group[1]:
-                values_list = [v for k, v in path_data.items()]
-                if len(values_list) != 2:
-                    values_list.append('')
-                context['validation_errors']['error_fields'][field]['paths_values'].append(values_list)
+            error_type, error_description, error_field = [
+                re.sub('(\[?|\s?)\"\]?', '', err) for err in error_group[0].split(',')
+            ]
+            for path_value in error_group[1]:
+                context['validation_errors'].append({
+                    'type': error_type,
+                    'field': error_field,
+                    'description': error_description,
+                    'paths': path_value.get('path', ''),
+                    'value': path_value.get('value', '')
+                })
 
-    else:
-        context.pop('validation_errors_count')
+    if extensions:
+        invalid_extensions = extensions.get('invalid_extension')
+
+        context['extensions']['extensions'] = []
+        for key, value in extensions['extensions'].items():
+            if key not in invalid_extensions:
+                context['extensions']['extensions'].append(value)
+
+        context['extensions']['invalid_extensions'] = []
+        for key, value in invalid_extensions.items():
+            context['extensions']['invalid_extensions'].append([key, value])
+
+        context['extensions']['extended_schema_url'] = extensions['extended_schema_url']
+        context['extensions']['is_extended_schema'] = extensions['is_extended_schema']
+
+    if deprecated_fields:
+        for key, value in deprecated_fields.items():
+            value.update({'field': key})
+            context['deprecated_fields'].append(value)
 
     if additional_fields:
-        context['additional_fields'] = {
-            "fields": {},
-            'additional_fields_count': context.pop('additional_fields_count')
-        }
         for field_group in additional_fields:
-            field = field_group[1]
-            context['additional_fields']['fields'][field] = {
+            context['additional_fields'].append({
                 'path': field_group[0],
+                'field': field_group[1],
                 'usage_count': field_group[2]
-            }
-    else:
-        context['additional_fields'] = {}
-        context.pop('additional_fields_count', None)
+            })
 
     return context
