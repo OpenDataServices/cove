@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+from decimal import Decimal
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
@@ -90,7 +91,7 @@ def explore_ocds(request, pk):
         # open the data first so we can inspect for record package
         with open(db_data.original_file.file.name, encoding='utf-8') as fp:
             try:
-                json_data = json.load(fp)
+                json_data = json.load(fp, parse_float=Decimal)
             except ValueError as err:
                 raise CoveInputDataError(context={
                     'sub_title': _("Sorry we can't process that data"),
@@ -173,7 +174,7 @@ def explore_ocds(request, pk):
         context.update(convert_spreadsheet(request, db_data, file_type, schema_url=url, pkg_schema_url=pkg_url, replace=replace))
 
         with open(context['converted_path'], encoding='utf-8') as fp:
-            json_data = json.load(fp)
+            json_data = json.load(fp, parse_float=Decimal)
 
     if replace:
         if os.path.exists(validation_errors_path):

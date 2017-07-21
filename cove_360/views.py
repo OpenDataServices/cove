@@ -1,5 +1,6 @@
 import json
 import logging
+from decimal import Decimal
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
@@ -45,7 +46,7 @@ def explore_360(request, pk, template='cove_360/explore.html'):
         # open the data first so we can inspect for record package
         with open(db_data.original_file.file.name, encoding='utf-8') as fp:
             try:
-                json_data = json.load(fp)
+                json_data = json.load(fp, parse_float=Decimal)
             except ValueError as err:
                 raise CoveInputDataError(context={
                     'sub_title': _("Sorry we can't process that data"),
@@ -69,7 +70,7 @@ def explore_360(request, pk, template='cove_360/explore.html'):
     else:
         context.update(convert_spreadsheet(request, db_data, file_type, schema_360.release_schema_url))
         with open(context['converted_path'], encoding='utf-8') as fp:
-            json_data = json.load(fp)
+            json_data = json.load(fp, parse_float=Decimal)
 
     context = common_checks_360(context, db_data, json_data, schema_360)
 

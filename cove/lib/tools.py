@@ -1,6 +1,7 @@
 import datetime
 import strict_rfc3339
 from functools import wraps  # use this to preserve function signatures and docstrings
+from decimal import Decimal
 
 from . exceptions import UnrecognisedFileType
 
@@ -67,3 +68,27 @@ def get_file_type(file):
             return 'json'
         else:
             raise UnrecognisedFileType
+
+
+# From http://bugs.python.org/issue16535
+class NumberStr(float):
+    def __init__(self, o):
+        # We don't call the parent here, since we're deliberately altering it's functionality
+        # pylint: disable=W0231
+        self.o = o
+
+    def __repr__(self):
+        return str(self.o)
+
+    # This is needed for this trick to work in python 3.4
+    def __float__(self):
+        return self
+
+
+def decimal_default(o):
+    if isinstance(o, Decimal):
+        if int(o) == o:
+            return int(o)
+        else:
+            return NumberStr(o)
+    raise TypeError(repr(o) + " is not JSON serializable")

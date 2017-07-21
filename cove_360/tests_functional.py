@@ -83,6 +83,8 @@ def server_url(request, live_server):
         'Value is not a number',
         'Value is not a string',
     ], True),
+    ('decimal_amounts.csv', 'The grants were awarded in GBP with a total value of £7,000.7 and individual awards ranging from £1,000.1 (lowest) to £1,000.1 (highest).', True),
+    ('decimal_amounts.json', 'The grants were awarded in GBP with a total value of £7,000.7 and individual awards ranging from £1,000.1 (lowest) to £1,000.1 (highest).', True),
 
 ])
 def test_explore_360_url_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
@@ -166,7 +168,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
             assert "unflattened.json" in browser.find_element_by_link_text("JSON (Converted from Original)").get_attribute("href")
 
         assert source_filename in original_file
-        assert '0 bytes' not in body_text
+        assert ' 0 bytes' not in body_text
         # Test for Load New File button
         assert 'Load New File' in body_text
 

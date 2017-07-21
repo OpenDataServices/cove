@@ -2,6 +2,7 @@ import json
 import re
 import os
 from collections import defaultdict, OrderedDict
+from decimal import Decimal
 
 import requests
 
@@ -55,7 +56,7 @@ def get_grants_aggregates(json_data):
 
             currencies[currency]["count"] += 1
             amount_awarded = grant.get('amountAwarded')
-            if amount_awarded and isinstance(amount_awarded, (int, float)):
+            if amount_awarded and isinstance(amount_awarded, (int, Decimal, float)):
                 currencies[currency]["total_amount"] += amount_awarded
                 currencies[currency]['max_amount'] = max(amount_awarded, currencies[currency]['max_amount'])
                 if not currencies[currency]["min_amount"]:
