@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.01">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.02">
 
   <xsd:annotation>
     <xsd:documentation xml:lang="en">
       International Aid Transparency Initiative: Common Markup Components
 
-      Release 2.01, 2014-10-21
+      Release 2.02, 2015-12-07
 
       This schema is not meant to be used on its own: it contains
       common shared markup components for the IATI activities and
