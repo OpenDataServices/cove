@@ -372,10 +372,16 @@ def get_json_data_deprecated_fields(json_data, schema_obj):
     # {deprecated_field: ((path, path... ), (version, description))}
     deprecated_fields = OrderedDict()
     for generic_path in sorted(deprecated_paths_in_data, key=lambda tup: tup[0][-1]):
-        deprecated_fields[generic_path[0][-1]] = (
-            tuple((key for key in paths_in_data[generic_path[0]].keys())),
-            generic_path[1]
-        )
+        deprecated_fields[generic_path[0][-1]] = tuple()
+
+        # Be defensive against invalid schema data and corner cases.
+        # e.g. (invalid OCDS data):
+        # {"version":"1.1", "releases":{"buyer":{"additionalIdentifiers":[]}}}
+        if hasattr(paths_in_data[generic_path[0]], "keys"):
+            deprecated_fields[generic_path[0][-1]] += (tuple(key for key in paths_in_data[generic_path[0]].keys()),
+                                                       generic_path[1])
+        else:
+            deprecated_fields[generic_path[0][-1]] += ((generic_path[0],), generic_path[1])
 
     # Order the path tuples in values for deprecated_fields.
     deprecated_fields_output = OrderedDict()

@@ -1,0 +1,214 @@
+{% extends 'explore.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load cove_tags %}
+
+{% block header_button %}
+{{block.super}}
+<div class="expand-collapse-all">
+<a href="#" onclick="$('.collapse').collapse('show')">Expand all</a>
+/
+<a href="#" onclick="$('.collapse').collapse('hide')">Collapse all</a>
+</div>
+{% endblock %}
+
+{% block explore_content %}
+
+  {% block data_supplied %}
+    <div class="panel panel-default">
+      <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#data-supplied-body" {% if conversion == 'flattenable' %}aria-expanded="true"{% endif %}>
+        <h3 class="panel-title panel-title-explore"> 
+          <span class="font-tick tick" aria-hidden="true"></span>
+          Data Supplied
+          <span class="pull-right glyphicon glyphicon-collapse-{% if conversion == 'flattenable' %}up{% else %}down{% endif %}"></span>
+        </h3>
+      </div>
+      <div id="data-supplied-body" class="collapse {% if conversion == 'flattenable' %}in{% endif %}">
+        <div class="panel-body">
+           <p class="explanation">
+             {% trans "A file was " %} 
+             {% if source_url %}
+                {% trans "downloaded from " %} <a href="{{source_url}}">{{source_url}}</a>
+             {% else %}
+               {% trans "uploaded " %} 
+             {% endif %}
+             {% trans "on " %} {{created_date}}.
+           </p>
+           <br>
+           <div class="explore-help"> If anything looks wrong with this data please use the <em>Review</em> section below to identify potential issues. </div>
+        </div>
+      </div>
+    </div>
+  {% endblock data_supplied %}
+
+  {% block conversion %}
+  {% if conversion == 'unflatten' or conversion == 'flatten'%}
+    <div class="panel panel-default">
+      <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#conversion-body">
+        <h3 class="panel-title panel-title-explore" id="conversion-title"> 
+          {% if conversion_warning_messages or conversion_error %}
+            <span class="font-tick cross" aria-hidden="true"></span>
+          {% else %}
+            <span class="font-tick tick" aria-hidden="true"></span>
+          {% endif %}
+          {% trans "Converted to " %}{% if conversion == 'unflatten'%} XML {% else %} Spreadsheet{% endif %}
+          {% if conversion_warning_messages %}
+            <small>{% blocktrans count n_warnings=conversion_warning_messages|length %}{{n_warnings}} Error{% plural %}{{n_warnings}} Errors{% endblocktrans %}</small>
+          {% endif %}
+          <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+        </h3>
+      </div>
+      <div id="conversion-body" class="collapse">
+        <div class="panel-body">
+          {% if conversion == 'unflatten' %}
+            <p class="explanation">{% trans "In order to validate your data we needed to convert it to XML." %}</p>
+          {% else %}
+            <p class="explanation"></p>
+            {% if conversion_error %}
+                <p>{% blocktrans %}{% endblocktrans %}</p>
+                {% include 'error_extra.html' %}
+            {% endif %}
+          {% endif %}
+          {% if conversion_warning_messages %}
+            <br>
+            <p>{% trans "Conversion <strong>errors:</strong>" %}</p>
+            <ul class="left-space">
+              {% for warning_message in conversion_warning_messages %}
+                <li>{{warning_message}}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% endblock conversion %}
+
+  {% block validation %}
+  <div class="panel panel-default">
+    <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#validation-body">
+      <h3 class="panel-title panel-title-explore">
+        {% if validation_errors %}
+           <span class="font-tick cross" aria-hidden="true"></span>
+           {% trans "Invalid against Schema " %}<small>{% blocktrans count n_errors=validation_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</small>
+        {% else %}
+           <span class="font-tick tick" aria-hidden="true"></span>
+          {% trans "Valid against Schema" %}
+        {% endif %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="validation-body" class="collapse">
+      <div class="panel-body">
+        <p class="explanation">
+        {% if validation_errors %}
+            {% trans "Sorry your data is invalid against" %}
+        {% else %}
+          {% trans "Congratulations! Your data is valid against" %}
+        {% endif %}
+        <a href=""> IATI Schema</a>.
+        </p>
+        <div class="explore-help"></div>
+        {% if validation_errors %}
+          <br>
+          <p class="explanation">&nbsp;{% trans "There are some <strong>validation errors</strong> in your data, please check them in the table below." %}</p>
+          <br>
+          {% include "validation_table.html" %}
+          {% for error, values in validation_errors %}
+             {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endblock validation %}
+
+
+  {% block download_and_share %}
+  <div class="panel panel-default">
+    <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#save-and-share-body">
+      <h3 class="panel-title panel-title-explore"><span class="glyphicon glyphicon-save"></span>
+        {% trans "Download and Share" %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="save-and-share-body" class="collapse {% if conversion == 'flatten' %}in{% endif %}">
+      <div class="panel-body">
+        <h4><span class="glyphicon glyphicon-download-alt"></span> Download</h4>
+        <p>{% trans "The following files are available to download:" %}</p>
+        <ul class="left-space">
+          <li>
+            <a href="{{original_file.url}}">{% trans "Original file" %} ({{file_type}})</a> {{original_file.size|filesizeformat}}
+          </li>
+          {% if not conversion_error %}
+            {% if conversion == 'unflatten' %}
+            <li>
+              <a href="{{converted_url}}">{{XML}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
+            </li>
+            {% elif conversion == 'flatten' %}
+            <li>
+              <a href="{{converted_url}}.xlsx">{{xlsx}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
+            </li>
+              {% if request.cove_config.convert_titles %}
+              <li>
+                <a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({% trans converted %})</a> {{converted_file_size_titles|filesizeformat}}
+              </li>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        </ul>
+        <h4><span class="glyphicon glyphicon-share"></span> Share</h4>
+        <p>{% trans "Use the following url to share these results:" %}</p>
+        <div class="copy-div">
+            <span class="copy-span"> {{ current_url }} <span id="copy-url-button" title="Click to copy." data-clipboard-text={{ current_url }} class="btn copy-button glyphicon glyphicon-copy" aria-hidden="true"></span> </span>
+        </div>
+        {% comment %}Translators: Paragraph that describes the application{% endcomment %}
+        <br>
+        <p>{% blocktrans %}After 7 days all uploaded data is deleted from our servers, and the results will no longer be available. Anyone using the link to this page after that will be shown a message that tells them the file has been removed.{% endblocktrans %}</p>
+        <p>{% blocktrans %}These results will be available for 7 days from the day the data was first uploaded. You can revisit these results until then.{% endblocktrans %}</p>
+      </div>
+    </div>
+  </div>
+  {% endblock download_and_share %}
+
+{% endblock explore_content %}
+
+{% block extrafooterscript %}
+  {{ block.super }} 
+  <script type="text/javascript">
+    $("[data-toggle='collapse']").click(function() {
+      var $this = $(this);
+      if($this.attr("aria-expanded") === "true"){
+        $this.find('.glyphicon-collapse-up').removeClass('glyphicon-collapse-up').addClass('glyphicon-collapse-down')
+      } else {
+        $this.find('.glyphicon-collapse-down').removeClass('glyphicon-collapse-down').addClass('glyphicon-collapse-up')
+      }
+    });
+  </script>
+{% endblock extrafooterscript %}
+
+
+{% comment %}
+<!-- These components haven't been used in the UI redesign -->
+{% cove_modal_list className="duplicate-id-modal" modalTitle="Duplicate IDs" itemList=grants_aggregates.duplicate_ids %}
+{% cove_modal_list className="funding-org-identifier-prefixes" modalTitle="Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifier_prefixes %}
+{% cove_modal_list className="funding-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Funding Organisation ID Prefixes" itemList=grants_aggregates.funding_org_identifiers_unrecognised_prefixes %}
+{% cove_modal_list className="recipient-org-identifier-prefixes" modalTitle="Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifier_prefixes %}
+{% cove_modal_list className="recipient-org-identifiers-unrecognised-prefixes" modalTitle="Unrecognised Recipient Organisation ID Prefixes" itemList=grants_aggregates.recipient_org_identifiers_unrecognised_prefixes %}
+<div class="modal fade distinct-funding-orgs" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         <h5 class="modal-title">Recipient Organisation IDs</h5>
+      </div>
+      <ul class="list-group">
+        {% for id in grants_aggregates.distinct_funding_org_identifier %}
+           <li class="list-group-item">{{ id }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+<!--  -->
+{% endcomment %}

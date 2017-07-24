@@ -18,25 +18,30 @@
         <h4 class="panel-title">Schema</h4>
       </div>
       <div class="panel-body">
-      <p>This data has been checked against <a href="{{ schema_url }}">OCDS schema version {{ version_used_display }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
-      <br>
-      <strong>Validate and explore same data against a different version of the schema</strong>
-      <br>
-      <br>
-      <div>
-        <form class="form-inline" action="{% url 'explore' data_uuid %}" method="post">
-        {% csrf_token %}
-          <select class="form-control" name="version">
-          {% for version in version_display_choices %}
-            <option value="{{ version.0 }}" {% if version.0 == version_used %}selected{% endif %}>
-               {{ version.1 }}
-            </option>
-          {% endfor %}
-          </select>
-            {# Translators: Label of a button that triggers search #}
-            <input class="btn btn-primary" type="submit" value={% trans "Go" %} /><img id="small-loading" style="display: none; margin:0; margin-left:2%" class="spinner" src="//i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="spinner" width="20" height="20">
-        </form>
-      </div>
+        {% if unrecognized_version_data %}
+          <div class="bg-danger in-panel-warning">
+            <small><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> &nbsp;Your data specifies a version <strong>{{unrecognized_version_data}}</strong> which is not recognised. For that reason, it's been validated against the current default version.</small>
+          </div>
+        {% endif %}
+        <p>This data has been checked against <a href="{{ schema_url }}">OCDS schema version {{ version_used_display }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
+        <br>
+        <strong>Validate and explore same data against a different version of the schema</strong>
+        <br>
+        <br>
+        <div>
+          <form class="form-inline" action="{% url 'explore' data_uuid %}" method="post">
+          {% csrf_token %}
+            <select class="form-control" name="version">
+            {% for version in version_display_choices %}
+              <option value="{{ version.0 }}" {% if version.0 == version_used %}selected{% endif %}>
+                 {{ version.1 }}
+              </option>
+            {% endfor %}
+            </select>
+              {# Translators: Label of a button that triggers search #}
+              <input class="btn btn-primary" type="submit" value={% trans "Go" %} /><img id="small-loading" style="display: none; margin:0; margin-left:2%" class="spinner" src="//i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="spinner" width="20" height="20">
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -139,7 +144,7 @@
       <ul>
         {% for ext_descriptor_url, ext_details in ext.items %}
           {% if ext_details %}
-          <li><a href="{{ext_details.0}}">{{ext_details.1}}</a> &nbsp;&nbsp;<span class="font-tick tick"></span><p><small>{{ext_details.2}}</small><p></li>
+          <li><a href="{% if ext_details.documentation_url %}{{ext_details.documentation_url}}{% else %}{{ext_details.url}}{% endif %}">{{ext_details.name}}</a> &nbsp;&nbsp;<span class="font-tick tick"></span><p><small>{{ext_details.description}}</small><p></li>
           {% endif %}
         {% endfor %}
       </ul>

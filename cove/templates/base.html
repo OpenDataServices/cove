@@ -122,6 +122,8 @@
           </ul>
           {% comment %}Translators: Provides information about the version of the code base that is being used{% endcomment %}
           <p class="text-muted">{% blocktrans %}Running version {% endblocktrans %}<a href="https://github.com/OpenDataServices/cove/tree/{{request.tag}}">{{request.tag}}</a></p>
+          {% block theme %}
+          {% endblock %}
         </div>
         <div class="col-md-6">
           <h4>{% trans "Links" %}</h4>

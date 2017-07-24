@@ -7,6 +7,8 @@ import json_merge_patch
 import requests
 from cached_property import cached_property
 from django.conf import settings
+from django.utils import translation
+
 
 from cove.lib.common import SchemaJsonMixin, schema_dict_fields_generator
 
@@ -21,7 +23,6 @@ class SchemaOCDS(SchemaJsonMixin):
     version_choices = config['schema_version_choices']
     default_version = config['schema_version']
     default_schema_host = version_choices[default_version][1]
-    default_release_schema_url = urljoin(default_schema_host, release_schema_name)
 
     def __init__(self, select_version=None, release_data=None):
         '''Build the schema object using an specific OCDS schema version
@@ -32,9 +33,14 @@ class SchemaOCDS(SchemaJsonMixin):
         and self.invalid_version_data respectively.
         '''
         self.version = self.default_version
+        self.schema_host = self.default_schema_host
+
+        if release_data and 'version' not in release_data:
+            self.version = '1.0'
+            self.schema_host = self.version_choices['1.0'][1]
+
         self.invalid_version_argument = False
         self.invalid_version_data = False
-        self.schema_host = self.default_schema_host
         self.extensions = {}
         self.invalid_extension = {}
         self.extended = False
@@ -48,8 +54,6 @@ class SchemaOCDS(SchemaJsonMixin):
             except KeyError:
                 select_version = None
                 self.invalid_version_argument = True
-                print('Not a valid value for `version` argument: using version in the release '
-                      'data or the default version if version is missing in the release data')
             else:
                 self.version = select_version
                 self.schema_host = self.version_choices[select_version][1]
@@ -59,7 +63,7 @@ class SchemaOCDS(SchemaJsonMixin):
             if data_extensions:
                 self.extensions = {ext: tuple() for ext in data_extensions}
             if not select_version:
-                release_version = release_data.get('version')
+                release_version = release_data and release_data.get('version')
                 if release_version:
                     version_choice = self.version_choices.get(release_version)
                     if version_choice:
@@ -129,8 +133,27 @@ class SchemaOCDS(SchemaJsonMixin):
 
             schema_obj = json_merge_patch.merge(schema_obj, extension_data)
             extensions_descriptor = requests.get(extensions_descriptor_url).json()
-            self.extensions[extensions_descriptor_url] = (url, extensions_descriptor['name'],
-                                                          extensions_descriptor['description'])
+            cur_language = translation.get_language()
+
+            extension_description = {'url': url}
+
+            # Section to be removed when extensions conform to new schema
+            old_documentation_url = extensions_descriptor.get('documentation_url', '')
+            if old_documentation_url and 'documentationUrl' not in extensions_descriptor:
+                extensions_descriptor['documentationUrl'] = {'en': old_documentation_url}
+            # End section
+
+            for field in ['description', 'name', 'documentationUrl']:
+                field_object = extensions_descriptor.get(field, {})
+                if isinstance(field_object, str):
+                    field_value = field_object
+                else:
+                    field_value = field_object.get(cur_language)
+                    if not field_value:
+                        field_value = field_object.get('en', '')
+                extension_description[field] = field_value
+
+            self.extensions[extensions_descriptor_url] = extension_description
             self.extended = True
 
     def create_extended_release_schema_file(self, upload_dir, upload_url):

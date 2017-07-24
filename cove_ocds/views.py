@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
@@ -27,6 +28,7 @@ def common_checks_ocds(context, db_data, json_data, schema_obj):
 
     if schema_name == 'record-package-schema.json':
         context['records_aggregates'] = get_records_aggregates(json_data, ignore_errors=bool(validation_errors))
+        context['schema_url'] = schema_obj.record_pkg_schema_url
     else:
         additional_codelist_values = get_additional_codelist_values(schema_obj, schema_obj.codelists, json_data)
         closed_codelist_values = {key: value for key, value in additional_codelist_values.items() if not value['isopen']}
@@ -55,15 +57,18 @@ def raise_invalid_version_argument(pk, version):
     })
 
 
-def raise_invalid_version_data(version):
+def raise_invalid_version_data_with_patch(version):
     raise CoveInputDataError(context={
-        'sub_title': _("Wrong schema version"),
+        'sub_title': _("Version format does not comply with the schema"),
         'link': 'index',
         'link_text': _('Try Again'),
-        'msg': _('The value for the <em>"version"</em> field in your data is not a recognised '
-                 'OCDS schema version.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
-                 'aria-hidden="true"></span> <strong>Error message: </strong> <em>{}</em> '
-                 'is not a recognised schema version choice'.format(version)),
+        'msg': _('The value for the <em>"version"</em> field in your data follows the '
+                 '<em>major.minor.patch</em> pattern but according to the schema the patch digit '
+                 'shouldn\'t be included (e.g. <em>"1.1.0"</em> should appear as <em>"1.1"</em> in '
+                 'your data as the validator always uses the latest patch release for a major.minor '
+                 'version).\n\nPlease get rid of the patch digit and try again.\n\n<span class="glyphicon '
+                 'glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message: '
+                 '</strong> <em>{}</em> format does not comply with the schema'.format(version)),
         'error': _('{} is not a valid schema version'.format(version))
     })
 
@@ -99,21 +104,27 @@ def explore_ocds(request, pk):
 
             select_version = post_version_choice or db_data.schema_version
             schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data)
-            
+
             if schema_ocds.invalid_version_argument:
                 # This shouldn't happen unless the user sends random POST data.
                 raise_invalid_version_argument(pk, post_version_choice)
             if schema_ocds.invalid_version_data:
-                raise_invalid_version_data(json_data.get('version'))
+                version_in_data = json_data.get('version')
+                if isinstance(version_in_data, str) and re.compile('^\d+\.\d+\.\d+$').match(version_in_data):
+                    raise_invalid_version_data_with_patch(version_in_data)
+                else:
+                    if not isinstance(version_in_data, str):
+                        version_in_data = '{} (it must be a string)'.format(str(version_in_data))
+                    context['unrecognized_version_data'] = version_in_data
+
+            # Replace the spreadsheet conversion only if it exists already.
+            if schema_ocds.version != db_data.schema_version:
+                replace = True
 
             if 'records' in json_data:
                 context['conversion'] = None
             else:
                 converted_path = os.path.join(upload_dir, 'flattened')
-
-                # Replace the spreadsheet conversion only if it exists already.
-                if schema_ocds.version != db_data.schema_version:
-                    replace = True
 
                 if schema_ocds.extensions:
                     schema_ocds.create_extended_release_schema_file(upload_dir, upload_url)
@@ -123,12 +134,24 @@ def explore_ocds(request, pk):
                 context.update(convert_json(request, db_data, schema_url=url, replace=replace_converted))
 
     else:
+        # Use the lowest release pkg schema version accepting 'version' field
         metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
         metatab_data = get_spreadsheet_meta_data(request, db_data, metatab_schema_url, file_type=file_type)
+        if 'version' not in metatab_data:
+            metatab_data['version'] = '1.0'
+
         select_version = post_version_choice or db_data.schema_version
+
         schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
+        if schema_ocds.invalid_version_argument:
+            # This shouldn't happen unless the user sends random POST data.
+            raise_invalid_version_argument(pk, post_version_choice)
         if schema_ocds.invalid_version_data:
-            raise_invalid_version_data(metatab_data.get('version'))
+            version_in_data = metatab_data.get('version')
+            if re.compile('^\d+\.\d+\.\d+$').match(version_in_data):
+                raise_invalid_version_data_with_patch(version_in_data)
+            else:
+                context['unrecognized_version_data'] = version_in_data
 
         # Replace json conversion when user chooses a different schema version.
         if db_data.schema_version and schema_ocds.version != db_data.schema_version:
@@ -148,6 +171,19 @@ def explore_ocds(request, pk):
         if os.path.exists(validation_errors_path):
             os.remove(validation_errors_path)
 
-    template = 'cove_ocds/explore_record.html' if 'records' in json_data else 'cove_ocds/explore_release.html'
     context = common_checks_ocds(context, db_data, json_data, schema_ocds)
+
+    if 'records' in json_data:
+        template = 'cove_ocds/explore_record.html'
+        if hasattr(json_data, 'get') and hasattr(json_data.get('records'), '__iter__'):
+            context['records'] = json_data['records']
+        else:
+            context['records'] = []
+    else:
+        template = 'cove_ocds/explore_release.html'
+        if hasattr(json_data, 'get') and hasattr(json_data.get('releases'), '__iter__'):
+            context['releases'] = json_data['releases']
+        else:
+            context['releases'] = []
+
     return render(request, template, context)

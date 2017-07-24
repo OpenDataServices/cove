@@ -38,7 +38,6 @@ COVE_CONFIG = {
     'schema_name': {'release': 'release-package-schema.json', 'record': 'record-package-schema.json'},
     'schema_item_name': 'release-schema.json',
     'schema_host': None,
-    'schema_version': '1.0',
     'schema_version_choices': OrderedDict((  # {version: (display, url)}
         ('1.0', ('1.0', 'http://standard.open-contracting.org/schema/1__0__2/')),
         ('1.1', ('1.1', 'http://standard.open-contracting.org/schema/1__1__0/')),
@@ -52,3 +51,6 @@ COVE_CONFIG = {
     'input_methods': ['upload', 'url', 'text'],
     'support_email': 'data@open-contracting.org'
 }
+
+# Set default schema version to the latest version
+COVE_CONFIG['schema_version'] = list(COVE_CONFIG['schema_version_choices'].keys())[-1]
