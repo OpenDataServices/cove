@@ -104,7 +104,7 @@ def context_api_transform(context):
                     'type': error_type,
                     'field': error_field,
                     'description': error_description,
-                    'paths': path_value.get('path', ''),
+                    'path': path_value.get('path', ''),
                     'value': path_value.get('value', '')
                 })
 
