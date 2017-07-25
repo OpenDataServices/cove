@@ -40,7 +40,7 @@ def produce_json_output(output_dir, file, schema_version, convert):
             if convert:
                 context.update(convert_json(output_dir, '', file, schema_url=url, flatten=True, cache=False))
                 # Remove unwanted folder in the output
-                # TODO: do this by no creating the folder in the first place
+                # TODO: can we do this by no creating the folder in the first place?
                 shutil.rmtree(os.path.join(output_dir, 'flattened'))
 
     else:
@@ -67,7 +67,7 @@ def produce_json_output(output_dir, file, schema_version, convert):
 
     if file_type == 'xlsx':
         # Remove unwanted files in the output
-        # TODO: Do this by no writing the files in the first place
+        # TODO: can we do this by no writing the files in the first place?
         os.remove(os.path.join(output_dir, 'heading_source_map.json'))
         os.remove(os.path.join(output_dir, 'cell_source_map.json'))
 

@@ -1,6 +1,6 @@
-import datetime
 import json
 import os
+import uuid
 from collections import OrderedDict
 from unittest.mock import patch
 
@@ -9,9 +9,10 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
 from django.core.management import call_command
+from django.core.management.base import CommandError
 
 import cove.lib.common as cove_common
-from . lib.api import context_api_transform
+from . lib.api import context_api_transform, produce_json_output, APIException
 from . lib.ocds import get_releases_aggregates
 from . lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
@@ -757,7 +758,7 @@ def test_corner_cases_for_deprecated_data_fields(json_data):
     assert len(deprecated_fields['additionalIdentifiers']['paths']) == 1
 
 
-def test_context_api_transform():
+def test_context_api_transform_validation_additional_fields():
     context = {
         'validation_errors': [['[\"type_a\", \"description_a\", \"field_a\"]', [{'path': 'path_to_a', 'value': 'a_value'}]],
                               ['[\"type_b\", \"description_b\", \"field_b\"]', [{'path': 'path_to_b', 'value': ''}]],
@@ -803,7 +804,8 @@ def test_context_api_transform():
 
 def test_context_api_transform_extensions():
     '''Expected result for extensions after trasform:
-    {
+
+    'extensions': {
         'extended_schema_url': 'extended_release_schema.json',
         'extensions': [{'description': 'description_a', 'documentationUrl': 'documentation_a', 'name': 'a', 'url': 'url_a'},
                        {'description': 'description_b', 'documentationUrl': 'documentation_b', 'name': 'b', 'url': 'url_b'},
@@ -838,7 +840,7 @@ def test_context_api_transform_extensions():
 
     transformed_ext_context = context_api_transform(context)['extensions']
 
-    assert type(transformed_ext_context['extensions']) == list
+    assert isinstance(transformed_ext_context['extensions'], list)
     assert len(transformed_ext_context['extensions']) == 4
     for extension in transformed_ext_context['extensions']:
         assert len(extension) == 4
@@ -855,7 +857,8 @@ def test_context_api_transform_extensions():
 
 def test_context_api_transform_deprecations():
     '''Expected result for deprecated field after trasform:
-    [
+
+    'deprecated_fields': [
         {"field": "a", "paths": ["path_to_a/0/a", "path_to_a/1/a"], "explanation": ["1.1", "description_a"]},
         {"field": "b", "paths": ["path_to_b/0/b", "path_to_b/1/b"], "explanation": ["1.1", "description_b"]}
     ]
@@ -874,11 +877,69 @@ def test_context_api_transform_deprecations():
 
     transformed_depr_context = context_api_transform(context)['deprecated_fields']
 
-    assert type(transformed_depr_context) == list
+    assert isinstance(transformed_depr_context, list)
     assert len(transformed_depr_context) == 2
 
     for deprecated_field in transformed_depr_context:
+        assert isinstance(deprecated_field, dict)
         assert len(deprecated_field) == 3
         assert len(deprecated_field['paths']) == 2
         assert len(deprecated_field['explanation']) == 2
         assert deprecated_field.get('field')
+
+
+@pytest.mark.django_db
+def test_produce_json_output_bad_json():
+    data = SuppliedData.objects.create()
+    data.original_file.save('bad_data.json', ContentFile('{[,]}'))
+    with pytest.raises(APIException):
+        produce_json_output(data.upload_dir(), data.original_file.file.name, schema_version='', convert=False)
+
+
+@pytest.mark.django_db
+def test_produce_json_output_bad_version_in_data():
+    data = SuppliedData.objects.create()
+    data.original_file.save('bad_version.json', ContentFile('{"version": "1.bad"}'))
+    with pytest.raises(APIException):
+        produce_json_output(data.upload_dir(), data.original_file.file.name, schema_version='', convert=False)
+
+
+@pytest.mark.parametrize(('options', 'output'), [
+    ({}, ['results.json', 'tenders_releases_2_releases.json']),
+    ({'convert': True}, ['results.json', 'tenders_releases_2_releases.json', 'flattened.xlsx']),
+    ({'exclude_file': True}, ['results.json'])
+])
+def test_cove_ocds_cli(options, output):
+    test_dir = str(uuid.uuid4())
+    file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases.json')
+    output_dir = os.path.join('media', test_dir)
+
+    call_command('cove_ocds', file_name, **options, output_dir=output_dir)
+    assert sorted(os.listdir(output_dir)) == sorted(output)
+
+    # Test --delete option for one of the cases
+    if not options:
+        call_command('cove_ocds', file_name, delete=True, output_dir=output_dir)
+        assert sorted(os.listdir(output_dir)) == sorted(output)
+
+        with pytest.raises(SystemExit):
+            call_command('cove_ocds', file_name, output_dir=output_dir)
+
+
+@pytest.mark.parametrize('version_option', ['', '1.1', '100.100.100'])
+def test_cove_ocds_cli_schema_version(version_option):
+    test_dir = str(uuid.uuid4())
+    file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases.json')
+    output_dir = os.path.join('media', test_dir)
+
+    if version_option == '100.100.100':
+        with pytest.raises(CommandError):
+            call_command('cove_ocds', file_name, schema_version=version_option, output_dir=output_dir)
+
+    else:
+        call_command('cove_ocds', file_name, schema_version=version_option, output_dir=output_dir)
+        with open(os.path.join(output_dir, 'results.json')) as fp:
+            results = json.load(fp)
+            # 1.0 by default is expected behaviour as tenders_releases_2_releases.json
+            # does not include a "version" field
+            assert results['version_used'] == version_option or '1.0'

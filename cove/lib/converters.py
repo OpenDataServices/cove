@@ -28,7 +28,7 @@ def filter_conversion_warnings(conversion_warnings):
 
 @cove_spreadsheet_conversion_error
 def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url=None, pkg_schema_url=None,
-                        metatab_name='Meta', replace=False, xml=False,cache=True):
+                        metatab_name='Meta', replace=False, xml=False, cache=True):
     context = {}
     if xml:
         output_file = 'unflattened.xml'
