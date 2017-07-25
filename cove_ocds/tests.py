@@ -889,17 +889,10 @@ def test_context_api_transform_deprecations():
 
 
 @pytest.mark.django_db
-def test_produce_json_output_bad_json():
+@pytest.mark.parametrize('json_data', ['{[,]}', '{"version": "1.bad"}'])
+def test_produce_json_output_bad_data(json_data):
     data = SuppliedData.objects.create()
-    data.original_file.save('bad_data.json', ContentFile('{[,]}'))
-    with pytest.raises(APIException):
-        produce_json_output(data.upload_dir(), data.original_file.file.name, schema_version='', convert=False)
-
-
-@pytest.mark.django_db
-def test_produce_json_output_bad_version_in_data():
-    data = SuppliedData.objects.create()
-    data.original_file.save('bad_version.json', ContentFile('{"version": "1.bad"}'))
+    data.original_file.save('bad_data.json', ContentFile(json_data))
     with pytest.raises(APIException):
         produce_json_output(data.upload_dir(), data.original_file.file.name, schema_version='', convert=False)
 

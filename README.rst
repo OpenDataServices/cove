@@ -39,9 +39,9 @@ Supported formats
 CoVE currently supports conversion from:
 
 * JSON to multi-tabbed Excel files
-* Excel to JSON (it uses the `flatten-tool <(https://github.com/OpenDataServices/flatten-tool>`_ for conversion)
+* Excel to JSON (it uses the `flatten-tool <https://github.com/OpenDataServices/flatten-tool>`_ for conversion)
 
-If a JSON schema is supplied, CoVE can use either field names, or user-friendly column titles.
+If a JSON schema is supplied, CoVE can use either field names or user-friendly column titles.
 
 User Flows
 ==========
@@ -95,6 +95,7 @@ Steps to installation:
 Then, for 360Giving run:
 
 .. code:: bash
+
     DJANGO_SETTINGS_MODULE=cove_360.settings python manage.py runserver
 
 Or for OCDS run:
@@ -158,7 +159,7 @@ We also use flake8 to test code quality, see https://github.com/OpenDataServices
 
 The development requirements include xdist to allow running tests in parallel:
 
-..code:: bash
+.. code:: bash
 
     py.test -n2
 
@@ -235,12 +236,12 @@ CoVE for OCDS can be run from the command line. To get a JSON file with validati
 
 Options:
 
-``--output-dir -o``  Directory where the output is created, defaults to the name of the file. 
+``--output-dir -o``  Directory where the output will be created, defaults to the name of the file.
 
 ``--exclude-file -e``  Do not include the file in the output directory.
 
-``--delete -d`` Delete existing directory if it exists.
+``--delete -d`` Delete the output directory if it already exists.
 
 ``--schema-version -s``  Version of the schema to validate the data.
 
-``--convert -c``  Convert data from nested (JSON) to flat format (Excel) or vice versa.
+``--convert -c``  Convert data from nested (JSON) to flat format (Excel and CSV). This option is redundant for spreadsheets as they are always converted to JSON format.
