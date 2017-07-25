@@ -904,17 +904,21 @@ def test_produce_json_output_bad_version_in_data():
         produce_json_output(data.upload_dir(), data.original_file.file.name, schema_version='', convert=False)
 
 
-@pytest.mark.parametrize(('options', 'output'), [
-    ({}, ['results.json', 'tenders_releases_2_releases.json']),
-    ({'convert': True}, ['results.json', 'tenders_releases_2_releases.json', 'flattened.xlsx']),
-    ({'exclude_file': True}, ['results.json'])
+@pytest.mark.parametrize(('file_type', 'options', 'output'), [
+    ('json', {}, ['results.json', 'tenders_releases_2_releases.json']),
+    ('xlsx', {}, ['results.json', 'tenders_releases_2_releases.xlsx', 'metatab.json', 'unflattened.json']),
+    ('json', {'convert': True}, ['results.json', 'tenders_releases_2_releases.json', 'flattened.xlsx', 'flattened']),
+    ('xlsx', {'convert': True}, ['results.json', 'tenders_releases_2_releases.xlsx', 'metatab.json', 'unflattened.json']),
+    ('json', {'exclude_file': True}, ['results.json']),
+    ('xlsx', {'exclude_file': True}, ['results.json', 'metatab.json', 'unflattened.json']),
 ])
-def test_cove_ocds_cli(options, output):
+def test_cove_ocds_cli(file_type, options, output):
     test_dir = str(uuid.uuid4())
-    file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases.json')
+    file_name = os.path.join('cove_ocds', 'fixtures', '{}.{}'.format('tenders_releases_2_releases', file_type))
     output_dir = os.path.join('media', test_dir)
+    options['output_dir'] = output_dir
 
-    call_command('cove_ocds', file_name, **options, output_dir=output_dir)
+    call_command('cove_ocds', file_name, **options)
     assert sorted(os.listdir(output_dir)) == sorted(output)
 
     # Test --delete option for one of the cases

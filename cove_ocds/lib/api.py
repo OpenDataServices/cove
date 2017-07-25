@@ -1,7 +1,6 @@
 import json
 import os
 import re
-import shutil
 
 from .ocds import common_checks_ocds
 from cove.lib.tools import get_file_type
@@ -39,9 +38,6 @@ def produce_json_output(output_dir, file, schema_version, convert):
 
             if convert:
                 context.update(convert_json(output_dir, '', file, schema_url=url, flatten=True, cache=False))
-                # Remove unwanted folder in the output
-                # TODO: can we do this by no creating the folder in the first place?
-                shutil.rmtree(os.path.join(output_dir, 'flattened'))
 
     else:
         metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
@@ -70,11 +66,6 @@ def produce_json_output(output_dir, file, schema_version, convert):
         # TODO: can we do this by no writing the files in the first place?
         os.remove(os.path.join(output_dir, 'heading_source_map.json'))
         os.remove(os.path.join(output_dir, 'cell_source_map.json'))
-
-        if not convert:
-            # We have to convert spreadsheet to json to validate the data, so for 'no conversion'
-            # in the output just remove the to_json_conversion file from the directory
-            os.remove(os.path.join(output_dir, 'unflattened.json'))
 
     return context
 
