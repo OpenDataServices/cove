@@ -10,7 +10,7 @@ from django.utils import timezone
 
 import cove.lib.common as common
 from cove.input.models import SuppliedData
-from cove.lib.tools import get_file_type
+from cove.lib.tools import get_file_type, decimal_default
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +94,7 @@ def common_checks_context(data, json_data, schema_obj, schema_name, context, ext
                                                                 cell_source_map, heading_source_map,
                                                                 extra_checkers=extra_checkers)
         with open(validation_errors_path, 'w+') as validiation_error_fp:
-            validiation_error_fp.write(json.dumps(validation_errors))
+            validiation_error_fp.write(json.dumps(validation_errors, default=decimal_default))
 
     extensions = None
     if getattr(schema_obj, 'extensions', None):

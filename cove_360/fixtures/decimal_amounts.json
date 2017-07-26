@@ -1,0 +1,32 @@
+{
+    "grants": [
+        {
+            "currency": "GBP",
+            "amountAwarded": 1000.1
+        },
+        {
+            "currency": "GBP",
+            "amountAwarded": 1000.1
+        },
+        {
+            "currency": "GBP",
+            "amountAwarded": 1000.1
+        },
+        {
+            "currency": "GBP",
+            "amountAwarded": 1000.1
+        },
+        {
+            "currency": "GBP",
+            "amountAwarded": 1000.1
+        },
+        {
+            "currency": "GBP",
+            "amountAwarded": 1000.1
+        },
+        {
+            "currency": "GBP",
+            "amountAwarded": 1000.1
+        }
+    ]
+}
