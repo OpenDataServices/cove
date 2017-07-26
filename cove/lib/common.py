@@ -17,6 +17,7 @@ from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
 
 from cove.lib.exceptions import cove_spreadsheet_conversion_error
+from cove.lib.tools import decimal_default
 
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
@@ -151,7 +152,7 @@ def common_checks_context(upload_dir, json_data, schema_obj, schema_name, contex
                                                          extra_checkers=extra_checkers)
         if cache:
             with open(validation_errors_path, 'w+') as validation_error_fp:
-                validation_error_fp.write(json.dumps(validation_errors))
+                validation_error_fp.write(json.dumps(validation_errors, default=decimal_default))
 
     extensions = None
     if getattr(schema_obj, 'extensions', None):
@@ -329,10 +330,10 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
         if e.validator == 'required':
             field_name = e.message
             if len(e.path) > 2:
-                if isinstance(e.path[-2], int):
-                    parent_name = e.path[-1]
-                else:
+                if isinstance(e.path[-1], int):
                     parent_name = e.path[-2]
+                else:
+                    parent_name = e.path[-1]
 
                 field_name = str(parent_name) + ":" + e.message
             heading = heading_src_map.get(path_no_number + '/' + e.message)

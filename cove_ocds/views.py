@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+from decimal import Decimal
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
@@ -37,7 +38,7 @@ def explore_ocds(request, pk):
         # open the data first so we can inspect for record package
         with open(file_name, encoding='utf-8') as fp:
             try:
-                json_data = json.load(fp)
+                json_data = json.load(fp, parse_float=Decimal)
             except ValueError as err:
                 raise CoveInputDataError(context={
                     'sub_title': _("Sorry we can't process that data"),
@@ -47,6 +48,14 @@ def explore_ocds(request, pk):
                              '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
                              '</span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
+                })
+
+            if not isinstance(json_data, dict):
+                raise CoveInputDataError(context={
+                    'sub_title': _("Sorry we can't process that data"),
+                    'link': 'index',
+                    'link_text': _('Try Again'),
+                    'msg': _('OCDS JSON should have an object as the top level, the JSON you supplied does not.'),
                 })
 
             select_version = post_version_choice or db_data.schema_version
@@ -114,7 +123,7 @@ def explore_ocds(request, pk):
                                            pkg_schema_url=pkg_url, replace=replace))
 
         with open(context['converted_path'], encoding='utf-8') as fp:
-            json_data = json.load(fp)
+            json_data = json.load(fp, parse_float=Decimal)
 
     if replace:
         if os.path.exists(validation_errors_path):

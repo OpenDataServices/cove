@@ -38,7 +38,7 @@ def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url
         converted_path = os.path.join(upload_dir, 'unflattened.json')
     cell_source_map_path = os.path.join(upload_dir, 'cell_source_map.json')
     heading_source_map_path = os.path.join(upload_dir, 'heading_source_map.json')
-    encoding = 'utf-8'
+    encoding = 'utf-8-sig'
 
     if file_type == 'csv':
         # flatten-tool expects a directory full of CSVs with file names
@@ -50,7 +50,7 @@ def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url
         destination = os.path.join(input_name, config['root_list_path'] + '.csv')
         shutil.copy(file_name, destination)
         try:
-            with open(destination, encoding='utf-8') as main_sheet_file:
+            with open(destination, encoding='utf-8-sig') as main_sheet_file:
                 main_sheet_file.read()
         except UnicodeDecodeError:
             try:
