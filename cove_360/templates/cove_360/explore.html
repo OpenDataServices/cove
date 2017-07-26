@@ -63,7 +63,7 @@
                 {% endif %}
               </li>
               {% endfor %}
-              {% if csv_encoding and csv_encoding != "utf-8" %}
+              {% if csv_encoding and csv_encoding != "utf-8-sig" %}
               <li>
               {% blocktrans %} This file is <strong>not 'utf-8'</strong> encoded (it is <em>{{csv_encoding}}</em> encoded).{% endblocktrans %}
               </li>

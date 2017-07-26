@@ -57,7 +57,7 @@
                 {% blocktrans count count=data_only|length %}This file uses {{count}} <a href="#additional-fields">additional field</a> not used in the standard.{% plural %}This file uses {{count}} <a href="#additional-fields">additional fields</a> not used in the standard.{% endblocktrans %}
              </li>
              {% endif %}
-             {% if csv_encoding and csv_encoding != "utf-8" %}
+             {% if csv_encoding and csv_encoding != "utf-8-sig" %}
              <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
               {% trans "This file is not 'utf-8' encoded (it is" %} <strong>{{csv_encoding}}</strong> {% trans "encoded)." %}
              </li>
