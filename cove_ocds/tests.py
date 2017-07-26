@@ -1,5 +1,6 @@
 import json
 import os
+import uuid
 from collections import OrderedDict
 from unittest.mock import patch
 
@@ -7,8 +8,11 @@ import pytest
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
+from django.core.management import call_command
+from django.core.management.base import CommandError
 
 import cove.lib.common as cove_common
+from . lib.api import context_api_transform, produce_json_output, APIException
 from . lib.ocds import get_releases_aggregates
 from . lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
@@ -759,3 +763,187 @@ def test_corner_cases_for_deprecated_data_fields(json_data):
     assert deprecated_fields['additionalIdentifiers']['paths'] == ('releases/buyer',)
     assert len(deprecated_fields.keys()) == 1
     assert len(deprecated_fields['additionalIdentifiers']['paths']) == 1
+
+
+def test_context_api_transform_validation_additional_fields():
+    context = {
+        'validation_errors': [['[\"type_a\", \"description_a\", \"field_a\"]', [{'path': 'path_to_a', 'value': 'a_value'}]],
+                              ['[\"type_b\", \"description_b\", \"field_b\"]', [{'path': 'path_to_b', 'value': ''}]],
+                              ['[\"type_c\", \"description_c\", \"field_c\"]', [{'path': 'path_to_c'}]]],
+        'data_only': [['path_to_d', 'field_d', 1],
+                      ['path_to_e', 'field_e', 2],
+                      ['path_to_f', 'field_f', 3]],
+        'additional_fields_count': 6,
+        'validation_errors_count': 3
+    }
+    expected_context = {
+        'additional_fields': [{'field': 'field_d', 'path': 'path_to_d', 'usage_count': 1},
+                              {'field': 'field_e', 'path': 'path_to_e', 'usage_count': 2},
+                              {'field': 'field_f', 'path': 'path_to_f', 'usage_count': 3}],
+        'deprecated_fields': [],
+        'extensions': {},
+        'validation_errors': [{'description': 'description_a', 'field': 'field_a', 'path': 'path_to_a', 'type': 'type_a', 'value': 'a_value'},
+                              {'description': 'description_b', 'field': 'field_b', 'path': 'path_to_b', 'type': 'type_b', 'value': ''},
+                              {'description': 'description_c', 'field': 'field_c', 'path': 'path_to_c', 'type': 'type_c', 'value': ''}]
+    }
+    transform_context = context_api_transform(context)
+
+    validation_errors = zip(transform_context['validation_errors'], expected_context['validation_errors'])
+    for result in validation_errors:
+        assert len(result[0]) == len(result[1])
+        for k, v in result[0].items():
+            assert result[1][k] == v
+    assert len(transform_context['validation_errors']) == len(expected_context['validation_errors'])
+
+    additional_fields = zip(transform_context['additional_fields'], expected_context['additional_fields'])
+    for result in additional_fields:
+        assert len(result[0]) == len(result[1])
+        for k, v in result[0].items():
+            assert result[1][k] == v
+    assert len(transform_context['additional_fields']) == len(expected_context['additional_fields'])
+
+    assert transform_context['extensions'] == expected_context['extensions']
+    assert transform_context['deprecated_fields'] == expected_context['deprecated_fields']
+    assert 'validation_errors_count' not in transform_context.keys()
+    assert 'additional_fields_count' not in transform_context.keys()
+    assert 'data_only' not in transform_context.keys()
+
+
+def test_context_api_transform_extensions():
+    '''Expected result for extensions after trasform:
+
+    'extensions': {
+        'extended_schema_url': 'extended_release_schema.json',
+        'extensions': [{'description': 'description_a', 'documentationUrl': 'documentation_a', 'name': 'a', 'url': 'url_a'},
+                       {'description': 'description_b', 'documentationUrl': 'documentation_b', 'name': 'b', 'url': 'url_b'},
+                       {'description': 'description_c', 'documentationUrl': 'documentation_c', 'name': 'c', 'url': 'url_c'},
+                       {'description': 'description_d', 'documentationUrl': 'documentation_d', 'name': 'd', 'url': 'url_d'}],
+        'invalid_extensions': [['bad_url_x', 'x_error_msg'],
+                               ['bad_url_z', 'z_error_msg'],
+                               ['bad_url_y', 'y_error_msg']],
+        'is_extended_schema': True
+    }
+    '''
+    context = {
+        'extensions': {
+            'is_extended_schema': True,
+            'invalid_extension': {'bad_url_x': 'x_error_msg', 'bad_url_y': 'y_error_msg', 'bad_url_z': 'z_error_msg'},
+            'extensions': {
+                'url_a': {'description': 'description_a', 'url': 'url_a', 'documentationUrl': 'documentation_a', 'name': 'a'},
+                'url_b': {'description': 'description_b', 'url': 'url_b', 'documentationUrl': 'documentation_b', 'name': 'b'},
+                'url_c': {'description': 'description_c', 'url': 'url_c', 'documentationUrl': 'documentation_c', 'name': 'c'},
+                'url_d': {'description': 'description_d', 'url': 'url_d', 'documentationUrl': 'documentation_d', 'name': 'd'},
+                'bad_url_x': [],
+                'bad_url_y': [],
+                'bad_url_z': []
+            },
+            'extended_schema_url': 'extended_release_schema.json'
+        },
+        'validation_errors_count': 0,
+        'additional_fields_count': 0,
+        'data_only': [],
+        'deprecated_fields': []
+    }
+
+    transformed_ext_context = context_api_transform(context)['extensions']
+
+    assert isinstance(transformed_ext_context['extensions'], list)
+    assert len(transformed_ext_context['extensions']) == 4
+    for extension in transformed_ext_context['extensions']:
+        assert len(extension) == 4
+
+    assert len(transformed_ext_context['invalid_extensions']) == 3
+    for inv_extension in transformed_ext_context['invalid_extensions']:
+        assert len(inv_extension) == 2
+        for extension in transformed_ext_context['extensions']:
+            assert extension['url'] != inv_extension[0]
+
+    assert transformed_ext_context['is_extended_schema'] == context['extensions']['is_extended_schema']
+    assert transformed_ext_context['extended_schema_url'] == context['extensions']['extended_schema_url']
+
+
+def test_context_api_transform_deprecations():
+    '''Expected result for deprecated field after trasform:
+
+    'deprecated_fields': [
+        {"field": "a", "paths": ["path_to_a/0/a", "path_to_a/1/a"], "explanation": ["1.1", "description_a"]},
+        {"field": "b", "paths": ["path_to_b/0/b", "path_to_b/1/b"], "explanation": ["1.1", "description_b"]}
+    ]
+    '''
+    context = {
+        "deprecated_fields": {
+            "a": {"paths": ["path_to_a/0/a", "path_to_a/1/a"], "explanation": ["1.1", "description_a"]},
+            "b": {"paths": ["path_to_b/0/b", "path_to_b/1/b"], "explanation": ["1.1", "description_b"]}
+        },
+        'validation_errors': [],
+        'validation_errors_count': 0,
+        'data_only': [],
+        'additional_fields_count': 0,
+        'extensions': {},
+    }
+
+    transformed_depr_context = context_api_transform(context)['deprecated_fields']
+
+    assert isinstance(transformed_depr_context, list)
+    assert len(transformed_depr_context) == 2
+
+    for deprecated_field in transformed_depr_context:
+        assert isinstance(deprecated_field, dict)
+        assert len(deprecated_field) == 3
+        assert len(deprecated_field['paths']) == 2
+        assert len(deprecated_field['explanation']) == 2
+        assert deprecated_field.get('field')
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize('json_data', ['{[,]}', '{"version": "1.bad"}'])
+def test_produce_json_output_bad_data(json_data):
+    data = SuppliedData.objects.create()
+    data.original_file.save('bad_data.json', ContentFile(json_data))
+    with pytest.raises(APIException):
+        produce_json_output(data.upload_dir(), data.original_file.file.name, schema_version='', convert=False)
+
+
+@pytest.mark.parametrize(('file_type', 'options', 'output'), [
+    ('json', {}, ['results.json', 'tenders_releases_2_releases.json']),
+    ('xlsx', {}, ['results.json', 'tenders_releases_2_releases.xlsx', 'metatab.json', 'unflattened.json']),
+    ('json', {'convert': True}, ['results.json', 'tenders_releases_2_releases.json', 'flattened.xlsx', 'flattened']),
+    ('xlsx', {'convert': True}, ['results.json', 'tenders_releases_2_releases.xlsx', 'metatab.json', 'unflattened.json']),
+    ('json', {'exclude_file': True}, ['results.json']),
+    ('xlsx', {'exclude_file': True}, ['results.json', 'metatab.json', 'unflattened.json']),
+])
+def test_cove_ocds_cli(file_type, options, output):
+    test_dir = str(uuid.uuid4())
+    file_name = os.path.join('cove_ocds', 'fixtures', '{}.{}'.format('tenders_releases_2_releases', file_type))
+    output_dir = os.path.join('media', test_dir)
+    options['output_dir'] = output_dir
+
+    call_command('cove_ocds', file_name, **options)
+    assert sorted(os.listdir(output_dir)) == sorted(output)
+
+    # Test --delete option for one of the cases
+    if not options:
+        call_command('cove_ocds', file_name, delete=True, output_dir=output_dir)
+        assert sorted(os.listdir(output_dir)) == sorted(output)
+
+        with pytest.raises(SystemExit):
+            call_command('cove_ocds', file_name, output_dir=output_dir)
+
+
+@pytest.mark.parametrize('version_option', ['', '1.1', '100.100.100'])
+def test_cove_ocds_cli_schema_version(version_option):
+    test_dir = str(uuid.uuid4())
+    file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases.json')
+    output_dir = os.path.join('media', test_dir)
+
+    if version_option == '100.100.100':
+        with pytest.raises(CommandError):
+            call_command('cove_ocds', file_name, schema_version=version_option, output_dir=output_dir)
+
+    else:
+        call_command('cove_ocds', file_name, schema_version=version_option, output_dir=output_dir)
+        with open(os.path.join(output_dir, 'results.json')) as fp:
+            results = json.load(fp)
+            # 1.0 by default is expected behaviour as tenders_releases_2_releases.json
+            # does not include a "version" field
+            assert results['version_used'] == version_option or '1.0'
