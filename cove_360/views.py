@@ -1,5 +1,6 @@
 import json
 import logging
+from decimal import Decimal
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
@@ -19,13 +20,14 @@ def common_checks_360(context, db_data, json_data, schema_obj):
     checkers = {'date-time': (datetime_or_date, ValueError)}
     common_checks = common_checks_context(db_data, json_data, schema_obj, schema_name, context, extra_checkers=checkers)
     cell_source_map = common_checks['cell_source_map']
-    additional_checks = run_additional_checks(json_data, cell_source_map)
+    additional_checks = run_additional_checks(json_data, cell_source_map, ignore_errors=True, return_on_error=None)
 
     context.update(common_checks['context'])
     context.update({
-        'grants_aggregates': get_grants_aggregates(json_data),
+        'grants_aggregates': get_grants_aggregates(json_data, ignore_errors=True),
+        'additional_checks_errored': additional_checks is None,
         'additional_checks': additional_checks,
-        'additional_checks_count': len(additional_checks) + (1 if context['data_only'] else 0),
+        'additional_checks_count': (len(additional_checks) if additional_checks else 0) + (1 if context['data_only'] else 0),
         'common_error_types': ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
     })
 
@@ -44,7 +46,7 @@ def explore_360(request, pk, template='cove_360/explore.html'):
         # open the data first so we can inspect for record package
         with open(db_data.original_file.file.name, encoding='utf-8') as fp:
             try:
-                json_data = json.load(fp)
+                json_data = json.load(fp, parse_float=Decimal)
             except ValueError as err:
                 raise CoveInputDataError(context={
                     'sub_title': _("Sorry we can't process that data"),
@@ -55,13 +57,28 @@ def explore_360(request, pk, template='cove_360/explore.html'):
                              '</span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
+
+            if not isinstance(json_data, dict):
+                raise CoveInputDataError(context={
+                    'sub_title': _("Sorry we can't process that data"),
+                    'link': 'index',
+                    'link_text': _('Try Again'),
+                    'msg': _('360Giving JSON should have an object as the top level, the JSON you supplied does not.'),
+                })
+
             context.update(convert_json(request, db_data, schema_360.release_schema_url))
     else:
         context.update(convert_spreadsheet(request, db_data, file_type, schema_360.release_schema_url))
         with open(context['converted_path'], encoding='utf-8') as fp:
-            json_data = json.load(fp)
+            json_data = json.load(fp, parse_float=Decimal)
 
     context = common_checks_360(context, db_data, json_data, schema_360)
+
+    if hasattr(json_data, 'get') and hasattr(json_data.get('grants'), '__iter__'):
+        context['grants'] = json_data['grants']
+    else:
+        context['grants'] = []
+
     return render(request, template, context)
 
 
