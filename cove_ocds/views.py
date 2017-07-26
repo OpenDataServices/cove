@@ -24,16 +24,18 @@ def explore_ocds(request, pk):
     if error:
         return error
 
-    post_version_choice = request.POST.get('version')
-    replace = False
     upload_dir = db_data.upload_dir()
     upload_url = db_data.upload_url()
-    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
+    file_name = db_data.original_file.file.name
     file_type = context['file_type']
+
+    post_version_choice = request.POST.get('version')
+    replace = False
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
 
     if file_type == 'json':
         # open the data first so we can inspect for record package
-        with open(db_data.original_file.file.name, encoding='utf-8') as fp:
+        with open(file_name, encoding='utf-8') as fp:
             try:
                 json_data = json.load(fp)
             except ValueError as err:
@@ -76,12 +78,16 @@ def explore_ocds(request, pk):
                 url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
 
                 replace_converted = replace and os.path.exists(converted_path + '.xlsx')
-                context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name, schema_url=url, replace=replace_converted, request=request, flatten=request.POST.get('flatten')))
+                context.update(convert_json(upload_dir, upload_url, file_name, schema_url=url, replace=replace_converted,
+                                            request=request, flatten=request.POST.get('flatten')))
 
     else:
         # Use the lowest release pkg schema version accepting 'version' field
         metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
-        metatab_data = get_spreadsheet_meta_data(db_data.upload_dir(), db_data.original_file.file.name, metatab_schema_url, file_type=file_type)
+        metatab_data = metatab_data = get_spreadsheet_meta_data(upload_dir, file_name, metatab_schema_url, file_type)
+        if 'version' not in metatab_data:
+            metatab_data['version'] = '1.0'
+
         select_version = post_version_choice or db_data.schema_version
 
         schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
@@ -104,7 +110,8 @@ def explore_ocds(request, pk):
         url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
         pkg_url = schema_ocds.release_pkg_schema_url
 
-        context.update(convert_spreadsheet(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name, file_type, schema_url=url, pkg_schema_url=pkg_url, replace=replace))
+        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url=url,
+                                           pkg_schema_url=pkg_url, replace=replace))
 
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
@@ -113,7 +120,7 @@ def explore_ocds(request, pk):
         if os.path.exists(validation_errors_path):
             os.remove(validation_errors_path)
 
-    context = common_checks_ocds(context, db_data.upload_dir(), json_data, schema_ocds)
+    context = common_checks_ocds(context, upload_dir, json_data, schema_ocds)
     context['first_render'] = not db_data.rendered
     schema_version = getattr(schema_ocds, 'version', None)
 

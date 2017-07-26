@@ -230,7 +230,7 @@ CoVE for OCDS can be run from the command line. To get a JSON file with validati
 
 .. code:: bash
 
-    ./ocds-cli.py --options file-name
+    ./ocds-cli --options file-name
 
 ``file-name`` can be a JSON or an Excel file.
 
