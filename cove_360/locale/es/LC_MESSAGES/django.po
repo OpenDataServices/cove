@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-03 11:41+0000\n"
+"POT-Creation-Date: 2017-07-26 15:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
@@ -103,19 +103,12 @@ msgstr ""
 
 #: cove_360/templates/cove_360/base.html:55
 msgid ""
-"Summary Spreadsheet - <a "
-"href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema"
-"/summary-table/360-giving-schema-titles.xlsx\">Excel</a>, <a "
-"href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema"
-"/summary-table/360-giving-schema-titles.csv/grants.csv\">CSV</a> (UTF-8, "
+"Summary Spreadsheet - <a href=\"https://threesixtygiving-"
+"standard.readthedocs.io/en/latest/_static/summary-table/360-giving-schema-"
+"titles.xlsx\">Excel</a>, <a href=\"https://threesixtygiving-"
+"standard.readthedocs.io/en/latest/templates-csv\">CSV</a> (UTF-8, "
 "Windows-1252 and ISO-8859-1 encodings supported)"
 msgstr ""
-"Resumen en formato hoja de cálculo- <a "
-"href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema"
-"/summary-table/360-giving-schema-titles.xlsx\">Excel</a>, <a "
-"href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema"
-"/summary-table/360-giving-schema-titles.csv/grants.csv\">CSV</a> "
-"(codificaciones soportadas: UTF-8, Windows-1252 and ISO-8859-1)"
 
 #: cove_360/templates/cove_360/base.html:56
 msgid ""
@@ -129,13 +122,10 @@ msgstr ""
 
 #: cove_360/templates/cove_360/base.html:57
 msgid ""
-"<a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema"
+"<a href=\"https://threesixtygiving-standard.readthedocs.io/en/latest/_static"
 "/multi-table/360-giving-schema-fields.xlsx\">Multi-table data package - "
 "Excel</a>"
 msgstr ""
-"<a href=\"https://github.com/ThreeSixtyGiving/standard/raw/master/schema"
-"/multi-table/360-giving-schema-fields.xlsx\">Paquete de datos de tablas "
-"múltiples - Excel</a>"
 
 #: cove_360/templates/cove_360/common_errors.html:6
 msgid "Common Errors"
@@ -648,14 +638,20 @@ msgstr[0] "Comprobació adicional "
 msgstr[1] "%(n_additional_checks)s Comprobaciones adicionales "
 
 #: cove_360/templates/cove_360/explore.html:181
+msgid ""
+"Additional checks failed due to an issue with the data. Fix some validation "
+"errors first."
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:190
 msgid "Check Description"
 msgstr "Compruebe la Descripción"
 
-#: cove_360/templates/cove_360/explore.html:182
+#: cove_360/templates/cove_360/explore.html:191
 msgid "First 3 Locations"
 msgstr "Primeras 3 localizaciones"
 
-#: cove_360/templates/cove_360/explore.html:214
+#: cove_360/templates/cove_360/explore.html:223
 msgid ""
 "<strong>Additional fields</strong> were found in your data. Please check "
 "them to see that they are intended additions and not just the result of "
@@ -665,66 +661,66 @@ msgstr ""
 "favor, compruebe que fueron añadidos  intencionalmente y no simplemente como"
 " el resultado de faltas de ortografía."
 
-#: cove_360/templates/cove_360/explore.html:225
+#: cove_360/templates/cove_360/explore.html:234
 msgid "Review"
 msgstr "Revisión"
 
-#: cove_360/templates/cove_360/explore.html:225
+#: cove_360/templates/cove_360/explore.html:234
 #, python-format
 msgid "%(n_grants)s Grant"
 msgid_plural "%(n_grants)s Grants"
 msgstr[0] "%(n_grants)s Subvención"
 msgstr[1] "%(n_grants)s Subvenciones"
 
-#: cove_360/templates/cove_360/explore.html:231
+#: cove_360/templates/cove_360/explore.html:240
 msgid "Review your data."
 msgstr "Revise sus datos."
 
-#: cove_360/templates/cove_360/explore.html:240
+#: cove_360/templates/cove_360/explore.html:249
 msgid "Grant identifiers:"
 msgstr "Identificadores de subvenciones"
 
-#: cove_360/templates/cove_360/explore.html:248
+#: cove_360/templates/cove_360/explore.html:257
 msgid "Funder organisation identifiers:"
 msgstr "Identificadores de organizaciones financiadoras:"
 
-#: cove_360/templates/cove_360/explore.html:257
+#: cove_360/templates/cove_360/explore.html:266
 msgid "Recipient organisation identifiers:"
 msgstr "Identificadores de organizaciones receptoras:"
 
-#: cove_360/templates/cove_360/explore.html:271
+#: cove_360/templates/cove_360/explore.html:280
 msgid "Grants Table"
 msgstr "Tabla de Subvenciones"
 
-#: cove_360/templates/cove_360/explore.html:313
+#: cove_360/templates/cove_360/explore.html:322
 msgid "Download and Share"
 msgstr "Descarga y Comparte"
 
-#: cove_360/templates/cove_360/explore.html:320
+#: cove_360/templates/cove_360/explore.html:329
 msgid "The following files are available to download:"
 msgstr "Los siguientes archivos están disponibles para descargar:"
 
-#: cove_360/templates/cove_360/explore.html:323
+#: cove_360/templates/cove_360/explore.html:332
 msgid "Original file"
 msgstr "Archivo original"
 
-#: cove_360/templates/cove_360/explore.html:335
+#: cove_360/templates/cove_360/explore.html:344
 msgid "You can also download an"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:335
+#: cove_360/templates/cove_360/explore.html:344
 msgid "Excel Spreadsheet (.xlsx) with JSON field names"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:335
+#: cove_360/templates/cove_360/explore.html:344
 msgid "instead of titles as column headers"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:341
+#: cove_360/templates/cove_360/explore.html:350
 msgid "Use the following url to share these results:"
 msgstr "Utilice el siguiente enlace para compartir estos resultados:"
 
-#: cove_360/templates/cove_360/explore.html:347
+#: cove_360/templates/cove_360/explore.html:356
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
@@ -735,7 +731,7 @@ msgstr ""
 "que use el enlace a esta página después de eso verá un mensaje avisando que "
 "el archivo se ha eliminado."
 
-#: cove_360/templates/cove_360/explore.html:348
+#: cove_360/templates/cove_360/explore.html:357
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
@@ -743,15 +739,15 @@ msgstr ""
 "Estos resultados estarán disponibles durante 7 días desde el día en que los "
 "datos se cargan. Puedes revisar estos resultados hasta entonces."
 
-#: cove_360/views.py:50
+#: cove_360/views.py:36 cove_360/views.py:46
 msgid "Sorry we can't process that data"
 msgstr "Lo sentimos, no podemos procesar esos datos"
 
-#: cove_360/views.py:52
+#: cove_360/views.py:38 cove_360/views.py:48
 msgid "Try Again"
 msgstr "Inténtalo de nuevo"
 
-#: cove_360/views.py:53
+#: cove_360/views.py:39
 msgid ""
 "We think you tried to upload a JSON file, but it is not well formed JSON.\n"
 "\n"
@@ -760,3 +756,9 @@ msgstr ""
 "Pensamos que está intentando enviar un archivo JSON, pero no está bien formado JSON\n"
 "\n"
 "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Mensaje de error:</strong> {}"
+
+#: cove_360/views.py:49
+msgid ""
+"360Giving JSON should have an object as the top level, the JSON you supplied"
+" does not."
+msgstr ""
