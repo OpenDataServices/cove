@@ -17,6 +17,7 @@ from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
 
 from cove.lib.exceptions import cove_spreadsheet_conversion_error
+from cove.lib.tools import decimal_default
 
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
@@ -107,6 +108,76 @@ class SchemaJsonMixin():
 
     def get_release_pkg_schema_fields(self):
         return set(schema_dict_fields_generator(self.get_release_pkg_schema_obj(deref=True)))
+
+
+def common_checks_context(upload_dir, json_data, schema_obj, schema_name, context, extra_checkers=None,
+                          fields_regex=False, api=False, cache=True):
+    schema_version = getattr(schema_obj, 'version', None)
+    schema_version_choices = getattr(schema_obj, 'version_choices', None)
+
+    if schema_version:
+        schema_version_display_choices = tuple(
+            (version, display_url[0]) for version, display_url in schema_version_choices.items()
+        )
+        context['version_used'] = schema_version
+        if not api:
+            context.update({
+                'version_display_choices': schema_version_display_choices,
+                'version_used_display': schema_version_choices[schema_version][0]}
+            )
+
+    additional_fields = sorted(get_counts_additional_fields(json_data, schema_obj, schema_name,
+                                                            context, fields_regex=fields_regex))
+    context.update({
+        'data_only': additional_fields,
+        'additional_fields_count': sum(item[2] for item in additional_fields)
+    })
+
+    cell_source_map = {}
+    heading_source_map = {}
+    if context['file_type'] != 'json':  # Assume it is csv or xlsx
+        with open(os.path.join(upload_dir, 'cell_source_map.json')) as cell_source_map_fp:
+            cell_source_map = json.load(cell_source_map_fp)
+
+        with open(os.path.join(upload_dir, 'heading_source_map.json')) as heading_source_map_fp:
+            heading_source_map = json.load(heading_source_map_fp)
+
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
+    if os.path.exists(validation_errors_path):
+        with open(validation_errors_path) as validation_error_fp:
+            validation_errors = json.load(validation_error_fp)
+    else:
+        validation_errors = get_schema_validation_errors(json_data, schema_obj, schema_name,
+                                                         cell_source_map, heading_source_map,
+                                                         extra_checkers=extra_checkers)
+        if cache:
+            with open(validation_errors_path, 'w+') as validation_error_fp:
+                validation_error_fp.write(json.dumps(validation_errors, default=decimal_default))
+
+    extensions = None
+    if getattr(schema_obj, 'extensions', None):
+        extensions = {
+            'extensions': schema_obj.extensions,
+            'invalid_extension': schema_obj.invalid_extension,
+            'is_extended_schema': schema_obj.extended,
+            'extended_schema_url': schema_obj.extended_schema_url
+        }
+
+    context.update({
+        'schema_url': schema_obj.release_pkg_schema_url,
+        'extensions': extensions,
+        'validation_errors': sorted(validation_errors.items()),
+        'validation_errors_count': sum(len(value) for value in validation_errors.values()),
+        'deprecated_fields': get_json_data_deprecated_fields(json_data, schema_obj),
+        'common_error_types': []
+    })
+    if not api:
+        context['json_data'] = json_data
+
+    return {
+        'context': context,
+        'cell_source_map': cell_source_map,
+    }
 
 
 def unique_ids(validator, ui, instance, schema):
@@ -259,10 +330,10 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
         if e.validator == 'required':
             field_name = e.message
             if len(e.path) > 2:
-                if isinstance(e.path[-2], int):
-                    parent_name = e.path[-1]
-                else:
+                if isinstance(e.path[-1], int):
                     parent_name = e.path[-2]
+                else:
+                    parent_name = e.path[-1]
 
                 field_name = str(parent_name) + ":" + e.message
             heading = heading_src_map.get(path_no_number + '/' + e.message)
@@ -533,12 +604,12 @@ def get_additional_codelist_values(schema_obj, codelist_url, json_data):
 
 
 @cove_spreadsheet_conversion_error
-def get_spreadsheet_meta_data(request, data_object, schema, file_type='xlsx', name='Meta'):
+def get_spreadsheet_meta_data(upload_dir, file_name, schema, file_type='xlsx', name='Meta'):
     if file_type == 'csv':
-        input_name = data_object.upload_dir()
+        input_name = upload_dir
     else:
-        input_name = data_object.original_file.file.name
-    output_name = os.path.join(data_object.upload_dir(), 'metatab.json')
+        input_name = file_name
+    output_name = os.path.join(upload_dir, 'metatab.json')
 
     unflatten(
         input_name=input_name,

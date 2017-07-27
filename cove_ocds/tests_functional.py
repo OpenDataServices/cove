@@ -171,7 +171,8 @@ def test_500_error(server_url, browser):
                                                                     'A tender process may be divided into lots',
                                                                     'copy of the schema with extension',
                                                                     'Validation Errors',
-                                                                    '\'buyer:id\' is missing but required'], ['fetching failed'], True),
+                                                                    '\'buyer:id\' is missing but required',
+                                                                    '\'procuringEntity:id\' is missing but required'], ['fetching failed'], True),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Schema Extensions',
                                                                  'https://raw.githubusercontent.com/open-contracting/',
                                                                  'badprotocol://example.com',
@@ -219,6 +220,7 @@ def test_500_error(server_url, browser):
     ('tenders_releases_1_release_with_patch_in_version.json', ['"version" field in your data follows the major.minor.patch pattern',
                                                                '100.100.0 format does not comply with the schema',
                                                                'Error message'], ['Convert to Spreadsheet'], False),
+    ('bad_toplevel_list.json', ['OCDS JSON should have an object as the top level, the JSON you supplied does not.'], [], False),
 ])
 def test_url_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     browser, source_url = url_input_browser(source_filename, output_source_url=True)

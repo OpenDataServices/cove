@@ -419,8 +419,35 @@ RESULTS = [
 ]
 
 
+@pytest.mark.parametrize('json_data', [
+    # A selection of JSON strings we expect to give a 200 status code, even
+    # though some of them aren't valid OCDS
+    'true',
+    'null',
+    '1',
+    '{}',
+    '[]',
+    '[[]]',
+    '{"grants": {}}',
+    '{"grants" : 1.0}',
+    '{"grants" : 2}',
+    '{"grants" : true}',
+    '{"grants" : "test"}',
+    '{"grants" : null}',
+    '{"grants" : {"a":"b"}}',
+    '{"grants" : [["test"]]}',
+])
 @pytest.mark.django_db
-def test_explore_page(client):
+def test_explore_page(client, json_data):
+    data = SuppliedData.objects.create()
+    data.original_file.save('test.json', ContentFile(json_data))
+    data.current_app = 'cove_360'
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
+
+
+@pytest.mark.django_db
+def test_explore_page_convert(client):
     data = SuppliedData.objects.create()
     data.original_file.save('test.json', ContentFile('{}'))
     data.current_app = 'cove_360'
@@ -472,7 +499,7 @@ def test_explore_unconvertable_spreadsheet(client):
 @pytest.mark.django_db
 def test_explore_unconvertable_json(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove', 'fixtures', 'unconvertable_json.json')) as fp:
+    with open(os.path.join('cove_360', 'fixtures', 'unconvertable_json.json')) as fp:
         data.original_file.save('unconvertable_json.json', UploadedFile(fp))
     resp = client.post(data.get_absolute_url(), {'flatten': 'true'})
     assert resp.status_code == 200
