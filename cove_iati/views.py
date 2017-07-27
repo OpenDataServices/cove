@@ -9,7 +9,7 @@ import defusedxml.lxml as etree
 import lxml.etree
 
 from .lib.schema import SchemaIATI
-from .lib.iati import format_lxml_errors, get_xml_validation_errors, lxml_errors_generator
+from .lib.iati import format_lxml_errors, get_xml_validation_errors, lxml_errors_generator, get_ruleset_errors
 from .lib.iati_utils import sort_iati_xml_file
 from cove.lib.converters import convert_spreadsheet
 from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
@@ -74,6 +74,8 @@ def common_checks_context_iati(db_data, data_file, file_type):
         schema.validate(tree)
         lxml_errors = lxml_errors_generator(schema.error_log)
 
+        ruleset_errors = get_ruleset_errors(tree, os.path.join(db_data.upload_dir(), 'ruleset')) or []
+
     errors_all = format_lxml_errors(lxml_errors)
 
     if file_type != 'xml':
@@ -94,6 +96,8 @@ def common_checks_context_iati(db_data, data_file, file_type):
     return {
         'validation_errors': sorted(validation_errors.items()),
         'validation_errors_count': sum(len(value) for value in validation_errors.values()),
+        'ruleset_errors': ruleset_errors,
+        'ruleset_errors_count': len(ruleset_errors),
         'cell_source_map': cell_source_map,
         'first_render': False
     }

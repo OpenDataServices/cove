@@ -123,6 +123,42 @@
   </div>
   {% endblock validation %}
 
+  {% block ruleset %}
+  <div class="panel panel-default">
+    <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#rulesets-body">
+      <h3 class="panel-title panel-title-explore">
+        {% if ruleset_errors %}
+           <span class="font-tick cross" aria-hidden="true"></span>
+           {% trans "Ruleset Errors " %}<small>{% blocktrans count n_errors=ruleset_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</small>
+        {% else %}
+           <span class="font-tick tick" aria-hidden="true"></span>
+          {% trans "Ruleset Checks" %}
+        {% endif %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="rulesets-body" class="collapse">
+      <div class="panel-body">
+        <p class="explanation">
+        {% if ruleset_errors %}
+            {% trans "Sorry your data contains ruleset errors" %}
+        {% else %}
+          {% trans "Congratulations! Your data passes all IATI ruleset checks" %}
+        {% endif %}
+        </p>
+        <div class="explore-help"></div>
+        {% if ruleset_errors %}
+          <br>
+          <p class="explanation">&nbsp;{% trans "There are some <strong>ruleset errors</strong> in your data, please check them in the table below." %}</p>
+          <br>
+          {% for error in ruleset_errors %}
+            {% if error|slice:":4" == "and " %}<p>&nbsp;&nbsp;&nbsp;&nbsp;{% else %}<br><p>{% endif %}{{error}}</p>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endblock ruleset %}
 
   {% block download_and_share %}
   <div class="panel panel-default">

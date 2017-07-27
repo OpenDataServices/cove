@@ -1,5 +1,8 @@
 import json
+import os
 import re
+
+from bdd_tester import bdd_tester
 
 
 def lxml_errors_generator(schema_error_log):
@@ -151,3 +154,21 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
             validation_errors[validation_key].append({'path': error['path']})
 
     return validation_errors
+
+
+def get_ruleset_errors(lxml_etree, output_dir):
+    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_ruleset/'], output_path=output_dir)
+    ruleset_errors = []
+
+    for output_file in os.listdir(output_dir):
+        with open(os.path.join(output_dir, output_file)) as fp:
+            for line in fp:
+                line = line.strip()
+                if line:
+                    prefix = '{} - '.format(output_file[:-7])
+                    if line.startswith('and '):
+                        prefix = ''
+                    line = '{}{}'.format(prefix, line)
+                    ruleset_errors.append(line)
+
+    return ruleset_errors
