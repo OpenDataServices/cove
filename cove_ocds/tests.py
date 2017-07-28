@@ -947,3 +947,26 @@ def test_cove_ocds_cli_schema_version(version_option):
             # 1.0 by default is expected behaviour as tenders_releases_2_releases.json
             # does not include a "version" field
             assert results['version_used'] == version_option or '1.0'
+
+
+@pytest.mark.parametrize(('file_name', 'version_option'), [
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0'),
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', '1.0')
+])
+def test_cove_ocds_cli_schema_version_override(file_name, version_option):
+    test_dir = str(uuid.uuid4())
+    file_path = os.path.join('cove_ocds', 'fixtures', file_name)
+    output_dir = os.path.join('media', test_dir)
+    call_command('cove_ocds', file_path, schema_version=version_option, output_dir=output_dir)
+
+    with open(os.path.join(output_dir, 'results.json')) as fp:
+        results = json.load(fp)
+    assert results['version_used'] == version_option
+
+    if os.path.exists(os.path.join(output_dir, 'metatab.json')):
+        with open(os.path.join(output_dir, 'metatab.json')) as fp:
+            version_in_data = json.load(fp)['version']
+    else:
+        with open(os.path.join(output_dir, file_name)) as fp:
+            version_in_data = json.load(fp)['version']
+    assert version_in_data == '1.1'
