@@ -367,12 +367,12 @@ msgstr ""
 #: cove_ocds/templates/cove_ocds/explore_record.html:21
 #: cove_ocds/templates/cove_ocds/explore_release.html:21
 msgid "Failed "
-msgstr "Ha fallado"
+msgstr "Ha fallado "
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:23
 #: cove_ocds/templates/cove_ocds/explore_release.html:23
 msgid "Passed "
-msgstr "Ha pasado"
+msgstr "Ha pasado "
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:25
 #: cove_ocds/templates/cove_ocds/explore_release.html:25
@@ -406,7 +406,7 @@ msgstr "El publicador nombrado en el archivo es"
 #: cove_ocds/templates/cove_ocds/explore_record.html:45
 #: cove_ocds/templates/cove_ocds/explore_release.html:50
 msgid "The license is"
-msgstr "La licencia es"
+msgstr "La licencia es "
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:51
 #: cove_ocds/templates/cove_ocds/explore_release.html:62
@@ -453,22 +453,22 @@ msgstr "codificado)."
 #: cove_ocds/templates/cove_ocds/explore_record.html:66
 #: cove_ocds/templates/cove_ocds/explore_release.html:81
 msgid "Data "
-msgstr "Datos"
+msgstr "Datos "
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:68
 #: cove_ocds/templates/cove_ocds/explore_release.html:83
 msgid "downloaded from "
-msgstr "descargado desde"
+msgstr "descargado desde "
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:70
 #: cove_ocds/templates/cove_ocds/explore_release.html:85
 msgid "uploaded "
-msgstr "subido"
+msgstr "subido "
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:72
 #: cove_ocds/templates/cove_ocds/explore_release.html:87
 msgid "on "
-msgstr "en"
+msgstr "el "
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:90
 msgid "Validates against the schema?"

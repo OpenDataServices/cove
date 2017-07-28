@@ -297,7 +297,7 @@ msgstr "Acerca de"
 
 #: cove/templates/base.html:116
 msgid "Built by"
-msgstr "Construido por"
+msgstr "Construido por "
 
 #: cove/templates/base.html:116
 msgid "Open Data Services"
@@ -305,7 +305,7 @@ msgstr "Open Data Services"
 
 #: cove/templates/base.html:117
 msgid "The code for this site is available on"
-msgstr "El código de este sitio está disponible en"
+msgstr "El código de este sitio está disponible en "
 
 #: cove/templates/base.html:117
 msgid "GitHub"
@@ -357,11 +357,11 @@ msgstr ""
 
 #: cove/templates/error_extra.html:2
 msgid "get in touch via email"
-msgstr "ponerse en contacto a través de correo electrónico"
+msgstr "ponerse en contacto a través de correo electrónico "
 
 #: cove/templates/error_extra.html:2
 msgid "referencing this error as "
-msgstr "haciendo referencia a este error como"
+msgstr "haciendo referencia a este error como "
 
 #: cove/templates/explore.html:6
 msgid "Load New File"
@@ -491,7 +491,7 @@ msgstr "Últimos"
 
 #: cove/templates/stats.html:19
 msgid "days"
-msgstr "días"
+msgstr "días "
 
 #: cove/templates/terms.html:6
 msgid "Terms &amp; conditions"
@@ -1066,23 +1066,23 @@ msgstr "Uso"
 
 #: cove_iati/templates/cove_iati/explore.html:29
 msgid "A file was "
-msgstr "Un archivo ha sido"
+msgstr "Un archivo ha sido "
 
 #: cove_iati/templates/cove_iati/explore.html:31
 msgid "downloaded from "
-msgstr "Descargado desde"
+msgstr "descargado desde "
 
 #: cove_iati/templates/cove_iati/explore.html:33
 msgid "uploaded "
-msgstr "Subido "
+msgstr "subido "
 
 #: cove_iati/templates/cove_iati/explore.html:35
 msgid "on "
-msgstr "en"
+msgstr "el "
 
 #: cove_iati/templates/cove_iati/explore.html:54
 msgid "Converted to "
-msgstr "Convertido a"
+msgstr "Convertido a "
 
 #: cove_iati/templates/cove_iati/explore.html:56
 #, python-format
