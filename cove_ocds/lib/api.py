@@ -42,7 +42,7 @@ def produce_json_output(output_dir, file, schema_version, convert):
     else:
         metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
         metatab_data = get_spreadsheet_meta_data(output_dir, file, metatab_schema_url, file_type=file_type)
-        schema_ocds = SchemaOCDS(release_data=metatab_data)
+        schema_ocds = SchemaOCDS(schema_version, release_data=metatab_data)
 
         if schema_ocds.invalid_version_data:
             raise APIException('\033[1;31mThe schema version in your data is not valid. Accepted values: {}\033[1;m'.format(
