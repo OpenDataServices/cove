@@ -162,13 +162,18 @@ def get_ruleset_errors(lxml_etree, output_dir):
 
     for output_file in os.listdir(output_dir):
         with open(os.path.join(output_dir, output_file)) as fp:
+            scenario_outline = re.sub(r':', '/', output_file[:-7]).split('_')
             for line in fp:
                 line = line.strip()
                 if line:
-                    prefix = '{} - '.format(output_file[:-7])
-                    if line.startswith('and '):
-                        prefix = ''
-                    line = '{}{}'.format(prefix, line)
-                    ruleset_errors.append(line)
+                    if not line.startswith('and '):
+                        rule_error = {
+                            'path': scenario_outline.pop(0),
+                            'rule': ' '.join(scenario_outline),
+                            'explanation': line
+                        }
+                    else:
+                        rule_error['explanation'] = '{} {}'.format(rule_error['explanation'], line)
+                    ruleset_errors.append(rule_error)
 
     return ruleset_errors

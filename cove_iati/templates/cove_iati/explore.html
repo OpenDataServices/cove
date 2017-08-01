@@ -146,14 +146,11 @@
           {% trans "Congratulations! Your data passes all IATI ruleset checks" %}
         {% endif %}
         </p>
-        <div class="explore-help"></div>
         {% if ruleset_errors %}
           <br>
           <p class="explanation">&nbsp;{% trans "There are some <strong>ruleset errors</strong> in your data, please check them in the table below." %}</p>
           <br>
-          {% for error in ruleset_errors %}
-            {% if error|slice:":4" == "and " %}<p>&nbsp;&nbsp;&nbsp;&nbsp;{% else %}<br><p>{% endif %}{{error}}</p>
-          {% endfor %}
+          {% include "cove_iati/ruleset_table.html" %}
         {% endif %}
       </div>
     </div>
