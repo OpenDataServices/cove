@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.01">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.02">
 
   <xsd:annotation>
     <xsd:documentation xml:lang="en">
       International Aid Transparency Initiative: Organisation-Information Schema
 
-      Release 2.01, 2014-10-21
+      Release 2.02, released 2015-12-07
 
       NOTE: the xml.xsd and iati-common.xsd schemas must be in the
       same directory as this one.
@@ -83,7 +83,9 @@
         <xsd:element ref="reporting-org" minOccurs="1" maxOccurs="1"/>
         <xsd:element ref="total-budget" minOccurs="0" maxOccurs="unbounded"/>
         <xsd:element ref="recipient-org-budget" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="recipient-region-budget" minOccurs="0" maxOccurs="unbounded"/>
         <xsd:element ref="recipient-country-budget" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="total-expenditure" minOccurs="0" maxOccurs="unbounded"/>
         <xsd:element ref="document-link" minOccurs="0" maxOccurs="unbounded"/>
         <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
@@ -141,7 +143,10 @@
         The total-budget element allows for the reporting of the organisation's 
         own budget. The recommendation is that, where and when possible, the 
         organisation's total annual planned budget for each of the next three 
-        years is reported.
+        years is reported. The status explains whether the budget being reported 
+        is indicative or has been formally committed. The value should appear 
+        within the BudgetStatus codelist. If the @status attribute is not present, 
+        the budget is assumed to be indicative.
       </xsd:documentation>
     </xsd:annotation>
     <xsd:complexType>
@@ -221,6 +226,16 @@
         </xsd:element>
         <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
+      <xsd:attribute name="status" use="optional" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            The status explains whether the budget being reported is indicative or has 
+            been formally committed. The value should appear within the BudgetStatus 
+            codelist. If the @status attribute is not present, the budget is assumed 
+            to be indicative.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
       <xsd:anyAttribute processContents="lax" namespace="##other"/>
     </xsd:complexType>
   </xsd:element>
@@ -236,7 +251,11 @@
         next three financial years are reported. This is primarily
         applicable to donors but any provider of core funding is
         expected to use it. Earmarked budgets should be reported at
-        activity-level through the Activity Standard.
+        activity-level through the Activity Standard. The status 
+        explains whether the budget being reported is indicative or 
+        has been formally committed. The value should appear within 
+        the BudgetStatus codelist. If the @status attribute is not 
+        present, the budget is assumed to be indicative.
       </xsd:documentation>
     </xsd:annotation>
     <xsd:complexType>
@@ -350,6 +369,166 @@
         </xsd:element>
         <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
+      <xsd:attribute name="status" use="optional" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            The status explains whether the budget being reported is indicative or has 
+            been formally committed. The value should appear within the BudgetStatus 
+            codelist. If the @status attribute is not present, the budget is assumed 
+            to be indicative.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:anyAttribute processContents="lax" namespace="##other"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="recipient-region-budget">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        The recipient-region-budget element allows for the reporting of forward 
+        looking budgets where the organisation maintains region-wide, rather than 
+        or in addition to country-specific budgets. The recommendation is that, 
+        where and when possible, the organisation’s total annual planned budget 
+        for each of the next three financial years is reported for each recipient 
+        region. This must NOT include an aggregation of budgets reported in the 
+        recipient-country-budget element. It is strongly recommended that 
+        publishers report to existing defined regions wherever possible. The 
+        status explains whether the budget being reported is indicative or has 
+        been formally committed. The value should appear within the BudgetStatus 
+        codelist. If the @status attribute is not present, the budget is assumed 
+        to be indicative.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="recipient-region" minOccurs="1" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              The supranational geographic region where funds have been allocated.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="narrative" minOccurs="0" maxOccurs="unbounded" />
+              <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="vocabulary" type="xsd:string" use="optional">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  An IATI code for the vocabulary from which the region code is 
+                  drawn. If it is not present, code 1 ('OECD DAC') is assumed.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="vocabulary-uri" type="xsd:anyURI" use="optional">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  If the vocabulary is 99 (reporting organisation), the URI 
+                  where this internal vocabulary is defined.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="code" type="xsd:string" use="optional">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  Either an OECD DAC, UN region code or (if code ‘99’ Reporting 
+                  organisation is selected for recipient-region/\@vocabulary) a 
+                  code from your internal vocabulary. The codelist is determined 
+                  by vocabulary attribute. The value in recipient-region/\@code 
+                  should appear within the Region codelist, if the vocabulary 
+                  code 1 ('OECD DAC') is used.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:anyAttribute processContents="lax" namespace="##other"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="period-start" minOccurs="1" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              The start of the budget period.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="iso-date" type="xsd:date" use="required"/>
+            <xsd:anyAttribute processContents="lax" namespace="##other"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="period-end" minOccurs="1" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              The end of the period (which must not be greater than one year)
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="iso-date" type="xsd:date" use="required"/>
+            <xsd:anyAttribute processContents="lax" namespace="##other"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="value" type="currencyType" minOccurs="1" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              The total value of the money budgeted to be disbursed to
+              the specified region during this time period.  This
+              element is required.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="budget-line" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              A breakdown of the recipient region’s budget into sub-totals. The 
+              breakdown is determined by the reporting organisation and described 
+              in the narrative. The period covered is the same as that covered by 
+              the parent recipient-region-budget element. The sum of budget-line 
+              values does not have to equal the value given in the parent element.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="value" type="currencyType" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                    The budget sub-total. The definition of the
+                    sub-division is determined by
+                    iati-organisation/recipient-region-budget/budget-line/narrative
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element ref="narrative" minOccurs="1" maxOccurs="unbounded" />
+              <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="ref" use="optional" type="xsd:string">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  An internal reference for this budget line taken
+                  from the reporting organisation's own system.
+                  Optional.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:anyAttribute processContents="lax" namespace="##other"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="status" use="optional" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            The status explains whether the budget being reported is indicative or has 
+            been formally committed. The value should appear within the BudgetStatus 
+            codelist. If the @status attribute is not present, the budget is assumed 
+            to be indicative.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
       <xsd:anyAttribute processContents="lax" namespace="##other"/>
     </xsd:complexType>
   </xsd:element>
@@ -364,7 +543,11 @@
         three financial years is reported for each recipient country. 
         It is strongly recommended that the start and end of the reported 
         financial years match those of the recipient country's 
-        budgetary/planning cycle.
+        budgetary/planning cycle. The status explains whether the budget 
+        being reported is indicative or has been formally committed. The 
+        value should appear within the BudgetStatus codelist. If the 
+        @status attribute is not present, the budget is assumed to be 
+        indicative.
       </xsd:documentation>
     </xsd:annotation>
     <xsd:complexType>
@@ -467,6 +650,107 @@
         </xsd:element>
         <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
+      <xsd:attribute name="status" use="optional" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            The status explains whether the budget being reported is indicative or has 
+            been formally committed. The value should appear within the BudgetStatus 
+            codelist. If the @status attribute is not present, the budget is assumed 
+            to be indicative.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:anyAttribute processContents="lax" namespace="##other"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="total-expenditure">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        The total-expenditure element allows for the reporting of the 
+        organisation’s international development expenditure. The 
+        recommendation is that, where and when possible, the organisation’s 
+        total expenditure for each of the past three years is reported. 
+        The expense line allows publishers to record further breakdown.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="period-start" minOccurs="1" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              The start of the budget period.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="iso-date" type="xsd:date" use="required"/>
+            <xsd:anyAttribute processContents="lax" namespace="##other"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="period-end" minOccurs="1" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              The end of the period (which must not be greater than one year)
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="iso-date" type="xsd:date" use="required"/>
+            <xsd:anyAttribute processContents="lax" namespace="##other"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="value" type="currencyType" minOccurs="1" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              The total value of the organisation's aid expenditure for
+              this period.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="expense-line" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              A breakdown of the total expenditure into sub-totals. 
+              The breakdown is determined by the reporting 
+              organisation and described in the narrative. The period 
+              covered is the same as that covered by the parent 
+              total-expenditure element. The sum of expenditure-line 
+              values does not have to equal the value given in the 
+              parent element.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="value" type="currencyType" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                    The expenditure sub-total. The definition of the
+                    sub-division is determined by 
+                    iati-organisation/total-expenditure/expenditure-line/narrative
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element ref="narrative" minOccurs="1" maxOccurs="unbounded" />
+              <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="ref" use="optional" type="xsd:string">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  An internal reference for this expenditure line taken 
+                  from the reporting organisation’s own system. Optional.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:anyAttribute processContents="lax" namespace="##other"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
       <xsd:anyAttribute processContents="lax" namespace="##other"/>
     </xsd:complexType>
   </xsd:element>
@@ -500,7 +784,7 @@
             </xsd:attribute>
             <xsd:anyAttribute processContents="lax" namespace="##other"/>
           </xsd:complexType>
-        </xsd:element>
+        </xsd:element>     
         <xsd:element name="language" minOccurs="0" maxOccurs="unbounded">
           <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -520,6 +804,20 @@
                 </xsd:documentation>
               </xsd:annotation>
             </xsd:attribute>
+            <xsd:anyAttribute processContents="lax" namespace="##other"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="document-date" minOccurs="0" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              The date of publication of the document that is being linked to.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="iso-date" use="required" type="xsd:date"/>
             <xsd:anyAttribute processContents="lax" namespace="##other"/>
           </xsd:complexType>
         </xsd:element>
@@ -565,7 +863,6 @@
       <xsd:anyAttribute processContents="lax" namespace="##other"/>
     </xsd:complexType>
   </xsd:element>
-
 
 
   <xsd:complexType name="currencyType">
