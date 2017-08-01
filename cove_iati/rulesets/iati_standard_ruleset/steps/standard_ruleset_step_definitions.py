@@ -26,16 +26,19 @@ def step_impl(context, xpath_expression, regex_str):
     regex = re.compile(regex_str)
     success = True
     bad_vals = []
+
     for val in vals:
-        if not bool(regex.search(val)):
+        if not bool(regex.match(val)):
             success = False
             bad_vals.append(val)
-    msg = '{} {} not match the regex `{}`'.format(
-        ', '.join(bad_vals),
-        'does' if len(bad_vals) == 1 else 'do',
-        regex_str,
-    )
-    raise StepException(context, msg)
+
+    if not success:
+        msg = '{} {} not match the regex `{}`'.format(
+            ', '.join(bad_vals),
+            'does' if len(bad_vals) == 1 else 'do',
+            regex_str,
+        )
+        raise StepException(context, msg)
 
 
 @given('`{xpath_expression}` is present')
