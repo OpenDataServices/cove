@@ -167,7 +167,6 @@ def get_ruleset_errors(lxml_etree, output_dir):
                 line = line.strip()
 
                 if line:
-                    print('------------------>  ', line)
                     json_line = json.loads(line)
                     message = json_line['message']
                     activity_id = json_line['id']
@@ -175,7 +174,7 @@ def get_ruleset_errors(lxml_etree, output_dir):
                         ruleset_errors[-1]['explanation'] += ' {}'.format(message)
                         continue
                     rule_error = {
-                        'path': scenario_outline[1],
+                        'path': scenario_outline[0],
                         'rule': ' '.join(scenario_outline[1:]),
                         'message': message,
                         'id': activity_id
