@@ -20,7 +20,10 @@ GRANTS = {
                 'amountAwarded': 0,
                 'awardDate': '24/07/2014',
                 'currency': 'GBP',
-                'dataSource': 'http://www.wellcome.ac.uk/Managing-a-grant/Grants-awarded/index.htm',
+                "beneficiaryLocation": [{
+                    "name": "Bloomsbury",
+                    "geoCodeType": "LONB"
+                }],
                 'dateModified': '13-03-2015',
                 'fundingOrganization': [{'id': 'XSFAFA',
                                          'name': 'The Wellcome Trust'}],
@@ -43,7 +46,7 @@ GRANTS = {
                 'awardDate': '24/07/2014',
                 'currency': 'GBP',
                 'dataSource': 'http://www.wellcome.ac.uk/Managing-a-grant/Grants-awarded/index.htm',
-                'dateModified': '13-03-2015',
+
                 'description': 'Exceptional and Extraordinary: unruly bodies and '
                                'minds in the medical museum. ',
                 'fundingOrganization': [{'id': '360G-CHC-210183',
@@ -70,7 +73,12 @@ GRANTS = {
                 'amountAwarded': 178990,
                 'awardDate': '24/07/2014',
                 'currency': 'GBP',
-                'dataSource': 'http://www.wellcome.ac.uk/Managing-a-grant/Grants-awarded/index.htm',
+                "beneficiaryLocation": [{
+                    "name": "Gateshed",
+                    "geoCodeType": "MD",
+                    "geoCode": "E08000037",
+                    
+                }],
                 'dateModified': '13-03-2015',
                 'description': 'Exceptional and Extraordinary: unruly bodies and '
                                'minds in the medical museum. ',
@@ -81,8 +89,6 @@ GRANTS = {
                 'id': '360G-wellcometrust-105183/Z/14/Z',
                 'plannedDates': [{'duration': '25'}],
                 'recipientOrganization': [{'addressLocality': 'Leicester ',
-                                           'charityNumber': 'SC012345',
-                                           'companyNumber': 'RC000659',
                                            'id': 'GB-CHC-10659',
                                            'name': 'UNIVERSITY OF LEICESTER'}],
                 'relatedActivity': ["", "360G-xxx"],
@@ -103,6 +109,7 @@ SOURCE_MAP = {
     'grants/0/amountAwarded': [['grants', 'Q', 2, 'Amount Awarded']],
     'grants/0/awardDate': [['grants', 'S', 2, 'Award Date']],
     'grants/0/currency': [['grants', 'R', 2, 'Currency']],
+    'grants/0/beneficiaryLocation': [['grants', 'AA', 2, 'Beneficiary Location']],
     'grants/0/dataSource': [['grants', 'Y', 2, 'Data source']],
     'grants/0/dateModified': [['grants', 'X', 2, 'Last modified']],
     'grants/0/fundingOrganization/0': [['grants', 2]],
@@ -294,7 +301,7 @@ RESULTS = [
                   "no other identifier can be used, then this notice can be ignored.")},
      ['grants/1/fundingOrganization/0/id'],
      [['grants', 'V', 3, 'Funding Org:Identifier']]),
-    ({'heading': ("33% of your grants have a Recipient Org:Identifier that doesn’t draw from "
+    ({'heading': ("1 grant has a Recipient Org:Identifier that doesn’t draw from "
                   "an external identification body"),
       'message': ("Using external identifiers (e.g. a charity number or a company number) "
                   "helps people using your data to match it up against other data - for "
@@ -304,7 +311,7 @@ RESULTS = [
                   "then you can ignore this notice.")},
      ['grants/1/recipientOrganization/0/id'],
      [['grants', 'J', 3, 'Recipient Org:Identifier']]),
-    ({'heading': ("33% of your grants have a Funding Org:Identifier that doesn’t draw from "
+    ({'heading': ("1 grant has a Funding Org:Identifier that doesn’t draw from "
                   "an external identification body"),
       'message': ("Using external identifiers (e.g. a charity number or a company number) "
                   "helps people using your data to match it up against other data - for "
@@ -326,6 +333,21 @@ RESULTS = [
                   "values being entered into this field.")},
      ['grants/0/recipientOrganization/0/companyNumber'],
      [['grants', 'L', 2, 'Recipient Org:Company Number']]),
+    ({'heading': "1 grant does not have either a Recipient Org:Company Number or a Recipient Org:Charity Number",
+      'message': ("Providing one or both of these, if possible, makes it easier for users of "
+                  "your data to join up the data with other data sources to provide better "
+                  "insight into grant-making. You don’t need to do anything if your grants are "
+                  "to organisations that don’t have UK Company or UK Charity numbers.")},
+     ['grants/2/recipientOrganization/0/id'],
+     [['grants', 'J', 4, 'Recipient Org:Identifier']]),
+    ({'heading': "3 grants have incomplete recipient organisation information",
+      'message': ("Your data is missing Recipient Org: Postal Code, Recipient Org: Location:Geographic "
+                  "Code or Recipient Org: Location: Geographic Code Type. Knowing the geographic location "
+                  "of recipient organisations allows users of your data to understand your data and combine "
+                  "it with other data sets to form a broader picture of grant-making.")},
+     ['grants/0/recipientOrganization/0/id', 'grants/1/recipientOrganization/0/id', 'grants/2/recipientOrganization/0/id'],
+     [['grants', 'J', 2, 'Recipient Org:Identifier'], ['grants', 'J', 3, 'Recipient Org:Identifier'],
+      ['grants', 'J', 4, 'Recipient Org:Identifier']]),
     ({'heading': "There are 3 different funding organisation IDs listed",
       'message': ("If you are expecting to be publishing data for multiple funders then "
                   "this notice can be ignored, however if you are only publishing for a "
@@ -347,14 +369,22 @@ RESULTS = [
                  "Programme data if available helps users to better understand your data.")},
      ['grants/0/id'],
      [['grants', 'A', 2, 'Identifier']]),
-    ({'heading': "3 grants do not contain any beneficiary location fields",
+    ({'heading': "1 grant does not contain any beneficiary location fields",
       'message': ("Although not required by the 360Giving Standard, providing beneficiary "
                   "data if available helps users to understand your data and allows it to be "
                   "used in tools that visualise grants geographically.")},
-     ['grants/0/id', 'grants/1/id', 'grants/2/id'],
-     [['grants', 'A', 2, 'Identifier'],
-      ['grants', 'A', 3, 'Identifier'],
-      ['grants', 'A', 4, 'Identifier']]),
+     ['grants/1/id'],
+     [['grants', 'A', 3, 'Identifier']]),
+    ({'heading': "1 grant has incomplete beneficiary location information",
+      'message': ("Your data is missing Beneficiary Location: Name, Beneficiary Location: "
+                  "Geographical Code and/or Beneficiary Location: Geographical Code Type. "
+                  "Beneficiary location information allows users of the data to understand who "
+                  "ultimately benefitted from the grant, not just the location of the organisation "
+                  "that provided the service. If your beneficiaries are in the same place as the "
+                  "organisation that the money went to, stating this is useful for anyone using your "
+                  "data as it cannot be inferred.")},
+     ['grants/0/beneficiaryLocation'],
+     [['grants', 'AA', 2, 'Beneficiary Location']]),
     ({'heading': "1 grant has a title and a description that are the same",
       'message': ("Users may find that the data is less useful as they are unable to "
                   "discover more about the grants. Consider including a more detailed "
@@ -372,12 +402,52 @@ RESULTS = [
                   "entered into this field.")},
      ['grants/2/fundingOrganization/0/id', 'grants/2/recipientOrganization/0/id'],
      [['grants', 'V', 4, 'Funding Org:Identifier'],
-      ['grants', 'J', 4, 'Recipient Org:Identifier']])
+      ['grants', 'J', 4, 'Recipient Org:Identifier']]),
+    ({'heading': "1 grant does not have a Last Modified date",
+      'message': "Last Modified allows data users to reconcile discrepancies between versions of your data."},
+     ['grants/1/id'],
+     [['grants', 'A', 3, 'Identifier']]),
+    ({'heading': "2 grants do not have a Data Source field",
+      'message': "Knowing where information came from is an important part of establishing trust in your data."},
+     ['grants/0/id', 'grants/2/id'],
+     [['grants', 'A', 2, 'Identifier'], ['grants', 'A', 4, 'Identifier']]),
+    ({'heading': "3 grants do not have a Classification: Title field",
+      'message': ("This field allows you to describe how you classify the grant or have tagged it internally. "
+                  "Examples include classifying by sector (eg Healthcare) or target group (eg NEET).")},
+     ['grants/0/id', 'grants/1/id', 'grants/2/id'],
+     [['grants', 'A', 2, 'Identifier'], ['grants', 'A', 3, 'Identifier'], ['grants', 'A', 4, 'Identifier']])
 ]
 
 
+@pytest.mark.parametrize('json_data', [
+    # A selection of JSON strings we expect to give a 200 status code, even
+    # though some of them aren't valid OCDS
+    'true',
+    'null',
+    '1',
+    '{}',
+    '[]',
+    '[[]]',
+    '{"grants": {}}',
+    '{"grants" : 1.0}',
+    '{"grants" : 2}',
+    '{"grants" : true}',
+    '{"grants" : "test"}',
+    '{"grants" : null}',
+    '{"grants" : {"a":"b"}}',
+    '{"grants" : [["test"]]}',
+])
 @pytest.mark.django_db
-def test_explore_page(client):
+def test_explore_page(client, json_data):
+    data = SuppliedData.objects.create()
+    data.original_file.save('test.json', ContentFile(json_data))
+    data.current_app = 'cove_360'
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
+
+
+@pytest.mark.django_db
+def test_explore_page_convert(client):
     data = SuppliedData.objects.create()
     data.original_file.save('test.json', ContentFile('{}'))
     data.current_app = 'cove_360'
@@ -429,7 +499,7 @@ def test_explore_unconvertable_spreadsheet(client):
 @pytest.mark.django_db
 def test_explore_unconvertable_json(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove', 'fixtures', 'unconvertable_json.json')) as fp:
+    with open(os.path.join('cove_360', 'fixtures', 'unconvertable_json.json')) as fp:
         data.original_file.save('unconvertable_json.json', UploadedFile(fp))
     resp = client.post(data.get_absolute_url(), {'flatten': 'true'})
     assert resp.status_code == 200

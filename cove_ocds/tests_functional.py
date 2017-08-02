@@ -12,6 +12,7 @@ PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/validator/')
 
 BROWSER = os.environ.get('BROWSER', 'Firefox')
 
+OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
 OCDS_SCHEMA_VERSIONS = settings.COVE_CONFIG['schema_version_choices']
 OCDS_SCHEMA_VERSIONS_DISPLAY = list(display_url[0] for version, display_url in OCDS_SCHEMA_VERSIONS.items())
 
@@ -157,13 +158,21 @@ def test_500_error(server_url, browser):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'not_expected_text', 'conversion_successful'), [
-    ('tenders_releases_2_releases.json', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, ['Schema Extensions'], True),
+    ('tenders_releases_2_releases.json', ['Convert', 'Schema', 'OCDS schema version 1.0. You can'] + OCDS_SCHEMA_VERSIONS_DISPLAY,
+                                         ['Schema Extensions'], True),
     ('tenders_releases_1_release_with_extensions_version_1_1.json', ['Schema Extensions',
                                                                      'Contract Parties (Organization structure)',
                                                                      'All the extensions above were applied',
                                                                      'copy of the schema with extension',
                                                                      'Validation Errors',
                                                                      '\'buyer:id\' is missing but required'], ['fetching failed'], True),
+    ('tenders_releases_1_release_with_extensions_new_layout.json', ['Schema Extensions',
+                                                                    'Lots',
+                                                                    'A tender process may be divided into lots',
+                                                                    'copy of the schema with extension',
+                                                                    'Validation Errors',
+                                                                    '\'buyer:id\' is missing but required',
+                                                                    '\'procuringEntity:id\' is missing but required'], ['fetching failed'], True),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Schema Extensions',
                                                                  'https://raw.githubusercontent.com/open-contracting/',
                                                                  'badprotocol://example.com',
@@ -198,27 +207,48 @@ def test_500_error(server_url, browser):
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', [], False),
     ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], [], True),
+    # Test "version" value in data
+    ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 123.123 which is not recognised',
+                                                                   'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
+                                                                   'validated against the current default version.',
+                                                                   'Convert to Spreadsheet'],
+                                                                  ['Additional Fields (fields in data not in schema)', 'Error message'], False),
+    ('tenders_releases_1_release_with_wrong_version_type.json', ['Your data specifies a version 1000 (it must be a string) which is not recognised',
+                                                                 'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
+                                                                 'Convert to Spreadsheet'],
+                                                                ['Additional Fields (fields in data not in schema)', 'Error message'], False),
+    ('tenders_releases_1_release_with_patch_in_version.json', ['"version" field in your data follows the major.minor.patch pattern',
+                                                               '100.100.0 format does not comply with the schema',
+                                                               'Error message'], ['Convert to Spreadsheet'], False),
+    ('bad_toplevel_list.json', ['OCDS JSON should have an object as the top level, the JSON you supplied does not.'], [], False),
 ])
-def test_URL_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
+def test_url_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     browser, source_url = url_input_browser(source_filename, output_source_url=True)
     check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
 
-    #refresh page to now check if tests still work after caching some data
-    browser.get(browser.current_url)
+    selected_examples = ['tenders_releases_2_releases_invalid.json']
 
-    selected_examples = ['tenders_releases_2_releases_invalid.json', 'WellcomeTrust-grants_fixed_2_grants.xlsx', 'WellcomeTrust-grants_2_grants_cp1252.csv']
     if source_filename in selected_examples:
+        #refresh page to now check if tests still work after caching some data
+        browser.get(browser.current_url)
         check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
         browser.get(server_url + '?source_url=' + source_url)
         check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
 
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
-    if source_filename.endswith('.json'):
+    # Avoid page refresh
+    dont_convert = [
+        'tenders_releases_1_release_with_unrecognized_version.json',
+        'tenders_releases_1_release_with_wrong_version_type.json'
+    ]
+
+    if source_filename.endswith('.json') and source_filename not in dont_convert:
         try:
             browser.find_element_by_name("flatten").click()
         except NoSuchElementException:
             pass
+
     body_text = browser.find_element_by_tag_name('body').text
     if isinstance(expected_text, str):
         expected_text = [expected_text]
@@ -331,7 +361,7 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
         assert 'conversion Warnings' not in body_text
 
 
-def test_URL_invalid_dataset_request(server_url, browser):
+def test_url_invalid_dataset_request(server_url, browser):
     # Test a badly formed hexadecimal UUID string
     browser.get(server_url + 'data/0')
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
@@ -352,7 +382,7 @@ def test_URL_invalid_dataset_request(server_url, browser):
     ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'validation against schema version 1.1',
      '\'version\' is missing but required', 'methodRationale', 'version')
 ])
-def test_URL_input_with_version(server_url, url_input_browser, httpserver, source_filename, expected, not_expected,
+def test_url_input_with_version(server_url, url_input_browser, httpserver, source_filename, expected, not_expected,
                                 expected_additional_field, not_expected_additional_field):
     browser = url_input_browser(source_filename)
     body_text = browser.find_element_by_tag_name('body').text
@@ -380,7 +410,7 @@ def test_URL_input_with_version(server_url, url_input_browser, httpserver, sourc
     ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'validation against schema version 1.0',
      '\'version\' is missing but required', 'version', 'publisher')
 ])
-def test_URL_input_with_version_change(server_url, url_input_browser, httpserver, select_version, source_filename, expected,
+def test_url_input_with_version_change(server_url, url_input_browser, httpserver, select_version, source_filename, expected,
                                        not_expected, expected_additional_field, not_expected_additional_field):
     browser = url_input_browser(source_filename)
     select = Select(browser.find_element_by_name('version'))
@@ -410,22 +440,26 @@ def test_URL_input_with_version_change(server_url, url_input_browser, httpserver
                                                                      'The metrics extension supports publication of forecasts',
                                                                      'All the extensions above were applied to extend the schema',
                                                                      'Get a copy of the schema with extension patches applied'],
-                                                                    ['The following extensions failed']),
+                                                                    ['The following extensions failed',
+                                                                     'extensions were not introduced in the schema until version 1.1.']),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Party Scale',
                                                                  'The metrics extension supports publication of forecasts',
                                                                  'Get a copy of the schema with extension patches applied',
-                                                                 'The following extensions failed'],
+                                                                 'The following extensions failed',
+                                                                 'extensions were not introduced in the schema until version 1.1.'],
                                                                 ['validated against a schema with no extensions']),
-    ('tenders_releases_1_release_with_all_invalid_extensions.json', ['None of the extensions above could be applied'],
+    ('tenders_releases_1_release_with_all_invalid_extensions.json', ['None of the extensions above could be applied',
+                                                                     'extensions were not introduced in the schema until version 1.1.'],
                                                                     ['Party Scale',
                                                                      'Get a copy of the schema with extension patches applied']),
     ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', ['Party Scale',
                                                                               'The metrics extension supports publication of forecasts',
                                                                               'All the extensions above were applied to extend the schema',
                                                                               'Get a copy of the schema with extension patches applied'],
-                                                                             ['The following extensions failed'])
+                                                                             ['The following extensions failed',
+                                                                              'extensions were not introduced in the schema until version 1.1.'])
 ])
-def test_URL_input_with_extensions(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
+def test_url_input_with_extensions(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
     browser = url_input_browser(source_filename)
     schema_extension_box = browser.find_element_by_id('schema-extensions').text
 
@@ -441,3 +475,23 @@ def test_URL_input_with_extensions(server_url, url_input_browser, httpserver, so
         assert text in schema_extension_box
     for text in not_expected:
         assert text not in schema_extension_box
+
+
+@pytest.mark.parametrize(('source_filename', 'expected', 'not_expected'), [
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', ['This file applies 3 valid extensions to the schema'],
+                                                                    ['Failed to apply']),
+    ('tenders_releases_1_release_with_invalid_extensions.json', ['Failed to apply 3 extensions to the schema',
+                                                                 'This file applies 3 valid extensions to the schema'],
+                                                                []),
+    ('tenders_releases_1_release_with_all_invalid_extensions.json', ['Failed to apply 3 extensions to the schema'],
+                                                                    ['This file applies',
+                                                                     'valid extensions to the schema'])
+])
+def test_url_input_extension_headlines(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
+    browser = url_input_browser(source_filename)
+    headlines_box_text = browser.find_element_by_class_name('panel-body').text
+
+    for text in expected:
+        assert text in headlines_box_text
+    for text in not_expected:
+        assert text not in headlines_box_text

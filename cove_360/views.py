@@ -1,35 +1,17 @@
 import json
 import logging
+from decimal import Decimal
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 
-from . lib.threesixtygiving import get_grants_aggregates, run_additional_checks
 from . lib.schema import Schema360
-from cove.lib.tools import datetime_or_date
+from . lib.threesixtygiving import common_checks_360
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
-from cove.views import explore_data_context, common_checks_context
+from cove.views import explore_data_context
 
 logger = logging.getLogger(__name__)
-
-
-def common_checks_360(context, db_data, json_data, schema_obj):
-    schema_name = schema_obj.release_pkg_schema_name
-    checkers = {'date-time': (datetime_or_date, ValueError)}
-    common_checks = common_checks_context(db_data, json_data, schema_obj, schema_name, context, extra_checkers=checkers)
-    cell_source_map = common_checks['cell_source_map']
-    additional_checks = run_additional_checks(json_data, cell_source_map)
-
-    context.update(common_checks['context'])
-    context.update({
-        'grants_aggregates': get_grants_aggregates(json_data),
-        'additional_checks': additional_checks,
-        'additional_checks_count': len(additional_checks) + (1 if context['data_only'] else 0),
-        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
-    })
-
-    return context
 
 
 @cove_web_input_error
@@ -38,13 +20,17 @@ def explore_360(request, pk, template='cove_360/explore.html'):
     context, db_data, error = explore_data_context(request, pk)
     if error:
         return error
+
+    upload_dir = db_data.upload_dir()
+    upload_url = db_data.upload_url()
+    file_name = db_data.original_file.file.name
     file_type = context['file_type']
 
     if file_type == 'json':
         # open the data first so we can inspect for record package
-        with open(db_data.original_file.file.name, encoding='utf-8') as fp:
+        with open(file_name, encoding='utf-8') as fp:
             try:
-                json_data = json.load(fp)
+                json_data = json.load(fp, parse_float=Decimal)
             except ValueError as err:
                 raise CoveInputDataError(context={
                     'sub_title': _("Sorry we can't process that data"),
@@ -55,13 +41,34 @@ def explore_360(request, pk, template='cove_360/explore.html'):
                              '</span> <strong>Error message:</strong> {}'.format(err)),
                     'error': format(err)
                 })
-            context.update(convert_json(request, db_data, schema_360.release_schema_url))
-    else:
-        context.update(convert_spreadsheet(request, db_data, file_type, schema_360.release_schema_url))
-        with open(context['converted_path'], encoding='utf-8') as fp:
-            json_data = json.load(fp)
+            if not isinstance(json_data, dict):
+                raise CoveInputDataError(context={
+                    'sub_title': _("Sorry we can't process that data"),
+                    'link': 'index',
+                    'link_text': _('Try Again'),
+                    'msg': _('360Giving JSON should have an object as the top level, the JSON you supplied does not.'),
+                })
 
-    context = common_checks_360(context, db_data, json_data, schema_360)
+            context.update(convert_json(upload_dir, upload_url, file_name, schema_url=schema_360.release_schema_url,
+                                        request=request, flatten=request.POST.get('flatten')))
+
+    else:
+        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_360.release_schema_url))
+        with open(context['converted_path'], encoding='utf-8') as fp:
+            json_data = json.load(fp, parse_float=Decimal)
+
+    context = common_checks_360(context, upload_dir, json_data, schema_360)
+
+    if hasattr(json_data, 'get') and hasattr(json_data.get('grants'), '__iter__'):
+        context['grants'] = json_data['grants']
+    else:
+        context['grants'] = []
+
+    context['first_render'] = not db_data.rendered
+    if not db_data.rendered:
+        db_data.rendered = True
+    db_data.save()
+
     return render(request, template, context)
 
 

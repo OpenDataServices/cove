@@ -12,13 +12,13 @@ def fake_cove_middleware(request):
 
 @pytest.mark.django_db
 def test_input(rf):
-    resp = v.input(fake_cove_middleware(rf.get('/')))
+    resp = v.data_input(fake_cove_middleware(rf.get('/')))
     assert resp.status_code == 200
 
 
 @pytest.mark.django_db
 def test_input_post(rf):
-    resp = v.input(fake_cove_middleware(rf.post('/', {
+    resp = v.data_input(fake_cove_middleware(rf.post('/', {
         'source_url': 'https://raw.githubusercontent.com/OpenDataServices/flatten-tool/master/flattentool/tests/fixtures/tenders_releases_2_releases.json'
     })))
     assert resp.status_code == 302
@@ -29,12 +29,12 @@ def test_input_post(rf):
 
 @pytest.mark.django_db
 def test_connection_error(rf):
-    resp = v.input(fake_cove_middleware(rf.post('/', {
+    resp = v.data_input(fake_cove_middleware(rf.post('/', {
         'source_url': 'http://localhost:1234'
     })))
     assert b'Connection refused' in resp.content
 
-    resp = v.input(fake_cove_middleware(rf.post('/', {
+    resp = v.data_input(fake_cove_middleware(rf.post('/', {
         'source_url': 'https://wrong.host.badssl.com/'
     })))
     assert b'doesn\'t match either of' in resp.content
@@ -42,7 +42,7 @@ def test_connection_error(rf):
 
 @pytest.mark.django_db
 def test_http_error(rf):
-    resp = v.input(fake_cove_middleware(rf.post('/', {
+    resp = v.data_input(fake_cove_middleware(rf.post('/', {
         'source_url': 'http://google.co.uk/cove'
     })))
     assert b'Not Found' in resp.content
@@ -53,7 +53,7 @@ def test_extension_from_content_type(rf, httpserver):
     httpserver.serve_content('{}', headers={
         'content-type': 'text/csv'
     })
-    v.input(fake_cove_middleware(rf.post('/', {
+    v.data_input(fake_cove_middleware(rf.post('/', {
         'source_url': httpserver.url
     })))
     supplied_datas = SuppliedData.objects.all()
@@ -66,7 +66,7 @@ def test_extension_from_content_disposition(rf, httpserver):
     httpserver.serve_content('{}', headers={
         'content-disposition': 'attachment; filename="something.csv"'
     })
-    v.input(fake_cove_middleware(rf.post('/', {
+    v.data_input(fake_cove_middleware(rf.post('/', {
         'source_url': httpserver.url
     })))
     supplied_datas = SuppliedData.objects.all()
@@ -80,7 +80,7 @@ def test_directory_for_empty_filename(rf):
     Check that URLs ending in / correctly create a directory, to test against
     regressions of https://github.com/OpenDataServices/cove/issues/426
     '''
-    v.input(fake_cove_middleware(rf.post('/', {
+    v.data_input(fake_cove_middleware(rf.post('/', {
         'source_url': 'http://example.org/'
     })))
     supplied_datas = SuppliedData.objects.all()

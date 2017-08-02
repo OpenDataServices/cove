@@ -41,7 +41,7 @@ Steps above need redoing for additional commits.
 
 After merge:
 - [ ] Run salt highstate on `cove-360-live`
-- [ ] Check that the correct commit has been deployed using the link in the footer http://cove.opendataservices.coop/
+- [ ] Check that the correct commit has been deployed using the link in the footer http://dataquality.threesixtygiving.org/
 - [ ] Run `BROWSER=PhantomJS CUSTOM_SERVER_URL=https://dataquality.threesixtygiving.org/ DJANGO_SETTINGS_MODULE=cove_360.settings py.test cove_360/tests_functional.py` on a local copy of the updated live branch
 - [ ] Run salt highstate on `cove-live-ocds`
 - [ ] Check that the correct commit has been deployed using the link in the footer http://standard.open-contracting.org/validator/

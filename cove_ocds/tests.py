@@ -1,5 +1,6 @@
 import json
 import os
+import uuid
 from collections import OrderedDict
 from unittest.mock import patch
 
@@ -7,14 +8,18 @@ import pytest
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
-from django.utils.translation import ugettext_lazy
+from django.core.management import call_command
+from django.core.management.base import CommandError
 
 import cove.lib.common as cove_common
+from . lib.api import context_api_transform, produce_json_output, APIException
 from . lib.ocds import get_releases_aggregates
 from . lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
 
+
+OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
 
 EMPTY_RELEASE_AGGREGATE = {
     'award_doc_count': 0,
@@ -314,9 +319,40 @@ def test_get_schema_deprecated_paths():
 @pytest.mark.parametrize('json_data', [
     # A selection of JSON strings we expect to give a 200 status code, even
     # though some of them aren't valid OCDS
+    'true',
+    'null',
+    '1',
     '{}',
     '[]',
     '[[]]',
+    '{"releases":{}}',
+    '{"releases" : 1.0}',
+    '{"releases" : 2}',
+    '{"releases" : true}',
+    '{"releases" : "test"}',
+    '{"releases" : null}',
+    '{"releases" : {"a":"b"}}',
+    '{"releases" : [["test"]]}',
+    '{"records":{}}',
+    '{"records" : 1.0}',
+    '{"records" : 2}',
+    '{"records" : true}',
+    '{"records" : "test"}',
+    '{"records" : null}',
+    '{"records" : {"a":"b"}}',
+    '{"records" : [["test"]]}',
+    '{"version": "1.1", "releases" : 1.0}',
+    '{"version": "1.1", "releases" : 2}',
+    '{"version": "1.1", "releases" : true}',
+    '{"version": "1.1", "releases" : "test"}',
+    '{"version": "1.1", "releases" : null}',
+    '{"version": "1.1", "releases" : {"version": "1.1", "a":"b"}}',
+    '{"version": "1.1", "records" : 1.0}',
+    '{"version": "1.1", "records" : 2}',
+    '{"version": "1.1", "records" : true}',
+    '{"version": "1.1", "records" : "test"}',
+    '{"version": "1.1", "records" : {"version": "1.1", "a":"b"}}',
+    '{"version": "1.1", "releases":{"buyer":{"additionalIdentifiers":[]}}}',
 ])
 def test_explore_page(client, json_data):
     data = SuppliedData.objects.create()
@@ -329,7 +365,7 @@ def test_explore_page(client, json_data):
 @pytest.mark.django_db
 def test_explore_page_convert(client):
     data = SuppliedData.objects.create()
-    data.original_file.save('test.json', ContentFile('{}'))
+    data.original_file.save('test.json', ContentFile('{"releases":[]}'))
     data.current_app = 'cove_ocds'
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
@@ -375,7 +411,7 @@ def test_explore_unconvertable_spreadsheet(client):
 @pytest.mark.django_db
 def test_explore_unconvertable_json(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove', 'fixtures', 'unconvertable_json.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'unconvertable_json.json')) as fp:
         data.original_file.save('unconvertable_json.json', UploadedFile(fp))
     resp = client.post(data.get_absolute_url(), {'flatten': 'true'})
     assert resp.status_code == 200
@@ -393,7 +429,8 @@ def test_explore_page_null_tag(client):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('json_data', [
-    '{"version": "1.1","releases": [{"ocid": "xx"}]}',
+    '{"version": "1.1", "releases": [{"ocid": "xx"}]}',
+    '{"version": "112233", "releases": [{"ocid": "xx"}]}',
     '{"releases": [{"ocid": "xx"}]}'
 ])
 def test_explore_schema_version(client, json_data):
@@ -403,23 +440,23 @@ def test_explore_schema_version(client, json_data):
 
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
-    if 'version' in json_data:
-        assert '1__1' in resp.context['schema_url']
-        assert resp.context['version_used'] == '1.1'
-        assert resp.context['version_used_display'] == '1.1'
-        resp = client.post(data.get_absolute_url(), {'version': "1.0"})
-        assert resp.status_code == 200
-        assert '1__0__2' in resp.context['schema_url']
-        assert resp.context['version_used'] == '1.0'
-    else:
-        assert '1__0__2' in resp.context['schema_url']
+    if 'version' not in json_data:
+        assert '1__0' in resp.context['schema_url']
         assert resp.context['version_used'] == '1.0'
         assert resp.context['version_used_display'] == '1.0'
         resp = client.post(data.get_absolute_url(), {'version': "1.1"})
         assert resp.status_code == 200
-        assert '1__1' in resp.context['schema_url']
+        assert '1__1__0' in resp.context['schema_url']
+        assert resp.context['version_used'] == '1.1'
+    else:
+        assert '1__1__0' in resp.context['schema_url']
         assert resp.context['version_used'] == '1.1'
         assert resp.context['version_used_display'] == '1.1'
+        resp = client.post(data.get_absolute_url(), {'version': "1.0"})
+        assert resp.status_code == 200
+        assert '1__0' in resp.context['schema_url']
+        assert resp.context['version_used'] == '1.0'
+        assert resp.context['version_used_display'] == '1.0'
 
 
 @pytest.mark.django_db
@@ -429,7 +466,7 @@ def test_wrong_schema_version_in_data(client):
     data.current_app = 'cove_ocds'
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
-    assert resp.context['sub_title'] == ugettext_lazy("Wrong schema version")
+    assert resp.context['version_used'] == OCDS_DEFAULT_SCHEMA_VERSION
 
 
 @pytest.mark.django_db
@@ -458,7 +495,7 @@ def test_explore_schema_version_change(client, file_type, converter, replace_aft
         assert resp.status_code == 200
         assert resp.context['version_used'] == '1.1'
         assert mock_object.called
-        assert '1__1' in kwargs['schema_url']
+        assert '1__1__0' in kwargs['schema_url']
         assert kwargs['replace'] is replace_after_post
 
 
@@ -559,19 +596,18 @@ def test_get_additional_codelist_values():
 @pytest.mark.parametrize(('select_version', 'release_data', 'version', 'invalid_version_argument',
                           'invalid_version_data', 'extensions'), [
     (None, None, DEFAULT_OCDS_VERSION, False, False, {}),
-    ('1.1', None, '1.1', False, False, {}),
+    ('1.0', None, '1.0', False, False, {}),
     (None, {'version': '1.1'}, '1.1', False, False, {}),
-    (None, {'extensions': ['c', 'd']}, DEFAULT_OCDS_VERSION, False, False, {'c': (), 'd': ()}),
-    ('1.1', {'version': '1.0'}, '1.1', False, False, {}),
+    (None, {'version': '1.1', 'extensions': ['c', 'd']}, '1.1', False, False, {'c': (), 'd': ()}),
     ('1.1', {'version': '1.0'}, '1.1', False, False, {}),
     ('1.bad', {'version': '1.1'}, '1.1', True, False, {}),
     ('1.wrong', {'version': '1.bad'}, DEFAULT_OCDS_VERSION, True, True, {}),
     (None, {'version': '1.bad'}, DEFAULT_OCDS_VERSION, False, True, {}),
-    (None, {'extensions': ['a', 'b']}, DEFAULT_OCDS_VERSION, False, False, {'a': (), 'b': ()}),
+    (None, {'extensions': ['a', 'b']}, '1.0', False, False, {'a': (), 'b': ()}),
     (None, {'version': '1.1', 'extensions': ['a', 'b']}, '1.1', False, False, {'a': (), 'b': ()})
 ])
 def test_schema_ocds_constructor(select_version, release_data, version, invalid_version_argument,
-                              invalid_version_data, extensions):
+                                 invalid_version_data, extensions):
     schema = SchemaOCDS(select_version=select_version, release_data=release_data)
     name = settings.COVE_CONFIG['schema_name']['release']
     host = settings.COVE_CONFIG['schema_version_choices'][version][1]
@@ -588,10 +624,10 @@ def test_schema_ocds_constructor(select_version, release_data, version, invalid_
 
 @pytest.mark.parametrize(('release_data', 'extensions', 'invalid_extension', 'extended'), [
     (None, {}, {}, False),
-    ({'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False),
-    ({'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False),
-    ({'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True),
-    ({'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True),
+    ({'version': '1.1', 'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False),
+    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False),
+    ({'version': '1.1', 'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True),
+    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True),
 ])
 def test_schema_ocds_extensions(release_data, extensions, invalid_extension, extended):
     schema = SchemaOCDS(release_data=release_data)
@@ -629,7 +665,7 @@ def test_schema_ocds_extended_release_schema_file():
     assert schema.extended_schema_file == os.path.join(data.upload_dir(), 'extended_release_schema.json')
     assert schema.extended_schema_url == os.path.join(data.upload_url(), 'extended_release_schema.json')
 
-    json_data = json.loads('{"extensions": [], "releases": [{"ocid": "xx"}]}')
+    json_data = json.loads('{"version": "1.1", "extensions": [], "releases": [{"ocid": "xx"}]}')
     schema = SchemaOCDS(release_data=json_data)
     schema.get_release_schema_obj()
     schema.create_extended_release_schema_file(data.upload_dir(), data.upload_url())
@@ -674,6 +710,263 @@ def test_schema_after_version_change(client):
         assert "'version' is missing but required" not in validation_errors_fp.read()
 
 
-def test_corner_cases_for_deprecated_data_fields():
-    ''' TODO '''
-    pass
+@pytest.mark.django_db
+def test_schema_after_version_change_record(client):
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_records_1_record_with_invalid_extensions.json')) as fp:
+        data.original_file.save('test.json', UploadedFile(fp))
+
+    resp = client.post(data.get_absolute_url(), {'version': '1.1'})
+    assert resp.status_code == 200
+
+    # Cove doesn't extend schema for record files (yet). The commented out assertions in this test
+    # are a reminder of that: https://github.com/OpenDataServices/cove/issues/747
+
+    #with open(os.path.join(data.upload_dir(), 'extended_record_schema.json')) as extended_record_fp:
+    #    assert "mainProcurementCategory" in json.load(extended_record_fp)['definitions']['Tender']['properties']
+
+    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+        assert "'version' is missing but required" in validation_errors_fp.read()
+
+    # test link is still there.
+    resp = client.get(data.get_absolute_url())
+    assert resp.status_code == 200
+    #assert 'extended_record_schema.json' in resp.content.decode()
+
+    #with open(os.path.join(data.upload_dir(), 'extended_record_schema.json')) as extended_record_fp:
+    #    assert "mainProcurementCategory" in json.load(extended_record_fp)['definitions']['Tender']['properties']
+
+    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+        assert "'version' is missing but required" in validation_errors_fp.read()
+
+    resp = client.post(data.get_absolute_url(), {'version': '1.0'})
+    assert resp.status_code == 200
+
+    #with open(os.path.join(data.upload_dir(), 'extended_record_schema.json')) as extended_record_fp:
+    #    assert "mainProcurementCategory" not in json.load(extended_record_fp)['definitions']['Tender']['properties']
+
+    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+        assert "'version' is missing but required" not in validation_errors_fp.read()
+
+
+@pytest.mark.parametrize('json_data', [
+    '{"version":"1.1", "releases":{"buyer":{"additionalIdentifiers":[]}, "initiationType": "tender"}}',
+    # TODO: add more ...
+])
+def test_corner_cases_for_deprecated_data_fields(json_data):
+    data = json.loads(json_data)
+    schema = SchemaOCDS(release_data=data)
+    deprecated_fields = cove_common.get_json_data_deprecated_fields(data, schema)
+
+    assert deprecated_fields['additionalIdentifiers']['explanation'][0] == '1.1'
+    assert 'parties section at the top level of a release' in deprecated_fields['additionalIdentifiers']['explanation'][1]
+    assert deprecated_fields['additionalIdentifiers']['paths'] == ('releases/buyer',)
+    assert len(deprecated_fields.keys()) == 1
+    assert len(deprecated_fields['additionalIdentifiers']['paths']) == 1
+
+
+def test_context_api_transform_validation_additional_fields():
+    context = {
+        'validation_errors': [['[\"type_a\", \"description_a\", \"field_a\"]', [{'path': 'path_to_a', 'value': 'a_value'}]],
+                              ['[\"type_b\", \"description_b\", \"field_b\"]', [{'path': 'path_to_b', 'value': ''}]],
+                              ['[\"type_c\", \"description_c\", \"field_c\"]', [{'path': 'path_to_c'}]]],
+        'data_only': [['path_to_d', 'field_d', 1],
+                      ['path_to_e', 'field_e', 2],
+                      ['path_to_f', 'field_f', 3]],
+        'additional_fields_count': 6,
+        'validation_errors_count': 3
+    }
+    expected_context = {
+        'additional_fields': [{'field': 'field_d', 'path': 'path_to_d', 'usage_count': 1},
+                              {'field': 'field_e', 'path': 'path_to_e', 'usage_count': 2},
+                              {'field': 'field_f', 'path': 'path_to_f', 'usage_count': 3}],
+        'deprecated_fields': [],
+        'extensions': {},
+        'validation_errors': [{'description': 'description_a', 'field': 'field_a', 'path': 'path_to_a', 'type': 'type_a', 'value': 'a_value'},
+                              {'description': 'description_b', 'field': 'field_b', 'path': 'path_to_b', 'type': 'type_b', 'value': ''},
+                              {'description': 'description_c', 'field': 'field_c', 'path': 'path_to_c', 'type': 'type_c', 'value': ''}]
+    }
+    transform_context = context_api_transform(context)
+
+    validation_errors = zip(transform_context['validation_errors'], expected_context['validation_errors'])
+    for result in validation_errors:
+        assert len(result[0]) == len(result[1])
+        for k, v in result[0].items():
+            assert result[1][k] == v
+    assert len(transform_context['validation_errors']) == len(expected_context['validation_errors'])
+
+    additional_fields = zip(transform_context['additional_fields'], expected_context['additional_fields'])
+    for result in additional_fields:
+        assert len(result[0]) == len(result[1])
+        for k, v in result[0].items():
+            assert result[1][k] == v
+    assert len(transform_context['additional_fields']) == len(expected_context['additional_fields'])
+
+    assert transform_context['extensions'] == expected_context['extensions']
+    assert transform_context['deprecated_fields'] == expected_context['deprecated_fields']
+    assert 'validation_errors_count' not in transform_context.keys()
+    assert 'additional_fields_count' not in transform_context.keys()
+    assert 'data_only' not in transform_context.keys()
+
+
+def test_context_api_transform_extensions():
+    '''Expected result for extensions after trasform:
+
+    'extensions': {
+        'extended_schema_url': 'extended_release_schema.json',
+        'extensions': [{'description': 'description_a', 'documentationUrl': 'documentation_a', 'name': 'a', 'url': 'url_a'},
+                       {'description': 'description_b', 'documentationUrl': 'documentation_b', 'name': 'b', 'url': 'url_b'},
+                       {'description': 'description_c', 'documentationUrl': 'documentation_c', 'name': 'c', 'url': 'url_c'},
+                       {'description': 'description_d', 'documentationUrl': 'documentation_d', 'name': 'd', 'url': 'url_d'}],
+        'invalid_extensions': [['bad_url_x', 'x_error_msg'],
+                               ['bad_url_z', 'z_error_msg'],
+                               ['bad_url_y', 'y_error_msg']],
+        'is_extended_schema': True
+    }
+    '''
+    context = {
+        'extensions': {
+            'is_extended_schema': True,
+            'invalid_extension': {'bad_url_x': 'x_error_msg', 'bad_url_y': 'y_error_msg', 'bad_url_z': 'z_error_msg'},
+            'extensions': {
+                'url_a': {'description': 'description_a', 'url': 'url_a', 'documentationUrl': 'documentation_a', 'name': 'a'},
+                'url_b': {'description': 'description_b', 'url': 'url_b', 'documentationUrl': 'documentation_b', 'name': 'b'},
+                'url_c': {'description': 'description_c', 'url': 'url_c', 'documentationUrl': 'documentation_c', 'name': 'c'},
+                'url_d': {'description': 'description_d', 'url': 'url_d', 'documentationUrl': 'documentation_d', 'name': 'd'},
+                'bad_url_x': [],
+                'bad_url_y': [],
+                'bad_url_z': []
+            },
+            'extended_schema_url': 'extended_release_schema.json'
+        },
+        'validation_errors_count': 0,
+        'additional_fields_count': 0,
+        'data_only': [],
+        'deprecated_fields': []
+    }
+
+    transformed_ext_context = context_api_transform(context)['extensions']
+
+    assert isinstance(transformed_ext_context['extensions'], list)
+    assert len(transformed_ext_context['extensions']) == 4
+    for extension in transformed_ext_context['extensions']:
+        assert len(extension) == 4
+
+    assert len(transformed_ext_context['invalid_extensions']) == 3
+    for inv_extension in transformed_ext_context['invalid_extensions']:
+        assert len(inv_extension) == 2
+        for extension in transformed_ext_context['extensions']:
+            assert extension['url'] != inv_extension[0]
+
+    assert transformed_ext_context['is_extended_schema'] == context['extensions']['is_extended_schema']
+    assert transformed_ext_context['extended_schema_url'] == context['extensions']['extended_schema_url']
+
+
+def test_context_api_transform_deprecations():
+    '''Expected result for deprecated field after trasform:
+
+    'deprecated_fields': [
+        {"field": "a", "paths": ["path_to_a/0/a", "path_to_a/1/a"], "explanation": ["1.1", "description_a"]},
+        {"field": "b", "paths": ["path_to_b/0/b", "path_to_b/1/b"], "explanation": ["1.1", "description_b"]}
+    ]
+    '''
+    context = {
+        "deprecated_fields": {
+            "a": {"paths": ["path_to_a/0/a", "path_to_a/1/a"], "explanation": ["1.1", "description_a"]},
+            "b": {"paths": ["path_to_b/0/b", "path_to_b/1/b"], "explanation": ["1.1", "description_b"]}
+        },
+        'validation_errors': [],
+        'validation_errors_count': 0,
+        'data_only': [],
+        'additional_fields_count': 0,
+        'extensions': {},
+    }
+
+    transformed_depr_context = context_api_transform(context)['deprecated_fields']
+
+    assert isinstance(transformed_depr_context, list)
+    assert len(transformed_depr_context) == 2
+
+    for deprecated_field in transformed_depr_context:
+        assert isinstance(deprecated_field, dict)
+        assert len(deprecated_field) == 3
+        assert len(deprecated_field['paths']) == 2
+        assert len(deprecated_field['explanation']) == 2
+        assert deprecated_field.get('field')
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize('json_data', ['{[,]}', '{"version": "1.bad"}'])
+def test_produce_json_output_bad_data(json_data):
+    data = SuppliedData.objects.create()
+    data.original_file.save('bad_data.json', ContentFile(json_data))
+    with pytest.raises(APIException):
+        produce_json_output(data.upload_dir(), data.original_file.file.name, schema_version='', convert=False)
+
+
+@pytest.mark.parametrize(('file_type', 'options', 'output'), [
+    ('json', {}, ['results.json', 'tenders_releases_2_releases.json']),
+    ('xlsx', {}, ['results.json', 'tenders_releases_2_releases.xlsx', 'metatab.json', 'unflattened.json']),
+    ('json', {'convert': True}, ['results.json', 'tenders_releases_2_releases.json', 'flattened.xlsx', 'flattened']),
+    ('xlsx', {'convert': True}, ['results.json', 'tenders_releases_2_releases.xlsx', 'metatab.json', 'unflattened.json']),
+    ('json', {'exclude_file': True}, ['results.json']),
+    ('xlsx', {'exclude_file': True}, ['results.json', 'metatab.json', 'unflattened.json']),
+])
+def test_cove_ocds_cli(file_type, options, output):
+    test_dir = str(uuid.uuid4())
+    file_name = os.path.join('cove_ocds', 'fixtures', '{}.{}'.format('tenders_releases_2_releases', file_type))
+    output_dir = os.path.join('media', test_dir)
+    options['output_dir'] = output_dir
+
+    call_command('cove_ocds', file_name, **options)
+    assert sorted(os.listdir(output_dir)) == sorted(output)
+
+    # Test --delete option for one of the cases
+    if not options:
+        call_command('cove_ocds', file_name, delete=True, output_dir=output_dir)
+        assert sorted(os.listdir(output_dir)) == sorted(output)
+
+        with pytest.raises(SystemExit):
+            call_command('cove_ocds', file_name, output_dir=output_dir)
+
+
+@pytest.mark.parametrize('version_option', ['', '1.1', '100.100.100'])
+def test_cove_ocds_cli_schema_version(version_option):
+    test_dir = str(uuid.uuid4())
+    file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases.json')
+    output_dir = os.path.join('media', test_dir)
+
+    if version_option == '100.100.100':
+        with pytest.raises(CommandError):
+            call_command('cove_ocds', file_name, schema_version=version_option, output_dir=output_dir)
+
+    else:
+        call_command('cove_ocds', file_name, schema_version=version_option, output_dir=output_dir)
+        with open(os.path.join(output_dir, 'results.json')) as fp:
+            results = json.load(fp)
+            # 1.0 by default is expected behaviour as tenders_releases_2_releases.json
+            # does not include a "version" field
+            assert results['version_used'] == version_option or '1.0'
+
+
+@pytest.mark.parametrize(('file_name', 'version_option'), [
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0'),
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', '1.0')
+])
+def test_cove_ocds_cli_schema_version_override(file_name, version_option):
+    test_dir = str(uuid.uuid4())
+    file_path = os.path.join('cove_ocds', 'fixtures', file_name)
+    output_dir = os.path.join('media', test_dir)
+    call_command('cove_ocds', file_path, schema_version=version_option, output_dir=output_dir)
+
+    with open(os.path.join(output_dir, 'results.json')) as fp:
+        results = json.load(fp)
+    assert results['version_used'] == version_option
+
+    if os.path.exists(os.path.join(output_dir, 'metatab.json')):
+        with open(os.path.join(output_dir, 'metatab.json')) as fp:
+            version_in_data = json.load(fp)['version']
+    else:
+        with open(os.path.join(output_dir, file_name)) as fp:
+            version_in_data = json.load(fp)['version']
+    assert version_in_data == '1.1'
