@@ -1,6 +1,7 @@
 import os
 import time
 import pytest
+import requests
 from selenium import webdriver
 
 BROWSER = os.environ.get('BROWSER', 'Firefox')
@@ -59,6 +60,8 @@ def test_accordion(server_url, browser):
     ('bad_spaces.csv', ['Converted to XML 2 Errors'], True),
     # We should not server error when there's fields not in the schema
     ('not_iati.csv', ['Data Supplied', 'Invalid against Schema'], True),
+    ('namespace_good.xlsx', ['Converted to XML', 'Invalid against Schema', '2 Errors'], True),
+    ('namespace_bad.xlsx', ['Converted to XML', 'Invalid against Schema', "'iati-activity', attribute 'test2': The attribute 'test2' is not allowed.", '3 Errors'], True),
 ])
 def test_explore_iati_url_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
     with open(os.path.join('cove_iati', 'fixtures', source_filename), 'rb') as fp:
@@ -111,3 +114,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
     if conversion_successful:
         assert 'Converted to XML' in body_text
+
+    if source_filename == 'namespace_good.xlsx':
+        converted_file = browser.find_element_by_link_text("XML (Converted from Original)").get_attribute("href")
+        assert requests.get(converted_file).text == '<iati-activities><iati-activity xmlns:myns="http://example.org" myns:test2="3"><myns:test>1</myns:test><test2>2</test2></iati-activity></iati-activities>'
