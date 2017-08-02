@@ -45,7 +45,7 @@ After merge:
 - [ ] Run `BROWSER=PhantomJS CUSTOM_SERVER_URL=https://dataquality.threesixtygiving.org/ DJANGO_SETTINGS_MODULE=cove_360.settings py.test cove_360/tests_functional.py` on a local copy of the updated live branch
 - [ ] Run salt highstate on `cove-live-ocds`
 - [ ] Check that the correct commit has been deployed using the link in the footer http://standard.open-contracting.org/validator/
-- [ ] Run `BROWSER=PhantomJS CUSTOM_SERVER_URL=http://dev.cove.opendataservices.coop/ DJANGO_SETTINGS_MODULE=cove_ocds.settings py.test cove_ocds/tests_functional.py` on a local copy of the updated live branch
+- [ ] Run `BROWSER=PhantomJS CUSTOM_SERVER_URL=http://standard.open-contracting.org/ DJANGO_SETTINGS_MODULE=cove_ocds.settings py.test cove_ocds/tests_functional.py` on a local copy of the updated live branch
 - [ ] Check that changes on live are merged back into master too
 ```
 
