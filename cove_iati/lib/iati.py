@@ -165,15 +165,21 @@ def get_ruleset_errors(lxml_etree, output_dir):
             scenario_outline = re.sub(r':', '/', output_file[:-7]).split('_')
             for line in fp:
                 line = line.strip()
+
                 if line:
-                    if not line.startswith('and '):
-                        rule_error = {
-                            'path': scenario_outline.pop(0),
-                            'rule': ' '.join(scenario_outline),
-                            'explanation': line
-                        }
-                    else:
-                        rule_error['explanation'] = '{} {}'.format(rule_error['explanation'], line)
+                    print('------------------>  ', line)
+                    json_line = json.loads(line)
+                    message = json_line['message']
+                    activity_id = json_line['id']
+                    if message.startswith('and') or message.startswith('or'):
+                        ruleset_errors[-1]['explanation'] += ' {}'.format(message)
+                        continue
+                    rule_error = {
+                        'path': scenario_outline[1],
+                        'rule': ' '.join(scenario_outline[1:]),
+                        'message': message,
+                        'id': activity_id
+                    }
                     ruleset_errors.append(rule_error)
 
     return ruleset_errors
