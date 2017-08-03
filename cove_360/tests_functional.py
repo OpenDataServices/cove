@@ -8,15 +8,21 @@ import os
 import flattentool
 import warnings
 from flattentool.exceptions import DataErrorWarning
+from selenium.webdriver.chrome.options import Options
 
-BROWSER = os.environ.get('BROWSER', 'Firefox')
+BROWSER = os.environ.get('BROWSER', 'Chrome')
 
 PREFIX_360 = os.environ.get('PREFIX_360', '/')
 
 
 @pytest.fixture(scope="module")
 def browser(request):
-    browser = getattr(webdriver, BROWSER)()
+    if BROWSER == 'Chrome':
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        browser = getattr(webdriver, BROWSER)(chrome_options=chrome_options)
+    else:
+        browser = getattr(webdriver, BROWSER)()
     browser.implicitly_wait(3)
     request.addfinalizer(lambda: browser.quit())
     return browser
