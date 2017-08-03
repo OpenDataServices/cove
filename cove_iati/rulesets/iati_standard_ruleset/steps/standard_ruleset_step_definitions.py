@@ -20,7 +20,7 @@ def step_impl(context):
 
 
 @then('`{xpath_expression}` should be present')
-def step_should_be_present(context, xpath_expression):
+def step_impl(context, xpath_expression):
     vals = context.xml.xpath(xpath_expression)
     if not vals:
         msg = '`{}` not found'.format(xpath_expression)
@@ -28,7 +28,7 @@ def step_should_be_present(context, xpath_expression):
 
 
 @then('every `{xpath_expression}` should match the regex `{regex_str}`')
-def step_match_regex(context, xpath_expression, regex_str):
+def step_impl(context, xpath_expression, regex_str):
     vals = context.xml.xpath(xpath_expression)
     regex = re.compile(regex_str)
     success = True
@@ -44,7 +44,7 @@ def step_match_regex(context, xpath_expression, regex_str):
 
 
 @given('`{xpath_expression}` is present')
-def step_is_present(context, xpath_expression):
+def step_impl(context, xpath_expression):
     vals = context.xml.xpath(xpath_expression)
     if vals:
         assert True
@@ -54,7 +54,7 @@ def step_is_present(context, xpath_expression):
 
 
 @then('`{xpath_expression}` should not be present')
-def step_should_not_be_present(context, xpath_expression):
+def step_impl(context, xpath_expression):
     vals = context.xml.xpath(xpath_expression)
     if not vals:
         assert True
@@ -64,7 +64,7 @@ def step_should_not_be_present(context, xpath_expression):
 
 
 @given('`{xpath_expression}` is a valid date')
-def step_valid_date(context, xpath_expression):
+def step_impl(context, xpath_expression):
     vals = context.xml.xpath(xpath_expression)
     for val in vals:
         try:
@@ -79,7 +79,7 @@ def step_valid_date(context, xpath_expression):
 
 
 @then('`{xpath_expression1}` should be chronologically before `{xpath_expression2}`')
-def step_should_be_earlier(context, xpath_expression1, xpath_expression2):
+def step_impl(context, xpath_expression1, xpath_expression2):
     less_str = context.xml.xpath(xpath_expression1)[0]
     more_str = context.xml.xpath(xpath_expression2)[0]
     less = datetime.strptime(less_str, '%Y-%m-%d').date()
@@ -91,7 +91,7 @@ def step_should_be_earlier(context, xpath_expression1, xpath_expression2):
 
 
 @then('`{xpath_expression}` should be today, or in the past')
-def step_should_be_past(context, xpath_expression):
+def step_impl(context, xpath_expression):
     val = context.xml.xpath(xpath_expression)[0]
     date = datetime.strptime(val, '%Y-%m-%d').date()
 
@@ -101,7 +101,7 @@ def step_should_be_past(context, xpath_expression):
 
 
 @then('either `{xpath_expression1}` or `{xpath_expression2}` {statement}')
-def step_either_or(context, xpath_expression1, xpath_expression2, statement):
+def step_impl(context, xpath_expression1, xpath_expression2, statement):
     xpath_expressions = [xpath_expression1, xpath_expression2]
     tmpl = 'then `{{expression}}` {statement}'.format(statement=statement)
     exceptions = []

@@ -23,7 +23,7 @@
           <span class="pull-right glyphicon glyphicon-collapse-{% if conversion == 'flattenable' %}up{% else %}down{% endif %}"></span>
         </h3>
       </div>
-      <div id="data-supplied-body" class="collapse {% if conversion == 'flattenable' %}in{% endif %}">
+      <div id="data-supplied-body" class="collapse in">
         <div class="panel-body">
            <p class="explanation">
              {% trans "A file was " %} 
@@ -34,8 +34,6 @@
              {% endif %}
              {% trans "on " %} {{created_date}}.
            </p>
-           <br>
-           <div class="explore-help"> If anything looks wrong with this data please use the <em>Review</em> section below to identify potential issues. </div>
         </div>
       </div>
     </div>
