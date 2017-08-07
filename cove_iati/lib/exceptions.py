@@ -4,6 +4,7 @@ import json
 class RuleSetStepException(Exception):
     def __init__(self, context, errors=''):
         self.errors = errors
+        self.id = ''
         try:
             self.id = context.xml.xpath('iati-identifier/text()')[0]
         except:

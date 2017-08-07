@@ -2,4 +2,3 @@
 -e git+https://github.com/pwyf/bdd-tester.git#egg=bdd-tester
 lxml==3.8.0
 defusedxml==0.5.0
-behave==1.2.5

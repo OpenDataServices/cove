@@ -53,7 +53,10 @@ def datetime_or_date(instance):
 
 
 def get_file_type(file):
-    name = file.name.lower()
+    if isinstance(file, str):
+        name = file.lower()
+    else:
+        name = file.name.lower()
     if name.endswith('.json'):
         return 'json'
     elif name.endswith('.xlsx'):

@@ -12,7 +12,7 @@
         <h4 class="panel-title">{% trans 'Headlines' %}</h4>
       </div>
       <div class="panel-body">
-        
+
         {% if conversion_warning_messages or conversion_warning_messages_titles %}
           <div class="conversion message"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>{% blocktrans %}Please read the <a href="#conversion-warning">conversion warnings</a> below.{% endblocktrans %}</div>
         {% endif %} 
@@ -80,12 +80,6 @@
 {% endwith %}
 {% endblock %}
 
-
-
-
-
-
-
 {% block explore_additional_content %}
 <div class="row">
   {% if schema_url %}
@@ -147,8 +141,8 @@
         <tr>
           <td>{{ record.ocid }}</td>
           <td>{{ record.releases|length }}</td>
-          <td>{% if record.compiledRelease %}Yes{% else %}No{% endif %}</td>          
-          <td>{% if record.versionedRelease %}Yes{% else %}No{% endif %}</td>          
+          <td>{% if record.compiledRelease %}Yes{% else %}No{% endif %}</td>
+          <td>{% if record.versionedRelease %}Yes{% else %}No{% endif %}</td>
         </tr>
         {% endfor %}
       </tbody>
