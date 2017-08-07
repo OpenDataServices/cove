@@ -19,13 +19,6 @@ def step_impl(context):
     assert True
 
 
-@then('`{xpath_expression}` should be present')
-def step_impl(context, xpath_expression):
-    vals = context.xml.xpath(xpath_expression)
-    if not vals:
-        msg = '`{}` not found'.format(xpath_expression)
-        raise RuleSetStepException(context, msg)
-
 
 @then('every `{xpath_expression}` should match the regex `{regex_str}`')
 def step_impl(context, xpath_expression, regex_str):
@@ -39,43 +32,56 @@ def step_impl(context, xpath_expression, regex_str):
             bad_vals.append(val)
     if not success:
         verb = 'does' if len(bad_vals) == 1 else 'do'
-        msg = '{} {} not match the regex `{}`'.format(', '.join(bad_vals), verb, regex_str)
-        raise RuleSetStepException(context, msg)
+        errors = [{
+            'message': '{} {} not match the regex `{}`'.format(', '.join(bad_vals), verb, regex_str),
+            'path': xpath_expression
+        }]
+        raise RuleSetStepException(context, errors)
 
 
 @given('`{xpath_expression}` is present')
 def step_impl(context, xpath_expression):
     vals = context.xml.xpath(xpath_expression)
-    if vals:
-        assert True
-    else:
-        msg = '`{}` is not present'.format(xpath_expression)
-        raise RuleSetStepException(context, msg)
+    if not vals:
+        errors = [{
+            'message': '`{}` is not present'.format(xpath_expression),
+            'path': xpath_expression
+        }]
+        raise RuleSetStepException(context, errors)
 
 
 @then('`{xpath_expression}` should not be present')
 def step_impl(context, xpath_expression):
     vals = context.xml.xpath(xpath_expression)
-    if not vals:
-        assert True
-    else:
-        msg = '`{}` is present when it shouldn\'t be'.format(xpath_expression)
-        raise RuleSetStepException(context, msg)
+    if vals:
+        errors = [{
+            'message': '`{}` is present when it shouldn\'t be'.format(xpath_expression),
+            'path': xpath_expression
+        }]
+        raise RuleSetStepException(context, errors)
 
 
 @given('`{xpath_expression}` is a valid date')
 def step_impl(context, xpath_expression):
     vals = context.xml.xpath(xpath_expression)
+    errors = []
+    if not vals:
+        errors.append({
+            'message': '`{}` not found'.format(xpath_expression),
+            'path': xpath_expression
+        })
+        raise RuleSetStepException(context, errors)
+
     for val in vals:
         try:
             datetime.strptime(val, '%Y-%m-%d')
-            assert True
-            return
         except ValueError:
-            msg = '"{}" is not a valid date'.format(val)
-            raise RuleSetStepException(context, msg)
-    msg = '`{}` not found'.format(xpath_expression)
-    raise RuleSetStepException(context, msg)
+            errors = [{
+                'messsage': '`{}` is not a valid date'.format(val),
+                'path': xpath_expression
+            }]
+            raise RuleSetStepException(context, errors)
+
 
 
 @then('`{xpath_expression1}` should be chronologically before `{xpath_expression2}`')
@@ -86,35 +92,40 @@ def step_impl(context, xpath_expression1, xpath_expression2):
     more = datetime.strptime(more_str, '%Y-%m-%d').date()
 
     if less > more:
-        msg = '{} should be before {}'.format(less_str, more_str)
-        raise RuleSetStepException(context, msg)
+        errors = [{
+            'message': '{} should be before {}'.format(less_str, more_str),
+            'path': ''
+        }]
+        raise RuleSetStepException(context, errors)
 
 
 @then('`{xpath_expression}` should be today, or in the past')
 def step_impl(context, xpath_expression):
-    val = context.xml.xpath(xpath_expression)[0]
-    date = datetime.strptime(val, '%Y-%m-%d').date()
+    values = context.xml.xpath(xpath_expression)
+    fail = False
 
-    if date > context.today:
-        msg = '{} should be on or before today ({})'.format(date, context.today)
-        raise RuleSetStepException(context, msg)
+    if values:
+        errors = []
+        tree = context.xml.getroottree()
+        for val in values:
+            date = datetime.strptime(val, '%Y-%m-%d').date()
+            if date > context.today:
+                errors.append({
+                    'message': '{} should be on or before today ({})'.format(date, context.today),
+                    'path': tree.getpath(val.getparent())
+                })
+                fail = True
+
+    if fail:
+        raise RuleSetStepException(context, errors)
 
 
-@then('either `{xpath_expression1}` or `{xpath_expression2}` {statement}')
-def step_impl(context, xpath_expression1, xpath_expression2, statement):
-    xpath_expressions = [xpath_expression1, xpath_expression2]
-    tmpl = 'then `{{expression}}` {statement}'.format(statement=statement)
-    exceptions = []
-
-    for xpath_expression in xpath_expressions:
-        try:
-            context.execute_steps(tmpl.format(expression=xpath_expression))
-            assert True
-            return
-        except AssertionError as e:
-            msg = str(e).split('RuleSetStepException: ')[1]
-            exceptions.append(msg)
-
-    exception_messages = [json.loads(exception.strip())['message'] for exception in exceptions]
-    msg = ' and '.join(exception_messages)
-    raise RuleSetStepException(context, msg)
+@then('either `{xpath_expression1}` or `{xpath_expression2}` should be present')
+def step_impl(context, xpath_expression1, xpath_expression2):
+    vals = context.xml.xpath(xpath_expression1) or context.xml.xpath(xpath_expression2)
+    if not vals:
+        errors = [{
+            'message': '`{}` and `{}` not found'.format(xpath_expression1, xpath_expression2),
+            'path': ''
+        }]
+        raise RuleSetStepException(context, errors)

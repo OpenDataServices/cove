@@ -168,17 +168,18 @@ def get_ruleset_errors(lxml_etree, output_dir):
 
                 if line:
                     json_line = json.loads(line)
-                    message = json_line['message']
-                    activity_id = json_line['id']
-                    if message.startswith('and') or message.startswith('or'):
-                        ruleset_errors[-1]['explanation'] += ' {}'.format(message)
-                        continue
-                    rule_error = {
-                        'path': scenario_outline[0],
-                        'rule': ' '.join(scenario_outline[1:]),
-                        'message': message,
-                        'id': activity_id
-                    }
-                    ruleset_errors.append(rule_error)
+                    for error in json_line['errors']:
+                        message = error['message']
+                        activity_id = json_line['id']
+                        if message.startswith('and') or message.startswith('or'):
+                            ruleset_errors[-1]['message'] += ' {}'.format(message)
+                            continue
+                        rule_error = {
+                            'path': error['path'] or scenario_outline[0],
+                            'rule': ' '.join(scenario_outline[1:]),
+                            'message': message,
+                            'id': activity_id
+                        }
+                        ruleset_errors.append(rule_error)
 
     return ruleset_errors
