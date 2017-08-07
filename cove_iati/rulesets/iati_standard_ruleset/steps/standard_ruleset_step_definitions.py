@@ -4,7 +4,6 @@ Released under MIT License
 License: https://github.com/pwyf/bdd-tester/blob/master/LICENSE
 '''
 from datetime import datetime
-import json
 import re
 
 from behave import given, then
@@ -13,15 +12,14 @@ from cove_iati.lib.exceptions import RuleSetStepException
 
 
 @given('an IATI activity')
-def step_impl(context):
+def step_given_iati_activity(context):
     # this is a dummy step. It's here because
     # behave / BDD requires at least one 'given' step.
     assert True
 
 
-
 @then('every `{xpath_expression}` should match the regex `{regex_str}`')
-def step_impl(context, xpath_expression, regex_str):
+def step_match_regex(context, xpath_expression, regex_str):
     vals = context.xml.xpath(xpath_expression)
     regex = re.compile(regex_str)
     success = True
@@ -40,7 +38,7 @@ def step_impl(context, xpath_expression, regex_str):
 
 
 @given('`{xpath_expression}` is present')
-def step_impl(context, xpath_expression):
+def step_given_present(context, xpath_expression):
     vals = context.xml.xpath(xpath_expression)
     if not vals:
         errors = [{
@@ -51,7 +49,7 @@ def step_impl(context, xpath_expression):
 
 
 @then('`{xpath_expression}` should not be present')
-def step_impl(context, xpath_expression):
+def step_should_not_be_present(context, xpath_expression):
     vals = context.xml.xpath(xpath_expression)
     if vals:
         errors = [{
@@ -62,7 +60,7 @@ def step_impl(context, xpath_expression):
 
 
 @given('`{xpath_expression}` is a valid date')
-def step_impl(context, xpath_expression):
+def step_valid_date(context, xpath_expression):
     vals = context.xml.xpath(xpath_expression)
     errors = []
     if not vals:
@@ -83,9 +81,8 @@ def step_impl(context, xpath_expression):
             raise RuleSetStepException(context, errors)
 
 
-
 @then('`{xpath_expression1}` should be chronologically before `{xpath_expression2}`')
-def step_impl(context, xpath_expression1, xpath_expression2):
+def step_should_be_before(context, xpath_expression1, xpath_expression2):
     less_str = context.xml.xpath(xpath_expression1)[0]
     more_str = context.xml.xpath(xpath_expression2)[0]
     less = datetime.strptime(less_str, '%Y-%m-%d').date()
@@ -100,7 +97,7 @@ def step_impl(context, xpath_expression1, xpath_expression2):
 
 
 @then('`{xpath_expression}` should be today, or in the past')
-def step_impl(context, xpath_expression):
+def step_should_be_past(context, xpath_expression):
     values = context.xml.xpath(xpath_expression)
     fail = False
 
@@ -121,7 +118,7 @@ def step_impl(context, xpath_expression):
 
 
 @then('either `{xpath_expression1}` or `{xpath_expression2}` should be present')
-def step_impl(context, xpath_expression1, xpath_expression2):
+def step_should_be_present(context, xpath_expression1, xpath_expression2):
     vals = context.xml.xpath(xpath_expression1) or context.xml.xpath(xpath_expression2)
     if not vals:
         errors = [{
