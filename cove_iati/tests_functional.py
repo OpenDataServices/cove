@@ -5,15 +5,15 @@ import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-BROWSER = os.environ.get('BROWSER', 'Chrome')
+BROWSER = os.environ.get('BROWSER', 'ChromeHeadless')
 
 
 @pytest.fixture(scope="module")
 def browser(request):
-    if BROWSER == 'Chrome':
+    if BROWSER == 'ChromeHeadless':
         chrome_options = Options()
         chrome_options.add_argument("--headless")
-        browser = getattr(webdriver, BROWSER)(chrome_options=chrome_options)
+        browser = webdriver.Chrome(chrome_options=chrome_options)
     else:
         browser = getattr(webdriver, BROWSER)()
     browser.implicitly_wait(3)
