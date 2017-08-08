@@ -218,7 +218,7 @@
 
 {% if validation_errors %}
   {% for error, values in validation_errors %}
-     {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type %}
+     {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type full_table=True %}
   {% endfor %}
   
 
