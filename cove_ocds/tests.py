@@ -441,20 +441,20 @@ def test_explore_schema_version(client, json_data):
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
     if 'version' not in json_data:
-        assert '1__0' in resp.context['schema_url']
+        assert '1__0__' in resp.context['schema_url']
         assert resp.context['version_used'] == '1.0'
         assert resp.context['version_used_display'] == '1.0'
         resp = client.post(data.get_absolute_url(), {'version': "1.1"})
         assert resp.status_code == 200
-        assert '1__1__0' in resp.context['schema_url']
+        assert '1__1__' in resp.context['schema_url']
         assert resp.context['version_used'] == '1.1'
     else:
-        assert '1__1__0' in resp.context['schema_url']
+        assert '1__1__' in resp.context['schema_url']
         assert resp.context['version_used'] == '1.1'
         assert resp.context['version_used_display'] == '1.1'
         resp = client.post(data.get_absolute_url(), {'version': "1.0"})
         assert resp.status_code == 200
-        assert '1__0' in resp.context['schema_url']
+        assert '1__0__' in resp.context['schema_url']
         assert resp.context['version_used'] == '1.0'
         assert resp.context['version_used_display'] == '1.0'
 
@@ -486,7 +486,7 @@ def test_explore_schema_version_change(client, file_type, converter, replace_aft
         assert resp.status_code == 200
         assert resp.context['version_used'] == '1.0'
         assert mock_object.called
-        assert '1__0__2' in kwargs['schema_url']
+        assert '1__0__' in kwargs['schema_url']
         assert kwargs['replace'] is False
         mock_object.reset_mock()
 
@@ -495,7 +495,7 @@ def test_explore_schema_version_change(client, file_type, converter, replace_aft
         assert resp.status_code == 200
         assert resp.context['version_used'] == '1.1'
         assert mock_object.called
-        assert '1__1__0' in kwargs['schema_url']
+        assert '1__1__' in kwargs['schema_url']
         assert kwargs['replace'] is replace_after_post
 
 
@@ -510,7 +510,7 @@ def test_explore_schema_version_change_with_json_to_xlsx(mock_object, client):
     resp = client.get(data.get_absolute_url())
     args, kwargs = mock_object.call_args
     assert resp.status_code == 200
-    assert '1__0__2' in kwargs['schema_url']
+    assert '1__0__' in kwargs['schema_url']
     assert kwargs['replace'] is False
     mock_object.reset_mock()
 
@@ -577,7 +577,7 @@ def test_get_additional_codelist_values():
     assert additional_codelist_values == {
         ('releases', 'tag'): {
             'codelist': 'releaseTag.csv',
-            'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1-dev/standard/schema/codelists/releaseTag.csv',
+            'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/releaseTag.csv',
             'field': 'tag',
             'isopen': False,
             'path': 'releases',
@@ -585,7 +585,7 @@ def test_get_additional_codelist_values():
         },
         ('releases', 'tender', 'items', 'classification', 'scheme'): {
             'codelist': 'itemClassificationScheme.csv',
-            'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1-dev/standard/schema/codelists/itemClassificationScheme.csv',
+            'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/itemClassificationScheme.csv',
             'field': 'scheme',
             'isopen': True,
             'path': 'releases/tender/items/classification',

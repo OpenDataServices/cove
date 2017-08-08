@@ -48,7 +48,6 @@
                 }, 
                 "items": [
                     {
-                        "id": "1", 
                         "classification": {
                             "scheme": "GSIN", 
                             "description": "F029: Other Animal Care and Control Services"
@@ -66,7 +65,6 @@
             }, 
             "tag": ["tender"], 
             "buyer": {
-                "name": "Agriculture & Agrifood Canada"
             }
         }
     ], 
