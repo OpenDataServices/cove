@@ -9,6 +9,10 @@ from . lib.schema import Schema360
 from . lib.threesixtygiving import run_additional_checks
 from cove.input.models import SuppliedData
 
+# Source is cove_360/fixtures/WellcomeTrust-grants_fixed_2_grants.json
+# see cove_360/fixtures/SOURCES for more info.
+# Data has been edited to increase test coverage, so should not be used for
+# anything besides testing.
 
 GRANTS = {
     'grants': [{'Co-applicant(s)': 'Mr Bentley Crudgington, Mr Gary Thomas ',
@@ -56,6 +60,10 @@ GRANTS = {
                 'id': '360G-wellcometrust-105182/Z/14/Z',
                 'plannedDates': [{'duration': '25'}],
                 'recipientOrganization': [{'addressLocality': 'Leicester ',
+                                           'location': [{
+                                               'geoCodeType': 'UA',
+                                               'name': 'Rhondda Cynon Taf',
+                                               'geoCode': 'W06000016'}],
                                            'charityNumber': '1234567',
                                            'companyNumber': 'RC000659',
                                            'id': 'GB-UNKNOW-RC000659',
