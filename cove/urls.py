@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.views.generic import TemplateView
 
-from django.template import Context, loader
+from django.template import loader
 from django.http import HttpResponseServerError
 
 import cove.input.views
@@ -20,7 +20,7 @@ def handler500(request):
     context.update(settings.COVE_CONFIG)
 
     t = loader.get_template('500.html')
-    return HttpResponseServerError(t.render(Context(context)))
+    return HttpResponseServerError(t.render(context))
 
 
 def cause500(request):
