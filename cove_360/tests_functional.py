@@ -422,9 +422,13 @@ def test_check_schema_link_on_result_page(server_url, browser, httpserver, sourc
     browser.find_element_by_id('toc-360giving-json-schemas')
 
 
-def test_URL_invalid_dataset_request(server_url, browser):
+@pytest.mark.parametrize(('data_url'), [
+    'data/0',
+    'data/324ea8eb-f080-43ce-a8c1-9f47b28162f3'
+])
+def test_URL_invalid_dataset_request(server_url, browser, data_url):
     # Test a badly formed hexadecimal UUID string
-    browser.get(server_url + 'data/0')
+    browser.get(server_url + data_url)
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
     # Test for well formed UUID that doesn't identify any dataset that exists
     browser.get(server_url + 'data/38e267ce-d395-46ba-acbf-2540cdd0c810')
