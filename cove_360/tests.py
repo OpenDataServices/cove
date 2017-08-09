@@ -38,6 +38,8 @@ GRANTS = {
                                            'companyNumber': 'AAA',
                                            'id': '360G-Blah',
                                            'name': 'Animate Project Limited'}],
+                'classifications': [{
+                    'title': 'Classification title'}],
                 'title': 'Silent Signal.  ,moo@moo.com '},
                {'Co-applicant(s)': ' ',
                 'Department': 'Department of Museum Studies',
@@ -419,11 +421,11 @@ RESULTS = [
       'message': "Knowing where information came from is an important part of establishing trust in your data."},
      ['grants/0/id', 'grants/2/id'],
      [['grants', 'A', 2, 'Identifier'], ['grants', 'A', 4, 'Identifier']]),
-    ({'heading': "3 grants do not have a Classification: Title field",
+    ({'heading': "2 grants do not have a Classifications: Title field",
       'message': ("This field allows you to describe how you classify the grant or have tagged it internally. "
                   "Examples include classifying by sector (eg Healthcare) or target group (eg NEET).")},
-     ['grants/0/id', 'grants/1/id', 'grants/2/id'],
-     [['grants', 'A', 2, 'Identifier'], ['grants', 'A', 3, 'Identifier'], ['grants', 'A', 4, 'Identifier']])
+     ['grants/1/id', 'grants/2/id'],
+     [['grants', 'A', 3, 'Identifier'], ['grants', 'A', 4, 'Identifier']])
 ]
 
 

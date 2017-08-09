@@ -556,13 +556,13 @@ class NoDataSource(AdditionalTest):
 
 class NoClassificationTitle(AdditionalTest):
     def process(self, grant, path_prefix):
-        classification_title = grant.get("classification") and grant.get("classification").get('title')
-        if not classification_title:
+        classifications_title = grant.get("classifications") and any(classification.get('title') for classification in grant.get("classifications"))
+        if not classifications_title:
             self.failed = True
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count("not have a Classification: Title field", verb='do')
+        self.heading = self.format_heading_count("not have a Classifications: Title field", verb='do')
         self.message = "This field allows you to describe how you classify the grant or have tagged it internally. Examples include classifying by sector (eg Healthcare) or target group (eg NEET)."
 
 
