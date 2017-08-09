@@ -31,5 +31,6 @@ pip freeze -r requirements_combined_tmp.in > requirements_dev.txt
 rm requirements_combined_tmp.in
 
 # Put comments back on the same line (mostly for requires.io's benefit)
-sed -i '$!N;s/\n#\^\^/ #/;P;D' requirements*txt
-sed -i 's/^-r.*//' requirements*txt
+sed -i '$!N;s/\n#\^\^/ #/;P;D' requirements.txt requirements_dev.txt
+sed -i 's/^-r.*//' requirements.txt requirements_dev.txt
+sed -i 's/pkg-resources==0.0.0//' requirements.txt requirements_dev.txt
