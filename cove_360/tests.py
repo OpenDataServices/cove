@@ -33,7 +33,10 @@ GRANTS = {
                                          'name': 'The Wellcome Trust'}],
                 'id': '360G-wellcometrust-105177/Z/14/Z',
                 'plannedDates': [{'duration': '30'}],
-                'recipientOrganization': [{'addressLocality': 'London ',
+                'recipientOrganization': [{'addressLocality': 'London',
+                                           'location': [{
+                                               'name': 'Somewhere in London',
+                                               'geoCode': 'W06000016'}],
                                            'charityNumber': '12345',
                                            'companyNumber': 'AAA',
                                            'id': '360G-Blah',
@@ -100,7 +103,8 @@ GRANTS = {
                 'plannedDates': [{'duration': '25'}],
                 'recipientOrganization': [{'addressLocality': 'Leicester ',
                                            'id': 'GB-CHC-10659',
-                                           'name': 'UNIVERSITY OF LEICESTER'}],
+                                           'name': 'UNIVERSITY OF LEICESTER',
+                                           'postalCode': 'NW15 8JK'}],
                 'relatedActivity': ["", "360G-xxx"],
                 'title': 'Exceptional and Extraordinary: unruly bodies and minds '
                          'in the medical museum. '}]}
@@ -350,14 +354,13 @@ RESULTS = [
                   "to organisations that don’t have UK Company or UK Charity numbers.")},
      ['grants/2/recipientOrganization/0/id'],
      [['grants', 'J', 4, 'Recipient Org:Identifier']]),
-    ({'heading': "3 grants have incomplete recipient organisation information",
-      'message': ("Your data is missing Recipient Org: Postal Code, Recipient Org: Location:Geographic "
-                  "Code or Recipient Org: Location: Geographic Code Type. Knowing the geographic location "
+    ({'heading': "1 grant has incomplete recipient organisation information",
+      'message': ("Your data is missing either Recipient Org: Postal Code or Recipient Org: Location:Geographic "
+                  "Code combined with Recipient Org: Location: Geographic Code Type. Knowing the geographic location "
                   "of recipient organisations allows users of your data to understand your data and combine "
                   "it with other data sets to form a broader picture of grant-making.")},
-     ['grants/0/recipientOrganization/0/id', 'grants/1/recipientOrganization/0/id', 'grants/2/recipientOrganization/0/id'],
-     [['grants', 'J', 2, 'Recipient Org:Identifier'], ['grants', 'J', 3, 'Recipient Org:Identifier'],
-      ['grants', 'J', 4, 'Recipient Org:Identifier']]),
+     ['grants/0/recipientOrganization/0/id'],
+     [['grants', 'J', 2, 'Recipient Org:Identifier']]),
     ({'heading': "There are 3 different funding organisation IDs listed",
       'message': ("If you are expecting to be publishing data for multiple funders then "
                   "this notice can be ignored, however if you are only publishing for a "

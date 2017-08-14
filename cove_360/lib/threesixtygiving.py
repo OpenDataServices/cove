@@ -389,20 +389,23 @@ class IncompleteRecipientOrg(AdditionalTest):
             count_failure = False
             for num, organization in enumerate(grant['recipientOrganization']):
                 has_postal_code = organization.get('postalCode')
-                has_location_data = organization.get('location') and any(location.get('geoCode') and location.get('geoCodeType') for location in organization.get('location'))
-                complete_recipient_org_data = has_postal_code and has_location_data
+                has_location_data = organization.get('location') and any(
+                    location.get('geoCode') and location.get('geoCodeType')
+                    for location in organization.get('location')
+                )
+
+                complete_recipient_org_data = has_postal_code or has_location_data
                 if not complete_recipient_org_data:
                     self.failed = True
                     count_failure = True
                     self.json_locations.append(path_prefix + '/recipientOrganization/{}/id'.format(num))
-
             if count_failure:
                 self.count += 1
         except KeyError:
             pass
 
         self.heading = self.format_heading_count("incomplete recipient organisation information")
-        self.message = "Your data is missing Recipient Org: Postal Code, Recipient Org: Location:Geographic Code or Recipient Org: Location: Geographic Code Type. Knowing the geographic location of recipient organisations allows users of your data to understand your data and combine it with other data sets to form a broader picture of grant-making."
+        self.message = "Your data is missing either Recipient Org: Postal Code or Recipient Org: Location:Geographic Code combined with Recipient Org: Location: Geographic Code Type. Knowing the geographic location of recipient organisations allows users of your data to understand your data and combine it with other data sets to form a broader picture of grant-making."
 
 
 class MoreThanOneFundingOrg(AdditionalTest):
