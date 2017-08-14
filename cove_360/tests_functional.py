@@ -381,6 +381,7 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
         if section.get_attribute('data-toggle') == "collapse" and section.get_attribute('aria-expanded') != 'true':
             section.click()
         time.sleep(0.5)
+
     browser.find_element_by_css_selector('a[data-target=".validation-errors-1"]').click()
 
     modal = browser.find_element_by_css_selector('.validation-errors-1')
@@ -388,8 +389,18 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
     modal_text = modal.text
     assert "24/07/2014" in modal_text
     assert "grants/0/awardDate" in modal_text
-
     table_rows = browser.find_elements_by_css_selector('.validation-errors-1 tbody tr')
+    assert len(table_rows) == 4
+
+    browser.find_element_by_css_selector('div.modal.validation-errors-1 button.close').click()
+    browser.find_element_by_css_selector('a[data-target=".additional-checks-3"]').click()
+
+    modal_additional_checks = browser.find_element_by_css_selector('.additional-checks-3')
+    assert "in" in modal_additional_checks.get_attribute("class").split()
+    modal_additional_checks_text = modal_additional_checks.text
+    assert "4 grants have incomplete recipient organisation information" in modal_additional_checks_text
+    assert "grants/0/recipientOrganization/0/id" in modal_additional_checks_text
+    table_rows = browser.find_elements_by_css_selector('.additional-checks-3 tbody tr')
     assert len(table_rows) == 4
 
 
@@ -426,7 +437,7 @@ def test_check_schema_link_on_result_page(server_url, browser, httpserver, sourc
     'data/0',
     'data/324ea8eb-f080-43ce-a8c1-9f47b28162f3'
 ])
-def test_URL_invalid_dataset_request(server_url, browser, data_url):
+def test_url_invalid_dataset_request(server_url, browser, data_url):
     # Test a badly formed hexadecimal UUID string
     browser.get(server_url + data_url)
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
