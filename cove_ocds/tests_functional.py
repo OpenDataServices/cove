@@ -11,7 +11,7 @@ from selenium.webdriver.chrome.options import Options
 
 PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/validator/')
 
-BROWSER = os.environ.get('BROWSER', 'Chrome')
+BROWSER = os.environ.get('BROWSER', 'ChromeHeadless')
 
 OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
 OCDS_SCHEMA_VERSIONS = settings.COVE_CONFIG['schema_version_choices']
@@ -20,10 +20,10 @@ OCDS_SCHEMA_VERSIONS_DISPLAY = list(display_url[0] for version, display_url in O
 
 @pytest.fixture(scope='module')
 def browser(request):
-    if BROWSER == 'Chrome':
+    if BROWSER == 'ChromeHeadless':
         chrome_options = Options()
         chrome_options.add_argument("--headless")
-        browser = getattr(webdriver, BROWSER)(chrome_options=chrome_options)
+        browser = webdriver.Chrome(chrome_options=chrome_options)
     else:
         browser = getattr(webdriver, BROWSER)()
     browser.implicitly_wait(3)
@@ -171,14 +171,14 @@ def test_500_error(server_url, browser):
                                                                      'All the extensions above were applied',
                                                                      'copy of the schema with extension',
                                                                      'Validation Errors',
-                                                                     '\'buyer:id\' is missing but required'], ['fetching failed'], True),
+                                                                     '\'buyer:name\' is missing but required'], ['fetching failed'], True),
     ('tenders_releases_1_release_with_extensions_new_layout.json', ['Schema Extensions',
                                                                     'Lots',
                                                                     'A tender process may be divided into lots',
                                                                     'copy of the schema with extension',
                                                                     'Validation Errors',
-                                                                    '\'buyer:id\' is missing but required',
-                                                                    '\'procuringEntity:id\' is missing but required'], ['fetching failed'], True),
+                                                                    '\'buyer:name\' is missing but required',
+                                                                    '\'items:id\' is missing but required'], ['fetching failed'], True),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Schema Extensions',
                                                                  'https://raw.githubusercontent.com/open-contracting/',
                                                                  'badprotocol://example.com',
@@ -367,9 +367,13 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
         assert 'conversion Warnings' not in body_text
 
 
-def test_url_invalid_dataset_request(server_url, browser):
+@pytest.mark.parametrize(('data_url'), [
+    'data/0',
+    'data/324ea8eb-f080-43ce-a8c1-9f47b28162f3'
+])
+def test_url_invalid_dataset_request(server_url, browser, data_url):
     # Test a badly formed hexadecimal UUID string
-    browser.get(server_url + 'data/0')
+    browser.get(server_url + data_url)
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
     # Test for well formed UUID that doesn't identify any dataset that exists
     browser.get(server_url + 'data/38e267ce-d395-46ba-acbf-2540cdd0c810')
