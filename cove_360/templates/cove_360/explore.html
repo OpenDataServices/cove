@@ -187,35 +187,32 @@
         <table class="table no-bottom-margin">
         <thead> 
           <tr> 
-            <th>{% trans 'Check Description' %}</th>
-            <th>{% trans 'Error Count' %}</th>
+            <th>{% trans 'Check Description' %} </th>
             <th>{% trans 'First 3 Locations' %}</th> 
           </tr> 
         </thead>
         <tbody>
         {% for message, json_location, spreadsheet_location in additional_checks %}
         <tr>
-            <td><strong>{{message.heading}}</strong><br>{{message.message}}</td>
             <td>
+              <strong>{{message.heading}}</strong><br>{{message.message}}
               {% if json_location|length > 3 %}
-                <a data-toggle="modal" data-target=".{{"additional-checks-"|concat:forloop.counter}}">{{json_location|length}}</a>
-              {% else %}
-                {{json_location|length}}
+                &nbsp; <a data-toggle="modal" data-target=".{{"additional-checks-"|concat:forloop.counter}}"><sup>See all</sup></a>
               {% endif %}
             </td>
           {% if file_type == 'xlsx' or file_type == 'csv' %}
             <td style="white-space: nowrap">
               <ul class="list-unstyled">
-                {% for sheet, letter, row, header in spreadsheet_location|slice:":3" %}
-                <li> <b>Sheet:</b> {{sheet}} <b>Row:</b> {{row}} {% if header %} <b>Header:</b> {{header}} {% endif %} </li>
+                {% for location in spreadsheet_location|slice:":3" %}
+                <li> <b>Sheet:</b> {{location.sheet}} <b>Row:</b> {{location.row_number}} {% if location.header %} <b>Header:</b> {{location.header}} {% endif %} </li>
                 {% endfor %}
               </ul>
             </td>
           {% else %}
             <td>
               <ul class="list-unstyled">
-                {% for value in json_location|slice:":3" %}
-                   <li> {{value}} </li>
+                {% for location in json_location|slice:":3" %}
+                   <li>{{location}}</li>
                 {% endfor %}
               </ul>
             </td>

@@ -38,7 +38,7 @@
                 {% if file_type == 'json' %}
                   <td>{{item}}</td>
                 {% else %}
-                  <td> <strong>Sheet:</strong> {{item.0}} <strong>Row:</strong> {{item.2}} {% if item.3 %} <strong>Header:</strong> {{item.3}} {% endif %} </td>
+                  <td> <strong>Sheet:</strong> {{item.sheet}} <strong>Row:</strong> {{item.row_number}} {% if item.header %} <strong>Header:</strong> {{item.header}} {% endif %} </td>
                 {% endif %}
               {% endif %}
               </tr>
