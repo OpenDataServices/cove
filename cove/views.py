@@ -5,6 +5,7 @@ from django.db.models.aggregates import Count
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 from cove.input.models import SuppliedData
 from cove.lib.tools import get_file_type
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 def explore_data_context(request, pk):
     try:
         data = SuppliedData.objects.get(pk=pk)
-    except (SuppliedData.DoesNotExist, ValueError):  # Catches primary key does not exist and badly formed UUID
+    except (SuppliedData.DoesNotExist, ValidationError):  # Catches primary key does not exist and badly formed UUID
         return {}, None, render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),
             'link': 'index',
