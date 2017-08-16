@@ -196,9 +196,6 @@
         <tr>
             <td>
               <strong>{{message.heading}}</strong><br>{{message.message}}
-              {% if json_location|length > 3 %}
-                &nbsp; <a data-toggle="modal" data-target=".{{"additional-checks-"|concat:forloop.counter}}"><sup>See all</sup></a>
-              {% endif %}
             </td>
           {% if file_type == 'xlsx' or file_type == 'csv' %}
             <td style="white-space: nowrap">
@@ -214,6 +211,9 @@
                 {% for location in json_location|slice:":3" %}
                    <li>{{location}}</li>
                 {% endfor %}
+                {% if json_location|length > 3 %}
+                  <li><a data-toggle="modal" data-target=".{{"additional-checks-"|concat:forloop.counter}}"><sup>see all</sup></a></li>
+                {% endif %}
               </ul>
             </td>
           {% endif %}
