@@ -1,10 +1,10 @@
 Feature: Actual dates should be in the past
 
-  Scenario Outline: activity-date[@type='2']:@iso-date date must be today or in the past (IATI 2.x)
+  Scenario Outline: activity-date[@type='2']:@iso-date date must be today or in the past
     Given `activity-date[@type='2']/@iso-date` is a valid date
      then `activity-date[@type='2']/@iso-date` should be today, or in the past
 
-  Scenario Outline: activity-date[@type='4']:@iso-date date must be today or in the past (IATI 2.x)
+  Scenario Outline: activity-date[@type='4']:@iso-date date must be today or in the past
     Given `activity-date[@type='4']/@iso-date` is a valid date
      then `activity-date[@type='4']/@iso-date` should be today, or in the past
 

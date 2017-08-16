@@ -213,7 +213,7 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
 
 
 def get_ruleset_errors(lxml_etree, output_dir):
-    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_ruleset/'], output_path=output_dir)
+    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'], output_path=output_dir)
     ruleset_errors = []
 
     for output_file in os.listdir(output_dir):
