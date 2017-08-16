@@ -9,6 +9,10 @@ from . lib.schema import Schema360
 from . lib.threesixtygiving import run_additional_checks
 from cove.input.models import SuppliedData
 
+# Source is cove_360/fixtures/WellcomeTrust-grants_fixed_2_grants.json
+# see cove_360/fixtures/SOURCES for more info.
+# Data has been edited to increase test coverage, so should not be used for
+# anything besides testing.
 
 GRANTS = {
     'grants': [{'Co-applicant(s)': 'Mr Bentley Crudgington, Mr Gary Thomas ',
@@ -34,6 +38,8 @@ GRANTS = {
                                            'companyNumber': 'AAA',
                                            'id': '360G-Blah',
                                            'name': 'Animate Project Limited'}],
+                'classifications': [{
+                    'title': 'Classification title'}],
                 'title': 'Silent Signal.  ,moo@moo.com '},
                {'Co-applicant(s)': ' ',
                 'Department': 'Department of Museum Studies',
@@ -56,6 +62,10 @@ GRANTS = {
                 'id': '360G-wellcometrust-105182/Z/14/Z',
                 'plannedDates': [{'duration': '25'}],
                 'recipientOrganization': [{'addressLocality': 'Leicester ',
+                                           'location': [{
+                                               'geoCodeType': 'UA',
+                                               'name': 'Rhondda Cynon Taf',
+                                               'geoCode': 'W06000016'}],
                                            'charityNumber': '1234567',
                                            'companyNumber': 'RC000659',
                                            'id': 'GB-UNKNOW-RC000659',
@@ -411,11 +421,11 @@ RESULTS = [
       'message': "Knowing where information came from is an important part of establishing trust in your data."},
      ['grants/0/id', 'grants/2/id'],
      [['grants', 'A', 2, 'Identifier'], ['grants', 'A', 4, 'Identifier']]),
-    ({'heading': "3 grants do not have a Classification: Title field",
+    ({'heading': "2 grants do not have a Classifications: Title field",
       'message': ("This field allows you to describe how you classify the grant or have tagged it internally. "
                   "Examples include classifying by sector (eg Healthcare) or target group (eg NEET).")},
-     ['grants/0/id', 'grants/1/id', 'grants/2/id'],
-     [['grants', 'A', 2, 'Identifier'], ['grants', 'A', 3, 'Identifier'], ['grants', 'A', 4, 'Identifier']])
+     ['grants/1/id', 'grants/2/id'],
+     [['grants', 'A', 3, 'Identifier'], ['grants', 'A', 4, 'Identifier']])
 ]
 
 
