@@ -1,0 +1,11 @@
+iati_standard_ruleset/actual_dates_in_the_past.feature
+iati_standard_ruleset/elements_use_valid_format.feature
+iati_standard_ruleset/mandatory_elements.feature
+iati_standard_ruleset/sector.feature
+iati_standard_ruleset/start_dates_before_end_dates.feature
+iati_standard_ruleset/steps/standard_ruleset_step_definitions.py
+
+All adapted from https://github.com/pwyf/bdd-tester/tree/master/sample_features/iati_standard_ruleset
+Copyright (c) 2017 Publish What You Fund
+Released under MIT License
+License: https://github.com/pwyf/bdd-tester/blob/master/LICENSE
