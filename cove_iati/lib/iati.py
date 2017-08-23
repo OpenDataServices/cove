@@ -216,6 +216,9 @@ def get_ruleset_errors(lxml_etree, output_dir):
     bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'], output_path=output_dir)
     ruleset_errors = []
 
+    if not os.path.isdir(output_dir):
+        return ruleset_errors
+
     for output_file in os.listdir(output_dir):
         with open(os.path.join(output_dir, output_file)) as fp:
             scenario_outline = re.sub(r':', '/', output_file[:-7]).split('_')

@@ -297,7 +297,7 @@ def test_index_page_360(server_url, browser):
     ('360Giving Data Standard guidance', 'http://www.threesixtygiving.org/standard/'),
     ('Excel', 'https://threesixtygiving-standard.readthedocs.io/en/latest/_static/summary-table/360-giving-schema-titles.xlsx'),
     ('CSV', 'https://threesixtygiving-standard.readthedocs.io/en/latest/templates-csv'),
-    ('360Giving JSON schema', 'http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas'),
+    ('360Giving JSON schema', 'http://standard.threesixtygiving.org/en/latest/reference/#giving-json-schemas'),
     ('Multi-table data package - Excel', 'https://threesixtygiving-standard.readthedocs.io/en/latest/_static/multi-table/360-giving-schema-fields.xlsx')
     ])
 def test_index_page_360_links(server_url, browser, link_text, url):
@@ -419,7 +419,7 @@ def test_check_schema_link_on_result_page(server_url, browser, httpserver, sourc
         time.sleep(0.5)
     schema_link = browser.find_element_by_link_text(expected_text)
     schema_link.click()
-    browser.find_element_by_id('toc-360giving-json-schemas')
+    browser.find_element_by_id('giving-json-schemas')
 
 
 @pytest.mark.parametrize(('data_url'), [
