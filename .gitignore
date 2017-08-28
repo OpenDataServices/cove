@@ -13,4 +13,4 @@ docs/_build
 .hypothesis/*
 geckodriver.log
 ghostdriver.log
-.api/*
+/.api/*
