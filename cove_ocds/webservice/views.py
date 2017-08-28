@@ -5,23 +5,23 @@ import re
 from decimal import Decimal
 
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 
-from . lib.exceptions import raise_invalid_version_argument, raise_invalid_version_data_with_patch
-from . lib.ocds import common_checks_ocds
-from . lib.schema import SchemaOCDS
+from cove_ocds.lib.exceptions import raise_invalid_version_argument, raise_invalid_version_data_with_patch
+from cove_ocds.lib.ocds import common_checks_ocds
+from cove_ocds.lib.schema import SchemaOCDS
 from cove.lib.common import get_spreadsheet_meta_data
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
 from cove.views import explore_data_context
 
-from cove_ocds.webservice import views
 
 logger = logging.getLogger(__name__)
 
 
 @cove_web_input_error
-def explore_ocds(request, pk):
+def explore_ocds_raw(request, pk):
     context, db_data, error = explore_data_context(request, pk)
     if error:
         return error
@@ -153,5 +153,9 @@ def explore_ocds(request, pk):
             context['releases'] = json_data['releases']
         else:
             context['releases'] = []
+            
+    response = {}
+    response['validation_errors'] = context['validation_errors']
+    response['validation_errors_count'] = context['validation_errors_count']
 
-    return render(request, template, context)
+    return HttpResponse(json.dumps(response))

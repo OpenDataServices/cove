@@ -82,6 +82,10 @@ def data_input(request, form_classes=default_form_classes, text_file_name='test.
                     })
             elif form_name == 'text_form':
                 data.original_file.save(text_file_name, ContentFile(form['paste'].value()))
-            return redirect(data.get_absolute_url())
+            
+            if 'raw' in request_data:
+                return redirect(data.get_raw_url())
+            else:
+                return redirect(data.get_absolute_url())
 
     return render(request, 'input/input.html', {'forms': forms})
