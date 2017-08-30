@@ -23,7 +23,7 @@
           <span class="pull-right glyphicon glyphicon-collapse-{% if conversion == 'flattenable' %}up{% else %}down{% endif %}"></span>
         </h3>
       </div>
-      <div id="data-supplied-body" class="collapse {% if conversion == 'flattenable' %}in{% endif %}">
+      <div id="data-supplied-body" class="collapse in">
         <div class="panel-body">
            <p class="explanation">
              {% trans "A file was " %} 
@@ -34,8 +34,6 @@
              {% endif %}
              {% trans "on " %} {{created_date}}.
            </p>
-           <br>
-           <div class="explore-help"> If anything looks wrong with this data please use the <em>Review</em> section below to identify potential issues. </div>
         </div>
       </div>
     </div>
@@ -115,7 +113,7 @@
           <br>
           {% include "validation_table.html" %}
           {% for error, values in validation_errors %}
-             {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type %}
+             {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type full_table=True %}
           {% endfor %}
         {% endif %}
       </div>
@@ -123,6 +121,39 @@
   </div>
   {% endblock validation %}
 
+  {% block ruleset %}
+  <div class="panel panel-default">
+    <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#rulesets-body">
+      <h3 class="panel-title panel-title-explore">
+        {% if ruleset_errors %}
+           <span class="font-tick cross" aria-hidden="true"></span>
+           {% trans "Ruleset Errors " %}<small>{% blocktrans count n_errors=ruleset_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</small>
+        {% else %}
+           <span class="font-tick tick" aria-hidden="true"></span>
+          {% trans "Ruleset Checks" %}
+        {% endif %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="rulesets-body" class="collapse">
+      <div class="panel-body">
+        <p class="explanation">
+        {% if ruleset_errors %}
+            {% trans "Sorry your data contains ruleset errors" %}
+        {% else %}
+          {% trans "Congratulations! Your data passes all IATI ruleset checks" %}
+        {% endif %}
+        </p>
+        {% if ruleset_errors %}
+          <br>
+          <p class="explanation">&nbsp;{% trans "There are some <strong>ruleset errors</strong> in your data, please check them in the table below." %}</p>
+          <br>
+          {% include "cove_iati/ruleset_table.html" %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endblock ruleset %}
 
   {% block download_and_share %}
   <div class="panel panel-default">

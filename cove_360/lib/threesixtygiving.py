@@ -389,20 +389,23 @@ class IncompleteRecipientOrg(AdditionalTest):
             count_failure = False
             for num, organization in enumerate(grant['recipientOrganization']):
                 has_postal_code = organization.get('postalCode')
-                has_location_data = organization.get('location') and organization.get('location').get('geoCode') and organization.get('location').get('geoCodeType')
-                complete_recipient_org_data = has_postal_code and has_location_data
+                has_location_data = organization.get('location') and any(
+                    location.get('geoCode') and location.get('geoCodeType')
+                    for location in organization.get('location')
+                )
+
+                complete_recipient_org_data = has_postal_code or has_location_data
                 if not complete_recipient_org_data:
                     self.failed = True
                     count_failure = True
                     self.json_locations.append(path_prefix + '/recipientOrganization/{}/id'.format(num))
-
             if count_failure:
                 self.count += 1
         except KeyError:
             pass
 
         self.heading = self.format_heading_count("incomplete recipient organisation information")
-        self.message = "Your data is missing Recipient Org: Postal Code, Recipient Org: Location:Geographic Code or Recipient Org: Location: Geographic Code Type. Knowing the geographic location of recipient organisations allows users of your data to understand your data and combine it with other data sets to form a broader picture of grant-making."
+        self.message = "Your data is missing either Recipient Org: Postal Code or Recipient Org: Location:Geographic Code combined with Recipient Org: Location: Geographic Code Type. Knowing the geographic location of recipient organisations allows users of your data to understand your data and combine it with other data sets to form a broader picture of grant-making."
 
 
 class MoreThanOneFundingOrg(AdditionalTest):
@@ -556,13 +559,13 @@ class NoDataSource(AdditionalTest):
 
 class NoClassificationTitle(AdditionalTest):
     def process(self, grant, path_prefix):
-        classification_title = grant.get("classification") and grant.get("classification").get('title')
-        if not classification_title:
+        classifications_title = grant.get("classifications") and any(classification.get('title') for classification in grant.get("classifications"))
+        if not classifications_title:
             self.failed = True
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count("not have a Classification: Title field", verb='do')
+        self.heading = self.format_heading_count("not have a Classifications: Title field", verb='do')
         self.message = "This field allows you to describe how you classify the grant or have tagged it internally. Examples include classifying by sector (eg Healthcare) or target group (eg NEET)."
 
 
@@ -607,9 +610,11 @@ def run_additional_checks(json_data, cell_source_map):
             continue
 
         spreadsheet_locations = []
+        spreadsheet_keys = ('sheet', 'letter', 'row_number', 'header')
         if cell_source_map:
             try:
-                spreadsheet_locations = [cell_source_map[location][0] for location in test_instance.json_locations]
+                spreadsheet_locations = [dict(zip(spreadsheet_keys, cell_source_map[location][0]))
+                                         for location in test_instance.json_locations]
             except KeyError:
                 continue
         results.append((test_instance.produce_message(),

@@ -10,21 +10,37 @@
         <table class="table">
           <thead>
             <tr>
-              <th>{% trans 'Value' %}</th> 
-              <th>{% trans 'Location' %}</th> 
-              {% if file_type == 'xlsx' or file_type == 'csv' %}
-                <th>{% trans 'Spreadsheet Location' %}</th> 
+              {% if full_table %}
+                <th>{% trans 'Value' %}</th>
+                <th>{% trans 'Location' %}</th>
+                {% if file_type == 'xlsx' or file_type == 'csv' %}
+                  <th>{% trans 'Spreadsheet Location' %}</th> 
+                {% endif %}
+              {% else %}
+                {% if file_type == 'json' %}
+                  <th>{% trans 'Location' %}</th>
+                {% else %}
+                  <th>{% trans 'Spreadsheet Location' %}</th>
+                {% endif %}
               {% endif %}
             </tr>
           </thead>
           <tbody>
-            {% for value in errorList %}
+            {% for item in errorList %}
               <tr>
-                <td> {{value.value}} </td>
-                <td> {{value.path}} </td>
+              {% if full_table %}
+                <td> {{item.value}} </td>
+                <td> {{item.path}} </td>
                 {% if file_type == 'xlsx' or file_type == 'csv' %}
-                  <td> <b>Sheet:</b> {{value.sheet}} <b>Row:</b> {{value.row_number}} {% if value.header %} <b>Header:</b> {{value.header}} {% endif %} </td>
+                  <td> <strong>Sheet:</strong> {{item.sheet}} <strong>Row:</strong> {{item.row_number}} {% if item.header %} <strong>Header:</strong> {{item.header}} {% endif %} </td>
                 {% endif %}
+              {% else %}
+                {% if file_type == 'json' %}
+                  <td>{{item}}</td>
+                {% else %}
+                  <td> <strong>Sheet:</strong> {{item.sheet}} <strong>Row:</strong> {{item.row_number}} {% if item.header %} <strong>Header:</strong> {{item.header}} {% endif %} </td>
+                {% endif %}
+              {% endif %}
               </tr>
             {% endfor %}
           </tbody>

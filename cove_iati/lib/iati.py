@@ -2,6 +2,7 @@ import json
 import os
 import re
 
+from bdd_tester import bdd_tester
 import defusedxml.lxml as etree
 import lxml.etree
 from django.utils.translation import ugettext_lazy as _
@@ -33,6 +34,7 @@ def common_checks_context_iati(upload_dir, data_file, file_type):
         schema = lxml.etree.XMLSchema(schema_tree)
         schema.validate(tree)
         lxml_errors = lxml_errors_generator(schema.error_log)
+        ruleset_errors = get_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'))
 
     errors_all = format_lxml_errors(lxml_errors)
 
@@ -52,7 +54,10 @@ def common_checks_context_iati(upload_dir, data_file, file_type):
     return {
         'validation_errors': sorted(validation_errors.items()),
         'validation_errors_count': sum(len(value) for value in validation_errors.values()),
-        'cell_source_map': cell_source_map
+        'ruleset_errors': ruleset_errors,
+        'ruleset_errors_count': len(ruleset_errors),
+        'cell_source_map': cell_source_map,
+        'first_render': False
     }
 
 
@@ -205,3 +210,35 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
             validation_errors[validation_key].append({'path': error['path']})
 
     return validation_errors
+
+
+def get_ruleset_errors(lxml_etree, output_dir):
+    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'], output_path=output_dir)
+    ruleset_errors = []
+
+    if not os.path.isdir(output_dir):
+        return ruleset_errors
+
+    for output_file in os.listdir(output_dir):
+        with open(os.path.join(output_dir, output_file)) as fp:
+            scenario_outline = re.sub(r':', '/', output_file[:-7]).split('_')
+            for line in fp:
+                line = line.strip()
+
+                if line:
+                    json_line = json.loads(line)
+                    for error in json_line['errors']:
+                        message = error['message']
+                        activity_id = json_line['id']
+                        if message.startswith('and') or message.startswith('or'):
+                            ruleset_errors[-1]['message'] += ' {}'.format(message)
+                            continue
+                        rule_error = {
+                            'path': error['path'] or scenario_outline[0],
+                            'rule': ' '.join(scenario_outline[1:]),
+                            'message': message,
+                            'id': activity_id
+                        }
+                        ruleset_errors.append(rule_error)
+
+    return ruleset_errors
