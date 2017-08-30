@@ -32,10 +32,10 @@ Before merge:
 - [ ] Create a new branch `release-{{YYYYMM}}` if it doesn't exist.
 - [ ] Deploy to a subdomain on `cove-dev` for OCDS http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/
 - [ ] Check that the correct commit has been deployed using the link in the footer http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/
-- [ ] Run `CUSTOM_SERVER_URL=http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/ DJANGO_SETTINGS_MODULE=cove_ocds.settings py.test cove_ocds/tests_functional.py` - redo this for each redeploy to the subomdain
+- [ ] Run `CUSTOM_SERVER_URL=http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/ DJANGO_SETTINGS_MODULE=cove_ocds.settings py.test cove_ocds/tests_functional.py` - redo this for each redeploy to the subdomain
 - [ ] Deploy to a subdomain on the 360 dev server http://release-{{YYYYMM}}.cove-360-dev.default.threesixtygiving.uk0.bigv.io/
 - [ ] Check that the correct commit has been deployed using the link in the footer http://release-{{YYYYMM}}.cove-360-dev.default.threesixtygiving.uk0.bigv.io/ 
-- [ ] Run `CUSTOM_SERVER_URL=http://release-{{YYYYMM}}.cove-360-dev.default.threesixtygiving.uk0.bigv.io/  DJANGO_SETTINGS_MODULE=cove_360.settings py.test cove_360/tests_functional.py` - redo this for each redeploy to the subomdain
+- [ ] Run `CUSTOM_SERVER_URL=http://release-{{YYYYMM}}.cove-360-dev.default.threesixtygiving.uk0.bigv.io/  DJANGO_SETTINGS_MODULE=cove_360.settings py.test cove_360/tests_functional.py` - redo this for each redeploy to the subdomain
 
 Steps above need redoing for additional commits.
 
