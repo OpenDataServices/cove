@@ -610,9 +610,11 @@ def run_additional_checks(json_data, cell_source_map):
             continue
 
         spreadsheet_locations = []
+        spreadsheet_keys = ('sheet', 'letter', 'row_number', 'header')
         if cell_source_map:
             try:
-                spreadsheet_locations = [cell_source_map[location][0] for location in test_instance.json_locations]
+                spreadsheet_locations = [dict(zip(spreadsheet_keys, cell_source_map[location][0]))
+                                         for location in test_instance.json_locations]
             except KeyError:
                 continue
         results.append((test_instance.produce_message(),

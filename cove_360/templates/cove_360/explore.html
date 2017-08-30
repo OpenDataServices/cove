@@ -156,7 +156,7 @@
           <br>
           {% include "validation_table.html" %}
           {% for error, values in validation_errors %}
-             {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type %}
+             {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type full_table=True %}
           {% endfor %}
         {% endif %}
       </div>
@@ -187,28 +187,36 @@
         <table class="table no-bottom-margin">
         <thead> 
           <tr> 
-            <th>{% trans 'Check Description' %}</th> 
+            <th>{% trans 'Check Description' %} </th>
             <th>{% trans 'First 3 Locations' %}</th> 
           </tr> 
         </thead>
         <tbody>
         {% for message, json_location, spreadsheet_location in additional_checks %}
         <tr>
-          <td><strong>{{message.heading}}</strong><br>{{message.message}}</td>
+            <td>
+              <strong>{{message.heading}}</strong><br>{{message.message}}
+            </td>
           {% if file_type == 'xlsx' or file_type == 'csv' %}
             <td style="white-space: nowrap">
               <ul class="list-unstyled">
-                {% for sheet, letter, row, header in spreadsheet_location|slice:":3" %}
-                <li> <b>Sheet:</b> {{sheet}} <b>Row:</b> {{row}} {% if header %} <b>Header:</b> {{header}} {% endif %} </li>
+                {% for location in spreadsheet_location|slice:":3" %}
+                <li> <b>Sheet:</b> {{location.sheet}} <b>Row:</b> {{location.row_number}} {% if location.header %} <b>Header:</b> {{location.header}} {% endif %} </li>
                 {% endfor %}
+                {% if spreadsheet_location|length > 3 %}
+                  <li><a data-toggle="modal" data-target=".{{"additional-checks-"|concat:forloop.counter}}"><sup>see all</sup></a></li>
+                {% endif %}
               </ul>
             </td>
           {% else %}
             <td>
               <ul class="list-unstyled">
-                {% for value in json_location|slice:":3" %}
-                   <li> {{value}} </li>
+                {% for location in json_location|slice:":3" %}
+                   <li>{{location}}</li>
                 {% endfor %}
+                {% if json_location|length > 3 %}
+                  <li><a data-toggle="modal" data-target=".{{"additional-checks-"|concat:forloop.counter}}"><sup>see all</sup></a></li>
+                {% endif %}
               </ul>
             </td>
           {% endif %}
@@ -224,6 +232,15 @@
           {% include "additional_fields_table.html" %}
         {% endif %}
     </div>
+    {% for message, json_location, spreadsheet_location in additional_checks %}
+      {% with msg=message.heading %}
+        {% if file_type == 'json' %}
+          {% cove_modal_errors className="additional-checks-"|concat:forloop.counter modalTitle=msg errorList=json_location file_type=file_type full_table=False %}
+        {% else %}
+          {% cove_modal_errors className="additional-checks-"|concat:forloop.counter modalTitle=msg errorList=spreadsheet_location file_type=file_type full_table=False %}
+        {% endif %}
+      {% endwith %}
+    {% endfor %}
   </div>
   {% endblock additional_checks %}
 
