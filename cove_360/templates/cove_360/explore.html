@@ -203,6 +203,9 @@
                 {% for location in spreadsheet_location|slice:":3" %}
                 <li> <b>Sheet:</b> {{location.sheet}} <b>Row:</b> {{location.row_number}} {% if location.header %} <b>Header:</b> {{location.header}} {% endif %} </li>
                 {% endfor %}
+                {% if spreadsheet_location|length > 3 %}
+                  <li><a data-toggle="modal" data-target=".{{"additional-checks-"|concat:forloop.counter}}"><sup>see all</sup></a></li>
+                {% endif %}
               </ul>
             </td>
           {% else %}
