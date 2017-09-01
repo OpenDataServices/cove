@@ -227,6 +227,9 @@ def test_500_error(server_url, browser):
                                                                '100.100.0 format does not comply with the schema',
                                                                'Error message'], ['Convert to Spreadsheet'], False),
     ('bad_toplevel_list.json', ['OCDS JSON should have an object as the top level, the JSON you supplied does not.'], [], False),
+    ('tender_releases_1_release_with_extension_broken_json_ref.json', ['JSON reference error',
+                                                                       'Unresolvable JSON pointer:',
+                                                                       '/definitions/OrganizationReference'], ['Convert to Spreadsheet'], False),
 ])
 def test_url_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     browser, source_url = url_input_browser(source_filename, output_source_url=True)

@@ -1,0 +1,96 @@
+{
+	"publisher": {
+		"scheme": "GON-PPMO",
+		"uid": "00000",
+		"name": "Public Procurement Monitoring Office",
+		"uri": "http://ppmo.gov.np/"
+	},
+	"publishedDate": "2017-08-08T09:44:30+00:00",
+	"uri": "http://pptin.staging.yipl.com.np/bulk-download/2017",
+	"extensions":["https://raw.githubusercontent.com/open-contracting/ocds_requirements_extension/master/extension.json"],
+	"version": "1.0",
+	"releases": [{
+			"ocid": "ocds-rw2stw-DTOK-3994\/CIP\/KPV\/W\/NCB-26",
+			"date": "2017-04-26T10:00:00+05:45",
+			"id": "DTOK-3994\/CIP\/KPV\/W\/NCB-26",
+			"tag": ["planning", "tender"],
+			"initiationType": "tender",
+			"planning": {
+				"rationale": null,
+				"budget": {
+					"id": "3548664",
+					"amount": {
+						"amount": 19322279,
+						"currency": "NPR"
+					},
+					"project": "community irrigation project",
+					"projectID": 3994,
+					"description": ""
+				},
+				"documents": []
+			},
+			"tender": {
+				"id": "DTOK-3994\/CIP\/KPV\/W\/NCB-26",
+				"title": "community irrigation project",
+				"description": "",
+				"status": "complete",
+				"minValue": {
+					"amount": 19322279,
+					"currency": "NRS"
+				},
+				"value": {
+					"amount": 19322279,
+					"currency": "NRS"
+				},
+				"procurementMethod": "open",
+				"procurementMethodDetails": "n\/a",
+				"procurementMethodRationale": "",
+				"awardCriteria": "",
+				"awardCriteriaDetails": "",
+				"submissionMethod": [],
+				"submissionMethodDetails": null,
+				"tenderPeriod": {
+					"endDate": "2017-05-26T12:00:00+05:45",
+					"startDate": "2017-04-26T10:00:00+05:45"
+				},
+				"enquiryPeriod": {
+					"endDate": "2017-05-16T12:00:00+05:45",
+					"startDate": "2017-04-26T10:00:00+05:45"
+				},
+				"hasEnquiries": false,
+				"eligibilityCriteria": "",
+				"awardPeriod": {
+					"endDate": null,
+					"startDate": null
+				},
+				"numberOfTenderers": 1,
+				"documents": [],
+				"milestones": [],
+				"amendment": {},
+				"items": [],
+				"tenderers": [{
+						"identifier": {
+							"id": null,
+							"uri": null,
+							"scheme": "NP-CRO",
+							"legalName": "Bajra Guru Construction "
+						},
+						"name": "Bajra Guru Construction ",
+						"address": {
+							"region": "Thapathali",
+							"locality": "Thapathali",
+							"postalCode": "",
+							"countryName": "Nepal",
+							"streetAddress": "01-5012576  "
+						},
+						"contactPoint": {
+							"url": null,
+							"name": "Laxman  Kumar Rana",
+							"email": "bgc042@gmail.com",
+							"telephone": "014257815"
+						}
+					}
+				]
+			}
+		}]
+}
