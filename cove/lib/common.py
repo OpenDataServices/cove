@@ -93,8 +93,18 @@ class SchemaJsonMixin():
         return json.loads(self.release_pkg_schema_str)
 
     def deref_schema(self, schema_str):
-        return jsonref.loads(schema_str, loader=CustomJsonrefLoader(schema_url=self.schema_host),
-                             object_pairs_hook=OrderedDict)
+        try:
+            deref_obj = jsonref.loads(
+                schema_str,
+                loader=CustomJsonrefLoader(schema_url=self.schema_host),
+                object_pairs_hook=OrderedDict
+            )
+            repr(deref_obj)  # jsonref.loads is lazy
+            return deref_obj
+
+        except jsonref.JsonRefError as e:
+            self.json_deref_error = e.message
+            return {}
 
     def get_release_schema_obj(self, deref=False):
         if deref:

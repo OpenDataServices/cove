@@ -41,6 +41,7 @@ class SchemaOCDS(SchemaJsonMixin):
 
         self.invalid_version_argument = False
         self.invalid_version_data = False
+        self.json_deref_error = None
         self.extensions = {}
         self.invalid_extension = {}
         self.extended = False
