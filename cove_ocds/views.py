@@ -61,6 +61,8 @@ def explore_ocds(request, pk):
             select_version = post_version_choice or db_data.schema_version
             schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data)
 
+            if schema_ocds.missing_package:
+                exceptions.raise_missing_package_error(pk)
             if schema_ocds.invalid_version_argument:
                 # This shouldn't happen unless the user sends random POST data.
                 exceptions.raise_invalid_version_argument(pk, post_version_choice)
@@ -98,8 +100,10 @@ def explore_ocds(request, pk):
             metatab_data['version'] = '1.0'
 
         select_version = post_version_choice or db_data.schema_version
-
         schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
+
+        if schema_ocds.missing_package:
+            exceptions.raise_missing_package_error(pk)
         if schema_ocds.invalid_version_argument:
             # This shouldn't happen unless the user sends random POST data.
             exceptions.raise_invalid_version_argument(pk, post_version_choice)

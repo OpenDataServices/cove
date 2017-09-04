@@ -5,7 +5,7 @@ from cove.lib.exceptions import CoveInputDataError
 
 def raise_invalid_version_argument(pk, version):
     raise CoveInputDataError(context={
-        'sub_title': _("Unrecognised version of the schema"),
+        'sub_title': _('Unrecognised version of the schema'),
         'link': 'explore',
         'link_args': pk,
         'link_text': _('Try Again'),
@@ -19,7 +19,7 @@ def raise_invalid_version_argument(pk, version):
 
 def raise_invalid_version_data_with_patch(version):
     raise CoveInputDataError(context={
-        'sub_title': _("Version format does not comply with the schema"),
+        'sub_title': _('Version format does not comply with the schema'),
         'link': 'index',
         'link_text': _('Try Again'),
         'msg': _('The value for the <em>"version"</em> field in your data follows the '
@@ -35,7 +35,7 @@ def raise_invalid_version_data_with_patch(version):
 
 def raise_json_deref_error(pk, error):
     raise CoveInputDataError(context={
-        'sub_title': _("JSON reference error"),
+        'sub_title': _('JSON reference error'),
         'link': 'explore',
         'link_args': pk,
         'link_text': _('Try Again'),
@@ -44,4 +44,21 @@ def raise_json_deref_error(pk, error):
                  '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
                  '</span> <strong>Error message:</strong> <em>{}</em>'.format(error)),
         'error': _('{}'.format(error))
+    })
+
+
+def raise_missing_package_error(pk):
+    raise CoveInputDataError(context={
+        'sub_title': _('Missing OCDS package'),
+        'link': 'explore',
+        'link_args': pk,
+        'link_text': _('Try Again'),
+        'msg': _('Your data is not in the right package format (either <em>release-package'
+                 '</em> or <em> record-package</em>). Please keep in mind that OCDS releases '
+                 'are intended to be published within a package.\n\nIf you are trying to '
+                 'validate a single release you can add it to the <code>"releases"</code> '
+                 'field in a release-package.\n\n<span class="glyphicon glyphicon-exclamation-'
+                 'sign" aria-hidden="true"></span> <strong>Error message:</strong> <em>'
+                 'Missing OCDS package</em>'),
+        'error': _('Missing OCDS package')
     })
