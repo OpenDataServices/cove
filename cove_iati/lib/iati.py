@@ -7,8 +7,12 @@ import defusedxml.lxml as etree
 import lxml.etree
 from django.utils.translation import ugettext_lazy as _
 
+from iati_utils import sort_iati_xml_file
 from .schema import SchemaIATI
+from cove.lib.api import context_api_transform
+from cove.lib.converters import convert_spreadsheet
 from cove.lib.exceptions import CoveInputDataError
+from cove.lib.tools import get_file_type
 
 
 def common_checks_context_iati(upload_dir, data_file, file_type):
@@ -213,7 +217,8 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
 
 
 def get_ruleset_errors(lxml_etree, output_dir):
-    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'], output_path=output_dir)
+    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
+               output_path=output_dir)
     ruleset_errors = []
 
     if not os.path.isdir(output_dir):
@@ -242,3 +247,28 @@ def get_ruleset_errors(lxml_etree, output_dir):
                         ruleset_errors.append(rule_error)
 
     return ruleset_errors
+
+
+def cli_json_output(output_dir, file):
+    context = {}
+    file_type = get_file_type(file)
+    context = {"file_type": file_type}
+    file_type = context['file_type']
+
+    if file_type != 'xml':
+        schema_iati = SchemaIATI()
+        context.update(convert_spreadsheet(output_dir, '', file, file_type,
+                       schema_iati.activity_schema, xml=True, cache=False))
+        data_file = context['converted_path']
+        # sort converted xml
+        sort_iati_xml_file(context['converted_path'], context['converted_path'])
+    else:
+        data_file = file
+
+    # context = context_api_transform(
+    #     context.update(common_checks_context_iati(output_dir, data_file, file_type))
+    # )
+
+    context.update(common_checks_context_iati(output_dir, data_file, file_type))
+
+    return context
