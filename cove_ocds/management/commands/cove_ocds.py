@@ -6,7 +6,8 @@ import sys
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
-from cove_ocds.lib.api import produce_json_output, APIException
+from cove.lib.api import APIException
+from cove_ocds.lib.ocds import cli_json_output
 
 
 class SetEncoder(json.JSONEncoder):
@@ -52,7 +53,7 @@ class Command(BaseCommand):
         os.makedirs(output_dir)
 
         try:
-            result = produce_json_output(output_dir, file, schema_version, convert)
+            result = cli_json_output(output_dir, file, schema_version, convert)
         except APIException as e:
             self.stdout.write(str(e))
             sys.exit(1)
