@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import re
 
 from bdd_tester import bdd_tester
@@ -15,7 +16,7 @@ from cove.lib.exceptions import CoveInputDataError
 from cove.lib.tools import get_file_type
 
 
-def common_checks_context_iati(upload_dir, data_file, file_type):
+def common_checks_context_iati(upload_dir, data_file, file_type, api=False):
     schema_aiti = SchemaIATI()
     lxml_errors = {}
     cell_source_map = {}
@@ -51,18 +52,23 @@ def common_checks_context_iati(upload_dir, data_file, file_type):
             validation_errors = json.load(validation_error_fp)
     else:
         validation_errors = get_xml_validation_errors(errors_all, file_type, cell_source_map)
+        if not api:
+            with open(validation_errors_path, 'w+') as validation_error_fp:
+                validation_error_fp.write(json.dumps(validation_errors))
 
-        with open(validation_errors_path, 'w+') as validation_error_fp:
-            validation_error_fp.write(json.dumps(validation_errors))
-
-    return {
+    context = {
         'validation_errors': sorted(validation_errors.items()),
-        'validation_errors_count': sum(len(value) for value in validation_errors.values()),
         'ruleset_errors': ruleset_errors,
-        'ruleset_errors_count': len(ruleset_errors),
-        'cell_source_map': cell_source_map,
-        'first_render': False
     }
+    if not api:
+        context.update({
+            'validation_errors_count': sum(len(value) for value in validation_errors.values()),
+            'ruleset_errors_count': len(ruleset_errors),
+            'cell_source_map': cell_source_map,
+            'first_render': False
+        })
+
+    return context
 
 
 def lxml_errors_generator(schema_error_log):
@@ -269,6 +275,19 @@ def cli_json_output(output_dir, file):
     #     context.update(common_checks_context_iati(output_dir, data_file, file_type))
     # )
 
-    context.update(common_checks_context_iati(output_dir, data_file, file_type))
+    context.update(common_checks_context_iati(output_dir, data_file, file_type, api=True))
+
+    if file_type == 'xlsx' or file_type == 'csv':
+        # Remove unwanted files in the output
+        # TODO: can we do this by no writing the files in the first place?
+        os.remove(os.path.join(output_dir, 'heading_source_map.json'))
+        os.remove(os.path.join(output_dir, 'cell_source_map.json'))
+
+        if file_type == 'csv':
+            shutil.rmtree(os.path.join(output_dir, 'csv_dir'))
+
+    ruleset_dir = os.path.join(output_dir, 'ruleset')
+    if os.path.exists(ruleset_dir):
+        shutil.rmtree(ruleset_dir)
 
     return context
