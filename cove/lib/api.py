@@ -1,5 +1,7 @@
 import re
 
+from django.conf import settings
+
 
 class APIException(Exception):
     pass
@@ -8,6 +10,20 @@ class APIException(Exception):
 def context_api_transform(context):
     validation_errors = context.get('validation_errors')
     context['validation_errors'] = []
+
+    if settings.COVE_CONFIG['app_name'] == 'cove_iati':
+        if validation_errors:
+                for error_group in validation_errors:
+                    error_description = error_group[0][5:]
+                    error_description = re.sub('(\[?|\s?)\"\]?', '', error_description)
+                    for path_value in error_group[1]:
+                        context['validation_errors'].append({
+                            'description': error_description,
+                            'path': path_value.get('path', ''),
+                            'value': path_value.get('value', '')
+                        })
+        return context
+
     context.pop('validation_errors_count')
 
     extensions = context.get('extensions')
@@ -37,15 +53,12 @@ def context_api_transform(context):
     if extensions:
         invalid_extensions = extensions.get('invalid_extension')
         context['extensions']['extensions'] = []
-
         for key, value in extensions['extensions'].items():
             if key not in invalid_extensions:
                 context['extensions']['extensions'].append(value)
-
         context['extensions']['invalid_extensions'] = []
         for key, value in invalid_extensions.items():
             context['extensions']['invalid_extensions'].append([key, value])
-
         context['extensions']['extended_schema_url'] = extensions['extended_schema_url']
         context['extensions']['is_extended_schema'] = extensions['is_extended_schema']
 

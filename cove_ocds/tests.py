@@ -12,9 +12,10 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 
 import cove.lib.common as cove_common
-from . lib.api import context_api_transform, cli_json_output, APIException
-from . lib.ocds import get_releases_aggregates
-from . lib.schema import SchemaOCDS
+from .lib.ocds import cli_json_output
+from .lib.ocds import get_releases_aggregates
+from .lib.schema import SchemaOCDS
+from cove.lib.api import context_api_transform, APIException
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
 
@@ -918,16 +919,16 @@ def test_cove_ocds_cli(file_type, options, output):
     output_dir = os.path.join('media', test_dir)
     options['output_dir'] = output_dir
 
-    call_command('cove_ocds', file_name, **options)
+    call_command('ocds_cli', file_name, **options)
     assert sorted(os.listdir(output_dir)) == sorted(output)
 
     # Test --delete option for one of the cases
     if not options:
-        call_command('cove_ocds', file_name, delete=True, output_dir=output_dir)
+        call_command('ocds_cli', file_name, delete=True, output_dir=output_dir)
         assert sorted(os.listdir(output_dir)) == sorted(output)
 
         with pytest.raises(SystemExit):
-            call_command('cove_ocds', file_name, output_dir=output_dir)
+            call_command('ocds_cli', file_name, output_dir=output_dir)
 
 
 @pytest.mark.parametrize('version_option', ['', '1.1', '100.100.100'])
@@ -938,10 +939,10 @@ def test_cove_ocds_cli_schema_version(version_option):
 
     if version_option == '100.100.100':
         with pytest.raises(CommandError):
-            call_command('cove_ocds', file_name, schema_version=version_option, output_dir=output_dir)
+            call_command('ocds_cli', file_name, schema_version=version_option, output_dir=output_dir)
 
     else:
-        call_command('cove_ocds', file_name, schema_version=version_option, output_dir=output_dir)
+        call_command('ocds_cli', file_name, schema_version=version_option, output_dir=output_dir)
         with open(os.path.join(output_dir, 'results.json')) as fp:
             results = json.load(fp)
             # 1.0 by default is expected behaviour as tenders_releases_2_releases.json
@@ -957,7 +958,7 @@ def test_cove_ocds_cli_schema_version_override(file_name, version_option):
     test_dir = str(uuid.uuid4())
     file_path = os.path.join('cove_ocds', 'fixtures', file_name)
     output_dir = os.path.join('media', test_dir)
-    call_command('cove_ocds', file_path, schema_version=version_option, output_dir=output_dir)
+    call_command('ocds_cli', file_path, schema_version=version_option, output_dir=output_dir)
 
     with open(os.path.join(output_dir, 'results.json')) as fp:
         results = json.load(fp)

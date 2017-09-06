@@ -439,8 +439,8 @@ def cli_json_output(output_dir, file, schema_version, convert):
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp)
 
-    context = context_api_transform(common_checks_ocds(
-        context, output_dir, json_data, schema_ocds, api=True, cache=False)
+    context = context_api_transform(
+        common_checks_ocds(context, output_dir, json_data, schema_ocds, api=True, cache=False)
     )
 
     if file_type == 'xlsx':

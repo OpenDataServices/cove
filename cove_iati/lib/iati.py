@@ -16,7 +16,7 @@ from cove.lib.exceptions import CoveInputDataError
 from cove.lib.tools import get_file_type
 
 
-def common_checks_context_iati(upload_dir, data_file, file_type, api=False):
+def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False):
     schema_aiti = SchemaIATI()
     lxml_errors = {}
     cell_source_map = {}
@@ -56,10 +56,10 @@ def common_checks_context_iati(upload_dir, data_file, file_type, api=False):
             with open(validation_errors_path, 'w+') as validation_error_fp:
                 validation_error_fp.write(json.dumps(validation_errors))
 
-    context = {
+    context.update({
         'validation_errors': sorted(validation_errors.items()),
         'ruleset_errors': ruleset_errors,
-    }
+    })
     if not api:
         context.update({
             'validation_errors_count': sum(len(value) for value in validation_errors.values()),
@@ -110,7 +110,9 @@ def format_lxml_errors(lxml_errors):
         
         message = error['message']
         value = ''
-        if 'element is not expected' not in message:
+        if 'element is not expected' in message:
+            message = message.replace('. Expected is (', ', expected is').replace(' )', '')
+        else:
             val_start = error['message'].find(": '")
             value = error['message'][val_start + len(": '"):]
             val_end = value.find("'")
@@ -271,13 +273,11 @@ def cli_json_output(output_dir, file):
     else:
         data_file = file
 
-    # context = context_api_transform(
-    #     context.update(common_checks_context_iati(output_dir, data_file, file_type))
-    # )
+    context = context_api_transform(
+        common_checks_context_iati(context, output_dir, data_file, file_type, api=True)
+    )
 
-    context.update(common_checks_context_iati(output_dir, data_file, file_type, api=True))
-
-    if file_type == 'xlsx' or file_type == 'csv':
+    if file_type != 'xml':
         # Remove unwanted files in the output
         # TODO: can we do this by no writing the files in the first place?
         os.remove(os.path.join(output_dir, 'heading_source_map.json'))
