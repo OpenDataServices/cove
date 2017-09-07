@@ -2,8 +2,8 @@ import json
 import os
 import sys
 
-from cove.lib.api import APIException
 from cove.management.commands.base_command import CoveBaseCommand, SetEncoder
+from cove_iati.lib.api import APIException
 from cove_iati.lib.iati import cli_json_output
 
 

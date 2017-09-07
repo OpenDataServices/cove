@@ -4,7 +4,7 @@ import os
 
 import cove.lib.tools as tools
 from .schema import SchemaOCDS
-from cove.lib.api import context_api_transform, APIException
+from .api import context_api_transform, APIException
 from cove.lib.common import common_checks_context, get_additional_codelist_values, get_spreadsheet_meta_data
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.tools import get_file_type

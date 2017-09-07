@@ -9,8 +9,8 @@ import lxml.etree
 from django.utils.translation import ugettext_lazy as _
 
 from .iati_utils import sort_iati_xml_file
+from .api import context_api_transform
 from .schema import SchemaIATI
-from cove.lib.api import context_api_transform
 from cove.lib.converters import convert_spreadsheet
 from cove.lib.exceptions import CoveInputDataError
 from cove.lib.tools import get_file_type

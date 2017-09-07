@@ -5,8 +5,8 @@ import sys
 from django.conf import settings
 from django.core.management.base import CommandError
 
-from cove.lib.api import APIException
 from cove.management.commands.base_command import CoveBaseCommand, SetEncoder
+from cove_ocds.lib.api import APIException
 from cove_ocds.lib.ocds import cli_json_output
 
 
