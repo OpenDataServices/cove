@@ -110,7 +110,7 @@ def format_lxml_errors(lxml_errors):
         
         message = error['message']
         value = ''
-        if 'element is not expected' in message:
+        if 'element is not expected' in message or 'Missing child element' in message:
             message = message.replace('. Expected is (', ', expected is').replace(' )', '')
         else:
             val_start = error['message'].find(": '")

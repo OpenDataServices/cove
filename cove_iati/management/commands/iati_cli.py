@@ -2,6 +2,8 @@ import json
 import os
 import sys
 
+
+from cove.lib.exceptions import CoveInputDataError
 from cove.management.commands.base_command import CoveBaseCommand, SetEncoder
 from cove_iati.lib.api import APIException
 from cove_iati.lib.iati import cli_json_output
@@ -17,6 +19,9 @@ class Command(CoveBaseCommand):
             result = cli_json_output(self.output_dir, file)
         except APIException as e:
             self.stdout.write(str(e))
+            sys.exit(1)
+        except CoveInputDataError as e:
+            self.stdout.write('Not well formed XML: %s' % str(e.context['error']))
             sys.exit(1)
 
         with open(os.path.join(self.output_dir, "results.json"), 'w+') as result_file:
