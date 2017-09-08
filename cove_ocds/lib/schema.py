@@ -34,8 +34,9 @@ class SchemaOCDS(SchemaJsonMixin):
         '''
         self.version = self.default_version
         self.schema_host = self.default_schema_host
-        self.missing_package = False
 
+        # Missing package is only for original json data
+        self.missing_package = False
         if release_data:
             if 'version' not in release_data:
                 self.version = '1.0'
