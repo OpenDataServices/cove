@@ -12,10 +12,10 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 
 import cove.lib.common as cove_common
+from .lib.api import context_api_transform, APIException
 from .lib.ocds import cli_json_output
 from .lib.ocds import get_releases_aggregates
 from .lib.schema import SchemaOCDS
-from cove.lib.api import context_api_transform, APIException
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
 
