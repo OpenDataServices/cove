@@ -22,7 +22,7 @@
         {% else %} 
           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% trans "Passed " %} 
         {% endif %}
-        {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">schema version {{ version_used_display }}.</a>
+        {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">OCDS release package schema version {{ version_used_display }}</a>.
         {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Validation Errors</a> below.{% endblocktrans %}{% endif %}
         </div>
         {% if extensions and extensions.invalid_extension %}
