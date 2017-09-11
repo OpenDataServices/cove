@@ -154,6 +154,6 @@ def test_cove_iati_cli_output():
 
     ruleset_errors = results.get('ruleset_errors')
     assert ruleset_errors and ruleset_errors[0]['rule'] == 'date must be today or in the past'
-    assert ruleset_errors and ruleset_errors[0]['message'] == '2200-03-03 should be on or before today (2017-09-08)'
+    assert ruleset_errors and '2200-03-03 should be on or before today' in ruleset_errors[0]['message']
     assert ruleset_errors and ruleset_errors[0]['id'] == 'AA-AAA-123123-AA123'
     assert ruleset_errors and ruleset_errors[0]['path'] == '/iati-activities/iati-activity[1]/transaction[2]/transaction-date'
