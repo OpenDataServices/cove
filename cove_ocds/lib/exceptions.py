@@ -53,11 +53,12 @@ def raise_missing_package_error():
         'msg': _('Your data is not in the right package format (either <a href="http://'
                  'standard.open-contracting.org/latest/en/schema/release_package/">release '
                  'package </a> or <a href="http://standard.open-contracting.org/latest/en'
-                 '/schema/record_package/"> record package</a>). Please keep in mind that '
-                 'OCDS releases are intended to be published within a package.\n\nIf you '
-                 'are trying to validate a single release you can add it to the <code>"'
-                 'releases"</code> field in a release-package.\n\n<span class="glyphicon '
-                 'glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error '
-                 'message:</strong> <em>Missing OCDS package</em>'),
+                 '/schema/record_package/"> record package</a>). OCDS releases and records '
+                 'are intended to be published within a package. For more information, '
+                 'please refer to the <a href="http://standard.open-contracting.org/latest'
+                 '/en/getting_started/releases_and_records/"> Releases and Records section'
+                 '</a> in the OCDS documentation.\n\n<span class="glyphicon glyphicon-excla'
+                 'mation-sign" aria-hidden="true"></span> <strong>Error message:</strong> '
+                 '<em>Missing OCDS package</em>'),
         'error': _('Missing OCDS package')
     })
