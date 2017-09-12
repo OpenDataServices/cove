@@ -50,15 +50,15 @@ def raise_missing_package_error():
         'sub_title': _('Missing OCDS package'),
         'link': 'index',
         'link_text': _('Try Again'),
-        'msg': _('Your data is not in the right package format (either <a href="http://'
+        'msg': _('We could not detect a package structure at the top-level of your data. '
+                 'OCDS releases and records should be published within a <a href="http://'
                  'standard.open-contracting.org/latest/en/schema/release_package/">release '
                  'package </a> or <a href="http://standard.open-contracting.org/latest/en'
-                 '/schema/record_package/"> record package</a>). OCDS releases and records '
-                 'are intended to be published within a package. For more information, '
-                 'please refer to the <a href="http://standard.open-contracting.org/latest'
-                 '/en/getting_started/releases_and_records/"> Releases and Records section'
-                 '</a> in the OCDS documentation.\n\n<span class="glyphicon glyphicon-excla'
-                 'mation-sign" aria-hidden="true"></span> <strong>Error message:</strong> '
-                 '<em>Missing OCDS package</em>'),
+                 '/schema/record_package/"> record package</a> to provide important meta-'
+                 'data. For more information, please refer to the <a href="http://standard.'
+                 'open-contracting.org/latest/en/getting_started/releases_and_records/"> '
+                 'Releases and Records section </a> in the OCDS documentation.\n\n<span '
+                 'class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> '
+                 '<strong>Error message:</strong> <em>Missing OCDS package</em>'),
         'error': _('Missing OCDS package')
     })
