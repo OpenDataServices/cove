@@ -6,8 +6,7 @@ from django.conf import settings
 from django.core.management.base import CommandError
 
 from cove.management.commands.base_command import CoveBaseCommand, SetEncoder
-from cove_ocds.lib.api import APIException
-from cove_ocds.lib.ocds import cli_json_output
+from cove_ocds.lib.api import APIException, ocds_json_output
 
 
 class Command(CoveBaseCommand):
@@ -31,7 +30,7 @@ class Command(CoveBaseCommand):
             ))
 
         try:
-            result = cli_json_output(self.output_dir, file, schema_version, convert)
+            result = ocds_json_output(self.output_dir, file, schema_version, convert)
         except APIException as e:
             self.stdout.write(str(e))
             sys.exit(1)

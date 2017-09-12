@@ -12,8 +12,7 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 
 import cove.lib.common as cove_common
-from .lib.api import context_api_transform, APIException
-from .lib.ocds import cli_json_output
+from .lib.api import APIException, context_api_transform, ocds_json_output
 from .lib.ocds import get_releases_aggregates
 from .lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
@@ -898,11 +897,11 @@ def test_context_api_transform_deprecations():
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('json_data', ['{[,]}', '{"version": "1.bad"}'])
-def test_cli_json_output_bad_data(json_data):
+def test_ocds_json_output_bad_data(json_data):
     data = SuppliedData.objects.create()
     data.original_file.save('bad_data.json', ContentFile(json_data))
     with pytest.raises(APIException):
-        cli_json_output(data.upload_dir(), data.original_file.file.name, schema_version='', convert=False)
+        ocds_json_output(data.upload_dir(), data.original_file.file.name, schema_version='', convert=False)
 
 
 @pytest.mark.parametrize(('file_type', 'options', 'output'), [

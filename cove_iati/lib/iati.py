@@ -1,19 +1,14 @@
 import json
 import os
-import shutil
 import re
 
-from bdd_tester import bdd_tester
 import defusedxml.lxml as etree
 import lxml.etree
+from bdd_tester import bdd_tester
 from django.utils.translation import ugettext_lazy as _
 
-from .iati_utils import sort_iati_xml_file
-from .api import context_api_transform
 from .schema import SchemaIATI
-from cove.lib.converters import convert_spreadsheet
 from cove.lib.exceptions import CoveInputDataError
-from cove.lib.tools import get_file_type
 
 
 def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False):
@@ -255,39 +250,3 @@ def get_ruleset_errors(lxml_etree, output_dir):
                         ruleset_errors.append(rule_error)
 
     return ruleset_errors
-
-
-def cli_json_output(output_dir, file):
-    context = {}
-    file_type = get_file_type(file)
-    context = {"file_type": file_type}
-    file_type = context['file_type']
-
-    if file_type != 'xml':
-        schema_iati = SchemaIATI()
-        context.update(convert_spreadsheet(output_dir, '', file, file_type,
-                       schema_iati.activity_schema, xml=True, cache=False))
-        data_file = context['converted_path']
-        # sort converted xml
-        sort_iati_xml_file(context['converted_path'], context['converted_path'])
-    else:
-        data_file = file
-
-    context = context_api_transform(
-        common_checks_context_iati(context, output_dir, data_file, file_type, api=True)
-    )
-
-    if file_type != 'xml':
-        # Remove unwanted files in the output
-        # TODO: can we do this by no writing the files in the first place?
-        os.remove(os.path.join(output_dir, 'heading_source_map.json'))
-        os.remove(os.path.join(output_dir, 'cell_source_map.json'))
-
-        if file_type == 'csv':
-            shutil.rmtree(os.path.join(output_dir, 'csv_dir'))
-
-    ruleset_dir = os.path.join(output_dir, 'ruleset')
-    if os.path.exists(ruleset_dir):
-        shutil.rmtree(ruleset_dir)
-
-    return context
