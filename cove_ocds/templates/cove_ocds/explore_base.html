@@ -23,7 +23,7 @@
             <small><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> &nbsp;Your data specifies a version <strong>{{unrecognized_version_data}}</strong> which is not recognised. For that reason, it's been validated against the current default version.</small>
           </div>
         {% endif %}
-        <p>This data has been checked against <a href="{{ schema_url }}">OCDS schema version {{ version_used_display }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
+        <p>This data has been checked against <a href="{{ schema_url }}">OCDS {% if releases %}release {% endif %}{% if records %}record {% endif %}package schema version {{ version_used_display }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
         <br>
         <strong>Validate and explore same data against a different version of the schema</strong>
         <br>
