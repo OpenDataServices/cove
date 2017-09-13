@@ -67,7 +67,7 @@ def explore_iati(request, pk):
     else:
         data_file = db_data.original_file.file.name
 
-    context.update(common_checks_context_iati(db_data.upload_dir(), data_file, file_type))
+    context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type)
     context['first_render'] = not db_data.rendered
 
     if not db_data.rendered:

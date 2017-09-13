@@ -2,16 +2,16 @@ import json
 import os
 import re
 
-from bdd_tester import bdd_tester
 import defusedxml.lxml as etree
 import lxml.etree
+from bdd_tester import bdd_tester
 from django.utils.translation import ugettext_lazy as _
 
 from .schema import SchemaIATI
 from cove.lib.exceptions import CoveInputDataError
 
 
-def common_checks_context_iati(upload_dir, data_file, file_type):
+def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False):
     schema_aiti = SchemaIATI()
     lxml_errors = {}
     cell_source_map = {}
@@ -47,18 +47,23 @@ def common_checks_context_iati(upload_dir, data_file, file_type):
             validation_errors = json.load(validation_error_fp)
     else:
         validation_errors = get_xml_validation_errors(errors_all, file_type, cell_source_map)
+        if not api:
+            with open(validation_errors_path, 'w+') as validation_error_fp:
+                validation_error_fp.write(json.dumps(validation_errors))
 
-        with open(validation_errors_path, 'w+') as validation_error_fp:
-            validation_error_fp.write(json.dumps(validation_errors))
-
-    return {
+    context.update({
         'validation_errors': sorted(validation_errors.items()),
-        'validation_errors_count': sum(len(value) for value in validation_errors.values()),
         'ruleset_errors': ruleset_errors,
-        'ruleset_errors_count': len(ruleset_errors),
-        'cell_source_map': cell_source_map,
-        'first_render': False
-    }
+    })
+    if not api:
+        context.update({
+            'validation_errors_count': sum(len(value) for value in validation_errors.values()),
+            'ruleset_errors_count': len(ruleset_errors),
+            'cell_source_map': cell_source_map,
+            'first_render': False
+        })
+
+    return context
 
 
 def lxml_errors_generator(schema_error_log):
@@ -100,7 +105,9 @@ def format_lxml_errors(lxml_errors):
         
         message = error['message']
         value = ''
-        if 'element is not expected' not in message:
+        if 'element is not expected' in message or 'Missing child element' in message:
+            message = message.replace('. Expected is (', ', expected is').replace(' )', '')
+        else:
             val_start = error['message'].find(": '")
             value = error['message'][val_start + len(": '"):]
             val_end = value.find("'")
@@ -213,7 +220,8 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
 
 
 def get_ruleset_errors(lxml_etree, output_dir):
-    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'], output_path=output_dir)
+    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
+               output_path=output_dir)
     ruleset_errors = []
 
     if not os.path.isdir(output_dir):
