@@ -353,6 +353,7 @@ def test_get_schema_deprecated_paths():
     '{"version": "1.1", "records" : "test"}',
     '{"version": "1.1", "records" : {"version": "1.1", "a":"b"}}',
     '{"version": "1.1", "releases":{"buyer":{"additionalIdentifiers":[]}}}',
+    '{"version": "1.1", "releases":{"parties":{"roles":[["a","b"]]}}}',  # test an array in a codelist position
 ])
 def test_explore_page(client, json_data):
     data = SuppliedData.objects.create()
