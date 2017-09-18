@@ -67,7 +67,7 @@ Serious Bug fixes and 'priority' features, that need to make it into a release a
 
 Requirements
 ============
-This application is built using Django and Python 3
+This application is built using Django and Python 3.5
 
 Installation
 ============

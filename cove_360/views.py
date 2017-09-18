@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from . lib.schema import Schema360
 from . lib.threesixtygiving import common_checks_360
+from . lib.threesixtygiving import TEST_CLASSES
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
 from cove.views import explore_data_context
@@ -74,3 +75,9 @@ def explore_360(request, pk, template='cove_360/explore.html'):
 
 def common_errors(request):
     return render(request, 'cove_360/common_errors.html')
+
+
+def additional_checks(request):
+    context = {}
+    context["checks"] = [{**check.check_text, 'desc': check.__doc__} for check in TEST_CLASSES]
+    return render(request, 'cove_360/additional_checks.html', context)
