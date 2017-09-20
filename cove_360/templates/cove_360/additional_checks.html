@@ -2,11 +2,9 @@
 {% load i18n %}
 {% block content %}
 
-<div>
-  <h2>{% trans "Additional Checks" %}</h2>
+<h2>{% trans "Additional Checks" %}</h2>
 
 <p>
-
 This page details all of the Additional Checks in this instance of the Data Quality Tool. 
 
 The <label> Heading </label> is prefixed by text such as "X of your grants have..." in almost all cases, apart from when the check refers to the whole dataset (eg the multiple Funding Org check). The <label>Message</label> is displayed if the check is triggered. The <label>Method</label> describes how the check works under-the-hood. 
@@ -16,12 +14,10 @@ The <label> Heading </label> is prefixed by text such as "X of your grants have.
 {% for check in checks %}
 
 <p>
-<label>Heading</label> {{ check.heading }}</br>
-<label>Message</label> {{ check.message }}</br>
-<label>Method</label> {{ check.desc }}
+<label>Heading</label> {{check.heading}}<br/>
+<label>Message</label> {{check.message}}<br/>
+<label>Method</label> {{check.desc}}
 </p>
 
 {% endfor %}
-
-
 {% endblock %} 
