@@ -8,15 +8,21 @@ import os
 import flattentool
 import warnings
 from flattentool.exceptions import DataErrorWarning
+from selenium.webdriver.chrome.options import Options
 
-BROWSER = os.environ.get('BROWSER', 'Firefox')
+BROWSER = os.environ.get('BROWSER', 'ChromeHeadless')
 
 PREFIX_360 = os.environ.get('PREFIX_360', '/')
 
 
 @pytest.fixture(scope="module")
 def browser(request):
-    browser = getattr(webdriver, BROWSER)()
+    if BROWSER == 'ChromeHeadless':
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        browser = webdriver.Chrome(chrome_options=chrome_options)
+    else:
+        browser = getattr(webdriver, BROWSER)()
     browser.implicitly_wait(3)
     request.addfinalizer(lambda: browser.quit())
     return browser
@@ -291,7 +297,7 @@ def test_index_page_360(server_url, browser):
     ('360Giving Data Standard guidance', 'http://www.threesixtygiving.org/standard/'),
     ('Excel', 'https://threesixtygiving-standard.readthedocs.io/en/latest/_static/summary-table/360-giving-schema-titles.xlsx'),
     ('CSV', 'https://threesixtygiving-standard.readthedocs.io/en/latest/templates-csv'),
-    ('360Giving JSON schema', 'http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas'),
+    ('360Giving JSON schema', 'http://standard.threesixtygiving.org/en/latest/reference/#giving-json-schemas'),
     ('Multi-table data package - Excel', 'https://threesixtygiving-standard.readthedocs.io/en/latest/_static/multi-table/360-giving-schema-fields.xlsx')
     ])
 def test_index_page_360_links(server_url, browser, link_text, url):
@@ -375,6 +381,7 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
         if section.get_attribute('data-toggle') == "collapse" and section.get_attribute('aria-expanded') != 'true':
             section.click()
         time.sleep(0.5)
+
     browser.find_element_by_css_selector('a[data-target=".validation-errors-1"]').click()
 
     modal = browser.find_element_by_css_selector('.validation-errors-1')
@@ -382,8 +389,18 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
     modal_text = modal.text
     assert "24/07/2014" in modal_text
     assert "grants/0/awardDate" in modal_text
-
     table_rows = browser.find_elements_by_css_selector('.validation-errors-1 tbody tr')
+    assert len(table_rows) == 4
+
+    browser.find_element_by_css_selector('div.modal.validation-errors-1 button.close').click()
+    browser.find_element_by_css_selector('a[data-target=".additional-checks-3"]').click()
+
+    modal_additional_checks = browser.find_element_by_css_selector('.additional-checks-3')
+    assert "in" in modal_additional_checks.get_attribute("class").split()
+    modal_additional_checks_text = modal_additional_checks.text
+    assert "4 grants have incomplete recipient organisation information" in modal_additional_checks_text
+    assert "grants/0/recipientOrganization/0/id" in modal_additional_checks_text
+    table_rows = browser.find_elements_by_css_selector('.additional-checks-3 tbody tr')
     assert len(table_rows) == 4
 
 
@@ -413,12 +430,16 @@ def test_check_schema_link_on_result_page(server_url, browser, httpserver, sourc
         time.sleep(0.5)
     schema_link = browser.find_element_by_link_text(expected_text)
     schema_link.click()
-    browser.find_element_by_id('toc-360giving-json-schemas')
+    browser.find_element_by_id('giving-json-schemas')
 
 
-def test_URL_invalid_dataset_request(server_url, browser):
+@pytest.mark.parametrize(('data_url'), [
+    'data/0',
+    'data/324ea8eb-f080-43ce-a8c1-9f47b28162f3'
+])
+def test_url_invalid_dataset_request(server_url, browser, data_url):
     # Test a badly formed hexadecimal UUID string
-    browser.get(server_url + 'data/0')
+    browser.get(server_url + data_url)
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
     # Test for well formed UUID that doesn't identify any dataset that exists
     browser.get(server_url + 'data/38e267ce-d395-46ba-acbf-2540cdd0c810')

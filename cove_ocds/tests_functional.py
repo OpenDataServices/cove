@@ -7,10 +7,11 @@ from django.conf import settings
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.chrome.options import Options
 
 PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/validator/')
 
-BROWSER = os.environ.get('BROWSER', 'Firefox')
+BROWSER = os.environ.get('BROWSER', 'ChromeHeadless')
 
 OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
 OCDS_SCHEMA_VERSIONS = settings.COVE_CONFIG['schema_version_choices']
@@ -19,7 +20,12 @@ OCDS_SCHEMA_VERSIONS_DISPLAY = list(display_url[0] for version, display_url in O
 
 @pytest.fixture(scope='module')
 def browser(request):
-    browser = getattr(webdriver, BROWSER)()
+    if BROWSER == 'ChromeHeadless':
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        browser = webdriver.Chrome(chrome_options=chrome_options)
+    else:
+        browser = getattr(webdriver, BROWSER)()
     browser.implicitly_wait(3)
     request.addfinalizer(lambda: browser.quit())
     return browser
@@ -158,7 +164,7 @@ def test_500_error(server_url, browser):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'not_expected_text', 'conversion_successful'), [
-    ('tenders_releases_2_releases.json', ['Convert', 'Schema', 'OCDS schema version 1.0. You can'] + OCDS_SCHEMA_VERSIONS_DISPLAY,
+    ('tenders_releases_2_releases.json', ['Convert', 'Schema', 'OCDS release package schema version 1.0. You can'] + OCDS_SCHEMA_VERSIONS_DISPLAY,
                                          ['Schema Extensions'], True),
     ('tenders_releases_1_release_with_extensions_version_1_1.json', ['Schema Extensions',
                                                                      'Contract Parties (Organization structure)',
@@ -202,25 +208,30 @@ def test_500_error(server_url, browser):
     ('utf8.json', 'Convert', [], True),
     # But we expect to see an error message if a file is not well formed JSON at all
     ('tenders_releases_2_releases_not_json.json', 'not well formed JSON', [], False),
-    ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, [], True),
+    ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, ['Missing OCDS package'], True),
     ('badfile.json', 'Statistics can not produced', [], True),
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', [], False),
     ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], [], True),
     # Test "version" value in data
     ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 123.123 which is not recognised',
-                                                                   'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
+                                                                   'checked against OCDS release package schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
                                                                    'validated against the current default version.',
                                                                    'Convert to Spreadsheet'],
                                                                   ['Additional Fields (fields in data not in schema)', 'Error message'], False),
     ('tenders_releases_1_release_with_wrong_version_type.json', ['Your data specifies a version 1000 (it must be a string) which is not recognised',
-                                                                 'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
+                                                                 'checked against OCDS release package schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
                                                                  'Convert to Spreadsheet'],
                                                                 ['Additional Fields (fields in data not in schema)', 'Error message'], False),
     ('tenders_releases_1_release_with_patch_in_version.json', ['"version" field in your data follows the major.minor.patch pattern',
                                                                '100.100.0 format does not comply with the schema',
                                                                'Error message'], ['Convert to Spreadsheet'], False),
     ('bad_toplevel_list.json', ['OCDS JSON should have an object as the top level, the JSON you supplied does not.'], [], False),
+    ('tenders_releases_1_release_with_extension_broken_json_ref.json', ['JSON reference error',
+                                                                       'Unresolvable JSON pointer:',
+                                                                       '/definitions/OrganizationReference'], ['Convert to Spreadsheet'], False),
+    ('tenders_releases_1_release_unpackaged.json', ['Missing OCDS package',
+                                                    'Error message: Missing OCDS package'], ['Convert to Spreadsheet'], False),
 ])
 def test_url_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     browser, source_url = url_input_browser(source_filename, output_source_url=True)
@@ -361,9 +372,13 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
         assert 'conversion Warnings' not in body_text
 
 
-def test_url_invalid_dataset_request(server_url, browser):
+@pytest.mark.parametrize(('data_url'), [
+    'data/0',
+    'data/324ea8eb-f080-43ce-a8c1-9f47b28162f3'
+])
+def test_url_invalid_dataset_request(server_url, browser, data_url):
     # Test a badly formed hexadecimal UUID string
-    browser.get(server_url + 'data/0')
+    browser.get(server_url + data_url)
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
     # Test for well formed UUID that doesn't identify any dataset that exists
     browser.get(server_url + 'data/38e267ce-d395-46ba-acbf-2540cdd0c810')
@@ -375,11 +390,11 @@ def test_url_invalid_dataset_request(server_url, browser):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_version_1_1.json', 'validation against schema version 1.1',
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', 'validation against OCDS release package schema version 1.1',
      '\'version\' is missing but required', 'methodRationale', 'version'),
-    ('tenders_releases_1_release_with_invalid_extensions.json', 'validation against schema version 1.0',
+    ('tenders_releases_1_release_with_invalid_extensions.json', 'validation against OCDS release package schema version 1.0',
      '\'version\' is missing but required', 'methodRationale', 'version'),
-    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'validation against schema version 1.1',
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'validation against OCDS release package schema version 1.1',
      '\'version\' is missing but required', 'methodRationale', 'version')
 ])
 def test_url_input_with_version(server_url, url_input_browser, httpserver, source_filename, expected, not_expected,
@@ -403,11 +418,11 @@ def test_url_input_with_version(server_url, url_input_browser, httpserver, sourc
 
 
 @pytest.mark.parametrize(('source_filename', 'select_version', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_version_1_1.json', '1.0', 'validation against schema version 1.0',
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', '1.0', 'validation against OCDS release package schema version 1.0',
      '\'version\' is missing but required', 'version', 'publisher'),
     ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', '\'version\' is missing but required',
-     'validation against schema version 1.0', 'methodRationale', 'version'),
-    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'validation against schema version 1.0',
+     'validation against OCDS release package schema version 1.0', 'methodRationale', 'version'),
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'validation against OCDS release package schema version 1.0',
      '\'version\' is missing but required', 'version', 'publisher')
 ])
 def test_url_input_with_version_change(server_url, url_input_browser, httpserver, select_version, source_filename, expected,

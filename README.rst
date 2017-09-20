@@ -67,7 +67,7 @@ Serious Bug fixes and 'priority' features, that need to make it into a release a
 
 Requirements
 ============
-This application is built using Django and Python 3
+This application is built using Django and Python 3.5
 
 Installation
 ============
@@ -226,7 +226,9 @@ WARNING: The ``./update_requirements`` script will delete and recreate your curr
 
 Command Line Interface
 ======================
-CoVE for OCDS can be run from the command line. To get a JSON file with validation errors plus other key information you can use the following command:
+CoVE for OCDS and IATI can be run from the command line. To get a JSON file with validation errors plus other key information, use the following command:
+
+**OCDS**
 
 .. code:: bash
 
@@ -245,3 +247,24 @@ Options:
 ``--schema-version -s``  Version of the schema to validate the data.
 
 ``--convert -c``  Convert data from nested (JSON) to flat format (Excel and CSV). This option is redundant for spreadsheets as they are always converted to JSON format.
+
+
+**IATI**
+
+.. code:: bash
+
+    ./iati-cli --options file-name
+
+``file-name`` can be a XML or an Excel/CSV file.
+
+Options:
+
+``--output-dir -o``  Directory where the output will be created, defaults to the name of the file.
+
+``--exclude-file -e``  Do not include the file in the output directory.
+
+``--delete -d`` Delete the output directory if it already exists.
+
+If the file is in spreadsheet format, the output directory will contain a *unflattened.xml* file converted from Excel or CSV to XML format
+
+

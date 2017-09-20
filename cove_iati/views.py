@@ -4,14 +4,14 @@ from django.shortcuts import render
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from .lib.schema import SchemaIATI
-from .lib.iati import common_checks_context_iati
-from .lib.iati_utils import sort_iati_xml_file
 from cove.lib.converters import convert_spreadsheet
 from cove.lib.exceptions import cove_web_input_error
 from cove.input.models import SuppliedData
 from cove.input.views import data_input
 from cove.views import explore_data_context
+from .lib.iati import common_checks_context_iati
+from .lib.iati_utils import sort_iati_xml_file
+from .lib.schema import SchemaIATI
 
 
 logger = logging.getLogger(__name__)
@@ -67,7 +67,7 @@ def explore_iati(request, pk):
     else:
         data_file = db_data.original_file.file.name
 
-    context.update(common_checks_context_iati(db_data.upload_dir(), data_file, file_type))
+    context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type)
     context['first_render'] = not db_data.rendered
 
     if not db_data.rendered:

@@ -44,8 +44,8 @@ class IATISchemaWalker(object):
         schema -- the filename of the schema to use, e.g.
                   'iati-activities-schema.xsd'
         '''
-        self.tree = ET.parse('cove_iati/iati_schemas/2.01/' + schema)
-        self.tree2 = ET.parse('cove_iati/iati_schemas/2.01//iati-common.xsd')
+        self.tree = ET.parse('cove_iati/iati_schemas/2.02/' + schema)
+        self.tree2 = ET.parse('cove_iati/iati_schemas/2.02//iati-common.xsd')
 
     def get_schema_element(self, tag_name, name_attribute):
         '''

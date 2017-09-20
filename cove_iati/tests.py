@@ -1,6 +1,11 @@
 import pytest
 import defusedxml.lxml as etree
+import json
 import lxml.etree
+import os
+import uuid
+
+from django.core.management import call_command
 
 from .lib import iati
 
@@ -93,3 +98,62 @@ def test_format_lxml_errors(validated_data):
         assert error_dict['path'] in expected_error_paths
         assert error_dict['value'] in expected_error_values
         assert error_dict['message'] in expected_error_messages
+
+
+@pytest.mark.parametrize(('file_name', 'bad_xml', 'options', 'output'), [
+    ('basic_iati_unordered_invalid_iso_dates.xlsx', False, {}, [
+        'basic_iati_unordered_invalid_iso_dates.xlsx',
+        'results.json',
+        'unflattened.xml'
+    ]),
+    ('basic_iati_unordered_invalid_iso_dates.xlsx', False, {'exclude_file': True}, [
+        'results.json',
+        'unflattened.xml'
+    ]),
+    ('basic_iati_ruleset_errors.xml', False, {}, [
+        'basic_iati_ruleset_errors.xml',
+        'results.json'
+    ]),
+    ('bad.xml', True, {}, ['bad.xml']),
+])
+def test_cove_iaiti_cli_dir_content(file_name, bad_xml, options, output):
+    test_dir = str(uuid.uuid4())
+    file_path = os.path.join('cove_iati', 'fixtures', file_name)
+    output_dir = os.path.join('media', test_dir)
+    options['output_dir'] = output_dir
+
+    if bad_xml:
+        with pytest.raises(SystemExit):
+            call_command('iati_cli', file_path, output_dir=output_dir)
+    else:
+        call_command('iati_cli', file_path, **options)
+        assert sorted(os.listdir(output_dir)) == sorted(output)
+
+
+def test_cove_iati_cli_delete_option():
+    test_dir = str(uuid.uuid4())
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.csv')
+    output_dir = os.path.join('media', test_dir)
+    call_command('iati_cli', file_path, output_dir=output_dir)
+
+    with pytest.raises(SystemExit):
+            call_command('iati_cli', file_path, output_dir=output_dir)
+
+
+def test_cove_iati_cli_output():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
+    output_dir = os.path.join('media', str(uuid.uuid4()))
+    call_command('iati_cli', file_path, output_dir=output_dir)
+
+    with open(os.path.join(output_dir, 'results.json')) as fp:
+        results = json.load(fp)
+
+    validation_errors = results.get('validation_errors')
+    assert validation_errors and validation_errors[0]['description'] == "'recipient-country': This element is not expected, expected is activity-date."
+    assert validation_errors and validation_errors[0]['path'] == 'iati-activity/0/recipient-country/0'
+
+    ruleset_errors = results.get('ruleset_errors')
+    assert ruleset_errors and ruleset_errors[0]['rule'] == 'date must be today or in the past'
+    assert ruleset_errors and '2200-03-03 should be on or before today' in ruleset_errors[0]['message']
+    assert ruleset_errors and ruleset_errors[0]['id'] == 'AA-AAA-123123-AA123'
+    assert ruleset_errors and ruleset_errors[0]['path'] == '/iati-activities/iati-activity[1]/transaction[2]/transaction-date'

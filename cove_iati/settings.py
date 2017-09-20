@@ -38,7 +38,7 @@ COVE_CONFIG = {
     'core_schema': {'activity': 'iati-activities-schema.xsd', 'organization': 'iati-organisations-schema.xsd'},
     'supplementary_schema': {'common': 'iati-common.xsd', 'xml': 'xml.xsd'},
     'schema_host': 'https://raw.githubusercontent.com/IATI/IATI-Schemas/',
-    'schema_version': '2.01',
+    'schema_version': '2.02',
     'schema_directory': 'iati_schemas',
     'root_list_path': 'iati-activity',
     'root_id': None,

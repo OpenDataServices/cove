@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     from django.core.management import execute_from_command_line
 
-    sys.argv.insert(1, "cove_ocds")
+    sys.argv.insert(1, "ocds_cli")
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
