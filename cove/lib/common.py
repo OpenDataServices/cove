@@ -591,7 +591,7 @@ def get_additional_codelist_values(schema_obj, codelist_url, json_data):
             continue
 
         for value in values:
-            if value in codelist_values:
+            if str(value) in codelist_values:
                 continue
             if path_no_num not in additional_codelist_values:
                 additional_codelist_values[path_no_num] = {
@@ -604,7 +604,7 @@ def get_additional_codelist_values(schema_obj, codelist_url, json_data):
                     #"location_values": []
                 }
 
-            additional_codelist_values[path_no_num]['values'].add(value)
+            additional_codelist_values[path_no_num]['values'].add(str(value))
             #additional_codelist_values[path_no_num]['location_values'].append((path, value))
 
     return additional_codelist_values
