@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-26 15:39+0000\n"
+"POT-Creation-Date: 2017-09-20 15:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
@@ -56,7 +56,7 @@ msgstr ""
 
 #: cove/input/views.py:71 cove/input/views.py:79 cove/lib/converters.py:170
 #: cove/lib/exceptions.py:25 cove/lib/exceptions.py:52
-#: cove_iati/lib/iati.py:26
+#: cove_iati/lib/iati.py:27
 msgid "Try Again"
 msgstr "Inténtalo de nuevo"
 
@@ -87,7 +87,7 @@ msgstr ""
 "Si se puede acceder al archivo a través de un navegador entonces el problema puede estar relacionado con los permisos de acceso , o puede ser que usted esté bloqueando ciertas aplicaciones de usuario."
 
 #: cove/lib/converters.py:168 cove/lib/exceptions.py:23
-#: cove/lib/exceptions.py:50 cove_iati/lib/iati.py:24
+#: cove/lib/exceptions.py:50 cove_iati/lib/iati.py:25
 msgid "Sorry we can't process that data"
 msgstr "Lo sentimos, no podemos procesar esos datos"
 
@@ -357,7 +357,7 @@ msgstr ""
 
 #: cove/templates/error_extra.html:2
 msgid "get in touch via email"
-msgstr "ponerse en contacto a través de correo electrónico "
+msgstr "póngase en contacto a través de correo electrónico "
 
 #: cove/templates/error_extra.html:2
 msgid "referencing this error as "
@@ -397,15 +397,15 @@ msgstr "JSON"
 msgid "XML"
 msgstr "XML"
 
-#: cove/templates/modal_errors.html:13
+#: cove/templates/modal_errors.html:14
 msgid "Value"
 msgstr "Valor"
 
-#: cove/templates/modal_errors.html:14
+#: cove/templates/modal_errors.html:15 cove/templates/modal_errors.html:21
 msgid "Location"
 msgstr "Ubicación"
 
-#: cove/templates/modal_errors.html:16
+#: cove/templates/modal_errors.html:17 cove/templates/modal_errors.html:23
 msgid "Spreadsheet Location"
 msgstr "Localización de la hoja de cálculo"
 
@@ -1016,19 +1016,19 @@ msgstr "Ubicación de los 3 primeros errores"
 msgid "Spreadsheet Location of first 3 errors"
 msgstr " Ubicación de los 3 primeros errores en la hoja de cálculo"
 
-#: cove/views.py:20 cove/views.py:30
+#: cove/views.py:21 cove/views.py:31
 msgid "Sorry, the page you are looking for is not available"
 msgstr "Lo sentimos, la página que está buscando no está disponible"
 
-#: cove/views.py:22 cove/views.py:32
+#: cove/views.py:23 cove/views.py:33
 msgid "Go to Home page"
 msgstr "Ir a la Página de Inicio"
 
-#: cove/views.py:23
+#: cove/views.py:24
 msgid "We don't seem to be able to find the data you requested."
 msgstr "Parece que no podemos encontrar los datos que usted solicitó."
 
-#: cove/views.py:33
+#: cove/views.py:34
 msgid ""
 "The data you were hoping to explore no longer exists.\n"
 "\n"
@@ -1038,7 +1038,7 @@ msgstr ""
 "\n"
 "Esto se debe a que todos los datos suministrados a este sitio web se borran automáticamente después de 7 días, y por lo tanto el análisis de esos datos ya no está disponible."
 
-#: cove_iati/lib/iati.py:27
+#: cove_iati/lib/iati.py:28
 msgid ""
 "We think you tried to upload a XML file, but it is not well formed XML.\n"
 "\n"
@@ -1080,49 +1080,50 @@ msgstr "subido "
 msgid "on "
 msgstr "el "
 
-#: cove_iati/templates/cove_iati/explore.html:54
+#: cove_iati/templates/cove_iati/explore.html:52
 msgid "Converted to "
 msgstr "Convertido a "
 
-#: cove_iati/templates/cove_iati/explore.html:56
+#: cove_iati/templates/cove_iati/explore.html:54
 #, python-format
 msgid "%(n_warnings)s Error"
 msgid_plural "%(n_warnings)s Errors"
 msgstr[0] "%(n_warnings)s Error"
 msgstr[1] "%(n_warnings)s Errores"
 
-#: cove_iati/templates/cove_iati/explore.html:64
+#: cove_iati/templates/cove_iati/explore.html:62
 msgid "In order to validate your data we needed to convert it to XML."
 msgstr "Para validar sus datos hemos tenido que convertirlo a XML"
 
-#: cove_iati/templates/cove_iati/explore.html:74
+#: cove_iati/templates/cove_iati/explore.html:72
 msgid "Conversion <strong>errors:</strong>"
 msgstr "<strong>errores</strong> de conversión"
 
-#: cove_iati/templates/cove_iati/explore.html:93
+#: cove_iati/templates/cove_iati/explore.html:91
 msgid "Invalid against Schema "
 msgstr "Inválido según el Esquema"
 
-#: cove_iati/templates/cove_iati/explore.html:93
+#: cove_iati/templates/cove_iati/explore.html:91
+#: cove_iati/templates/cove_iati/explore.html:130
 #, python-format
 msgid " %(n_errors)s Error."
 msgid_plural "%(n_errors)s Errors "
 msgstr[0] "%(n_errors)s Error"
 msgstr[1] "%(n_errors)s Errores"
 
-#: cove_iati/templates/cove_iati/explore.html:96
+#: cove_iati/templates/cove_iati/explore.html:94
 msgid "Valid against Schema"
 msgstr "Válido de acuerdo con el Esquema"
 
-#: cove_iati/templates/cove_iati/explore.html:105
+#: cove_iati/templates/cove_iati/explore.html:103
 msgid "Sorry your data is invalid against"
 msgstr "Los sentimos, según el Esquema sus datos son inválidos"
 
-#: cove_iati/templates/cove_iati/explore.html:107
+#: cove_iati/templates/cove_iati/explore.html:105
 msgid "Congratulations! Your data is valid against"
 msgstr "Enhorabuena! Sus datos son válidos de acuerdo con el Esquema"
 
-#: cove_iati/templates/cove_iati/explore.html:114
+#: cove_iati/templates/cove_iati/explore.html:112
 msgid ""
 "There are some <strong>validation errors</strong> in your data, please check"
 " them in the table below."
@@ -1130,23 +1131,49 @@ msgstr ""
 "Hay algunos errores de validación es sus datos, por favor compruébelos en la"
 " tabla más abajo."
 
-#: cove_iati/templates/cove_iati/explore.html:131
+#: cove_iati/templates/cove_iati/explore.html:130
+msgid "Ruleset Errors "
+msgstr "Errores de conjuntos de reglas"
+
+#: cove_iati/templates/cove_iati/explore.html:133
+msgid "Ruleset Checks"
+msgstr "Comprobaciones de conjuntos de reglas"
+
+#: cove_iati/templates/cove_iati/explore.html:142
+msgid "Sorry your data contains ruleset errors"
+msgstr "Lo sentimos, sus datos contienen errores de conjuntos de reglas"
+
+#: cove_iati/templates/cove_iati/explore.html:144
+msgid "Congratulations! Your data passes all IATI ruleset checks"
+msgstr ""
+"Enhorabuena! Sus datos han pasado todas las comprobaciones de los conjuntos "
+"de reglas"
+
+#: cove_iati/templates/cove_iati/explore.html:149
+msgid ""
+"There are some <strong>ruleset errors</strong> in your data, please check "
+"them in the table below."
+msgstr ""
+"Hay algunos errores de <strong>conjuntos de reglas</strong> en sus datos. "
+"Por favor compruébelos en la tabla debajo."
+
+#: cove_iati/templates/cove_iati/explore.html:162
 msgid "Download and Share"
 msgstr "Descargue y comparta "
 
-#: cove_iati/templates/cove_iati/explore.html:138
+#: cove_iati/templates/cove_iati/explore.html:169
 msgid "The following files are available to download:"
 msgstr "Los siguientes archivos están disponibles para descargar: "
 
-#: cove_iati/templates/cove_iati/explore.html:141
+#: cove_iati/templates/cove_iati/explore.html:172
 msgid "Original file"
 msgstr "Archivo original "
 
-#: cove_iati/templates/cove_iati/explore.html:161
+#: cove_iati/templates/cove_iati/explore.html:192
 msgid "Use the following url to share these results:"
 msgstr "Use la siguiente url para compartir estos resultados: "
 
-#: cove_iati/templates/cove_iati/explore.html:167
+#: cove_iati/templates/cove_iati/explore.html:198
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
@@ -1157,7 +1184,7 @@ msgstr ""
 "el enlace a esta página después de ese periodo verá un mensaje informando de"
 " que el archivo ha sido borrado."
 
-#: cove_iati/templates/cove_iati/explore.html:168
+#: cove_iati/templates/cove_iati/explore.html:199
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
@@ -1165,6 +1192,22 @@ msgstr ""
 "Estos resultados estarán disponibles durante 7 días contando desde el día "
 "que los datos fueron subidos por primera vez. Usted puede revisitar los "
 "datos hasta entonces."
+
+#: cove_iati/templates/cove_iati/ruleset_table.html:6
+msgid "Activity ID"
+msgstr "Identidad de la actividad"
+
+#: cove_iati/templates/cove_iati/ruleset_table.html:7
+msgid "Path"
+msgstr "Ruta"
+
+#: cove_iati/templates/cove_iati/ruleset_table.html:8
+msgid "Rule"
+msgstr "Regla"
+
+#: cove_iati/templates/cove_iati/ruleset_table.html:9
+msgid "Explanation"
+msgstr "Explicación"
 
 #: cove_iati/views.py:25
 msgid "Upload a file (.csv, .xlsx, .xml)"
