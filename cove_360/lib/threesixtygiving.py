@@ -230,6 +230,15 @@ class AdditionalTest():
 
 
 class ZeroAmountTest(AdditionalTest):
+    """Check if any grants have an amountAwarded of 0.
+
+    Checks explicitly for a number with a value of 0"""
+
+    check_text = {
+        "heading": 'a value of £0',
+        "message": "It’s worth taking a look at these grants and deciding if they should be published. It’s unusual to have grants of £0, but there may be a reasonable explanation. Additional information on why these grants are £0 might be useful to anyone using the data, so consider adding an explanation to the description of the grant."
+    }
+
     def process(self, grant, path_prefix):
         try:
             # check for == 0 explicitly, as other falsey values will be caught
@@ -242,11 +251,18 @@ class ZeroAmountTest(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count('a value of £0')
-        self.message = "It’s worth taking a look at these grants and deciding if they should be published. It’s unusual to have grants of £0, but there may be a reasonable explanation. Additional information on why these grants are £0 might be useful to anyone using the data, so consider adding an explanation to the description of the grant."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text['message']
 
 
 class RecipientOrg360GPrefix(AdditionalTest):
+    """Check if any grants are using RecipientOrg IDs that start 360G or 360g"""
+
+    check_text = {
+        "heading": "a Recipient Org:Identifier that starts '360G-'",
+        "message": "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
+    }
+
     def process(self, grant, path_prefix):
         try:
             for num, organization in enumerate(grant['recipientOrganization']):
@@ -257,11 +273,18 @@ class RecipientOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count("a Recipient Org:Identifier that starts '360G-'")
-        self.message = "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text['message']
 
 
 class FundingOrg360GPrefix(AdditionalTest):
+    """Check if any grants are using FundingOrg IDs that start 360G or 360g"""
+
+    check_text = {
+        "heading": "a Funding Org:Identifier that starts '360G-'",
+        "message": "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
+    }
+
     def process(self, grant, path_prefix):
         try:
             for num, organization in enumerate(grant['fundingOrganization']):
@@ -272,11 +295,18 @@ class FundingOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count("a Funding Org:Identifier that starts '360G-'")
-        self.message = "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text['message']
 
 
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):
+    """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the IATI prefix codelist"""
+
+    check_text = {
+        "heading": "a Recipient Org:Identifier that doesn’t draw from an external identification body",
+        "message": "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
+    }
+
     def process(self, grant, path_prefix):
         try:
             count_failure = False
@@ -294,11 +324,18 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count("a Recipient Org:Identifier that doesn’t draw from an external identification body")
-        self.message = "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text['message']
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
+    """Check if any grants have FundingOrg IDs that use a prefix that isn't on the IATI prefix codelist """
+
+    check_text = {
+        "heading": "a Funding Org:Identifier that doesn’t draw from an external identification body",
+        "message": "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
+    }
+
     def process(self, grant, path_prefix):
         try:
             count_failure = False
@@ -316,11 +353,21 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count("a Funding Org:Identifier that doesn’t draw from an external identification body")
-        self.message = "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text['message']
 
 
 class RecipientOrgCharityNumber(AdditionalTest):
+    """Check if any grants have ReceipientOrg charity numbers that don't look like charity numbers
+
+    Checks if the first two characters are letters, then checks that the remainder of the value is a number 6 or 7 digits long.
+    """
+
+    check_text = {
+        "heading": "a value provided in the Recipient Org: Charity Number column that doesn’t look like a charity number",
+        "message": "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
+    }
+
     def process(self, grant, path_prefix):
         try:
             count_failure = False
@@ -339,11 +386,21 @@ class RecipientOrgCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count("a value provided in the Recipient Org: Charity Number column that doesn’t look like a charity number")
-        self.message = "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text['message']
 
 
 class RecipientOrgCompanyNumber(AdditionalTest):
+    """Checks if any grants have RecipientOrg company numbers that don't look like company numbers
+
+    Checks if the value is 8 characters long, and that the last 6 of those characters are numbers
+    """
+
+    check_text = {
+        "heading": "a value provided in the Recipient Org: Company Number column that doesn’t look like a company number",
+        "message": "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
+    }
+
     def process(self, grant, path_prefix):
         try:
             count_failure = False
@@ -359,11 +416,18 @@ class RecipientOrgCompanyNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count("a value provided in the Recipient Org: Company Number column that doesn’t look like a company number")
-        self.message = "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text['message']
 
 
 class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
+    """Checks if any grants don't have either a Recipient Org:Company Number or Recipient Org:Charity Number"""
+
+    check_text = {
+        "heading": "not have either a Recipient Org:Company Number or a Recipient Org:Charity Number",
+        "message": "Providing one or both of these, if possible, makes it easier for users of your data to join up the data with other data sources to provide better insight into grant-making. You don’t need to do anything if your grants are to organisations that don’t have UK Company or UK Charity numbers."
+    }
+
     def process(self, grant, path_prefix):
         try:
             count_failure = False
@@ -379,11 +443,18 @@ class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count("not have either a Recipient Org:Company Number or a Recipient Org:Charity Number", verb="do")
-        self.message = "Providing one or both of these, if possible, makes it easier for users of your data to join up the data with other data sources to provide better insight into grant-making. You don’t need to do anything if your grants are to organisations that don’t have UK Company or UK Charity numbers."
+        self.heading = self.format_heading_count(self.check_text['heading'], verb="do")
+        self.message = self.check_text['message']
 
 
 class IncompleteRecipientOrg(AdditionalTest):
+    """Checks if any grants lack one of either Recipient Org:Postal Code or both of Recipient Org:Location:Geographic Code and Recipient Org:Location:Geographic Code Type"""
+
+    check_text = {
+        "heading": "incomplete recipient organisation information",
+        "message": "Your data is missing either Recipient Org: Postal Code or Recipient Org: Location:Geographic Code combined with Recipient Org: Location: Geographic Code Type. Knowing the geographic location of recipient organisations allows users of your data to understand your data and combine it with other data sets to form a broader picture of grant-making."
+    }
+
     def process(self, grant, path_prefix):
         try:
             count_failure = False
@@ -404,11 +475,18 @@ class IncompleteRecipientOrg(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count("incomplete recipient organisation information")
-        self.message = "Your data is missing either Recipient Org: Postal Code or Recipient Org: Location:Geographic Code combined with Recipient Org: Location: Geographic Code Type. Knowing the geographic location of recipient organisations allows users of your data to understand your data and combine it with other data sets to form a broader picture of grant-making."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text['message']
 
 
 class MoreThanOneFundingOrg(AdditionalTest):
+    """Checks if the file contains multiple FundingOrganisation:IDs"""
+
+    check_text = {
+        "heading": "There are {} different funding organisation IDs listed",
+        "message": "If you are expecting to be publishing data for multiple funders then this notice can be ignored, however if you are only publishing for a single funder then you should review your Funder ID column to see where multiple IDs have occurred."
+    }
+
     def __init__(self, **kw):
         super().__init__(**kw)
         self.funding_organization_ids = []
@@ -424,14 +502,24 @@ class MoreThanOneFundingOrg(AdditionalTest):
         if len(self.funding_organization_ids) > 1:
             self.failed = True
 
-        self.heading = "There are {} different funding organisation IDs listed".format(len(self.funding_organization_ids))
-        self.message = "If you are expecting to be publishing data for multiple funders then this notice can be ignored, however if you are only publishing for a single funder then you should review your Funder ID column to see where multiple IDs have occurred."
+        self.heading = self.check_text["heading"].format(len(self.funding_organization_ids))
+        self.message = self.check_text["message"]
 
 
 compiled_email_re = re.compile('[\w.-]+@[\w.-]+\.[\w.-]+')
 
 
 class LooksLikeEmail(AdditionalTest):
+    """Checks if any grants contain text that looks like an email address
+
+    The check looks for any number of alphanumerics, dots or hyphens, followed by an @ sign, followed by any number of alphanumerics, dots or hyphens, with a minimum of one dot after the @
+    """
+
+    check_text = {
+        "heading": "text that looks like an email address",
+        "message": "This may indicate that the data contains personal data, use and distribution of which is restricted by the Data Protection Act. You should ensure that any personal data is included with the knowledge and consent of the person to whom it refers."
+    }
+
     def process(self, grant, path_prefix):
         flattened_grant = OrderedDict(flatten_dict(grant))
         for key, value in flattened_grant.items():
@@ -440,11 +528,18 @@ class LooksLikeEmail(AdditionalTest):
                 self.json_locations.append(path_prefix + key)
                 self.count += 1
 
-        self.heading = self.format_heading_count("text that looks like an email address", verb='contain')
-        self.message = "This may indicate that the data contains personal data, use and distribution of which is restricted by the Data Protection Act. You should ensure that any personal data is included with the knowledge and consent of the person to whom it refers."
+        self.heading = self.format_heading_count(self.check_text['heading'], verb='contain')
+        self.message = self.check_text['message']
 
 
 class NoGrantProgramme(AdditionalTest):
+    """Checks if any grants have no Grant Programme fields"""
+
+    check_text = {
+        "heading": "not contain any Grant Programme fields",
+        "message": "Although not required by the 360Giving Standard, providing Grant Programme data if available helps users to better understand your data."
+    }
+
     def process(self, grant, path_prefix):
         grant_programme = grant.get("grantProgramme")
         if not grant_programme:
@@ -452,11 +547,18 @@ class NoGrantProgramme(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count("not contain any Grant Programme fields", verb='do')
-        self.message = "Although not required by the 360Giving Standard, providing Grant Programme data if available helps users to better understand your data."
+        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
+        self.message = self.check_text['message']
 
 
 class NoBeneficiaryLocation(AdditionalTest):
+    """Checks if any grants have no Beneficiary Location fields"""
+
+    check_text = {
+        "heading": "not contain any beneficiary location fields",
+        "message": "Although not required by the 360Giving Standard, providing beneficiary data if available helps users to understand your data and allows it to be used in tools that visualise grants geographically."
+    }
+
     def process(self, grant, path_prefix):
         beneficiary_location = grant.get("beneficiaryLocation")
         if not beneficiary_location:
@@ -464,11 +566,18 @@ class NoBeneficiaryLocation(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count("not contain any beneficiary location fields", verb='do')
-        self.message = "Although not required by the 360Giving Standard, providing beneficiary data if available helps users to understand your data and allows it to be used in tools that visualise grants geographically."
+        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
+        self.message = self.check_text['message']
 
 
 class IncompleteBeneficiaryLocation(AdditionalTest):
+    """Checks if any grants that do have Beneficiary Location fields are missing any of the details"""
+
+    check_text = {
+        "heading": "incomplete beneficiary location information",
+        "message": "Your data is missing Beneficiary Location: Name, Beneficiary Location: Geographical Code and/or Beneficiary Location: Geographical Code Type. Beneficiary location information allows users of the data to understand who ultimately benefitted from the grant, not just the location of the organisation that provided the service. If your beneficiaries are in the same place as the organisation that the money went to, stating this is useful for anyone using your data as it cannot be inferred."
+    }
+
     def process(self, grant, path_prefix):
         beneficiary_location = grant.get("beneficiaryLocation")
         if beneficiary_location:
@@ -480,11 +589,18 @@ class IncompleteBeneficiaryLocation(AdditionalTest):
                     self.json_locations.append(path_prefix + '/beneficiaryLocation')
                     break
 
-        self.heading = self.format_heading_count("incomplete beneficiary location information")
-        self.message = "Your data is missing Beneficiary Location: Name, Beneficiary Location: Geographical Code and/or Beneficiary Location: Geographical Code Type. Beneficiary location information allows users of the data to understand who ultimately benefitted from the grant, not just the location of the organisation that provided the service. If your beneficiaries are in the same place as the organisation that the money went to, stating this is useful for anyone using your data as it cannot be inferred."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text["message"]
 
 
 class TitleDescriptionSame(AdditionalTest):
+    """Checks if any grants have the same text for Title and Description"""
+
+    check_text = {
+        "heading": "a title and a description that are the same",
+        "message": "Users may find that the data is less useful as they are unable to discover more about the grants. Consider including a more detailed description if you have one."
+    }
+
     def process(self, grant, path_prefix):
         title = grant.get("title")
         description = grant.get("description")
@@ -493,11 +609,18 @@ class TitleDescriptionSame(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/description')
 
-        self.heading = self.format_heading_count("a title and a description that are the same")
-        self.message = "Users may find that the data is less useful as they are unable to discover more about the grants. Consider including a more detailed description if you have one."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text['message']
 
 
 class TitleLength(AdditionalTest):
+    """Checks if any grants have Titles longer than 140 characters"""
+
+    check_text = {
+        "heading": "a title longer than recommended",
+        "message": "Titles for grant activities should be under 140 characters long."
+    }
+
     def process(self, grant, path_prefix):
         title = grant.get("title", '')
         if len(title) > 140:
@@ -505,11 +628,21 @@ class TitleLength(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/title')
 
-        self.heading = self.format_heading_count("a title longer than recommended")
-        self.message = "Titles for grant activities should be under 140 characters long."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text['message']
 
 
 class OrganizationIdLooksInvalid(AdditionalTest):
+    """Checks if any grants have org IDs for fundingOrg or recipientOrg that don't look correctly formatted for their respective registration agency (eg GB-CHC- not looking like a valid company number)
+
+    Looks at the start of the ID - if it's GB-CHC- or GB-COH-, performs the relevant format check
+    """
+ 
+    check_text = {
+        "heading": "funder or recipient organisation IDs that might not be valid",
+        "message": "The IDs might not be valid for the registration agency that they refer to - for example, a 'GB-CHC' ID that contains an invalid charity number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
+    }
+
     def process(self, grant, path_prefix):
         for org_type in ("fundingOrganization", "recipientOrganization"):
             orgs = grant.get(org_type, [])
@@ -529,11 +662,18 @@ class OrganizationIdLooksInvalid(AdditionalTest):
                         self.json_locations.append(id_location)
                         self.count += 1
 
-        self.heading = self.format_heading_count("funder or recipient organisation IDs that might not be valid")
-        self.message = "The IDs might not be valid for the registration agency that they refer to - for example, a 'GB-CHC' ID that contains an invalid charity number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
+        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.message = self.check_text['message']
 
 
 class NoLastModified(AdditionalTest):
+    """Check if any grants are missing Last Modified dates"""
+
+    check_text = {
+        "heading": "not have a Last Modified date",
+        "message": "Last Modified allows data users to reconcile discrepancies between versions of your data."
+    }
+
     def process(self, grant, path_prefix):
         last_modified = grant.get("dateModified")
         if not last_modified:
@@ -541,11 +681,18 @@ class NoLastModified(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count("not have a Last Modified date", verb='do')
-        self.message = "Last Modified allows data users to reconcile discrepancies between versions of your data."
+        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
+        self.message = self.check_text['message']
 
 
 class NoDataSource(AdditionalTest):
+    """Checks if any grants are missing dataSource"""
+
+    check_text = {
+        "heading": "not have a Data Source field",
+        "message": "Knowing where information came from is an important part of establishing trust in your data."
+    }
+
     def process(self, grant, path_prefix):
         data_source = grant.get("dataSource")
         if not data_source:
@@ -553,11 +700,18 @@ class NoDataSource(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count("not have a Data Source field", verb='do')
-        self.message = "Knowing where information came from is an important part of establishing trust in your data."
+        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
+        self.message = self.check_text['message']
 
 
 class NoClassificationTitle(AdditionalTest):
+    """Checks if any grants are missing the Classifications: Title field"""
+
+    check_text = {
+        "heading": "not have a Classifications: Title field",
+        "message": "This field allows you to describe how you classify the grant or have tagged it internally. Examples include classifying by sector (eg Healthcare) or target group (eg NEET)."
+    }
+
     def process(self, grant, path_prefix):
         classifications_title = grant.get("classifications") and any(classification.get('title') for classification in grant.get("classifications"))
         if not classifications_title:
@@ -565,8 +719,8 @@ class NoClassificationTitle(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count("not have a Classifications: Title field", verb='do')
-        self.message = "This field allows you to describe how you classify the grant or have tagged it internally. Examples include classifying by sector (eg Healthcare) or target group (eg NEET)."
+        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
+        self.message = self.check_text['message']
 
 
 TEST_CLASSES = [
@@ -610,9 +764,11 @@ def run_additional_checks(json_data, cell_source_map):
             continue
 
         spreadsheet_locations = []
+        spreadsheet_keys = ('sheet', 'letter', 'row_number', 'header')
         if cell_source_map:
             try:
-                spreadsheet_locations = [cell_source_map[location][0] for location in test_instance.json_locations]
+                spreadsheet_locations = [dict(zip(spreadsheet_keys, cell_source_map[location][0]))
+                                         for location in test_instance.json_locations]
             except KeyError:
                 continue
         results.append((test_instance.produce_message(),

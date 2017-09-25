@@ -164,7 +164,7 @@ def test_500_error(server_url, browser):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'not_expected_text', 'conversion_successful'), [
-    ('tenders_releases_2_releases.json', ['Convert', 'Schema', 'OCDS schema version 1.0. You can'] + OCDS_SCHEMA_VERSIONS_DISPLAY,
+    ('tenders_releases_2_releases.json', ['Convert', 'Schema', 'OCDS release package schema version 1.0. You can'] + OCDS_SCHEMA_VERSIONS_DISPLAY,
                                          ['Schema Extensions'], True),
     ('tenders_releases_1_release_with_extensions_version_1_1.json', ['Schema Extensions',
                                                                      'Contract Parties (Organization structure)',
@@ -208,25 +208,30 @@ def test_500_error(server_url, browser):
     ('utf8.json', 'Convert', [], True),
     # But we expect to see an error message if a file is not well formed JSON at all
     ('tenders_releases_2_releases_not_json.json', 'not well formed JSON', [], False),
-    ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, [], True),
+    ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, ['Missing OCDS package'], True),
     ('badfile.json', 'Statistics can not produced', [], True),
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', [], False),
     ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], [], True),
     # Test "version" value in data
     ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 123.123 which is not recognised',
-                                                                   'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
+                                                                   'checked against OCDS release package schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
                                                                    'validated against the current default version.',
                                                                    'Convert to Spreadsheet'],
                                                                   ['Additional Fields (fields in data not in schema)', 'Error message'], False),
     ('tenders_releases_1_release_with_wrong_version_type.json', ['Your data specifies a version 1000 (it must be a string) which is not recognised',
-                                                                 'checked against OCDS schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
+                                                                 'checked against OCDS release package schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
                                                                  'Convert to Spreadsheet'],
                                                                 ['Additional Fields (fields in data not in schema)', 'Error message'], False),
     ('tenders_releases_1_release_with_patch_in_version.json', ['"version" field in your data follows the major.minor.patch pattern',
                                                                '100.100.0 format does not comply with the schema',
                                                                'Error message'], ['Convert to Spreadsheet'], False),
     ('bad_toplevel_list.json', ['OCDS JSON should have an object as the top level, the JSON you supplied does not.'], [], False),
+    ('tenders_releases_1_release_with_extension_broken_json_ref.json', ['JSON reference error',
+                                                                       'Unresolvable JSON pointer:',
+                                                                       '/definitions/OrganizationReference'], ['Convert to Spreadsheet'], False),
+    ('tenders_releases_1_release_unpackaged.json', ['Missing OCDS package',
+                                                    'Error message: Missing OCDS package'], ['Convert to Spreadsheet'], False),
 ])
 def test_url_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     browser, source_url = url_input_browser(source_filename, output_source_url=True)
@@ -385,11 +390,11 @@ def test_url_invalid_dataset_request(server_url, browser, data_url):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_version_1_1.json', 'validation against schema version 1.1',
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', 'validation against OCDS release package schema version 1.1',
      '\'version\' is missing but required', 'methodRationale', 'version'),
-    ('tenders_releases_1_release_with_invalid_extensions.json', 'validation against schema version 1.0',
+    ('tenders_releases_1_release_with_invalid_extensions.json', 'validation against OCDS release package schema version 1.0',
      '\'version\' is missing but required', 'methodRationale', 'version'),
-    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'validation against schema version 1.1',
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'validation against OCDS release package schema version 1.1',
      '\'version\' is missing but required', 'methodRationale', 'version')
 ])
 def test_url_input_with_version(server_url, url_input_browser, httpserver, source_filename, expected, not_expected,
@@ -413,11 +418,11 @@ def test_url_input_with_version(server_url, url_input_browser, httpserver, sourc
 
 
 @pytest.mark.parametrize(('source_filename', 'select_version', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_version_1_1.json', '1.0', 'validation against schema version 1.0',
+    ('tenders_releases_1_release_with_extensions_version_1_1.json', '1.0', 'validation against OCDS release package schema version 1.0',
      '\'version\' is missing but required', 'version', 'publisher'),
     ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', '\'version\' is missing but required',
-     'validation against schema version 1.0', 'methodRationale', 'version'),
-    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'validation against schema version 1.0',
+     'validation against OCDS release package schema version 1.0', 'methodRationale', 'version'),
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'validation against OCDS release package schema version 1.0',
      '\'version\' is missing but required', 'version', 'publisher')
 ])
 def test_url_input_with_version_change(server_url, url_input_browser, httpserver, select_version, source_filename, expected,

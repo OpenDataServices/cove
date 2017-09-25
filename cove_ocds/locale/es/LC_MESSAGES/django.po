@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-26 15:39+0000\n"
+"POT-Creation-Date: 2017-09-20 15:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
@@ -19,15 +19,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: cove_ocds/lib/exceptions.py:8
-msgid "Something unexpected happened"
-msgstr "Ha sucedido algo inesperado "
+msgid "Unrecognised version of the schema"
+msgstr "Versión del esquema no reconocida"
 
-#: cove_ocds/lib/exceptions.py:11 cove_ocds/lib/exceptions.py:24
+#: cove_ocds/lib/exceptions.py:10 cove_ocds/lib/exceptions.py:23
+#: cove_ocds/lib/exceptions.py:39 cove_ocds/lib/exceptions.py:52
 #: cove_ocds/views.py:46 cove_ocds/views.py:57
 msgid "Try Again"
 msgstr "Inténtelo de nuevo"
 
-#: cove_ocds/lib/exceptions.py:12
+#: cove_ocds/lib/exceptions.py:11
 msgid ""
 "We think you tried to run your data against an unrecognised version of the schema.\n"
 "\n"
@@ -37,15 +38,15 @@ msgstr ""
 "\n"
 "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Mensaje del error:</strong> <em>{}</em> no es una opción reconocida como versión del esquema"
 
-#: cove_ocds/lib/exceptions.py:16 cove_ocds/lib/exceptions.py:32
+#: cove_ocds/lib/exceptions.py:15 cove_ocds/lib/exceptions.py:31
 msgid "{} is not a valid schema version"
 msgstr "{} no es una versión válida del esquema"
 
-#: cove_ocds/lib/exceptions.py:22
+#: cove_ocds/lib/exceptions.py:21
 msgid "Version format does not comply with the schema"
 msgstr "El formato de la versión no se ajusta al esquema"
 
-#: cove_ocds/lib/exceptions.py:25
+#: cove_ocds/lib/exceptions.py:24
 msgid ""
 "The value for the <em>\"version\"</em> field in your data follows the <em>major.minor.patch</em> pattern but according to the schema the patch digit shouldn't be included (e.g. <em>\"1.1.0\"</em> should appear as <em>\"1.1\"</em> in your data as the validator always uses the latest patch release for a major.minor version).\n"
 "\n"
@@ -58,6 +59,38 @@ msgstr ""
 "Por favor excluya el dígito del parche e inténtenlo de nuevo.\n"
 "\n"
 "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><strong>Mensaje del error: </strong><em>{}</em> el formato no concuerda con el esquema"
+
+#: cove_ocds/lib/exceptions.py:37
+msgid "JSON reference error"
+msgstr "Error de referencia en JSON"
+
+#: cove_ocds/lib/exceptions.py:40
+msgid ""
+"We have detected a JSON reference error in the schema. This <em> may be </em> due to some extension trying to resolve non-existing references. \n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Error message:</strong> <em>{}</em>"
+msgstr ""
+"Hemos detectado un error de referencia en JSON. Esto <em>podría</em> ser debido a alguna extensión intentando resolver una referencia que no existe.\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><strong>Mensaje del error:</strong><em>{}</em> "
+
+#: cove_ocds/lib/exceptions.py:44
+msgid "{}"
+msgstr "{}"
+
+#: cove_ocds/lib/exceptions.py:50 cove_ocds/lib/exceptions.py:63
+msgid "Missing OCDS package"
+msgstr "Paquete OCDS no encontrado"
+
+#: cove_ocds/lib/exceptions.py:53
+msgid ""
+"We could not detect a package structure at the top-level of your data. OCDS releases and records should be published within a <a href=\"http://standard.open-contracting.org/latest/en/schema/release_package/\">release package </a> or <a href=\"http://standard.open-contracting.org/latest/en/schema/record_package/\"> record package</a> to provide important meta-data. For more information, please refer to the <a href=\"http://standard.open-contracting.org/latest/en/getting_started/releases_and_records/\"> Releases and Records section </a> in the OCDS documentation.\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Error message:</strong> <em>Missing OCDS package</em>"
+msgstr ""
+"No hemos podido detectar una estructura de paquete en sus datos. Entregras y registros del OCDS deben ser publicados como un <a href=\"http://standard.open-contracting.org/latest/en/schema/release_package/\">paquete de entregas</a> o como un <a href=\"http://standard.open-contracting.org/latest/en/schema/record_package/\">paquete de registros</a>, los cuales proveen importantes meta-datos. Para obtener más información, por favor consulte la <a href=\"http://standard.open-contracting.org/latest/en/getting_started/releases_and_records/\">sección Entregas y Registros</a> en la documentación del OCDS\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><strong>Mensaje del error:</strong> No se ha podido encontrar un paquete del OCDS  "
 
 #. Translators: Label of a button that triggers search
 #: cove_ocds/templates/cove_ocds/base.html:46

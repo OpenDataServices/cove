@@ -7,7 +7,7 @@ from decimal import Decimal
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 
-from . lib.exceptions import raise_invalid_version_argument, raise_invalid_version_data_with_patch
+from . lib import exceptions
 from . lib.ocds import common_checks_ocds
 from . lib.schema import SchemaOCDS
 from cove.lib.common import get_spreadsheet_meta_data
@@ -62,13 +62,15 @@ def explore_ocds(request, pk):
             select_version = post_version_choice or db_data.schema_version
             schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data)
 
+            if schema_ocds.missing_package:
+                exceptions.raise_missing_package_error()
             if schema_ocds.invalid_version_argument:
                 # This shouldn't happen unless the user sends random POST data.
-                raise_invalid_version_argument(pk, post_version_choice)
+                exceptions.raise_invalid_version_argument(post_version_choice)
             if schema_ocds.invalid_version_data:
                 version_in_data = json_data.get('version')
                 if isinstance(version_in_data, str) and re.compile('^\d+\.\d+\.\d+$').match(version_in_data):
-                    raise_invalid_version_data_with_patch(version_in_data)
+                    exceptions.raise_invalid_version_data_with_patch(version_in_data)
                 else:
                     if not isinstance(version_in_data, str):
                         version_in_data = '{} (it must be a string)'.format(str(version_in_data))
@@ -94,20 +96,21 @@ def explore_ocds(request, pk):
     else:
         # Use the lowest release pkg schema version accepting 'version' field
         metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
-        metatab_data = metatab_data = get_spreadsheet_meta_data(upload_dir, file_name, metatab_schema_url, file_type)
+        metatab_data = get_spreadsheet_meta_data(upload_dir, file_name, metatab_schema_url, file_type)
         if 'version' not in metatab_data:
             metatab_data['version'] = '1.0'
 
         select_version = post_version_choice or db_data.schema_version
-
         schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
+
+        # Unlike for JSON data case above, do not check for missing data package
         if schema_ocds.invalid_version_argument:
             # This shouldn't happen unless the user sends random POST data.
-            raise_invalid_version_argument(pk, post_version_choice)
+            exceptions.raise_invalid_version_argument(post_version_choice)
         if schema_ocds.invalid_version_data:
             version_in_data = metatab_data.get('version')
             if re.compile('^\d+\.\d+\.\d+$').match(version_in_data):
-                raise_invalid_version_data_with_patch(version_in_data)
+                exceptions.raise_invalid_version_data_with_patch(version_in_data)
             else:
                 context['unrecognized_version_data'] = version_in_data
 
@@ -131,6 +134,10 @@ def explore_ocds(request, pk):
             os.remove(validation_errors_path)
 
     context = common_checks_ocds(context, upload_dir, json_data, schema_ocds)
+
+    if schema_ocds.json_deref_error:
+        exceptions.raise_json_deref_error(schema_ocds.json_deref_error)
+
     context['first_render'] = not db_data.rendered
     schema_version = getattr(schema_ocds, 'version', None)
 

@@ -4,11 +4,11 @@ import sys
 import warnings
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cove_ocds.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cove_iati.settings")
 
     from django.core.management import execute_from_command_line
 
-    sys.argv.insert(1, "ocds_cli")
+    sys.argv.insert(1, "iati_cli")
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
