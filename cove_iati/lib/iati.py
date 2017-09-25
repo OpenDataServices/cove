@@ -34,7 +34,8 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         schema = lxml.etree.XMLSchema(schema_tree)
         schema.validate(tree)
         lxml_errors = lxml_errors_generator(schema.error_log)
-        ruleset_errors = get_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'))
+        ruleset_errors = get_iati_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'))
+        ruleset_errors_ag = get_openag_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_ag'))
 
     errors_all = format_lxml_errors(lxml_errors)
 
@@ -54,6 +55,8 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
     context.update({
         'validation_errors': sorted(validation_errors.items()),
         'ruleset_errors': ruleset_errors,
+        'ruleset_errors_ag': ruleset_errors_ag,
+        
     })
     if not api:
         context.update({
@@ -219,13 +222,8 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
     return validation_errors
 
 
-def get_ruleset_errors(lxml_etree, output_dir):
-    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
-               output_path=output_dir)
+def format_ruleset_errors(output_dir):
     ruleset_errors = []
-
-    if not os.path.isdir(output_dir):
-        return ruleset_errors
 
     for output_file in os.listdir(output_dir):
         with open(os.path.join(output_dir, output_file)) as fp:
@@ -250,3 +248,21 @@ def get_ruleset_errors(lxml_etree, output_dir):
                         ruleset_errors.append(rule_error)
 
     return ruleset_errors
+
+
+def get_iati_ruleset_errors(lxml_etree, output_dir):
+    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
+               output_path=output_dir)
+
+    if not os.path.isdir(output_dir):
+        return []
+    return format_ruleset_errors(output_dir)
+
+
+def get_openag_ruleset_errors(lxml_etree, output_dir):
+    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_openag_ruleset/'],
+               output_path=output_dir)
+
+    if not os.path.isdir(output_dir):
+        return []
+    return format_ruleset_errors(output_dir)
