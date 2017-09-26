@@ -19,18 +19,18 @@ def step_given_iati_activity(context):
     assert True
 
 
-@given('openag:tag elements')
-def step_given_openag_tag(context):
+@given('{xpath_expression} elements')
+def step_given_openag_tag(context, xpath_expression):
     assert True
 
 
-@then('at least one `{xpath_expression}` is expected')
+@then('at least one `{xpath_expression}` element is expected')
 def step_openag_expected(context, xpath_expression):
     xpaths = get_xpaths(context, xpath_expression)
     if not xpaths:
         tree = context.xml.getroottree()
         errors = [{
-            'message': 'the activity should include at least one {} element'.format(xpath_expression),
+            'message': 'the activity should include at least one <{}> element'.format(xpath_expression),
             'path': tree.getpath(context.xml)
         }]
         raise RuleSetStepException(context, errors)
@@ -40,9 +40,9 @@ def step_openag_expected(context, xpath_expression):
 def step_openag_tag_attribute_expected(context, xpath_expression, attribute):
     # Add to context for steps with no xpath_expression
     context.xpath_expression = xpath_expression
+    xpaths = get_xpaths(context, xpath_expression)
     fail = False
 
-    xpaths = get_xpaths(context, xpath_expression)
     if xpaths:
         errors = []
         tree = context.xml.getroottree()
@@ -53,28 +53,44 @@ def step_openag_tag_attribute_expected(context, xpath_expression, attribute):
                     msg = '{} element must have @{} attribute'.format(xpath_expression, attribute)
                     errors.append({'message': msg, 'path': tree.getpath(xpath)})
                     fail = True
-
     if fail:
         raise RuleSetStepException(context, errors)
 
 
 @then('every `{attribute}` must be equal to `{any_value}`')
 def step_openag_tag_attribute_accepted_values(context, attribute, any_value):
+    xpaths = get_xpaths(context, context.xpath_expression)
     fail = False
 
-    xpaths = get_xpaths(context, context.xpath_expression)
     if xpaths:
         errors = []
         tree = context.xml.getroottree()
         for xpath in xpaths:
             element_attrs = xpath.attrib
-            matching_value = any([element_attrs.get(attribute) == val for val in any_value.split('or')])
+            matching_value = any([element_attrs.get(attribute) == val for val in any_value.split(' or ')])
 
             if not matching_value:
                 msg = '@{} attribute must be equal to "{}" (it is "{}")'
                 msg = msg.format(attribute, any_value, element_attrs.get(attribute))
                 errors.append({'message': msg, 'path': tree.getpath(xpath)})
                 fail = True
+    if fail:
+        raise RuleSetStepException(context, errors)
 
+
+@then('every `{xpath_expression1}` must include `{xpath_expression2}` element')
+def step_openag_location_id_expected(context, xpath_expression1, xpath_expression2):
+    xpaths = get_xpaths(context, xpath_expression1)
+    fail = False
+
+    if xpaths:
+        errors = []
+        tree = context.xml.getroottree()
+        for xpath in xpaths:
+            has_xpath_expression2 = xpath.find(xpath_expression2)
+            if not has_xpath_expression2:
+                msg = '{} must contain a {} element'.format(xpath_expression1, xpath_expression2)
+                errors.append({'message': msg, 'path': tree.getpath(xpath)})
+                fail = True
     if fail:
         raise RuleSetStepException(context, errors)
