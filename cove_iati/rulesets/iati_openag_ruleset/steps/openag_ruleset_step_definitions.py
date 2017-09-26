@@ -19,6 +19,11 @@ def step_given_iati_activity(context):
     assert True
 
 
+@given('openag:tag elements')
+def step_given_openag_tag(context):
+    assert True
+
+
 @then('at least one `{xpath_expression}` is expected')
 def step_openag_expected(context, xpath_expression):
     xpaths = get_xpaths(context, xpath_expression)
@@ -31,89 +36,45 @@ def step_openag_expected(context, xpath_expression):
         raise RuleSetStepException(context, errors)
 
 
-@given('openag:tag elements')
-def step_given_openag_tag(context):
-    assert True
-
-
-@then('every `{xpath_expression}` must have @vocabulary="98"|"99"')
-def step_openag_tag_vocabulary(context, xpath_expression):
-    xpaths = get_xpaths(context, xpath_expression)
+@then('every `{xpath_expression}` must have `{attribute}` attribute')
+def step_openag_tag_attribute_expected(context, xpath_expression, attribute):
+    # Add to context for steps with no xpath_expression
+    context.xpath_expression = xpath_expression
     fail = False
 
+    xpaths = get_xpaths(context, xpath_expression)
     if xpaths:
         errors = []
         tree = context.xml.getroottree()
         for xpath in xpaths:
             attrib = xpath.attrib
-            vocabulary = attrib.get('vocabulary')
-            org_vocabulary = attrib.get('vocabulary') == '98' or attrib.get('vocabulary') == '99'
-
-            if vocabulary and org_vocabulary:
-                continue
-            else:
-                if not vocabulary:
-                    msg = '{} element must have a vocabulary attribute'.format(xpath_expression)
-                elif not org_vocabulary:
-                    msg = '{} element must have code "98" or "99" for the vocabulary attribute (it is "{}")'
-                    msg = msg.format(xpath_expression, attrib.get('vocabulary'))
-
-                errors.append({'message': msg, 'path': tree.getpath(xpath)})
-                fail = True
-
-    if fail:
-        raise RuleSetStepException(context, errors)
-
-
-@then('every `{xpath_expression}` must have @vocabulary-uri=="http://aims.fao.org/aos/agrovoc/"')
-def step_openag_tag_vocabulary_uri(context, xpath_expression):
-    xpaths = get_xpaths(context, xpath_expression)
-    fail = False
-
-    if xpaths:
-        errors = []
-        tree = context.xml.getroottree()
-        for xpath in xpaths:
-            attrib = xpath.attrib
-            vocabulary_uri = attrib.get('vocabulary-uri')
-            agrovoc_uri = attrib.get('vocabulary-uri') == 'http://aims.fao.org/aos/agrovoc/'
-
-            if vocabulary_uri and agrovoc_uri:
-                continue
-            else:
-                if not vocabulary_uri:
-                    msg = '{} element must have a vocabulary-uri attribute'.format(xpath_expression)
-                elif not agrovoc_uri:
-                    msg = ('{} element must have "http://aims.fao.org/aos/agrovoc/" '
-                           'uri for the vocabulary-uri attribute (it is "{}")')
-                    msg = msg.format(xpath_expression, attrib.get('vocabulary-uri'))
-
-                errors.append({'message': msg, 'path': tree.getpath(xpath)})
-                fail = True
-
-    if fail:
-        raise RuleSetStepException(context, errors)
-
-
-@then('every `{xpath_expression}` must have @code')
-def step_openag_tag_code(context, xpath_expression):
-    xpaths = get_xpaths(context, xpath_expression)
-    fail = False
-
-    if xpaths:
-        errors = []
-        tree = context.xml.getroottree()
-        for xpath in xpaths:
-            attrib = xpath.attrib
-            code_attrib = attrib.get('code')
-
-            if code_attrib:
-                continue
-            else:
-                if not code_attrib:
-                    msg = '{} element must have a code attribute'.format(xpath_expression)
+            required_attrib = attrib.get(attribute)
+            if not required_attrib:
+                    msg = '{} element must have @{} attribute'.format(xpath_expression, attribute)
                     errors.append({'message': msg, 'path': tree.getpath(xpath)})
                     fail = True
+
+    if fail:
+        raise RuleSetStepException(context, errors)
+
+
+@then('every `{attribute}` must be equal to `{any_value}`')
+def step_openag_tag_attribute_accepted_values(context, attribute, any_value):
+    fail = False
+
+    xpaths = get_xpaths(context, context.xpath_expression)
+    if xpaths:
+        errors = []
+        tree = context.xml.getroottree()
+        for xpath in xpaths:
+            element_attrs = xpath.attrib
+            matching_value = any([element_attrs.get(attribute) == val for val in any_value.split('or')])
+
+            if not matching_value:
+                msg = '@{} attribute must be equal to "{}" (it is "{}")'
+                msg = msg.format(attribute, any_value, element_attrs.get(attribute))
+                errors.append({'message': msg, 'path': tree.getpath(xpath)})
+                fail = True
 
     if fail:
         raise RuleSetStepException(context, errors)

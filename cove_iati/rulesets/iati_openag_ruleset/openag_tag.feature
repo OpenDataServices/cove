@@ -1,17 +1,19 @@
-Feature: openag:tag element checks
+Feature: openag:tag element is expected and must have specific attributes
 
-  Scenario Outline: location: element is expected
+  Scenario Outline: openag-tag: element is expected
     Given an Open Agriculture IATI activity
-     then at least one `openag:tag` is expected
+     Then at least one `openag:tag` is expected
 
-  Scenario Outline: openag-tag: element must use vocabulary maintained by the Reporting Organisation
+  Scenario Outline: openag-tag: element must have @vocabulary attribute with code for "maintained by the Reporting Organisation"
     Given openag:tag elements
-     then every `openag:tag` must have @vocabulary="98"|"99"
+     Then every `openag:tag` must have `vocabulary` attribute
+       And every `vocabulary` must be equal to `98 or 99`
 
-  Scenario Outline: openag-tag: element must use Agrovoc vocabulary-uri
+  Scenario Outline: openag-tag: element must have @vocabulary-uri attribute with Agrovoc URI
     Given openag:tag elements
-     then every `openag:tag` must have @vocabulary-uri=="http://aims.fao.org/aos/agrovoc/"
+     Then every `openag:tag` must have `vocabulary-uri` attribute
+       And every `vocabulary-uri` must be equal to `http://aims.fao.org/aos/agrovoc/`
 
-  Scenario Outline: openag-tag: element must use code attribute
+  Scenario Outline: openag-tag: element must have @code attribute
     Given openag:tag elements
-     then every `openag:tag` must have @code
+     Then every `openag:tag` must have `code` attribute
