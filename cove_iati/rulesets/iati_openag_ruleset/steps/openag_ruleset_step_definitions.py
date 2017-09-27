@@ -15,12 +15,17 @@ def get_xpaths(context, xpath_expression):
 
 
 @given('an Open Agriculture IATI activity')
-def step_given_iati_activity(context):
+def step_openag_iati_activity(context):
     assert True
 
 
 @given('{xpath_expression} elements')
-def step_given_openag_tag(context, xpath_expression):
+def step_openag_element(context, xpath_expression):
+    assert True
+
+
+@given('{xpath_expression} identifier attribute')
+def step_openag_identifier_attribute(context, xpath_expression):
     assert True
 
 
@@ -92,5 +97,19 @@ def step_openag_location_id_expected(context, xpath_expression1, xpath_expressio
                 msg = '{} must contain a {} element'.format(xpath_expression1, xpath_expression2)
                 errors.append({'message': msg, 'path': tree.getpath(xpath)})
                 fail = True
+    if fail:
+        raise RuleSetStepException(context, errors)
+
+
+@then('`{xpath_expression1}` should start with an org-id prefix')
+def step_openag_org_id_prefix_expected(context, xpath_expression1, xpath_expression2):
+    xpath = get_xpaths(context, xpath_expression1)
+    fail = False
+
+    if xpath:
+        fail = True
+        xpath = xpath[0]
+        tree = context.xml.getroottree()
+        errors = [{'message': 'message', 'path': tree.getpath(xpath)}]
     if fail:
         raise RuleSetStepException(context, errors)
