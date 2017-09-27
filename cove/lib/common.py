@@ -1,5 +1,6 @@
 import collections
 import csv
+import datetime
 import functools
 import json
 import os
@@ -631,3 +632,30 @@ def get_spreadsheet_meta_data(upload_dir, file_name, schema, file_type='xlsx', n
     with open(output_name) as metatab_data:
         metatab_json = json.load(metatab_data)
     return metatab_json
+
+
+def get_orgids_prefixes():
+    local_org_ids_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'org-ids.json')
+    today = datetime.date.today()
+    get_remote_file = False
+
+    if os.path.exists(local_org_ids_file):
+        with open(local_org_ids_file) as fp:
+            org_ids = json.load(fp)
+        date_str = org_ids.get('downloaded', '0001-1-1')
+        date_downloaded = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+        if date_downloaded != today:
+            get_remote_file = True
+    else:
+        get_remote_file = True  # first time around
+
+    if get_remote_file:
+        try:
+            org_ids = requests.get('http://org-id.guide/download.json').json()
+            org_ids['downloaded'] = "%s" % today
+            with open(local_org_ids_file, 'w') as fp:
+                json.dump(org_ids, fp, indent=2)
+        except requests.exceptions.RequestException:
+            pass
+
+    return [org_list['code'] for org_list in org_ids['lists']]
