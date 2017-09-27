@@ -5,6 +5,7 @@ import re
 from decimal import Decimal
 
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 
 from . lib import exceptions
@@ -160,5 +161,14 @@ def explore_ocds(request, pk):
             context['releases'] = json_data['releases']
         else:
             context['releases'] = []
-
-    return render(request, template, context)
+    
+    # Check the path to know whether a 'raw' request has been made
+    request_path = request.path
+    if 'raw' in request_path.split('/'):
+        response = {}
+        response['validation_errors'] = context['validation_errors']
+        response['validation_errors_count'] = context['validation_errors_count']
+        # Output as raw json
+        return HttpResponse(json.dumps(response))
+    else:
+        return render(request, template, context)
