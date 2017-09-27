@@ -19,7 +19,9 @@ Post {{Month}} {{Year}} bug fixes ({{Num}}) - {{optionally, brief description of
 
 In both cases, add a description following this template:
 ```
-URL for testing: http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/
+URL for testing:
+* 360Giving - http://release-{{YYYYMM}}.cove-360-dev.default.threesixtygiving.uk0.bigv.io/
+* OCDS - http://release-{{YYYYMM}}.dev.cove.opendataservices.coop/
 
 Planned deployment date: 
 
