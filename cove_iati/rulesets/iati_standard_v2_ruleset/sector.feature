@@ -5,5 +5,5 @@ Feature: Sector
      then either `sector` or `transaction/sector` should be present
 
   Scenario Outline: sector either sector or transaction:sector must be present but not both
-    Given `sector` is present
+    Given `sector` elements
      then `transaction/sector` should not be present

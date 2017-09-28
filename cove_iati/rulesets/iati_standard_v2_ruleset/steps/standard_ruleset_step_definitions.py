@@ -13,9 +13,66 @@ from cove_iati.lib.exceptions import RuleSetStepException
 
 @given('an IATI activity')
 def step_given_iati_activity(context):
-    # this is a dummy step. It's here because
-    # behave / BDD requires at least one 'given' step.
     assert True
+
+
+@given('`{xpath_expression}` organisations')
+def step_given_organisations(context, xpath_expression):
+    context.xpath_expression = xpath_expression
+
+
+@given('`{xpath_expression}` elements')
+def step_given_elements(context, xpath_expression):
+    context.xpath_expression = xpath_expression
+
+
+@given('`{xpath_expression}` texts')
+def step_given_texts(context, xpath_expression):
+    context.xpath_expression = xpath_expression
+
+
+@given('`{xpath_expression}` is a valid date')
+def step_given_date(context, xpath_expression):
+    vals = context.xml.xpath(xpath_expression)
+    errors = []
+    if not vals:
+        errors.append({
+            'message': '`{}` not found'.format(xpath_expression),
+            'path': xpath_expression
+        })
+        raise RuleSetStepException(context, errors)
+
+    for val in vals:
+        try:
+            datetime.strptime(val, '%Y-%m-%d')
+        except ValueError:
+            errors = [{
+                'messsage': '`{}` is not a valid date'.format(val),
+                'path': xpath_expression
+            }]
+            raise RuleSetStepException(context, errors)
+
+
+@given('`{xpath_expression}` is a valid date')
+def step_given_date(context, xpath_expression):
+    vals = context.xml.xpath(xpath_expression)
+    errors = []
+    if not vals:
+        errors.append({
+            'message': '`{}` not found'.format(xpath_expression),
+            'path': xpath_expression
+        })
+        raise RuleSetStepException(context, errors)
+
+    for val in vals:
+        try:
+            datetime.strptime(val, '%Y-%m-%d')
+        except ValueError:
+            errors = [{
+                'messsage': '`{}` is not a valid date'.format(val),
+                'path': xpath_expression
+            }]
+            raise RuleSetStepException(context, errors)
 
 
 @then('every `{xpath_expression}` should match the regex `{regex_str}`')
@@ -37,17 +94,6 @@ def step_match_regex(context, xpath_expression, regex_str):
         raise RuleSetStepException(context, errors)
 
 
-@given('`{xpath_expression}` is present')
-def step_given_present(context, xpath_expression):
-    vals = context.xml.xpath(xpath_expression)
-    if not vals:
-        errors = [{
-            'message': '`{}` is not present'.format(xpath_expression),
-            'path': xpath_expression
-        }]
-        raise RuleSetStepException(context, errors)
-
-
 @then('`{xpath_expression}` should not be present')
 def step_should_not_be_present(context, xpath_expression):
     vals = context.xml.xpath(xpath_expression)
@@ -58,27 +104,6 @@ def step_should_not_be_present(context, xpath_expression):
         }]
         raise RuleSetStepException(context, errors)
 
-
-@given('`{xpath_expression}` is a valid date')
-def step_valid_date(context, xpath_expression):
-    vals = context.xml.xpath(xpath_expression)
-    errors = []
-    if not vals:
-        errors.append({
-            'message': '`{}` not found'.format(xpath_expression),
-            'path': xpath_expression
-        })
-        raise RuleSetStepException(context, errors)
-
-    for val in vals:
-        try:
-            datetime.strptime(val, '%Y-%m-%d')
-        except ValueError:
-            errors = [{
-                'messsage': '`{}` is not a valid date'.format(val),
-                'path': xpath_expression
-            }]
-            raise RuleSetStepException(context, errors)
 
 
 @then('`{xpath_expression1}` should be chronologically before `{xpath_expression2}`')

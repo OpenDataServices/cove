@@ -1,7 +1,7 @@
 Feature: openag:tag element is expected and must contain specific attributes
 
   Scenario Outline: openag-tag: element is expected
-    Given an Open Agriculture IATI activity
+    Given an IATI activity
      Then at least one `openag:tag` element is expected
 
   Scenario Outline: openag-tag: element must have @vocabulary attribute with code for "maintained by the Reporting Organisation"

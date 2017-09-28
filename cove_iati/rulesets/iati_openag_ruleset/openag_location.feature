@@ -1,7 +1,7 @@
 Feature: location element must be present and must contain location-id with attributes
 
   Scenario Outline: location: element is expected
-    Given an Open Agriculture IATI activity
+    Given an IATI activity
      Then at least one `location` element is expected
 
   Scenario Outline: location: element must include <location-id>

@@ -3,7 +3,7 @@ Adapted from https://github.com/pwyf/bdd-tester/blob/master/steps/standard_rules
 Released under MIT License
 License: https://github.com/pwyf/bdd-tester/blob/master/LICENSE
 '''
-from behave import given, then
+from behave import then
 
 from cove.lib.common import get_orgids_prefixes
 from cove_iati.lib.exceptions import RuleSetStepException
@@ -16,21 +16,6 @@ def get_xpaths(context, xpath_expression):
     nsmap = context.xml.getparent().nsmap
     xpaths = context.xml.xpath(xpath_expression, namespaces=nsmap)
     return xpaths
-
-
-@given('an Open Agriculture IATI activity')
-def step_openag_iati_activity(context):
-    assert True
-
-
-@given('`{xpath_expression}` elements')
-def step_openag_element(context, xpath_expression):
-    context.xpath_expression = xpath_expression
-
-
-@given('`{xpath_expression}` organisation')
-def step_openag_organisation(context, xpath_expression):
-    context.xpath_expression = xpath_expression
 
 
 @then('at least one `{xpath_expression}` element is expected')
@@ -104,7 +89,7 @@ def step_openag_location_id_expected(context, xpath_expression1, xpath_expressio
         raise RuleSetStepException(context, errors)
 
 
-@then('`{attribute}` id attribute should start with an org-ids prefix')
+@then('every `{attribute}` id attribute should start with an org-ids prefix')
 def step_openag_org_id_prefix_expected(context, attribute):
     xpaths = get_xpaths(context, context.xpath_expression)
     msg = '@{} attribute must start with a valid org-ids prefix (it is "{}")'
