@@ -355,7 +355,9 @@ def test_get_schema_deprecated_paths():
     '{"version": "1.1", "releases":{"buyer":{"additionalIdentifiers":[]}}}',
     '{"version": "1.1", "releases":{"parties":{"roles":[["a","b"]]}}}',  # test an array in a codelist position
     '{"extensions":["https://raw.githubusercontent.com/open-contracting/ocds_bid_extension/v1.1.1/extension.jso"], "releases":[]}',
-    #'{"extensions":[{}], "releases":[]}'
+    '{"extensions":[{}], "releases":[]}'
+    '{"extensions":["https://raw.githubusercontent.com/open-contracting/ocds_bid_extension/v1.1.1/extension.jso"], "releases":[], "version": "1.1"}',
+    '{"extensions":[{}], "releases":[], "version": "1.1"}'
 ])
 def test_explore_page(client, json_data):
     data = SuppliedData.objects.create()
