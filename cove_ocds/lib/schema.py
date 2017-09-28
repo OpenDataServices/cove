@@ -130,7 +130,7 @@ class SchemaOCDS(SchemaJsonMixin):
                 try:
                     extension_data = extension.json()
                 except json.JSONDecodeError:
-                    self.invalid_extension[extensions_descriptor_url] = 'invalid JSON'
+                    self.invalid_extension[extensions_descriptor_url] = 'release schema invalid JSON'
                     continue
             else:
                 self.invalid_extension[extensions_descriptor_url] = '{}: {}'.format(extension.status_code,
@@ -138,7 +138,11 @@ class SchemaOCDS(SchemaJsonMixin):
                 continue
 
             schema_obj = json_merge_patch.merge(schema_obj, extension_data)
-            extensions_descriptor = requests.get(extensions_descriptor_url).json()
+            try:
+                extensions_descriptor = requests.get(extensions_descriptor_url).json()
+            except json.decoder.JSONDecodeError:
+                self.invalid_extension[extensions_descriptor_url] = 'invalid JSON'
+                continue
             cur_language = translation.get_language()
 
             extension_description = {'url': url}
