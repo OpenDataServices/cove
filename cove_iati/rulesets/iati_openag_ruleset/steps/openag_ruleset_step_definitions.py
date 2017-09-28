@@ -5,6 +5,7 @@ License: https://github.com/pwyf/bdd-tester/blob/master/LICENSE
 '''
 from behave import given, then
 
+from cove.lib.common import get_orgids_prefixes
 from cove_iati.lib.exceptions import RuleSetStepException
 
 
@@ -24,8 +25,9 @@ def step_openag_element(context, xpath_expression):
     assert True
 
 
-@given('{xpath_expression} identifier attribute')
-def step_openag_identifier_attribute(context, xpath_expression):
+@given('{xpath_expression} organisation')
+def step_openag_organisation(context, xpath_expression):
+    context.xpath_expression = xpath_expression
     assert True
 
 
@@ -101,15 +103,6 @@ def step_openag_location_id_expected(context, xpath_expression1, xpath_expressio
         raise RuleSetStepException(context, errors)
 
 
-@then('`{xpath_expression1}` should start with an org-id prefix')
-def step_openag_org_id_prefix_expected(context, xpath_expression1, xpath_expression2):
-    xpath = get_xpaths(context, xpath_expression1)
-    fail = False
-
-    if xpath:
-        fail = True
-        xpath = xpath[0]
-        tree = context.xml.getroottree()
-        errors = [{'message': 'message', 'path': tree.getpath(xpath)}]
-    if fail:
-        raise RuleSetStepException(context, errors)
+@then('`{attribute}` attribute should start with an org-id prefix')
+def step_openag_org_id_prefix_expected(context, attribute):
+    print(context.xpath_expression)
