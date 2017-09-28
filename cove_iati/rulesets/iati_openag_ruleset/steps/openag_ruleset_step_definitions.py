@@ -89,7 +89,7 @@ def step_openag_location_id_expected(context, xpath_expression1, xpath_expressio
         raise RuleSetStepException(context, errors)
 
 
-@then('every `{attribute}` id attribute should start with an org-ids prefix')
+@then('`{attribute}` id attribute should start with an org-ids prefix')
 def step_openag_org_id_prefix_expected(context, attribute):
     xpaths = get_xpaths(context, context.xpath_expression)
     msg = '@{} attribute must start with a valid org-ids prefix (it is "{}")'

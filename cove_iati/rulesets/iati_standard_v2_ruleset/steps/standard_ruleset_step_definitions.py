@@ -3,7 +3,7 @@ Adapted from https://github.com/pwyf/bdd-tester/blob/master/steps/standard_rules
 Released under MIT License
 License: https://github.com/pwyf/bdd-tester/blob/master/LICENSE
 '''
-from datetime import datetime
+import datetime
 import re
 
 from behave import given, then
@@ -31,48 +31,45 @@ def step_given_texts(context, xpath_expression):
     context.xpath_expression = xpath_expression
 
 
-@given('`{xpath_expression}` is a valid date')
-def step_given_date(context, xpath_expression):
-    vals = context.xml.xpath(xpath_expression)
-    errors = []
-    if not vals:
-        errors.append({
-            'message': '`{}` not found'.format(xpath_expression),
-            'path': xpath_expression
-        })
+@then('`{attribute}` attribute must be a valid date')
+def step_valid_date(context, attribute):
+    xpaths = context.xml.xpath(context.xpath_expression)
+    fail = False
+    if xpaths:
+        errors = []
+        tree = context.xml.getroottree()
+        for xpath in xpaths:
+            date_str = xpath.attrib.get(attribute)
+            try:
+                datetime.datetime.strptime(date_str, '%Y-%m-%d')
+            except ValueError:
+                errors.append({'message': '`{}` is not a valid date'.format(date_str),
+                               'path': '{}/@{}'.format(tree.getpath(xpath), attribute)})
+                fail = True
+    if fail:
         raise RuleSetStepException(context, errors)
 
-    for val in vals:
-        try:
-            datetime.strptime(val, '%Y-%m-%d')
-        except ValueError:
-            errors = [{
-                'messsage': '`{}` is not a valid date'.format(val),
-                'path': xpath_expression
-            }]
-            raise RuleSetStepException(context, errors)
 
+@then('`{attribute}` attribute must be today, or in the past')
+def step_should_be_past(context, attribute):
+    xpaths = context.xml.xpath(context.xpath_expression)
+    fail = False
 
-@given('`{xpath_expression}` is a valid date')
-def step_given_date(context, xpath_expression):
-    vals = context.xml.xpath(xpath_expression)
-    errors = []
-    if not vals:
-        errors.append({
-            'message': '`{}` not found'.format(xpath_expression),
-            'path': xpath_expression
-        })
+    if xpaths:
+        errors = []
+        tree = context.xml.getroottree()
+        today = datetime.date.today()
+        for xpath in xpaths:
+            date_str = xpath.attrib.get(attribute)
+            date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+            print(date)
+            if date > today:
+                errors.append({'message': '{} should be on or before today ({})'.format(date, today),
+                               'path': '{}/@{}'.format(tree.getpath(xpath), attribute)})
+                fail = True
+
+    if fail:
         raise RuleSetStepException(context, errors)
-
-    for val in vals:
-        try:
-            datetime.strptime(val, '%Y-%m-%d')
-        except ValueError:
-            errors = [{
-                'messsage': '`{}` is not a valid date'.format(val),
-                'path': xpath_expression
-            }]
-            raise RuleSetStepException(context, errors)
 
 
 @then('every `{xpath_expression}` should match the regex `{regex_str}`')
@@ -105,7 +102,6 @@ def step_should_not_be_present(context, xpath_expression):
         raise RuleSetStepException(context, errors)
 
 
-
 @then('`{xpath_expression1}` should be chronologically before `{xpath_expression2}`')
 def step_should_be_before(context, xpath_expression1, xpath_expression2):
     less_str = context.xml.xpath(xpath_expression1)[0]
@@ -118,27 +114,6 @@ def step_should_be_before(context, xpath_expression1, xpath_expression2):
             'message': '{} should be before {}'.format(less_str, more_str),
             'path': ''
         }]
-        raise RuleSetStepException(context, errors)
-
-
-@then('`{xpath_expression}` should be today, or in the past')
-def step_should_be_past(context, xpath_expression):
-    values = context.xml.xpath(xpath_expression)
-    fail = False
-
-    if values:
-        errors = []
-        tree = context.xml.getroottree()
-        for val in values:
-            date = datetime.strptime(val, '%Y-%m-%d').date()
-            if date > context.today:
-                errors.append({
-                    'message': '{} should be on or before today ({})'.format(date, context.today),
-                    'path': tree.getpath(val.getparent())
-                })
-                fail = True
-
-    if fail:
         raise RuleSetStepException(context, errors)
 
 
