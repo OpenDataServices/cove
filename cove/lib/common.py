@@ -647,7 +647,8 @@ def get_orgids_prefixes():
         if date_downloaded != today:
             get_remote_file = True
     else:
-        get_remote_file = True  # first time around
+        get_remote_file = True
+        first_request = True
 
     if get_remote_file:
         try:
@@ -656,6 +657,8 @@ def get_orgids_prefixes():
             with open(local_org_ids_file, 'w') as fp:
                 json.dump(org_ids, fp, indent=2)
         except requests.exceptions.RequestException:
-            pass
+            if first_request:
+                raise  # First time ever request fails
+            pass  # Update fails
 
     return [org_list['code'] for org_list in org_ids['lists']]
