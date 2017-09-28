@@ -81,7 +81,7 @@ def server_url(request, live_server):
     # Test a non-valid file.
     ('paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
     # Test a unconvertable spreadsheet (blank file)
-    ('bad.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.', False),
+    ('bad.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it.', False),
     # Check that a file with a UTF-8 BOM converts correctly
     ('bom.csv', 'Grant identifiers:  1', True),
     ('nulls.json', [

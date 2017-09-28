@@ -8,7 +8,7 @@ from bdd_tester import bdd_tester
 from django.utils.translation import ugettext_lazy as _
 
 from .schema import SchemaIATI
-from cove.lib.exceptions import CoveInputDataError
+from cove.lib.exceptions import CoveInputDataError, UnrecognisedFileTypeXML
 
 
 def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False):
@@ -260,3 +260,18 @@ def get_ruleset_errors(lxml_etree, output_dir):
                         ruleset_errors.append(rule_error)
 
     return ruleset_errors
+
+
+def get_file_type(file):
+    if isinstance(file, str):
+        name = file.lower()
+    else:
+        name = file.name.lower()
+    if name.endswith('.xml'):
+        return 'xml'
+    elif name.endswith('.xlsx'):
+        return 'xlsx'
+    elif name.endswith('.csv'):
+        return 'csv'
+    else:
+        raise UnrecognisedFileTypeXML
