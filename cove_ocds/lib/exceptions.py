@@ -3,11 +3,10 @@ from django.utils.translation import ugettext_lazy as _
 from cove.lib.exceptions import CoveInputDataError
 
 
-def raise_invalid_version_argument(pk, version):
+def raise_invalid_version_argument(version):
     raise CoveInputDataError(context={
-        'sub_title': _("Something unexpected happened"),
-        'link': 'explore',
-        'link_args': pk,
+        'sub_title': _('Unrecognised version of the schema'),
+        'link': 'index',
         'link_text': _('Try Again'),
         'msg': _('We think you tried to run your data against an unrecognised version of '
                  'the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
@@ -19,7 +18,7 @@ def raise_invalid_version_argument(pk, version):
 
 def raise_invalid_version_data_with_patch(version):
     raise CoveInputDataError(context={
-        'sub_title': _("Version format does not comply with the schema"),
+        'sub_title': _('Version format does not comply with the schema'),
         'link': 'index',
         'link_text': _('Try Again'),
         'msg': _('The value for the <em>"version"</em> field in your data follows the '
@@ -30,4 +29,36 @@ def raise_invalid_version_data_with_patch(version):
                  'glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message: '
                  '</strong> <em>{}</em> format does not comply with the schema'.format(version)),
         'error': _('{} is not a valid schema version'.format(version))
+    })
+
+
+def raise_json_deref_error(error):
+    raise CoveInputDataError(context={
+        'sub_title': _('JSON reference error'),
+        'link': 'index',
+        'link_text': _('Try Again'),
+        'msg': _('We have detected a JSON reference error in the schema. This <em> may be '
+                 '</em> due to some extension trying to resolve non-existing references. '
+                 '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
+                 '</span> <strong>Error message:</strong> <em>{}</em>'.format(error)),
+        'error': _('{}'.format(error))
+    })
+
+
+def raise_missing_package_error():
+    raise CoveInputDataError(context={
+        'sub_title': _('Missing OCDS package'),
+        'link': 'index',
+        'link_text': _('Try Again'),
+        'msg': _('We could not detect a package structure at the top-level of your data. '
+                 'OCDS releases and records should be published within a <a href="http://'
+                 'standard.open-contracting.org/latest/en/schema/release_package/">release '
+                 'package </a> or <a href="http://standard.open-contracting.org/latest/en'
+                 '/schema/record_package/"> record package</a> to provide important meta-'
+                 'data. For more information, please refer to the <a href="http://standard.'
+                 'open-contracting.org/latest/en/getting_started/releases_and_records/"> '
+                 'Releases and Records section </a> in the OCDS documentation.\n\n<span '
+                 'class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> '
+                 '<strong>Error message:</strong> <em>Missing OCDS package</em>'),
+        'error': _('Missing OCDS package')
     })

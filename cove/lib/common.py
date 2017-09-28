@@ -93,8 +93,15 @@ class SchemaJsonMixin():
         return json.loads(self.release_pkg_schema_str)
 
     def deref_schema(self, schema_str):
-        return jsonref.loads(schema_str, loader=CustomJsonrefLoader(schema_url=self.schema_host),
-                             object_pairs_hook=OrderedDict)
+        loader = CustomJsonrefLoader(schema_url=self.schema_host)
+        try:
+            deref_obj = jsonref.loads(schema_str, loader=loader, object_pairs_hook=OrderedDict)
+            # Force evaluation of jsonref.loads here
+            repr(deref_obj)
+            return deref_obj
+        except jsonref.JsonRefError as e:
+            self.json_deref_error = e.message
+            return {}
 
     def get_release_schema_obj(self, deref=False):
         if deref:
@@ -584,7 +591,7 @@ def get_additional_codelist_values(schema_obj, codelist_url, json_data):
             continue
 
         for value in values:
-            if value in codelist_values:
+            if str(value) in codelist_values:
                 continue
             if path_no_num not in additional_codelist_values:
                 additional_codelist_values[path_no_num] = {
@@ -597,7 +604,7 @@ def get_additional_codelist_values(schema_obj, codelist_url, json_data):
                     #"location_values": []
                 }
 
-            additional_codelist_values[path_no_num]['values'].add(value)
+            additional_codelist_values[path_no_num]['values'].add(str(value))
             #additional_codelist_values[path_no_num]['location_values'].append((path, value))
 
     return additional_codelist_values
