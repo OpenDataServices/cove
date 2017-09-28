@@ -30,6 +30,16 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                          '</span> <strong>Error message:</strong> {}'.format(err)),
                 'error': format(err)
             })
+        except UnicodeDecodeError as err:
+            raise CoveInputDataError(context={
+                'sub_title': _("Sorry we can't process that data"),
+                'link': 'index',
+                'link_text': _('Try Again'),
+                'msg': _('We think you tried to upload a XML file, but the encoding is incorrect.'
+                         '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
+                         '</span> <strong>Error message:</strong> {}'.format(err)),
+                'error': format(err)
+            })
         schema_tree = etree.parse(schema_fp)
         schema = lxml.etree.XMLSchema(schema_tree)
         schema.validate(tree)
