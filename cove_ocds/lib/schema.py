@@ -129,7 +129,7 @@ class SchemaOCDS(SchemaJsonMixin):
             if extension.ok:
                 try:
                     extension_data = extension.json()
-                except json.JSONDecodeError:
+                except ValueError:  # would be json.JSONDecodeError for Python 3.5+
                     self.invalid_extension[extensions_descriptor_url] = 'release schema invalid JSON'
                     continue
             else:
@@ -140,7 +140,7 @@ class SchemaOCDS(SchemaJsonMixin):
             schema_obj = json_merge_patch.merge(schema_obj, extension_data)
             try:
                 extensions_descriptor = requests.get(extensions_descriptor_url).json()
-            except json.decoder.JSONDecodeError:
+            except ValueError:  # would be json.JSONDecodeError for Python 3.5+
                 self.invalid_extension[extensions_descriptor_url] = 'invalid JSON'
                 continue
             cur_language = translation.get_language()
