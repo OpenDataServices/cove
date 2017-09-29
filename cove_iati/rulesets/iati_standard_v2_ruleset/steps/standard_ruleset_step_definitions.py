@@ -63,7 +63,7 @@ def step_valid_date(context, attribute):
         raise RuleSetStepException(context, errors)
 
 
-@then('`{attribute}` attribute must be today, or in the past')
+@then('`{attribute}` attribute must be today or in the past')
 def step_must_be_today_or_past(context, attribute):
     xpaths = context.xml.xpath(context.xpath_expression)
     fail = False
@@ -103,14 +103,18 @@ def step_match_regex(context, xpath_expression, regex_str):
         raise RuleSetStepException(context, errors)
 
 
-@then('`{xpath_expression}` should not be present')
+@then('`{xpath_expression}` is not expected')
 def step_should_not_be_present(context, xpath_expression):
-    vals = context.xml.xpath(xpath_expression)
-    if vals:
-        errors = [{
-            'message': '`{}` is present when it shouldn\'t be'.format(xpath_expression),
-            'path': xpath_expression
-        }]
+    xpaths = context.xml.xpath(xpath_expression)
+    fail = False
+
+    if xpaths:
+        errors = []
+        tree = context.xml.getroottree()
+        for xpath in xpaths:
+            errors.append({'message': '`{}` is not expected'.format(xpath_expression),
+                           'path': tree.getpath(xpath)})
+    if fail:
         raise RuleSetStepException(context, errors)
 
 
@@ -165,12 +169,12 @@ def step_should_be_before(context, attribute):
         raise RuleSetStepException(context, errors)
 
 
-@then('either `{xpath_expression1}` or `{xpath_expression2}` should be present')
-def step_should_be_present(context, xpath_expression1, xpath_expression2):
-    vals = context.xml.xpath(xpath_expression1) or context.xml.xpath(xpath_expression2)
-    if not vals:
-        errors = [{
-            'message': '`{}` and `{}` not found'.format(xpath_expression1, xpath_expression2),
-            'path': ''
-        }]
+@then('either `{xpath_expression1}` or `{xpath_expression2}` is expected')
+def step_either_or_expected(context, xpath_expression1, xpath_expression2):
+    xpath = context.xml.xpath(xpath_expression1) or context.xml.xpath(xpath_expression2)
+    if not xpath:
+        fail_msg = 'Neither {} nor `{}` has been found'
+        tree = context.xml.getroottree()
+        errors = [{'message': fail_msg.format(xpath_expression1, xpath_expression2),
+                   'path': tree.getpath(context.xml)}]
         raise RuleSetStepException(context, errors)

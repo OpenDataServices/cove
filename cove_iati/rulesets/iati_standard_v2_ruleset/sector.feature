@@ -1,9 +1,9 @@
 Feature: Sector
 
-  Scenario Outline: sector sector or transaction:sector must be present
+  Scenario Outline: sector sector or transaction:sector expected
     Given an IATI activity
-     then either `sector` or `transaction/sector` should be present
+     Then either `sector` or `transaction/sector` is expected
 
-  Scenario Outline: sector either sector or transaction:sector must be present but not both
+  Scenario Outline: sector either sector or transaction:sector are expected but not both
     Given `sector` elements
-     then `transaction/sector` should not be present
+     then `transaction/sector` is not expected
