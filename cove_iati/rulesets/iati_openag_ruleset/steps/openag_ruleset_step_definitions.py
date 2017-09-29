@@ -53,7 +53,7 @@ def step_openag_tag_attribute_expected(context, xpath_expression, attribute):
 @then('every `{attribute}` must be equal to `{any_value}`')
 def step_openag_tag_attribute_accepted_values(context, attribute, any_value):
     xpaths = get_xpaths(context, context.xpath_expression)
-    msg = '@{} attribute must be equal to "{}" (it is "{}")'
+    msg = '"{}" is not a valid value for @{} attribute (it should be "{}")'
     fail = False
 
     if xpaths:
@@ -63,7 +63,7 @@ def step_openag_tag_attribute_accepted_values(context, attribute, any_value):
             element_attrs = xpath.attrib
             matching_value = any([element_attrs.get(attribute) == val for val in any_value.split(' or ')])
             if not matching_value:
-                errors.append({'message': msg.format(attribute, any_value, element_attrs.get(attribute)),
+                errors.append({'message': msg.format(element_attrs.get(attribute), attribute, any_value),
                                'path': '{}/@{}'.format(tree.getpath(xpath), attribute)})
                 fail = True
     if fail:
@@ -92,7 +92,7 @@ def step_openag_location_id_expected(context, xpath_expression1, xpath_expressio
 @then('`{attribute}` id attribute should start with an org-ids prefix')
 def step_openag_org_id_prefix_expected(context, attribute):
     xpaths = get_xpaths(context, context.xpath_expression)
-    msg = '@{} attribute must start with a valid org-ids prefix (it is "{}")'
+    msg = '@{} {} does not start with a recognised org-ids prefix'
     fail = False
 
     if xpaths:
@@ -101,7 +101,7 @@ def step_openag_org_id_prefix_expected(context, attribute):
         for xpath in xpaths:
             attr_id = xpath.attrib.get(attribute, '')
             if attr_id[:6].upper() not in ORGIDS_PREFIXES:
-                errors.append({'message': msg.format(attribute, attr_id[:6]),
+                errors.append({'message': msg.format(attr_id, attribute),
                                'path': '{}/@{}'.format(tree.getpath(xpath), attribute)})
                 fail = True
     if fail:

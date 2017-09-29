@@ -1,6 +1,6 @@
 Feature: Elements use a valid format
 
-  Scenario Outline: text identifier should match the regex [^\:\&\|\?]+
+  Scenario Outline: identifier text should match the regex [^\:\&\|\?]+
     Given `iati-identifier` elements
      then iati-identifier text should match the regex `^[^\/\&\|\?]+$`
 

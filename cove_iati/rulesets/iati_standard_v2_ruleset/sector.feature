@@ -1,6 +1,6 @@
 Feature: Sector
 
-  Scenario Outline: sector sector or transaction:sector expected
+  Scenario Outline: sector sector or transaction:sector are expected
     Given an IATI activity
      Then either `sector` or `transaction/sector` is expected
 
