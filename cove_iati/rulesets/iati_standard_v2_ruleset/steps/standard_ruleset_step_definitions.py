@@ -34,11 +34,6 @@ def step_given_elements(context, xpath_expression):
     context.xpath_expression = xpath_expression
 
 
-@given('`{xpath_expression}` texts')
-def step_given_texts(context, xpath_expression):
-    context.xpath_expression = xpath_expression
-
-
 @given('`{xpath_expression1}` plus `{xpath_expression2}`')
 def step_given_two_different_elements(context, xpath_expression1, xpath_expression2):
     context.xpath_expression1 = xpath_expression1
@@ -83,23 +78,39 @@ def step_must_be_today_or_past(context, attribute):
         raise RuleSetStepException(context, errors)
 
 
-@then('every `{xpath_expression}` should match the regex `{regex_str}`')
-def step_match_regex(context, xpath_expression, regex_str):
-    vals = context.xml.xpath(xpath_expression)
+@then('iati-identifier text should match the regex `{regex_str}`')
+def step_iati_id_text_match_regex(context, regex_str):
+    xpath = context.xml.xpath(context.xpath_expression)
     regex = re.compile(regex_str)
-    success = True
-    bad_vals = []
 
-    for val in vals:
-        if not regex.match(val):
-            success = False
-            bad_vals.append(val)
-    if not success:
-        verb = 'does' if len(bad_vals) == 1 else 'do'
-        errors = [{
-            'message': '{} {} not match the regex `{}`'.format(', '.join(bad_vals), verb, regex_str),
-            'path': xpath_expression
-        }]
+    if xpath:
+        xpath = xpath[0]
+        text_str = xpath.text
+        if not regex.match(text_str):
+            tree = context.xml.getroottree()
+            fail_msg = 'text does not match the regex {}'
+            errors = [{'message': fail_msg.format(text_str, regex_str),
+                       'path': '{}/text()'.format(tree.getpath(xpath))}]
+            raise RuleSetStepException(context, errors)
+
+
+@then('`{attribute}` attribute should match the regex `{regex_str}`')
+def step_attribute_match_regex(context, attribute, regex_str):
+    xpaths = context.xml.xpath(context.xpath_expression)
+    regex = re.compile(regex_str)
+    fail = False
+
+    if xpaths:
+        errors = []
+        fail_msg = '{} does not match the regex {}'
+        tree = context.xml.getroottree()
+        for xpath in xpaths:
+            attr_str = xpath.attrib.get(attribute)
+            if not regex.match(attr_str):
+                errors.append({'message': fail_msg.format(attr_str, regex_str),
+                               'path': '{}/@{}'.format(tree.getpath(xpath), attribute)})
+            fail = True
+    if fail:
         raise RuleSetStepException(context, errors)
 
 
@@ -173,7 +184,7 @@ def step_should_be_before(context, attribute):
 def step_either_or_expected(context, xpath_expression1, xpath_expression2):
     xpath = context.xml.xpath(xpath_expression1) or context.xml.xpath(xpath_expression2)
     if not xpath:
-        fail_msg = 'Neither {} nor `{}` has been found'
+        fail_msg = 'Neither {} nor {} have been found'
         tree = context.xml.getroottree()
         errors = [{'message': fail_msg.format(xpath_expression1, xpath_expression2),
                    'path': tree.getpath(context.xml)}]
