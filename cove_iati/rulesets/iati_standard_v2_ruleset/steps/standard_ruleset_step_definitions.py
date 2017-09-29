@@ -114,6 +114,17 @@ def step_attribute_match_regex(context, attribute, regex_str):
         raise RuleSetStepException(context, errors)
 
 
+@then('either `{xpath_expression1}` or `{xpath_expression2}` is expected')
+def step_either_or_expected(context, xpath_expression1, xpath_expression2):
+    xpath = context.xml.xpath(xpath_expression1) or context.xml.xpath(xpath_expression2)
+    if not xpath:
+        fail_msg = 'Neither {} nor {} have been found'
+        tree = context.xml.getroottree()
+        errors = [{'message': fail_msg.format(xpath_expression1, xpath_expression2),
+                   'path': tree.getpath(context.xml)}]
+        raise RuleSetStepException(context, errors)
+
+
 @then('`{xpath_expression}` is not expected')
 def step_should_not_be_present(context, xpath_expression):
     xpaths = context.xml.xpath(xpath_expression)
@@ -177,15 +188,4 @@ def step_should_be_before(context, attribute):
             'message': fail_msg.format(start_date_str, end_date_str),
             'path': '{} & {}'.format(path_str1, path_str2)
         }]
-        raise RuleSetStepException(context, errors)
-
-
-@then('either `{xpath_expression1}` or `{xpath_expression2}` is expected')
-def step_either_or_expected(context, xpath_expression1, xpath_expression2):
-    xpath = context.xml.xpath(xpath_expression1) or context.xml.xpath(xpath_expression2)
-    if not xpath:
-        fail_msg = 'Neither {} nor {} have been found'
-        tree = context.xml.getroottree()
-        errors = [{'message': fail_msg.format(xpath_expression1, xpath_expression2),
-                   'path': tree.getpath(context.xml)}]
         raise RuleSetStepException(context, errors)

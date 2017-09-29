@@ -60,8 +60,10 @@ def iati_json_output(output_dir, file):
         if file_type == 'csv':
             shutil.rmtree(os.path.join(output_dir, 'csv_dir'))
 
-    ruleset_dir = os.path.join(output_dir, 'ruleset')
-    if os.path.exists(ruleset_dir):
-        shutil.rmtree(ruleset_dir)
+    ruleset_dirs = [os.path.join(output_dir, 'ruleset'),
+                    os.path.join(output_dir, 'ruleset_openag')]
+    for directory in ruleset_dirs:
+        if os.path.exists(directory):
+            shutil.rmtree(directory)
 
     return context
