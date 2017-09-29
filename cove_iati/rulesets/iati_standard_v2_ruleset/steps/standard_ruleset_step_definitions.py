@@ -35,42 +35,38 @@ def step_given_two_different_elements(context, xpath_expression1, xpath_expressi
 @then('`{attribute}` attribute must be a valid date')
 @register_ruleset_errors
 def step_valid_date(context, attribute):
-    xpaths = get_xpaths(context.xml, context.xpath_expression)
     errors = []
 
-    if xpaths:
-        for xpath in xpaths:
-            date_str = xpath.attrib.get(attribute)
-            if invalid_date_format(xpath, date_str):
-                errors.append({'message': '`{}` is not a valid date'.format(date_str),
-                               'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
+    for xpath in get_xpaths(context.xml, context.xpath_expression):
+        date_str = xpath.attrib.get(attribute)
+        if invalid_date_format(xpath, date_str):
+            errors.append({'message': '`{}` is not a valid date'.format(date_str),
+                           'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
     return context, errors
 
 
 @then('`{attribute}` attribute must be today or in the past')
 @register_ruleset_errors
 def step_must_be_today_or_past(context, attribute):
-    xpaths = get_xpaths(context.xml, context.xpath_expression)
     errors = []
+    today = datetime.date.today()
 
-    if xpaths:
-        today = datetime.date.today()
-        for xpath in xpaths:
-            date_str = xpath.attrib.get(attribute)
-            date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
-            if date > today:
-                errors.append({'message': '{} must be on or before today ({})'.format(date, today),
-                               'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
+    for xpath in get_xpaths(context.xml, context.xpath_expression):
+        date_str = xpath.attrib.get(attribute)
+        date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+        if date > today:
+            errors.append({'message': '{} must be on or before today ({})'.format(date, today),
+                           'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
     return context, errors
 
 
 @then('iati-identifier text should match the regex `{regex_str}`')
 @register_ruleset_errors
 def step_iati_id_text_match_regex(context, regex_str):
-    xpath = get_xpaths(context.xml, context.xpath_expression)
     regex = re.compile(regex_str)
     errors = []
 
+    xpath = get_xpaths(context.xml, context.xpath_expression)
     if xpath:
         xpath = xpath[0]
         fail_msg = 'text does not match the regex {}'
@@ -84,28 +80,26 @@ def step_iati_id_text_match_regex(context, regex_str):
 @then('`{attribute}` attribute should match the regex `{regex_str}`')
 @register_ruleset_errors
 def step_attribute_match_regex(context, attribute, regex_str):
-    xpaths = get_xpaths(context.xml, context.xpath_expression)
     regex = re.compile(regex_str)
     errors = []
+    fail_msg = '{} does not match the regex {}'
 
-    if xpaths:
-        fail_msg = '{} does not match the regex {}'
-        for xpath in xpaths:
-            attr_str = xpath.attrib.get(attribute)
-            if not regex.match(attr_str):
-                errors.append({'message': fail_msg.format(attr_str, regex_str),
-                               'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
+    for xpath in get_xpaths(context.xml, context.xpath_expression):
+        attr_str = xpath.attrib.get(attribute)
+        if not regex.match(attr_str):
+            errors.append({'message': fail_msg.format(attr_str, regex_str),
+                           'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
     return context, errors
 
 
 @then('either `{xpath_expression1}` or `{xpath_expression2}` is expected')
 @register_ruleset_errors
 def step_either_or_expected(context, xpath_expression1, xpath_expression2):
-    xpath = get_xpaths(context.xml, xpath_expression1) or get_xpaths(context.xml, xpath_expression2)
     errors = []
+    fail_msg = 'Neither {} nor {} have been found'
 
+    xpath = get_xpaths(context.xml, xpath_expression1) or get_xpaths(context.xml, xpath_expression2)
     if not xpath:
-        fail_msg = 'Neither {} nor {} have been found'
         errors = [{'message': fail_msg.format(xpath_expression1, xpath_expression2),
                    'path': get_full_xpath(context.xml, context.xml)}]
     return context, errors
@@ -113,14 +107,12 @@ def step_either_or_expected(context, xpath_expression1, xpath_expression2):
 
 @then('`{xpath_expression}` is not expected')
 @register_ruleset_errors
-def step_should_not_be_present(context, xpath_expression):
-    xpaths = get_xpaths(context.xml, xpath_expression)
+def step_not_expected(context, xpath_expression):
     errors = []
 
-    if xpaths:
-        for xpath in xpaths:
-            errors.append({'message': '`{}` is not expected'.format(xpath_expression),
-                           'path': get_full_xpath(context.xml, xpath)})
+    for xpath in get_xpaths(context.xml, xpath_expression):
+        errors.append({'message': '`{}` is not expected'.format(xpath_expression),
+                       'path': get_full_xpath(context.xml, xpath)})
     return context, errors
 
 
@@ -131,25 +123,24 @@ def step_two_valid_dates(context, attribute):
     xpath2 = get_xpaths(context.xml, context.xpath_expression2)
     xpaths = []
     errors = []
+    fail_msg = '`{}` is not a valid date'
 
     if xpath1:
         xpaths.append(xpath1[0])
     if xpath2:
         xpaths.append(xpath2[0])
 
-    if xpaths:
-        fail_msg = '`{}` is not a valid date'
-        for xpath in xpaths:
-            date_str = xpath.attrib.get(attribute)
-            if invalid_date_format(xpath1, date_str):
-                errors.append({'message': fail_msg.format(date_str),
-                               'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
+    for xpath in xpaths:
+        date_str = xpath.attrib.get(attribute)
+        if invalid_date_format(xpath, date_str):
+            errors.append({'message': fail_msg.format(date_str),
+                           'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
     return context, errors
 
 
 @then('`{attribute}` start date attribute must be chronologically before end date attribute')
 @register_ruleset_errors
-def step_should_be_before(context, attribute):
+def step_start_date_before_end_date(context, attribute):
     xpath1 = get_xpaths(context.xml, context.xpath_expression1)
     xpath2 = get_xpaths(context.xml, context.xpath_expression2)
     errors = []
