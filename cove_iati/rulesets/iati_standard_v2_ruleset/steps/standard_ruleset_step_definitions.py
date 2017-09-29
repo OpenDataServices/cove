@@ -9,6 +9,7 @@ import re
 from behave import given, then
 
 from cove_iati.lib.exceptions import RuleSetStepException
+from cove_iati.rulesets.utils import get_xpaths, get_full_xpath
 
 
 def invalid_date_format(xpath, date_str):
@@ -42,17 +43,16 @@ def step_given_two_different_elements(context, xpath_expression1, xpath_expressi
 
 @then('`{attribute}` attribute must be a valid date')
 def step_valid_date(context, attribute):
-    xpaths = context.xml.xpath(context.xpath_expression)
+    xpaths = get_xpaths(context.xml, context.xpath_expression)
     fail = False
 
     if xpaths:
         errors = []
-        tree = context.xml.getroottree()
         for xpath in xpaths:
             date_str = xpath.attrib.get(attribute)
             if invalid_date_format(xpath, date_str):
                 errors.append({'message': '`{}` is not a valid date'.format(date_str),
-                               'path': '{}/@{}'.format(tree.getpath(xpath), attribute)})
+                               'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
                 fail = True
     if fail:
         raise RuleSetStepException(context, errors)
@@ -60,19 +60,18 @@ def step_valid_date(context, attribute):
 
 @then('`{attribute}` attribute must be today or in the past')
 def step_must_be_today_or_past(context, attribute):
-    xpaths = context.xml.xpath(context.xpath_expression)
+    xpaths = get_xpaths(context.xml, context.xpath_expression)
     fail = False
 
     if xpaths:
         errors = []
-        tree = context.xml.getroottree()
         today = datetime.date.today()
         for xpath in xpaths:
             date_str = xpath.attrib.get(attribute)
             date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
             if date > today:
                 errors.append({'message': '{} must be on or before today ({})'.format(date, today),
-                               'path': '{}/@{}'.format(tree.getpath(xpath), attribute)})
+                               'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
                 fail = True
     if fail:
         raise RuleSetStepException(context, errors)
@@ -80,35 +79,34 @@ def step_must_be_today_or_past(context, attribute):
 
 @then('iati-identifier text should match the regex `{regex_str}`')
 def step_iati_id_text_match_regex(context, regex_str):
-    xpath = context.xml.xpath(context.xpath_expression)
+    xpath = get_xpaths(context.xml, context.xpath_expression)
     regex = re.compile(regex_str)
 
     if xpath:
         xpath = xpath[0]
         text_str = xpath.text
         if not regex.match(text_str):
-            tree = context.xml.getroottree()
+
             fail_msg = 'text does not match the regex {}'
             errors = [{'message': fail_msg.format(text_str, regex_str),
-                       'path': '{}/text()'.format(tree.getpath(xpath))}]
+                       'path': '{}/text()'.format(get_full_xpath(context.xml, xpath))}]
             raise RuleSetStepException(context, errors)
 
 
 @then('`{attribute}` attribute should match the regex `{regex_str}`')
 def step_attribute_match_regex(context, attribute, regex_str):
-    xpaths = context.xml.xpath(context.xpath_expression)
+    xpaths = get_xpaths(context.xml, context.xpath_expression)
     regex = re.compile(regex_str)
     fail = False
 
     if xpaths:
         errors = []
         fail_msg = '{} does not match the regex {}'
-        tree = context.xml.getroottree()
         for xpath in xpaths:
             attr_str = xpath.attrib.get(attribute)
             if not regex.match(attr_str):
                 errors.append({'message': fail_msg.format(attr_str, regex_str),
-                               'path': '{}/@{}'.format(tree.getpath(xpath), attribute)})
+                               'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
             fail = True
     if fail:
         raise RuleSetStepException(context, errors)
@@ -116,34 +114,32 @@ def step_attribute_match_regex(context, attribute, regex_str):
 
 @then('either `{xpath_expression1}` or `{xpath_expression2}` is expected')
 def step_either_or_expected(context, xpath_expression1, xpath_expression2):
-    xpath = context.xml.xpath(xpath_expression1) or context.xml.xpath(xpath_expression2)
+    xpath = get_xpaths(context.xml, xpath_expression1) or get_xpaths(context.xml, xpath_expression2)
     if not xpath:
         fail_msg = 'Neither {} nor {} have been found'
-        tree = context.xml.getroottree()
         errors = [{'message': fail_msg.format(xpath_expression1, xpath_expression2),
-                   'path': tree.getpath(context.xml)}]
+                   'path': get_full_xpath(context.xml, context.xml)}]
         raise RuleSetStepException(context, errors)
 
 
 @then('`{xpath_expression}` is not expected')
 def step_should_not_be_present(context, xpath_expression):
-    xpaths = context.xml.xpath(xpath_expression)
+    xpaths = get_xpaths(context.xml, xpath_expression)
     fail = False
 
     if xpaths:
         errors = []
-        tree = context.xml.getroottree()
         for xpath in xpaths:
             errors.append({'message': '`{}` is not expected'.format(xpath_expression),
-                           'path': tree.getpath(xpath)})
+                           'path': get_full_xpath(context.xml, xpath)})
     if fail:
         raise RuleSetStepException(context, errors)
 
 
 @then('both `{attribute}` attributes must be a valid date')
 def step_two_valid_dates(context, attribute):
-    xpath1 = context.xml.xpath(context.xpath_expression1)
-    xpath2 = context.xml.xpath(context.xpath_expression1)
+    xpath1 = get_xpaths(context.xml, context.xpath_expression1)
+    xpath2 = get_xpaths(context.xml, context.xpath_expression2)
     xpaths = []
     fail = False
     if xpath1:
@@ -154,12 +150,11 @@ def step_two_valid_dates(context, attribute):
     if xpaths:
         fail_msg = '`{}` is not a valid date'
         errors = []
-        tree = context.xml.getroottree()
         for xpath in xpaths:
             date_str = xpath.attrib.get(attribute)
             if invalid_date_format(xpath1, date_str):
                 errors.append({'message': fail_msg.format(date_str),
-                               'path': '{}/@{}'.format(tree.getpath(xpath), attribute)})
+                               'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
                 fail = True
     if fail:
         raise RuleSetStepException(context, errors)
@@ -167,8 +162,8 @@ def step_two_valid_dates(context, attribute):
 
 @then('`{attribute}` start date attribute must be chronologically before end date attribute')
 def step_should_be_before(context, attribute):
-    xpath1 = context.xml.xpath(context.xpath_expression1)
-    xpath2 = context.xml.xpath(context.xpath_expression2)
+    xpath1 = get_xpaths(context.xml, context.xpath_expression1)
+    xpath2 = get_xpaths(context.xml, context.xpath_expression2)
     if not xpath1 or not xpath2:
         return
 
@@ -181,9 +176,8 @@ def step_should_be_before(context, attribute):
     fail_msg = 'start date ({}) must be before end date ({})'
 
     if start_date >= end_date:
-        tree = context.xml.getroottree()
-        path_str1 = '{}/@{}'.format(tree.getpath(xpath1), attribute)
-        path_str2 = '{}/@{}'.format(tree.getpath(xpath2), attribute)
+        path_str1 = '{}/@{}'.format(get_full_xpath(context.xml, xpath1), attribute)
+        path_str2 = '{}/@{}'.format(get_full_xpath(context.xml, xpath2), attribute)
         errors = [{
             'message': fail_msg.format(start_date_str, end_date_str),
             'path': '{} & {}'.format(path_str1, path_str2)
