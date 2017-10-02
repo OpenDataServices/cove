@@ -33,7 +33,7 @@ def step_given_two_different_elements(context, xpath_expression1, xpath_expressi
 
 
 @then('`{attribute}` attribute must be a valid date')
-@register_ruleset_errors
+@register_ruleset_errors()
 def step_valid_date(context, attribute):
     errors = []
 
@@ -46,7 +46,7 @@ def step_valid_date(context, attribute):
 
 
 @then('`{attribute}` attribute must be today or in the past')
-@register_ruleset_errors
+@register_ruleset_errors()
 def step_must_be_today_or_past(context, attribute):
     errors = []
     today = datetime.date.today()
@@ -61,7 +61,7 @@ def step_must_be_today_or_past(context, attribute):
 
 
 @then('iati-identifier text should match the regex `{regex_str}`')
-@register_ruleset_errors
+@register_ruleset_errors()
 def step_iati_id_text_match_regex(context, regex_str):
     regex = re.compile(regex_str)
     errors = []
@@ -78,7 +78,7 @@ def step_iati_id_text_match_regex(context, regex_str):
 
 
 @then('`{attribute}` attribute should match the regex `{regex_str}`')
-@register_ruleset_errors
+@register_ruleset_errors()
 def step_attribute_match_regex(context, attribute, regex_str):
     regex = re.compile(regex_str)
     errors = []
@@ -93,7 +93,7 @@ def step_attribute_match_regex(context, attribute, regex_str):
 
 
 @then('either `{xpath_expression1}` or `{xpath_expression2}` is expected')
-@register_ruleset_errors
+@register_ruleset_errors()
 def step_either_or_expected(context, xpath_expression1, xpath_expression2):
     errors = []
     fail_msg = 'Neither {} nor {} have been found'
@@ -106,7 +106,7 @@ def step_either_or_expected(context, xpath_expression1, xpath_expression2):
 
 
 @then('`{xpath_expression}` is not expected')
-@register_ruleset_errors
+@register_ruleset_errors()
 def step_not_expected(context, xpath_expression):
     errors = []
 
@@ -117,7 +117,7 @@ def step_not_expected(context, xpath_expression):
 
 
 @then('both `{attribute}` attributes must be a valid date')
-@register_ruleset_errors
+@register_ruleset_errors()
 def step_two_valid_dates(context, attribute):
     xpath1 = get_xpaths(context.xml, context.xpath_expression1)
     xpath2 = get_xpaths(context.xml, context.xpath_expression2)
@@ -139,7 +139,7 @@ def step_two_valid_dates(context, attribute):
 
 
 @then('`{attribute}` start date attribute must be chronologically before end date attribute')
-@register_ruleset_errors
+@register_ruleset_errors()
 def step_start_date_before_end_date(context, attribute):
     xpath1 = get_xpaths(context.xml, context.xpath_expression1)
     xpath2 = get_xpaths(context.xml, context.xpath_expression2)

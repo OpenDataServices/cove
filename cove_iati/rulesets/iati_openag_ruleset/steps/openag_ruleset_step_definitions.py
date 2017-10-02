@@ -7,14 +7,14 @@ from behave import then
 
 from cove.lib.common import get_orgids_prefixes
 from cove_iati.rulesets.utils import get_full_xpath, get_xpaths, register_ruleset_errors
+
 ORGIDS_PREFIXES = get_orgids_prefixes()
 
 
 @then('at least one `{xpath_expression}` element is expected')
-@register_ruleset_errors
+@register_ruleset_errors('openag')
 def step_openag_expected(context, xpath_expression):
     errors = []
-
     if not get_xpaths(context.xml, xpath_expression):
         errors = [{
             'message': 'the activity should include at least one {} element'.format(xpath_expression),
@@ -24,7 +24,7 @@ def step_openag_expected(context, xpath_expression):
 
 
 @then('every `{xpath_expression}` must have `{attribute}` attribute')
-@register_ruleset_errors
+@register_ruleset_errors('openag')
 def step_openag_tag_attribute_expected(context, xpath_expression, attribute):
     errors = []
     fail_msg = '{} element must have @{} attribute'
@@ -39,7 +39,7 @@ def step_openag_tag_attribute_expected(context, xpath_expression, attribute):
 
 
 @then('every `{attribute}` must be equal to `{any_value}`')
-@register_ruleset_errors
+@register_ruleset_errors('openag')
 def step_openag_tag_attribute_accepted_values(context, attribute, any_value):
     errors = []
     fail_msg = '"{}" is not a valid value for @{} attribute (it should be "{}")'
@@ -54,7 +54,7 @@ def step_openag_tag_attribute_accepted_values(context, attribute, any_value):
 
 
 @then('every `{xpath_expression1}` must include `{xpath_expression2}` element')
-@register_ruleset_errors
+@register_ruleset_errors('openag')
 def step_openag_location_id_expected(context, xpath_expression1, xpath_expression2):
     errors = []
     fail_msg = '{} must contain a {} element'
@@ -68,7 +68,7 @@ def step_openag_location_id_expected(context, xpath_expression1, xpath_expressio
 
 
 @then('`{attribute}` id attribute should start with an org-ids prefix')
-@register_ruleset_errors
+@register_ruleset_errors('openag')
 def step_openag_org_id_prefix_expected(context, attribute):
     errors = []
     fail_msg = '@{} {} does not start with a recognised org-ids prefix'

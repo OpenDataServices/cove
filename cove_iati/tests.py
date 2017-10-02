@@ -165,3 +165,30 @@ def test_cove_iati_cli_output():
     assert ruleset_errors[1]['message'] == '2200-03-03 must be on or before today (2017-10-02)'
     assert ruleset_errors[1]['id'] == 'AA-AAA-123123-AA123'
     assert ruleset_errors[1]['path'] == '/iati-activities/iati-activity[1]/transaction[2]/transaction-date/@iso-date'
+
+    assert not results.get('ruleset_errors_openag')
+
+
+def test_cove_iati_cli_openag_output():
+    file_path = os.path.join('cove_iati', 'fixtures', 'iati_openag_tag.xml')
+    output_dir = os.path.join('media', str(uuid.uuid4()))
+    call_command('iati_cli', file_path, output_dir=output_dir, openag=True)
+
+    with open(os.path.join(output_dir, 'results.json')) as fp:
+        results = json.load(fp)
+
+    ruleset_errors = results.get('ruleset_errors_openag')
+    ruleset_errors.sort(key=lambda i: i['path'])
+    
+    import pprint
+    pprint.pprint(ruleset_errors)
+
+    # assert ruleset_errors[0]['rule'] == 'activity-date[date @type="1"] or activity-date[@type="2"] is expected'
+    # assert ruleset_errors[0]['message'] == 'Neither activity-date[@type="1"] nor activity-date[@type="2"] have been found'
+    # assert ruleset_errors[0]['id'] == 'AA-AAA-123123-AA123'
+    # assert ruleset_errors[0]['path'] == '/iati-activities/iati-activity[1]'
+
+    # assert ruleset_errors[1]['rule'] == '@iso-date date must be in iso format and must be today or in the past'
+    # assert ruleset_errors[1]['message'] == '2200-03-03 must be on or before today (2017-10-02)'
+    # assert ruleset_errors[1]['id'] == 'AA-AAA-123123-AA123'
+    # assert ruleset_errors[1]['path'] == '/iati-activities/iati-activity[1]/transaction[2]/transaction-date/@iso-date'
