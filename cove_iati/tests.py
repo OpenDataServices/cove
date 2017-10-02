@@ -149,11 +149,19 @@ def test_cove_iati_cli_output():
         results = json.load(fp)
 
     validation_errors = results.get('validation_errors')
-    assert validation_errors and validation_errors[0]['description'] == "'recipient-country': This element is not expected, expected is activity-date."
-    assert validation_errors and validation_errors[0]['path'] == 'iati-activity/0/recipient-country/0'
+    
+    assert validation_errors[0]['description'] == "'recipient-country': This element is not expected, expected is activity-date."
+    assert validation_errors[0]['path'] == 'iati-activity/0/recipient-country/0'
 
     ruleset_errors = results.get('ruleset_errors')
-    assert ruleset_errors and ruleset_errors[0]['rule'] == 'date must be today or in the past'
-    assert ruleset_errors and '2200-03-03 should be on or before today' in ruleset_errors[0]['message']
-    assert ruleset_errors and ruleset_errors[0]['id'] == 'AA-AAA-123123-AA123'
-    assert ruleset_errors and ruleset_errors[0]['path'] == '/iati-activities/iati-activity[1]/transaction[2]/transaction-date'
+    ruleset_errors.sort(key=lambda i: i['path'])
+
+    assert ruleset_errors[0]['rule'] == 'activity-date[date @type="1"] or activity-date[@type="2"] is expected'
+    assert ruleset_errors[0]['message'] == 'Neither activity-date[@type="1"] nor activity-date[@type="2"] have been found'
+    assert ruleset_errors[0]['id'] == 'AA-AAA-123123-AA123'
+    assert ruleset_errors[0]['path'] == '/iati-activities/iati-activity[1]'
+
+    assert ruleset_errors[1]['rule'] == '@iso-date date must be in iso format and must be today or in the past'
+    assert ruleset_errors[1]['message'] == '2200-03-03 must be on or before today (2017-10-02)'
+    assert ruleset_errors[1]['id'] == 'AA-AAA-123123-AA123'
+    assert ruleset_errors[1]['path'] == '/iati-activities/iati-activity[1]/transaction[2]/transaction-date/@iso-date'
