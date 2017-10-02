@@ -1,0 +1,95 @@
+<iati-activities version="2.02" xmlns:openag="http://openagfunding.readthedocs.io/en/latest/extensions/">
+  <iati-activity>
+    <iati-identifier>AA-AAA-123123-AA123</iati-identifier>
+    <reporting-org ref="AA-AAA-123" type="40"><narrative>Reporting Organisation A</narrative></reporting-org>
+    <title><narrative>A title</narrative></title>
+    <description><narrative>A description</narrative></description>
+    <participating-org role="1" ref="?AA-AAA-123"/>
+    <activity-status code="3"/>
+    <recipient-country code="AF" percentage="30"/>
+    <recipient-country code="XK" percentage="60"/>
+    <transaction>
+      <transaction-type code="2"/>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2200-03-03"/>
+      <value value-date="2400-03-03">20</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="20130404"/>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2013-05-05"/>
+      <value value-date="2600-05-05" >40</value>
+    </transaction>
+    <openag:tag vocabulary="95" vocabulary-uri="http://bad.org" code="c_4397">
+        <narrative xml:lang="en">Livestock</narrative>
+    </openag:tag>
+  </iati-activity>
+  <iati-activity>
+    <iati-identifier>BB-BBB-456?</iati-identifier>
+    <reporting-org ref="BB-BBB-56789" type="40"><narrative>Reporting Organisation B</narrative></reporting-org>
+    <title><narrative>A title</narrative></title>
+    <description><narrative>A description</narrative></description>
+    <participating-org role="1" ref="BB-BBB-456?"/>
+    <activity-status code="3"/><activity-date type="2" iso-date="2019-01-01"/>
+    <recipient-country code="AF" percentage="30"/>
+    <recipient-country code="XK" percentage="60"/>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2012-01-01"/>
+      <value value-date="2013-01-01">10</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2200-03-03"/>
+      <value value-date="2012-03-03">20</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2013-04-04"/>
+      <value value-date="2013-04-04">30</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2013-05-05"/>
+      <value value-date="2013-05-05">40</value>
+    </transaction>
+    <openag:tag vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_4397">
+        <narrative xml:lang="en">Livestock</narrative>
+    </openag:tag>
+  </iati-activity>
+  <iati-activity>
+    <iati-identifier>CC-CCC-789789-CC789</iati-identifier>
+    <reporting-org ref="GB-COH-56789" type="40"><narrative>Reporting Organisation C</narrative></reporting-org>
+    <title><narrative>A title</narrative></title>
+    <description><narrative>A description</narrative></description>
+    <participating-org role="1" ref="CC-CCC-789"/>
+    <activity-status code="3"/><activity-date type="start-actual" iso-date="2019-01-01"/>
+    <recipient-country code="AF" percentage="30"/>
+    <recipient-country code="XK" percentage="60"/>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2012-01-01"/>
+      <value value-date="2012-01-01">10</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2200-03-03"/>
+      <value value-date="2200-03-03">20</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2013-04-04"/>
+      <value value-date="2013-04-04">30</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2013-05-05"/>
+      <value value-date="2013-05-05">40</value>
+    </transaction>
+  </iati-activity>
+</iati-activities>
