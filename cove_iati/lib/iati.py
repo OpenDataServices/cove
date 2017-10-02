@@ -35,7 +35,10 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         schema.validate(tree)
         lxml_errors = lxml_errors_generator(schema.error_log)
         ruleset_errors = get_iati_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'))
-        ruleset_errors_ag = get_openag_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_openag'))
+
+        if api:
+            ruleset_errors_ag = get_openag_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_openag'))
+            context.update({'ruleset_errors_openag': ruleset_errors_ag})
 
     errors_all = format_lxml_errors(lxml_errors)
 
@@ -54,9 +57,7 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
 
     context.update({
         'validation_errors': sorted(validation_errors.items()),
-        'ruleset_errors': ruleset_errors,
-        'ruleset_errors_openag': ruleset_errors_ag,
-        
+        'ruleset_errors': ruleset_errors
     })
     if not api:
         context.update({
