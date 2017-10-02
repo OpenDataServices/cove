@@ -31,7 +31,7 @@ def context_api_transform(context):
     return context
 
 
-def iati_json_output(output_dir, file):
+def iati_json_output(output_dir, file, openag=False):
     context = {}
     file_type = get_file_type(file)
     context = {"file_type": file_type}
@@ -48,7 +48,8 @@ def iati_json_output(output_dir, file):
         data_file = file
 
     context = context_api_transform(
-        common_checks_context_iati(context, output_dir, data_file, file_type, api=True)
+        common_checks_context_iati(context, output_dir, data_file,
+                                   file_type, api=True, openag=openag)
     )
 
     if file_type != 'xml':

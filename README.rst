@@ -265,6 +265,8 @@ Options:
 
 ``--delete -d`` Delete the output directory if it already exists.
 
+``--openag -a`` Run ruleset checks for IATI OpenAg data.
+
 If the file is in spreadsheet format, the output directory will contain a *unflattened.xml* file converted from Excel or CSV to XML format
 
 

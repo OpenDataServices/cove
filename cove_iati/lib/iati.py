@@ -11,7 +11,7 @@ from .schema import SchemaIATI
 from cove.lib.exceptions import CoveInputDataError
 
 
-def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False):
+def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False):
     schema_aiti = SchemaIATI()
     lxml_errors = {}
     cell_source_map = {}
@@ -36,7 +36,7 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         lxml_errors = lxml_errors_generator(schema.error_log)
         ruleset_errors = get_iati_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'))
 
-        if api:
+        if openag:
             ruleset_errors_ag = get_openag_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_openag'))
             context.update({'ruleset_errors_openag': ruleset_errors_ag})
 
