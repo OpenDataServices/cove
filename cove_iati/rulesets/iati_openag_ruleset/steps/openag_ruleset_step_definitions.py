@@ -18,7 +18,7 @@ def step_openag_expected(context, xpath_expression):
 
     if not get_xpaths(context.xml, xpath_expression):
         errors = [{
-            'message': 'the activity should include at least one <{}> element'.format(xpath_expression),
+            'message': 'the activity should include at least one {} element'.format(xpath_expression),
             'path': get_full_xpath(context.xml, context.xml)
         }]
     return context, errors

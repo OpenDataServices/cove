@@ -227,23 +227,18 @@ def format_ruleset_errors(output_dir):
 
     for output_file in os.listdir(output_dir):
         with open(os.path.join(output_dir, output_file)) as fp:
-            scenario_outline = re.sub(r':', '/', output_file[:-7]).split('_')
+            scenario_outline = output_file[:-7].split('_')
             for line in fp:
                 line = line.strip()
 
                 if line:
                     json_line = json.loads(line)
                     for error in json_line['errors']:
-                        message = error['message']
-                        activity_id = json_line['id']
-                        if message.startswith('and') or message.startswith('or'):
-                            ruleset_errors[-1]['message'] += ' {}'.format(message)
-                            continue
                         rule_error = {
-                            'path': error['path'] or scenario_outline[0],
+                            'id': json_line['id'],
+                            'path': error['path'],
                             'rule': ' '.join(scenario_outline[1:]),
-                            'message': message,
-                            'id': activity_id
+                            'message': error['message']
                         }
                         ruleset_errors.append(rule_error)
 
