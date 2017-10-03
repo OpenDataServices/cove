@@ -126,7 +126,8 @@ def test_register_ruleset_errors_decorator():
     decorator_no_ns = register_ruleset_errors('undefined_ns')
     decorated_func_no_ns = decorator_no_ns(decorated_func_no_errors)
     errors_ns = [{
-        'message': 'rule not applied: the data does not define "undefined_ns" namespace (@xmlns:undefined_ns)',
+        'message': 'rule not applied: the data does not define "undefined_ns" namespace '
+                   '(@xmlns:undefined_ns)',
         'path': '/iati-activities/@xmlns'
     }]
 
@@ -193,21 +194,26 @@ def test_cove_iati_cli_output():
 
     validation_errors = results.get('validation_errors')
     
-    assert validation_errors[0]['description'] == "'recipient-country': This element is not expected, expected is activity-date."
+    assert validation_errors[0]['description'] == "'recipient-country': This element is not " \
+                                                  "expected, expected is activity-date."
     assert validation_errors[0]['path'] == 'iati-activity/0/recipient-country/0'
 
     ruleset_errors = results.get('ruleset_errors')
     ruleset_errors.sort(key=lambda i: i['path'])
 
-    assert ruleset_errors[0]['rule'] == 'activity-date[date @type="1"] or activity-date[@type="2"] is expected'
-    assert ruleset_errors[0]['message'] == 'Neither activity-date[@type="1"] nor activity-date[@type="2"] have been found'
+    assert ruleset_errors[0]['rule'] == 'activity-date[date @type="1"] or activity-date' \
+                                        '[@type="2"] is expected'
+    assert ruleset_errors[0]['message'] == 'Neither activity-date[@type="1"] nor activity-date' \
+                                           '[@type="2"] have been found'
     assert ruleset_errors[0]['id'] == 'AA-AAA-123123-AA123'
     assert ruleset_errors[0]['path'] == '/iati-activities/iati-activity[1]'
 
-    assert ruleset_errors[1]['rule'] == '@iso-date date must be in iso format and must be today or in the past'
+    assert ruleset_errors[1]['rule'] == '@iso-date date must be in iso format and must be ' \
+                                        'today or in the past'
     assert '2200-03-03 must be on or before today' in ruleset_errors[1]['message']
     assert ruleset_errors[1]['id'] == 'AA-AAA-123123-AA123'
-    assert ruleset_errors[1]['path'] == '/iati-activities/iati-activity[1]/transaction[2]/transaction-date/@iso-date'
+    assert ruleset_errors[1]['path'] == '/iati-activities/iati-activity[1]/transaction[2]/' \
+                                        'transaction-date/@iso-date'
 
 
 def test_cove_iati_cli_openag_output():
@@ -218,7 +224,8 @@ def test_cove_iati_cli_openag_output():
                 {'id': 'AA-AAA-123123-AA123',
                  'message': 'openag:tag element must have @vocabulary attribute',
                  'path': '/iati-activities/iati-activity[1]/openag:tag',
-                 'rule': 'element must have @vocabulary attribute with code for "maintained by the reporting organisation"'},
+                 'rule': 'element must have @vocabulary attribute with code for "maintained '
+                         'by the reporting organisation"'},
                 {'id': 'AA-AAA-123123-AA123',
                  'message': '@ref NO-ORGIDS-10000 does not start with a recognised org-ids prefix',
                  'path': '/iati-activities/iati-activity[1]/reporting-org/@ref',
@@ -228,7 +235,8 @@ def test_cove_iati_cli_openag_output():
                  'path': '/iati-activities/iati-activity[2]/location/location-id',
                  'rule': 'element must use @code attribute'},
                 {'id': 'BB-BBB-123123-BB123',
-                 'message': '"http://bad.org" is not a valid value for @vocabulary-uri attribute (it should be "http://aims.fao.org/aos/agrovoc/")',
+                 'message': '"http://bad.org" is not a valid value for @vocabulary-uri attribute '
+                            '(it should be "http://aims.fao.org/aos/agrovoc/")',
                  'path': '/iati-activities/iati-activity[2]/openag:tag/@vocabulary-uri',
                  'rule': 'element must have @vocabulary-uri attribute with agrovoc uri'},
                 {'id': 'BB-BBB-123123-BB123',
@@ -240,9 +248,11 @@ def test_cove_iati_cli_openag_output():
                  'path': '/iati-activities/iati-activity[3]/location/location-id',
                  'rule': 'element must use @vocabulary attribute'},
                 {'id': 'CC-CCC-789789-CC789',
-                 'message': '"01" is not a valid value for @vocabulary attribute (it should be "98 or 99")',
+                 'message': '"01" is not a valid value for @vocabulary attribute (it should '
+                            'be "98 or 99")',
                  'path': '/iati-activities/iati-activity[3]/openag:tag/@vocabulary',
-                 'rule': 'element must have @vocabulary attribute with code for "maintained by the reporting organisation"'},
+                 'rule': 'element must have @vocabulary attribute with code for "maintained '
+                         'by the reporting organisation"'},
                 {'id': 'DD-DDD-789789-DD789',
                  'message': 'openag:tag element must have @code attribute',
                  'path': '/iati-activities/iati-activity[4]/openag:tag',
