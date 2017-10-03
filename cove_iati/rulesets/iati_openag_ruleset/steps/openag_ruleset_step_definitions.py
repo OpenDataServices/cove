@@ -60,7 +60,7 @@ def step_openag_location_id_expected(context, xpath_expression1, xpath_expressio
     fail_msg = '{} must contain a {} element'
 
     for xpath in get_xpaths(context.xml, xpath_expression1):
-        has_xpath_expression2 = xpath.find(xpath_expression2)
+        has_xpath_expression2 = get_xpaths(xpath, xpath_expression2)
         if not has_xpath_expression2:
             errors.append({'message': fail_msg.format(xpath_expression1, xpath_expression2),
                            'path': get_full_xpath(context.xml, xpath)})
