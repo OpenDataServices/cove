@@ -164,12 +164,57 @@ def test_cove_iati_cli_output():
     assert ruleset_errors[0]['path'] == '/iati-activities/iati-activity[1]'
 
     assert ruleset_errors[1]['rule'] == '@iso-date date must be in iso format and must be today or in the past'
-    assert ruleset_errors[1]['message'] == '2200-03-03 must be on or before today (2017-10-02)'
+    assert '2200-03-03 must be on or before today' in ruleset_errors[1]['message']
     assert ruleset_errors[1]['id'] == 'AA-AAA-123123-AA123'
     assert ruleset_errors[1]['path'] == '/iati-activities/iati-activity[1]/transaction[2]/transaction-date/@iso-date'
 
 
 def test_cove_iati_cli_openag_output():
+    expected = [{'id': 'AA-AAA-123123-AA123',
+                 'message': 'the activity should include at least one location element',
+                 'path': '/iati-activities/iati-activity[1]',
+                 'rule': 'element is expected'},
+                {'id': 'AA-AAA-123123-AA123',
+                 'message': '@ref NO-ORGIDS-10000 does not start with a recognised org-ids prefix',
+                 'path': '/iati-activities/iati-activity[1]/reporting-org/@ref',
+                 'rule': '@ref should have an org-ids prefix'},
+                {'id': 'BB-BBB-123123-BB123',
+                 'message': 'location/location-id element must have @code attribute',
+                 'path': '/iati-activities/iati-activity[2]/location/location-id',
+                 'rule': 'element must use @code attribute'},
+                {'id': 'BB-BBB-123123-BB123',
+                 'message': 'location/location-id element must have @vocabulary attribute',
+                 'path': '/iati-activities/iati-activity[2]/location/location-id',
+                 'rule': 'element must use @vocabulary attribute'},
+                {'id': 'BB-BBB-123123-BB123',
+                 'message': '"90" is not a valid value for @vocabulary attribute (it should be "98 or 99")',
+                 'path': '/iati-activities/iati-activity[2]/openag:tag/@vocabulary',
+                 'rule': 'element must have @vocabulary attribute with code for "maintained by the reporting organisation"'},
+                {'id': 'BB-BBB-123123-BB123',
+                 'message': '"http://bad.org" is not a valid value for @vocabulary-uri attribute (it should be "http://aims.fao.org/aos/agrovoc/")',
+                 'path': '/iati-activities/iati-activity[2]/openag:tag/@vocabulary-uri',
+                 'rule': 'element must have @vocabulary-uri attribute with agrovoc uri'},
+                {'id': 'BB-BBB-123123-BB123',
+                 'message': '@ref NO-ORGIDS-40000 does not start with a recognised org-ids prefix',
+                 'path': '/iati-activities/iati-activity[2]/participating-org/@ref',
+                 'rule': '@ref should have an org-ids prefix'},
+                {'id': 'CC-CCC-789789-CC789',
+                 'message': 'openag:tag element must have @code attribute',
+                 'path': '/iati-activities/iati-activity[3]/openag:tag',
+                 'rule': 'element must have @code attribute'},
+                {'id': 'CC-CCC-789789-CC789',
+                 'message': 'openag:tag element must have @vocabulary-uri attribute',
+                 'path': '/iati-activities/iati-activity[3]/openag:tag',
+                 'rule': 'element must have @vocabulary-uri attribute with agrovoc uri'},
+                {'id': 'CC-CCC-789789-CC789',
+                 'message': 'openag:tag element must have @vocabulary attribute',
+                 'path': '/iati-activities/iati-activity[3]/openag:tag',
+                 'rule': 'element must have @vocabulary attribute with code for "maintained by the reporting organisation"'},
+                {'id': 'DD-DDD-789789-DD789',
+                 'message': 'the activity should include at least one openag:tag element',
+                 'path': '/iati-activities/iati-activity[4]',
+                 'rule': 'element is expected'}]
+
     file_path = os.path.join('cove_iati', 'fixtures', 'iati_openag_tag.xml')
     output_dir = os.path.join('media', str(uuid.uuid4()))
     call_command('iati_cli', file_path, output_dir=output_dir, openag=True)
@@ -180,27 +225,10 @@ def test_cove_iati_cli_openag_output():
     ruleset_errors = results.get('ruleset_errors_openag')
     ruleset_errors.sort(key=lambda i: i['path'])
 
-    assert ruleset_errors[0]['rule'] == 'element is expected'
-    assert ruleset_errors[0]['message'] == 'the activity should include at least one location element'
-    assert ruleset_errors[0]['id'] == 'AA-AAA-123123-AA123'
-    assert ruleset_errors[0]['path'] == '/iati-activities/iati-activity[1]'
+    zipped_results = zip(expected, ruleset_errors)
 
-    assert ruleset_errors[1]['rule'] == 'element must have @vocabulary attribute with code for "maintained by the reporting organisation"'
-    assert ruleset_errors[1]['message'] == '"95" is not a valid value for @vocabulary attribute (it should be "98 or 99")'
-    assert ruleset_errors[1]['id'] == 'AA-AAA-123123-AA123'
-    assert ruleset_errors[1]['path'] == '/iati-activities/iati-activity[1]/openag:tag/@vocabulary'
-
-    assert ruleset_errors[2]['rule'] == 'element must have @vocabulary-uri attribute with agrovoc uri'
-    assert ruleset_errors[2]['message'] == '"http://bad.org" is not a valid value for @vocabulary-uri attribute (it should be "http://aims.fao.org/aos/agrovoc/")'
-    assert ruleset_errors[2]['id'] == 'AA-AAA-123123-AA123'
-    assert ruleset_errors[2]['path'] == '/iati-activities/iati-activity[1]/openag:tag/@vocabulary-uri'
-
-    assert ruleset_errors[3]['rule'] == '@ref should have an org-ids prefix'
-    assert ruleset_errors[3]['message'] == '@ref ?AA-AAA-123 does not start with a recognised org-ids prefix'
-    assert ruleset_errors[3]['id'] == 'AA-AAA-123123-AA123'
-    assert ruleset_errors[3]['path'] == '/iati-activities/iati-activity[1]/participating-org/@ref'
-
-    assert ruleset_errors[4]['rule'] == '@ref should have an org-ids prefix'
-    assert ruleset_errors[4]['message'] == '@ref AA-AAA-123 does not start with a recognised org-ids prefix'
-    assert ruleset_errors[4]['id'] == 'AA-AAA-123123-AA123'
-    assert ruleset_errors[4]['path'] == '/iati-activities/iati-activity[1]/reporting-org/@ref'
+    for expected, actual in zipped_results:
+        assert expected['id'] == actual['id']
+        assert expected['message'] == actual['message']
+        assert expected['path'] == actual['path']
+        assert expected['rule'] == actual['rule']

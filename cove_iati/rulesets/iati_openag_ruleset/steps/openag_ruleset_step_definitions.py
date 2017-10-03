@@ -3,6 +3,8 @@ Adapted from https://github.com/pwyf/bdd-tester/blob/master/steps/standard_rules
 Released under MIT License
 License: https://github.com/pwyf/bdd-tester/blob/master/LICENSE
 '''
+import re
+
 from behave import then
 
 from cove.lib.common import get_orgids_prefixes
@@ -75,7 +77,10 @@ def step_openag_org_id_prefix_expected(context, attribute):
 
     for xpath in get_xpaths(context.xml, context.xpath_expression):
         attr_id = xpath.attrib.get(attribute, '')
-        if attr_id[:6].upper() not in ORGIDS_PREFIXES:
+        for prefix in ORGIDS_PREFIXES:
+            if re.match('^%s' % prefix, attr_id):
+                break
+        else:
             errors.append({'message': fail_msg.format(attribute, attr_id),
                            'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
     return context, errors
