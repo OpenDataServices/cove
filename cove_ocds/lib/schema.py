@@ -67,7 +67,7 @@ class SchemaOCDS(SchemaJsonMixin):
         if hasattr(release_data, 'get'):
             data_extensions = release_data.get('extensions', {})
             if data_extensions:
-                self.extensions = {ext: tuple() for ext in data_extensions}
+                self.extensions = {ext: tuple() for ext in data_extensions if type(ext) == str}
             if not select_version:
                 release_version = release_data and release_data.get('version')
                 if release_version:
@@ -129,8 +129,8 @@ class SchemaOCDS(SchemaJsonMixin):
             if extension.ok:
                 try:
                     extension_data = extension.json()
-                except json.JSONDecodeError:
-                    self.invalid_extension[extensions_descriptor_url] = 'invalid JSON'
+                except ValueError:  # would be json.JSONDecodeError for Python 3.5+
+                    self.invalid_extension[extensions_descriptor_url] = 'release schema invalid JSON'
                     continue
             else:
                 self.invalid_extension[extensions_descriptor_url] = '{}: {}'.format(extension.status_code,
@@ -138,7 +138,11 @@ class SchemaOCDS(SchemaJsonMixin):
                 continue
 
             schema_obj = json_merge_patch.merge(schema_obj, extension_data)
-            extensions_descriptor = requests.get(extensions_descriptor_url).json()
+            try:
+                extensions_descriptor = requests.get(extensions_descriptor_url).json()
+            except ValueError:  # would be json.JSONDecodeError for Python 3.5+
+                self.invalid_extension[extensions_descriptor_url] = 'invalid JSON'
+                continue
             cur_language = translation.get_language()
 
             extension_description = {'url': url}

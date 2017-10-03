@@ -6,9 +6,9 @@
 {% block header_button %}
 {{block.super}}
 <div class="expand-collapse-all">
-<a href="#" onclick="$('.collapse').collapse('show')">Expand all</a>
+<a href="#" onclick="expand_all()">Expand all</a>
 /
-<a href="#" onclick="$('.collapse').collapse('hide')">Collapse all</a>
+<a href="#" onclick="collapse_all()">Collapse all</a>
 </div>
 {% endblock %}
 
@@ -390,6 +390,14 @@
         $this.find('.glyphicon-collapse-down').removeClass('glyphicon-collapse-down').addClass('glyphicon-collapse-up')
       }
     });
+    function expand_all() {
+        $('.collapse').collapse('show');
+        $("[data-toggle='collapse']").find('.glyphicon-collapse-down').removeClass('glyphicon-collapse-down').addClass('glyphicon-collapse-up');
+    }
+    function collapse_all() {
+        $('.collapse').collapse('hide');
+        $("[data-toggle='collapse']").find('.glyphicon-collapse-up').removeClass('glyphicon-collapse-up').addClass('glyphicon-collapse-down');
+    }
   </script>
 {% endblock extrafooterscript %}
 

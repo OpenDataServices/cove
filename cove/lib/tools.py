@@ -63,8 +63,6 @@ def get_file_type(file):
         return 'xlsx'
     elif name.endswith('.csv'):
         return 'csv'
-    elif name.endswith('.xml'):
-        return 'xml'
     else:
         first_byte = file.read(1)
         if first_byte in [b'{', b'[']:

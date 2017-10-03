@@ -353,6 +353,11 @@ def test_get_schema_deprecated_paths():
     '{"version": "1.1", "records" : "test"}',
     '{"version": "1.1", "records" : {"version": "1.1", "a":"b"}}',
     '{"version": "1.1", "releases":{"buyer":{"additionalIdentifiers":[]}}}',
+    '{"version": "1.1", "releases":{"parties":{"roles":[["a","b"]]}}}',  # test an array in a codelist position
+    '{"extensions":["https://raw.githubusercontent.com/open-contracting/ocds_bid_extension/v1.1.1/extension.jso"], "releases":[]}',
+    '{"extensions":[{}], "releases":[]}'
+    '{"extensions":["https://raw.githubusercontent.com/open-contracting/ocds_bid_extension/v1.1.1/extension.jso"], "releases":[], "version": "1.1"}',
+    '{"extensions":[{}], "releases":[], "version": "1.1"}'
 ])
 def test_explore_page(client, json_data):
     data = SuppliedData.objects.create()
@@ -405,7 +410,7 @@ def test_explore_unconvertable_spreadsheet(client):
         data.original_file.save('basic.xlsx', UploadedFile(fp))
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
-    assert b'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.' in resp.content
+    assert b'We think you tried to supply a spreadsheet, but we failed to convert it.' in resp.content
 
 
 @pytest.mark.django_db

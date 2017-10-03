@@ -9,7 +9,7 @@ from cove.lib.exceptions import cove_web_input_error
 from cove.input.models import SuppliedData
 from cove.input.views import data_input
 from cove.views import explore_data_context
-from .lib.iati import common_checks_context_iati
+from .lib.iati import common_checks_context_iati, get_file_type
 from .lib.iati_utils import sort_iati_xml_file
 from .lib.schema import SchemaIATI
 
@@ -52,7 +52,7 @@ def data_input_iati(request):
 
 @cove_web_input_error
 def explore_iati(request, pk):
-    context, db_data, error = explore_data_context(request, pk)
+    context, db_data, error = explore_data_context(request, pk, get_file_type)
     if error:
         return error
 

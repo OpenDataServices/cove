@@ -106,7 +106,7 @@ def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url
     context.update({
         'conversion': 'unflatten',
         'converted_path': converted_path,
-        'converted_url': '{}/{}'.format(upload_url, output_file),
+        'converted_url': '{}{}{}'.format(upload_url, '' if upload_url.endswith('/') else '/', output_file),
         "csv_encoding": encoding
     })
     return context
@@ -181,6 +181,6 @@ def convert_json(upload_dir, upload_url, file_name, schema_url, replace=False, r
     context.update({
         'conversion': 'flatten',
         'converted_path': converted_path,
-        'converted_url': '{}/flattened'.format(upload_url)
+        'converted_url': '{}{}flattened'.format(upload_url, '' if upload_url.endswith('/') else '/')
     })
     return context

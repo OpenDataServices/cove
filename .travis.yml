@@ -23,13 +23,13 @@ install:
   - "wget https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip; unzip chromedriver_linux64.zip -d chromedriver; export PATH=$PATH:`pwd`/chromedriver"
 
 script:
-  - "flake8 ."
+  - "if [ \"$TRAVIS_PYTHON_VERSION\" != \"3.4\" ]; then flake8 .; fi"
   - "DJANGO_SETTINGS_MODULE=cove.settings py.test -n 2 cove --cov --cov-report="
-  - "DJANGO_SETTINGS_MODULE=cove_360.settings py.test -n 2 cove_360 --cov-append --cov --cov-report="
+  - "if [ \"$TRAVIS_PYTHON_VERSION\" != \"3.4\" ]; then DJANGO_SETTINGS_MODULE=cove_360.settings py.test -n 2 cove_360 --cov-append --cov --cov-report=; fi"
   - "DJANGO_SETTINGS_MODULE=cove_ocds.settings py.test -n 2 cove_ocds --cov-append --cov"
   - "DJANGO_SETTINGS_MODULE=cove_iati.settings py.test -n 2 cove_iati --cov-append --cov"
   - "python manage.py migrate; python manage.py compilemessages" 
-  - "DJANGO_SETTINGS_MODULE=cove_360.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver & (sleep 10s; java -jar dist/vnu.jar 'http://localhost:8000/' 'http://localhost:8000/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_360/fixtures/WellcomeTrust-grants_2_grants.csv' 'http://localhost:8000/common_errors/')"
+  - "if [ \"$TRAVIS_PYTHON_VERSION\" != \"3.4\" ]; then DJANGO_SETTINGS_MODULE=cove_360.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver & (sleep 10s; java -jar dist/vnu.jar 'http://localhost:8000/' 'http://localhost:8000/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_360/fixtures/WellcomeTrust-grants_2_grants.csv' 'http://localhost:8000/common_errors/' 'http://localhost:8000/additional_checks/'); fi"
   - "DJANGO_SETTINGS_MODULE=cove_ocds.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver localhost:8001 & (sleep 10s; java -jar dist/vnu.jar http://localhost:8001/ 'http://localhost:8001/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_ocds/fixtures/tenders_releases_2_releases.json')"
 
 after_success: coveralls
