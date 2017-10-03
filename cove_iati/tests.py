@@ -8,6 +8,8 @@ import uuid
 from django.core.management import call_command
 
 from .lib import iati
+from cove_iati.lib.exceptions import RuleSetStepException
+from cove_iati.rulesets.utils import register_ruleset_errors
 
 
 XML_SCHEMA = '''
@@ -41,6 +43,12 @@ INVALID_DATA = '''
       <e>non-date</e>
       <e>string</e>
     </test-element>
+'''
+
+XML_NS = '''
+    <iati-activities xmlns:namespace="http://example.com">
+      <element>element</element>
+    </iati-activities>
 '''
 
 
@@ -100,6 +108,39 @@ def test_format_lxml_errors(validated_data):
         assert error_dict['message'] in expected_error_messages
 
 
+def test_register_ruleset_errors_decorator():
+    def decorated_func_errors(context):
+        return context, ['errors']
+
+    def decorated_func_no_errors(context):
+        return context, []
+
+    class Context():
+        xml = etree.XML(XML_NS).getchildren()[0]
+    context = Context()
+
+    decorator_ns = register_ruleset_errors('namespace')
+    decorated_func_errors = decorator_ns(decorated_func_errors)
+    decorated_func_no_errors = decorator_ns(decorated_func_no_errors)
+
+    decorator_no_ns = register_ruleset_errors('undefined_ns')
+    decorated_func_no_ns = decorator_no_ns(decorated_func_no_errors)
+    errors_ns = [{
+        'message': 'rule not applied: the data does not define "undefined_ns" namespace (@xmlns:undefined_ns)',
+        'path': '/iati-activities/@xmlns'
+    }]
+
+    with pytest.raises(RuleSetStepException) as e:
+        decorated_func_errors(context)
+    assert e.value.args == (context, ['errors'])
+
+    assert not decorated_func_no_errors(context)
+
+    with pytest.raises(RuleSetStepException) as e:
+        decorated_func_no_ns(context)
+    assert e.value.args == (context, errors_ns)
+
+
 @pytest.mark.parametrize(('file_name', 'bad_xml', 'options', 'output'), [
     ('basic_iati_unordered_invalid_iso_dates.xlsx', False, {}, [
         'basic_iati_unordered_invalid_iso_dates.xlsx',
@@ -116,7 +157,7 @@ def test_format_lxml_errors(validated_data):
     ]),
     ('bad.xml', True, {}, ['bad.xml']),
 ])
-def test_cove_iaiti_cli_dir_content(file_name, bad_xml, options, output):
+def test_cove_iati_cli_dir_content(file_name, bad_xml, options, output):
     test_dir = str(uuid.uuid4())
     file_path = os.path.join('cove_iati', 'fixtures', file_name)
     output_dir = os.path.join('media', test_dir)
