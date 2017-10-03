@@ -44,6 +44,9 @@ class SuppliedData(models.Model):
 
     def get_absolute_url(self):
         return reverse('explore', args=(self.pk,), current_app=self.current_app)
+    
+    def get_raw_url(self):
+        return reverse('explore_raw', args=(self.pk,), current_app=self.current_app)
 
     def upload_dir(self):
         return os.path.join(settings.MEDIA_ROOT, upload_to(self))

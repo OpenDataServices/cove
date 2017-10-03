@@ -7,6 +7,7 @@ from cove.urls import urlpatterns as urlpatterns_core
 from cove.urls import handler500  # noqa: F401
 
 import cove_ocds.views
+import cove_ocds.webservice.urls
 
 
 # Serve the OCDS validator at /validator/
