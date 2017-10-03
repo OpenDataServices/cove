@@ -8,7 +8,7 @@ from bdd_tester import bdd_tester
 from django.utils.translation import ugettext_lazy as _
 
 from .schema import SchemaIATI
-from cove.lib.exceptions import CoveInputDataError
+from cove.lib.exceptions import CoveInputDataError, UnrecognisedFileTypeXML
 
 
 def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False):
@@ -26,6 +26,16 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                 'link': 'index',
                 'link_text': _('Try Again'),
                 'msg': _('We think you tried to upload a XML file, but it is not well formed XML.'
+                         '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
+                         '</span> <strong>Error message:</strong> {}'.format(err)),
+                'error': format(err)
+            })
+        except UnicodeDecodeError as err:
+            raise CoveInputDataError(context={
+                'sub_title': _("Sorry we can't process that data"),
+                'link': 'index',
+                'link_text': _('Try Again'),
+                'msg': _('We think you tried to upload a XML file, but the encoding is incorrect.'
                          '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
                          '</span> <strong>Error message:</strong> {}'.format(err)),
                 'error': format(err)
@@ -262,3 +272,18 @@ def get_openag_ruleset_errors(lxml_etree, output_dir):
     if not os.path.isdir(output_dir):
         return []
     return format_ruleset_errors(output_dir)
+
+
+def get_file_type(file):
+    if isinstance(file, str):
+        name = file.lower()
+    else:
+        name = file.name.lower()
+    if name.endswith('.xml'):
+        return 'xml'
+    elif name.endswith('.xlsx'):
+        return 'xlsx'
+    elif name.endswith('.csv'):
+        return 'csv'
+    else:
+        raise UnrecognisedFileTypeXML

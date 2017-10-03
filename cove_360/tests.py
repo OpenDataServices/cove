@@ -510,7 +510,7 @@ def test_explore_unconvertable_spreadsheet(client):
         data.original_file.save('basic.xlsx', UploadedFile(fp))
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
-    assert b'We think you tried to supply a spreadsheet, but we failed to convert it to JSON.' in resp.content
+    assert b'We think you tried to supply a spreadsheet, but we failed to convert it.' in resp.content
 
 
 @pytest.mark.django_db

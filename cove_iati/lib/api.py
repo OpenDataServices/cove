@@ -2,11 +2,10 @@ import os
 import re
 import shutil
 
-from .iati import common_checks_context_iati
+from .iati import common_checks_context_iati, get_file_type
 from .iati_utils import sort_iati_xml_file
 from .schema import SchemaIATI
 from cove.lib.converters import convert_spreadsheet
-from cove.lib.tools import get_file_type
 
 
 class APIException(Exception):

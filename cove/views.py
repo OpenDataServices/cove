@@ -8,12 +8,15 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 
 from cove.input.models import SuppliedData
-from cove.lib.tools import get_file_type
+from cove.lib.tools import get_file_type as _get_file_type
 
 logger = logging.getLogger(__name__)
 
 
-def explore_data_context(request, pk):
+def explore_data_context(request, pk, get_file_type=None):
+    if get_file_type is None:
+        get_file_type = _get_file_type
+
     try:
         data = SuppliedData.objects.get(pk=pk)
     except (SuppliedData.DoesNotExist, ValidationError):  # Catches primary key does not exist and badly formed UUID
