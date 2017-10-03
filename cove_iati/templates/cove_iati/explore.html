@@ -34,6 +34,12 @@
              {% endif %}
              {% trans "on " %} {{created_date}}.
            </p>
+          {% if conversion == 'flattenable' %}
+            <form method="post">
+              <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% trans "Convert to Spreadsheet" %}</button>
+              {% csrf_token %}
+            </form>
+          {% endif %}
         </div>
       </div>
     </div>

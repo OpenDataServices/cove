@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from cove.lib.converters import convert_spreadsheet
+from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import cove_web_input_error
 from cove.input.models import SuppliedData
 from cove.input.views import data_input
@@ -66,6 +66,8 @@ def explore_iati(request, pk):
         sort_iati_xml_file(context['converted_path'], context['converted_path'])
     else:
         data_file = db_data.original_file.file.name
+        context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
+                       request=request, flatten=request.POST.get('flatten'), xml=True))
 
     context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type)
     context['first_render'] = not db_data.rendered
