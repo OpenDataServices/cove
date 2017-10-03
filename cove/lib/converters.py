@@ -112,7 +112,7 @@ def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url
     return context
 
 
-def convert_json(upload_dir, upload_url, file_name, schema_url, replace=False, request=None, flatten=False, cache=True):
+def convert_json(upload_dir, upload_url, file_name, schema_url=None, replace=False, request=None, flatten=False, cache=True, xml=False):
     context = {}
     converted_path = os.path.join(upload_dir, 'flattened')
 
@@ -123,6 +123,10 @@ def convert_json(upload_dir, upload_url, file_name, schema_url, replace=False, r
         root_id=config['root_id'],
         schema=schema_url
     )
+
+    if xml:
+        flatten_kwargs['xml'] = True
+        flatten_kwargs['id_name'] = config.get('id_name', 'id')
 
     try:
         conversion_warning_cache_path = os.path.join(upload_dir, 'conversion_warning_messages.json')
