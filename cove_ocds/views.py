@@ -16,8 +16,6 @@ from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
 from cove.views import explore_data_context
 
-from cove_ocds.webservice import views
-
 logger = logging.getLogger(__name__)
 
 
