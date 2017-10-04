@@ -69,7 +69,7 @@ def step_iati_id_text_match_regex(context, regex_str):
     xpath = get_xpaths(context.xml, context.xpath_expression)
     if xpath:
         xpath = xpath[0]
-        fail_msg = 'text does not match the regex {}'
+        fail_msg = 'Text does not match the regex {}'
         text_str = xpath.text
         if not regex.match(text_str):
             errors = [{'message': fail_msg.format(text_str, regex_str),
@@ -85,7 +85,7 @@ def step_attribute_match_regex(context, attribute, regex_str):
     fail_msg = '{} does not match the regex {}'
 
     for xpath in get_xpaths(context.xml, context.xpath_expression):
-        attr_str = xpath.attrib.get(attribute)
+        attr_str = xpath.attrib.get(attribute, '')
         if not regex.match(attr_str):
             errors.append({'message': fail_msg.format(attr_str, regex_str),
                            'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
@@ -96,12 +96,33 @@ def step_attribute_match_regex(context, attribute, regex_str):
 @register_ruleset_errors()
 def step_either_or_expected(context, xpath_expression1, xpath_expression2):
     errors = []
-    fail_msg = 'Neither {} nor {} have been found'
-
-    xpath = get_xpaths(context.xml, xpath_expression1) or get_xpaths(context.xml, xpath_expression2)
-    if not xpath:
-        errors = [{'message': fail_msg.format(xpath_expression1, xpath_expression2),
+    fail_msg_neither = 'Neither {} nor {} have been found'
+    fail_msg_both = 'Either {} or {} are expected (not both)'
+    xpaths1 = get_xpaths(context.xml, xpath_expression1)
+    xpaths2 = get_xpaths(context.xml, xpath_expression2)
+    
+    if not xpaths1 or not xpaths2:
+        errors = [{'message': fail_msg_neither.format(xpath_expression1, xpath_expression2),
                    'path': get_full_xpath(context.xml, context.xml)}]
+
+    if xpaths1 and xpaths2:
+        msg = fail_msg_both.format(xpath_expression1, xpath_expression2)
+        if len(xpaths1) == len(xpaths2):
+            zipped_xpaths = zip(xpaths1, xpaths2)
+            for tup_xpath1, tup_xpath2 in zipped_xpaths:
+                errors = [{
+                    'message': msg,
+                    'path': '{} & {}'.format(get_full_xpath(context.xml, tup_xpath1),
+                                             get_full_xpath(context.xml, tup_xpath2))
+                }]
+        else:
+            for xpath in xpaths2:
+                errors.append({
+                    'message': msg,
+                    'path': '{} & {}'.format(get_full_xpath(context.xml, xpaths1[0]),
+                                             get_full_xpath(context.xml, xpath))
+                })
+
     return context, errors
 
 
@@ -150,13 +171,13 @@ def step_start_date_before_end_date(context, attribute):
 
     xpath1 = xpath1[0]
     start_date_str = xpath1.attrib.get(attribute)
-    start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+    start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
     xpath2 = xpath2[0]
     end_date_str = xpath2.attrib.get(attribute)
-    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+    end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
 
     if start_date >= end_date:
-        fail_msg = 'start date ({}) must be before end date ({})'
+        fail_msg = 'Start date ({}) must be before end date ({})'
         path_str1 = '{}/@{}'.format(get_full_xpath(context.xml, xpath1), attribute)
         path_str2 = '{}/@{}'.format(get_full_xpath(context.xml, xpath2), attribute)
         errors = [{
