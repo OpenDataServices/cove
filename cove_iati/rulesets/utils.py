@@ -4,7 +4,7 @@ from functools import wraps
 from cove_iati.lib.exceptions import RuleSetStepException
 
 
-def invalid_date_format(xpath, date_str):
+def invalid_date_format(date_str):
     try:
         datetime.datetime.strptime(date_str, '%Y-%m-%d')
     except ValueError:

@@ -32,19 +32,6 @@ def step_given_two_different_elements(context, xpath_expression1, xpath_expressi
     context.xpath_expression2 = xpath_expression2
 
 
-@then('`{attribute}` attribute must be a valid date')
-@register_ruleset_errors()
-def step_valid_date(context, attribute):
-    errors = []
-
-    for xpath in get_xpaths(context.xml, context.xpath_expression):
-        date_str = xpath.attrib.get(attribute)
-        if invalid_date_format(xpath, date_str):
-            errors.append({'message': '`{}` is not a valid date'.format(date_str),
-                           'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
-    return context, errors
-
-
 @then('`{attribute}` attribute must be today or in the past')
 @register_ruleset_errors()
 def step_must_be_today_or_past(context, attribute):
@@ -53,6 +40,10 @@ def step_must_be_today_or_past(context, attribute):
 
     for xpath in get_xpaths(context.xml, context.xpath_expression):
         date_str = xpath.attrib.get(attribute)
+
+        if invalid_date_format(date_str):
+            continue
+
         date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
         if date > today:
             errors.append({'message': '{} must be on or before today ({})'.format(date, today),
@@ -122,7 +113,6 @@ def step_either_or_expected(context, xpath_expression1, xpath_expression2):
                     'path': '{} & {}'.format(get_full_xpath(context.xml, xpaths1[0]),
                                              get_full_xpath(context.xml, xpath))
                 })
-
     return context, errors
 
 
@@ -137,28 +127,6 @@ def step_not_expected(context, xpath_expression):
     return context, errors
 
 
-@then('both `{attribute}` attributes must be a valid date')
-@register_ruleset_errors()
-def step_two_valid_dates(context, attribute):
-    xpath1 = get_xpaths(context.xml, context.xpath_expression1)
-    xpath2 = get_xpaths(context.xml, context.xpath_expression2)
-    xpaths = []
-    errors = []
-    fail_msg = '`{}` is not a valid date'
-
-    if xpath1:
-        xpaths.append(xpath1[0])
-    if xpath2:
-        xpaths.append(xpath2[0])
-
-    for xpath in xpaths:
-        date_str = xpath.attrib.get(attribute)
-        if invalid_date_format(xpath, date_str):
-            errors.append({'message': fail_msg.format(date_str),
-                           'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
-    return context, errors
-
-
 @then('`{attribute}` start date attribute must be chronologically before end date attribute')
 @register_ruleset_errors()
 def step_start_date_before_end_date(context, attribute):
@@ -169,19 +137,20 @@ def step_start_date_before_end_date(context, attribute):
     if not xpath1 or not xpath2:
         return context, errors
 
-    xpath1 = xpath1[0]
     start_date_str = xpath1.attrib.get(attribute)
-    start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
-    xpath2 = xpath2[0]
     end_date_str = xpath2.attrib.get(attribute)
-    end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
 
-    if start_date >= end_date:
-        fail_msg = 'Start date ({}) must be before end date ({})'
-        path_str1 = '{}/@{}'.format(get_full_xpath(context.xml, xpath1), attribute)
-        path_str2 = '{}/@{}'.format(get_full_xpath(context.xml, xpath2), attribute)
-        errors = [{
-            'message': fail_msg.format(start_date_str, end_date_str),
-            'path': '{} & {}'.format(path_str1, path_str2)
-        }]
+    if not invalid_date_format(start_date_str) and not invalid_date_format(end_date_str):
+        xpath1 = xpath1[0]
+        xpath2 = xpath2[0]
+        start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        if start_date >= end_date:
+            fail_msg = 'Start date ({}) must be before end date ({})'
+            path_str1 = '{}/@{}'.format(get_full_xpath(context.xml, xpath1), attribute)
+            path_str2 = '{}/@{}'.format(get_full_xpath(context.xml, xpath2), attribute)
+            errors = [{
+                'message': fail_msg.format(start_date_str, end_date_str),
+                'path': '{} & {}'.format(path_str1, path_str2)
+            }]
     return context, errors
