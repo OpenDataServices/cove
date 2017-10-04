@@ -168,6 +168,7 @@
     <activity-status code="3"/>
     <activity-date iso-date="2017-01-01"/>
     <recipient-country code="AF" percentage="30"/>
+    <sector vocabulary="1" code="1"/>
     <transaction>
       <transaction-type code="2"/>
       <transaction-date iso-date="2017-01-01"/>

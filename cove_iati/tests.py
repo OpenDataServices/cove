@@ -240,10 +240,6 @@ def test_cove_iati_cli_output():
                  'path': '/iati-activities/iati-activity[4]/participating-org/@ref',
                  'rule': 'participating-org/@ref/should match the regex [^\\:\\&\\|\\?]+'},
                 {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                 'message': 'Neither sector nor transaction/sector have been found',
-                 'path': '/iati-activities/iati-activity[5]',
-                 'rule': 'either sector or transaction/sector must be present'},
-                {'id': 'TZ-BRLA-9-EEE-123123-EE123',
                  'message': 'Neither activity-date[@type="1"] nor activity-date[@type="2"] have been found',
                  'path': '/iati-activities/iati-activity[5]',
                  'rule': 'activity-date[date @type="1"] or activity-date[@type="2"] must be present'},
@@ -265,11 +261,11 @@ def test_cove_iati_cli_output():
 
     assert not results.get('ruleset_errors_openag')
 
-    validation_errors = results.get('validation_errors')
+    # validation_errors = results.get('validation_errors')
     
-    assert validation_errors[0]['description'] == "'recipient-country': This element is not " \
-                                                  "expected, expected is activity-date."
-    assert validation_errors[0]['path'] == 'iati-activity/0/recipient-country/0'
+    # assert validation_errors[0]['description'] == "'recipient-country': This element is not " \
+    #                                               "expected, expected is activity-date."
+    # assert validation_errors[0]['path'] == 'iati-activity/0/recipient-country/0'
 
     ruleset_errors = results.get('ruleset_errors')
     ruleset_errors.sort(key=lambda i: i['path'])
@@ -277,60 +273,62 @@ def test_cove_iati_cli_output():
 
     for expected, actual in zipped_results:
         assert expected['id'] == actual['id']
-        assert expected['message'] in actual['message']
         assert expected['path'] == actual['path']
         assert expected['rule'] == actual['rule']
+        if 'on or before today' in expected['message']:
+            assert expected['message'][:-13] == actual['message'][:-13]
+        else:
+            assert expected['message'] == actual['message']
 
 
 def test_cove_iati_cli_openag_output():
     expected = [{'id': 'AA-AAA-123123-AA123',
                  'message': 'the activity should include at least one location element',
                  'path': '/iati-activities/iati-activity[1]',
-                 'rule': 'element is expected'},
+                 'rule': 'location element must be present'},
                 {'id': 'AA-AAA-123123-AA123',
                  'message': 'openag:tag element must have @vocabulary attribute',
                  'path': '/iati-activities/iati-activity[1]/openag:tag',
-                 'rule': 'element must have @vocabulary attribute with code for "maintained '
-                         'by the reporting organisation"'},
+                 'rule': 'openag:tag/@vocabulary must be present with a code for "maintained by the '
+                         'reporting organisation"'},
                 {'id': 'AA-AAA-123123-AA123',
                  'message': '@ref NO-ORGIDS-10000 does not start with a recognised org-ids prefix',
                  'path': '/iati-activities/iati-activity[1]/reporting-org/@ref',
-                 'rule': '@ref should have an org-ids prefix'},
+                 'rule': 'reporting-org/@ref must have an org-ids prefix'},
                 {'id': 'BB-BBB-123123-BB123',
                  'message': 'location/location-id element must have @code attribute',
                  'path': '/iati-activities/iati-activity[2]/location/location-id',
-                 'rule': 'element must use @code attribute'},
+                 'rule': 'location/@code must be present'},
                 {'id': 'BB-BBB-123123-BB123',
-                 'message': '"http://bad.org" is not a valid value for @vocabulary-uri attribute '
-                            '(it should be "http://aims.fao.org/aos/agrovoc/")',
+                 'message': '"http://bad.org" is not a valid value for @vocabulary-uri attribute (it '
+                            'should be "http://aims.fao.org/aos/agrovoc/")',
                  'path': '/iati-activities/iati-activity[2]/openag:tag/@vocabulary-uri',
-                 'rule': 'element must have @vocabulary-uri attribute with agrovoc uri'},
+                 'rule': 'openag:tag/@vocabulary-uri must be present with an agrovoc uri'},
                 {'id': 'BB-BBB-123123-BB123',
                  'message': '@ref NO-ORGIDS-40000 does not start with a recognised org-ids prefix',
                  'path': '/iati-activities/iati-activity[2]/participating-org/@ref',
-                 'rule': '@ref should have an org-ids prefix'},
+                 'rule': 'participating-org/@ref must have an org-ids prefix'},
                 {'id': 'CC-CCC-789789-CC789',
                  'message': 'location/location-id element must have @vocabulary attribute',
                  'path': '/iati-activities/iati-activity[3]/location/location-id',
-                 'rule': 'element must use @vocabulary attribute'},
+                 'rule': 'location/@vocabulary must be present'},
                 {'id': 'CC-CCC-789789-CC789',
-                 'message': '"01" is not a valid value for @vocabulary attribute (it should '
-                            'be "98 or 99")',
+                 'message': '"01" is not a valid value for @vocabulary attribute (it should be "98 or 99")',
                  'path': '/iati-activities/iati-activity[3]/openag:tag/@vocabulary',
-                 'rule': 'element must have @vocabulary attribute with code for "maintained '
-                         'by the reporting organisation"'},
+                 'rule': 'openag:tag/@vocabulary must be present with a code for "maintained by the '
+                         'reporting organisation"'},
                 {'id': 'DD-DDD-789789-DD789',
                  'message': 'openag:tag element must have @code attribute',
                  'path': '/iati-activities/iati-activity[4]/openag:tag',
-                 'rule': 'element must have @code attribute'},
+                 'rule': 'openag:tag/@code must be present'},
                 {'id': 'EE-DDD-789789-EE789',
                  'message': 'the activity should include at least one openag:tag element',
                  'path': '/iati-activities/iati-activity[5]',
-                 'rule': 'element is expected'},
+                 'rule': 'openag:tag element must be present'},
                 {'id': 'EE-DDD-789789-EE789',
                  'message': 'location must contain a location-id element',
                  'path': '/iati-activities/iati-activity[5]/location',
-                 'rule': 'element must include <location-id>'}]
+                 'rule': 'location/location-id must be present'}]
 
     file_path = os.path.join('cove_iati', 'fixtures', 'iati_openag_tag.xml')
     output_dir = os.path.join('media', str(uuid.uuid4()))
