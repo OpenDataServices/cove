@@ -238,7 +238,7 @@ def format_ruleset_errors(output_dir):
 
     for output_file in os.listdir(output_dir):
         with open(os.path.join(output_dir, output_file)) as fp:
-            scenario_outline = output_file[:-7].split('_')
+            scenario_outline = ' '.join(re.sub('\.', '/', output_file[:-7]).split('_'))
             for line in fp:
                 line = line.strip()
 
@@ -248,7 +248,7 @@ def format_ruleset_errors(output_dir):
                         rule_error = {
                             'id': json_line['id'],
                             'path': error['path'],
-                            'rule': ' '.join(scenario_outline[1:]),
+                            'rule': scenario_outline,
                             'message': error['message']
                         }
                         ruleset_errors.append(rule_error)

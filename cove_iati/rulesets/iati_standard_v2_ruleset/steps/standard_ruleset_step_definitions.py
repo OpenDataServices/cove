@@ -101,7 +101,7 @@ def step_either_or_expected(context, xpath_expression1, xpath_expression2):
     xpaths1 = get_xpaths(context.xml, xpath_expression1)
     xpaths2 = get_xpaths(context.xml, xpath_expression2)
     
-    if not xpaths1 or not xpaths2:
+    if not xpaths1 and not xpaths2:
         errors = [{'message': fail_msg_neither.format(xpath_expression1, xpath_expression2),
                    'path': get_full_xpath(context.xml, context.xml)}]
 
