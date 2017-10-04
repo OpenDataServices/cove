@@ -87,6 +87,7 @@
     </description>
     <participating-org />
     <activity-status code="3"/>
+    <activity-date type="2" iso-date="22000101"/>
     <activity-date type="4" iso-date="24000101"/>
     <recipient-country code="AF" percentage="30"/>
     <sector vocabulary="1" code="1"/>

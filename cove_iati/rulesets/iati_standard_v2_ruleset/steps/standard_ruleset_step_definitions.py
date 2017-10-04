@@ -137,12 +137,12 @@ def step_start_date_before_end_date(context, attribute):
     if not xpath1 or not xpath2:
         return context, errors
 
+    xpath1 = xpath1[0]
+    xpath2 = xpath2[0]
     start_date_str = xpath1.attrib.get(attribute)
     end_date_str = xpath2.attrib.get(attribute)
 
     if not invalid_date_format(start_date_str) and not invalid_date_format(end_date_str):
-        xpath1 = xpath1[0]
-        xpath2 = xpath2[0]
         start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
         end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
         if start_date >= end_date:

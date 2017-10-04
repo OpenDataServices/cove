@@ -183,6 +183,79 @@ def test_cove_iati_cli_delete_option():
 
 
 def test_cove_iati_cli_output():
+    expected = [{'id': 'TZ-BRLA-1-AAA-123123-AA123',
+                 'message': '2200-01-01 must be on or before today (2017-10-04)',
+                 'path': '/iati-activities/iati-activity[1]/transaction[2]/transaction-date/@iso-date',
+                 'rule': 'transaction/transaction-date/@iso-date date must be today or in the past'},
+                {'id': 'TZ-BRLA-3-BBB-123123-BB123',
+                 'message': '2200-01-01 must be on or before today (2017-10-04)',
+                 'path': '/iati-activities/iati-activity[2]/activity-date/@iso-date',
+                 'rule': "activity-date[@type='2']/@iso-date must be today or in the past"},
+                {'id': 'TZ-BRLA-3-BBB-123123-BB123',
+                 'message': '2200-01-01 must be on or before today (2017-10-04)',
+                 'path': '/iati-activities/iati-activity[2]/transaction[2]/value/@value-date',
+                 'rule': 'transaction/value/@value-date must be today or in the past'},
+                {'id': '?TZ-BRLA-5-CCC-123123-CC123',
+                 'message': 'Neither participating-org/@ref nor participating-org/narrative/text() '
+                            'have been found',
+                 'path': '/iati-activities/iati-activity[3]',
+                 'rule': 'participating-org/@ref attribute or participating-org/narrative must be present'},
+                {'id': '?TZ-BRLA-5-CCC-123123-CC123',
+                 'message': 'Start date (2010-01-01) must be before end date (2009-01-01)',
+                 'path': '/iati-activities/iati-activity[3]/budget/period-start/@iso-date & '
+                         '/iati-activities/iati-activity[3]/budget/period-end/@iso-date',
+                 'rule': 'budget-period/period-start/@iso-date must be before budget-period/period-end/@iso-date'},
+                {'id': '?TZ-BRLA-5-CCC-123123-CC123',
+                 'message': 'Text does not match the regex ?TZ-BRLA-5-CCC-123123-CC123',
+                 'path': '/iati-activities/iati-activity[3]/iati-identifier/text()',
+                 'rule': 'identifier/text() should match the regex [^\\:\\&\\|\\?]+'},
+                {'id': '?TZ-BRLA-5-CCC-123123-CC123',
+                 'message': ' does not match the regex ^[^\\/\\&\\|\\?]+$',
+                 'path': '/iati-activities/iati-activity[3]/participating-org/@ref',
+                 'rule': 'participating-org/@ref/should match the regex [^\\:\\&\\|\\?]+'},
+                {'id': '?TZ-BRLA-5-CCC-123123-CC123',
+                 'message': '?TZ-BRLA-5 does not match the regex ^[^\\/\\&\\|\\?]+$',
+                 'path': '/iati-activities/iati-activity[3]/reporting-org/@ref',
+                 'rule': 'reporting-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
+                {'id': '?TZ-BRLA-5-CCC-123123-CC123',
+                 'message': 'Either sector or transaction/sector are expected (not both)',
+                 'path': '/iati-activities/iati-activity[3]/sector & /iati-activities/iati-activity[3]'
+                         '/transaction[1]/sector',
+                 'rule': 'either sector or transaction/sector must be present'},
+                {'id': '?TZ-BRLA-5-CCC-123123-CC123',
+                 'message': 'Either sector or transaction/sector are expected (not both)',
+                 'path': '/iati-activities/iati-activity[3]/sector & /iati-activities/iati-activity[3]'
+                         '/transaction[2]/sector',
+                 'rule': 'either sector or transaction/sector must be present'},
+                {'id': 'TZ-BRLA-5-DDD-123123-DD123',
+                 'message': 'Neither activity-date[@type="1"] nor activity-date[@type="2"] have been found',
+                 'path': '/iati-activities/iati-activity[4]',
+                 'rule': 'activity-date[date @type="1"] or activity-date[@type="2"] must be present'},
+                {'id': 'TZ-BRLA-5-DDD-123123-DD123',
+                 'message': '2400-01-01 must be on or before today (2017-10-04)',
+                 'path': '/iati-activities/iati-activity[4]/activity-date/@iso-date',
+                 'rule': "activity-date[@type='4']/@iso-date must be today or in the past"},
+                {'id': 'TZ-BRLA-5-DDD-123123-DD123',
+                 'message': '?TZ-BRLA-8 does not match the regex ^[^\\/\\&\\|\\?]+$',
+                 'path': '/iati-activities/iati-activity[4]/participating-org/@ref',
+                 'rule': 'participating-org/@ref/should match the regex [^\\:\\&\\|\\?]+'},
+                {'id': 'TZ-BRLA-9-EEE-123123-EE123',
+                 'message': 'Neither sector nor transaction/sector have been found',
+                 'path': '/iati-activities/iati-activity[5]',
+                 'rule': 'either sector or transaction/sector must be present'},
+                {'id': 'TZ-BRLA-9-EEE-123123-EE123',
+                 'message': 'Neither activity-date[@type="1"] nor activity-date[@type="2"] have been found',
+                 'path': '/iati-activities/iati-activity[5]',
+                 'rule': 'activity-date[date @type="1"] or activity-date[@type="2"] must be present'},
+                {'id': 'TZ-BRLA-9-EEE-123123-EE123',
+                 'message': '?TZ-BRLA-101 does not match the regex ^[^\\/\\&\\|\\?]+$',
+                 'path': '/iati-activities/iati-activity[5]/transaction[1]/provider-org/@ref',
+                 'rule': 'transaction/provider-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'},
+                {'id': 'TZ-BRLA-9-EEE-123123-EE123',
+                 'message': '?TZ-BRLA-102 does not match the regex ^[^\\/\\&\\|\\?]+$',
+                 'path': '/iati-activities/iati-activity[5]/transaction[2]/receiver-org/@ref',
+                 'rule': 'transaction/receiver-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'}]
+
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
     output_dir = os.path.join('media', str(uuid.uuid4()))
     call_command('iati_cli', file_path, output_dir=output_dir)
@@ -200,20 +273,13 @@ def test_cove_iati_cli_output():
 
     ruleset_errors = results.get('ruleset_errors')
     ruleset_errors.sort(key=lambda i: i['path'])
+    zipped_results = zip(expected, ruleset_errors)
 
-    assert ruleset_errors[0]['rule'] == 'activity-date[date @type="1"] or activity-date' \
-                                        '[@type="2"] is expected'
-    assert ruleset_errors[0]['message'] == 'Neither activity-date[@type="1"] nor activity-date' \
-                                           '[@type="2"] have been found'
-    assert ruleset_errors[0]['id'] == 'AA-AAA-123123-AA123'
-    assert ruleset_errors[0]['path'] == '/iati-activities/iati-activity[1]'
-
-    assert ruleset_errors[1]['rule'] == '@iso-date date must be in iso format and must be ' \
-                                        'today or in the past'
-    assert '2200-03-03 must be on or before today' in ruleset_errors[1]['message']
-    assert ruleset_errors[1]['id'] == 'AA-AAA-123123-AA123'
-    assert ruleset_errors[1]['path'] == '/iati-activities/iati-activity[1]/transaction[2]/' \
-                                        'transaction-date/@iso-date'
+    for expected, actual in zipped_results:
+        assert expected['id'] == actual['id']
+        assert expected['message'] in actual['message']
+        assert expected['path'] == actual['path']
+        assert expected['rule'] == actual['rule']
 
 
 def test_cove_iati_cli_openag_output():
@@ -275,7 +341,6 @@ def test_cove_iati_cli_openag_output():
 
     ruleset_errors = results.get('ruleset_errors_openag')
     ruleset_errors.sort(key=lambda i: i['path'])
-
     zipped_results = zip(expected, ruleset_errors)
 
     for expected, actual in zipped_results:
