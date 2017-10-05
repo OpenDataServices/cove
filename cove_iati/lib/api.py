@@ -30,7 +30,7 @@ def context_api_transform(context):
     return context
 
 
-def iati_json_output(output_dir, file, openag=False):
+def iati_json_output(output_dir, file, openag=False, orgids=False):
     context = {}
     file_type = get_file_type(file)
     context = {"file_type": file_type}
@@ -47,8 +47,8 @@ def iati_json_output(output_dir, file, openag=False):
         data_file = file
 
     context = context_api_transform(
-        common_checks_context_iati(context, output_dir, data_file,
-                                   file_type, api=True, openag=openag)
+        common_checks_context_iati(context, output_dir, data_file, file_type,
+                                   api=True, openag=openag, orgids=orgids)
     )
 
     if file_type != 'xml':
@@ -61,7 +61,8 @@ def iati_json_output(output_dir, file, openag=False):
             shutil.rmtree(os.path.join(output_dir, 'csv_dir'))
 
     ruleset_dirs = [os.path.join(output_dir, 'ruleset'),
-                    os.path.join(output_dir, 'ruleset_openag')]
+                    os.path.join(output_dir, 'ruleset_openag'),
+                    os.path.join(output_dir, 'ruleset_orgids')]
     for directory in ruleset_dirs:
         if os.path.exists(directory):
             shutil.rmtree(directory)

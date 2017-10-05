@@ -11,7 +11,7 @@ from .schema import SchemaIATI
 from cove.lib.exceptions import CoveInputDataError, UnrecognisedFileTypeXML
 
 
-def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False):
+def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
     schema_aiti = SchemaIATI()
     lxml_errors = {}
     cell_source_map = {}
@@ -49,6 +49,10 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         if openag:
             ruleset_errors_ag = get_openag_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_openag'))
             context.update({'ruleset_errors_openag': ruleset_errors_ag})
+
+        if orgids:
+            ruleset_errors_orgids = get_orgids_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_orgids'))
+            context.update({'ruleset_errors_orgids': ruleset_errors_orgids})
 
     errors_all = format_lxml_errors(lxml_errors)
 
@@ -270,6 +274,15 @@ def get_iati_ruleset_errors(lxml_etree, output_dir):
 
 def get_openag_ruleset_errors(lxml_etree, output_dir):
     bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_openag_ruleset/'],
+               output_path=output_dir)
+
+    if not os.path.isdir(output_dir):
+        return []
+    return format_ruleset_errors(output_dir)
+
+
+def get_orgids_ruleset_errors(lxml_etree, output_dir):
+    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_orgids_ruleset/'],
                output_path=output_dir)
 
     if not os.path.isdir(output_dir):

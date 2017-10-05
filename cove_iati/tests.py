@@ -304,6 +304,7 @@ def test_cove_iati_cli_output():
         results = json.load(fp)
 
     assert not results.get('ruleset_errors_openag')
+    assert not results.get('ruleset_errors_orgids')
 
     validation_errors = results.get('validation_errors')
     validation_errors.sort(key=lambda i: i['path'])
@@ -328,6 +329,48 @@ def test_cove_iati_cli_output():
             assert expected['message'] == actual['message']
 
 
+def test_cove_iati_cli_orgids_output():
+    expected = [{'id': '?TZ-BRLA-5-CCC-123123-CC123',
+                 'message': '@ref  does not start with a recognised org-ids prefix',
+                 'path': '/iati-activities/iati-activity[3]/participating-org/@ref',
+                 'rule': 'participating-org/@ref must have an org-ids prefix'},
+                {'id': '?TZ-BRLA-5-CCC-123123-CC123',
+                 'message': '@ref ?TZ-BRLA-5 does not start with a recognised org-ids prefix',
+                 'path': '/iati-activities/iati-activity[3]/reporting-org/@ref',
+                 'rule': 'reporting-org/@ref must have an org-ids prefix'},
+                {'id': 'TZ-BRLA-5-DDD-123123-DD123',
+                 'message': '@ref ?TZ-BRLA-8 does not start with a recognised org-ids prefix',
+                 'path': '/iati-activities/iati-activity[4]/participating-org/@ref',
+                 'rule': 'participating-org/@ref must have an org-ids prefix'},
+                {'id': 'TZ-BRLA-9-EEE-123123-EE123',
+                 'message': '@ref ?TZ-BRLA-101 does not start with a recognised org-ids prefix',
+                 'path': '/iati-activities/iati-activity[5]/transaction[1]/provider-org/@ref',
+                 'rule': 'transaction/provider-org/@ref must have an org-ids prefix'},
+                {'id': 'TZ-BRLA-9-EEE-123123-EE123',
+                 'message': '@ref ?TZ-BRLA-102 does not start with a recognised org-ids prefix',
+                 'path': '/iati-activities/iati-activity[5]/transaction[2]/receiver-org/@ref',
+                 'rule': 'transaction/receiver-org/@ref must have an org-ids prefix'}]
+
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
+    output_dir = os.path.join('media', str(uuid.uuid4()))
+    call_command('iati_cli', file_path, output_dir=output_dir, orgids=True)
+
+    with open(os.path.join(output_dir, 'results.json')) as fp:
+        results = json.load(fp)
+
+    assert not results.get('ruleset_errors_openag')
+
+    ruleset_errors = results.get('ruleset_errors_orgids')
+    ruleset_errors.sort(key=lambda i: i['path'])
+    zipped_results = zip(expected, ruleset_errors)
+
+    for expected, actual in zipped_results:
+        assert expected['id'] == actual['id']
+        assert expected['message'] == actual['message']
+        assert expected['path'] == actual['path']
+        assert expected['rule'] == actual['rule']
+
+
 def test_cove_iati_cli_openag_output():
     expected = [{'id': 'AA-AAA-123123-AA123',
                  'message': 'the activity should include at least one location element',
@@ -338,10 +381,6 @@ def test_cove_iati_cli_openag_output():
                  'path': '/iati-activities/iati-activity[1]/openag:tag',
                  'rule': 'openag:tag/@vocabulary must be present with a code for "maintained by the '
                          'reporting organisation"'},
-                {'id': 'AA-AAA-123123-AA123',
-                 'message': '@ref NO-ORGIDS-10000 does not start with a recognised org-ids prefix',
-                 'path': '/iati-activities/iati-activity[1]/reporting-org/@ref',
-                 'rule': 'reporting-org/@ref must have an org-ids prefix'},
                 {'id': 'BB-BBB-123123-BB123',
                  'message': 'location/location-id element must have @code attribute',
                  'path': '/iati-activities/iati-activity[2]/location/location-id',
@@ -351,10 +390,6 @@ def test_cove_iati_cli_openag_output():
                             'should be "http://aims.fao.org/aos/agrovoc/")',
                  'path': '/iati-activities/iati-activity[2]/openag:tag/@vocabulary-uri',
                  'rule': 'openag:tag/@vocabulary-uri must be present with an agrovoc uri'},
-                {'id': 'BB-BBB-123123-BB123',
-                 'message': '@ref NO-ORGIDS-40000 does not start with a recognised org-ids prefix',
-                 'path': '/iati-activities/iati-activity[2]/participating-org/@ref',
-                 'rule': 'participating-org/@ref must have an org-ids prefix'},
                 {'id': 'CC-CCC-789789-CC789',
                  'message': 'location/location-id element must have @vocabulary attribute',
                  'path': '/iati-activities/iati-activity[3]/location/location-id',
@@ -383,6 +418,8 @@ def test_cove_iati_cli_openag_output():
 
     with open(os.path.join(output_dir, 'results.json')) as fp:
         results = json.load(fp)
+
+    assert not results.get('ruleset_errors_orgids')
 
     ruleset_errors = results.get('ruleset_errors_openag')
     ruleset_errors.sort(key=lambda i: i['path'])
