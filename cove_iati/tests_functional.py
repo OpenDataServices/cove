@@ -64,6 +64,11 @@ def test_accordion(server_url, browser):
     ('basic_iati_unordered_invalid_iso_dates.xlsx', ['Invalid against Schema'], True),
     ('bad.xml', ['We think you tried to upload a XML file'], False),
     ('bad_spaces.csv', ['Converted to XML 2 Errors'], True),
+    ('basic_iati_ruleset_errors.xml', ['Invalid against Schema 12 Errors', '20140101',
+                                       '\'budget\': Missing child element(s), expected is value',
+                                       'Ruleset Errors 16 Errors',
+                                       'Start date (2010-01-01) must be before end date (2009-01-01)',
+                                       'participating-org/@ref/should match the regex [^\:\&\|\?]+'], False),
     # We should not server error when there's fields not in the schema
     ('not_iati.csv', ['Data Supplied', 'Invalid against Schema'], True),
     ('namespace_good.xlsx', ['Converted to XML', 'Invalid against Schema', '2 Errors'], True),
