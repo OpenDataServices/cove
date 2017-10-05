@@ -119,8 +119,11 @@ def format_lxml_errors(lxml_errors):
         
         message = error['message']
         value = ''
+
         if 'element is not expected' in message or 'Missing child element' in message:
             message = message.replace('. Expected is (', ', expected is').replace(' )', '')
+        elif 'required but missing' in message or 'content other than whitespace is not allowed' in message:
+            pass
         else:
             val_start = error['message'].find(": '")
             value = error['message'][val_start + len(": '"):]
@@ -228,7 +231,7 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
                 source = error_path_source(error, cell_paths, cell_source_map, missing_zeros=True)
                 validation_errors[validation_key].append(source)
         else:
-            validation_errors[validation_key].append({'path': error['path']})
+            validation_errors[validation_key].append({'path': error['path'], 'value': error['value']})
 
     return validation_errors
 

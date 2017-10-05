@@ -13,7 +13,7 @@
     <sector vocabulary="1" code="1"/>
     <budget>
       <period-start iso-date="2016-01-01"/>
-      <period-end iso-date="2017-01-01"/>\
+      <period-end iso-date="2017-01-01"/>
     </budget>
     <transaction>
       <transaction-type code="2"/>
