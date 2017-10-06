@@ -8,7 +8,7 @@ import re
 
 from behave import given, then
 
-from cove_iati.rulesets.utils import invalid_date_format, get_full_xpath, get_xpaths, register_ruleset_errors
+from cove_iati.rulesets.utils import invalid_date_format, get_full_xpath, get_xobjects, register_ruleset_errors
 
 
 @given('an IATI activity')
@@ -38,7 +38,7 @@ def step_must_be_today_or_past(context, attribute):
     errors = []
     today = datetime.date.today()
 
-    for xpath in get_xpaths(context.xml, context.xpath_expression):
+    for xpath in get_xobjects(context.xml, context.xpath_expression):
         date_str = xpath.attrib.get(attribute)
 
         if invalid_date_format(date_str):
@@ -57,7 +57,7 @@ def step_iati_id_text_match_regex(context, regex_str):
     regex = re.compile(regex_str)
     errors = []
 
-    xpath = get_xpaths(context.xml, context.xpath_expression)
+    xpath = get_xobjects(context.xml, context.xpath_expression)
     if xpath:
         xpath = xpath[0]
         fail_msg = 'Text does not match the regex {}'
@@ -75,7 +75,7 @@ def step_attribute_match_regex(context, attribute, regex_str):
     errors = []
     fail_msg = '{} does not match the regex {}'
 
-    for xpath in get_xpaths(context.xml, context.xpath_expression):
+    for xpath in get_xobjects(context.xml, context.xpath_expression):
         attr_str = xpath.attrib.get(attribute, '')
         if not regex.match(attr_str):
             errors.append({'message': fail_msg.format(attr_str, regex_str),
@@ -89,8 +89,8 @@ def step_either_or_expected(context, xpath_expression1, xpath_expression2):
     errors = []
     fail_msg_neither = 'Neither {} nor {} have been found'
     fail_msg_both = 'Either {} or {} are expected (not both)'
-    xpaths1 = get_xpaths(context.xml, xpath_expression1)
-    xpaths2 = get_xpaths(context.xml, xpath_expression2)
+    xpaths1 = get_xobjects(context.xml, xpath_expression1)
+    xpaths2 = get_xobjects(context.xml, xpath_expression2)
     
     if not xpaths1 and not xpaths2:
         errors = [{'message': fail_msg_neither.format(xpath_expression1, xpath_expression2),
@@ -121,7 +121,7 @@ def step_either_or_expected(context, xpath_expression1, xpath_expression2):
 def step_not_expected(context, xpath_expression):
     errors = []
 
-    for xpath in get_xpaths(context.xml, xpath_expression):
+    for xpath in get_xobjects(context.xml, xpath_expression):
         errors.append({'message': '`{}` is not expected'.format(xpath_expression),
                        'path': get_full_xpath(context.xml, xpath)})
     return context, errors
@@ -130,8 +130,8 @@ def step_not_expected(context, xpath_expression):
 @then('`{attribute}` start date attribute must be chronologically before end date attribute')
 @register_ruleset_errors()
 def step_start_date_before_end_date(context, attribute):
-    xpath1 = get_xpaths(context.xml, context.xpath_expression1)
-    xpath2 = get_xpaths(context.xml, context.xpath_expression2)
+    xpath1 = get_xobjects(context.xml, context.xpath_expression1)
+    xpath2 = get_xobjects(context.xml, context.xpath_expression2)
     errors = []
 
     if not xpath1 or not xpath2:

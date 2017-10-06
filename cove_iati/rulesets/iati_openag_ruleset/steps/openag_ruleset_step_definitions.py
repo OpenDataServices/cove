@@ -5,14 +5,14 @@ License: https://github.com/pwyf/bdd-tester/blob/master/LICENSE
 '''
 from behave import then
 
-from cove_iati.rulesets.utils import get_full_xpath, get_xpaths, register_ruleset_errors
+from cove_iati.rulesets.utils import get_full_xpath, get_xobjects, register_ruleset_errors
 
 
 @then('at least one `{xpath_expression}` element is expected')
 @register_ruleset_errors('openag')
 def step_openag_expected(context, xpath_expression):
     errors = []
-    if not get_xpaths(context.xml, xpath_expression):
+    if not get_xobjects(context.xml, xpath_expression):
         errors = [{
             'message': 'the activity should include at least one {} element'.format(xpath_expression),
             'path': get_full_xpath(context.xml, context.xml)
@@ -26,7 +26,7 @@ def step_openag_tag_attribute_expected(context, xpath_expression, attribute):
     errors = []
     fail_msg = '{} element must have @{} attribute'
 
-    for xpath in get_xpaths(context.xml, xpath_expression):
+    for xpath in get_xobjects(context.xml, xpath_expression):
         attrib = xpath.attrib
         required_attrib = attrib.get(attribute)
         if not required_attrib:
@@ -41,7 +41,7 @@ def step_openag_tag_attribute_accepted_values(context, attribute, any_value):
     errors = []
     fail_msg = '"{}" is not a valid value for @{} attribute (it should be "{}")'
 
-    for xpath in get_xpaths(context.xml, context.xpath_expression):
+    for xpath in get_xobjects(context.xml, context.xpath_expression):
         element_attrs = xpath.attrib
         matching_value = any([element_attrs.get(attribute) == val for val in any_value.split(' or ')])
         if not matching_value:
@@ -56,8 +56,8 @@ def step_openag_location_id_expected(context, xpath_expression1, xpath_expressio
     errors = []
     fail_msg = '{} must contain a {} element'
 
-    for xpath in get_xpaths(context.xml, xpath_expression1):
-        has_xpath_expression2 = get_xpaths(xpath, xpath_expression2)
+    for xpath in get_xobjects(context.xml, xpath_expression1):
+        has_xpath_expression2 = get_xobjects(xpath, xpath_expression2)
         if not has_xpath_expression2:
             errors.append({'message': fail_msg.format(xpath_expression1, xpath_expression2),
                            'path': get_full_xpath(context.xml, xpath)})

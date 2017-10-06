@@ -9,7 +9,7 @@ from django.core.management import call_command
 
 from .lib import iati
 from cove_iati.lib.exceptions import RuleSetStepException
-from cove_iati.rulesets.utils import register_ruleset_errors
+from cove_iati.rulesets.utils import invalid_date_format, get_full_xpath, get_xobjects, register_ruleset_errors
 
 
 XML_SCHEMA = '''
@@ -47,7 +47,10 @@ INVALID_DATA = '''
 
 XML_NS = '''
     <iati-activities xmlns:namespace="http://example.com">
-      <element>element</element>
+      <iati-activity>
+        <element id='element1'/>
+        <element id='element2'/>
+    </iati-activity>
     </iati-activities>
 '''
 
@@ -108,6 +111,31 @@ def test_format_lxml_errors(validated_data):
         assert error_dict['message'] in expected_error_messages
 
 
+@pytest.mark.parametrize(('date_string', 'boolean'), [
+    ('2000-01-01', False),
+    ('01-01-2000', True),
+    ('2000/01/01', True)
+])
+def test_invalid_date_format(date_string, boolean):
+    assert invalid_date_format(date_string) is boolean
+
+
+def test_get_xobjects():
+    activities_xml = etree.XML(XML_NS)
+    activity_xml = activities_xml.getchildren()[0]
+    xobjects = get_xobjects(activity_xml, 'element')
+    assert xobjects[0].attrib.get('id') == 'element1'
+    assert xobjects[1].attrib.get('id') == 'element2'
+
+
+def test_get_full_xpath():
+    expected_full_xpath = '/iati-activities/iati-activity/element[1]'
+    activities_xml = etree.XML(XML_NS)
+    activity_xml = activities_xml.getchildren()[0]
+    element_xml = activity_xml.getchildren()[0]
+    assert get_full_xpath(activity_xml, element_xml) == expected_full_xpath
+
+
 def test_register_ruleset_errors_decorator():
     def decorated_func_errors(context):
         return context, ['errors']
@@ -152,6 +180,11 @@ def test_register_ruleset_errors_decorator():
         'results.json',
         'unflattened.xml'
     ]),
+    ('basic_iati_unordered_valid.csv', False, {}, [
+        'basic_iati_unordered_valid.csv',
+        'results.json',
+        'unflattened.xml'
+    ]),
     ('basic_iati_ruleset_errors.xml', False, {}, [
         'basic_iati_ruleset_errors.xml',
         'results.json'
@@ -183,6 +216,51 @@ def test_cove_iati_cli_delete_option():
 
 
 def test_cove_iati_cli_output():
+
+    exp_validation = [{'description': "'activity-date', attribute 'iso-date' is not a valid value of "
+                                      "the atomic type 'xs:date'.",
+                       'path': 'iati-activity/0/activity-date/@iso-date',
+                       'value': '22000101'},
+                      {'description': "'budget': Missing child element(s), expected is value.",
+                       'path': 'iati-activity/0/budget',
+                       'value': ''},
+                      {'description': "'transaction-date', attribute 'iso-date' is not a valid value "
+                                      "of the atomic type 'xs:date'.",
+                       'path': 'iati-activity/0/transaction/0/transaction-date/@iso-date',
+                       'value': '22000101'},
+                      {'description': "'budget': Missing child element(s), expected is value.",
+                       'path': 'iati-activity/1/budget',
+                       'value': ''},
+                      {'description': "'period-end', attribute 'iso-date' is not a valid value of the "
+                                      "atomic type 'xs:date'.",
+                       'path': 'iati-activity/1/budget/period-end/@iso-date',
+                       'value': '20140101'},
+                      {'description': "'period-start', attribute 'iso-date' is not a valid value of "
+                                      "the atomic type 'xs:date'.",
+                       'path': 'iati-activity/1/budget/period-start/@iso-date',
+                       'value': '20150101'},
+                      {'description': "'value', attribute 'value-date' is not a valid value of the "
+                                      "atomic type 'xs:date'.",
+                       'path': 'iati-activity/1/transaction/0/value/@value-date',
+                       'value': '24000101'},
+                      {'description': "'activity-date', attribute 'iso-date' is not a valid value of "
+                                      "the atomic type 'xs:date'.",
+                       'path': 'iati-activity/2/activity-date/0/@iso-date',
+                       'value': '22000101'},
+                      {'description': "'activity-date', attribute 'iso-date' is not a valid value of "
+                                      "the atomic type 'xs:date'.",
+                       'path': 'iati-activity/2/activity-date/1/@iso-date',
+                       'value': '24000101'},
+                      {'description': "'budget': Missing child element(s), expected is value.",
+                       'path': 'iati-activity/2/budget',
+                       'value': ''},
+                      {'description': "'participating-org': The attribute 'role' is required but missing.",
+                       'path': "iati-activity/2/participating-org/@role' is required but missing",
+                       'value': ''},
+                      {'description': "'activity-date': The attribute 'type' is required but missing.",
+                       'path': "iati-activity/4/activity-date/@type' is required but missing",
+                       'value': ''}]
+
     exp_rulesets = [{'id': 'TZ-BRLA-1-AAA-123123-AA123',
                      'message': '2200-01-01 must be on or before today (2017-10-04)',
                      'path': '/iati-activities/iati-activity[1]/transaction[2]/transaction-date/@iso-date',
@@ -251,50 +329,6 @@ def test_cove_iati_cli_output():
                     'message': '?TZ-BRLA-102 does not match the regex ^[^\\/\\&\\|\\?]+$',
                     'path': '/iati-activities/iati-activity[5]/transaction[2]/receiver-org/@ref',
                     'rule': 'transaction/receiver-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'}]
-
-    exp_validation = [{'description': "'activity-date', attribute 'iso-date' is not a valid value of "
-                                      "the atomic type 'xs:date'.",
-                       'path': 'iati-activity/0/activity-date/@iso-date',
-                       'value': '22000101'},
-                      {'description': "'budget': Missing child element(s), expected is value.",
-                       'path': 'iati-activity/0/budget',
-                       'value': ''},
-                      {'description': "'transaction-date', attribute 'iso-date' is not a valid value "
-                                      "of the atomic type 'xs:date'.",
-                       'path': 'iati-activity/0/transaction/0/transaction-date/@iso-date',
-                       'value': '22000101'},
-                      {'description': "'budget': Missing child element(s), expected is value.",
-                       'path': 'iati-activity/1/budget',
-                       'value': ''},
-                      {'description': "'period-end', attribute 'iso-date' is not a valid value of the "
-                                      "atomic type 'xs:date'.",
-                       'path': 'iati-activity/1/budget/period-end/@iso-date',
-                       'value': '20140101'},
-                      {'description': "'period-start', attribute 'iso-date' is not a valid value of "
-                                      "the atomic type 'xs:date'.",
-                       'path': 'iati-activity/1/budget/period-start/@iso-date',
-                       'value': '20150101'},
-                      {'description': "'value', attribute 'value-date' is not a valid value of the "
-                                      "atomic type 'xs:date'.",
-                       'path': 'iati-activity/1/transaction/0/value/@value-date',
-                       'value': '24000101'},
-                      {'description': "'activity-date', attribute 'iso-date' is not a valid value of "
-                                      "the atomic type 'xs:date'.",
-                       'path': 'iati-activity/2/activity-date/0/@iso-date',
-                       'value': '22000101'},
-                      {'description': "'activity-date', attribute 'iso-date' is not a valid value of "
-                                      "the atomic type 'xs:date'.",
-                       'path': 'iati-activity/2/activity-date/1/@iso-date',
-                       'value': '24000101'},
-                      {'description': "'budget': Missing child element(s), expected is value.",
-                       'path': 'iati-activity/2/budget',
-                       'value': ''},
-                      {'description': "'participating-org': The attribute 'role' is required but missing.",
-                       'path': "iati-activity/2/participating-org/@role' is required but missing",
-                       'value': ''},
-                      {'description': "'activity-date': The attribute 'type' is required but missing.",
-                       'path': "iati-activity/4/activity-date/@type' is required but missing",
-                       'value': ''}]
 
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
     output_dir = os.path.join('media', str(uuid.uuid4()))

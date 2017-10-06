@@ -3,7 +3,7 @@ import re
 from behave import then
 
 from cove.lib.common import get_orgids_prefixes
-from cove_iati.rulesets.utils import get_full_xpath, get_xpaths, register_ruleset_errors
+from cove_iati.rulesets.utils import get_full_xpath, get_xobjects, register_ruleset_errors
 
 ORGIDS_PREFIXES = get_orgids_prefixes()
 
@@ -14,7 +14,7 @@ def step_openag_org_id_prefix_expected(context, attribute):
     errors = []
     fail_msg = '@{} {} does not start with a recognised org-ids prefix'
 
-    for xpath in get_xpaths(context.xml, context.xpath_expression):
+    for xpath in get_xobjects(context.xml, context.xpath_expression):
         attr_id = xpath.attrib.get(attribute, '')
         for prefix in ORGIDS_PREFIXES:
             if re.match('^%s' % prefix, attr_id):

@@ -12,15 +12,15 @@ def invalid_date_format(date_str):
     return False
 
 
-def get_full_xpath(xml, xpath):
-    tree = xml.getroottree()
-    return tree.getpath(xpath)
+def get_full_xpath(parent_xobj, child_xobj):
+    tree = parent_xobj.getroottree()
+    return tree.getpath(child_xobj)
 
 
-def get_xpaths(xml, xpath_expression):
-    nsmap = xml.getparent().nsmap
-    xpaths = xml.xpath(xpath_expression, namespaces=nsmap)
-    return xpaths
+def get_xobjects(xobj, xpath_expression):
+    nsmap = xobj.getparent().nsmap
+    xobjects = xobj.xpath(xpath_expression, namespaces=nsmap)
+    return xobjects
 
 
 def register_ruleset_errors(namespace=None):
