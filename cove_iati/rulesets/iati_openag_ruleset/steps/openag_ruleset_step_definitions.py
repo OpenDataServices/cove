@@ -52,7 +52,7 @@ def step_openag_tag_attribute_accepted_values(context, attribute, any_value):
 
 @then('every `{xpath_expression1}` must include `{xpath_expression2}` element')
 @register_ruleset_errors(['openag'])
-def step_openag_location_id_expected(context, xpath_expression1, xpath_expression2):
+def step_openag_element_has_child_element(context, xpath_expression1, xpath_expression2):
     errors = []
     fail_msg = '{} must contain a {} element'
 
