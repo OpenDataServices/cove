@@ -265,11 +265,13 @@ Options:
 
 ``--delete -d`` Delete the output directory if it already exists.
 
-``--orgids -i`` Check IATI identifier prefixes against Org-ids prefixes.
+``--orgids -i`` Run org-ids rule check for IATI identifier prefixes.
 
 ``--openag -a`` Run ruleset checks for IATI OpenAg data.
 
 
 If the file is in spreadsheet format, the output directory will contain a *unflattened.xml* file converted from Excel or CSV to XML format
 
+**OpenaAg** rulesets check that the data contains the XML elements ``<opeang:tag>`` and ``<location>``, and that they include the right attributes expected for OpenAg data. Please read `OpenAg ruleset feature files <cove_iati/rulesets/iati_openag_ruleset/>`_ (written in `Gerkhin <https://github.com/cucumber/cucumber/wiki/Gherkin/>`_ style) for more information.
 
+**Org-ids** rulesets check that all organisation identifiers are prefixed with a registered `org-ids <http://org-id.guide>`_ prefix. Please read `Org-ids ruleset feature file <cove_iati/rulesets/iati_orgids_ruleset/>`_ for more information
