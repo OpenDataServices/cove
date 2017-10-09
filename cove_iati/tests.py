@@ -9,7 +9,7 @@ from django.core.management import call_command
 
 from .lib import iati
 from cove_iati.lib.exceptions import RuleSetStepException
-from cove_iati.rulesets.utils import invalid_date_format, get_full_xpath, get_xobjects, register_ruleset_errors
+from cove_iati.rulesets.utils import invalid_date_format, get_child_full_xpath, get_xobjects, register_ruleset_errors
 
 
 XML_SCHEMA = '''
@@ -133,7 +133,7 @@ def test_get_full_xpath():
     activities_xml = etree.XML(XML_NS)
     activity_xml = activities_xml.getchildren()[0]
     element_xml = activity_xml.getchildren()[0]
-    assert get_full_xpath(activity_xml, element_xml) == expected_full_xpath
+    assert get_child_full_xpath(activity_xml, element_xml) == expected_full_xpath
 
 
 def test_register_ruleset_errors_decorator():
@@ -147,11 +147,11 @@ def test_register_ruleset_errors_decorator():
         xml = etree.XML(XML_NS).getchildren()[0]
     context = Context()
 
-    decorator_ns = register_ruleset_errors('namespace')
+    decorator_ns = register_ruleset_errors(['namespace'])
     decorated_func_errors = decorator_ns(decorated_func_errors)
     decorated_func_no_errors = decorator_ns(decorated_func_no_errors)
 
-    decorator_no_ns = register_ruleset_errors('undefined_ns')
+    decorator_no_ns = register_ruleset_errors(['undefined_ns'])
     decorated_func_no_ns = decorator_no_ns(decorated_func_no_errors)
     errors_ns = [{
         'message': 'rule not applied: the data does not define "undefined_ns" namespace '

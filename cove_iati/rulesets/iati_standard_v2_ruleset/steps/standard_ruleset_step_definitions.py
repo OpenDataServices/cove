@@ -8,7 +8,7 @@ import re
 
 from behave import given, then
 
-from cove_iati.rulesets.utils import invalid_date_format, get_full_xpath, get_xobjects, register_ruleset_errors
+from cove_iati.rulesets.utils import invalid_date_format, get_child_full_xpath, get_xobjects, register_ruleset_errors
 
 
 @given('an IATI activity')
@@ -47,7 +47,7 @@ def step_must_be_today_or_past(context, attribute):
         date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
         if date > today:
             errors.append({'message': '{} must be on or before today ({})'.format(date, today),
-                           'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
+                           'path': '{}/@{}'.format(get_child_full_xpath(context.xml, xpath), attribute)})
     return context, errors
 
 
@@ -64,7 +64,7 @@ def step_iati_id_text_match_regex(context, regex_str):
         text_str = xpath.text
         if not regex.match(text_str):
             errors = [{'message': fail_msg.format(text_str, regex_str),
-                       'path': '{}/text()'.format(get_full_xpath(context.xml, xpath))}]
+                       'path': '{}/text()'.format(get_child_full_xpath(context.xml, xpath))}]
     return context, errors
 
 
@@ -79,7 +79,7 @@ def step_attribute_match_regex(context, attribute, regex_str):
         attr_str = xpath.attrib.get(attribute, '')
         if not regex.match(attr_str):
             errors.append({'message': fail_msg.format(attr_str, regex_str),
-                           'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
+                           'path': '{}/@{}'.format(get_child_full_xpath(context.xml, xpath), attribute)})
     return context, errors
 
 
@@ -94,7 +94,7 @@ def step_either_or_expected(context, xpath_expression1, xpath_expression2):
     
     if not xpaths1 and not xpaths2:
         errors = [{'message': fail_msg_neither.format(xpath_expression1, xpath_expression2),
-                   'path': get_full_xpath(context.xml, context.xml)}]
+                   'path': get_child_full_xpath(context.xml, context.xml)}]
 
     if xpaths1 and xpaths2:
         msg = fail_msg_both.format(xpath_expression1, xpath_expression2)
@@ -103,15 +103,15 @@ def step_either_or_expected(context, xpath_expression1, xpath_expression2):
             for tup_xpath1, tup_xpath2 in zipped_xpaths:
                 errors = [{
                     'message': msg,
-                    'path': '{} & {}'.format(get_full_xpath(context.xml, tup_xpath1),
-                                             get_full_xpath(context.xml, tup_xpath2))
+                    'path': '{} & {}'.format(get_child_full_xpath(context.xml, tup_xpath1),
+                                             get_child_full_xpath(context.xml, tup_xpath2))
                 }]
         else:
             for xpath in xpaths2:
                 errors.append({
                     'message': msg,
-                    'path': '{} & {}'.format(get_full_xpath(context.xml, xpaths1[0]),
-                                             get_full_xpath(context.xml, xpath))
+                    'path': '{} & {}'.format(get_child_full_xpath(context.xml, xpaths1[0]),
+                                             get_child_full_xpath(context.xml, xpath))
                 })
     return context, errors
 
@@ -123,7 +123,7 @@ def step_not_expected(context, xpath_expression):
 
     for xpath in get_xobjects(context.xml, xpath_expression):
         errors.append({'message': '`{}` is not expected'.format(xpath_expression),
-                       'path': get_full_xpath(context.xml, xpath)})
+                       'path': get_child_full_xpath(context.xml, xpath)})
     return context, errors
 
 
@@ -147,8 +147,8 @@ def step_start_date_before_end_date(context, attribute):
         end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
         if start_date >= end_date:
             fail_msg = 'Start date ({}) must be before end date ({})'
-            path_str1 = '{}/@{}'.format(get_full_xpath(context.xml, xpath1), attribute)
-            path_str2 = '{}/@{}'.format(get_full_xpath(context.xml, xpath2), attribute)
+            path_str1 = '{}/@{}'.format(get_child_full_xpath(context.xml, xpath1), attribute)
+            path_str2 = '{}/@{}'.format(get_child_full_xpath(context.xml, xpath2), attribute)
             errors = [{
                 'message': fail_msg.format(start_date_str, end_date_str),
                 'path': '{} & {}'.format(path_str1, path_str2)

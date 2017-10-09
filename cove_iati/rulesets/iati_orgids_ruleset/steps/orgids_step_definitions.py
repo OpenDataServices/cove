@@ -3,7 +3,7 @@ import re
 from behave import then
 
 from cove.lib.common import get_orgids_prefixes
-from cove_iati.rulesets.utils import get_full_xpath, get_xobjects, register_ruleset_errors
+from cove_iati.rulesets.utils import get_child_full_xpath, get_xobjects, register_ruleset_errors
 
 ORGIDS_PREFIXES = get_orgids_prefixes()
 
@@ -21,5 +21,5 @@ def step_openag_org_id_prefix_expected(context, attribute):
                 break
         else:
             errors.append({'message': fail_msg.format(attribute, attr_id),
-                           'path': '{}/@{}'.format(get_full_xpath(context.xml, xpath), attribute)})
+                           'path': '{}/@{}'.format(get_child_full_xpath(context.xml, xpath), attribute)})
     return context, errors
