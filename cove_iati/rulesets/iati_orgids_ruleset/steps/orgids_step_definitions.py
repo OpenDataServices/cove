@@ -1,5 +1,3 @@
-import re
-
 from behave import then
 
 from cove.lib.common import get_orgids_prefixes
@@ -17,7 +15,7 @@ def step_openag_org_id_prefix_expected(context, attribute):
     for xpath in get_xobjects(context.xml, context.xpath_expression):
         attr_id = xpath.attrib.get(attribute, '')
         for prefix in ORGIDS_PREFIXES:
-            if re.match('^%s' % prefix, attr_id):
+            if attr_id.startswith(prefix):
                 break
         else:
             errors.append({'message': fail_msg.format(attribute, attr_id),
