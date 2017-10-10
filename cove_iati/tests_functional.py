@@ -60,6 +60,7 @@ def test_accordion(server_url, browser):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
+    ('example.xml', ['Valid against Schema'], False),
     ('basic_iati_unordered_valid.xlsx', ['Valid against Schema'], True),
     ('basic_iati_unordered_invalid_iso_dates.xlsx', ['Invalid against Schema'], True),
     ('bad.xml', ['We think you tried to upload a XML file'], False),
@@ -95,6 +96,7 @@ def test_explore_iati_url_input(server_url, browser, httpserver, source_filename
     all_sections = browser.find_elements_by_class_name('panel-heading')
     for section in all_sections:
         if section.get_attribute('data-toggle') == "collapse" and section.get_attribute('aria-expanded') != 'true':
+            browser.execute_script("arguments[0].scrollIntoView();", section)
             section.click()
         time.sleep(0.5)
 

@@ -15,7 +15,12 @@ def invalid_date_format(date_str):
 def get_child_full_xpath(parent_xobj, child_xobj):
     '''Return full xpath for a xml object in the context of a parent object'''
     tree = parent_xobj.getroottree()
-    return tree.getpath(child_xobj)
+    if hasattr(child_xobj, 'is_attribute') and child_xobj.is_attribute:
+        return '{}/@{}'.format(tree.getpath(child_xobj.getparent()), child_xobj.attrname)
+    elif hasattr(child_xobj, 'is_text') and child_xobj.is_text:
+        return '{}/text()'.format(tree.getpath(child_xobj.getparent()))
+    else:
+        return tree.getpath(child_xobj)
 
 
 def get_xobjects(xobj, xpath_expression):
