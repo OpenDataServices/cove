@@ -88,6 +88,21 @@ def step_attribute_match_regex(context, attribute, regex_str):
 def step_either_or_expected(context, xpath_expression1, xpath_expression2):
     errors = []
     fail_msg_neither = 'Neither {} nor {} have been found'
+    xpaths1 = get_xobjects(context.xml, xpath_expression1)
+    xpaths2 = get_xobjects(context.xml, xpath_expression2)
+
+    if not xpaths1 and not xpaths2:
+        errors = [{'message': fail_msg_neither.format(xpath_expression1, xpath_expression2),
+                   'path': get_child_full_xpath(context.xml, context.xml)}]
+
+    return context, errors
+
+
+@then('either `{xpath_expression1}` or `{xpath_expression2}` is expected, but not both')
+@register_ruleset_errors()
+def step_either_or_expected_not_both(context, xpath_expression1, xpath_expression2):
+    errors = []
+    fail_msg_neither = 'Neither {} nor {} have been found'
     fail_msg_both = 'Either {} or {} are expected (not both)'
     xpaths1 = get_xobjects(context.xml, xpath_expression1)
     xpaths2 = get_xobjects(context.xml, xpath_expression2)
