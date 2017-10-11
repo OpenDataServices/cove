@@ -1,0 +1,227 @@
+<iati-activities version="2.02" xmlns:openag="http://openagfunding.readthedocs.io/en/latest/extensions/">
+  <iati-activity>
+    <iati-identifier>AA-AAA-123123-AA123</iati-identifier>
+    <reporting-org ref="NO-ORGIDS-10000" type="40"><narrative>Reporting Organisation A</narrative></reporting-org>
+    <title><narrative>A title</narrative></title>
+    <description><narrative>A description</narrative></description>
+    <participating-org role="1" ref="TZ-BRLA-20000"/>
+    <activity-status code="3"/>
+    <activity-date type="start-actual" iso-date="2017-01-01"/>
+    <recipient-country code="TZ" percentage="100"/>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">20</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">20</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">20</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01" >40</value>
+    </transaction>
+    <openag:tag vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_4397">
+        <narrative xml:lang="en">Livestock</narrative>
+    </openag:tag>
+  </iati-activity>
+  <iati-activity>
+    <iati-identifier>BB-BBB-123123-BB123</iati-identifier>
+    <reporting-org ref="TZ-BRLA-30000" type="40"><narrative>Reporting Organisation B</narrative></reporting-org>
+    <title><narrative>A title</narrative></title>
+    <description><narrative>A description</narrative></description>
+    <participating-org role="1" ref="NO-ORGIDS-40000"/>
+    <activity-status code="3"/><activity-date type="2" iso-date="2017-01-01"/>
+    <recipient-country code="TZ" percentage="100"/>
+    <location>
+      <location-id vocabulary="G1" />
+        <name>
+            <narrative>Ilala District, Dar es Salaam, Tanzania TZ</narrative>
+        </name>
+        <description>
+            <narrative>Ilala District is one of three districts in Dar es Salaam</narrative>
+        </description>
+        <administrative vocabulary="G1" level="2" code="159239"/>
+        <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <pos>-6.91805, 39.16254</pos>
+        </point>
+        <exactness code="1"/>
+        <location-class code="1"/>
+      <feature-designation code="ADM2"/>
+    </location>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">10</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">20</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">30</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">40</value>
+    </transaction>
+    <openag:tag vocabulary="98" vocabulary-uri="http://bad.org" code="c_4397">
+        <narrative xml:lang="en">Livestock</narrative>
+    </openag:tag>
+  </iati-activity>
+  <iati-activity>
+    <iati-identifier>CC-CCC-789789-CC789</iati-identifier>
+    <reporting-org ref="TZ-BRLA-50000" type="40"><narrative>Reporting Organisation C</narrative></reporting-org>
+    <title><narrative>A title</narrative></title>
+    <description><narrative>A description</narrative></description>
+    <participating-org role="1" ref="TZ-BRLA-60000"/>
+    <activity-status code="3"/>
+    <activity-date type="start-actual" iso-date="2017-01-01"/>
+    <recipient-country code="AF" percentage="30"/>
+    <location>
+      <location-reach code="1"/>
+      <location-id code="159239" />
+        <name>
+            <narrative>Ilala District, Dar es Salaam, Tanzania TZ</narrative>
+        </name>
+        <description>
+            <narrative>Ilala District is one of three districts in Dar es Salaam</narrative>
+        </description>
+        <administrative vocabulary="G1" level="2" code="159239"/>
+        <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <pos>-6.91805, 39.16254</pos>
+        </point>
+        <exactness code="1"/>
+        <location-class code="1"/>
+      <feature-designation code="ADM2"/>
+    </location>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">10</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">20</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">30</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">40</value>
+    </transaction>
+    <openag:tag  vocabulary="01" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_4397">
+        <narrative xml:lang="en">Livestock</narrative>
+    </openag:tag>
+  </iati-activity>
+  <iati-activity>
+    <iati-identifier>DD-DDD-789789-DD789</iati-identifier>
+    <reporting-org ref="TZ-BRLA-70000" type="40"><narrative>Reporting Organisation D</narrative></reporting-org>
+    <title><narrative>A title</narrative></title>
+    <description><narrative>A description</narrative></description>
+    <participating-org role="1" ref="TZ-BRLA-80000"/>
+    <activity-status code="3"/><activity-date type="start-actual" iso-date="2017-01-01"/>
+    <recipient-country code="AF" percentage="30"/>
+    <location>
+      <location-reach code="1"/>
+      <location-id vocabulary="G1" code="159239" />
+        <name>
+            <narrative>Ilala District, Dar es Salaam, Tanzania TZ</narrative>
+        </name>
+        <description>
+            <narrative>Ilala District is one of three districts in Dar es Salaam</narrative>
+        </description>
+        <administrative vocabulary="G1" level="2" code="159239"/>
+        <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <pos>-6.91805, 39.16254</pos>
+        </point>
+        <exactness code="1"/>
+        <location-class code="1"/>
+      <feature-designation code="ADM2"/>
+    </location>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2012-01-01">10</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">20</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">30</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">40</value>
+    </transaction>
+    <openag:tag  vocabulary="98" vocabulary-uri="http://aims.fao.org/aos/agrovoc/">
+        <narrative xml:lang="en">Livestock</narrative>
+    </openag:tag>
+  </iati-activity>
+  <iati-activity>
+    <iati-identifier>EE-DDD-789789-EE789</iati-identifier>
+    <reporting-org ref="TZ-BRLA-90000" type="40"><narrative>Reporting Organisation D</narrative></reporting-org>
+    <title><narrative>A title</narrative></title>
+    <description><narrative>A description</narrative></description>
+    <participating-org role="1" ref="TZ-BRLA-100000"/>
+    <activity-status code="3"/><activity-date type="start-actual" iso-date="2017-01-01"/>
+    <recipient-country code="AF" percentage="30"/>
+    <location>
+      <location-reach code="1"/>
+        <name>
+            <narrative>Ilala District, Dar es Salaam, Tanzania TZ</narrative>
+        </name>
+        <description>
+            <narrative>Ilala District is one of three districts in Dar es Salaam</narrative>
+        </description>
+        <administrative vocabulary="G1" level="2" code="159239"/>
+        <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <pos>-6.91805, 39.16254</pos>
+        </point>
+        <exactness code="1"/>
+        <location-class code="1"/>
+      <feature-designation code="ADM2"/>
+    </location>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2012-01-01">10</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">20</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">30</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">40</value>
+    </transaction>
+  </iati-activity>
+</iati-activities>
