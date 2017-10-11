@@ -70,7 +70,8 @@ def server_url(request, live_server):
     # Test conversion warnings are shown
     ('tenders_releases_2_releases.xlsx', ['Converted to JSON 5 Errors',
                                           'Invalid against Schema 76 Errors',
-                                          'Conflict when merging field "ocid" for id "1" in sheet items'], True),
+                                          'You may have a duplicate Identifier: We couldn\'t merge these rows with the id "1": field "ocid" in sheet "items": one cell has the value: "PW-14-00627094", the other cell has the value: "PW-14-00629344"'
+                                          ], True),
     # Test that titles that aren't in the rollup are converted correctly
     # (See @check_url_input_result_page).
     ('WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx', [], True),
