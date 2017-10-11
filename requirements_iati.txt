@@ -1,4 +1,4 @@
 -r requirements.txt
 -e git+https://github.com/pwyf/bdd-tester.git@b30f9fd3e32d72a5e84492f7f336776006bc45e8#egg=bdd-tester
-lxml==3.8.0
+lxml==4.0.0
 defusedxml==0.5.0
