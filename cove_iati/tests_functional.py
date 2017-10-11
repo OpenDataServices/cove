@@ -60,10 +60,16 @@ def test_accordion(server_url, browser):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
+    ('example.xml', ['Valid against Schema'], False),
     ('basic_iati_unordered_valid.xlsx', ['Valid against Schema'], True),
     ('basic_iati_unordered_invalid_iso_dates.xlsx', ['Invalid against Schema'], True),
     ('bad.xml', ['We think you tried to upload a XML file'], False),
     ('bad_spaces.csv', ['Converted to XML 2 Errors'], True),
+    ('basic_iati_ruleset_errors.xml', ['Invalid against Schema 12 Errors', '20140101',
+                                       '\'budget\': Missing child element(s), expected is value',
+                                       'Ruleset Errors 16 Errors',
+                                       'Start date (2010-01-01) must be before end date (2009-01-01)',
+                                       'participating-org/@ref/should match the regex [^\:\&\|\?]+'], False),
     # We should not server error when there's fields not in the schema
     ('not_iati.csv', ['Data Supplied', 'Invalid against Schema'], True),
     ('namespace_good.xlsx', ['Converted to XML', 'Invalid against Schema', '2 Errors'], True),
@@ -90,6 +96,7 @@ def test_explore_iati_url_input(server_url, browser, httpserver, source_filename
     all_sections = browser.find_elements_by_class_name('panel-heading')
     for section in all_sections:
         if section.get_attribute('data-toggle') == "collapse" and section.get_attribute('aria-expanded') != 'true':
+            browser.execute_script("arguments[0].scrollIntoView();", section)
             section.click()
         time.sleep(0.5)
 

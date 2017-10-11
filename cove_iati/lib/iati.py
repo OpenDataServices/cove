@@ -11,7 +11,7 @@ from .schema import SchemaIATI
 from cove.lib.exceptions import CoveInputDataError, UnrecognisedFileTypeXML
 
 
-def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False):
+def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
     schema_aiti = SchemaIATI()
     lxml_errors = {}
     cell_source_map = {}
@@ -44,7 +44,15 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         schema = lxml.etree.XMLSchema(schema_tree)
         schema.validate(tree)
         lxml_errors = lxml_errors_generator(schema.error_log)
-        ruleset_errors = get_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'))
+        ruleset_errors = get_iati_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'))
+
+        if openag:
+            ruleset_errors_ag = get_openag_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_openag'))
+            context.update({'ruleset_errors_openag': ruleset_errors_ag})
+
+        if orgids:
+            ruleset_errors_orgids = get_orgids_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_orgids'))
+            context.update({'ruleset_errors_orgids': ruleset_errors_orgids})
 
     errors_all = format_lxml_errors(lxml_errors)
 
@@ -63,7 +71,7 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
 
     context.update({
         'validation_errors': sorted(validation_errors.items()),
-        'ruleset_errors': ruleset_errors,
+        'ruleset_errors': ruleset_errors
     })
     if not api:
         context.update({
@@ -115,8 +123,11 @@ def format_lxml_errors(lxml_errors):
         
         message = error['message']
         value = ''
+
         if 'element is not expected' in message or 'Missing child element' in message:
             message = message.replace('. Expected is (', ', expected is').replace(' )', '')
+        elif 'required but missing' in message or 'content other than whitespace is not allowed' in message:
+            pass
         else:
             val_start = error['message'].find(": '")
             value = error['message'][val_start + len(": '"):]
@@ -224,42 +235,59 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
                 source = error_path_source(error, cell_paths, cell_source_map, missing_zeros=True)
                 validation_errors[validation_key].append(source)
         else:
-            validation_errors[validation_key].append({'path': error['path']})
+            validation_errors[validation_key].append({'path': error['path'], 'value': error['value']})
 
     return validation_errors
 
 
-def get_ruleset_errors(lxml_etree, output_dir):
-    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
-               output_path=output_dir)
+def format_ruleset_errors(output_dir):
     ruleset_errors = []
-
-    if not os.path.isdir(output_dir):
-        return ruleset_errors
 
     for output_file in os.listdir(output_dir):
         with open(os.path.join(output_dir, output_file)) as fp:
-            scenario_outline = re.sub(r':', '/', output_file[:-7]).split('_')
+            scenario_outline = ' '.join(re.sub('\.', '/', output_file[:-7]).split('_'))
             for line in fp:
                 line = line.strip()
 
                 if line:
                     json_line = json.loads(line)
                     for error in json_line['errors']:
-                        message = error['message']
-                        activity_id = json_line['id']
-                        if message.startswith('and') or message.startswith('or'):
-                            ruleset_errors[-1]['message'] += ' {}'.format(message)
-                            continue
                         rule_error = {
-                            'path': error['path'] or scenario_outline[0],
-                            'rule': ' '.join(scenario_outline[1:]),
-                            'message': message,
-                            'id': activity_id
+                            'id': json_line['id'],
+                            'path': error['path'],
+                            'rule': scenario_outline,
+                            'message': error['message']
                         }
                         ruleset_errors.append(rule_error)
 
     return ruleset_errors
+
+
+def get_iati_ruleset_errors(lxml_etree, output_dir):
+    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
+               output_path=output_dir)
+
+    if not os.path.isdir(output_dir):
+        return []
+    return format_ruleset_errors(output_dir)
+
+
+def get_openag_ruleset_errors(lxml_etree, output_dir):
+    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_openag_ruleset/'],
+               output_path=output_dir)
+
+    if not os.path.isdir(output_dir):
+        return []
+    return format_ruleset_errors(output_dir)
+
+
+def get_orgids_ruleset_errors(lxml_etree, output_dir):
+    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_orgids_ruleset/'],
+               output_path=output_dir)
+
+    if not os.path.isdir(output_dir):
+        return []
+    return format_ruleset_errors(output_dir)
 
 
 def get_file_type(file):

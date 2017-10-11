@@ -1,63 +1,195 @@
-<iati-activities version="2.01">
+<iati-activities version="2.02">
   <iati-activity>
-    <iati-identifier>AA-AAA-123123-AA123</iati-identifier>
-    <reporting-org ref="AA-AAA-123" type="40"><narrative>Reporting Organisation A</narrative></reporting-org>
+    <iati-identifier>TZ-BRLA-1-AAA-123123-AA123</iati-identifier>
+    <reporting-org ref="TZ-BRLA-1" type="40">
+      <narrative>Reporting Organisation 1</narrative>
+    </reporting-org>
     <title><narrative>A title</narrative></title>
     <description><narrative>A description</narrative></description>
-    <participating-org role="1" ref="AA-AAA-123"/>
+    <participating-org role="1" ref="TZ-BRLA-2"/>
     <activity-status code="3"/>
-    <recipient-country code="AF" percentage="30"/>
-    <recipient-country code="XK" percentage="60"/>
-    <sector code='1'/>
+    <activity-date type="2" iso-date="22000101"/>
+    <recipient-country code="TZ" percentage="100"/>
+    <sector vocabulary="1" code="1"/>
+    <budget>
+      <period-start iso-date="2016-01-01"/>
+      <period-end iso-date="2017-01-01"/>
+    </budget>
     <transaction>
       <transaction-type code="2"/>
+      <transaction-date iso-date="22000101"/>
+      <value value-date="2017-01-01">20</value>
     </transaction>
     <transaction>
       <transaction-type code="3"/>
-      <transaction-date iso-date="2200-03-03"/>
-      <value value-date="2012-03-03">20</value>
+      <transaction-date iso-date="2200-01-01"/>
+      <value value-date="2017-01-01">20</value>
     </transaction>
     <transaction>
       <transaction-type code="2"/>
-      <transaction-date iso-date="2013-04-04"/>
-      <value value-date="2013-04-04">30</value>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">20</value>
     </transaction>
     <transaction>
       <transaction-type code="3"/>
-      <transaction-date iso-date="2013-05-05"/>
-      <value value-date="2014-05-05" >40</value>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01" >40</value>
     </transaction>
   </iati-activity>
   <iati-activity>
-    <iati-identifier>BB-BBB-456456-BB456</iati-identifier>
-    <reporting-org ref="BB-BBB-56789" type="40"><narrative>Reporting Organisation B</narrative></reporting-org>
+    <iati-identifier>TZ-BRLA-3-BBB-123123-BB123</iati-identifier>
+    <reporting-org ref="TZ-BRLA-3" type="40">
+      <narrative>Reporting Organisation 3</narrative>
+    </reporting-org>
     <title><narrative>A title</narrative></title>
     <description><narrative>A description</narrative></description>
-    <participating-org role="1" ref="BB-BBB-456"/>
+    <participating-org role="1" ref="TZ-BRLA-4"/>
     <activity-status code="3"/>
-    <activity-date type="2" iso-date="2013-01-01"/>
-    <recipient-country code="AF" percentage="30"/>
-    <recipient-country code="XK" percentage="60"/>
-    <sector code='1'/>
+    <activity-date type="2" iso-date="2200-01-01"/>
+    <recipient-country code="TZ" percentage="100"/>
+    <budget>
+      <period-start iso-date="20150101"/>
+      <period-end iso-date="20140101"/>
+    </budget>
     <transaction>
       <transaction-type code="2"/>
-      <transaction-date iso-date="2012-01-01"/>
-      <value value-date="2013-01-01">10</value>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="24000101">10</value>
+      <sector vocabulary="1" code="1"/>
     </transaction>
     <transaction>
       <transaction-type code="2"/>
-      <transaction-date iso-date="2012-03-03"/>
-      <value value-date="2012-03-03">20</value>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2200-01-01">20</value>
+      <sector vocabulary="1" code="1" />
     </transaction>
     <transaction>
       <transaction-type code="2"/>
-      <transaction-date iso-date="2013-04-04"/>
-      <value value-date="2013-04-04">30</value>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">30</value>
+      <sector vocabulary="1" code="1"/>
     </transaction>
     <transaction>
       <transaction-type code="3"/>
-      <transaction-date iso-date="2013-05-05"/>
-      <value value-date="2013-05-05">40</value>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">40</value>
+      <sector vocabulary="1" code="1"/>
+    </transaction>
+  </iati-activity>
+  <iati-activity>
+    <iati-identifier>?TZ-BRLA-5-CCC-123123-CC123</iati-identifier>
+    <reporting-org ref="?TZ-BRLA-5" type="40">
+      <narrative>Reporting Organisation 5</narrative>
+    </reporting-org>
+    <title><narrative>A title</narrative></title>
+    <description>
+      <narrative>A description</narrative>
+    </description>
+    <participating-org />
+    <activity-status code="3"/>
+    <activity-date type="2" iso-date="22000101"/>
+    <activity-date type="4" iso-date="24000101"/>
+    <recipient-country code="AF" percentage="30"/>
+    <sector vocabulary="1" code="1"/>
+    <budget>
+      <period-start iso-date="2010-01-01"/>
+      <period-end iso-date="2009-01-01"/>
+    </budget>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">10</value>
+      <sector vocabulary="1" code="1"/>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">20</value>
+      <sector vocabulary="1" code="1"/>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">30</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">40</value>
+    </transaction>
+  </iati-activity>
+  <iati-activity>
+    <iati-identifier>TZ-BRLA-5-DDD-123123-DD123</iati-identifier>
+    <reporting-org ref="TZ-BRLA-7" type="40">
+      <narrative>Reporting Organisation 5</narrative>
+    </reporting-org>
+    <title><narrative>A title</narrative></title>
+    <description>
+      <narrative>A description</narrative>
+    </description>
+    <participating-org role="1" ref="?TZ-BRLA-8"/>
+    <activity-status code="3"/>
+    <activity-date type="4" iso-date="2400-01-01"/>
+    <recipient-country code="AF" percentage="30"/>
+    <sector vocabulary="1" code="1"/>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2012-01-01">10</value>
+      <provider-org ref="TZ-BRLA-801"/>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">20</value>
+      <receiver-org ref="TZ-BRLA-802"/>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">30</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">40</value>
+    </transaction>
+  </iati-activity>
+  <iati-activity>
+    <iati-identifier>TZ-BRLA-9-EEE-123123-EE123</iati-identifier>
+    <reporting-org ref="TZ-BRLA-9" type="40">
+      <narrative>Reporting Organisation 9</narrative>
+    </reporting-org>
+    <title><narrative>A title</narrative></title>
+    <description>
+      <narrative>A description</narrative>
+    </description>
+    <participating-org role="1" ref="TZ-BRLA-10"/>
+    <activity-status code="3"/>
+    <activity-date iso-date="2017-01-01"/>
+    <recipient-country code="AF" percentage="30"/>
+    <sector vocabulary="1" code="1"/>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2012-01-01">10</value>
+      <provider-org ref="?TZ-BRLA-101"/>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">20</value>
+      <receiver-org ref="?TZ-BRLA-102"/>
+    </transaction>
+    <transaction>
+      <transaction-type code="2"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">30</value>
+    </transaction>
+    <transaction>
+      <transaction-type code="3"/>
+      <transaction-date iso-date="2017-01-01"/>
+      <value value-date="2017-01-01">40</value>
     </transaction>
   </iati-activity>
 </iati-activities>
