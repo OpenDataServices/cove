@@ -288,7 +288,7 @@ class FundingOrg360GPrefix(AdditionalTest):
 
 
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):
-    """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the IATI prefix codelist"""
+    """Check if any grants have RecipientOrg IDs that use a prefix that isn't an Org-id registered prefix"""
 
     check_text = {
         "heading": "a Recipient Org:Identifier that doesn’t draw from an external identification body",
@@ -317,7 +317,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
-    """Check if any grants have FundingOrg IDs that use a prefix that isn't on the IATI prefix codelist """
+    """Check if any grants have FundingOrg IDs that use a prefix that isn't an Org-id registered prefix"""
 
     check_text = {
         "heading": "a Funding Org:Identifier that doesn’t draw from an external identification body",
