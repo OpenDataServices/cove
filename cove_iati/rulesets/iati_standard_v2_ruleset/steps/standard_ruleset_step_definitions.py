@@ -26,12 +26,6 @@ def step_given_elements(context, xpath_expression):
     context.xpath_expression = xpath_expression
 
 
-@given('`{xpath_expression1}` plus `{xpath_expression2}`')
-def step_given_two_different_elements(context, xpath_expression1, xpath_expression2):
-    context.xpath_expression1 = xpath_expression1
-    context.xpath_expression2 = xpath_expression2
-
-
 @then('`{attribute}` attribute must be today or in the past')
 @register_ruleset_errors()
 def step_must_be_today_or_past(context, attribute):
@@ -142,30 +136,31 @@ def step_not_expected(context, xpath_expression):
     return context, errors
 
 
-@then('`{attribute}` start date attribute must be chronologically before end date attribute')
+@then('`{xpath1}` must be chronologically before `{xpath2}`')
 @register_ruleset_errors()
-def step_start_date_before_end_date(context, attribute):
-    xpath1 = get_xobjects(context.xml, context.xpath_expression1)
-    xpath2 = get_xobjects(context.xml, context.xpath_expression2)
+def step_start_date_before_end_date(context, xpath1, xpath2):
+    parents = get_xobjects(context.xml, context.xpath_expression)
+
     errors = []
+    for parent in parents:
+        start_date_attrs = get_xobjects(parent, xpath1)
+        end_date_attrs = get_xobjects(parent, xpath2)
 
-    if not xpath1 or not xpath2:
-        return context, errors
+        if not start_date_attrs or not end_date_attrs:
+            continue
 
-    xpath1 = xpath1[0]
-    xpath2 = xpath2[0]
-    start_date_str = xpath1.attrib.get(attribute)
-    end_date_str = xpath2.attrib.get(attribute)
+        start_date_attr = start_date_attrs[0]
+        end_date_attr = end_date_attrs[0]
 
-    if not invalid_date_format(start_date_str) and not invalid_date_format(end_date_str):
-        start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
-        end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
-        if start_date >= end_date:
-            fail_msg = 'Start date ({}) must be before end date ({})'
-            path_str1 = '{}/@{}'.format(get_child_full_xpath(context.xml, xpath1), attribute)
-            path_str2 = '{}/@{}'.format(get_child_full_xpath(context.xml, xpath2), attribute)
-            errors = [{
-                'message': fail_msg.format(start_date_str, end_date_str),
-                'path': '{} & {}'.format(path_str1, path_str2)
-            }]
+        if not invalid_date_format(start_date_attr) and not invalid_date_format(end_date_attr):
+            start_date = datetime.datetime.strptime(start_date_attr, '%Y-%m-%d').date()
+            end_date = datetime.datetime.strptime(end_date_attr, '%Y-%m-%d').date()
+            if start_date >= end_date:
+                fail_msg = 'Start date ({}) must be before end date ({})'
+                path_attr1 = get_child_full_xpath(context.xml, start_date_attr)
+                path_attr2 = get_child_full_xpath(context.xml, end_date_attr)
+                errors.append({
+                    'message': fail_msg.format(start_date_attr, end_date_attr),
+                    'path': '{} & {}'.format(path_attr1, path_attr2)
+                })
     return context, errors
