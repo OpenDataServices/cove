@@ -26,22 +26,28 @@ def step_given_elements(context, xpath_expression):
     context.xpath_expression = xpath_expression
 
 
-@then('`{attribute}` attribute must be today or in the past')
+@then('`{xpath}` must be today or in the past')
 @register_ruleset_errors()
-def step_must_be_today_or_past(context, attribute):
+def step_must_be_today_or_past(context, xpath):
     errors = []
     today = datetime.date.today()
+    parents = get_xobjects(context.xml, context.xpath_expression)
 
-    for xpath in get_xobjects(context.xml, context.xpath_expression):
-        date_str = xpath.attrib.get(attribute)
+    for parent in parents:
+        date_attrs = get_xobjects(parent, xpath)
 
-        if invalid_date_format(date_str):
+        if not date_attrs:
             continue
 
-        date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+        date_attr = date_attrs[0]
+
+        if invalid_date_format(date_attr):
+            continue
+
+        date = datetime.datetime.strptime(date_attr, '%Y-%m-%d').date()
         if date > today:
             errors.append({'message': '{} must be on or before today ({})'.format(date, today),
-                           'path': '{}/@{}'.format(get_child_full_xpath(context.xml, xpath), attribute)})
+                           'path': get_child_full_xpath(context.xml, date_attr)})
     return context, errors
 
 
