@@ -76,7 +76,9 @@ def step_attribute_match_regex(context, attribute, regex_str):
     fail_msg = '{} does not match the regex {}'
 
     for xpath in get_xobjects(context.xml, context.xpath_expression):
-        attr_str = xpath.attrib.get(attribute, '')
+        if attribute not in xpath.attrib:
+            continue
+        attr_str = xpath.attrib[attribute]
         if not regex.match(attr_str):
             errors.append({'message': fail_msg.format(attr_str, regex_str),
                            'path': '{}/@{}'.format(get_child_full_xpath(context.xml, xpath), attribute)})
