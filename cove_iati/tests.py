@@ -274,7 +274,7 @@ def test_cove_iati_cli_output():
                     'path': '/iati-activities/iati-activity[2]/transaction[2]/value/@value-date',
                     'rule': 'transaction/value/@value-date must be today or in the past'},
                    {'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                    'message': 'Neither participating-org/@ref nor participating-org/narrative/text() '
+                    'message': 'Neither @ref nor narrative/text() '
                                'have been found',
                     'path': '/iati-activities/iati-activity[3]',
                     'rule': 'participating-org/@ref attribute or participating-org/narrative must be present'},

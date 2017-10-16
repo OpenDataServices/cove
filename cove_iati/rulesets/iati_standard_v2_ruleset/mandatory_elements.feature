@@ -5,5 +5,5 @@ Feature: Mandatory elements
     Then either `activity-date[@type="1"]` or `activity-date[@type="2"]` is expected
 
   Scenario Outline: participating-org.@ref attribute or participating-org.narrative must be present
-    Given `participating-org` organisations
-    Then either `participating-org/@ref` or `participating-org/narrative/text()` is expected
+    Given `participating-org` elements
+    Then either `@ref` or `narrative/text()` is expected
