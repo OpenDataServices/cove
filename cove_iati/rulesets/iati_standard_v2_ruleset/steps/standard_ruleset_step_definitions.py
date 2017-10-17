@@ -3,6 +3,7 @@ Adapted from https://github.com/pwyf/bdd-tester/blob/master/steps/standard_rules
 Released under MIT License
 License: https://github.com/pwyf/bdd-tester/blob/master/LICENSE
 '''
+from decimal import Decimal
 import datetime
 import re
 
@@ -13,7 +14,7 @@ from cove_iati.rulesets.utils import invalid_date_format, get_child_full_xpath, 
 
 @given('an IATI activity')
 def step_given_iati_activity(context):
-    assert True
+    context.xpath_expression = '.'
 
 
 @given('`{xpath_expression}` organisations')
@@ -26,28 +27,28 @@ def step_given_elements(context, xpath_expression):
     context.xpath_expression = xpath_expression
 
 
-@given('`{xpath_expression1}` plus `{xpath_expression2}`')
-def step_given_two_different_elements(context, xpath_expression1, xpath_expression2):
-    context.xpath_expression1 = xpath_expression1
-    context.xpath_expression2 = xpath_expression2
-
-
-@then('`{attribute}` attribute must be today or in the past')
+@then('`{xpath}` must be today or in the past')
 @register_ruleset_errors()
-def step_must_be_today_or_past(context, attribute):
+def step_must_be_today_or_past(context, xpath):
     errors = []
     today = datetime.date.today()
+    parents = get_xobjects(context.xml, context.xpath_expression)
 
-    for xpath in get_xobjects(context.xml, context.xpath_expression):
-        date_str = xpath.attrib.get(attribute)
+    for parent in parents:
+        date_attrs = get_xobjects(parent, xpath)
 
-        if invalid_date_format(date_str):
+        if not date_attrs:
             continue
 
-        date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+        date_attr = date_attrs[0]
+
+        if invalid_date_format(date_attr):
+            continue
+
+        date = datetime.datetime.strptime(date_attr, '%Y-%m-%d').date()
         if date > today:
             errors.append({'message': '{} must be on or before today ({})'.format(date, today),
-                           'path': '{}/@{}'.format(get_child_full_xpath(context.xml, xpath), attribute)})
+                           'path': get_child_full_xpath(context.xml, date_attr)})
     return context, errors
 
 
@@ -76,7 +77,9 @@ def step_attribute_match_regex(context, attribute, regex_str):
     fail_msg = '{} does not match the regex {}'
 
     for xpath in get_xobjects(context.xml, context.xpath_expression):
-        attr_str = xpath.attrib.get(attribute, '')
+        if attribute not in xpath.attrib:
+            continue
+        attr_str = xpath.attrib[attribute]
         if not regex.match(attr_str):
             errors.append({'message': fail_msg.format(attr_str, regex_str),
                            'path': '{}/@{}'.format(get_child_full_xpath(context.xml, xpath), attribute)})
@@ -88,12 +91,15 @@ def step_attribute_match_regex(context, attribute, regex_str):
 def step_either_or_expected(context, xpath_expression1, xpath_expression2):
     errors = []
     fail_msg_neither = 'Neither {} nor {} have been found'
-    xpaths1 = get_xobjects(context.xml, xpath_expression1)
-    xpaths2 = get_xobjects(context.xml, xpath_expression2)
+    parents = get_xobjects(context.xml, context.xpath_expression)
 
-    if not xpaths1 and not xpaths2:
-        errors = [{'message': fail_msg_neither.format(xpath_expression1, xpath_expression2),
-                   'path': get_child_full_xpath(context.xml, context.xml)}]
+    for parent in parents:
+        xpaths1 = get_xobjects(parent, xpath_expression1)
+        xpaths2 = get_xobjects(parent, xpath_expression2)
+
+        if not xpaths1 and not xpaths2:
+            errors.append({'message': fail_msg_neither.format(xpath_expression1, xpath_expression2),
+                       'path': get_child_full_xpath(context.xml, context.xml)})
 
     return context, errors
 
@@ -142,30 +148,48 @@ def step_not_expected(context, xpath_expression):
     return context, errors
 
 
-@then('`{attribute}` start date attribute must be chronologically before end date attribute')
+@then('`{xpath1}` must be chronologically before `{xpath2}`')
 @register_ruleset_errors()
-def step_start_date_before_end_date(context, attribute):
-    xpath1 = get_xobjects(context.xml, context.xpath_expression1)
-    xpath2 = get_xobjects(context.xml, context.xpath_expression2)
-    errors = []
+def step_start_date_before_end_date(context, xpath1, xpath2):
+    parents = get_xobjects(context.xml, context.xpath_expression)
 
-    if not xpath1 or not xpath2:
+    errors = []
+    for parent in parents:
+        start_date_attrs = get_xobjects(parent, xpath1)
+        end_date_attrs = get_xobjects(parent, xpath2)
+
+        if not start_date_attrs or not end_date_attrs:
+            continue
+
+        start_date_attr = start_date_attrs[0]
+        end_date_attr = end_date_attrs[0]
+
+        if not invalid_date_format(start_date_attr) and not invalid_date_format(end_date_attr):
+            start_date = datetime.datetime.strptime(start_date_attr, '%Y-%m-%d').date()
+            end_date = datetime.datetime.strptime(end_date_attr, '%Y-%m-%d').date()
+            if start_date >= end_date:
+                fail_msg = 'Start date ({}) must be before end date ({})'
+                path_attr1 = get_child_full_xpath(context.xml, start_date_attr)
+                path_attr2 = get_child_full_xpath(context.xml, end_date_attr)
+                errors.append({
+                    'message': fail_msg.format(start_date_attr, end_date_attr),
+                    'path': '{} & {}'.format(path_attr1, path_attr2)
+                })
+    return context, errors
+
+
+@then(u'`{attribute}` attribute must sum to 100')
+@register_ruleset_errors()
+def step_impl(context, attribute):
+    elements = get_xobjects(context.xml, context.xpath_expression)
+    errors = []
+    
+    if len(elements) == 0 or (len(elements) == 1 and elements[0].attrib.get(attribute, '100') == '100'):
         return context, errors
 
-    xpath1 = xpath1[0]
-    xpath2 = xpath2[0]
-    start_date_str = xpath1.attrib.get(attribute)
-    end_date_str = xpath2.attrib.get(attribute)
+    attr_sum = sum(Decimal(x.attrib.get(attribute)) for x in elements)
+    if attr_sum != 100:
+        errors.append({'message': '`({})/@{}` should sum to 100'.format(context.xpath_expression, attribute),
+                       'path': ' & '.join(get_child_full_xpath(context.xml, element) for element in elements)})
 
-    if not invalid_date_format(start_date_str) and not invalid_date_format(end_date_str):
-        start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
-        end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
-        if start_date >= end_date:
-            fail_msg = 'Start date ({}) must be before end date ({})'
-            path_str1 = '{}/@{}'.format(get_child_full_xpath(context.xml, xpath1), attribute)
-            path_str2 = '{}/@{}'.format(get_child_full_xpath(context.xml, xpath2), attribute)
-            errors = [{
-                'message': fail_msg.format(start_date_str, end_date_str),
-                'path': '{} & {}'.format(path_str1, path_str2)
-            }]
     return context, errors

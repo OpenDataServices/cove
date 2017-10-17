@@ -8,7 +8,7 @@ Feature: Elements use a valid format
     Given `reporting-org` organisations
      Then `ref` attribute should match the regex `^[^\/\&\|\?]+$`
 
-  Scenario Outline: participating-org.@ref.should match the regex [^\:\&\|\?]+
+  Scenario Outline: participating-org.@ref should match the regex [^\:\&\|\?]+
     Given `participating-org` organisations
      Then `ref` attribute should match the regex `^[^\/\&\|\?]+$`
 
