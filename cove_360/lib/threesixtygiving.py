@@ -558,29 +558,6 @@ class NoBeneficiaryLocation(AdditionalTest):
         self.message = self.check_text['message']
 
 
-class IncompleteBeneficiaryLocation(AdditionalTest):
-    """Checks if any grants that do have Beneficiary Location fields are missing any of the details"""
-
-    check_text = {
-        "heading": "incomplete beneficiary location information",
-        "message": "Your data is missing Beneficiary Location: Name, Beneficiary Location: Geographical Code and/or Beneficiary Location: Geographical Code Type. Beneficiary location information allows users of the data to understand who ultimately benefitted from the grant, not just the location of the organisation that provided the service. If your beneficiaries are in the same place as the organisation that the money went to, stating this is useful for anyone using your data as it cannot be inferred."
-    }
-
-    def process(self, grant, path_prefix):
-        beneficiary_location = grant.get("beneficiaryLocation")
-        if beneficiary_location:
-            for location_item in beneficiary_location:
-                complete_beneficiary_data = location_item.get('name') and location_item.get('geoCode') and location_item.get('geoCodeType')
-                if not complete_beneficiary_data:
-                    self.failed = True
-                    self.count += 1
-                    self.json_locations.append(path_prefix + '/beneficiaryLocation')
-                    break
-
-        self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text["message"]
-
-
 class TitleDescriptionSame(AdditionalTest):
     """Checks if any grants have the same text for Title and Description"""
 
@@ -692,23 +669,27 @@ class NoDataSource(AdditionalTest):
         self.message = self.check_text['message']
 
 
-class NoClassificationTitle(AdditionalTest):
-    """Checks if any grants are missing the Classifications: Title field"""
+# class IncompleteBeneficiaryLocation(AdditionalTest):
+#     """Checks if any grants that do have Beneficiary Location fields are missing any of the details"""
 
-    check_text = {
-        "heading": "not have a Classifications: Title field",
-        "message": "This field allows you to describe how you classify the grant or have tagged it internally. Examples include classifying by sector (eg Healthcare) or target group (eg NEET)."
-    }
+#     check_text = {
+#         "heading": "incomplete beneficiary location information",
+#         "message": "Your data is missing Beneficiary Location: Name, Beneficiary Location: Geographical Code and/or Beneficiary Location: Geographical Code Type. Beneficiary location information allows users of the data to understand who ultimately benefitted from the grant, not just the location of the organisation that provided the service. If your beneficiaries are in the same place as the organisation that the money went to, stating this is useful for anyone using your data as it cannot be inferred."
+#     }
 
-    def process(self, grant, path_prefix):
-        classifications_title = grant.get("classifications") and any(classification.get('title') for classification in grant.get("classifications"))
-        if not classifications_title:
-            self.failed = True
-            self.count += 1
-            self.json_locations.append(path_prefix + '/id')
+#     def process(self, grant, path_prefix):
+#         beneficiary_location = grant.get("beneficiaryLocation")
+#         if beneficiary_location:
+#             for location_item in beneficiary_location:
+#                 complete_beneficiary_data = location_item.get('name') and location_item.get('geoCode') and location_item.get('geoCodeType')
+#                 if not complete_beneficiary_data:
+#                     self.failed = True
+#                     self.count += 1
+#                     self.json_locations.append(path_prefix + '/beneficiaryLocation')
+#                     break
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
-        self.message = self.check_text['message']
+#         self.heading = self.format_heading_count(self.check_text['heading'])
+#         self.message = self.check_text["message"]
 
 
 TEST_CLASSES = [
@@ -725,13 +706,12 @@ TEST_CLASSES = [
     LooksLikeEmail,
     NoGrantProgramme,
     NoBeneficiaryLocation,
-    IncompleteBeneficiaryLocation,
     TitleDescriptionSame,
     TitleLength,
     OrganizationIdLooksInvalid,
     NoLastModified,
     NoDataSource,
-    NoClassificationTitle
+    # IncompleteBeneficiaryLocation
 ]
 
 

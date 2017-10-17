@@ -637,14 +637,14 @@ def get_spreadsheet_meta_data(upload_dir, file_name, schema, file_type='xlsx', n
 def get_orgids_prefixes(orgids_url=None):
     local_org_ids_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'org-ids.json')
     today = datetime.date.today()
-    get_remote_file = False
+    get_remote_file = True
     first_request = False
 
     if not orgids_url:
         orgids_url = 'http://org-id.guide/download.json'
 
     if os.path.exists(local_org_ids_file):
-        with open(local_org_ids_file) as fp:
+        with open(local_org_ids_file, 'rU') as fp:
             org_ids = json.load(fp)
         date_str = org_ids.get('downloaded', '2000-1-1')
         date_downloaded = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
@@ -659,7 +659,7 @@ def get_orgids_prefixes(orgids_url=None):
             org_ids = requests.get(orgids_url).json()
             org_ids['downloaded'] = "%s" % today
             with open(local_org_ids_file, 'w') as fp:
-                json.dump(org_ids, fp, indent=2)
+                json.dump(org_ids, fp)
         except requests.exceptions.RequestException:
             if first_request:
                 raise  # First time ever request fails

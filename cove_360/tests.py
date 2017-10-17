@@ -390,16 +390,16 @@ RESULTS = [
                   "used in tools that visualise grants geographically.")},
      ['grants/1/id'],
      [{'sheet': 'grants', 'letter': 'A', 'row_number': 3, 'header': 'Identifier'}]),
-    ({'heading': "1 grant has incomplete beneficiary location information",
-      'message': ("Your data is missing Beneficiary Location: Name, Beneficiary Location: "
-                  "Geographical Code and/or Beneficiary Location: Geographical Code Type. "
-                  "Beneficiary location information allows users of the data to understand who "
-                  "ultimately benefitted from the grant, not just the location of the organisation "
-                  "that provided the service. If your beneficiaries are in the same place as the "
-                  "organisation that the money went to, stating this is useful for anyone using your "
-                  "data as it cannot be inferred.")},
-     ['grants/0/beneficiaryLocation'],
-     [{'sheet': 'grants', 'letter': 'AA', 'row_number': 2, 'header': 'Beneficiary Location'}]),
+    # ({'heading': "1 grant has incomplete beneficiary location information",
+    #   'message': ("Your data is missing Beneficiary Location: Name, Beneficiary Location: "
+    #               "Geographical Code and/or Beneficiary Location: Geographical Code Type. "
+    #               "Beneficiary location information allows users of the data to understand who "
+    #               "ultimately benefitted from the grant, not just the location of the organisation "
+    #               "that provided the service. If your beneficiaries are in the same place as the "
+    #               "organisation that the money went to, stating this is useful for anyone using your "
+    #               "data as it cannot be inferred.")},
+    #  ['grants/0/beneficiaryLocation'],
+    #  [{'sheet': 'grants', 'letter': 'AA', 'row_number': 2, 'header': 'Beneficiary Location'}]),
     ({'heading': "1 grant has a title and a description that are the same",
       'message': ("Users may find that the data is less useful as they are unable to "
                   "discover more about the grants. Consider including a more detailed "
@@ -426,12 +426,6 @@ RESULTS = [
       'message': "Knowing where information came from is an important part of establishing trust in your data."},
      ['grants/0/id', 'grants/2/id'],
      [{'sheet': 'grants', 'letter': 'A', 'row_number': 2, 'header': 'Identifier'},
-      {'sheet': 'grants', 'letter': 'A', 'row_number': 4, 'header': 'Identifier'}]),
-    ({'heading': "2 grants do not have a Classifications: Title field",
-      'message': ("This field allows you to describe how you classify the grant or have tagged it internally. "
-                  "Examples include classifying by sector (eg Healthcare) or target group (eg NEET).")},
-     ['grants/1/id', 'grants/2/id'],
-     [{'sheet': 'grants', 'letter': 'A', 'row_number': 3, 'header': 'Identifier'},
       {'sheet': 'grants', 'letter': 'A', 'row_number': 4, 'header': 'Identifier'}])
 ]
 
