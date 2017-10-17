@@ -287,11 +287,6 @@ def test_cove_iati_cli_output():
                     'message': 'Text does not match the regex ?TZ-BRLA-5-CCC-123123-CC123',
                     'path': '/iati-activities/iati-activity[3]/iati-identifier/text()',
                     'rule': 'identifier/text() should match the regex [^\\:\\&\\|\\?]+'},
-                   {
-                    'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                    'message': '`(recipient-country|recipient-region)/@percentage` should sum to 100',
-                    'path': '/iati-activities/iati-activity[3]/recipient-country',
-                    'rule': 'recipient-country/@percentage and recipient-region/@percentage must sum to 100'},
                    {'id': '?TZ-BRLA-5-CCC-123123-CC123',
                     'message': '?TZ-BRLA-5 does not match the regex ^[^\\/\\&\\|\\?]+$',
                     'path': '/iati-activities/iati-activity[3]/reporting-org/@ref',
