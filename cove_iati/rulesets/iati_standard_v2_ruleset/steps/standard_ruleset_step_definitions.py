@@ -3,6 +3,7 @@ Adapted from https://github.com/pwyf/bdd-tester/blob/master/steps/standard_rules
 Released under MIT License
 License: https://github.com/pwyf/bdd-tester/blob/master/LICENSE
 '''
+from decimal import Decimal
 import datetime
 import re
 
@@ -174,4 +175,21 @@ def step_start_date_before_end_date(context, xpath1, xpath2):
                     'message': fail_msg.format(start_date_attr, end_date_attr),
                     'path': '{} & {}'.format(path_attr1, path_attr2)
                 })
+    return context, errors
+
+
+@then(u'`{attribute}` attribute must sum to 100')
+@register_ruleset_errors()
+def step_impl(context, attribute):
+    elements = get_xobjects(context.xml, context.xpath_expression)
+    errors = []
+    
+    if len(elements) == 0 or (len(elements) == 1 and elements[0].attrib.get(attribute, '100') == '100'):
+        return context, errors
+
+    attr_sum = sum(Decimal(x.attrib.get(attribute)) for x in elements)
+    if attr_sum != 100:
+        errors.append({'message': '`({})/@{}` should sum to 100'.format(context.xpath_expression, attribute),
+                       'path': ' & '.join(get_child_full_xpath(context.xml, element) for element in elements)})
+
     return context, errors
