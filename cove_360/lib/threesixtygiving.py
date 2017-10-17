@@ -1,26 +1,14 @@
-import json
 import re
-import os
 from collections import defaultdict, OrderedDict
 from decimal import Decimal
 
-import requests
-
 import cove.lib.tools as tools
-from cove.lib.common import common_checks_context
+from cove.lib.common import common_checks_context, get_orgids_prefixes
 from cove.lib.tools import datetime_or_date
 
 
-# JSON from link on http://iatistandard.org/202/codelists/OrganisationRegistrationAgency/
-try:
-    org_prefix_codelist = requests.get('http://iatistandard.org/202/codelists/downloads/clv3/json/en/OrganisationRegistrationAgency.json').json()
-except requests.exceptions.RequestException:
-    local_codelist_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'OrganisationRegistrationAgency.json')
-    with open(local_codelist_file) as local_codelist:
-        org_prefix_codelist = json.load(local_codelist)
-
-org_prefixes = [x['code'] for x in org_prefix_codelist['data']]
-org_prefixes.append('360G')
+orgids_prefixes = get_orgids_prefixes()
+orgids_prefixes.append('360G')
 
 currency_html = {
     "GBP": "&pound;",
@@ -141,7 +129,7 @@ def get_prefixes(distinct_identifiers):
     org_identifiers_unrecognised_prefixes = defaultdict(int)
 
     for org_identifier in distinct_identifiers:
-        for prefix in org_prefixes:
+        for prefix in orgids_prefixes:
             if org_identifier.startswith(prefix):
                 org_identifier_prefixes[prefix] += 1
                 break
@@ -300,7 +288,7 @@ class FundingOrg360GPrefix(AdditionalTest):
 
 
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):
-    """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the IATI prefix codelist"""
+    """Check if any grants have RecipientOrg IDs that use a prefix that isn't an Org-id registered prefix"""
 
     check_text = {
         "heading": "a Recipient Org:Identifier that doesn’t draw from an external identification body",
@@ -311,7 +299,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
         try:
             count_failure = False
             for num, organization in enumerate(grant['recipientOrganization']):
-                for prefix in org_prefixes:
+                for prefix in orgids_prefixes:
                     if organization['id'].lower().startswith(prefix.lower()):
                         break
                 else:
@@ -329,7 +317,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
-    """Check if any grants have FundingOrg IDs that use a prefix that isn't on the IATI prefix codelist """
+    """Check if any grants have FundingOrg IDs that use a prefix that isn't an Org-id registered prefix"""
 
     check_text = {
         "heading": "a Funding Org:Identifier that doesn’t draw from an external identification body",
@@ -340,7 +328,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
         try:
             count_failure = False
             for num, organization in enumerate(grant['fundingOrganization']):
-                for prefix in org_prefixes:
+                for prefix in orgids_prefixes:
                     if organization['id'].lower().startswith(prefix.lower()):
                         break
                 else:
