@@ -312,7 +312,7 @@ def test_cove_iati_cli_output():
                    {'id': 'TZ-BRLA-5-DDD-123123-DD123',
                     'message': '?TZ-BRLA-8 does not match the regex ^[^\\/\\&\\|\\?]+$',
                     'path': '/iati-activities/iati-activity[4]/participating-org/@ref',
-                    'rule': 'participating-org/@ref/should match the regex [^\\:\\&\\|\\?]+'},
+                    'rule': 'participating-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
                    {
                     'id': 'TZ-BRLA-5-DDD-123123-DD123',
                     'message': '`(recipient-country|recipient-region)/@percentage` should sum to 100',
