@@ -644,7 +644,7 @@ def get_orgids_prefixes(orgids_url=None):
         orgids_url = 'http://org-id.guide/download.json'
 
     if os.path.exists(local_org_ids_file):
-        with open(local_org_ids_file) as fp:
+        with open(local_org_ids_file, 'rU') as fp:
             org_ids = json.load(fp)
         date_str = org_ids.get('downloaded', '2000-1-1')
         date_downloaded = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
@@ -659,7 +659,7 @@ def get_orgids_prefixes(orgids_url=None):
             org_ids = requests.get(orgids_url).json()
             org_ids['downloaded'] = "%s" % today
             with open(local_org_ids_file, 'w') as fp:
-                json.dump(org_ids, fp, indent=2)
+                json.dump(org_ids, fp)
         except requests.exceptions.RequestException:
             if first_request:
                 raise  # First time ever request fails
