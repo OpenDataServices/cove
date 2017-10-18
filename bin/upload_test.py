@@ -2,6 +2,7 @@ import requests
 import argparse
 from urllib.parse import urlparse, urlunparse
 import csv
+import json
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Upload set of files to cove')
@@ -23,4 +24,4 @@ if __name__ == '__main__':
             new_url = urlunparse(new_tuple)
             validation_errors = requests.get(new_url).json()
             for key, value in validation_errors.items():
-                validation_writer.writerow([file, key, len(value), value[0]])
+                validation_writer.writerow([file, key, len(value), json.dumps(value[0], sort_keys=True)])
