@@ -21,7 +21,7 @@ msgstr ""
 #: cove_360/templates/cove_360/additional_checks.html:5
 #: cove_360/templates/cove_360/explore.html:172
 msgid "Additional Checks"
-msgstr "Comprobaciones adicionales "
+msgstr "Comprobaciones adicionales"
 
 #: cove_360/templates/cove_360/base.html:34
 msgid "360Giving"
@@ -735,7 +735,7 @@ msgid ""
 "uploaded. You can revisit these results until then."
 msgstr ""
 "Estos resultados estarán disponibles durante 7 días desde el día en que los "
-"datos se cargan. Puedes revisar estos resultados hasta entonces."
+"datos fueron subidos. Puede revisar estos resultados hasta entonces."
 
 #: cove_360/views.py:37 cove_360/views.py:47
 msgid "Sorry we can't process that data"
@@ -743,7 +743,7 @@ msgstr "Lo sentimos, no podemos procesar esos datos"
 
 #: cove_360/views.py:39 cove_360/views.py:49
 msgid "Try Again"
-msgstr "Inténtalo de nuevo"
+msgstr "Inténtelo de nuevo"
 
 #: cove_360/views.py:40
 msgid ""

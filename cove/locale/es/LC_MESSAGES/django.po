@@ -58,7 +58,7 @@ msgstr ""
 #: cove/lib/exceptions.py:25 cove/lib/exceptions.py:34
 #: cove/lib/exceptions.py:61 cove_iati/lib/iati.py:27 cove_iati/lib/iati.py:37
 msgid "Try Again"
-msgstr "Inténtalo de nuevo"
+msgstr "Inténtelo de nuevo"
 
 #: cove/input/views.py:72
 msgid ""
@@ -128,9 +128,9 @@ msgid ""
 "\n"
 "Error message: {}"
 msgstr ""
-"Creemos que se trató de suministrar una hoja de cálculo, pero no hemos podido convertirlo.\n"
+"Creemos que ha tratado de suministrar una hoja de cálculo, pero no hemos podido convertirla.\n"
 "\n"
-"Mensaje de error: {}"
+"Mensaje del error: {}"
 
 #: cove/templates/500.html:8
 msgid "Internal Server Error"
