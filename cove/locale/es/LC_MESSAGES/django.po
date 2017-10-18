@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 15:49+0000\n"
+"POT-Creation-Date: 2017-10-18 11:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
@@ -55,8 +55,8 @@ msgstr ""
 "ConnectionError"
 
 #: cove/input/views.py:71 cove/input/views.py:79 cove/lib/converters.py:170
-#: cove/lib/exceptions.py:25 cove/lib/exceptions.py:52
-#: cove_iati/lib/iati.py:27
+#: cove/lib/exceptions.py:25 cove/lib/exceptions.py:34
+#: cove/lib/exceptions.py:61 cove_iati/lib/iati.py:27 cove_iati/lib/iati.py:37
 msgid "Try Again"
 msgstr "Inténtalo de nuevo"
 
@@ -87,7 +87,8 @@ msgstr ""
 "Si se puede acceder al archivo a través de un navegador entonces el problema puede estar relacionado con los permisos de acceso , o puede ser que usted esté bloqueando ciertas aplicaciones de usuario."
 
 #: cove/lib/converters.py:168 cove/lib/exceptions.py:23
-#: cove/lib/exceptions.py:50 cove_iati/lib/iati.py:25
+#: cove/lib/exceptions.py:32 cove/lib/exceptions.py:59
+#: cove_iati/lib/iati.py:25 cove_iati/lib/iati.py:35
 msgid "Sorry we can't process that data"
 msgstr "Lo sentimos, no podemos procesar esos datos"
 
@@ -111,15 +112,25 @@ msgstr ""
 "\n"
 "Sólo podemos procesar archivos json, csv y xlsx."
 
-#: cove/lib/exceptions.py:53
+#: cove/lib/exceptions.py:35
 msgid ""
-"We think you tried to supply a spreadsheet, but we failed to convert it to JSON.\n"
+"We did not recognise the file type.\n"
+"\n"
+"We can only process xml, csv and xlsx files."
+msgstr ""
+"No se reconoce el tipo de archivo. \n"
+"\n"
+"Sólo podemos procesar archivos xml, csv y xlsx."
+
+#: cove/lib/exceptions.py:62
+msgid ""
+"We think you tried to supply a spreadsheet, but we failed to convert it.\n"
 "\n"
 "Error message: {}"
 msgstr ""
-"Creemos que ha tratado de suministrar una hoja de cálculo, pero no hemos podido convertirla a JSON.\n"
+"Creemos que se trató de suministrar una hoja de cálculo, pero no hemos podido convertirlo.\n"
 "\n"
-"Mensaje del error: {}"
+"Mensaje de error: {}"
 
 #: cove/templates/500.html:8
 msgid "Internal Server Error"
@@ -1016,19 +1027,19 @@ msgstr "Ubicación de los 3 primeros errores"
 msgid "Spreadsheet Location of first 3 errors"
 msgstr " Ubicación de los 3 primeros errores en la hoja de cálculo"
 
-#: cove/views.py:21 cove/views.py:31
+#: cove/views.py:24 cove/views.py:34
 msgid "Sorry, the page you are looking for is not available"
 msgstr "Lo sentimos, la página que está buscando no está disponible"
 
-#: cove/views.py:23 cove/views.py:33
+#: cove/views.py:26 cove/views.py:36
 msgid "Go to Home page"
 msgstr "Ir a la Página de Inicio"
 
-#: cove/views.py:24
+#: cove/views.py:27
 msgid "We don't seem to be able to find the data you requested."
 msgstr "Parece que no podemos encontrar los datos que usted solicitó."
 
-#: cove/views.py:34
+#: cove/views.py:37
 msgid ""
 "The data you were hoping to explore no longer exists.\n"
 "\n"
@@ -1047,6 +1058,13 @@ msgstr ""
 "Creemos que ha tratado de subir un archivo XML, pero el archivo no es XML "
 "bien formado. <span class=\"glyphicon glyphicon-exclamation-sign\" aria-"
 "hidden=\"true\"></span><strong>Mensaje del Error:</strong>{}"
+
+#: cove_iati/lib/iati.py:38
+msgid ""
+"We think you tried to upload a XML file, but the encoding is incorrect.\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> <strong>Error message:</strong> {}"
+msgstr ""
 
 #: cove_iati/templates/cove_iati/base.html:28
 msgid "Bootstrap theme "
