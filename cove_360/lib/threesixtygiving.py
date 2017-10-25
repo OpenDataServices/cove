@@ -1,26 +1,14 @@
-import json
 import re
-import os
 from collections import defaultdict, OrderedDict
 from decimal import Decimal
 
-import requests
-
 import cove.lib.tools as tools
-from cove.lib.common import common_checks_context
+from cove.lib.common import common_checks_context, get_orgids_prefixes
 from cove.lib.tools import datetime_or_date
 
 
-# JSON from link on http://iatistandard.org/202/codelists/OrganisationRegistrationAgency/
-try:
-    org_prefix_codelist = requests.get('http://iatistandard.org/202/codelists/downloads/clv3/json/en/OrganisationRegistrationAgency.json').json()
-except requests.exceptions.RequestException:
-    local_codelist_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'OrganisationRegistrationAgency.json')
-    with open(local_codelist_file) as local_codelist:
-        org_prefix_codelist = json.load(local_codelist)
-
-org_prefixes = [x['code'] for x in org_prefix_codelist['data']]
-org_prefixes.append('360G')
+orgids_prefixes = get_orgids_prefixes()
+orgids_prefixes.append('360G')
 
 currency_html = {
     "GBP": "&pound;",
@@ -141,7 +129,7 @@ def get_prefixes(distinct_identifiers):
     org_identifiers_unrecognised_prefixes = defaultdict(int)
 
     for org_identifier in distinct_identifiers:
-        for prefix in org_prefixes:
+        for prefix in orgids_prefixes:
             if org_identifier.startswith(prefix):
                 org_identifier_prefixes[prefix] += 1
                 break
@@ -300,7 +288,7 @@ class FundingOrg360GPrefix(AdditionalTest):
 
 
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):
-    """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the IATI prefix codelist"""
+    """Check if any grants have RecipientOrg IDs that use a prefix that isn't an Org-id registered prefix"""
 
     check_text = {
         "heading": "a Recipient Org:Identifier that doesn’t draw from an external identification body",
@@ -311,7 +299,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
         try:
             count_failure = False
             for num, organization in enumerate(grant['recipientOrganization']):
-                for prefix in org_prefixes:
+                for prefix in orgids_prefixes:
                     if organization['id'].lower().startswith(prefix.lower()):
                         break
                 else:
@@ -329,7 +317,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
-    """Check if any grants have FundingOrg IDs that use a prefix that isn't on the IATI prefix codelist """
+    """Check if any grants have FundingOrg IDs that use a prefix that isn't an Org-id registered prefix"""
 
     check_text = {
         "heading": "a Funding Org:Identifier that doesn’t draw from an external identification body",
@@ -340,7 +328,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
         try:
             count_failure = False
             for num, organization in enumerate(grant['fundingOrganization']):
-                for prefix in org_prefixes:
+                for prefix in orgids_prefixes:
                     if organization['id'].lower().startswith(prefix.lower()):
                         break
                 else:
@@ -570,29 +558,6 @@ class NoBeneficiaryLocation(AdditionalTest):
         self.message = self.check_text['message']
 
 
-class IncompleteBeneficiaryLocation(AdditionalTest):
-    """Checks if any grants that do have Beneficiary Location fields are missing any of the details"""
-
-    check_text = {
-        "heading": "incomplete beneficiary location information",
-        "message": "Your data is missing Beneficiary Location: Name, Beneficiary Location: Geographical Code and/or Beneficiary Location: Geographical Code Type. Beneficiary location information allows users of the data to understand who ultimately benefitted from the grant, not just the location of the organisation that provided the service. If your beneficiaries are in the same place as the organisation that the money went to, stating this is useful for anyone using your data as it cannot be inferred."
-    }
-
-    def process(self, grant, path_prefix):
-        beneficiary_location = grant.get("beneficiaryLocation")
-        if beneficiary_location:
-            for location_item in beneficiary_location:
-                complete_beneficiary_data = location_item.get('name') and location_item.get('geoCode') and location_item.get('geoCodeType')
-                if not complete_beneficiary_data:
-                    self.failed = True
-                    self.count += 1
-                    self.json_locations.append(path_prefix + '/beneficiaryLocation')
-                    break
-
-        self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text["message"]
-
-
 class TitleDescriptionSame(AdditionalTest):
     """Checks if any grants have the same text for Title and Description"""
 
@@ -704,23 +669,27 @@ class NoDataSource(AdditionalTest):
         self.message = self.check_text['message']
 
 
-class NoClassificationTitle(AdditionalTest):
-    """Checks if any grants are missing the Classifications: Title field"""
+# class IncompleteBeneficiaryLocation(AdditionalTest):
+#     """Checks if any grants that do have Beneficiary Location fields are missing any of the details"""
 
-    check_text = {
-        "heading": "not have a Classifications: Title field",
-        "message": "This field allows you to describe how you classify the grant or have tagged it internally. Examples include classifying by sector (eg Healthcare) or target group (eg NEET)."
-    }
+#     check_text = {
+#         "heading": "incomplete beneficiary location information",
+#         "message": "Your data is missing Beneficiary Location: Name, Beneficiary Location: Geographical Code and/or Beneficiary Location: Geographical Code Type. Beneficiary location information allows users of the data to understand who ultimately benefitted from the grant, not just the location of the organisation that provided the service. If your beneficiaries are in the same place as the organisation that the money went to, stating this is useful for anyone using your data as it cannot be inferred."
+#     }
 
-    def process(self, grant, path_prefix):
-        classifications_title = grant.get("classifications") and any(classification.get('title') for classification in grant.get("classifications"))
-        if not classifications_title:
-            self.failed = True
-            self.count += 1
-            self.json_locations.append(path_prefix + '/id')
+#     def process(self, grant, path_prefix):
+#         beneficiary_location = grant.get("beneficiaryLocation")
+#         if beneficiary_location:
+#             for location_item in beneficiary_location:
+#                 complete_beneficiary_data = location_item.get('name') and location_item.get('geoCode') and location_item.get('geoCodeType')
+#                 if not complete_beneficiary_data:
+#                     self.failed = True
+#                     self.count += 1
+#                     self.json_locations.append(path_prefix + '/beneficiaryLocation')
+#                     break
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
-        self.message = self.check_text['message']
+#         self.heading = self.format_heading_count(self.check_text['heading'])
+#         self.message = self.check_text["message"]
 
 
 TEST_CLASSES = [
@@ -737,13 +706,12 @@ TEST_CLASSES = [
     LooksLikeEmail,
     NoGrantProgramme,
     NoBeneficiaryLocation,
-    IncompleteBeneficiaryLocation,
     TitleDescriptionSame,
     TitleLength,
     OrganizationIdLooksInvalid,
     NoLastModified,
     NoDataSource,
-    NoClassificationTitle
+    # IncompleteBeneficiaryLocation
 ]
 
 

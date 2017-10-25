@@ -3,126 +3,193 @@ Adapted from https://github.com/pwyf/bdd-tester/blob/master/steps/standard_rules
 Released under MIT License
 License: https://github.com/pwyf/bdd-tester/blob/master/LICENSE
 '''
-from datetime import datetime
+from decimal import Decimal
+import datetime
 import re
 
 from behave import given, then
 
-from cove_iati.lib.exceptions import RuleSetStepException
+from cove_iati.rulesets.utils import invalid_date_format, get_child_full_xpath, get_xobjects, register_ruleset_errors
 
 
 @given('an IATI activity')
 def step_given_iati_activity(context):
-    # this is a dummy step. It's here because
-    # behave / BDD requires at least one 'given' step.
-    assert True
+    context.xpath_expression = '.'
 
 
-@then('every `{xpath_expression}` should match the regex `{regex_str}`')
-def step_match_regex(context, xpath_expression, regex_str):
-    vals = context.xml.xpath(xpath_expression)
-    regex = re.compile(regex_str)
-    success = True
-    bad_vals = []
-    for val in vals:
-        if not regex.match(val):
-            success = False
-            bad_vals.append(val)
-    if not success:
-        verb = 'does' if len(bad_vals) == 1 else 'do'
-        errors = [{
-            'message': '{} {} not match the regex `{}`'.format(', '.join(bad_vals), verb, regex_str),
-            'path': xpath_expression
-        }]
-        raise RuleSetStepException(context, errors)
+@given('`{xpath_expression}` organisations')
+def step_given_organisations(context, xpath_expression):
+    context.xpath_expression = xpath_expression
 
 
-@given('`{xpath_expression}` is present')
-def step_given_present(context, xpath_expression):
-    vals = context.xml.xpath(xpath_expression)
-    if not vals:
-        errors = [{
-            'message': '`{}` is not present'.format(xpath_expression),
-            'path': xpath_expression
-        }]
-        raise RuleSetStepException(context, errors)
+@given('`{xpath_expression}` elements')
+def step_given_elements(context, xpath_expression):
+    context.xpath_expression = xpath_expression
 
 
-@then('`{xpath_expression}` should not be present')
-def step_should_not_be_present(context, xpath_expression):
-    vals = context.xml.xpath(xpath_expression)
-    if vals:
-        errors = [{
-            'message': '`{}` is present when it shouldn\'t be'.format(xpath_expression),
-            'path': xpath_expression
-        }]
-        raise RuleSetStepException(context, errors)
-
-
-@given('`{xpath_expression}` is a valid date')
-def step_valid_date(context, xpath_expression):
-    vals = context.xml.xpath(xpath_expression)
+@then('`{xpath}` must be today or in the past')
+@register_ruleset_errors()
+def step_must_be_today_or_past(context, xpath):
     errors = []
-    if not vals:
-        errors.append({
-            'message': '`{}` not found'.format(xpath_expression),
-            'path': xpath_expression
-        })
-        raise RuleSetStepException(context, errors)
+    today = datetime.date.today()
+    parents = get_xobjects(context.xml, context.xpath_expression)
 
-    for val in vals:
-        try:
-            datetime.strptime(val, '%Y-%m-%d')
-        except ValueError:
-            errors = [{
-                'messsage': '`{}` is not a valid date'.format(val),
-                'path': xpath_expression
-            }]
-            raise RuleSetStepException(context, errors)
+    for parent in parents:
+        date_attrs = get_xobjects(parent, xpath)
 
+        if not date_attrs:
+            continue
 
-@then('`{xpath_expression1}` should be chronologically before `{xpath_expression2}`')
-def step_should_be_before(context, xpath_expression1, xpath_expression2):
-    less_str = context.xml.xpath(xpath_expression1)[0]
-    more_str = context.xml.xpath(xpath_expression2)[0]
-    less = datetime.strptime(less_str, '%Y-%m-%d').date()
-    more = datetime.strptime(more_str, '%Y-%m-%d').date()
+        date_attr = date_attrs[0]
 
-    if less > more:
-        errors = [{
-            'message': '{} should be before {}'.format(less_str, more_str),
-            'path': ''
-        }]
-        raise RuleSetStepException(context, errors)
+        if invalid_date_format(date_attr):
+            continue
+
+        date = datetime.datetime.strptime(date_attr, '%Y-%m-%d').date()
+        if date > today:
+            errors.append({'message': '{} must be on or before today ({})'.format(date, today),
+                           'path': get_child_full_xpath(context.xml, date_attr)})
+    return context, errors
 
 
-@then('`{xpath_expression}` should be today, or in the past')
-def step_should_be_past(context, xpath_expression):
-    values = context.xml.xpath(xpath_expression)
-    fail = False
+@then('iati-identifier text should match the regex `{regex_str}`')
+@register_ruleset_errors()
+def step_iati_id_text_match_regex(context, regex_str):
+    regex = re.compile(regex_str)
+    errors = []
 
-    if values:
-        errors = []
-        tree = context.xml.getroottree()
-        for val in values:
-            date = datetime.strptime(val, '%Y-%m-%d').date()
-            if date > context.today:
+    xpath = get_xobjects(context.xml, context.xpath_expression)
+    if xpath:
+        xpath = xpath[0]
+        fail_msg = 'Text does not match the regex {}'
+        text_str = xpath.text
+        if not regex.match(text_str):
+            errors = [{'message': fail_msg.format(text_str, regex_str),
+                       'path': '{}/text()'.format(get_child_full_xpath(context.xml, xpath))}]
+    return context, errors
+
+
+@then('`{attribute}` attribute should match the regex `{regex_str}`')
+@register_ruleset_errors()
+def step_attribute_match_regex(context, attribute, regex_str):
+    regex = re.compile(regex_str)
+    errors = []
+    fail_msg = '{} does not match the regex {}'
+
+    for xpath in get_xobjects(context.xml, context.xpath_expression):
+        if attribute not in xpath.attrib:
+            continue
+        attr_str = xpath.attrib[attribute]
+        if not regex.match(attr_str):
+            errors.append({'message': fail_msg.format(attr_str, regex_str),
+                           'path': '{}/@{}'.format(get_child_full_xpath(context.xml, xpath), attribute)})
+    return context, errors
+
+
+@then('either `{xpath_expression1}` or `{xpath_expression2}` is expected')
+@register_ruleset_errors()
+def step_either_or_expected(context, xpath_expression1, xpath_expression2):
+    errors = []
+    fail_msg_neither = 'Neither {} nor {} have been found'
+    parents = get_xobjects(context.xml, context.xpath_expression)
+
+    for parent in parents:
+        xpaths1 = get_xobjects(parent, xpath_expression1)
+        xpaths2 = get_xobjects(parent, xpath_expression2)
+
+        if not xpaths1 and not xpaths2:
+            errors.append({'message': fail_msg_neither.format(xpath_expression1, xpath_expression2),
+                       'path': get_child_full_xpath(context.xml, context.xml)})
+
+    return context, errors
+
+
+@then('either `{xpath_expression1}` or `{xpath_expression2}` is expected, but not both')
+@register_ruleset_errors()
+def step_either_or_expected_not_both(context, xpath_expression1, xpath_expression2):
+    errors = []
+    fail_msg_neither = 'Neither {} nor {} have been found'
+    fail_msg_both = 'Either {} or {} are expected (not both)'
+    xpaths1 = get_xobjects(context.xml, xpath_expression1)
+    xpaths2 = get_xobjects(context.xml, xpath_expression2)
+    
+    if not xpaths1 and not xpaths2:
+        errors = [{'message': fail_msg_neither.format(xpath_expression1, xpath_expression2),
+                   'path': get_child_full_xpath(context.xml, context.xml)}]
+
+    if xpaths1 and xpaths2:
+        msg = fail_msg_both.format(xpath_expression1, xpath_expression2)
+        if len(xpaths1) == len(xpaths2):
+            zipped_xpaths = zip(xpaths1, xpaths2)
+            for tup_xpath1, tup_xpath2 in zipped_xpaths:
+                errors = [{
+                    'message': msg,
+                    'path': '{} & {}'.format(get_child_full_xpath(context.xml, tup_xpath1),
+                                             get_child_full_xpath(context.xml, tup_xpath2))
+                }]
+        else:
+            for xpath in xpaths2:
                 errors.append({
-                    'message': '{} should be on or before today ({})'.format(date, context.today),
-                    'path': tree.getpath(val.getparent())
+                    'message': msg,
+                    'path': '{} & {}'.format(get_child_full_xpath(context.xml, xpaths1[0]),
+                                             get_child_full_xpath(context.xml, xpath))
                 })
-                fail = True
-
-    if fail:
-        raise RuleSetStepException(context, errors)
+    return context, errors
 
 
-@then('either `{xpath_expression1}` or `{xpath_expression2}` should be present')
-def step_should_be_present(context, xpath_expression1, xpath_expression2):
-    vals = context.xml.xpath(xpath_expression1) or context.xml.xpath(xpath_expression2)
-    if not vals:
-        errors = [{
-            'message': '`{}` and `{}` not found'.format(xpath_expression1, xpath_expression2),
-            'path': ''
-        }]
-        raise RuleSetStepException(context, errors)
+@then('`{xpath_expression}` is not expected')
+@register_ruleset_errors()
+def step_not_expected(context, xpath_expression):
+    errors = []
+
+    for xpath in get_xobjects(context.xml, xpath_expression):
+        errors.append({'message': '`{}` is not expected'.format(xpath_expression),
+                       'path': get_child_full_xpath(context.xml, xpath)})
+    return context, errors
+
+
+@then('`{xpath1}` must be chronologically before `{xpath2}`')
+@register_ruleset_errors()
+def step_start_date_before_end_date(context, xpath1, xpath2):
+    parents = get_xobjects(context.xml, context.xpath_expression)
+
+    errors = []
+    for parent in parents:
+        start_date_attrs = get_xobjects(parent, xpath1)
+        end_date_attrs = get_xobjects(parent, xpath2)
+
+        if not start_date_attrs or not end_date_attrs:
+            continue
+
+        start_date_attr = start_date_attrs[0]
+        end_date_attr = end_date_attrs[0]
+
+        if not invalid_date_format(start_date_attr) and not invalid_date_format(end_date_attr):
+            start_date = datetime.datetime.strptime(start_date_attr, '%Y-%m-%d').date()
+            end_date = datetime.datetime.strptime(end_date_attr, '%Y-%m-%d').date()
+            if start_date >= end_date:
+                fail_msg = 'Start date ({}) must be before end date ({})'
+                path_attr1 = get_child_full_xpath(context.xml, start_date_attr)
+                path_attr2 = get_child_full_xpath(context.xml, end_date_attr)
+                errors.append({
+                    'message': fail_msg.format(start_date_attr, end_date_attr),
+                    'path': '{} & {}'.format(path_attr1, path_attr2)
+                })
+    return context, errors
+
+
+@then(u'`{attribute}` attribute must sum to 100')
+@register_ruleset_errors()
+def step_impl(context, attribute):
+    elements = get_xobjects(context.xml, context.xpath_expression)
+    errors = []
+    
+    if len(elements) == 0 or (len(elements) == 1 and elements[0].attrib.get(attribute, '100') == '100'):
+        return context, errors
+
+    attr_sum = sum(Decimal(x.attrib.get(attribute)) for x in elements)
+    if attr_sum != 100:
+        errors.append({'message': '`({})/@{}` should sum to 100'.format(context.xpath_expression, attribute),
+                       'path': ' & '.join(get_child_full_xpath(context.xml, element) for element in elements)})
+
+    return context, errors
