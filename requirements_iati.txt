@@ -2,3 +2,4 @@
 -e git+https://github.com/pwyf/bdd-tester.git@b30f9fd3e32d72a5e84492f7f336776006bc45e8#egg=bdd-tester
 lxml==4.0.0
 defusedxml==0.5.0
+-e hg+https://bitbucket.org/bjwebb/defusedexpat@11b0ba9f42a547607134f7b36a241382659aff24#egg=defusedexpat
