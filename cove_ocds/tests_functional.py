@@ -166,12 +166,17 @@ def test_500_error(server_url, browser):
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'not_expected_text', 'conversion_successful'), [
     ('tenders_releases_2_releases.json', ['Convert', 'Schema', 'OCDS release package schema version 1.0. You can'] + OCDS_SCHEMA_VERSIONS_DISPLAY,
                                          ['Schema Extensions'], True),
-    ('tenders_releases_1_release_with_extensions_version_1_1.json', ['Schema Extensions',
-                                                                     'Contract Parties (Organization structure)',
-                                                                     'All the extensions above were applied',
-                                                                     'copy of the schema with extension',
-                                                                     'Validation Errors',
-                                                                     '\'buyer:name\' is missing but required'], ['fetching failed'], True),
+    ('tenders_releases_1_release_with_extensions_1_1.json', ['Schema Extensions',
+                                                             'Contract Parties (Organization structure)',
+                                                             'All the extensions above were applied',
+                                                             'copy of the schema with extension',
+                                                             'Validation Errors',
+                                                             '\'buyer:name\' is missing but required',
+                                                             'Party Scale'], ['scale', '/releases/parties/details', 'fetching failed'], True),
+    ('tenders_1_release_with_extensions_1_1_missing_party_scale.json', ['Schema Extensions',
+                                                                        'Contract Parties (Organization structure)',
+                                                                        'scale',
+                                                                        '/releases/parties/details'], ['Party Scale'], True),
     ('tenders_releases_1_release_with_extensions_new_layout.json', ['Schema Extensions',
                                                                     'Lots',
                                                                     'A tender process may be divided into lots',
@@ -390,7 +395,7 @@ def test_url_invalid_dataset_request(server_url, browser, data_url):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_version_1_1.json', 'validation against OCDS release package schema version 1.1',
+    ('tenders_releases_1_release_with_extensions_1_1.json', 'validation against OCDS release package schema version 1.1',
      '\'version\' is missing but required', 'methodRationale', 'version'),
     ('tenders_releases_1_release_with_invalid_extensions.json', 'validation against OCDS release package schema version 1.0',
      '\'version\' is missing but required', 'methodRationale', 'version'),
@@ -418,7 +423,7 @@ def test_url_input_with_version(server_url, url_input_browser, httpserver, sourc
 
 
 @pytest.mark.parametrize(('source_filename', 'select_version', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_version_1_1.json', '1.0', 'validation against OCDS release package schema version 1.0',
+    ('tenders_releases_1_release_with_extensions_1_1.json', '1.0', 'validation against OCDS release package schema version 1.0',
      '\'version\' is missing but required', 'version', 'publisher'),
     ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', '\'version\' is missing but required',
      'validation against OCDS release package schema version 1.0', 'methodRationale', 'version'),
@@ -451,12 +456,12 @@ def test_url_input_with_version_change(server_url, url_input_browser, httpserver
 
 
 @pytest.mark.parametrize(('source_filename', 'expected', 'not_expected'), [
-    ('tenders_releases_1_release_with_extensions_version_1_1.json', ['Party Scale',
-                                                                     'The metrics extension supports publication of forecasts',
-                                                                     'All the extensions above were applied to extend the schema',
-                                                                     'Get a copy of the schema with extension patches applied'],
-                                                                    ['The following extensions failed',
-                                                                     'extensions were not introduced in the schema until version 1.1.']),
+    ('tenders_releases_1_release_with_extensions_1_1.json', ['Party Scale',
+                                                             'The metrics extension supports publication of forecasts',
+                                                             'All the extensions above were applied to extend the schema',
+                                                             'Get a copy of the schema with extension patches applied'],
+                                                            ['The following extensions failed',
+                                                             'extensions were not introduced in the schema until version 1.1.']),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Party Scale',
                                                                  'The metrics extension supports publication of forecasts',
                                                                  'Get a copy of the schema with extension patches applied',
@@ -493,8 +498,8 @@ def test_url_input_with_extensions(server_url, url_input_browser, httpserver, so
 
 
 @pytest.mark.parametrize(('source_filename', 'expected', 'not_expected'), [
-    ('tenders_releases_1_release_with_extensions_version_1_1.json', ['This file applies 3 valid extensions to the schema'],
-                                                                    ['Failed to apply']),
+    ('tenders_releases_1_release_with_extensions_1_1.json', ['This file applies 3 valid extensions to the schema'],
+                                                            ['Failed to apply']),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Failed to apply 3 extensions to the schema',
                                                                  'This file applies 3 valid extensions to the schema'],
                                                                 []),
