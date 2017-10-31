@@ -87,7 +87,7 @@ class SchemaJsonMixin():
 
     @property
     def _release_schema_obj(self):
-        return json.loads(self.release_schema_str)
+        return json.loads(self.release_schema_str, object_pairs_hook=OrderedDict)
 
     @property
     def _release_pkg_schema_obj(self):
