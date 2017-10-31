@@ -101,17 +101,16 @@ class SchemaOCDS(SchemaJsonMixin):
         return release_schema_obj
 
     def get_release_pkg_schema_obj(self, deref=False):
-        package_schema_obj = self._release_pkg_schema_obj
+        package_schema_obj = deepcopy(self._release_pkg_schema_obj)
         if deref:
-            deref_release_schema_obj = self.get_release_schema_obj(deref=True)
             if self.extended:
-                package_schema_obj = deepcopy(self._release_pkg_schema_obj)
+                deref_release_schema_obj = self.get_release_schema_obj(deref=True)
                 package_schema_obj['properties']['releases']['items'] = {}
                 release_pkg_schema_str = json.dumps(package_schema_obj)
                 package_schema_obj = self.deref_schema(release_pkg_schema_str)
                 package_schema_obj['properties']['releases']['items'].update(deref_release_schema_obj)
             else:
-                package_schema_obj = self.deref_schema(self.release_pkg_schema_str)
+                return self.deref_schema(self.release_pkg_schema_str)
         return package_schema_obj
 
     def apply_extensions(self, schema_obj):
