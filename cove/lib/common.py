@@ -292,7 +292,7 @@ def get_counts_additional_fields(json_data, schema_obj, schema_name, context, fi
 
 def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_map, heading_src_map, extra_checkers=None):
     if schema_name == 'record-package-schema.json':
-        pkg_schema_obj = schema_obj.get_record_pkg_schema_obj()
+        pkg_schema_obj = schema_obj.get_record_pkg_schema_obj(deref=True)
     else:
         pkg_schema_obj = schema_obj.get_release_pkg_schema_obj()
 
