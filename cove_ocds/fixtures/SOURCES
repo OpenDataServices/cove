@@ -19,7 +19,7 @@ tenders_releases_2_releases_with_deprecated_fields.json
 Source: Same data as tenders_releases_2_releases.json, but edited such that it contain deprecated fields.
 License: http://data.gc.ca/eng/open-government-licence-canada
 
-tenders_releases_1_release_with_extensions_version_1_1.json
+tenders_releases_1_release_with_extensions_1_1.json
 Source: Same data as tenders_releases_2_releases.json, but edited such that it contains extensions, and is missing some fields.
 License: http://data.gc.ca/eng/open-government-licence-canada
 

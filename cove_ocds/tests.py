@@ -654,7 +654,7 @@ def test_schema_ocds_extensions(release_data, extensions, invalid_extension, ext
 @pytest.mark.django_db
 def test_schema_ocds_extended_release_schema_file():
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_extensions_version_1_1.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_extensions_1_1.json')) as fp:
         data.original_file.save('test.json', UploadedFile(fp))
         fp.seek(0)
         json_data = json.load(fp)
@@ -956,7 +956,7 @@ def test_cove_ocds_cli_schema_version(version_option):
 
 @pytest.mark.parametrize(('file_name', 'version_option'), [
     ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0'),
-    ('tenders_releases_1_release_with_extensions_version_1_1.json', '1.0')
+    ('tenders_releases_1_release_with_extensions_1_1.json', '1.0')
 ])
 def test_cove_ocds_cli_schema_version_override(file_name, version_option):
     test_dir = str(uuid.uuid4())
