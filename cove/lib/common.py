@@ -49,18 +49,23 @@ class CustomJsonrefLoader(jsonref.JsonLoader):
 
 class CustomRefResolver(RefResolver):
     def __init__(self, *args, **kw):
+        self.file_schema_name = kw.pop('file_schema_name', '')
         self.schema_file = kw.pop('schema_file', None)
         self.schema_url = kw.pop('schema_url', '')
         super().__init__(*args, **kw)
 
     def resolve_remote(self, uri):
-        schema_name = self.schema_file or uri.split('/')[-1]
-        uri = urljoin(self.schema_url, schema_name)
+        schema_name = uri.split('/')[-1]
+        if self.schema_file and self.file_schema_name == schema_name:
+            uri = self.schema_file
+        else:
+            uri = urljoin(self.schema_url, schema_name)
+
         document = self.store.get(uri)
 
         if document:
             return document
-        if self.schema_url.startswith("http"):
+        if uri.startswith("http"):
             return super().resolve_remote(uri)
         else:
             with open(uri) as schema_file:
@@ -292,7 +297,7 @@ def get_counts_additional_fields(json_data, schema_obj, schema_name, context, fi
 
 def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_map, heading_src_map, extra_checkers=None):
     if schema_name == 'record-package-schema.json':
-        pkg_schema_obj = schema_obj.get_record_pkg_schema_obj(deref=True)
+        pkg_schema_obj = schema_obj.get_record_pkg_schema_obj()
     else:
         pkg_schema_obj = schema_obj.get_release_pkg_schema_obj()
 
@@ -302,7 +307,9 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
         format_checker.checkers.update(extra_checkers)
 
     if getattr(schema_obj, 'extended', None):
-        resolver = CustomRefResolver('', pkg_schema_obj, schema_file=schema_obj.extended_schema_file)
+        resolver = CustomRefResolver('', pkg_schema_obj, schema_url=schema_obj.schema_host,
+                                     schema_file=schema_obj.extended_schema_file,
+                                     file_schema_name=schema_obj.release_schema_name)
     else:
         resolver = CustomRefResolver('', pkg_schema_obj, schema_url=schema_obj.schema_host)
 

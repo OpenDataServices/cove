@@ -18,12 +18,12 @@
             "id": "Buyandsell.gc.ca-2014-11-07-89f689cd-e784-4374-bb17-94144679d46f", 
             "ocid": "PW-14-00627094", 
             "initiationType": "tender", 
-            "parties": [{
+            "parties": {
                 "id": "GB-COH-0000",
                 "details": {
                     "scale": "sme"
                 }
-            }],
+            },
             "tender": {
                 "documents": [
                     {
