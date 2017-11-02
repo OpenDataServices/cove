@@ -33,6 +33,8 @@ validation_error_lookup = {'date-time': 'Date is not in the correct format',
 
 
 class CustomJsonrefLoader(jsonref.JsonLoader):
+    '''This ref loader is only for use with the jsonref library
+    and NOT jsonschema.'''
     def __init__(self, **kwargs):
         self.schema_url = kwargs.pop('schema_url', None)
         super().__init__(**kwargs)
@@ -48,9 +50,15 @@ class CustomJsonrefLoader(jsonref.JsonLoader):
 
 
 class CustomRefResolver(RefResolver):
+    '''This RefResolver is only for use with the jsonschema library'''
     def __init__(self, *args, **kw):
+        # this is the name of the json file that you want replaced i.e release-schema.json
         self.file_schema_name = kw.pop('file_schema_name', '')
+        # the path on the disk of the file you want to replace the ref
         self.schema_file = kw.pop('schema_file', None)
+        # the url of the path to the schema. i.e http://standard.open-contracting.org/schema/1__1__1/
+        # the name of the schema file is appended to this to make the full url.
+        # this is ignored when you supply a file
         self.schema_url = kw.pop('schema_url', '')
         super().__init__(*args, **kw)
 
