@@ -203,8 +203,13 @@ class SchemaOCDS(SchemaJsonMixin):
 
     def get_record_pkg_schema_obj(self, deref=False):
         if deref:
-            return self.deref_schema(self.record_pkg_schema_str)
-        return self._record_pkg_schema_obj
+            deref_package_schema = self.deref_schema(self.record_pkg_schema_str)
+            if self.extended:
+                deref_release_schema_obj = self.get_release_schema_obj(deref=True)
+                deref_package_schema['properties']['records']['items']['properties']['compiledRelease'] = deref_release_schema_obj
+                deref_package_schema['properties']['records']['items']['properties']['releases']['oneOf'][1] = deref_release_schema_obj
+            return deref_package_schema
+        return deepcopy(self._record_pkg_schema_obj)
 
     def get_record_pkg_schema_fields(self):
         return set(schema_dict_fields_generator(self.get_record_pkg_schema_obj(deref=True)))
