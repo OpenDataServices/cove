@@ -399,7 +399,7 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
     modal_additional_checks = browser.find_element_by_css_selector('.additional-checks-3')
     assert "in" in modal_additional_checks.get_attribute("class").split()
     modal_additional_checks_text = modal_additional_checks.text
-    assert "4 grants have incomplete recipient organisation information" in modal_additional_checks_text
+    assert "4 grants do not have recipient organisation location information" in modal_additional_checks_text
     assert "grants/0/recipientOrganization/0/id" in modal_additional_checks_text
     table_rows = browser.find_elements_by_css_selector('.additional-checks-3 tbody tr')
     assert len(table_rows) == 4
