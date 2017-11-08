@@ -20,7 +20,7 @@ install:
   - "pip install Cython"
   - "pip install -r requirements_iati.txt"
   - wget "https://github.com/validator/validator/releases/download/16.3.3/vnu.jar_16.3.3.zip"; unzip vnu.jar_16.3.3.zip
-  - "wget https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip; unzip chromedriver_linux64.zip -d chromedriver; export PATH=$PATH:`pwd`/chromedriver"
+  - "wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip; unzip chromedriver_linux64.zip -d chromedriver; export PATH=$PATH:`pwd`/chromedriver"
 
 script:
   - "if [ \"$TRAVIS_PYTHON_VERSION\" != \"3.4\" ]; then flake8 .; fi"
