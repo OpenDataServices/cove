@@ -291,7 +291,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
     """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
-        "heading": "a Recipient Org:Identifier does not draw from a recognised register.",
+        "heading": "a Recipient Org:Identifier that does not draw from a recognised register.",
         "message": "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
     }
 
@@ -320,7 +320,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
     """Check if any grants have FundingOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
-        "heading": "a Funding Org:Identifier does not draw from a recognised register.",
+        "heading": "a Funding Org:Identifier that does not draw from a recognised register.",
         "message": "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
     }
 
@@ -463,7 +463,7 @@ class IncompleteRecipientOrg(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = self.format_heading_count(self.check_text['heading'], verb="do")
         self.message = self.check_text['message']
 
 
@@ -505,7 +505,7 @@ class LooksLikeEmail(AdditionalTest):
 
     check_text = {
         "heading": "text that looks like an email address",
-        "message": "An @ symbol has been found in your data. This may indicate that the data contains an email address, which can constitute personal data. The use and distribution of personal data  is restricted by the Data Protection Act. You should ensure that any personal data is only included with the knowledge and consent of the person to whom it refers."
+        "message": "Your data may contain an email address (or something that looks like one), which can constitute personal data. The use and distribution of personal data  is restricted by the Data Protection Act. You should ensure that any personal data is only included with the knowledge and consent of the person to whom it refers."
     }
 
     def process(self, grant, path_prefix):
