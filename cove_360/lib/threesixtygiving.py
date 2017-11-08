@@ -440,7 +440,7 @@ class IncompleteRecipientOrg(AdditionalTest):
 
     check_text = {
         "heading": "not have recipient organisation location information",
-        "message": "Your data is missing information about the geographic location of recipient organisations; either Recipient Org: Postal Code or Recipient Org: Location:Geographic Code combined with Recipient Org: Location: Geographic Code Type. Knowing the geographic location of recipient organisations helps users to understand your data and allows it to be used in tools that visualise grants geographically."
+        "message": "Your data is missing information about the geographic location of recipient organisations; either Recipient Org:Postal Code or Recipient Org:Location:Geographic Code combined with Recipient Org:Location:Geographic Code Type. Knowing the geographic location of recipient organisations helps users to understand your data and allows it to be used in tools that visualise grants geographically."
     }
 
     def process(self, grant, path_prefix):
@@ -505,7 +505,7 @@ class LooksLikeEmail(AdditionalTest):
 
     check_text = {
         "heading": "text that looks like an email address",
-        "message": "Your data may contain an email address (or something that looks like one), which can constitute personal data. The use and distribution of personal data  is restricted by the Data Protection Act. You should ensure that any personal data is only included with the knowledge and consent of the person to whom it refers."
+        "message": "Your data may contain an email address (or something that looks like one), which can constitute personal data. The use and distribution of personal data is restricted by the Data Protection Act. You should ensure that any personal data is only included with the knowledge and consent of the person to whom it refers."
     }
 
     def process(self, grant, path_prefix):
@@ -635,7 +635,7 @@ class NoLastModified(AdditionalTest):
     """Check if any grants are missing Last Modified dates"""
 
     check_text = {
-        "heading": "not have a Last Modified information",
+        "heading": "not have Last Modified information",
         "message": "Last Modified shows the date and time when information about a grant was last updated in your file. Including this information allows data users to see when changes have been made and reconcile differences between versions of your data. Please note: this is the date when the data was modified in your 360Giving file, rather than in any of your internal systems."
     }
 
