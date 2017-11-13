@@ -75,19 +75,18 @@ def explore_ocds(request, pk):
                         version_in_data = '{} (it must be a string)'.format(str(version_in_data))
                     context['unrecognized_version_data'] = version_in_data
 
-            # Replace the spreadsheet conversion only if it exists already.
             if schema_ocds.version != db_data.schema_version:
                 replace = True
+            if schema_ocds.extensions:
+                schema_ocds.create_extended_release_schema_file(upload_dir, upload_url)
+            url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
 
             if 'records' in json_data:
                 context['conversion'] = None
             else:
+
+                # Replace the spreadsheet conversion only if it exists already.
                 converted_path = os.path.join(upload_dir, 'flattened')
-
-                if schema_ocds.extensions:
-                    schema_ocds.create_extended_release_schema_file(upload_dir, upload_url)
-                url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
-
                 replace_converted = replace and os.path.exists(converted_path + '.xlsx')
                 context.update(convert_json(upload_dir, upload_url, file_name, schema_url=url, replace=replace_converted,
                                             request=request, flatten=request.POST.get('flatten')))
