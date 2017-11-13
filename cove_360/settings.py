@@ -37,7 +37,7 @@ COVE_CONFIG = {
     'app_strapline': 'Convert, Validate, Explore 360Giving Data',
     'schema_name': '360-giving-package-schema.json',
     'schema_item_name': '360-giving-schema.json',
-    'schema_host': 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/master/schema/',
+    'schema_host': 'https://raw.githubusercontent.com/ThreeSixtyGiving/standard/date-validation/schema/',
     'schema_version': None,
     'schema_version_choices': None,
     'root_list_path': 'grants',
