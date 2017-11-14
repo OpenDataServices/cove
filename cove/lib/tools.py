@@ -2,6 +2,7 @@ import datetime
 import strict_rfc3339
 from functools import wraps  # use this to preserve function signatures and docstrings
 from decimal import Decimal
+from json import JSONDecodeError
 
 from . exceptions import UnrecognisedFileType
 
@@ -12,7 +13,7 @@ def ignore_errors(f):
         if ignore_errors:
             try:
                 return f(json_data, *args, **kwargs)
-            except (KeyError, TypeError, IndexError, AttributeError):
+            except (KeyError, TypeError, IndexError, AttributeError, JSONDecodeError):
                 return return_on_error
         else:
             return f(json_data, *args, **kwargs)
