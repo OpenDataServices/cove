@@ -248,7 +248,7 @@ class RecipientOrg360GPrefix(AdditionalTest):
 
     check_text = {
         "heading": "a Recipient Org:Identifier that starts '360G-'",
-        "message": "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
+        "message": "If the grant is to a recipient organisation that has an external identifier (such as a charity or company number), then this should be used instead. Using external identifiers helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If no external identifier can be used, then you can ignore this notice."
     }
 
     def process(self, grant, path_prefix):
@@ -270,7 +270,7 @@ class FundingOrg360GPrefix(AdditionalTest):
 
     check_text = {
         "heading": "a Funding Org:Identifier that starts '360G-'",
-        "message": "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number, or in the case of local authorities, geocodes), then this should be used instead. If no other identifier can be used, then this notice can be ignored."
+        "message": "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number), then this should be used instead. If no other identifier can be used, then you can ignore this notice."
     }
 
     def process(self, grant, path_prefix):
@@ -288,10 +288,10 @@ class FundingOrg360GPrefix(AdditionalTest):
 
 
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):
-    """Check if any grants have RecipientOrg IDs that use a prefix that isn't an Org-id registered prefix"""
+    """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
-        "heading": "a Recipient Org:Identifier that doesn’t draw from an external identification body",
+        "heading": "a Recipient Org:Identifier that does not draw from a recognised register.",
         "message": "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
     }
 
@@ -317,10 +317,10 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
-    """Check if any grants have FundingOrg IDs that use a prefix that isn't an Org-id registered prefix"""
+    """Check if any grants have FundingOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
-        "heading": "a Funding Org:Identifier that doesn’t draw from an external identification body",
+        "heading": "a Funding Org:Identifier that does not draw from a recognised register.",
         "message": "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
     }
 
@@ -346,7 +346,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
 
 
 class RecipientOrgCharityNumber(AdditionalTest):
-    """Check if any grants have ReceipientOrg charity numbers that don't look like charity numbers
+    """Check if any grants have RecipientOrg charity numbers that don't look like charity numbers
 
     Checks if the first two characters are letters, then checks that the remainder of the value is a number 6 or 7 digits long.
     """
@@ -413,7 +413,7 @@ class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
 
     check_text = {
         "heading": "not have either a Recipient Org:Company Number or a Recipient Org:Charity Number",
-        "message": "Providing one or both of these, if possible, makes it easier for users of your data to join up the data with other data sources to provide better insight into grant-making. You don’t need to do anything if your grants are to organisations that don’t have UK Company or UK Charity numbers."
+        "message": "Providing one or both of these, if possible, makes it easier for users of your data to join up the data with other data sources to provide better insight into grant-making. If your grants are to organisations that don’t have UK Company or UK Charity numbers, then you can ignore this notice."
     }
 
     def process(self, grant, path_prefix):
@@ -439,8 +439,8 @@ class IncompleteRecipientOrg(AdditionalTest):
     """Checks if any grants lack one of either Recipient Org:Postal Code or both of Recipient Org:Location:Geographic Code and Recipient Org:Location:Geographic Code Type"""
 
     check_text = {
-        "heading": "incomplete recipient organisation information",
-        "message": "Your data is missing either Recipient Org: Postal Code or Recipient Org: Location:Geographic Code combined with Recipient Org: Location: Geographic Code Type. Knowing the geographic location of recipient organisations allows users of your data to understand your data and combine it with other data sets to form a broader picture of grant-making."
+        "heading": "not have recipient organisation location information",
+        "message": "Your data is missing information about the geographic location of recipient organisations; either Recipient Org:Postal Code or Recipient Org:Location:Geographic Code combined with Recipient Org:Location:Geographic Code Type. Knowing the geographic location of recipient organisations helps users to understand your data and allows it to be used in tools that visualise grants geographically."
     }
 
     def process(self, grant, path_prefix):
@@ -463,7 +463,7 @@ class IncompleteRecipientOrg(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = self.format_heading_count(self.check_text['heading'], verb="do")
         self.message = self.check_text['message']
 
 
@@ -472,7 +472,7 @@ class MoreThanOneFundingOrg(AdditionalTest):
 
     check_text = {
         "heading": "There are {} different funding organisation IDs listed",
-        "message": "If you are expecting to be publishing data for multiple funders then this notice can be ignored, however if you are only publishing for a single funder then you should review your Funder ID column to see where multiple IDs have occurred."
+        "message": "If you are expecting to be publishing data for multiple funders then you can ignore this notice. If you are only publishing for a single funder then you should review your Funding Organisation identifier column to see where multiple IDs have occurred."
     }
 
     def __init__(self, **kw):
@@ -505,7 +505,7 @@ class LooksLikeEmail(AdditionalTest):
 
     check_text = {
         "heading": "text that looks like an email address",
-        "message": "This may indicate that the data contains personal data, use and distribution of which is restricted by the Data Protection Act. You should ensure that any personal data is included with the knowledge and consent of the person to whom it refers."
+        "message": "Your data may contain an email address (or something that looks like one), which can constitute personal data. The use and distribution of personal data is restricted by the Data Protection Act. You should ensure that any personal data is only included with the knowledge and consent of the person to whom it refers."
     }
 
     def process(self, grant, path_prefix):
@@ -525,7 +525,7 @@ class NoGrantProgramme(AdditionalTest):
 
     check_text = {
         "heading": "not contain any Grant Programme fields",
-        "message": "Although not required by the 360Giving Standard, providing Grant Programme data if available helps users to better understand your data."
+        "message": "Providing Grant Programme data, if available, helps users to better understand your data."
     }
 
     def process(self, grant, path_prefix):
@@ -544,7 +544,7 @@ class NoBeneficiaryLocation(AdditionalTest):
 
     check_text = {
         "heading": "not contain any beneficiary location fields",
-        "message": "Although not required by the 360Giving Standard, providing beneficiary data if available helps users to understand your data and allows it to be used in tools that visualise grants geographically."
+        "message": "Providing beneficiary data, if available, helps users to understand to understand which areas ultimately benefitted from the grant."
     }
 
     def process(self, grant, path_prefix):
@@ -635,8 +635,8 @@ class NoLastModified(AdditionalTest):
     """Check if any grants are missing Last Modified dates"""
 
     check_text = {
-        "heading": "not have a Last Modified date",
-        "message": "Last Modified allows data users to reconcile discrepancies between versions of your data."
+        "heading": "not have Last Modified information",
+        "message": "Last Modified shows the date and time when information about a grant was last updated in your file. Including this information allows data users to see when changes have been made and reconcile differences between versions of your data. Please note: this is the date when the data was modified in your 360Giving file, rather than in any of your internal systems."
     }
 
     def process(self, grant, path_prefix):
@@ -654,8 +654,8 @@ class NoDataSource(AdditionalTest):
     """Checks if any grants are missing dataSource"""
 
     check_text = {
-        "heading": "not have a Data Source field",
-        "message": "Knowing where information came from is an important part of establishing trust in your data."
+        "heading": "not have Data Source information",
+        "message": "Data Source informs users about where information came from and is an important part of establishing trust in your data. This information should be a web link pointing to the source of this data, which may be an original 360Giving data file, a file from which the data was converted, or your organisation’s website."
     }
 
     def process(self, grant, path_prefix):
