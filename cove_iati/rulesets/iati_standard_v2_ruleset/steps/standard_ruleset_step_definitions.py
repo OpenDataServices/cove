@@ -187,7 +187,7 @@ def step_impl(context, attribute):
     if len(elements) == 0 or (len(elements) == 1 and elements[0].attrib.get(attribute, '100') == '100'):
         return context, errors
 
-    attr_sum = sum(Decimal(x.attrib.get(attribute)) for x in elements)
+    attr_sum = sum(Decimal(x.attrib.get(attribute, 0)) for x in elements)
     if attr_sum != 100:
         errors.append({'message': '`({})/@{}` should sum to 100'.format(context.xpath_expression, attribute),
                        'path': ' & '.join(get_child_full_xpath(context.xml, element) for element in elements)})
