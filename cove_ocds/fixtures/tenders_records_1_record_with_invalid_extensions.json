@@ -5,6 +5,7 @@
         "uri": "https://buyandsell.gc.ca", 
         "uid": null
     },
+    "version": "1.1",
     "extensions": [
         "https://raw.githubusercontent.com/open-contracting/ocds_metrics_extension/master/extension.json",
         "https://raw.githubusercontent.com/open-contracting/ocds_extension_parties/master/extension.json",
@@ -15,12 +16,18 @@
     ],
     "records": [
         {
-            "compiledRelease": {
+            "releases": [{
                 "date": "2014-03-25T00:00:00.00Z", 
                 "language": "English", 
                 "id": "Buyandsell.gc.ca-2014-11-07-89f689cd-e784-4374-bb17-94144679d46f", 
                 "ocid": "PW-14-00627094", 
                 "initiationType": "tender", 
+                "parties": [{
+                    "id": "GB-COH-0000",
+                    "details": {
+                        "scale": "mooo"
+                    }
+                }],
                 "tender": {
                     "documents": [
                         {
@@ -47,7 +54,7 @@
                             "url": "https://buyandsell.gc.ca/cds/public/2014/04/11/69359ba194d3f01f4f13cb9673b85071/14-2015_itt_amd2-f.pdf", 
                             "id": "https://buyandsell.gc.ca/cds/public/2014/04/11/69359ba194d3f01f4f13cb9673b85071/14-2015_itt_amd2-f.pdf"
                         }
-                    ], 
+                    ],
                     "tenderPeriod": {
                         "endDate": "2014-04-15T14:00:00.00Z"
                     }, 
@@ -67,7 +74,74 @@
                         "name_fr": "Agriculture & Agrifood Canada"
                     }, 
                     "id": "PW-14-00627094", 
-                    "methodRationale": "Open"
+                    "methodRationale": "Open",
+                    "targets": [{"id": "an id", "titles": "not a title"}]
+                }, 
+                "tag": ["tender"], 
+                "buyer": {
+                    "name": "Agriculture & Agrifood Canada"
+                }
+            }],
+            "compiledRelease": {
+                "date": "2014-03-25T00:00:00.00Z", 
+                "language": "English", 
+                "id": "Buyandsell.gc.ca-2014-11-07-89f689cd-e784-4374-bb17-94144679d46f", 
+                "ocid": "PW-14-00627094", 
+                "initiationType": "tender", 
+                "parties": [{
+                    "id": "GB-COH-0000",
+                    "details": {
+                        "scale": "mooo"
+                    }
+                }],
+                "tender": {
+                    "documents": [
+                        {
+                            "url": "https://buyandsell.gc.ca/cds/public/2014/03/25/3a76d19e61825db7939e14afaa2002e3/14-2015_itt.pdf", 
+                            "id": "https://buyandsell.gc.ca/cds/public/2014/03/25/3a76d19e61825db7939e14afaa2002e3/14-2015_itt.pdf"
+                        }, 
+                        {
+                            "url": "https://buyandsell.gc.ca/cds/public/2014/03/25/a5d07c1166142b8b2f4183d7a5363fec/14-2015_itt_-_f.pdf", 
+                            "id": "https://buyandsell.gc.ca/cds/public/2014/03/25/a5d07c1166142b8b2f4183d7a5363fec/14-2015_itt_-_f.pdf"
+                        }, 
+                        {
+                            "url": "https://buyandsell.gc.ca/cds/public/2014/04/04/ea5d0f03cfc6ea201b5b6df8794dbb3c/14-2015_itt_amd1.pdf", 
+                            "id": "https://buyandsell.gc.ca/cds/public/2014/04/04/ea5d0f03cfc6ea201b5b6df8794dbb3c/14-2015_itt_amd1.pdf"
+                        }, 
+                        {
+                            "url": "https://buyandsell.gc.ca/cds/public/2014/04/04/ac9afb3b664a28d519062f2b2a4cbceb/14-2015_itt_amd1-f.pdf", 
+                            "id": "https://buyandsell.gc.ca/cds/public/2014/04/04/ac9afb3b664a28d519062f2b2a4cbceb/14-2015_itt_amd1-f.pdf"
+                        }, 
+                        {
+                            "url": "https://buyandsell.gc.ca/cds/public/2014/04/11/f3f3993b4f6f260e057d0cb95f43741d/14-2015_itt_amd2.pdf", 
+                            "id": "https://buyandsell.gc.ca/cds/public/2014/04/11/f3f3993b4f6f260e057d0cb95f43741d/14-2015_itt_amd2.pdf"
+                        }, 
+                        {
+                            "url": "https://buyandsell.gc.ca/cds/public/2014/04/11/69359ba194d3f01f4f13cb9673b85071/14-2015_itt_amd2-f.pdf", 
+                            "id": "https://buyandsell.gc.ca/cds/public/2014/04/11/69359ba194d3f01f4f13cb9673b85071/14-2015_itt_amd2-f.pdf"
+                        }
+                    ],
+                    "tenderPeriod": {
+                        "endDate": "2014-04-15T14:00:00.00Z"
+                    }, 
+                    "items": [
+                        {
+                            "id": "1", 
+                            "classification": {
+                                "scheme": "GSIN", 
+                                "description": "F029: Other Animal Care and Control Services"
+                            }, 
+                            "description": "Canine Control of the Canada Geese (14-2015)"
+                        }
+                    ], 
+                    "awardCriteriaDetails": null, 
+                    "procuringEntity": {
+                        "name": "Agriculture & Agrifood Canada",
+                        "name_fr": "Agriculture & Agrifood Canada"
+                    }, 
+                    "id": "PW-14-00627094", 
+                    "methodRationale": "Open",
+                    "targets": [{"id": "an id", "titles": "not a title"}]
                 }, 
                 "tag": ["tender"], 
                 "buyer": {

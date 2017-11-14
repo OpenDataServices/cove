@@ -1,5 +1,6 @@
 import json
 import os
+import io
 import uuid
 from collections import OrderedDict
 from unittest.mock import patch
@@ -654,7 +655,7 @@ def test_schema_ocds_extensions(release_data, extensions, invalid_extension, ext
 @pytest.mark.django_db
 def test_schema_ocds_extended_release_schema_file():
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_extensions_version_1_1.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_extensions_1_1.json')) as fp:
         data.original_file.save('test.json', UploadedFile(fp))
         fp.seek(0)
         json_data = json.load(fp)
@@ -719,16 +720,17 @@ def test_schema_after_version_change(client):
 def test_schema_after_version_change_record(client):
     data = SuppliedData.objects.create()
     with open(os.path.join('cove_ocds', 'fixtures', 'tenders_records_1_record_with_invalid_extensions.json')) as fp:
-        data.original_file.save('test.json', UploadedFile(fp))
+        new_json = json.load(fp)
+        # Test without version field
+        new_json.pop("version")
+        new_json_file = io.StringIO(json.dumps(new_json))
+        data.original_file.save('test.json', UploadedFile(new_json_file))
 
     resp = client.post(data.get_absolute_url(), {'version': '1.1'})
     assert resp.status_code == 200
 
-    # Cove doesn't extend schema for record files (yet). The commented out assertions in this test
-    # are a reminder of that: https://github.com/OpenDataServices/cove/issues/747
-
-    #with open(os.path.join(data.upload_dir(), 'extended_record_schema.json')) as extended_record_fp:
-    #    assert "mainProcurementCategory" in json.load(extended_record_fp)['definitions']['Tender']['properties']
+    with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
+        assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
     with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
@@ -736,10 +738,10 @@ def test_schema_after_version_change_record(client):
     # test link is still there.
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
-    #assert 'extended_record_schema.json' in resp.content.decode()
+    assert 'extended_release_schema.json' in resp.content.decode()
 
-    #with open(os.path.join(data.upload_dir(), 'extended_record_schema.json')) as extended_record_fp:
-    #    assert "mainProcurementCategory" in json.load(extended_record_fp)['definitions']['Tender']['properties']
+    with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
+        assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
     with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
@@ -747,8 +749,8 @@ def test_schema_after_version_change_record(client):
     resp = client.post(data.get_absolute_url(), {'version': '1.0'})
     assert resp.status_code == 200
 
-    #with open(os.path.join(data.upload_dir(), 'extended_record_schema.json')) as extended_record_fp:
-    #    assert "mainProcurementCategory" not in json.load(extended_record_fp)['definitions']['Tender']['properties']
+    with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
+        assert "mainProcurementCategory" not in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
     with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
         assert "'version' is missing but required" not in validation_errors_fp.read()
@@ -956,7 +958,7 @@ def test_cove_ocds_cli_schema_version(version_option):
 
 @pytest.mark.parametrize(('file_name', 'version_option'), [
     ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0'),
-    ('tenders_releases_1_release_with_extensions_version_1_1.json', '1.0')
+    ('tenders_releases_1_release_with_extensions_1_1.json', '1.0')
 ])
 def test_cove_ocds_cli_schema_version_override(file_name, version_option):
     test_dir = str(uuid.uuid4())
