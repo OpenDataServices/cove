@@ -24,6 +24,15 @@
 
 {% block strapline %}{% endblock %}
 
+{% block howToUse %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    <h2 class="heading-in-panel" ><small>{% blocktrans %}How to use {% endblocktrans %}{{ app_verbose_name }}</small></h2>
+    {% comment %}Translators: Paragraph that describes the application{% endcomment %}
+  </div>
+</div>
+{% endblock %}
+
 {% block theme %}
   <p class="text-muted">{% blocktrans %}Bootstrap theme {% endblocktrans %}<a href="https://bootswatch.com/sandstone/"> Sandstone</a>{% blocktrans %}
 by Bootswatch{% endblocktrans %}</p>
@@ -43,12 +52,4 @@ by Bootswatch{% endblocktrans %}</p>
 {% block link %}
 {% endblock %}
 
-{% block howToUse %}
-<div class="panel panel-default">
-  <div class="panel-body">
-    <h2 class="heading-in-panel" ><small>{% blocktrans %}How to use {% endblocktrans %}{{ app_verbose_name }}</small></h2>
-    {% comment %}Translators: Paragraph that describes the application{% endcomment %}
-  </div>
-</div>
-{% endblock %}
 
