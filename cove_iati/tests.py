@@ -518,3 +518,25 @@ def test_common_checks_context_iati_ruleset():
     upload_dir = os.path.join('media', str(uuid.uuid4()))
     context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml')
     assert len(context['ruleset_errors']) == 17
+
+
+@pytest.mark.django_db
+def test_post_api(client):
+    file_path = os.path.join('cove_iati', 'fixtures', 'example.xml')
+    resp = client.post('/api_test', {'file': open(file_path, 'rb'), 'name': 'example.xml'})
+
+    assert resp.status_code == 200
+    assert resp.json()['validation_errors'] == []
+    assert resp.json()['file_type'] == 'xml'
+
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xlsx')
+    resp = client.post('/api_test', {'file': open(file_path, 'rb'), 'name': 'basic_iati_unordered_valid.xlsx'})
+
+    assert resp.status_code == 200
+    assert resp.json()['validation_errors'] == []
+    assert resp.json()['file_type'] == 'xlsx'
+
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xlsx')
+    resp = client.post('/api_test', {'file': open(file_path, 'rb')})
+    assert resp.status_code == 400
+    assert resp.json() == {'name': ['This field is required.']}

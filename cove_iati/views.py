@@ -1,8 +1,14 @@
 import logging
+import json
+import tempfile
+import os
 
 from django.shortcuts import render
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, HttpResponseBadRequest
 
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import cove_web_input_error
@@ -10,6 +16,7 @@ from cove.input.models import SuppliedData
 from cove.input.views import data_input
 from cove.views import explore_data_context
 from .lib.iati import common_checks_context_iati, get_file_type
+from .lib.api import iati_json_output
 from .lib.iati_utils import sort_iati_xml_file
 from .lib.schema import SchemaIATI
 
@@ -37,6 +44,12 @@ class UrlForm(forms.ModelForm):
 
 class TextForm(forms.Form):
     paste = forms.CharField(label=_('Paste (XML only)'), widget=forms.Textarea)
+
+
+class UploadApi(forms.Form):
+    name = forms.CharField(max_length=200)
+    file = forms.FileField()
+    openag = forms.BooleanField(required=False)
 
 
 iati_form_classes = {
@@ -76,3 +89,19 @@ def explore_iati(request, pk):
         db_data.rendered = True
 
     return render(request, 'cove_iati/explore.html', context)
+
+
+@require_POST
+@csrf_exempt
+def api_test(request):
+    form = UploadApi(request.POST, request.FILES)
+    if form.is_valid():
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            file_path = os.path.join(tmpdirname, form.cleaned_data['name'])
+            with open(file_path, 'wb+') as destination:
+                for chunk in request.FILES['file'].chunks():
+                    destination.write(chunk)
+            result = iati_json_output(tmpdirname, file_path, form.cleaned_data['openag'])
+            return HttpResponse(json.dumps(result), content_type='application/json')
+    else:
+        return HttpResponseBadRequest(json.dumps(form.errors), content_type='application/json')
