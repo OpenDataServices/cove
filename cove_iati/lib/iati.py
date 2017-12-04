@@ -277,6 +277,19 @@ def ruleset_errors_by_rule(flat_errors):
     return ruleset_errors
 
 
+def ruleset_errors_by_activity(flat_errors):
+    ruleset_errors = {}
+    for error in flat_errors:
+        if error['id'] not in ruleset_errors:
+            ruleset_errors[error['id']] = {}
+        if error['rule'] not in ruleset_errors[error['id']]:
+            ruleset_errors[error['id']][error['rule']] = []
+        ruleset_errors[error['id']][error['rule']].append([
+            error['rule_violation'], error['explanation'], error['path']
+        ])
+    return ruleset_errors
+
+
 def get_iati_ruleset_errors(lxml_etree, output_dir):
     bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
                output_path=output_dir)
