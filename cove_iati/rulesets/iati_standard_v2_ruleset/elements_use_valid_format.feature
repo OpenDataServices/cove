@@ -1,4 +1,4 @@
-Feature: Elements use a valid format
+Feature: Elements must use a valid format
 
   Scenario Outline: identifier.text() should match the regex [^\:\&\|\?]+
     Given `iati-identifier` elements

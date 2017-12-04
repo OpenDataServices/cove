@@ -1,4 +1,4 @@
-Feature: location element must be present and must contain location-id with attributes
+Feature: Location element must be present and must contain location-id with attributes
 
   Scenario Outline: location element must be present
     Given an IATI activity
