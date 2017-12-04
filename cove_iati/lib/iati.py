@@ -255,8 +255,9 @@ def format_ruleset_errors(output_dir):
                         rule_error = {
                             'id': json_line['id'],
                             'path': error['path'],
-                            'rule': scenario_outline,
-                            'message': error['message']
+                            'rule_violation': scenario_outline,
+                            'message': error['message'],
+                            'rule': json_line['rule']
                         }
                         ruleset_errors.append(rule_error)
 

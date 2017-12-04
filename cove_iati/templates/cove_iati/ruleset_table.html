@@ -5,7 +5,7 @@
   <tr>
     <th>{% trans 'Activity ID' %}</th>
     <th>{% trans 'Path' %}</th>
-    <th>{% trans 'Rule' %}</th>
+    <th>{% trans 'Rule violation' %}</th>
     <th>{% trans 'Explanation' %}</th>
   </tr> 
 </thead>
@@ -14,7 +14,7 @@
   <tr>
     <td>{{error.id}}</td>
     <td>{{error.path}}</td>
-    <td>{{error.rule}}</td>
+    <td>{{error.rule_violation}}</td>
     <td>{{error.message}}</td>
   </tr>
 {% endfor %}
