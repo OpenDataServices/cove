@@ -13,48 +13,48 @@
 <tbody>
 {% for ruleset, result in ruleset_errors.items %}
   <tr>
-    <td>{{ruleset}}</td>
+    <td><strong>{{ruleset}}</strong></td>
     {% for rule, violations in result.items %}
       {% if forloop.first %}
       <td>{{rule}}</td>
-                    {% for instance in violations %}
-                    {% if forloop.first %}
-                        <td>{{instance.0}}</td>
-                        <td>{{instance.1}}</td>
-                        <td>{{instance.2}}</td>
-                      </tr>
-                    {% else %}
-                      </tr>
-                      <tr>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>{{instance.0}}</td>
-                        <td>{{instance.1}}</td>
-                        <td>{{instance.2}}</td>
-                      </tr>
-                    {% endif %}
-                    {% endfor %}
+        {% for instance in violations %}
+        {% if forloop.first %}
+            <td>{{instance.0}}</td>
+            <td>{{instance.1}}</td>
+            <td>{{instance.2}}</td>
+          </tr>
+        {% else %}
+          </tr>
+          <tr>
+            <td class="no-border-top">&nbsp;</td>
+            <td class="no-border-top">&nbsp;</td>
+            <td>{{instance.0}}</td>
+            <td>{{instance.1}}</td>
+            <td>{{instance.2}}</td>
+          </tr>
+        {% endif %}
+        {% endfor %}
       {% else %}
       <tr>
-      <td>&nbsp;</td>
+      <td class="no-border-top">&nbsp;</td>
       <td>{{rule}}</td>
-                    {% for instance in violations %}
-                    {% if forloop.first %}
-                        <td>{{instance.0}}</td>
-                        <td>{{instance.1}}</td>
-                        <td>{{instance.2}}</td>
-                      </tr>
-                    {% else %}
-                      </tr>
-                      <tr>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>{{instance.0}}</td>
-                        <td>{{instance.1}}</td>
-                        <td>{{instance.2}}</td>
-                      </tr>
-                    {% endif %}
-                    {% endfor %}
+        {% for instance in violations %}
+        {% if forloop.first %}
+            <td>{{instance.0}}</td>
+            <td>{{instance.1}}</td>
+            <td>{{instance.2}}</td>
+          </tr>
+        {% else %}
+          </tr>
+          <tr>
+            <td class="no-border-top">&nbsp;</td>
+            <td class="no-border-top">&nbsp;</td>
+            <td>{{instance.0}}</td>
+            <td>{{instance.1}}</td>
+            <td>{{instance.2}}</td>
+          </tr>
+        {% endif %}
+        {% endfor %}
       {% endif %}
     {% endfor %}
 {% endfor %}
