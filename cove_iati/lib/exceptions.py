@@ -15,5 +15,5 @@ class RuleSetStepException(Exception):
         return json.dumps({
             'errors': self.errors,
             'id': self.id,
-            'rule': self.feature_name
+            'ruleset': self.feature_name
         })

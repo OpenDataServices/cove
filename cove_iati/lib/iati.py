@@ -255,9 +255,9 @@ def format_ruleset_errors(output_dir):
                         rule_error = {
                             'id': json_line['id'],
                             'path': error['path'],
-                            'rule_violation': scenario_outline,
+                            'rule': scenario_outline,
                             'explanation': error['explanation'],
-                            'rule': json_line['rule']
+                            'ruleset': json_line['ruleset']
                         }
                         ruleset_errors.append(rule_error)
 
@@ -267,11 +267,11 @@ def format_ruleset_errors(output_dir):
 def ruleset_errors_by_rule(flat_errors):
     ruleset_errors = {}
     for error in flat_errors:
-        if error['rule'] not in ruleset_errors:
-            ruleset_errors[error['rule']] = {}
-        if error['rule_violation'] not in ruleset_errors[error['rule']]:
-            ruleset_errors[error['rule']][error['rule_violation']] = []
-        ruleset_errors[error['rule']][error['rule_violation']].append([
+        if error['ruleset'] not in ruleset_errors:
+            ruleset_errors[error['ruleset']] = {}
+        if error['rule'] not in ruleset_errors[error['ruleset']]:
+            ruleset_errors[error['ruleset']][error['rule']] = []
+        ruleset_errors[error['ruleset']][error['rule']].append([
             error['id'], error['explanation'], error['path']
         ])
     return ruleset_errors
@@ -282,10 +282,10 @@ def ruleset_errors_by_activity(flat_errors):
     for error in flat_errors:
         if error['id'] not in ruleset_errors:
             ruleset_errors[error['id']] = {}
-        if error['rule'] not in ruleset_errors[error['id']]:
-            ruleset_errors[error['id']][error['rule']] = []
-        ruleset_errors[error['id']][error['rule']].append([
-            error['rule_violation'], error['explanation'], error['path']
+        if error['ruleset'] not in ruleset_errors[error['id']]:
+            ruleset_errors[error['id']][error['ruleset']] = []
+        ruleset_errors[error['id']][error['ruleset']].append([
+            error['rule'], error['explanation'], error['path']
         ])
     return ruleset_errors
 

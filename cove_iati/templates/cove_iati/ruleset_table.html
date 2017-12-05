@@ -3,21 +3,21 @@
 <table class="table table-condensed">
 <thead> 
   <tr>
+    <th>{% trans 'Rule Set' %}</th>
     <th>{% trans 'Rule' %}</th>
-    <th>{% trans 'Rule violations' %}</th>
     <th>{% trans 'Activity' %}</th>
     <th>{% trans 'Explanation' %}</th>
     <th>{% trans 'Path' %}</th>
   </tr> 
 </thead>
 <tbody>
-{% for rule, rule_violations in ruleset_errors.items %}
+{% for ruleset, result in ruleset_errors.items %}
   <tr>
-    <td>{{rule}}</td>
-    {% for violation, instances in rule_violations.items %}
+    <td>{{ruleset}}</td>
+    {% for rule, violations in result.items %}
       {% if forloop.first %}
-      <td>{{violation}}</td>
-                    {% for instance in instances %}
+      <td>{{rule}}</td>
+                    {% for instance in violations %}
                     {% if forloop.first %}
                         <td>{{instance.0}}</td>
                         <td>{{instance.1}}</td>
@@ -37,8 +37,8 @@
       {% else %}
       <tr>
       <td>&nbsp;</td>
-      <td>{{violation}}</td>
-                    {% for instance in instances %}
+      <td>{{rule}}</td>
+                    {% for instance in violations %}
                     {% if forloop.first %}
                         <td>{{instance.0}}</td>
                         <td>{{instance.1}}</td>
