@@ -318,7 +318,7 @@ def test_cove_iati_cli_output():
                     'rule': 'participating-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
                    {
                     'id': 'TZ-BRLA-5-DDD-123123-DD123',
-                    'explanation': '`(recipient-country|recipient-region)/@percentage` adds up to 30% only',
+                    'explanation': 'recipient-country|recipient-region/@percentage adds up to 30% only',
                     'path': '/iati-activities/iati-activity[4]/recipient-country',
                     'rule': 'recipient-country/@percentage and recipient-region/@percentage must sum to 100%'},
                    {'id': 'TZ-BRLA-9-EEE-123123-EE123',
@@ -326,7 +326,7 @@ def test_cove_iati_cli_output():
                     'path': '/iati-activities/iati-activity[5]',
                     'rule': 'activity-date[date @type="1"] or activity-date[@type="2"] must be present'},
                    {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                    'explanation': '`(recipient-country|recipient-region)/@percentage` adds up to 30% only',
+                    'explanation': 'recipient-country|recipient-region/@percentage adds up to 30% only',
                     'path': '/iati-activities/iati-activity[5]/recipient-country',
                     'rule': 'recipient-country/@percentage and recipient-region/@percentage must sum to 100%'},
                    {'id': 'TZ-BRLA-9-EEE-123123-EE123',
