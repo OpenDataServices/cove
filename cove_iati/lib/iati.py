@@ -296,7 +296,7 @@ def get_iati_ruleset_errors(lxml_etree, output_dir):
 
     if not os.path.isdir(output_dir):
         return []
-    return format_ruleset_errors(output_dir)
+    return ruleset_errors_by_rule(format_ruleset_errors(output_dir))
 
 
 def get_openag_ruleset_errors(lxml_etree, output_dir):

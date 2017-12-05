@@ -3,20 +3,60 @@
 <table class="table table-condensed">
 <thead> 
   <tr>
-    <th>{% trans 'Activity ID' %}</th>
-    <th>{% trans 'Path' %}</th>
-    <th>{% trans 'Rule violation' %}</th>
+    <th>{% trans 'Rule' %}</th>
+    <th>{% trans 'Rule violations' %}</th>
+    <th>{% trans 'Activity' %}</th>
     <th>{% trans 'Explanation' %}</th>
+    <th>{% trans 'Path' %}</th>
   </tr> 
 </thead>
 <tbody>
-{% for error in ruleset_errors %}
+{% for rule, rule_violations in ruleset_errors.items %}
   <tr>
-    <td>{{error.id}}</td>
-    <td>{{error.path}}</td>
-    <td>{{error.rule_violation}}</td>
-    <td>{{error.explanation}}</td>
-  </tr>
+    <td>{{rule}}</td>
+    {% for violation, instances in rule_violations.items %}
+      {% if forloop.first %}
+      <td>{{violation}}</td>
+                    {% for instance in instances %}
+                    {% if forloop.first %}
+                        <td>{{instance.0}}</td>
+                        <td>{{instance.1}}</td>
+                        <td>{{instance.2}}</td>
+                      </tr>
+                    {% else %}
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>{{instance.0}}</td>
+                        <td>{{instance.1}}</td>
+                        <td>{{instance.2}}</td>
+                      </tr>
+                    {% endif %}
+                    {% endfor %}
+      {% else %}
+      <tr>
+      <td>&nbsp;</td>
+      <td>{{violation}}</td>
+                    {% for instance in instances %}
+                    {% if forloop.first %}
+                        <td>{{instance.0}}</td>
+                        <td>{{instance.1}}</td>
+                        <td>{{instance.2}}</td>
+                      </tr>
+                    {% else %}
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>{{instance.0}}</td>
+                        <td>{{instance.1}}</td>
+                        <td>{{instance.2}}</td>
+                      </tr>
+                    {% endif %}
+                    {% endfor %}
+      {% endif %}
+    {% endfor %}
 {% endfor %}
 </tbody>
 </table>
