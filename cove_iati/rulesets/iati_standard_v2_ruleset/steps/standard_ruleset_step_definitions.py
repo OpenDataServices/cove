@@ -189,7 +189,7 @@ def step_impl(context, attribute):
 
     attr_sum = sum(Decimal(x.attrib.get(attribute)) for x in elements)
     if attr_sum != 100:
-        errors.append({'explanation': '{}/@{} adds up to {}% only'.format(context.xpath_expression, attribute, attr_sum),
+        errors.append({'explanation': '{}/@{} adds up to {}%'.format(context.xpath_expression, attribute, attr_sum),
                        'path': ' & '.join(get_child_full_xpath(context.xml, element) for element in elements)})
 
     return context, errors

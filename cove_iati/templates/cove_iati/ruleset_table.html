@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<table class="table table-condensed">
+<table class="table table-condensed table-striped">
 <thead> 
   <tr>
     <th>{% trans 'Ruleset' %}</th>
@@ -13,10 +13,10 @@
 <tbody>
 {% for ruleset, result in ruleset_errors.items %}
   <tr>
-    <td><strong>{{ruleset}}</strong></td>
+    <td class="white-background"><strong>{{ruleset}}</strong></td>
     {% for rule, violations in result.items %}
       {% if forloop.first %}
-      <td>{{rule}}</td>
+      <td class="white-background"><em>{{rule}}</em></td>
         {% for instance in violations %}
         {% if forloop.first %}
             <td>{{instance.0}}</td>
@@ -26,8 +26,8 @@
         {% else %}
           </tr>
           <tr>
-            <td class="no-border-top">&nbsp;</td>
-            <td class="no-border-top">&nbsp;</td>
+            <td class="no-border-top white-background">&nbsp;</td>
+            <td class="no-border-top white-background">&nbsp;</td>
             <td>{{instance.0}}</td>
             <td>{{instance.1}}</td>
             <td>{{instance.2}}</td>
@@ -36,8 +36,8 @@
         {% endfor %}
       {% else %}
       <tr>
-      <td class="no-border-top">&nbsp;</td>
-      <td>{{rule}}</td>
+      <td class="no-border-top white-background">&nbsp;</td>
+      <td class="white-background"><em>{{rule}}</em></td>
         {% for instance in violations %}
         {% if forloop.first %}
             <td>{{instance.0}}</td>
@@ -47,8 +47,8 @@
         {% else %}
           </tr>
           <tr>
-            <td class="no-border-top">&nbsp;</td>
-            <td class="no-border-top">&nbsp;</td>
+            <td class="no-border-top white-background">&nbsp;</td>
+            <td class="no-border-top white-background">&nbsp;</td>
             <td>{{instance.0}}</td>
             <td>{{instance.1}}</td>
             <td>{{instance.2}}</td>
