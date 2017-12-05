@@ -76,10 +76,15 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
     if not api:
         context.update({
             'validation_errors_count': sum(len(value) for value in validation_errors.values()),
-            'ruleset_errors_count': len(ruleset_errors),
             'cell_source_map': cell_source_map,
             'first_render': False
         })
+
+        count_ruleset_errors = 0
+        for rules in ruleset_errors.values():
+            for errors in rules.values():
+                count_ruleset_errors += len(errors)
+        context['ruleset_errors_count'] = count_ruleset_errors
 
     return context
 
