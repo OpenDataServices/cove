@@ -44,7 +44,7 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         schema = lxml.etree.XMLSchema(schema_tree)
         schema.validate(tree)
         lxml_errors = lxml_errors_generator(schema.error_log)
-        ruleset_errors = get_iati_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'))
+        ruleset_errors = get_iati_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'), api=api)
 
         if openag:
             ruleset_errors_ag = get_openag_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_openag'))
@@ -290,12 +290,14 @@ def ruleset_errors_by_activity(flat_errors):
     return ruleset_errors
 
 
-def get_iati_ruleset_errors(lxml_etree, output_dir):
+def get_iati_ruleset_errors(lxml_etree, output_dir, api=False):
     bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
                output_path=output_dir)
 
     if not os.path.isdir(output_dir):
         return []
+    if api:
+        return format_ruleset_errors(output_dir)
     return ruleset_errors_by_rule(format_ruleset_errors(output_dir))
 
 
