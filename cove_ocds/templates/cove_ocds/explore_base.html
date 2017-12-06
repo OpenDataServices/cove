@@ -311,11 +311,6 @@
 {% block explore_additional_content %}
 {% endblock %}
 
-{% block introduction %}
-{% endblock %}
-
-{% block howToUse %}
-{% endblock %}
 
 <div class="above-footer">
   <h2>{% trans "Save or Share these results" %}</h2>
@@ -329,6 +324,12 @@
 </div>
 
 {% endblock explore_content %}
+
+{% block bottomcontent1 %}
+{% endblock %}
+{% block bottomcontent2 %}
+{% endblock %}
+
 
 {% block extrafooterscript %}
   {{ block.super }} 

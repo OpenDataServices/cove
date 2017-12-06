@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load static %}
 
-{% block h1 %}
+{% block heading %}
   <div class="row">
     <div class="col-md-2">
         <a href="{% url 'index' %}"><img src="{% static 'dataexplore/360Giving-logo.png' %}" alt="360Giving Logo" width=270 height=270 class="logo360"/></a>
@@ -36,7 +36,7 @@
 <li><a href="http://www.threesixtygiving.org/contact/">Support</a></li>
 {% endblock %}
 
-{% block howToUse %}
+{% block bottomcontent1 %}
 <div class="panel panel-default">
   <div class="panel-body">
     <h2 class="heading-in-panel" ><small>{% blocktrans %}How to use the {% endblocktrans %}{{ app_verbose_name }}</small></h2>
@@ -60,3 +60,6 @@
 </div>
 {% endblock %}
 
+{% block bottomcontent2 %}
+{% include "cove_360/more_info.html" %}
+{% endblock %}
