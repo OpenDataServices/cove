@@ -187,7 +187,11 @@ def step_attr_add_to_hundred(context, attribute):
     if len(elements) == 0 or (len(elements) == 1 and elements[0].attrib.get(attribute, '100') == '100'):
         return context, errors
 
-    attr_sum = sum(Decimal(x.attrib.get(attribute) or 0) for x in elements)
+    attr_sum = 0
+    for el in elements:
+        percentage = el.attrib.get(attribute)
+        if percentage and percentage.isdigit():
+            attr_sum += Decimal(percentage)
     if attr_sum != 100:
         errors.append({'message': '`({})/@{}` should sum to 100'.format(context.xpath_expression, attribute),
                        'path': ' & '.join(get_child_full_xpath(context.xml, element) for element in elements)})
