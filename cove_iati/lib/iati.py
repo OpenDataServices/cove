@@ -45,25 +45,31 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         schema = lxml.etree.XMLSchema(schema_tree)
         schema.validate(tree)
         lxml_errors = lxml_errors_generator(schema.error_log)
+
+        invalid_data = bool(schema.error_log.last_error)
         ruleset_errors = get_iati_ruleset_errors(
             tree,
             os.path.join(upload_dir, 'ruleset'),
-            ignore_errors=not api,
+            ignore_errors=invalid_data,
             return_on_error=[{'message': 'There was a problem running the ruleset checks.'}],
-            )
+        )
 
         if openag:
             ruleset_errors_ag = get_openag_ruleset_errors(
                 tree,
-                os.path.join(upload_dir, 'ruleset_openag')
-                )
+                os.path.join(upload_dir, 'ruleset_openag'),
+                ignore_errors=invalid_data,
+                return_on_error=[{'message': 'There was a problem running the ruleset checks.'}],
+            )
             context.update({'ruleset_errors_openag': ruleset_errors_ag})
 
         if orgids:
             ruleset_errors_orgids = get_orgids_ruleset_errors(
                 tree,
-                os.path.join(upload_dir, 'ruleset_orgids')
-                )
+                os.path.join(upload_dir, 'ruleset_orgids'),
+                ignore_errors=invalid_data,
+                return_on_error=[{'message': 'There was a problem running the ruleset checks.'}],
+            )
             context.update({'ruleset_errors_orgids': ruleset_errors_orgids})
 
     errors_all = format_lxml_errors(lxml_errors)
