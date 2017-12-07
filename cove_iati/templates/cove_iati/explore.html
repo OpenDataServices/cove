@@ -155,8 +155,9 @@
           <br>
           <p class="explanation">&nbsp;{% trans "There are some <strong>ruleset errors</strong> in your data, please check them in the table below." %}</p>
           <br>
+          <h4 class="noscript-notice">Results group by Ruleset</h2>
           {% include "cove_iati/ruleset_table_by_rule.html" %}
-          <br>
+          <h4 class="noscript-notice">Results group by Activity</h2>
           {% include "cove_iati/ruleset_table_by_activity.html" %}
         {% endif %}
       </div>
@@ -236,7 +237,7 @@
         else {
             $($tableByRule).hide();
             $($tableByActivity).fadeIn('slow');
-            $(this).html('See same results <strong>by rule</strong>');
+            $(this).html('See same results <strong>by ruleset</strong>');
         }
     });
     function expand_all() {
