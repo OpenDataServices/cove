@@ -8,50 +8,50 @@ import uuid
 from django.core.management import call_command
 
 from .lib import iati
-from cove_iati.lib.exceptions import RuleSetStepException
-from cove_iati.rulesets.utils import invalid_date_format, get_child_full_xpath, get_xobjects, register_ruleset_errors
+from .lib.exceptions import RuleSetStepException
+from .rulesets.utils import invalid_date_format, get_child_full_xpath, get_xobjects, register_ruleset_errors
 
 
 XML_SCHEMA = '''
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-      <xsd:element name="test-element">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element name="a" type="xsd:integer"/>
-            <xsd:element name="b" type="xsd:decimal" minOccurs="1" maxOccurs="unbounded"/>
-            <xsd:element name="c" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
-            <xsd:element name="d" minOccurs="0" maxOccurs="unbounded">
-              <xsd:complexType>
-                <xsd:attribute name="test-attr" type="xsd:integer" />
-              </xsd:complexType>
-            </xsd:element>
-            <xsd:element name="e" type="xsd:date" maxOccurs="1"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-    </xsd:schema>
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="test-element">
+      <xsd:complexType>
+        <xsd:sequence>
+          <xsd:element name="a" type="xsd:integer"/>
+          <xsd:element name="b" type="xsd:decimal" minOccurs="1" maxOccurs="unbounded"/>
+          <xsd:element name="c" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+          <xsd:element name="d" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:attribute name="test-attr" type="xsd:integer" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="e" type="xsd:date" maxOccurs="1"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
 '''
 
 INVALID_DATA = '''
-    <test-element>
-      <a>non-int-a</a>
-      <b>2</b>
-      <b>FF</b>
-      <c>string</c>
-      <d test-attr="1"/>
-      <d test-attr="non-int-d"/>
-      <e>non-date</e>
-      <e>string</e>
-    </test-element>
+  <test-element>
+    <a>non-int-a</a>
+    <b>2</b>
+    <b>FF</b>
+    <c>string</c>
+    <d test-attr="1"/>
+    <d test-attr="non-int-d"/>
+    <e>non-date</e>
+    <e>string</e>
+  </test-element>
 '''
 
 XML_NS = '''
-    <iati-activities xmlns:namespace="http://example.com">
-      <iati-activity>
-        <element id='element1'/>
-        <element id='element2'/>
-    </iati-activity>
-    </iati-activities>
+  <iati-activities xmlns:namespace="http://example.com">
+    <iati-activity>
+      <element id='element1'/>
+      <element id='element2'/>
+  </iati-activity>
+  </iati-activities>
 '''
 
 
@@ -216,7 +216,6 @@ def test_cove_iati_cli_delete_option():
 
 
 def test_cove_iati_cli_output():
-
     exp_validation = [{'description': "'activity-date', attribute 'iso-date' is not a valid value of "
                                       "the atomic type 'xs:date'.",
                        'path': 'iati-activity/0/activity-date/@iso-date',
@@ -469,3 +468,41 @@ def test_cove_iati_cli_openag_output():
         assert expected['message'] == actual['message']
         assert expected['path'] == actual['path']
         assert expected['rule'] == actual['rule']
+
+
+def test_ruleset_error_exceptions_handling(validated_data):
+    return_on_error = [{'message': 'There was a problem running ruleset checks', 'exception': True}]
+
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
+    with open(file_path) as fp:
+        valid_data_tree = etree.parse(fp)
+    upload_dir = os.path.join('media', str(uuid.uuid4()))
+    ruleset_errors = iati.get_iati_ruleset_errors(
+        valid_data_tree,
+        os.path.join(upload_dir, 'ruleset'),
+        ignore_errors=False,
+        return_on_error=return_on_error
+    )
+    assert ruleset_errors != return_on_error
+
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
+    with open(file_path) as fp:
+        invalid_data_tree = etree.parse(fp)
+    invalid_data_tree = etree.fromstring(INVALID_DATA)  # Causes an exception in ruleset checks
+    upload_dir = os.path.join('media', str(uuid.uuid4()))
+    ruleset_errors = iati.get_iati_ruleset_errors(
+        invalid_data_tree,
+        os.path.join(upload_dir, 'ruleset'),
+        ignore_errors=True,
+        return_on_error=return_on_error
+    )
+    assert ruleset_errors == return_on_error
+
+    with pytest.raises(AttributeError):
+        upload_dir = os.path.join('media', str(uuid.uuid4()))
+        ruleset_errors = iati.get_iati_ruleset_errors(
+            invalid_data_tree,
+            os.path.join(upload_dir, 'ruleset'),
+            ignore_errors=False,
+            return_on_error=return_on_error
+        )

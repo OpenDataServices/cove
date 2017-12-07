@@ -46,11 +46,12 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         schema.validate(tree)
         lxml_errors = lxml_errors_generator(schema.error_log)
 
-        invalid_data = bool(schema.error_log.last_error)
+        invalid_data = bool(schema.error_log)
         return_on_error = [{'message': 'There was a problem running ruleset checks',
                             'exception': True}]
         ruleset_errors = get_iati_ruleset_errors(
-            tree, os.path.join(upload_dir, 'ruleset'),
+            tree,
+            os.path.join(upload_dir, 'ruleset'),
             ignore_errors=invalid_data,
             return_on_error=return_on_error
         )
