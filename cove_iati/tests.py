@@ -488,12 +488,12 @@ def test_ruleset_error_exceptions_handling(validated_data):
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
     with open(file_path) as fp:
         invalid_data_tree = etree.parse(fp)
-    invalid_data_tree = etree.fromstring(INVALID_DATA)  # Causes an exception in ruleset checks
+    invalid_data_tree = etree.fromstring(INVALID_DATA)
     upload_dir = os.path.join('media', str(uuid.uuid4()))
     ruleset_errors = iati.get_iati_ruleset_errors(
-        invalid_data_tree,
+        invalid_data_tree,  # Causes an exception in ruleset checks
         os.path.join(upload_dir, 'ruleset'),
-        ignore_errors=True,
+        ignore_errors=True,  # Exception ignored
         return_on_error=return_on_error
     )
     assert ruleset_errors == return_on_error
@@ -501,8 +501,20 @@ def test_ruleset_error_exceptions_handling(validated_data):
     with pytest.raises(AttributeError):
         upload_dir = os.path.join('media', str(uuid.uuid4()))
         ruleset_errors = iati.get_iati_ruleset_errors(
-            invalid_data_tree,
+            invalid_data_tree,  # Causes an exception in ruleset checks
             os.path.join(upload_dir, 'ruleset'),
-            ignore_errors=False,
+            ignore_errors=False,  # Exception not ignored
             return_on_error=return_on_error
         )
+
+
+def test_common_checks_context_iati_ruleset():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
+    upload_dir = os.path.join('media', str(uuid.uuid4()))
+    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml')
+    assert len(context['ruleset_errors']) == 3
+
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
+    upload_dir = os.path.join('media', str(uuid.uuid4()))
+    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml')
+    assert len(context['ruleset_errors']) == 17
