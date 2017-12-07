@@ -44,7 +44,11 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         schema = lxml.etree.XMLSchema(schema_tree)
         schema.validate(tree)
         lxml_errors = lxml_errors_generator(schema.error_log)
+
         ruleset_errors = get_iati_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'), api=api)
+        if not api:
+            ruleset_errors_by_activity = get_iati_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'),
+                                                                 group_by='activity')
 
         if openag:
             ruleset_errors_ag = get_openag_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_openag'))
@@ -79,6 +83,8 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
             'cell_source_map': cell_source_map,
             'first_render': False
         })
+        if ruleset_errors:
+            context['ruleset_errors'] = [ruleset_errors, ruleset_errors_by_activity]
 
         count_ruleset_errors = 0
         for rules in ruleset_errors.values():
@@ -295,7 +301,10 @@ def ruleset_errors_by_activity(flat_errors):
     return ruleset_errors
 
 
-def get_iati_ruleset_errors(lxml_etree, output_dir, api=False):
+def get_iati_ruleset_errors(lxml_etree, output_dir, group_by='rule', api=False):
+    if group_by not in ['rule', 'activity']:
+        raise ValueError('Only `rule` or `activity` are valid values for group_by argument')
+
     bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
                output_path=output_dir)
 
@@ -303,7 +312,10 @@ def get_iati_ruleset_errors(lxml_etree, output_dir, api=False):
         return []
     if api:
         return format_ruleset_errors(output_dir)
-    return ruleset_errors_by_rule(format_ruleset_errors(output_dir))
+    if group_by == 'rule':
+        return ruleset_errors_by_rule(format_ruleset_errors(output_dir))
+    else:
+        return ruleset_errors_by_activity(format_ruleset_errors(output_dir))
 
 
 def get_openag_ruleset_errors(lxml_etree, output_dir):
