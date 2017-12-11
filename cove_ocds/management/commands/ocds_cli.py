@@ -1,7 +1,7 @@
 import json
 import os
 import sys
-
+import csv
 from django.conf import settings
 from django.core.management.base import CommandError
 
@@ -14,7 +14,9 @@ class Command(CoveBaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--schema-version', '-s', default='', help='Version of the schema to validate the data')
-        parser.add_argument('--convert', '-c', action='store_true', help='Convert data from nested (json) to flat format (spreadsheet) or vice versa')
+        parser.add_argument('--convert', '-c', action='store_true',
+                            help='Convert data from nested (json) to flat format (spreadsheet) or vice versa')
+        parser.add_argument('--folder', '-f', help='Evaluate all the json file under the given folder')
         super(Command, self).add_arguments(parser)
 
     def handle(self, file, *args, **options):
@@ -23,6 +25,7 @@ class Command(CoveBaseCommand):
         convert = options.get('convert')
         schema_version = options.get('schema_version')
         version_choices = settings.COVE_CONFIG['schema_version_choices']
+        folder = options.get('folder')
 
         if schema_version and schema_version not in version_choices:
             raise CommandError('Value for schema version option is not valid. Accepted values: {}'.format(
@@ -30,10 +33,28 @@ class Command(CoveBaseCommand):
             ))
 
         try:
-            result = ocds_json_output(self.output_dir, file, schema_version, convert)
+            if folder is not None:
+                directory = os.fsencode(folder)
+                csvfile = open(os.path.join(self.output_dir, "results.csv"), 'w+', newline='')
+                writer = csv.writer(csvfile, delimiter=',')
+                writer.writerow(['Description', 'Field', 'Path', 'Type', 'File'])
+                for file in os.listdir(directory):
+                    filename = os.fsdecode(file)
+                    if filename.endswith(".json"):
+                        result = ocds_json_output(self.output_dir, folder + filename, schema_version, convert)
+                        for error in result.get('validation_errors'):
+                            writer.writerow([error.get("description"),
+                                             error.get("field"),
+                                             error.get("path"),
+                                             error.get("type"),
+                                             filename])
+                    else:
+                        continue
+                csvfile.close()
+            else:
+                result = ocds_json_output(self.output_dir, file, schema_version, convert)
+                with open(os.path.join(self.output_dir, "results.json"), 'w+') as result_file:
+                    json.dump(result, result_file, indent=2, cls=SetEncoder)
         except APIException as e:
             self.stdout.write(str(e))
             sys.exit(1)
-
-        with open(os.path.join(self.output_dir, "results.json"), 'w+') as result_file:
-            json.dump(result, result_file, indent=2, cls=SetEncoder)

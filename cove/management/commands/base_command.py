@@ -19,7 +19,7 @@ class CoveBaseCommand(BaseCommand):
         super(CoveBaseCommand, self).__init__(*args, **kwargs)
 
     def add_arguments(self, parser):
-        parser.add_argument('file', help='File to be processed by Cove')
+        parser.add_argument('--file', '-file', help='File to be processed by Cove')
         parser.add_argument('--output-dir', '-o', default='', help='Directory where the output is created, defaults to the name of the file')
         parser.add_argument('--delete', '-d', action='store_true', help='Delete existing directory if it exits')
         parser.add_argument('--exclude-file', '-e', action='store_true', help='Do not include the file in the output directory')
@@ -30,7 +30,10 @@ class CoveBaseCommand(BaseCommand):
         exclude_file = options.get('exclude_file')
 
         if not output_dir:
-            output_dir = file.split('/')[-1].split('.')[0]
+            if file is None:
+                output_dir = 'result'
+            else:
+                output_dir = file.split('/')[-1].split('.')[0]
 
         if os.path.exists(output_dir):
             if delete:
