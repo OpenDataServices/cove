@@ -16,7 +16,6 @@ class Command(CoveBaseCommand):
         parser.add_argument('--schema-version', '-s', default='', help='Version of the schema to validate the data')
         parser.add_argument('--convert', '-c', action='store_true',
                             help='Convert data from nested (json) to flat format (spreadsheet) or vice versa')
-        parser.add_argument('--folder', '-f', help='Evaluate all the json file under the given folder')
         super(Command, self).add_arguments(parser)
 
     def handle(self, file, *args, **options):
@@ -25,7 +24,6 @@ class Command(CoveBaseCommand):
         convert = options.get('convert')
         schema_version = options.get('schema_version')
         version_choices = settings.COVE_CONFIG['schema_version_choices']
-        folder = options.get('folder')
 
         if schema_version and schema_version not in version_choices:
             raise CommandError('Value for schema version option is not valid. Accepted values: {}'.format(
@@ -33,15 +31,15 @@ class Command(CoveBaseCommand):
             ))
 
         try:
-            if folder is not None:
-                directory = os.fsencode(folder)
+            if os.path.isdir(file):
+                directory = os.fsencode(file)
                 csvfile = open(os.path.join(self.output_dir, "results.csv"), 'w+', newline='')
                 writer = csv.writer(csvfile, delimiter=',')
                 writer.writerow(['Description', 'Field', 'Path', 'Type', 'File'])
-                for file in os.listdir(directory):
-                    filename = os.fsdecode(file)
+                for f in os.listdir(directory):
+                    filename = os.fsdecode(f)
                     if filename.endswith(".json"):
-                        result = ocds_json_output(self.output_dir, folder + filename, schema_version, convert)
+                        result = ocds_json_output(self.output_dir, file + filename, schema_version, convert)
                         for error in result.get('validation_errors'):
                             writer.writerow([error.get("description"),
                                              error.get("field"),
