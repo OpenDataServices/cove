@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+
 from django.conf import settings
 from django.core.management.base import CommandError
 
@@ -31,18 +32,16 @@ class Command(CoveBaseCommand):
 
         try:
             if os.path.isdir(file):
-                directory = os.fsencode(file)
-                outfile = open(os.path.join(self.output_dir, "all_results.txt"), 'w+')
-                for f in os.listdir(directory):
-                    filename = os.fsdecode(f)
-                    if filename.endswith(".json"):
-                        result = ocds_json_output(self.output_dir, file + filename, schema_version, convert)
-                        result.update({'file': filename})
-                        json.dump(result, outfile, cls=SetEncoder)
-                        outfile.write("\n")
-                    else:
-                        continue
-                outfile.close()
+                with open(os.path.join(self.output_dir, "all_results.txt"), 'w+') as outfile:
+                    for f in os.listdir(file):
+                        filename = os.fsdecode(f)
+                        if filename.endswith(".json"):
+                            result = ocds_json_output(self.output_dir, os.path.join(file, filename), schema_version,
+                                                      convert)
+                            result.update({'file': filename})
+                            json.dump(result, outfile, cls=SetEncoder)
+                            outfile.write("\n")
+                    outfile.close()
             else:
                 result = ocds_json_output(self.output_dir, file, schema_version, convert)
                 with open(os.path.join(self.output_dir, "results.json"), 'w+') as result_file:
