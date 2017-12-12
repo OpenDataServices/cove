@@ -180,14 +180,18 @@ def step_start_date_before_end_date(context, xpath1, xpath2):
 
 @then(u'`{attribute}` attribute must sum to 100')
 @register_ruleset_errors()
-def step_impl(context, attribute):
+def step_attr_add_to_hundred(context, attribute):
     elements = get_xobjects(context.xml, context.xpath_expression)
     errors = []
     
     if len(elements) == 0 or (len(elements) == 1 and elements[0].attrib.get(attribute, '100') == '100'):
         return context, errors
 
-    attr_sum = sum(Decimal(x.attrib.get(attribute)) for x in elements)
+    attr_sum = 0
+    for el in elements:
+        percentage = el.attrib.get(attribute)
+        if percentage and percentage.isdigit():
+            attr_sum += Decimal(percentage)
     if attr_sum != 100:
         errors.append({'message': '`({})/@{}` should sum to 100'.format(context.xpath_expression, attribute),
                        'path': ' & '.join(get_child_full_xpath(context.xml, element) for element in elements)})

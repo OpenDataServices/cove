@@ -12,7 +12,7 @@ def ignore_errors(f):
         if ignore_errors:
             try:
                 return f(json_data, *args, **kwargs)
-            except (KeyError, TypeError, IndexError, AttributeError):
+            except (KeyError, TypeError, IndexError, AttributeError, ValueError):
                 return return_on_error
         else:
             return f(json_data, *args, **kwargs)
