@@ -1,7 +1,6 @@
 import json
 import os
 import sys
-import csv
 from django.conf import settings
 from django.core.management.base import CommandError
 
@@ -33,22 +32,17 @@ class Command(CoveBaseCommand):
         try:
             if os.path.isdir(file):
                 directory = os.fsencode(file)
-                csvfile = open(os.path.join(self.output_dir, "results.csv"), 'w+', newline='')
-                writer = csv.writer(csvfile, delimiter=',')
-                writer.writerow(['Description', 'Field', 'Path', 'Type', 'File'])
+                outfile = open(os.path.join(self.output_dir, "all_results.txt"), 'w+')
                 for f in os.listdir(directory):
                     filename = os.fsdecode(f)
                     if filename.endswith(".json"):
                         result = ocds_json_output(self.output_dir, file + filename, schema_version, convert)
-                        for error in result.get('validation_errors'):
-                            writer.writerow([error.get("description"),
-                                             error.get("field"),
-                                             error.get("path"),
-                                             error.get("type"),
-                                             filename])
+                        result.update({'file': filename})
+                        json.dump(result, outfile, cls=SetEncoder)
+                        outfile.write("\n")
                     else:
                         continue
-                csvfile.close()
+                outfile.close()
             else:
                 result = ocds_json_output(self.output_dir, file, schema_version, convert)
                 with open(os.path.join(self.output_dir, "results.json"), 'w+') as result_file:
