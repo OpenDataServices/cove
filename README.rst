@@ -232,13 +232,11 @@ CoVE for OCDS and IATI can be run from the command line. To get a JSON file with
 
 .. code:: bash
 
-    ./ocds-cli --options
+    ./ocds-cli --options file-name
 
-
+``file-name`` can be a JSON or an Excel file or folder.
 
 Options:
-
-``--file-name -file`` can be a JSON or an Excel file or folder.
 
 ``--output-dir -o``  Directory where the output will be created, defaults to the name of the file.
 
@@ -260,8 +258,6 @@ Options:
 ``file-name`` can be a XML or an Excel/CSV file.
 
 Options:
-
-``--file-name -file`` can be a XML or an Excel/CSV file.
 
 ``--output-dir -o``  Directory where the output will be created, defaults to the name of the file.
 
