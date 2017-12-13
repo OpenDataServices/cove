@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from .schema import SchemaIATI
 from cove.lib.exceptions import CoveInputDataError, UnrecognisedFileTypeXML
+from cove.lib.tools import ignore_errors
 
 
 def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
@@ -44,14 +45,32 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         schema = lxml.etree.XMLSchema(schema_tree)
         schema.validate(tree)
         lxml_errors = lxml_errors_generator(schema.error_log)
-        ruleset_errors = get_iati_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'))
+
+        invalid_data = bool(schema.error_log)
+        return_on_error = [{'message': 'There was a problem running ruleset checks',
+                            'exception': True}]
+        ruleset_errors = get_iati_ruleset_errors(
+            tree,
+            os.path.join(upload_dir, 'ruleset'),
+            ignore_errors=invalid_data,
+            return_on_error=return_on_error
+        )
 
         if openag:
-            ruleset_errors_ag = get_openag_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_openag'))
+            ruleset_errors_ag = get_openag_ruleset_errors(
+                tree,
+                os.path.join(upload_dir, 'ruleset_openang'),
+                ignore_errors=invalid_data,
+                return_on_error=return_on_error
+            )
             context.update({'ruleset_errors_openag': ruleset_errors_ag})
-
         if orgids:
-            ruleset_errors_orgids = get_orgids_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_orgids'))
+            ruleset_errors_orgids = get_orgids_ruleset_errors(
+                tree,
+                os.path.join(upload_dir, 'ruleset_orgids'),
+                ignore_errors=invalid_data,
+                return_on_error=return_on_error
+            )
             context.update({'ruleset_errors_orgids': ruleset_errors_orgids})
 
     errors_all = format_lxml_errors(lxml_errors)
@@ -263,6 +282,7 @@ def format_ruleset_errors(output_dir):
     return ruleset_errors
 
 
+@ignore_errors
 def get_iati_ruleset_errors(lxml_etree, output_dir):
     bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
                output_path=output_dir)
@@ -272,6 +292,7 @@ def get_iati_ruleset_errors(lxml_etree, output_dir):
     return format_ruleset_errors(output_dir)
 
 
+@ignore_errors
 def get_openag_ruleset_errors(lxml_etree, output_dir):
     bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_openag_ruleset/'],
                output_path=output_dir)
@@ -281,6 +302,7 @@ def get_openag_ruleset_errors(lxml_etree, output_dir):
     return format_ruleset_errors(output_dir)
 
 
+@ignore_errors
 def get_orgids_ruleset_errors(lxml_etree, output_dir):
     bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_orgids_ruleset/'],
                output_path=output_dir)

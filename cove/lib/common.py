@@ -2,6 +2,7 @@ import collections
 import csv
 import datetime
 import functools
+import fcntl
 import json
 import os
 import re
@@ -650,7 +651,15 @@ def get_spreadsheet_meta_data(upload_dir, file_name, schema, file_type='xlsx', n
 
 
 def get_orgids_prefixes(orgids_url=None):
-    local_org_ids_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'org-ids.json')
+    '''Get org-ids.json file from file system (or fetch upstream if it doesn't exist)
+
+    A lock file is needed to avoid different processes trying to access the file
+    trampling each other. If a process has the exclusive lock, a different process
+    will wait until it is released.
+    '''
+    local_org_ids_dir = os.path.dirname(os.path.realpath(__file__))
+    local_org_ids_file = os.path.join(local_org_ids_dir, 'org-ids.json')
+    lock_file = os.path.join(local_org_ids_dir, 'org-ids.json.lock')
     today = datetime.date.today()
     get_remote_file = False
     first_request = False
@@ -659,8 +668,12 @@ def get_orgids_prefixes(orgids_url=None):
         orgids_url = 'http://org-id.guide/download.json'
 
     if os.path.exists(local_org_ids_file):
-        with open(local_org_ids_file) as fp:
+        with open(lock_file, 'w') as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            fp = open(local_org_ids_file)
             org_ids = json.load(fp)
+            fp.close()
+            fcntl.flock(lock, fcntl.LOCK_UN)
         date_str = org_ids.get('downloaded', '2000-1-1')
         date_downloaded = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
         if date_downloaded != today:
@@ -673,8 +686,12 @@ def get_orgids_prefixes(orgids_url=None):
         try:
             org_ids = requests.get(orgids_url).json()
             org_ids['downloaded'] = "%s" % today
-            with open(local_org_ids_file, 'w') as fp:
+            with open(lock_file, 'w') as lock:
+                fcntl.flock(lock, fcntl.LOCK_EX)
+                fp = open(local_org_ids_file, 'w')
                 json.dump(org_ids, fp, indent=2)
+                fp.close()
+                fcntl.flock(lock, fcntl.LOCK_UN)
         except requests.exceptions.RequestException:
             if first_request:
                 raise  # First time ever request fails
