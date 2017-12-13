@@ -14,3 +14,4 @@ docs/_build
 geckodriver.log
 ghostdriver.log
 cove/lib/org-ids.json
+cove/lib/org-ids.json.lock

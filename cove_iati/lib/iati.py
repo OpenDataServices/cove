@@ -13,6 +13,9 @@ from cove.lib.tools import ignore_errors
 
 
 def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
+    '''TODO: this function is trying to do too many things. Separate some
+    of its logic into smaller functions doing one single thing each.
+    '''
     schema_aiti = SchemaIATI()
     lxml_errors = {}
     cell_source_map = {}
