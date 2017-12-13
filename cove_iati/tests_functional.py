@@ -3,6 +3,7 @@ import time
 import pytest
 import requests
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 
 BROWSER = os.environ.get('BROWSER', 'ChromeHeadless')
@@ -106,12 +107,12 @@ def test_explore_iati_url_input(server_url, browser, httpserver, source_filename
     #refresh page to now check if tests still work after caching some data
     browser.get(data_url)
 
-    return
-
-    if conversion_successful:
-        # Expand all sections with the expand all button this time
+    # Expand all sections with the expand all button this time
+    try:
         browser.find_element_by_link_text('Expand all').click()
         time.sleep(0.5)
+    except NoSuchElementException:
+        pass
 
     # Do the assertions again
     check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
