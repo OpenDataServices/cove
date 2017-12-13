@@ -1,10 +1,10 @@
 # Spreadsheet and CSV input.
 
-Cove allows XLSX and CSV import in all the standards it supports.  It uses the [flattentool](http://flatten-tool.readthedocs.io) library to do the conversion from these formats to either XML or JSON.  Please look at flattentool documentation for detailed information on how to create spreadsheet templates for the particular standard.
+Cove allows XLSX and CSV import in all the standards it supports.  It uses the [flattentool](http://flatten-tool.readthedocs.io) library to do the conversion from these formats to either XML or JSON.  Please look at flattentool documentation for detailed information on how to create spreadsheet templates for a particular standard.
 
 ## Metatab
 
-Cove configures flattentool to allow an extra sheet in your spreadsheets (not for CSV) named "Meta" (case sensative). This sheet contains items at the top level of your document. For JSON this means key/value pairs that appear at the top level object and in XML attributes on the outermost tag. 
+Cove configures flattentool to allow an extra sheet in your spreadsheets (not for CSV) named "Meta" (case sensitive). This sheet contains items at the top level of your document. For JSON this means key/value pairs that appear at the top level object and in XML attributes on the outermost tag. 
 
 The "Meta" sheet is expected to be vertically aligned, so headings are on first column (not first row), and values are on second column. So a sheet named Meta could look like:
 
@@ -84,15 +84,15 @@ Defaults to 0 rows skipped.
 This is followed by a number i.e ```headerRows 2``` and says how many rows are header lines in the file. All header rows apart from the first one will be ignored. For example:
 
 ```eval_rst
-+---------------+------------+------------+
-| #             | skipRows 1 |            |
-+---------------+------------+------------+
-| Some          | Headings   | Here       |
-+---------------+------------+------------+
-| More          | headings   | here       |
-+---------------+------------+------------+
-| some          | data       | here       |
-+---------------+------------+------------+
++---------------+--------------+------------+
+| #             | headerRows 2 |            |
++---------------+--------------+------------+
+| Some          | Headings     | Here       |
++---------------+--------------+------------+
+| More          | headings     | here       |
++---------------+--------------+------------+
+| some          | data         | here       |
++---------------+--------------+------------+
 ```
 
 Defaults to 1 header rows. 0 rows is invalid as cove needs a heading row.
