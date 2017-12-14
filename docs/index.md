@@ -10,6 +10,7 @@ Contents:
    deployment
    errors
    lib
+   spreadsheet_input
 ```
 
 
