@@ -520,7 +520,6 @@ def test_common_checks_context_iati_ruleset():
     assert len(context['ruleset_errors']) == 17
 
 
-@pytest.mark.django_db
 def test_post_api(client):
     file_path = os.path.join('cove_iati', 'fixtures', 'example.xml')
     resp = client.post('/api_test', {'file': open(file_path, 'rb'), 'name': 'example.xml'})
