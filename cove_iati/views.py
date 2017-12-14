@@ -50,6 +50,7 @@ class UploadApi(forms.Form):
     name = forms.CharField(max_length=200)
     file = forms.FileField()
     openag = forms.BooleanField(required=False)
+    orgids = forms.BooleanField(required=False)
 
 
 iati_form_classes = {
@@ -101,7 +102,7 @@ def api_test(request):
             with open(file_path, 'wb+') as destination:
                 for chunk in request.FILES['file'].chunks():
                     destination.write(chunk)
-            result = iati_json_output(tmpdirname, file_path, form.cleaned_data['openag'])
+            result = iati_json_output(tmpdirname, file_path, form.cleaned_data['openag'], form.cleaned_data['orgids'])
             return HttpResponse(json.dumps(result), content_type='application/json')
     else:
         return HttpResponseBadRequest(json.dumps(form.errors), content_type='application/json')
