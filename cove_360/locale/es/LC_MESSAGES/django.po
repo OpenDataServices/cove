@@ -414,7 +414,7 @@ msgstr ""
 "En los datos 360Giving cuando hablamos de monedas, países y tipos de "
 "organización, le pedimos a los editores utilizar valores de una lista "
 "predefinida. Cuando preguntamos si esta concesión fue una convocatoria "
-"abierta, esperamos como respuest 'sí' o 'no' y nada más. Cuando validamos "
+"abierta, esperamos como respuesta 'sí' o 'no' y nada más. Cuando validamos "
 "los datos, comprobamos los valores de esos campos mirando esas notas."
 
 #: cove_360/templates/cove_360/common_errors.html:94
@@ -795,7 +795,7 @@ msgid ""
 "We delete all data older than 7 days from our servers daily, retaining none "
 "of the original data."
 msgstr ""
-"Borramos todos los datos de más de 7 días desde nuestros servidores "
+"Borramos todos los datos de más de 7 días de nuestros servidores "
 "diariamente, no conservamos ninguno de los datos originales."
 
 #: cove_360/templates/cove_360/more_info.html:14
@@ -856,7 +856,7 @@ msgid ""
 "We believe that deleting supplied data after 7 days provides a level of "
 "privacy for the users of this service. "
 msgstr ""
-"Creemos que la supresión de los datos suministrados después de 7 días "
+"Creemos que el borrado de los datos suministrados después de 7 días "
 "proporciona un nivel de privacidad para los usuarios de este servicio."
 
 #: cove_360/templates/cove_360/more_info.html:24
