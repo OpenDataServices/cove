@@ -26,6 +26,10 @@
         <p>This data has been checked against <a href="{{ schema_url }}">OCDS {% if releases %}release {% endif %}{% if records %}record {% endif %}package schema version {{ version_used_display }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
         <br>
         <strong>Validate and explore same data against a different version of the schema</strong>
+        <div class="ttip">
+          <sup><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></sup>
+          <span class="ttiptext">Switching the schema version will result in changes to CoVE output and conversions. If you revisit or share this URL, the lastest version selected will be used to check your data</span>
+        </div>
         <br>
         <br>
         <div>
@@ -39,7 +43,8 @@
             {% endfor %}
             </select>
               {# Translators: Label of a button that triggers search #}
-              <input class="btn btn-primary" type="submit" value={% trans "Go" %} /><img id="small-loading" style="display: none; margin:0; margin-left:2%" class="spinner" src="//i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="spinner" width="20" height="20">
+              <input class="btn btn-primary" type="submit" value={% trans "Go" %} />
+              <img id="small-loading" style="display: none; margin:0; margin-left:2%" class="spinner" src="//i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="spinner" width="20" height="20">
           </form>
         </div>
       </div>
