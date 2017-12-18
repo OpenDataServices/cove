@@ -1,4 +1,4 @@
-Feature: Sector
+Feature: Sector must be specified
 
   Scenario Outline: either sector or transaction.sector must be present
     Given an IATI activity

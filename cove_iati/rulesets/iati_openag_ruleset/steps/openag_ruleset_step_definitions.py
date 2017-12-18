@@ -14,7 +14,7 @@ def step_openag_expected(context, xpath_expression):
     errors = []
     if not get_xobjects(context.xml, xpath_expression):
         errors = [{
-            'message': 'the activity should include at least one {} element'.format(xpath_expression),
+            'explanation': 'the activity should include at least one {} element'.format(xpath_expression),
             'path': get_child_full_xpath(context.xml, context.xml)
         }]
     return context, errors
@@ -30,7 +30,7 @@ def step_openag_tag_attribute_expected(context, xpath_expression, attribute):
         attrib = xpath.attrib
         required_attrib = attrib.get(attribute)
         if not required_attrib:
-                errors.append({'message': fail_msg.format(xpath_expression, attribute),
+                errors.append({'explanation': fail_msg.format(xpath_expression, attribute),
                                'path': get_child_full_xpath(context.xml, xpath)})
     return context, errors
 
@@ -45,7 +45,7 @@ def step_openag_tag_attribute_accepted_values(context, attribute, any_value):
         element_attrs = xpath.attrib
         matching_value = any([element_attrs.get(attribute) == val for val in any_value.split(' or ')])
         if not matching_value:
-            errors.append({'message': fail_msg.format(element_attrs.get(attribute), attribute, any_value),
+            errors.append({'explanation': fail_msg.format(element_attrs.get(attribute), attribute, any_value),
                            'path': '{}/@{}'.format(get_child_full_xpath(context.xml, xpath), attribute)})
     return context, errors
 
@@ -59,6 +59,6 @@ def step_openag_element_has_child_element(context, xpath_expression1, xpath_expr
     for xpath in get_xobjects(context.xml, xpath_expression1):
         has_xpath_expression2 = get_xobjects(xpath, xpath_expression2)
         if not has_xpath_expression2:
-            errors.append({'message': fail_msg.format(xpath_expression1, xpath_expression2),
+            errors.append({'explanation': fail_msg.format(xpath_expression1, xpath_expression2),
                            'path': get_child_full_xpath(context.xml, xpath)})
     return context, errors

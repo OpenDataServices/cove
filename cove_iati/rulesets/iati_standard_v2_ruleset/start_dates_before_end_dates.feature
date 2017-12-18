@@ -1,4 +1,4 @@
-Feature: Start dates chronologically before end dates
+Feature: Start dates must be chronologically before end dates
 
   Scenario Outline: result-indicator.period-start.@iso-date must be before result-indicator.period-end.@iso-date
     Given `result/indicator/period` elements
