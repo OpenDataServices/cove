@@ -113,12 +113,14 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                 return_on_error=return_on_error
             )
             context['ruleset_errors'] = [ruleset_errors, ruleset_errors_by_activity]
-        count_ruleset_errors = 0
-        for rules in ruleset_errors.values():
-            for errors in rules.values():
-                count_ruleset_errors += len(errors)
-        context['ruleset_errors_count'] = count_ruleset_errors
 
+        count_ruleset_errors = 0
+        if isinstance(ruleset_errors, dict):
+            for rules in ruleset_errors.values():
+                for errors in rules.values():
+                    count_ruleset_errors += len(errors)
+
+        context['ruleset_errors_count'] = count_ruleset_errors
     return context
 
 
