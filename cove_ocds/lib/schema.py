@@ -11,6 +11,7 @@ from django.utils import translation
 
 
 from cove.lib.common import SchemaJsonMixin, schema_dict_fields_generator
+from cove.lib.tools import cached_get_request
 
 
 config = settings.COVE_CONFIG
@@ -24,7 +25,7 @@ class SchemaOCDS(SchemaJsonMixin):
     default_version = config['schema_version']
     default_schema_host = version_choices[default_version][1]
 
-    def __init__(self, select_version=None, release_data=None):
+    def __init__(self, select_version=None, release_data=None, cache_schema=False):
         '''Build the schema object using an specific OCDS schema version
         
         The version used will be select_version, release_data.get('version') or
@@ -34,6 +35,7 @@ class SchemaOCDS(SchemaJsonMixin):
         '''
         self.version = self.default_version
         self.schema_host = self.default_schema_host
+        self.cache_schema = cache_schema
 
         # Missing package is only for original json data
         self.missing_package = False
@@ -121,10 +123,14 @@ class SchemaOCDS(SchemaJsonMixin):
             url = '{}/{}'.format(extensions_descriptor_url[:i], 'release-schema.json')
 
             try:
-                extension = requests.get(url)
+                if self.cache_schema:
+                    extension = cached_get_request(url)
+                else:
+                    extension = requests.get(url)
             except requests.exceptions.RequestException:
                 self.invalid_extension[extensions_descriptor_url] = 'fetching failed'
                 continue
+
             if extension.ok:
                 try:
                     extension_data = extension.json()
@@ -138,7 +144,12 @@ class SchemaOCDS(SchemaJsonMixin):
 
             schema_obj = json_merge_patch.merge(schema_obj, extension_data)
             try:
-                extensions_descriptor = requests.get(extensions_descriptor_url).json()
+                if self.cache_schema:
+                    response = cached_get_request(extensions_descriptor_url)
+                else:
+                    response = requests.get(extensions_descriptor_url)
+                extensions_descriptor = response.json()
+
             except ValueError:  # would be json.JSONDecodeError for Python 3.5+
                 self.invalid_extension[extensions_descriptor_url] = 'invalid JSON'
                 continue
@@ -192,7 +203,11 @@ class SchemaOCDS(SchemaJsonMixin):
     def record_pkg_schema_str(self):
         uri_scheme = urlparse(self.record_pkg_schema_url).scheme
         if uri_scheme == 'http' or uri_scheme == 'https':
-            return requests.get(self.record_pkg_schema_url).text
+            if self.cache_schema:
+                response = cached_get_request(self.record_pkg_schema_url)
+            else:
+                response = requests.get(self.record_pkg_schema_url)
+            return response.text
         else:
             with open(self.record_pkg_schema_url) as fp:
                 return fp.read()
