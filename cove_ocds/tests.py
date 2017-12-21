@@ -1,6 +1,7 @@
 import json
 import os
 import io
+import time
 import uuid
 from collections import OrderedDict
 from unittest.mock import patch
@@ -977,3 +978,46 @@ def test_cove_ocds_cli_schema_version_override(file_name, version_option):
         with open(os.path.join(output_dir, file_name)) as fp:
             version_in_data = json.load(fp)['version']
     assert version_in_data == '1.1'
+
+
+def test_cove_ocds_cli_with_cache():
+    test_dir = str(uuid.uuid4())
+    file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_invalid_extensions.json')
+    output_dir = os.path.join('media', test_dir)
+    options = {'output_dir': output_dir}
+
+    no_cache_start = time.time()
+    call_command('ocds_cli', file_name, **options)
+    no_cache_end = time.time()
+    no_cache_time = no_cache_end - no_cache_start
+
+    with open(os.path.join(output_dir, 'results.json')) as fp:
+        results = json.load(fp)
+
+    assert results['version_used'] == '1.0'
+    assert results['schema_url'] == 'http://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
+    assert sorted(results['validation_errors'], key=lambda k: k['description'])[0]['description'] == "'buyer:id' is missing but required"
+    assert sorted(results['extensions']['extensions'], key=lambda k: k['name'])[2]['description'] == "For classifying organizations as micro, sme or large."
+    assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[0][0] == 'badprotocol://example.com'
+    assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[1][1] == '404: not found'
+
+    options = {'output_dir': output_dir, 'cache': True, 'delete': True}
+    call_command('ocds_cli', file_name, **options)
+
+    cache_start = time.time()
+    call_command('ocds_cli', file_name, **options)
+    cache_end = time.time()
+    cache_time = cache_end - cache_start
+
+    with open(os.path.join(output_dir, 'results.json')) as fp:
+        results = json.load(fp)
+
+    assert results['version_used'] == '1.0'
+    assert results['schema_url'] == 'http://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
+    assert sorted(results['validation_errors'], key=lambda k: k['description'])[0]['description'] == "'buyer:id' is missing but required"
+    assert sorted(results['extensions']['extensions'], key=lambda k: k['name'])[2]['description'] == "For classifying organizations as micro, sme or large."
+    assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[0][0] == 'badprotocol://example.com'
+    assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[1][1] == '404: not found'
+    
+    # Penalise cache_time a bit to make sure it is really faster
+    assert (cache_time + cache_time * 0.3) < no_cache_time

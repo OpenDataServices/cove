@@ -17,7 +17,7 @@ class Command(CoveBaseCommand):
                             help='Version of the schema to validate the data')
         parser.add_argument('--convert', '-c', action='store_true',
                             help='Convert data from nested (json) to flat format (spreadsheet) or vice versa')
-        parser.add_argument('--cache', '-h', action='store_true',
+        parser.add_argument('--cache', '-z', action='store_true',
                             help='Cache the remote schema and extensions in memory')
         super(Command, self).add_arguments(parser)
 
