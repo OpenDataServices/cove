@@ -248,6 +248,7 @@ Options:
 
 ``--convert -c``  Convert data from nested (JSON) to flat format (Excel and CSV). This option is redundant for spreadsheets as they are always converted to JSON format.
 
+``--cache -h`` Cache the remote schema and extensions. This can be useful to process mutiple files, e.g. invoking the CLI in a BASH script.
 
 **IATI**
 
