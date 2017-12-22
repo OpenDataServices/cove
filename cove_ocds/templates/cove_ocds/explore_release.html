@@ -5,8 +5,6 @@
 
 {% block key_facts %}
 {% with releases_aggregates as ra %}
-
-
   <div class="col-md-12">
     <div class="panel panel-primary">
       <div class="panel-heading">
@@ -40,6 +38,13 @@
              {% blocktrans count count=ra.unique_ocids|length %} describing <strong>{{count}} contracting process</strong>{% plural %} describing <strong>{{count}} contracting processes.</strong>{% endblocktrans %}
              </li>
              {% endif %}
+
+             {% if data_schema_version %}
+                <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                  {% trans "The schema version specified in the file is" %} <strong>{{data_schema_version}}</strong>.
+                </li>
+             {% endif %}
+
              {% if json_data.publisher %}
                 <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                   {% trans "The publisher named in the file is" %} <strong>{{json_data.publisher.name}}</strong>.

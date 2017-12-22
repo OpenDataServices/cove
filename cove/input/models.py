@@ -31,6 +31,8 @@ class SuppliedData(models.Model):
 
     # Last schema version applied to the stored data
     schema_version = models.CharField(max_length=10, default='')
+    # Schema version in data
+    data_schema_version = models.CharField(max_length=10, default='')
 
     form_name = models.CharField(
         max_length=20,
