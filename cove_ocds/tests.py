@@ -980,12 +980,13 @@ def test_cove_ocds_cli_schema_version_override(file_name, version_option):
     assert version_in_data == '1.1'
 
 
-def test_cove_ocds_cli_with_cache():
+def test_cove_ocds_cli_schema_cache():
     test_dir = str(uuid.uuid4())
     file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_invalid_extensions.json')
     output_dir = os.path.join('media', test_dir)
-    options = {'output_dir': output_dir}
+    options = {'output_dir': output_dir, 'delete': True}
 
+    # First time around, nothing cached yet
     no_cache_start = time.time()
     call_command('ocds_cli', file_name, **options)
     no_cache_end = time.time()
@@ -1001,9 +1002,7 @@ def test_cove_ocds_cli_with_cache():
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[0][0] == 'badprotocol://example.com'
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[1][1] == '404: not found'
 
-    options = {'output_dir': output_dir, 'cache': True, 'delete': True}
-    call_command('ocds_cli', file_name, **options)
-
+    # Use cached schema from previous call_command
     cache_start = time.time()
     call_command('ocds_cli', file_name, **options)
     cache_end = time.time()
@@ -1020,4 +1019,4 @@ def test_cove_ocds_cli_with_cache():
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[1][1] == '404: not found'
     
     # Penalise cache_time a bit to make sure it is really faster
-    assert (cache_time + cache_time * 0.3) < no_cache_time
+    assert (cache_time + cache_time * 0.33) < no_cache_time

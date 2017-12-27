@@ -17,8 +17,6 @@ class Command(CoveBaseCommand):
                             help='Version of the schema to validate the data')
         parser.add_argument('--convert', '-c', action='store_true',
                             help='Convert data from nested (json) to flat format (spreadsheet) or vice versa')
-        parser.add_argument('--cache', '-z', action='store_true',
-                            help='Cache the remote schema and extensions in memory')
         super(Command, self).add_arguments(parser)
 
     def handle(self, file, *args, **options):
@@ -26,7 +24,6 @@ class Command(CoveBaseCommand):
 
         schema_version = options.get('schema_version')
         convert = options.get('convert')
-        cache = options.get('cache')
         version_choices = settings.COVE_CONFIG['schema_version_choices']
 
         if schema_version and schema_version not in version_choices:
@@ -35,7 +32,7 @@ class Command(CoveBaseCommand):
             ))
 
         try:
-            result = ocds_json_output(self.output_dir, file, schema_version, convert, cache)
+            result = ocds_json_output(self.output_dir, file, schema_version, convert, cache_schema=True)
         except APIException as e:
             self.stdout.write(str(e))
             sys.exit(1)
