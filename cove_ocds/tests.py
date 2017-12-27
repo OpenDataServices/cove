@@ -1003,10 +1003,16 @@ def test_cove_ocds_cli_schema_cache():
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[1][1] == '404: not found'
 
     # Use cached schema from previous call_command
-    cache_start = time.time()
-    call_command('ocds_cli', file_name, **options)
-    cache_end = time.time()
-    cache_time = cache_end - cache_start
+    cache_time_total = 0
+
+    for i in range(6):
+        cache_start = time.time()
+        call_command('ocds_cli', file_name, **options)
+        cache_end = time.time()
+        cache_time = cache_end - cache_start
+        cache_time_total += cache_time
+
+    cache_time_avg = cache_time_total / 5.0
 
     with open(os.path.join(output_dir, 'results.json')) as fp:
         results = json.load(fp)
@@ -1017,6 +1023,4 @@ def test_cove_ocds_cli_schema_cache():
     assert sorted(results['extensions']['extensions'], key=lambda k: k['name'])[2]['description'] == "For classifying organizations as micro, sme or large."
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[0][0] == 'badprotocol://example.com'
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[1][1] == '404: not found'
-    
-    # Penalise cache_time a bit to make sure it is really faster
-    assert (cache_time + cache_time * 0.33) < no_cache_time
+    assert cache_time_avg < no_cache_time
