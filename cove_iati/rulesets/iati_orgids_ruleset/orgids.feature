@@ -1,4 +1,4 @@
-Feature: organisation identifiers must use org-ids prefixes 
+Feature: Organisation identifiers must use org-ids prefixes
 
   Scenario Outline: reporting-org.@ref must have an org-ids prefix
     Given `reporting-org` organisations

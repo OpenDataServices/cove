@@ -143,8 +143,13 @@ def test_register_ruleset_errors_decorator():
     def decorated_func_no_errors(context):
         return context, []
 
+    class Feature():
+        name = 'feature name'
+
     class Context():
         xml = etree.XML(XML_NS).getchildren()[0]
+        feature = Feature()
+
     context = Context()
 
     decorator_ns = register_ruleset_errors(['namespace'])
@@ -154,8 +159,8 @@ def test_register_ruleset_errors_decorator():
     decorator_no_ns = register_ruleset_errors(['undefined_ns'])
     decorated_func_no_ns = decorator_no_ns(decorated_func_no_errors)
     errors_ns = [{
-        'message': 'rule not applied: the data does not define "undefined_ns" namespace '
-                   '(@xmlns:undefined_ns)',
+        'explanation': 'rule not applied: the data does not define "undefined_ns" namespace '
+                       '(@xmlns:undefined_ns)',
         'path': '/iati-activities/@xmlns'
     }]
 
@@ -261,76 +266,75 @@ def test_cove_iati_cli_output():
                        'value': ''}]
 
     exp_rulesets = [{'id': 'TZ-BRLA-1-AAA-123123-AA123',
-                     'message': '2200-01-01 must be on or before today (2017-10-04)',
+                     'explanation': '2200-01-01 must be on or before today (2017-10-04)',
                      'path': '/iati-activities/iati-activity[1]/transaction[2]/transaction-date/@iso-date',
                      'rule': 'transaction/transaction-date/@iso-date date must be today or in the past'},
                    {'id': 'TZ-BRLA-3-BBB-123123-BB123',
-                    'message': '2200-01-01 must be on or before today (2017-10-04)',
+                    'explanation': '2200-01-01 must be on or before today (2017-10-04)',
                     'path': '/iati-activities/iati-activity[2]/activity-date/@iso-date',
                     'rule': "activity-date[@type='2']/@iso-date must be today or in the past"},
                    {'id': 'TZ-BRLA-3-BBB-123123-BB123',
-                    'message': '2200-01-01 must be on or before today (2017-10-04)',
+                    'explanation': '2200-01-01 must be on or before today (2017-10-04)',
                     'path': '/iati-activities/iati-activity[2]/transaction[2]/value/@value-date',
                     'rule': 'transaction/value/@value-date must be today or in the past'},
                    {'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                    'message': 'Neither @ref nor narrative/text() '
-                               'have been found',
+                    'explanation': 'Neither @ref nor narrative/text() have been found',
                     'path': '/iati-activities/iati-activity[3]',
                     'rule': 'participating-org/@ref attribute or participating-org/narrative must be present'},
                    {'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                    'message': 'Start date (2010-01-01) must be before end date (2009-01-01)',
+                    'explanation': 'Start date (2010-01-01) must be before end date (2009-01-01)',
                     'path': '/iati-activities/iati-activity[3]/budget/period-start/@iso-date & '
                             '/iati-activities/iati-activity[3]/budget/period-end/@iso-date',
                     'rule': 'budget-period/period-start/@iso-date must be before budget-period/period-end/@iso-date'},
                    {'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                    'message': 'Text does not match the regex ?TZ-BRLA-5-CCC-123123-CC123',
+                    'explanation': 'Text does not match the regex ?TZ-BRLA-5-CCC-123123-CC123',
                     'path': '/iati-activities/iati-activity[3]/iati-identifier/text()',
                     'rule': 'identifier/text() should match the regex [^\\:\\&\\|\\?]+'},
                    {'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                    'message': '?TZ-BRLA-5 does not match the regex ^[^\\/\\&\\|\\?]+$',
+                    'explanation': '?TZ-BRLA-5 does not match the regex ^[^\\/\\&\\|\\?]+$',
                     'path': '/iati-activities/iati-activity[3]/reporting-org/@ref',
                     'rule': 'reporting-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
                    {'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                    'message': 'Either sector or transaction/sector are expected (not both)',
+                    'explanation': 'Either sector or transaction/sector are expected (not both)',
                     'path': '/iati-activities/iati-activity[3]/sector & /iati-activities/iati-activity[3]'
                             '/transaction[1]/sector',
                     'rule': 'either sector or transaction/sector must be present'},
                    {'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                    'message': 'Either sector or transaction/sector are expected (not both)',
+                    'explanation': 'Either sector or transaction/sector are expected (not both)',
                     'path': '/iati-activities/iati-activity[3]/sector & /iati-activities/iati-activity[3]'
                             '/transaction[2]/sector',
                     'rule': 'either sector or transaction/sector must be present'},
                    {'id': 'TZ-BRLA-5-DDD-123123-DD123',
-                    'message': 'Neither activity-date[@type="1"] nor activity-date[@type="2"] have been found',
+                    'explanation': 'Neither activity-date[@type="1"] nor activity-date[@type="2"] have been found',
                     'path': '/iati-activities/iati-activity[4]',
                     'rule': 'activity-date[date @type="1"] or activity-date[@type="2"] must be present'},
                    {'id': 'TZ-BRLA-5-DDD-123123-DD123',
-                    'message': '2400-01-01 must be on or before today (2017-10-04)',
+                    'explanation': '2400-01-01 must be on or before today (2017-10-04)',
                     'path': '/iati-activities/iati-activity[4]/activity-date/@iso-date',
                     'rule': "activity-date[@type='4']/@iso-date must be today or in the past"},
                    {'id': 'TZ-BRLA-5-DDD-123123-DD123',
-                    'message': '?TZ-BRLA-8 does not match the regex ^[^\\/\\&\\|\\?]+$',
+                    'explanation': '?TZ-BRLA-8 does not match the regex ^[^\\/\\&\\|\\?]+$',
                     'path': '/iati-activities/iati-activity[4]/participating-org/@ref',
                     'rule': 'participating-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
                    {
                     'id': 'TZ-BRLA-5-DDD-123123-DD123',
-                    'message': '`(recipient-country|recipient-region)/@percentage` should sum to 100',
+                    'explanation': 'recipient-country|recipient-region/@percentage adds up to 30%',
                     'path': '/iati-activities/iati-activity[4]/recipient-country',
-                    'rule': 'recipient-country/@percentage and recipient-region/@percentage must sum to 100'},
+                    'rule': 'recipient-country/@percentage and recipient-region/@percentage must sum to 100%'},
                    {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                    'message': 'Neither activity-date[@type="1"] nor activity-date[@type="2"] have been found',
+                    'explanation': 'Neither activity-date[@type="1"] nor activity-date[@type="2"] have been found',
                     'path': '/iati-activities/iati-activity[5]',
                     'rule': 'activity-date[date @type="1"] or activity-date[@type="2"] must be present'},
                    {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                    'message': '`(recipient-country|recipient-region)/@percentage` should sum to 100',
+                    'explanation': 'recipient-country|recipient-region/@percentage adds up to 30%',
                     'path': '/iati-activities/iati-activity[5]/recipient-country',
-                    'rule': 'recipient-country/@percentage and recipient-region/@percentage must sum to 100'},
+                    'rule': 'recipient-country/@percentage and recipient-region/@percentage must sum to 100%'},
                    {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                    'message': '?TZ-BRLA-101 does not match the regex ^[^\\/\\&\\|\\?]+$',
+                    'explanation': '?TZ-BRLA-101 does not match the regex ^[^\\/\\&\\|\\?]+$',
                     'path': '/iati-activities/iati-activity[5]/transaction[1]/provider-org/@ref',
                     'rule': 'transaction/provider-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'},
                    {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                    'message': '?TZ-BRLA-102 does not match the regex ^[^\\/\\&\\|\\?]+$',
+                    'explanation': '?TZ-BRLA-102 does not match the regex ^[^\\/\\&\\|\\?]+$',
                     'path': '/iati-activities/iati-activity[5]/transaction[2]/receiver-org/@ref',
                     'rule': 'transaction/receiver-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'}]
 
@@ -361,31 +365,31 @@ def test_cove_iati_cli_output():
         assert expected['id'] == actual['id']
         assert expected['path'] == actual['path']
         assert expected['rule'] == actual['rule']
-        if 'on or before today' in expected['message']:
-            assert expected['message'][:-13] == actual['message'][:-13]
+        if 'on or before today' in expected['explanation']:
+            assert expected['explanation'][:-13] == actual['explanation'][:-13]
         else:
-            assert expected['message'] == actual['message']
+            assert expected['explanation'] == actual['explanation']
 
 
 def test_cove_iati_cli_orgids_output():
     expected = [{'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                 'message': '@ref  does not start with a recognised org-ids prefix',
+                 'explanation': '@ref  does not start with a recognised org-ids prefix',
                  'path': '/iati-activities/iati-activity[3]/participating-org/@ref',
                  'rule': 'participating-org/@ref must have an org-ids prefix'},
                 {'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                 'message': '@ref ?TZ-BRLA-5 does not start with a recognised org-ids prefix',
+                 'explanation': '@ref ?TZ-BRLA-5 does not start with a recognised org-ids prefix',
                  'path': '/iati-activities/iati-activity[3]/reporting-org/@ref',
                  'rule': 'reporting-org/@ref must have an org-ids prefix'},
                 {'id': 'TZ-BRLA-5-DDD-123123-DD123',
-                 'message': '@ref ?TZ-BRLA-8 does not start with a recognised org-ids prefix',
+                 'explanation': '@ref ?TZ-BRLA-8 does not start with a recognised org-ids prefix',
                  'path': '/iati-activities/iati-activity[4]/participating-org/@ref',
                  'rule': 'participating-org/@ref must have an org-ids prefix'},
                 {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                 'message': '@ref ?TZ-BRLA-101 does not start with a recognised org-ids prefix',
+                 'explanation': '@ref ?TZ-BRLA-101 does not start with a recognised org-ids prefix',
                  'path': '/iati-activities/iati-activity[5]/transaction[1]/provider-org/@ref',
                  'rule': 'transaction/provider-org/@ref must have an org-ids prefix'},
                 {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                 'message': '@ref ?TZ-BRLA-102 does not start with a recognised org-ids prefix',
+                 'explanation': '@ref ?TZ-BRLA-102 does not start with a recognised org-ids prefix',
                  'path': '/iati-activities/iati-activity[5]/transaction[2]/receiver-org/@ref',
                  'rule': 'transaction/receiver-org/@ref must have an org-ids prefix'}]
 
@@ -404,49 +408,49 @@ def test_cove_iati_cli_orgids_output():
 
     for expected, actual in zipped_results:
         assert expected['id'] == actual['id']
-        assert expected['message'] == actual['message']
+        assert expected['explanation'] == actual['explanation']
         assert expected['path'] == actual['path']
         assert expected['rule'] == actual['rule']
 
 
 def test_cove_iati_cli_openag_output():
     expected = [{'id': 'AA-AAA-123123-AA123',
-                 'message': 'the activity should include at least one location element',
+                 'explanation': 'the activity should include at least one location element',
                  'path': '/iati-activities/iati-activity[1]',
                  'rule': 'location element must be present'},
                 {'id': 'AA-AAA-123123-AA123',
-                 'message': 'openag:tag element must have @vocabulary attribute',
+                 'explanation': 'openag:tag element must have @vocabulary attribute',
                  'path': '/iati-activities/iati-activity[1]/openag:tag',
                  'rule': 'openag:tag/@vocabulary must be present with a code for "maintained by the '
                          'reporting organisation"'},
                 {'id': 'BB-BBB-123123-BB123',
-                 'message': 'location/location-id element must have @code attribute',
+                 'explanation': 'location/location-id element must have @code attribute',
                  'path': '/iati-activities/iati-activity[2]/location/location-id',
                  'rule': 'location/@code must be present'},
                 {'id': 'BB-BBB-123123-BB123',
-                 'message': '"http://bad.org" is not a valid value for @vocabulary-uri attribute (it '
-                            'should be "http://aims.fao.org/aos/agrovoc/")',
+                 'explanation': '"http://bad.org" is not a valid value for @vocabulary-uri attribute (it '
+                                'should be "http://aims.fao.org/aos/agrovoc/")',
                  'path': '/iati-activities/iati-activity[2]/openag:tag/@vocabulary-uri',
                  'rule': 'openag:tag/@vocabulary-uri must be present with an agrovoc uri'},
                 {'id': 'CC-CCC-789789-CC789',
-                 'message': 'location/location-id element must have @vocabulary attribute',
+                 'explanation': 'location/location-id element must have @vocabulary attribute',
                  'path': '/iati-activities/iati-activity[3]/location/location-id',
                  'rule': 'location/@vocabulary must be present'},
                 {'id': 'CC-CCC-789789-CC789',
-                 'message': '"01" is not a valid value for @vocabulary attribute (it should be "98 or 99")',
+                 'explanation': '"01" is not a valid value for @vocabulary attribute (it should be "98 or 99")',
                  'path': '/iati-activities/iati-activity[3]/openag:tag/@vocabulary',
                  'rule': 'openag:tag/@vocabulary must be present with a code for "maintained by the '
                          'reporting organisation"'},
                 {'id': 'DD-DDD-789789-DD789',
-                 'message': 'openag:tag element must have @code attribute',
+                 'explanation': 'openag:tag element must have @code attribute',
                  'path': '/iati-activities/iati-activity[4]/openag:tag',
                  'rule': 'openag:tag/@code must be present'},
                 {'id': 'EE-DDD-789789-EE789',
-                 'message': 'the activity should include at least one openag:tag element',
+                 'explanation': 'the activity should include at least one openag:tag element',
                  'path': '/iati-activities/iati-activity[5]',
                  'rule': 'openag:tag element must be present'},
                 {'id': 'EE-DDD-789789-EE789',
-                 'message': 'location must contain a location-id element',
+                 'explanation': 'location must contain a location-id element',
                  'path': '/iati-activities/iati-activity[5]/location',
                  'rule': 'location/location-id must be present'}]
 
@@ -465,7 +469,7 @@ def test_cove_iati_cli_openag_output():
 
     for expected, actual in zipped_results:
         assert expected['id'] == actual['id']
-        assert expected['message'] == actual['message']
+        assert expected['explanation'] == actual['explanation']
         assert expected['path'] == actual['path']
         assert expected['rule'] == actual['rule']
 
@@ -511,10 +515,31 @@ def test_ruleset_error_exceptions_handling(validated_data):
 def test_common_checks_context_iati_ruleset():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
     upload_dir = os.path.join('media', str(uuid.uuid4()))
-    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml')
+    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', api=True)
     assert len(context['ruleset_errors']) == 3
 
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
     upload_dir = os.path.join('media', str(uuid.uuid4()))
-    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml')
+    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', api=True)
     assert len(context['ruleset_errors']) == 17
+
+
+def test_post_api(client):
+    file_path = os.path.join('cove_iati', 'fixtures', 'example.xml')
+    resp = client.post('/api_test', {'file': open(file_path, 'rb'), 'name': 'example.xml'})
+
+    assert resp.status_code == 200
+    assert resp.json()['validation_errors'] == []
+    assert resp.json()['file_type'] == 'xml'
+
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xlsx')
+    resp = client.post('/api_test', {'file': open(file_path, 'rb'), 'name': 'basic_iati_unordered_valid.xlsx'})
+
+    assert resp.status_code == 200
+    assert resp.json()['validation_errors'] == []
+    assert resp.json()['file_type'] == 'xlsx'
+
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xlsx')
+    resp = client.post('/api_test', {'file': open(file_path, 'rb')})
+    assert resp.status_code == 400
+    assert resp.json() == {'name': ['This field is required.']}

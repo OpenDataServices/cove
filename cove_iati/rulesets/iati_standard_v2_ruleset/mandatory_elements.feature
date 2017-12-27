@@ -1,4 +1,4 @@
-Feature: Mandatory elements
+Feature: Elements are mandatory
 
   Scenario Outline: activity-date[date @type="1"] or activity-date[@type="2"] must be present
     Given an IATI activity

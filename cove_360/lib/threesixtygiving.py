@@ -270,7 +270,7 @@ class FundingOrg360GPrefix(AdditionalTest):
 
     check_text = {
         "heading": "a Funding Org:Identifier that starts '360G-'",
-        "message": "If the grant is from a recipient organisation that has an external identifier (such as a charity number, company number), then this should be used instead. If no other identifier can be used, then you can ignore this notice."
+        "message": "If the grant is from a funding organisation that has an external identifier (such as a charity or company number), then this should be used instead. If no other identifier can be used, then you can ignore this notice."
     }
 
     def process(self, grant, path_prefix):
@@ -292,7 +292,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
 
     check_text = {
         "heading": "a Recipient Org:Identifier that does not draw from a recognised register.",
-        "message": "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
+        "message": "Using external identifiers (such as a charity or company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers, or grants to individuals, then you can ignore this notice."
     }
 
     def process(self, grant, path_prefix):
@@ -321,7 +321,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
 
     check_text = {
         "heading": "a Funding Org:Identifier that does not draw from a recognised register.",
-        "message": "Using external identifiers (e.g. a charity number or a company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers or individuals then you can ignore this notice."
+        "message": "Using external identifiers (such as a charity or company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers, or grants to individuals, then you can ignore this notice."
     }
 
     def process(self, grant, path_prefix):
@@ -413,7 +413,7 @@ class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
 
     check_text = {
         "heading": "not have either a Recipient Org:Company Number or a Recipient Org:Charity Number",
-        "message": "Providing one or both of these, if possible, makes it easier for users of your data to join up the data with other data sources to provide better insight into grant-making. If your grants are to organisations that don’t have UK Company or UK Charity numbers, then you can ignore this notice."
+        "message": "Providing one or both of these, if possible, makes it easier for users to join up your data with other data sources to provide better insight into grantmaking. If your grants are to organisations that don’t have UK Company or UK Charity numbers, then you can ignore this notice."
     }
 
     def process(self, grant, path_prefix):
@@ -544,7 +544,7 @@ class NoBeneficiaryLocation(AdditionalTest):
 
     check_text = {
         "heading": "not contain any beneficiary location fields",
-        "message": "Providing beneficiary data, if available, helps users to understand to understand which areas ultimately benefitted from the grant."
+        "message": "Providing beneficiary data, if available, helps users to understand which areas ultimately benefitted from the grant."
     }
 
     def process(self, grant, path_prefix):

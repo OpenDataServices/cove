@@ -113,7 +113,7 @@ The following steps are for Ubuntu but equivalent packages are available for oth
 
 .. code:: bash
 
-   sudo apt-get install build-essential libxml2-dev libxslt1-dev python3-dev
+   sudo apt-get install build-essential libxml2-dev libxslt1-dev python3-dev mercurial
    pip install -r requirements_iati.txt
 
 Then run the development server:

@@ -1,0 +1,62 @@
+{% load i18n %}
+
+<table class="table table-condensed table-striped" id="ruleset-by-rule">
+<thead> 
+  <tr>
+    <th>{% trans 'Ruleset' %}</th>
+    <th>{% trans 'Rule' %}</th>
+    <th>{% trans 'Activity' %}</th>
+    <th>{% trans 'Explanation' %}</th>
+    <th>{% trans 'Path' %}</th>
+  </tr> 
+</thead>
+<tbody>
+{% for ruleset, result in ruleset_errors.0.items %}
+  <tr>
+    <td class="white-background"><strong>{{ruleset}}</strong></td>
+    {% for rule, violations in result.items %}
+      {% if forloop.first %}
+      <td class="white-background"><em>{{rule}}</em></td>
+        {% for instance in violations %}
+        {% if forloop.first %}
+            <td>{{instance.0}}</td>
+            <td>{{instance.1}}</td>
+            <td>{{instance.2}}</td>
+          </tr>
+        {% else %}
+          </tr>
+          <tr>
+            <td class="no-border-top white-background">&nbsp;</td>
+            <td class="no-border-top white-background">&nbsp;</td>
+            <td>{{instance.0}}</td>
+            <td>{{instance.1}}</td>
+            <td>{{instance.2}}</td>
+          </tr>
+        {% endif %}
+        {% endfor %}
+      {% else %}
+      <tr>
+      <td class="no-border-top white-background">&nbsp;</td>
+      <td class="white-background"><em>{{rule}}</em></td>
+        {% for instance in violations %}
+        {% if forloop.first %}
+            <td>{{instance.0}}</td>
+            <td>{{instance.1}}</td>
+            <td>{{instance.2}}</td>
+          </tr>
+        {% else %}
+          </tr>
+          <tr>
+            <td class="no-border-top white-background">&nbsp;</td>
+            <td class="no-border-top white-background">&nbsp;</td>
+            <td>{{instance.0}}</td>
+            <td>{{instance.1}}</td>
+            <td>{{instance.2}}</td>
+          </tr>
+        {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+{% endfor %}
+</tbody>
+</table>
