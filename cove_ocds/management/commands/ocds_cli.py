@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import glob
 
 from django.conf import settings
 from django.core.management.base import CommandError
@@ -18,10 +19,11 @@ class Command(CoveBaseCommand):
                             help='Convert data from nested (json) to flat format (spreadsheet) or vice versa')
         super(Command, self).add_arguments(parser)
 
-    def handle(self, file, *args, **options):
-        super(Command, self).handle(file, *args, **options)
+    def handle(self, files, *args, **options):
+        super(Command, self).handle(files, *args, **options)
 
         convert = options.get('convert')
+        stream = options.get('stream')
         schema_version = options.get('schema_version')
         version_choices = settings.COVE_CONFIG['schema_version_choices']
 
@@ -31,17 +33,18 @@ class Command(CoveBaseCommand):
             ))
 
         try:
-            if os.path.isdir(file):
-                with open(os.path.join(self.output_dir, 'all_results.txt'), 'w+') as outfile:
-                    for filename in os.listdir(file):
-                        result = ocds_json_output(self.output_dir, os.path.join(file, filename), schema_version,
-                                                  convert)
-                        result.update({'file': filename})
-                        json.dump(result, outfile, cls=SetEncoder)
-                        outfile.write('\n')
-                    outfile.close()
+            if stream:
+                for file in files:
+                    real_files = glob.glob(file)
+                    for real_file in real_files:
+                        if os.path.isdir(real_file):
+                            self.stdout.write('Skipping %s directory ', real_file)
+                        else:
+                            result = ocds_json_output(self.output_dir, os.path.join(files, real_file), schema_version,
+                                                      convert)
+                            print(result)
             else:
-                result = ocds_json_output(self.output_dir, file, schema_version, convert)
+                result = ocds_json_output(self.output_dir, files[0], schema_version, convert)
                 with open(os.path.join(self.output_dir, 'results.json'), 'w+') as result_file:
                     json.dump(result, result_file, indent=2, cls=SetEncoder)
         except APIException as e:
