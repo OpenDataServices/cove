@@ -31,9 +31,9 @@ class Command(CoveBaseCommand):
                         if os.path.isdir(real_file):
                             self.stdout.write('Skipping %s directory ', real_file)
                         else:
-                            result = iati_json_output(self.output_dir, os.path.join(files, real_file), openag=openag,
+                            result = iati_json_output(self.output_dir, real_file, openag=openag,
                                                       orgids=orgids)
-                            print(result)
+                            self.stdout.write(str(result))
             else:
                 result = iati_json_output(self.output_dir, files[0], openag=openag, orgids=orgids)
                 with open(os.path.join(self.output_dir, "results.json"), 'w+') as result_file:

@@ -40,9 +40,9 @@ class Command(CoveBaseCommand):
                         if os.path.isdir(real_file):
                             self.stdout.write('Skipping %s directory ', real_file)
                         else:
-                            result = ocds_json_output(self.output_dir, os.path.join(files, real_file), schema_version,
+                            result = ocds_json_output(self.output_dir, real_file, schema_version,
                                                       convert)
-                            print(result)
+                            self.stdout.write(str(result))
             else:
                 result = ocds_json_output(self.output_dir, files[0], schema_version, convert)
                 with open(os.path.join(self.output_dir, 'results.json'), 'w+') as result_file:
