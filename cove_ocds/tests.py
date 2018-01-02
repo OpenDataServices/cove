@@ -936,6 +936,14 @@ def test_cove_ocds_cli(file_type, options, output):
         with pytest.raises(SystemExit):
             call_command('ocds_cli', file_name, output_dir=output_dir)
 
+    # Test --stream option for one of the cases
+    if not options:
+        call_command('ocds_cli', file_name, stream=True)
+        assert sorted(os.listdir(output_dir)) == sorted(output)
+
+        with pytest.raises(SystemExit):
+            call_command('ocds_cli', file_name, output_dir=output_dir)
+
 
 @pytest.mark.parametrize('version_option', ['', '1.1', '100.100.100'])
 def test_cove_ocds_cli_schema_version(version_option):

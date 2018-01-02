@@ -220,6 +220,14 @@ def test_cove_iati_cli_delete_option():
             call_command('iati_cli', file_path, output_dir=output_dir)
 
 
+def test_cove_iati_cli_stream_option():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.csv')
+    call_command('iati_cli', file_path, stream=True)
+
+    with pytest.raises(SystemExit):
+        call_command('iati_cli', file_path, stream=True)
+
+
 def test_cove_iati_cli_output():
     exp_validation = [{'description': "'activity-date', attribute 'iso-date' is not a valid value of "
                                       "the atomic type 'xs:date'.",
