@@ -29,7 +29,7 @@ class Command(CoveBaseCommand):
                     real_files = glob.glob(file)
                     for real_file in real_files:
                         if os.path.isdir(real_file):
-                            self.stdout.write('Skipping %s directory ', real_file)
+                            self.stdout.write('Skipping %s directory ' % str(real_file))
                         else:
                             result = iati_json_output(self.output_dir, real_file, openag=openag,
                                                       orgids=orgids)

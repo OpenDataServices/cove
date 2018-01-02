@@ -936,13 +936,18 @@ def test_cove_ocds_cli(file_type, options, output):
         with pytest.raises(SystemExit):
             call_command('ocds_cli', file_name, output_dir=output_dir)
 
-    # Test --stream option for one of the cases
-    if not options:
-        call_command('ocds_cli', file_name, stream=True)
-        assert sorted(os.listdir(output_dir)) == sorted(output)
 
-        with pytest.raises(SystemExit):
-            call_command('ocds_cli', file_name, output_dir=output_dir)
+def test_cove_ocds_cli_stream_option():
+    file_path = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases.json')
+    test_dir = str(uuid.uuid4())
+    output_dir = os.path.join('media', test_dir)
+    call_command('ocds_cli', file_path, stream=True, output_dir=output_dir)
+    assert not os.path.exists(output_dir)
+    file_path = os.path.join('cove_ocds', 'fixtures')
+    with pytest.raises(SystemExit):
+        call_command('ocds_cli', file_path, output_dir=output_dir)
+    call_command('ocds_cli', file_path, stream=True, output_dir=output_dir)
+    assert not os.path.exists(output_dir)
 
 
 @pytest.mark.parametrize('version_option', ['', '1.1', '100.100.100'])

@@ -222,10 +222,18 @@ def test_cove_iati_cli_delete_option():
 
 def test_cove_iati_cli_stream_option():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.csv')
-    call_command('iati_cli', file_path, stream=True)
+    test_dir = str(uuid.uuid4())
+    output_dir = os.path.join('media', test_dir)
+    call_command('iati_cli', file_path, stream=True, output_dir=output_dir)
+    assert not os.path.exists(output_dir)
 
-    with pytest.raises(SystemExit):
-        call_command('iati_cli', file_path, stream=True)
+
+def test_cove_iati_cli_stream_option_dir():
+    file_path = os.path.join('cove_iati', 'fixtures')
+    test_dir = str(uuid.uuid4())
+    output_dir = os.path.join('media', test_dir)
+    call_command('iati_cli', file_path, stream=True, output_dir=output_dir)
+    assert not os.path.exists(output_dir)
 
 
 def test_cove_iati_cli_output():
