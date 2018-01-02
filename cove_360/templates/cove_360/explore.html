@@ -173,17 +173,27 @@
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
-    <div id="additional-checks-body" class="collapse">
+    <div id="additional-checks-body" class="collapse panel-body">
         {% if additional_checks_errored %}
         <div class="row"> <!--Start Row (Detail Table)-->
           <div class="col-xs-12">
             <div class="alert alert-danger">
-              {%blocktrans%}Additional checks failed due to an issue with the data. Fix some validation errors first.{%endblocktrans%}
+              {% blocktrans %}Additional checks failed due to an issue with the data. Fix some validation errors first.{% endblocktrans %}
             </div>
           </div>
         </div>
         {% endif %}
         {% if additional_checks %}
+        <p class="explanation">{% blocktrans %}Additional checks have been made on your data.{% endblocktrans %}</p>
+        <br>
+        <p>
+            {% blocktrans %}
+            Additional checks highlight some specific areas where the source data may be incorrect or require further attention.
+            They can also suggest ways to increase the usefulness of the data.
+            In any case, these checks do not indicate validation errors and can be ignored if they are not relevant.
+            {% endblocktrans %}
+        </p>
+        <br>
         <table class="table no-bottom-margin">
         <thead> 
           <tr> 
