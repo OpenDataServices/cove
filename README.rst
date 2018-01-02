@@ -232,9 +232,10 @@ CoVE for OCDS and IATI can be run from the command line. To get a JSON file with
 
 .. code:: bash
 
-    ./ocds-cli --options file/folder
+    ./ocds-cli --options files
 
-``file/folder`` can be a JSON or an Excel file or folder that contains JSON or Excel files.
+``files`` can be a list of JSON or Excel files. Regular expressions are supported. The use of multiple files must be
+used with the --stream option.
 
 Options:
 
@@ -248,6 +249,7 @@ Options:
 
 ``--convert -c``  Convert data from nested (JSON) to flat format (Excel and CSV). This option is redundant for spreadsheets as they are always converted to JSON format.
 
+``--stream -st`` Print the validation results into the console, without generating any output file, only printing one line per input file.
 
 **IATI**
 
@@ -255,7 +257,8 @@ Options:
 
     ./iati-cli --options file-name
 
-``file-name`` can be a XML or an Excel/CSV file.
+``file-name`` can be a list of XML or an Excel/CSV files. Regular expressions are supported. The use of multiple files must be
+used with the --stream option..
 
 Options:
 
@@ -268,6 +271,8 @@ Options:
 ``--orgids -i`` Run org-ids rule check for IATI identifier prefixes.
 
 ``--openag -a`` Run ruleset checks for IATI OpenAg data.
+
+``--stream -st`` Print the validation results into the console, without generating any output file, only printing one line per input file.
 
 
 If the file is in spreadsheet format, the output directory will contain a *unflattened.xml* file converted from Excel or CSV to XML format
