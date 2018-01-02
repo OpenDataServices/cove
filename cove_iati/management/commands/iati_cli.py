@@ -1,7 +1,7 @@
 import json
 import os
 import sys
-
+import glob
 
 from cove.lib.exceptions import CoveInputDataError
 from cove.management.commands.base_command import CoveBaseCommand, SetEncoder
@@ -17,19 +17,30 @@ class Command(CoveBaseCommand):
                             'Org-ids prefixes')
         super(Command, self).add_arguments(parser)
 
-    def handle(self, file, *args, **options):
-        super(Command, self).handle(file, *args, **options)
+    def handle(self, files, *args, **options):
+        super(Command, self).handle(files, *args, **options)
+        stream = options.get('stream')
         openag = options.get('openag')
         orgids = options.get('orgids')
 
         try:
-            result = iati_json_output(self.output_dir, file, openag=openag, orgids=orgids)
+            if stream:
+                for file in files:
+                    real_files = glob.glob(file)
+                    for real_file in real_files:
+                        if os.path.isdir(real_file):
+                            self.stdout.write('Skipping %s directory ', real_file)
+                        else:
+                            result = iati_json_output(self.output_dir, os.path.join(files, real_file), openag=openag,
+                                                      orgids=orgids)
+                            print(result)
+            else:
+                result = iati_json_output(self.output_dir, files[0], openag=openag, orgids=orgids)
+                with open(os.path.join(self.output_dir, "results.json"), 'w+') as result_file:
+                    json.dump(result, result_file, indent=2, cls=SetEncoder)
         except APIException as e:
             self.stdout.write(str(e))
             sys.exit(1)
         except CoveInputDataError as e:
             self.stdout.write('Not well formed XML: %s' % str(e.context['error']))
             sys.exit(1)
-
-        with open(os.path.join(self.output_dir, "results.json"), 'w+') as result_file:
-            json.dump(result, result_file, indent=2, cls=SetEncoder)
