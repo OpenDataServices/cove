@@ -58,6 +58,8 @@ def explore_ocds(request, pk):
                     'msg': _('OCDS JSON should have an object as the top level, the JSON you supplied does not.'),
                 })
 
+            version_in_data = json_data.get('version', '')
+            db_data.data_schema_version = version_in_data
             select_version = post_version_choice or db_data.schema_version
             schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data)
 
@@ -67,7 +69,6 @@ def explore_ocds(request, pk):
                 # This shouldn't happen unless the user sends random POST data.
                 exceptions.raise_invalid_version_argument(post_version_choice)
             if schema_ocds.invalid_version_data:
-                version_in_data = json_data.get('version')
                 if isinstance(version_in_data, str) and re.compile('^\d+\.\d+\.\d+$').match(version_in_data):
                     exceptions.raise_invalid_version_data_with_patch(version_in_data)
                 else:
@@ -97,6 +98,8 @@ def explore_ocds(request, pk):
         metatab_data = get_spreadsheet_meta_data(upload_dir, file_name, metatab_schema_url, file_type)
         if 'version' not in metatab_data:
             metatab_data['version'] = '1.0'
+        else:
+            db_data.data_schema_version = metatab_data['version']
 
         select_version = post_version_choice or db_data.schema_version
         schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
@@ -136,9 +139,12 @@ def explore_ocds(request, pk):
     if schema_ocds.json_deref_error:
         exceptions.raise_json_deref_error(schema_ocds.json_deref_error)
 
-    context['first_render'] = not db_data.rendered
-    schema_version = getattr(schema_ocds, 'version', None)
+    context.update({
+        'data_schema_version': db_data.data_schema_version,
+        'first_render': not db_data.rendered
+    })
 
+    schema_version = getattr(schema_ocds, 'version', None)
     if schema_version:
         db_data.schema_version = schema_version
     if not db_data.rendered:

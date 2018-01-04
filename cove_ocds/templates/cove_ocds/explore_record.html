@@ -32,6 +32,11 @@
              <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
              {% blocktrans count count=records_aggregates.count %}This file contains <strong>{{count}} record.</strong>{% plural %}This file contains <strong>{{count}} record.</strong>{% endblocktrans %}
              </li>
+             {% if data_schema_version %}
+                <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                  {% trans "The schema version specified in the file is" %} <strong>{{data_schema_version}}</strong>.
+                </li>
+             {% endif %}
              <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
              {% blocktrans count count=records_aggregates.unique_ocids|length %}There is <strong>{{count}} unique OCID.</strong>{% plural %}There are <strong>{{count}} unique OCIDs.</strong>{% endblocktrans %}
              </li>
