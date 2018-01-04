@@ -95,3 +95,35 @@ option:disabled
 .in-panel-warning
   padding: 10px
   margin-bottom: 10px
+
+.ttip
+  position: relative
+  display: inline-block
+  color: #9BAF00
+
+.ttip .ttiptext
+  visibility: hidden
+  width: 120px
+  background-color: #555
+  color: #fff
+  text-align: center
+  border-radius: 6px
+  border-color: #585858
+  position: absolute
+  z-index: 1
+  opacity: 0
+  transition: opacity 1s
+  padding: 5px
+
+.ttip .ttiptext
+    width: 240px
+    top: 100%
+    left: 50% 
+    margin-left: -60px
+    
+
+.ttip:hover .ttiptext
+  visibility: visible
+  opacity: 0.9
+
+
