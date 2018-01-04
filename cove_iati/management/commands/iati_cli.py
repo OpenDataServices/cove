@@ -1,7 +1,6 @@
 import json
 import os
 import sys
-import glob
 
 from cove.lib.exceptions import CoveInputDataError
 from cove.management.commands.base_command import CoveBaseCommand, SetEncoder
@@ -26,14 +25,12 @@ class Command(CoveBaseCommand):
         try:
             if stream:
                 for file in files:
-                    real_files = glob.glob(file)
-                    for real_file in real_files:
-                        if os.path.isdir(real_file):
-                            self.stdout.write('Skipping %s directory ' % str(real_file))
-                        else:
-                            result = iati_json_output(self.output_dir, real_file, openag=openag,
-                                                      orgids=orgids)
-                            self.stdout.write(str(result))
+                    if os.path.isdir(file):
+                        self.stdout.write('Skipping %s directory ' % str(file))
+                    else:
+                        result = iati_json_output(self.output_dir, file, openag=openag,
+                                                  orgids=orgids)
+                        self.stdout.write(str(result))
             else:
                 result = iati_json_output(self.output_dir, files[0], openag=openag, orgids=orgids)
                 with open(os.path.join(self.output_dir, "results.json"), 'w+') as result_file:

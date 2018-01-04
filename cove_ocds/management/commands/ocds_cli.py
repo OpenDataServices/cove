@@ -1,7 +1,6 @@
 import json
 import os
 import sys
-import glob
 
 from django.conf import settings
 from django.core.management.base import CommandError
@@ -21,7 +20,6 @@ class Command(CoveBaseCommand):
 
     def handle(self, files, *args, **options):
         super(Command, self).handle(files, *args, **options)
-
         convert = options.get('convert')
         stream = options.get('stream')
         schema_version = options.get('schema_version')
@@ -35,14 +33,12 @@ class Command(CoveBaseCommand):
         try:
             if stream:
                 for file in files:
-                    real_files = glob.glob(file)
-                    for real_file in real_files:
-                        if os.path.isdir(real_file):
-                            self.stdout.write('Skipping %s directory ' % str(real_file))
-                        else:
-                            result = ocds_json_output(self.output_dir, real_file, schema_version,
-                                                      convert)
-                            self.stdout.write(str(result))
+                    if os.path.isdir(file):
+                        self.stdout.write('Skipping %s directory ' % str(file))
+                    else:
+                        result = ocds_json_output(self.output_dir, file, schema_version,
+                                                  convert)
+                        self.stdout.write(str(result))
             else:
                 result = ocds_json_output(self.output_dir, files[0], schema_version, convert)
                 with open(os.path.join(self.output_dir, 'results.json'), 'w+') as result_file:

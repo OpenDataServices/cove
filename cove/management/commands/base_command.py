@@ -2,7 +2,6 @@ import json
 import os
 import shutil
 import sys
-import glob
 
 from django.core.management.base import BaseCommand
 
@@ -24,12 +23,12 @@ class CoveBaseCommand(BaseCommand):
         parser.add_argument('--output-dir', '-o', default='', help='Directory where the output is created, defaults to the name of the file')
         parser.add_argument('--delete', '-d', action='store_true', help='Delete existing directory if it exits')
         parser.add_argument('--exclude-file', '-e', action='store_true', help='Do not include the file in the output directory')
-        parser.add_argument('--stream', '-st', action='store_true', help='Do not include the file in the output directory')
+        parser.add_argument('--stream', '-t', action='store_true', help='The output would be streamed to stdout')
 
     def handle(self, files, *args, **options):
 
         stream = options.get('stream')
-        if (len(files) > 1 or len(glob.glob(files[0])) > 1 or os.path.isdir(glob.glob(files[0])[0])) and not stream:
+        if (len(files) > 1 or os.path.isdir(files[0])) and not stream:
             self.stdout.write('The multiple file option must be used with the --stream option')
             sys.exit(1)
 
