@@ -19,7 +19,7 @@ from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
 
 from cove.lib.exceptions import cove_spreadsheet_conversion_error
-from cove.lib.tools import decimal_default
+from cove.lib.tools import cached_get_request, decimal_default
 
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
@@ -88,13 +88,21 @@ class CustomRefResolver(RefResolver):
 class SchemaJsonMixin():
     @cached_property
     def release_schema_str(self):
-        return requests.get(self.release_schema_url).text
+        if getattr(self, 'cache_schema', False):
+            response = cached_get_request(self.release_schema_url)
+        else:
+            response = requests.get(self.release_schema_url)
+        return response.text
 
     @cached_property
     def release_pkg_schema_str(self):
         uri_scheme = urlparse(self.release_pkg_schema_url).scheme
         if uri_scheme == 'http' or uri_scheme == 'https':
-            return requests.get(self.release_pkg_schema_url).text
+            if getattr(self, 'cache_schema', False):
+                response = cached_get_request(self.release_pkg_schema_url)
+            else:
+                response = requests.get(self.release_pkg_schema_url)
+            return response.text
         else:
             with open(self.release_pkg_schema_url) as fp:
                 return fp.read()
