@@ -316,7 +316,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
         if 'record' not in source_filename:
             converted_file_response = requests.get(converted_file)
-            if source_filename == 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx':
+            if source_filename == 'fundingproviders-grants_2_grants_titleswithoutrollup.xlsx':
                 grant1 = converted_file_response.json()['grants'][1]
                 assert grant1['recipientOrganization'][0]['department'] == 'Test data'
                 assert grant1['classifications'][0]['title'] == 'Test'
