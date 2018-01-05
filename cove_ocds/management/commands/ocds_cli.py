@@ -13,7 +13,8 @@ class Command(CoveBaseCommand):
     help = 'Run Command Line version of Cove OCDS'
 
     def add_arguments(self, parser):
-        parser.add_argument('--schema-version', '-s', default='', help='Version of the schema to validate the data')
+        parser.add_argument('--schema-version', '-s', default='',
+                            help='Version of the schema to validate the data')
         parser.add_argument('--convert', '-c', action='store_true',
                             help='Convert data from nested (json) to flat format (spreadsheet) or vice versa')
         super(Command, self).add_arguments(parser)
@@ -23,6 +24,7 @@ class Command(CoveBaseCommand):
         convert = options.get('convert')
         stream = options.get('stream')
         schema_version = options.get('schema_version')
+        convert = options.get('convert')
         version_choices = settings.COVE_CONFIG['schema_version_choices']
 
         if schema_version and schema_version not in version_choices:
@@ -37,14 +39,14 @@ class Command(CoveBaseCommand):
                 else:
                     try:
                         result = ocds_json_output(self.output_dir, file, schema_version,
-                                                  convert)
+                                                  convert, cache_schema=True)
                         result.update({'file': file})
                         self.stdout.write(json.dumps(result, cls=SetEncoder))
                     except APIException as e:
                         self.stdout.write(json.dumps({'file': file, 'error': e}))
         else:
             try:
-                result = ocds_json_output(self.output_dir, files[0], schema_version, convert)
+                result = ocds_json_output(self.output_dir, files[0], schema_version, convert, cache_schema=True)
                 with open(os.path.join(self.output_dir, 'results.json'), 'w+') as result_file:
                     json.dump(result, result_file, indent=2, cls=SetEncoder)
             except APIException as e:

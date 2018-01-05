@@ -19,7 +19,7 @@ from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
 
 from cove.lib.exceptions import cove_spreadsheet_conversion_error
-from cove.lib.tools import decimal_default
+from cove.lib.tools import cached_get_request, decimal_default
 
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
@@ -88,13 +88,21 @@ class CustomRefResolver(RefResolver):
 class SchemaJsonMixin():
     @cached_property
     def release_schema_str(self):
-        return requests.get(self.release_schema_url).text
+        if getattr(self, 'cache_schema', False):
+            response = cached_get_request(self.release_schema_url)
+        else:
+            response = requests.get(self.release_schema_url)
+        return response.text
 
     @cached_property
     def release_pkg_schema_str(self):
         uri_scheme = urlparse(self.release_pkg_schema_url).scheme
         if uri_scheme == 'http' or uri_scheme == 'https':
-            return requests.get(self.release_pkg_schema_url).text
+            if getattr(self, 'cache_schema', False):
+                response = cached_get_request(self.release_pkg_schema_url)
+            else:
+                response = requests.get(self.release_pkg_schema_url)
+            return response.text
         else:
             with open(self.release_pkg_schema_url) as fp:
                 return fp.read()
@@ -264,19 +272,21 @@ def get_fields_present(*args, **kwargs):
 
 
 def schema_dict_fields_generator(schema_dict):
-    if 'properties' in schema_dict:
+    if 'properties' in schema_dict and isinstance(schema_dict['properties'], dict):
         for property_name, value in schema_dict['properties'].items():
             if 'oneOf' in value:
                 property_schema_dicts = value['oneOf']
             else:
                 property_schema_dicts = [value]
             for property_schema_dict in property_schema_dicts:
+                if not isinstance(property_schema_dict, dict):
+                    continue
                 property_type_set = get_property_type_set(property_schema_dict)
                 if 'object' in property_type_set:
                     for field in schema_dict_fields_generator(property_schema_dict):
                         yield '/' + property_name + field
                 elif 'array' in property_type_set:
-                    fields = schema_dict_fields_generator(property_schema_dict['items'])
+                    fields = schema_dict_fields_generator(property_schema_dict.get('items', {}))
                     for field in fields:
                         yield '/' + property_name + field
                 yield '/' + property_name
@@ -390,7 +400,10 @@ def _get_schema_deprecated_paths(schema_obj, obj=None, current_path=(), deprecat
     if schema_obj:
         obj = schema_obj.get_release_pkg_schema_obj(deref=True)
 
-    for prop, value in obj.get('properties', {}).items():
+    properties = obj.get('properties', {})
+    if not isinstance(properties, dict):
+        return deprecated_paths
+    for prop, value in properties.items():
         if current_path:
             path = current_path + (prop,)
         else:
@@ -411,7 +424,7 @@ def _get_schema_deprecated_paths(schema_obj, obj=None, current_path=(), deprecat
 
         if value.get('type') == 'object':
             _get_schema_deprecated_paths(None, value, path, deprecated_paths)
-        elif value.get('type') == 'array' and value['items'].get('properties'):
+        elif value.get('type') == 'array' and value.get('items', {}).get('properties'):
             _get_schema_deprecated_paths(None, value['items'], path, deprecated_paths)
 
     return deprecated_paths
@@ -508,7 +521,7 @@ def add_is_codelist(obj):
 
         if value.get('type') == 'object':
             add_is_codelist(value)
-        elif value.get('type') == 'array' and value['items'].get('properties'):
+        elif value.get('type') == 'array' and value.get('items', {}).get('properties'):
             add_is_codelist(value['items'])
 
     for value in obj.get("definitions", {}).values():
@@ -528,7 +541,10 @@ def _get_schema_codelist_paths(schema_obj, obj=None, current_path=(), codelist_p
     if schema_obj:
         obj = schema_obj.get_release_pkg_schema_obj(deref=True)
 
-    for prop, value in obj.get('properties', {}).items():
+    properties = obj.get('properties', {})
+    if not isinstance(properties, dict):
+        return codelist_paths
+    for prop, value in properties.items():
         if current_path:
             path = current_path + (prop,)
         else:
@@ -539,7 +555,7 @@ def _get_schema_codelist_paths(schema_obj, obj=None, current_path=(), codelist_p
 
         if value.get('type') == 'object':
             _get_schema_codelist_paths(None, value, path, codelist_paths)
-        elif value.get('type') == 'array' and value['items'].get('properties'):
+        elif value.get('type') == 'array' and value.get('items', {}).get('properties'):
             _get_schema_codelist_paths(None, value['items'], path, codelist_paths)
 
     return codelist_paths
