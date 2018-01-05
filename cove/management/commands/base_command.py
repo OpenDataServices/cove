@@ -29,7 +29,7 @@ class CoveBaseCommand(BaseCommand):
 
         stream = options.get('stream')
         if (len(files) > 1 or os.path.isdir(files[0])) and not stream:
-            self.stdout.write('The multiple file option must be used with the --stream option')
+            self.stderr.write('The multiple file option must be used with the --stream option')
             sys.exit(1)
 
         output_dir = options.get('output_dir')
@@ -45,7 +45,7 @@ class CoveBaseCommand(BaseCommand):
                 if delete:
                     shutil.rmtree(output_dir)
                 else:
-                    self.stdout.write('Directory {} already exists'.format(output_dir))
+                    self.stderr.write('Directory {} already exists'.format(output_dir))
                     sys.exit(1)
             os.makedirs(output_dir)
 

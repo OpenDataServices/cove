@@ -30,19 +30,23 @@ class Command(CoveBaseCommand):
                 str(list(version_choices.keys()))
             ))
 
-        try:
-            if stream:
-                for file in files:
-                    if os.path.isdir(file):
-                        self.stdout.write('Skipping %s directory ' % str(file))
-                    else:
+        if stream:
+            for file in files:
+                if os.path.isdir(file):
+                    self.stderr.write('Skipping %s directory ' % str(file))
+                else:
+                    try:
                         result = ocds_json_output(self.output_dir, file, schema_version,
                                                   convert)
-                        self.stdout.write(str(result))
-            else:
+                        result.update({'file': file})
+                        self.stdout.write(json.dumps(result, cls=SetEncoder))
+                    except APIException as e:
+                        self.stdout.write(json.dumps({'file': file, 'error': e}))
+        else:
+            try:
                 result = ocds_json_output(self.output_dir, files[0], schema_version, convert)
                 with open(os.path.join(self.output_dir, 'results.json'), 'w+') as result_file:
                     json.dump(result, result_file, indent=2, cls=SetEncoder)
-        except APIException as e:
-            self.stdout.write(str(e))
-            sys.exit(1)
+            except APIException as e:
+                self.stderr.write(str(e))
+                sys.exit(1)
