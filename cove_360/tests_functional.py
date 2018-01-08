@@ -292,8 +292,8 @@ def test_index_page_360(server_url, browser):
     assert 'JSON built to the 360Giving JSON schema' in browser.find_element_by_tag_name('body').text
     assert 'Multi-table data package - Excel' in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
-  
-  
+
+
 @pytest.mark.parametrize(('link_text', 'url'), [
     ('360Giving Data Standard guidance', 'http://www.threesixtygiving.org/standard/'),
     ('Excel', 'https://threesixtygiving-standard.readthedocs.io/en/latest/_static/summary-table/360-giving-schema-titles.xlsx'),
@@ -488,3 +488,16 @@ def test_favicon(server_url, browser):
     # we should not have a favicon link just now
     with pytest.raises(NoSuchElementException):
         browser.find_element_by_xpath("//link[@rel='icon']")
+
+
+def test_explore_360_sample_data_link(server_url, browser):
+    browser.get(server_url)
+    browser.find_element_by_partial_link_text('loading some sample data.').click()
+    time.sleep(0.5)
+    body_text = browser.find_element_by_tag_name('body').text
+
+    assert 'Data Summary' in body_text
+    assert 'Sorry we can\'t process that data' not in body_text
+    # Show sample data link in the home page only
+    with pytest.raises(NoSuchElementException):
+        browser.find_element_by_partial_link_text('loading some sample data.')
