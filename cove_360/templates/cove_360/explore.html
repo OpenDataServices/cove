@@ -69,7 +69,7 @@
               </li>
              {% endif %}
            </ul>
-           <div class="explore-help"> If anything looks wrong with this data please use the <em>Review</em> section below to identify potential issues. </div>
+           <div class="explore-help">{% blocktrans %}If this summary looks incorrect, you can use the <em>Review</em> section alongside any <em>warnings</em> or <em>errors</em> to investigate what happened and make changes to your original data before loading it again for a new check.{% endblocktrans %}</div>
         {% if conversion == 'flattenable' %}
           <form method="post">
             <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% trans "Convert to Spreadsheet" %}</button>
