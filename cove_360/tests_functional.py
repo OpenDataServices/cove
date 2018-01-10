@@ -313,7 +313,7 @@ def test_common_index_elements(server_url, browser):
     browser.find_element_by_css_selector('#more-information .panel-title').click()
     time.sleep(0.5)
     assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
-    assert 'Why do you delete data after 7 days?' in browser.find_element_by_tag_name('body').text
+    assert 'Why do you delete data after seven days?' in browser.find_element_by_tag_name('body').text
     assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
     assert 'Terms & Conditions' in browser.find_element_by_tag_name('body').text
     assert 'Open Data Services' in browser.find_element_by_tag_name('body').text
