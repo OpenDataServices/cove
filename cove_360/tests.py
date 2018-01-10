@@ -9,18 +9,18 @@ from . lib.schema import Schema360
 from . lib.threesixtygiving import run_additional_checks
 from cove.input.models import SuppliedData
 
-# Source is cove_360/fixtures/WellcomeTrust-grants_fixed_2_grants.json
+# Source is cove_360/fixtures/fundingproviders-grants_fixed_2_grants.json
 # see cove_360/fixtures/SOURCES for more info.
 # Data has been edited to increase test coverage, so should not be used for
 # anything besides testing.
 
 GRANTS = {
-    'grants': [{'Co-applicant(s)': 'Mr Bentley Crudgington, Mr Gary Thomas ',
-                'Full name of applicant': 'Miss Abigail Addison',
-                'Grant number': '105177/Z/14/Z',
-                'Grant type': 'Large Arts Awards bob@bop.com',
+    'grants': [{'Co-applicant(s)': 'Miss Hypatia Alexandria, Mr Thomas Aquinas',
+                'Full name of applicant': 'Miss Jane Roe',
+                'Grant number': '000001/X/00/X',
+                'Grant type': 'Large Awards bob@bop.com',
                 'Sponsor(s)': ' ',
-                'Surname of applicant': 'Addison',
+                'Surname of applicant': 'Roe',
                 'amountAwarded': 0,
                 'awardDate': '24/07/2014',
                 'currency': 'GBP',
@@ -30,8 +30,8 @@ GRANTS = {
                 }],
                 'dateModified': '13-03-2015',
                 'fundingOrganization': [{'id': 'XSFAFA',
-                                         'name': 'The Wellcome Trust'}],
-                'id': '360G-wellcometrust-105177/Z/14/Z',
+                                         'name': 'Funding Providers UK'}],
+                'id': '360G-fundingproviders-000001/X/00/X',
                 'plannedDates': [{'duration': '30'}],
                 'recipientOrganization': [{'addressLocality': 'London',
                                            'location': [{
@@ -40,29 +40,28 @@ GRANTS = {
                                            'charityNumber': '12345',
                                            'companyNumber': 'AAA',
                                            'id': '360G-Blah',
-                                           'name': 'Animate Project Limited'}],
+                                           'name': 'Company Name Limited'}],
                 'classifications': [{
                     'title': 'Classification title'}],
-                'title': 'Silent Signal.  ,moo@moo.com '},
+                'title': 'Title A.  ,moo@moo.com '},
                {'Co-applicant(s)': ' ',
-                'Department': 'Department of Museum Studies',
-                'Full name of applicant': 'Prof Richard Sandell',
-                'Grant number': '105182/Z/14/Z',
-                'Grant type': 'Large Arts Awards',
+                'Department': 'Department of Studies',
+                'Full name of applicant': 'Prof John Doe',
+                'Grant number': '000002/X/00/X',
+                'Grant type': 'Large Awards',
                 'Sponsor(s)': ' ',
-                'Surname of applicant': 'Sandell',
+                'Surname of applicant': 'Doe',
                 'amountAwarded': 178990,
                 'awardDate': '24/07/2014',
                 'currency': 'GBP',
-                'dataSource': 'http://www.wellcome.ac.uk/Managing-a-grant/Grants-awarded/index.htm',
+                'dataSource': 'http://www.fundingproviders.co.uk/grants/',
 
-                'description': 'Exceptional and Extraordinary: unruly bodies and '
-                               'minds in the medical museum. ',
-                'fundingOrganization': [{'id': '360G-CHC-210183',
-                                         'name': 'The Wellcome Trust'}],
+                'description': 'Description for project A',
+                'fundingOrganization': [{'id': '360G-CHC-000001',
+                                         'name': 'Funding Providers UK'}],
                 'grantProgramme': [{'code': 'AAC',
-                                    'title': 'Arts Awards Funding Committee'}],
-                'id': '360G-wellcometrust-105182/Z/14/Z',
+                                    'title': 'Awards Funding Committee'}],
+                'id': '360G-fundingproviders-000002/X/00/X',
                 'plannedDates': [{'duration': '25'}],
                 'recipientOrganization': [{'addressLocality': 'Leicester ',
                                            'location': [{
@@ -70,19 +69,19 @@ GRANTS = {
                                                'name': 'Rhondda Cynon Taf',
                                                'geoCode': 'W06000016'}],
                                            'charityNumber': '1234567',
-                                           'companyNumber': 'RC000659',
-                                           'id': 'GB-UNKNOW-RC000659',
-                                           'name': 'UNIVERSITY OF LEICESTER'}],
-                'title': ('Exceptional and Extraordinary: unruly bodies and minds in the medical '
-                          'museum - unique film, dance, performance and comedy commissions that draw '
-                          'on museum collections to explore our problematic attitudes towards difference')},
+                                           'companyNumber': 'RC000000',
+                                           'id': 'GB-UNKNOW-RC000000',
+                                           'name': 'University of UK'}],
+                'title': ('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do '
+                          'eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut '
+                          'enim ad minim veniam, quis nostrud exercitation ullamco laboris.')},
                {'Co-applicant(s)': ' ',
-                'Department': 'Department of Museum Studies',
-                'Full name of applicant': 'Prof Richard Sandell',
-                'Grant number': '105183/Z/14/Z',
-                'Grant type': 'Large Arts Awards',
+                'Department': 'Department of Studies',
+                'Full name of applicant': 'Prof John Doe',
+                'Grant number': '00002/X/00/X',
+                'Grant type': 'Large Awards',
                 'Sponsor(s)': ' ',
-                'Surname of applicant': 'Sandell',
+                'Surname of applicant': 'Doe',
                 'amountAwarded': 178990,
                 'awardDate': '24/07/2014',
                 'currency': 'GBP',
@@ -93,21 +92,21 @@ GRANTS = {
                     
                 }],
                 'dateModified': '13-03-2015',
-                'description': 'Exceptional and Extraordinary: unruly bodies and '
-                               'minds in the medical museum. ',
-                'fundingOrganization': [{'id': 'GB-COH-A106590',
-                                         'name': 'The Wellcome Trust'}],
+                'description': 'Excepteur sint occaecat cupidatat non proident, sunt in culpa '
+                               'qui officia deserunt mollit anim id est laborum.',
+                'fundingOrganization': [{'id': 'GB-COH-000000',
+                                         'name': 'Funding Providers UK'}],
                 'grantProgramme': [{'code': 'AAC',
                                     'title': 'Arts Awards Funding Committee'}],
-                'id': '360G-wellcometrust-105183/Z/14/Z',
+                'id': '360G-fundingproviders-000003/X/00/X',
                 'plannedDates': [{'duration': '25'}],
                 'recipientOrganization': [{'addressLocality': 'Leicester ',
-                                           'id': 'GB-CHC-10659',
-                                           'name': 'UNIVERSITY OF LEICESTER',
-                                           'postalCode': 'NW15 8JK'}],
+                                           'id': 'GB-CHC-00001',
+                                           'name': 'University of UK',
+                                           'postalCode': 'SW10 0AB'}],
                 'relatedActivity': ["", "360G-xxx"],
-                'title': 'Exceptional and Extraordinary: unruly bodies and minds '
-                         'in the medical museum. '}]}
+                'title': 'Excepteur sint occaecat cupidatat non proident, sunt in culpa '
+                         'qui officia deserunt mollit anim id est laborum.'}]}
 
 
 SOURCE_MAP = {
@@ -500,7 +499,7 @@ def test_explore_page_csv(client):
 @pytest.mark.django_db
 def test_explore_not_json(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove_360', 'fixtures', 'WellcomeTrust-grants_malformed.json')) as fp:
+    with open(os.path.join('cove_360', 'fixtures', 'fundingproviders-grants_malformed.json')) as fp:
         data.original_file.save('test.json', UploadedFile(fp))
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200

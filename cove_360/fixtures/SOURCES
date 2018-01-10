@@ -1,12 +1,20 @@
-WellcomeTrust-grants_fixed_2_grants.json
-Source: http://data.threesixtygiving.org/dataset/welcome-trust-grants-awarded
-(but with the key "Grants" changed to "grants" and truncated to to releases)
+fundingproviders-grants_2_grants_cp1252.csv
+fundingproviders_grants_2_grants.csv
+fundingproviders-grants_2_grants.xlsx
+fundingproviders-grants_2_grants_titleswithoutrollup.xlsx
+fundingproviders-grants_broken_grants.json
+fundingproviders-grants_fixed_2_grants.json
+fundingproviders-grants_malformed.json
+Source (all): Edited version  of data from http://data.threesixtygiving.org/dataset/welcome-trust-grants-awarded
+(converted to different formats; key "Grants" changed to "grants"; truncated to two releases; personal and organization indentifiers replaced)
 License: Creative Commons Attribution
 
-WellcomeTrust-grants_2_grants.xlsx
-Source: http://data.threesixtygiving.org/dataset/welcome-trust-grants-awarded
+fundingtrust-grants_dc.txt
+Source: Edited version of data from http://data.threesixtygiving.org/sites/default/files/PHF-201314grants_1.csv
+(personal and organization indentifiers replaced)
 License: Creative Commons Attribution
 
-paul-hamlyn-foundation-grants_dc.txt
-Source: Edited version of data taken from http://data.threesixtygiving.org/sites/default/files/PHF-201314grants_1.csv
-License: Creative Commons Attribution
+tenders_releases_2_releases.xlsx
+Source: https://github.com/open-contracting/sample-data/tree/958fc30e827e980e750459e1b9a6fe09eb266d7d/buyandsell/ocds_data
+License: http://data.gc.ca/eng/open-government-licence-canada 
+(converted to xlsx format using flatten-tool; truncated to only two releases)

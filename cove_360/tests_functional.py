@@ -37,7 +37,7 @@ def server_url(request, live_server):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
-    ('WellcomeTrust-grants_fixed_2_grants.json', ['A file was downloaded from',
+    ('fundingproviders-grants_fixed_2_grants.json', ['A file was downloaded from',
                                                   'This file contains 4 grants from 1 funder to 2 recipients awarded on 24/07/2014',
                                                   'The grants were awarded in GBP with a total value of £662,990',
                                                   'individual awards ranging from £152,505 (lowest) to £178,990 (highest)',
@@ -48,14 +48,14 @@ def server_url(request, live_server):
                                                   'Non-unique ID Values (first 3 shown)',
                                                   'Grant identifiers:  2',
                                                   'Funder organisation identifiers:  1',
-                                                  '360G-wellcometrust-105182/Z/14/Z'], True),
-    ('WellcomeTrust-grants_broken_grants.json', ['Invalid against Schema 17 Errors',
+                                                  '360G-fundingproviders-000002/X/00/X'], True),
+    ('fundingproviders-grants_broken_grants.json', ['Invalid against Schema 17 Errors',
                                                  'Value is not a string',
                                                  'Review 4 Grants',
                                                  'Funder organisation identifiers:  2',
                                                  'Recipient organisation identifiers:  2',
-                                                 '360G-wellcometrust-105177/Z/14/Z'], True),
-    ('WellcomeTrust-grants_2_grants.xlsx', ['This file contains 2 grants from 1 funder to 1 recipient',
+                                                 '360G-fundingproviders-000002/X/00/X'], True),
+    ('fundingproviders-grants_2_grants.xlsx', ['This file contains 2 grants from 1 funder to 1 recipient',
                                             'The grants were awarded in GBP with a total value of £331,495',
                                             # check that there's no errors after the heading
                                             'Converted to JSON\nIn order',
@@ -66,7 +66,7 @@ def server_url(request, live_server):
                                             'Review 2 Grants',
                                             'Funder organisation identifiers:  1',
                                             'Recipient organisation identifiers:  1',
-                                            '360G-wellcometrust-105177/Z/14/Z'], True),
+                                            '360G-fundingproviders-000002/X/00/X'], True),
     # Test conversion warnings are shown
     ('tenders_releases_2_releases.xlsx', ['Converted to JSON 5 Errors',
                                           'Invalid against Schema 76 Errors',
@@ -74,13 +74,13 @@ def server_url(request, live_server):
                                           ], True),
     # Test that titles that aren't in the rollup are converted correctly
     # (See @check_url_input_result_page).
-    ('WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx', [], True),
+    ('fundingproviders-grants_2_grants_titleswithoutrollup.xlsx', [], True),
     # Test a 360 csv in cp1252 encoding
-    ('WellcomeTrust-grants_2_grants_cp1252.csv', ['This file contains 2 grants from 1 funder to 1 recipient',
+    ('fundingproviders-grants_2_grants_cp1252.csv', ['This file contains 2 grants from 1 funder to 1 recipient',
                                                   'The grants were awarded in GBP with a total value of £331,495',
                                                   'This file is not \'utf-8\' encoded (it is cp1252 encoded)'], True),
     # Test a non-valid file.
-    ('paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
+    ('fundingtrust-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
     # Test a unconvertable spreadsheet (blank file)
     ('bad.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it.', False),
     # Check that a file with a UTF-8 BOM converts correctly
@@ -186,7 +186,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
         if source_filename.endswith('.xlsx') or source_filename.endswith('.csv'):
             converted_file_response = requests.get(converted_file)
-            if source_filename == 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx':
+            if source_filename == 'fundingproviders-grants_2_grants_titleswithoutrollup.xlsx':
                 grant1 = converted_file_response.json()['grants'][1]
                 assert grant1['recipientOrganization'][0]['department'] == 'Test data'
                 assert grant1['classifications'][0]['title'] == 'Test'
@@ -359,7 +359,7 @@ def test_accordion(server_url, browser):
 
 
 @pytest.mark.parametrize(('source_filename'), [
-    ('WellcomeTrust-grants_fixed_2_grants.json'),
+    ('fundingproviders-grants_fixed_2_grants.json'),
     ])
 def test_error_modal(server_url, browser, httpserver, source_filename):
     with open(os.path.join('cove_360', 'fixtures', source_filename), 'rb') as fp:
@@ -406,7 +406,7 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text'), [
-    ('WellcomeTrust-grants_fixed_2_grants.json', '360Giving JSON Package Schema')
+    ('fundingproviders-grants_fixed_2_grants.json', '360Giving JSON Package Schema')
     ])
 def test_check_schema_link_on_result_page(server_url, browser, httpserver, source_filename, expected_text):
     with open(os.path.join('cove_360', 'fixtures', source_filename), 'rb') as fp:
