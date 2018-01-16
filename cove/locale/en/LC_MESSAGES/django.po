@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#: cove_iati/templates/cove_iati/explore.html:66
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-18 11:50+0000\n"
+"POT-Creation-Date: 2018-01-16 13:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,7 +39,7 @@ msgstr ""
 msgid "Upload a file (.json, .csv, .xlsx)"
 msgstr ""
 
-#: cove/input/views.py:25 cove_iati/views.py:34
+#: cove/input/views.py:25
 msgid "Supply a URL"
 msgstr ""
 
@@ -52,9 +51,9 @@ msgstr ""
 msgid "Sorry we got a ConnectionError whilst trying to download that file"
 msgstr ""
 
-#: cove/input/views.py:71 cove/input/views.py:79 cove/lib/converters.py:170
+#: cove/input/views.py:71 cove/input/views.py:79 cove/lib/converters.py:174
 #: cove/lib/exceptions.py:25 cove/lib/exceptions.py:34
-#: cove/lib/exceptions.py:61 cove_iati/lib/iati.py:27 cove_iati/lib/iati.py:37
+#: cove/lib/exceptions.py:61
 msgid "Try Again"
 msgstr ""
 
@@ -78,13 +77,12 @@ msgid ""
 "related to permissions, or you may be blocking certain user agents."
 msgstr ""
 
-#: cove/lib/converters.py:168 cove/lib/exceptions.py:23
-#: cove/lib/exceptions.py:32 cove/lib/exceptions.py:59 cove_iati/lib/iati.py:25
-#: cove_iati/lib/iati.py:35
+#: cove/lib/converters.py:172 cove/lib/exceptions.py:23
+#: cove/lib/exceptions.py:32 cove/lib/exceptions.py:59
 msgid "Sorry we can't process that data"
 msgstr ""
 
-#: cove/lib/converters.py:171
+#: cove/lib/converters.py:175
 msgid ""
 "We think you tried to upload a JSON file, but it is not well formed JSON.\n"
 "\n"
@@ -154,150 +152,60 @@ msgid "Usage Count"
 msgstr ""
 
 #. Translators: Label of a button that triggers search
-#: cove/templates/base.html:52
+#: cove/templates/base.html:55 cove/templates/page_header.html:27
 msgid "Go"
 msgstr ""
 
-#: cove/templates/base.html:80
-msgid "More Information "
-msgstr ""
-
-#: cove/templates/base.html:80
-msgid "click to see."
-msgstr ""
-
-#: cove/templates/base.html:86
-msgid "What happens to the data I provide to this site?"
-msgstr ""
-
-#: cove/templates/base.html:87
-msgid ""
-"We retain the data you upload or paste to this site, on our server, for 7 "
-"days."
-msgstr ""
-
-#: cove/templates/base.html:88
-msgid ""
-"If you supply a link, we fetch the data from that link and store it on our "
-"server for 7 days."
-msgstr ""
-
-#: cove/templates/base.html:89
-msgid ""
-"We delete all data older than 7 days from our servers daily, retaining none "
-"of the original data."
-msgstr ""
-
-#: cove/templates/base.html:90
-msgid ""
-"While the data is on our servers we may access that data to help us "
-"understand how people are using this application, what types of data are "
-"being supplied, what common errors exist and so on."
-msgstr ""
-
-#: cove/templates/base.html:91
-msgid ""
-"We may also retain data in backups of our servers, which means on occasion, "
-"some data may be retained longer. We have no intention of using this data "
-"for anything other than server recovery in an emergency."
-msgstr ""
-
-#: cove/templates/base.html:92
-msgid ""
-"We do retain some metadata about data supplied to this site. Details can be "
-"found in the code, but may include information about whether or not the file "
-"was uploaded, linked or pasted, the size of the file, the date/time it was "
-"supplied and so on. "
-msgstr ""
-
-#: cove/templates/base.html:94
-msgid "Why do you delete data after 7 days?"
-msgstr ""
-
-#: cove/templates/base.html:95
-msgid ""
-"This is service to allow people to explore machine readable data. As such we "
-"see no need to store and gather everything people submit to the site "
-"forever. We have chosen 7 days as a practical time frame that allows people "
-"to share results with colleagues, but also allows data to disappear over "
-"time to save people having to clean up after themselves."
-msgstr ""
-
-#: cove/templates/base.html:96
-msgid ""
-"We believe that deleting supplied data after 7 days provides a level of "
-"privacy for the users of this service. "
-msgstr ""
-
-#: cove/templates/base.html:100
-msgid "Why provide converted versions?"
-msgstr ""
-
-#: cove/templates/base.html:101
-msgid "The W3C"
-msgstr ""
-
-#: cove/templates/base.html:101
-msgid "Data on the Web Best Practices"
-msgstr ""
-
-#: cove/templates/base.html:101
-msgid ""
-"recommend making open data available in a range of formats to meet the needs "
-"of different users, for example, developers may want JSON, researchers might "
-"prefer a spreadsheet format."
-msgstr ""
-
-#: cove/templates/base.html:114
+#: cove/templates/base.html:115
 msgid "About"
 msgstr ""
 
-#: cove/templates/base.html:116
+#: cove/templates/base.html:117
 msgid "Built by"
 msgstr ""
 
-#: cove/templates/base.html:116
+#: cove/templates/base.html:117
 msgid "Open Data Services"
 msgstr ""
 
-#: cove/templates/base.html:117
+#: cove/templates/base.html:118
 msgid "The code for this site is available on"
 msgstr ""
 
-#: cove/templates/base.html:117
+#: cove/templates/base.html:118
 msgid "GitHub"
 msgstr ""
 
-#: cove/templates/base.html:117
+#: cove/templates/base.html:118
 msgid "Cove - COnvert Validate & Explore"
 msgstr ""
 
-#: cove/templates/base.html:117
+#: cove/templates/base.html:118
 msgid "Licence"
 msgstr ""
 
-#: cove/templates/base.html:117
+#: cove/templates/base.html:118
 msgid "AGPLv3"
 msgstr ""
 
-#: cove/templates/base.html:117
+#: cove/templates/base.html:118
 msgid "Report/View issues"
 msgstr ""
 
-#: cove/templates/base.html:117
+#: cove/templates/base.html:118
 msgid "Cove Issues"
 msgstr ""
 
-#: cove/templates/base.html:121
+#: cove/templates/base.html:122
 msgid "Terms &amp; Conditions"
 msgstr ""
 
 #. Translators: Provides information about the version of the code base that is being used
-#: cove/templates/base.html:124
+#: cove/templates/base.html:125
 msgid "Running version "
 msgstr ""
 
-#: cove/templates/base.html:129
+#: cove/templates/base.html:130
 msgid "Links"
 msgstr ""
 
@@ -856,174 +764,4 @@ msgid ""
 "\n"
 "This is because all data suplied to this website is automatically deleted "
 "after 7 days, and therefore the analysis of that data is no longer available."
-msgstr ""
-
-#: cove_iati/lib/iati.py:28
-msgid ""
-"We think you tried to upload a XML file, but it is not well formed XML.\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
-"span> <strong>Error message:</strong> {}"
-msgstr ""
-
-#: cove_iati/lib/iati.py:38
-msgid ""
-"We think you tried to upload a XML file, but the encoding is incorrect.\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
-"span> <strong>Error message:</strong> {}"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/base.html:28
-msgid "Bootstrap theme "
-msgstr ""
-
-#: cove_iati/templates/cove_iati/base.html:28
-msgid ""
-"\n"
-"by Bootswatch"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/base.html:49
-msgid "How to use "
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:29
-msgid "A file was "
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:31
-msgid "downloaded from "
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:33
-msgid "uploaded "
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:35
-msgid "on "
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:52
-msgid "Converted to "
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:54
-#, python-format
-msgid "%(n_warnings)s Error"
-msgid_plural "%(n_warnings)s Errors"
-msgstr[0] ""
-msgstr[1] ""
-
-#: cove_iati/templates/cove_iati/explore.html:62
-msgid "In order to validate your data we needed to convert it to XML."
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:72
-msgid "Conversion <strong>errors:</strong>"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:91
-msgid "Invalid against Schema "
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:91
-#: cove_iati/templates/cove_iati/explore.html:130
-#, python-format
-msgid " %(n_errors)s Error."
-msgid_plural "%(n_errors)s Errors "
-msgstr[0] ""
-msgstr[1] ""
-
-#: cove_iati/templates/cove_iati/explore.html:94
-msgid "Valid against Schema"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:103
-msgid "Sorry your data is invalid against"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:105
-msgid "Congratulations! Your data is valid against"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:112
-msgid ""
-"There are some <strong>validation errors</strong> in your data, please check "
-"them in the table below."
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:130
-msgid "Ruleset Errors "
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:133
-msgid "Ruleset Checks"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:142
-msgid "Sorry your data contains ruleset errors"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:144
-msgid "Congratulations! Your data passes all IATI ruleset checks"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:149
-msgid ""
-"There are some <strong>ruleset errors</strong> in your data, please check "
-"them in the table below."
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:162
-msgid "Download and Share"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:169
-msgid "The following files are available to download:"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:172
-msgid "Original file"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:192
-msgid "Use the following url to share these results:"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:198
-msgid ""
-"After 7 days all uploaded data is deleted from our servers, and the results "
-"will no longer be available. Anyone using the link to this page after that "
-"will be shown a message that tells them the file has been removed."
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:199
-msgid ""
-"These results will be available for 7 days from the day the data was first "
-"uploaded. You can revisit these results until then."
-msgstr ""
-
-#: cove_iati/templates/cove_iati/ruleset_table.html:6
-msgid "Activity ID"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/ruleset_table.html:7
-msgid "Path"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/ruleset_table.html:8
-msgid "Rule"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/ruleset_table.html:9
-msgid "Explanation"
-msgstr ""
-
-#: cove_iati/views.py:25
-msgid "Upload a file (.csv, .xlsx, .xml)"
-msgstr ""
-
-#: cove_iati/views.py:39
-msgid "Paste (XML only)"
 msgstr ""

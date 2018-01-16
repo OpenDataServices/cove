@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-18 11:50+0000\n"
+"POT-Creation-Date: 2018-01-16 13:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -85,19 +85,26 @@ msgstr ""
 msgid "Publishing and Using Open Grant Data "
 msgstr ""
 
-#: cove_360/templates/cove_360/base.html:51
-msgid "Formats"
-msgstr ""
-
-#: cove_360/templates/cove_360/base.html:52
+#: cove_360/templates/cove_360/base.html:53
 msgid ""
-"The application accepts data in some of the formats given in the <a href="
-"\"http://www.threesixtygiving.org/standard/\">360Giving Data Standard "
-"guidance</a>.\n"
-"    <br>Acceptable files are: "
+"To preview how this tool works, try <a href=\"?source_url=https://github.com/"
+"ThreeSixtyGiving/sample-data/blob/master/ExampleTrust-grants-fixed.xlsx?"
+"raw=true\"> loading some sample data.</a>"
 msgstr ""
 
 #: cove_360/templates/cove_360/base.html:55
+msgid "Formats"
+msgstr ""
+
+#: cove_360/templates/cove_360/base.html:56
+msgid ""
+"The application accepts data in some of the formats given in the <a href="
+"\"http://www.threesixtygiving.org/standard/\">360Giving Data Standard "
+"guidance</a>.</p>\n"
+"    <p>Acceptable files are: "
+msgstr ""
+
+#: cove_360/templates/cove_360/base.html:59
 msgid ""
 "Summary Spreadsheet - <a href=\"https://threesixtygiving-standard."
 "readthedocs.io/en/latest/_static/summary-table/360-giving-schema-titles.xlsx"
@@ -106,14 +113,14 @@ msgid ""
 "supported)"
 msgstr ""
 
-#: cove_360/templates/cove_360/base.html:56
+#: cove_360/templates/cove_360/base.html:60
 msgid ""
 "JSON built to the <a href=\"http://standard.threesixtygiving.org/en/latest/"
 "reference/#giving-json-schemas\">360Giving JSON schema</a> (UTF-8 encoding "
 "supported)"
 msgstr ""
 
-#: cove_360/templates/cove_360/base.html:57
+#: cove_360/templates/cove_360/base.html:61
 msgid ""
 "<a href=\"https://threesixtygiving-standard.readthedocs.io/en/latest/_static/"
 "multi-table/360-giving-schema-fields.xlsx\">Multi-table data package - "
@@ -480,6 +487,14 @@ msgid ""
 "%(csv_encoding)s</em> encoded)."
 msgstr ""
 
+#: cove_360/templates/cove_360/explore.html:72
+msgid ""
+"If this summary looks incorrect, you can use the <em>Review</em> section "
+"alongside any <em>warnings</em> or <em>errors</em> to investigate what "
+"happened and make changes to your original data before loading it again for "
+"a new check."
+msgstr ""
+
 #: cove_360/templates/cove_360/explore.html:75
 msgid "Convert to Spreadsheet"
 msgstr ""
@@ -552,91 +567,193 @@ msgid ""
 "errors first."
 msgstr ""
 
+#: cove_360/templates/cove_360/explore.html:187
+msgid "Additional checks have been made on your data."
+msgstr ""
+
 #: cove_360/templates/cove_360/explore.html:190
+msgid ""
+"\n"
+"            Additional checks highlight some specific areas where the source "
+"data may be incorrect or require further attention.\n"
+"            They can also suggest ways to increase the usefulness of the "
+"data.\n"
+"            In any case, these checks do not indicate validation errors and "
+"can be ignored if they are not relevant.\n"
+"            "
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:200
 msgid "Check Description"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:191
+#: cove_360/templates/cove_360/explore.html:201
 msgid "First 3 Locations"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:231
+#: cove_360/templates/cove_360/explore.html:241
 msgid ""
 "<strong>Additional fields</strong> were found in your data. Please check "
 "them to see that they are intended additions and not just the result of "
 "spelling mistakes."
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:251
+#: cove_360/templates/cove_360/explore.html:261
 msgid "Review"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:251
+#: cove_360/templates/cove_360/explore.html:261
 #, python-format
 msgid "%(n_grants)s Grant"
 msgid_plural "%(n_grants)s Grants"
 msgstr[0] ""
 msgstr[1] ""
 
-#: cove_360/templates/cove_360/explore.html:257
+#: cove_360/templates/cove_360/explore.html:267
 msgid "Review your data."
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:266
+#: cove_360/templates/cove_360/explore.html:276
 msgid "Grant identifiers:"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:274
+#: cove_360/templates/cove_360/explore.html:284
 msgid "Funder organisation identifiers:"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:283
+#: cove_360/templates/cove_360/explore.html:293
 msgid "Recipient organisation identifiers:"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:297
+#: cove_360/templates/cove_360/explore.html:307
 msgid "Grants Table"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:339
+#: cove_360/templates/cove_360/explore.html:349
 msgid "Download and Share"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:346
+#: cove_360/templates/cove_360/explore.html:356
 msgid "The following files are available to download:"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:349
+#: cove_360/templates/cove_360/explore.html:359
 msgid "Original file"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:361
+#: cove_360/templates/cove_360/explore.html:371
 msgid "You can also download an"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:361
+#: cove_360/templates/cove_360/explore.html:371
 msgid "Excel Spreadsheet (.xlsx) with JSON field names"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:361
+#: cove_360/templates/cove_360/explore.html:371
 msgid "instead of titles as column headers"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:367
+#: cove_360/templates/cove_360/explore.html:377
 msgid "Use the following url to share these results:"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:373
+#: cove_360/templates/cove_360/explore.html:383
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
 "will be shown a message that tells them the file has been removed."
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:374
+#: cove_360/templates/cove_360/explore.html:384
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:4
+msgid "More Information "
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:9
+msgid "What happens to the data I provide to this site?"
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:11
+msgid ""
+"We retain the data you upload or paste to this site, on our server, for "
+"seven days."
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:12
+msgid ""
+"If you supply a link, we fetch the data from that link and store it on our "
+"server for seven days."
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:13
+msgid ""
+"We delete all data older than seven days from our servers daily, retaining "
+"none of the original data."
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:14
+msgid ""
+"While the data is on our servers we may access that data to help us "
+"understand how people are using this application, what types of data are "
+"being supplied, what common errors exist and so on."
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:15
+msgid ""
+"We may also retain data in backups of our servers, which means on occasion, "
+"some data may be retained longer. We have no intention of using this data "
+"for anything other than server recovery in an emergency."
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:16
+msgid ""
+"We do retain some metadata about data supplied to this site. Details can be "
+"found in the code, but may include information about whether or not the file "
+"was uploaded, linked or pasted, the size of the file, the date/time it was "
+"supplied and so on. "
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:19
+msgid "Why do you delete data after seven days?"
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:21
+msgid ""
+"This is a service to allow people to explore machine readable data. As such "
+"we see no need to store and gather everything people submit to the site "
+"forever. We have chosen seven days as a practical time frame that allows "
+"people to share results with colleagues, but also allows data to disappear "
+"over time to save people having to clean up after themselves."
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:22
+msgid ""
+"We believe that deleting supplied data after seven days provides a level of "
+"privacy for the users of this service. "
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:27
+msgid "Why provide converted versions?"
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:29
+msgid "The W3C"
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:29
+msgid "Data on the Web Best Practices"
+msgstr ""
+
+#: cove_360/templates/cove_360/more_info.html:29
+msgid ""
+"recommend making open data available in a range of formats to meet the needs "
+"of different users, for example, developers may want JSON, researchers might "
+"prefer a spreadsheet format."
 msgstr ""
 
 #: cove_360/views.py:37 cove_360/views.py:47
