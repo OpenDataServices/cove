@@ -22,12 +22,17 @@ install:
   - "pip install -r requirements_iati.txt"
   - wget "https://github.com/validator/validator/releases/download/16.3.3/vnu.jar_16.3.3.zip"; unzip vnu.jar_16.3.3.zip
   - "wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip; unzip chromedriver_linux64.zip -d chromedriver; export PATH=$PATH:`pwd`/chromedriver"
+  - "wget http://travis:$TRAVIS_SECRET_FILES_PASSWORD@travis-secret-files.live3.default.opendataservices.uk0.bigv.io/ocdstestdata.zip"
+  - "unzip ocdstestdata.zip"
+  - "wget http://travis:$TRAVIS_SECRET_FILES_PASSWORD@travis-secret-files.live3.default.opendataservices.uk0.bigv.io/secret_data_test_archive.zip"
+  - "unzip secret_data_test_archive.zip"
 
 script:
   # Check that messages used by OCDS CoVE are translated
   - "python manage.py makemessages -l es"
   - "[ \"`pocount --incomplete cove/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
   - "[ \"`pocount --incomplete cove_ocds/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
+  - "python secret_data_test.py"
   - "flake8 ."
   - "DJANGO_SETTINGS_MODULE=cove.settings py.test -n 2 cove --cov --cov-report="
   - "DJANGO_SETTINGS_MODULE=cove_360.settings py.test -n 2 cove_360 --cov-append --cov --cov-report="
