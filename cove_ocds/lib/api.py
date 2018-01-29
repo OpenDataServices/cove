@@ -1,6 +1,5 @@
 import json
 import os
-import re
 
 from .schema import SchemaOCDS
 from .ocds import common_checks_ocds
@@ -31,9 +30,7 @@ def context_api_transform(context):
 
     if validation_errors:
         for error_group in validation_errors:
-            error_type, error_description, error_field = [
-                re.sub('(\[?|\s?)\"\]?', '', err) for err in error_group[0].split(',')
-            ]
+            error_type, error_description, error_field = json.loads(error_group[0])
             for path_value in error_group[1]:
                 context['validation_errors'].append({
                     'type': error_type,
