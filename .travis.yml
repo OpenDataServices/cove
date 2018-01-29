@@ -13,6 +13,8 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install oracle-java8-installer gettext build-essential libxml2-dev libxslt1-dev python3-dev
   - sudo update-java-alternatives -s java-8-oracle
+  # Install translate toolkit to get pocount binary
+  - sudo apt-get install translate-toolkit
 
 install: 
   - "pip install -r requirements_dev.txt"
@@ -22,6 +24,10 @@ install:
   - "wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip; unzip chromedriver_linux64.zip -d chromedriver; export PATH=$PATH:`pwd`/chromedriver"
 
 script:
+  # Check that messages used by OCDS CoVE are translated
+  - "python manage.py makemessages -l es"
+  - "[ \"`pocount --incomplete cove/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
+  - "[ \"`pocount --incomplete cove_ocds/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
   - "flake8 ."
   - "DJANGO_SETTINGS_MODULE=cove.settings py.test -n 2 cove --cov --cov-report="
   - "DJANGO_SETTINGS_MODULE=cove_360.settings py.test -n 2 cove_360 --cov-append --cov --cov-report="
