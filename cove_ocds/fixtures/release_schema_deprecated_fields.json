@@ -1,6 +1,7 @@
 {
     "id": "http://standard.open-contracting.org/schema/1__0__2/release-schema.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
+    "description": "Tests: fake local schema to tests deprecations without relying on a specific remote schema",
     "title": "Schema for an Open Contracting Release",
     "type": "object",
     "properties": {
