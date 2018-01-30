@@ -257,12 +257,12 @@ def get_releases_aggregates(json_data):
 
     return dict(
         release_count=release_count,
-        unique_ocids=unique_ocids,
-        unique_initation_type=unique_initation_type,
+        unique_ocids=sorted(unique_ocids, key=lambda x: str(x)),
+        unique_initation_type=sorted(unique_initation_type, key=lambda x: str(x)),
         duplicate_release_ids=duplicate_release_ids,
         tags=dict(tags),
-        unique_lang=unique_lang,
-        unique_award_id=unique_award_id,
+        unique_lang=sorted(unique_lang, key=lambda x: str(x)),
+        unique_award_id=sorted(unique_award_id, key=lambda x: str(x)),
 
         planning_count=len(planning_ocids),
         tender_count=len(tender_ocids),
@@ -283,18 +283,18 @@ def get_releases_aggregates(json_data):
         max_contract_date=max(contract_dates) if contract_dates else '',
 
         unique_buyers_identifier=unique_buyers_identifier,
-        unique_buyers_name_no_id=unique_buyers_name_no_id,
+        unique_buyers_name_no_id=sorted(unique_buyers_name_no_id, key=lambda x: str(x)),
         unique_suppliers_identifier=unique_suppliers_identifier,
-        unique_suppliers_name_no_id=unique_suppliers_name_no_id,
+        unique_suppliers_name_no_id=sorted(unique_suppliers_name_no_id, key=lambda x: str(x)),
         unique_procuring_identifier=unique_procuring_identifier,
-        unique_procuring_name_no_id=unique_procuring_name_no_id,
+        unique_procuring_name_no_id=sorted(unique_procuring_name_no_id, key=lambda x: str(x)),
         unique_tenderers_identifier=unique_tenderers_identifier,
-        unique_tenderers_name_no_id=unique_tenderers_name_no_id,
+        unique_tenderers_name_no_id=sorted(unique_tenderers_name_no_id, key=lambda x: str(x)),
 
-        unique_buyers=set(unique_buyers),
-        unique_suppliers=set(unique_suppliers),
-        unique_procuring=set(unique_procuring),
-        unique_tenderers=set(unique_tenderers),
+        unique_buyers=sorted(set(unique_buyers)),
+        unique_suppliers=sorted(set(unique_suppliers)),
+        unique_procuring=sorted(set(unique_procuring)),
+        unique_tenderers=sorted(set(unique_tenderers)),
 
         unique_buyers_count=unique_buyers_count,
         unique_suppliers_count=unique_suppliers_count,
@@ -316,7 +316,7 @@ def get_releases_aggregates(json_data):
         contract_item_count=len(release_contract_item_ids),
 
         item_identifier_schemes=item_identifier_schemes,
-        unique_currency=unique_currency,
+        unique_currency=sorted(unique_currency, key=lambda x: str(x)),
 
         planning_doc_count=planning_doc_count,
         tender_doc_count=tender_doc_count,
