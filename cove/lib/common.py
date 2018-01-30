@@ -272,6 +272,7 @@ def oneOf_draft4(validator, oneOf, instance, schema):
             "%r is valid under each of %s" % (instance, reprs)
         )
 
+
 validator.VALIDATORS.pop("patternProperties")
 validator.VALIDATORS["uniqueItems"] = unique_ids
 validator.VALIDATORS["required"] = required_draft4

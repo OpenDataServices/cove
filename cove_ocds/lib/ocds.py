@@ -259,7 +259,7 @@ def get_releases_aggregates(json_data):
         release_count=release_count,
         unique_ocids=sorted(unique_ocids, key=lambda x: str(x)),
         unique_initation_type=sorted(unique_initation_type, key=lambda x: str(x)),
-        duplicate_release_ids=duplicate_release_ids,
+        duplicate_release_ids=sorted(duplicate_release_ids, key=lambda x: str(x)),
         tags=dict(tags),
         unique_lang=sorted(unique_lang, key=lambda x: str(x)),
         unique_award_id=sorted(unique_award_id, key=lambda x: str(x)),
@@ -305,7 +305,7 @@ def get_releases_aggregates(json_data):
         unique_org_name_count=unique_org_name_count,
         unique_org_count=unique_org_count,
 
-        unique_organisation_schemes=unique_organisation_schemes,
+        unique_organisation_schemes=sorted(unique_organisation_schemes, key=lambda x: str(x)),
 
         organisations_with_address=len(organisation_identifier_address) + len(organisation_name_no_id_address),
         organisations_with_contact_point=len(organisation_identifier_contact_point) + len(organisation_name_no_id_contact_point),
@@ -315,7 +315,7 @@ def get_releases_aggregates(json_data):
         award_item_count=len(release_award_item_ids),
         contract_item_count=len(release_contract_item_ids),
 
-        item_identifier_schemes=item_identifier_schemes,
+        item_identifier_schemes=sorted(item_identifier_schemes, key=lambda x: str(x)),
         unique_currency=sorted(unique_currency, key=lambda x: str(x)),
 
         planning_doc_count=planning_doc_count,
