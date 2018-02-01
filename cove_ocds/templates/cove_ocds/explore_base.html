@@ -262,6 +262,24 @@
     </div>
 {% endif %}
 
+{% if ocds_prefixes_bad_format %}
+    <a name="bad-ocds-prefx" class="anchor"></a>
+    <div class="panel panel-danger">
+      <div id="bad-ocds-prefix-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="OcdsPrefixWarningsTable" data-toggle="collapse" data-target="#OcdsPrefixWarningsTable">
+        <h4 class="panel-title">
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Quality Warnings' %}</span>
+        </h4>
+      </div>
+      <div id="OcdsPrefixWarningsTable" class="collapse in">
+        <div class="panel-body">
+        {% with ocds_prefixes_bad_format=ocds_prefixes_bad_format %}
+        {% include "cove_ocds/quality_warnings_table.html" %}
+        {% endwith %}
+        </div>
+      </div>
+    </div>
+{% endif %}
+
 {% if additional_closed_codelist_values %}
     <a name="additional-fields" class="anchor"></a>
     <div class="panel panel-danger">
@@ -390,6 +408,11 @@
       });
       $("#OCDSmissingIdTable").on("show.bs.collapse", function(){
         $(".view-all").html('<small>{% trans "View all errors &#9650;" %}</small>');
+      $("#OcdsPrefixWarningsTable").on("hide.bs.collapse", function(){
+        $("#bad-ocds-prefix-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Quality Warnings" %}');
+      });
+      $("#OcdsPrefixWarningsTable").on("show.bs.collapse", function(){
+        $("#bad-ocds-prefix-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Quality Warnings" %}');
       });
       $("#additionalFieldTable").on("hide.bs.collapse", function(){
         $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Additional Fields (fields in data not in schema)" %}');

@@ -1,4 +1,5 @@
 import collections
+import re
 
 import cove.lib.tools as tools
 from cove.lib.common import common_checks_context, get_additional_codelist_values
@@ -362,6 +363,7 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
             'additional_open_codelist_values': open_codelist_values
         })
 
+    context['ocds_prefixes_bad_format'] = get_bad_ocds_prefixes(json_data)
     return context
 
 
@@ -383,3 +385,38 @@ def get_records_aggregates(json_data):
         'count': count,
         'unique_ocids': unique_ocids,
     }
+
+
+def _bad_ocds_prefixes_gen(json_data):
+    '''Yield tuples with ('ocid', 'path/to/ocid') for ocids with malformed prefixes'''
+    prefix_regex = re.compile(r'^ocds-[a-zA-Z0-9]{6}-')
+    releases = json_data.get('releases', '')
+    records = json_data.get('records', '')
+
+    if releases:
+        for n_rel, release in enumerate(releases):
+            ocid = release.get('ocid', '')
+            if ocid and not prefix_regex.match(ocid):
+                yield (ocid, 'releases/%s/ocid' % n_rel)
+
+    elif records:
+        for n_rec, record in enumerate(records):
+            for n_rel, release in enumerate(record.get('releases', [])):
+                ocid = release.get('ocid', '')
+                if ocid and not prefix_regex.match(ocid):
+                    yield (ocid, 'records/%s/releases/%s/ocid' % (n_rec, n_rel))
+            compiled_release = record.get('compiledRelease', '')
+            if compiled_release:
+                ocid = compiled_release.get('ocid', '')
+                if ocid and not prefix_regex.match(ocid):
+                    yield (ocid, 'records/%s/compiledRelease/ocid' % n_rec)
+
+
+def get_bad_ocds_prefixes(json_data):
+    '''Wrap _bad_ocds_prefixes_gen and return a generator object or None'''
+    gen = _bad_ocds_prefixes_gen(json_data)
+    try:
+        gen.__next__()
+    except StopIteration:
+        return
+    return _bad_ocds_prefixes_gen(json_data)

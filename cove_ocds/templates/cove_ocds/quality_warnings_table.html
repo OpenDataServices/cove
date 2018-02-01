@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load cove_tags %}
+
+<table class="table">
+  <thead><tr> <th>{% trans "Field" %}</th><th>{% trans "Value" %}</th> <th>{% trans "Warning" %}</th> <th class="col-md-2">{% trans "Path to field" %}</th> </tr></thead>
+  <tbody>
+  {% for ocid, path in ocds_prefixes_bad_format %}
+      <tr>
+         <td>ocid</td><td>{{ocid}}</td> <td>{% blocktrans %} The <em>Open Contracting ID</em> contains a malformed OCDS prefix {% endblocktrans %}</td> <td>{{path}}</td>
+      </tr>
+   {% endfor %}
+   </tbody>
+</table>
