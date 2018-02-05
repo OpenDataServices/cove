@@ -463,17 +463,36 @@ def _get_schema_deprecated_paths(schema_obj, obj=None, current_path=(), deprecat
 def _get_json_data_generic_paths(json_data, path=(), generic_paths=None):
     '''Transform json data into a dictionary with keys made of json paths.
 
-   Key are json paths (as tuples). Values are dictionaries with keys including specific
-   indexes (which are not including in the top level keys), eg:
+    Key are json paths (as tuples). Values are dictionaries with keys including specific
+    indexes (which are not including in the top level keys), eg:
 
-   {'a': 'I am', 'b': ['a', 'list'], 'c': [{'ca': 'ca1'}, {'ca': 'ca2'}, {'cb': 'cb'}]}
+    {'a': 'I am', 'b': ['a', 'list'], 'c': [{'ca': 'ca1'}, {'ca': 'ca2'}, {'cb': 'cb'}]}
 
-   will produce:
+    will return:
 
-   {('a',): {('a',): I am'},
-    ('b',): {{(b, 0), 'a'}, {('b', 1): 'list'}},
-    ('c', 'ca'): {('c', 0, 'ca'): 'ca1', ('c', 1, 'ca'): 'ca2'},
-    ('c', 'cb'): {('c', 1, 'ca'): 'cb'}}
+    generic_paths = {
+        ('a',): {('a',): 'I am'},
+        ('b',): {
+            ('b',): ['a', 'list'],
+            ('b', 0): 'a',
+            ('b', 1): 'list'
+        },
+        ('c',): {
+            ('c',): [
+                {'ca': 'ca1'},
+                {'ca': 'ca2'},
+                {'cb': 'cb'}
+            ],
+            ('c', 0): {'ca': 'ca1'},
+            ('c', 1): {'ca': 'ca2'},
+            ('c', 2): {'cb': 'cb'}
+        },
+        ('c', 'ca'): {
+            ('c', 0, 'ca'): 'ca1',
+            ('c', 1, 'ca'): 'ca2'
+        },
+        ('c', 'cb'): {('c', 2, 'cb'): 'cb'}
+    }
     '''
     if generic_paths is None:
         generic_paths = {}
