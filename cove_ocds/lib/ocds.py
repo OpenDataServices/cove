@@ -363,7 +363,8 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
             'additional_open_codelist_values': open_codelist_values
         })
 
-    context['ocds_prefixes_bad_format'] = get_bad_ocds_prefixes(json_data)
+    if not api:
+        context['ocds_prefixes_bad_format'] = get_bad_ocds_prefixes(json_data)
     return context
 
 
@@ -390,22 +391,27 @@ def get_records_aggregates(json_data):
 def _bad_ocds_prefixes_gen(json_data):
     '''Yield tuples with ('ocid', 'path/to/ocid') for ocids with malformed prefixes'''
     prefix_regex = re.compile(r'^ocds-[a-zA-Z0-9]{6}-')
-    releases = json_data.get('releases', '')
-    records = json_data.get('records', '')
+    releases = json_data.get('releases', [])
+    records = json_data.get('records', [])
 
-    if releases:
+    if releases and isinstance(releases, list):
         for n_rel, release in enumerate(releases):
+            if not isinstance(release, dict):
+                continue
             ocid = release.get('ocid', '')
             if ocid and not prefix_regex.match(ocid):
                 yield (ocid, 'releases/%s/ocid' % n_rel)
 
-    elif records:
+    elif records and isinstance(records, list):
         for n_rec, record in enumerate(records):
-            for n_rel, release in enumerate(record.get('releases', [])):
+            if not isinstance(record, dict):
+                continue
+            for n_rel, release in enumerate(record.get('releases', {})):
                 ocid = release.get('ocid', '')
                 if ocid and not prefix_regex.match(ocid):
                     yield (ocid, 'records/%s/releases/%s/ocid' % (n_rec, n_rel))
-            compiled_release = record.get('compiledRelease', '')
+
+            compiled_release = record.get('compiledRelease', {})
             if compiled_release:
                 ocid = compiled_release.get('ocid', '')
                 if ocid and not prefix_regex.match(ocid):
