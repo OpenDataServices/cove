@@ -363,8 +363,7 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
             'additional_open_codelist_values': open_codelist_values
         })
 
-    if not api:
-        context['ocds_prefixes_bad_format'] = get_bad_ocds_prefixes(json_data)
+    context['ocds_prefixes_bad_format'] = get_bad_ocds_prefixes(json_data)
     return context
 
 
@@ -424,5 +423,5 @@ def get_bad_ocds_prefixes(json_data):
     try:
         gen.__next__()
     except StopIteration:
-        return
+        return []
     return _bad_ocds_prefixes_gen(json_data)
