@@ -460,6 +460,43 @@ def _get_schema_deprecated_paths(schema_obj, obj=None, current_path=(), deprecat
     return deprecated_paths
 
 
+def _get_schema_non_required_ids(schema_obj, obj=None, current_path=(), id_paths=None,
+                                array_parent=False, list_merge=False):
+    '''Get a list of paths for schema non-required object['id'] in arrays of objects.
+
+    Return a list of tuples with generic paths (i.e. no indexes for array paths).
+    Types "array" in json schema objects with property `"wholeListMerge": true` will
+    be skipped.
+    '''
+    if id_paths is None:
+        id_paths = []
+    if schema_obj:
+        obj = schema_obj.get_release_pkg_schema_obj(deref=True)
+
+    properties = obj.get('properties', {})
+    no_required_id = 'id' not in obj.get('required', [])
+
+    if not isinstance(properties, dict):
+        return id_paths
+    for prop, value in properties.items():
+        if current_path:
+            path = current_path + (prop,)
+        else:
+            path = (prop,)
+
+        if prop == 'id' and no_required_id and array_parent and not list_merge:
+                id_paths.append(path)
+
+        if value.get('type') == 'object':
+            _get_schema_non_required_ids(None, value, path, id_paths)
+        elif value.get('type') == 'array' and value.get('items', {}).get('properties'):
+            has_list_merge = 'wholeListMerge' in value and value.get('wholeListMerge')
+            _get_schema_non_required_ids(None, value['items'], path, id_paths,
+                                        array_parent=True, list_merge=has_list_merge)
+
+    return id_paths
+
+
 def _get_json_data_generic_paths(json_data, path=(), generic_paths=None):
     '''Transform json data into a dictionary with keys made of json paths.
 
