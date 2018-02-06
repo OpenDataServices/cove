@@ -13,9 +13,9 @@ import cove_ocds.views
 urlpatterns_core += [url(r'^data/(.+)$', cove_ocds.views.explore_ocds, name='explore')]
 
 urlpatterns = [
-    url(r'^validator/terms_ocds', TemplateView.as_view(template_name='terms_ocds.html'), name='terms'),
     url(r'^$', RedirectView.as_view(url='validator/', permanent=False)),
     url('^validator/', include(urlpatterns_core)),
+    url(r'^validator/terms_ocds$', TemplateView.as_view(template_name='terms_ocds.html'), name='terms'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
