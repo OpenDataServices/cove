@@ -265,11 +265,11 @@ def test_get_schema_validation_errors():
         assert len(error_list) > 0
 
 
-def test_get_json_data_generic_paths():
+def testget_json_data_generic_paths():
     with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
         json_data_w_deprecations = json.load(fp)
 
-    generic_paths = cove_common._get_json_data_generic_paths(json_data_w_deprecations)
+    generic_paths = cove_common.get_json_data_generic_paths(json_data_w_deprecations)
     assert len(generic_paths.keys()) == 36
     assert generic_paths[('releases', 'buyer', 'name')] == {
         ('releases', 1, 'buyer', 'name'): 'Parks Canada',
