@@ -1,0 +1,17 @@
+{% load i18n %}
+{% load cove_tags %}
+<p>
+  <strong>{{conformance_errors.ocds_prefixes_bad_format|length}}</strong>{% blocktrans %} of your <strong>ocid</strong> fields have a problem: there is no prefix or the prefix format is not recognised.{% endblocktrans %}
+  <a class="view-all" role="region" aria-expanded="false" aria-controls="OCDSprefixesTable" data-toggle="collapse" data-target="#OCDSprefixesTable"><small>{% trans "View all errors &#9660;" %}</small></a>
+</p>
+<div id="OCDSprefixesTable" class="collapse">
+  <table class="table table-striped">
+    <thead><tr><th>{% trans "ocid" %}</th><th>{% trans "Path" %}</th></tr></thead>
+    <tbody>
+{% for ocid, path in conformance_errors.ocds_prefixes_bad_format %}
+      <tr><td>{{ocid}}</td><td>{{path}}</td></tr>
+{% endfor %}
+    </tbody>
+  </table>
+</div>
+<p class="font-weight-light small">{% blocktrans %} What is the <code>ocid</code> field ?{% endblocktrans %} {{conformance_errors.ocid_description}}<br>{% trans "For more information see" %} <a href="{{conformance_errors.ocid_info_url}}">{% trans "Open Contracting Identifier guidance" %}</a></p>
