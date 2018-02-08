@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load cove_tags %}
 <p>
-  <strong>{{conformance_errors.ocds_prefixes_bad_format|length}}</strong>{% blocktrans %} of your <strong>ocid</strong> fields have a problem: there is no prefix or the prefix format is not recognised.{% endblocktrans %}
+  {% blocktrans count n_prefixes=conformance_errors.ocds_prefixes_bad_format|length %}<strong>{{n_prefixes}}</strong> of your <code>ocid</code> fields has a problem: {% plural %}<strong>{{n_prefixes}}</strong> of your <code>ocid</code> fields have a problem: {% endblocktrans %}{% trans "there is no prefix or the prefix format is not recognised." %}
   <a class="view-all" role="region" aria-expanded="false" aria-controls="OCDSprefixesTable" data-toggle="collapse" data-target="#OCDSprefixesTable"><small>{% trans "View all errors &#9660;" %}</small></a>
 </p>
 <div id="OCDSprefixesTable" class="collapse">
@@ -14,4 +14,4 @@
     </tbody>
   </table>
 </div>
-<p class="font-weight-light small">{% blocktrans %} What is the <code>ocid</code> field ?{% endblocktrans %} {{conformance_errors.ocid_description}}<br>{% trans "For more information see" %} <a href="{{conformance_errors.ocid_info_url}}">{% trans "Open Contracting Identifier guidance" %}</a></p>
+<p class="font-weight-light small">{% blocktrans with description=conformance_errors.ocid_description %} What is the <code>ocid</code> field? {{description}} {% endblocktrans %}<br>{% trans "For more information see" %} <a href="{{conformance_errors.ocid_info_url}}">{% trans "Open Contracting Identifier guidance" %}</a></p>
