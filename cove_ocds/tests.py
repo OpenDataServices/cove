@@ -265,7 +265,7 @@ def test_get_schema_validation_errors():
         assert len(error_list) > 0
 
 
-def testget_json_data_generic_paths():
+def test_get_json_data_generic_paths():
     with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
         json_data_w_deprecations = json.load(fp)
 

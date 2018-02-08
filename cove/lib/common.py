@@ -202,10 +202,12 @@ def common_checks_context(upload_dir, json_data, schema_obj, schema_name, contex
     })
 
     json_data_gen_paths = get_json_data_generic_paths(json_data)
-    context.update({
-        'missing_ids': get_json_data_missing_ids(json_data_gen_paths, schema_obj),
-        'deprecated_fields': get_json_data_deprecated_fields(json_data_gen_paths, schema_obj)
-    })
+    context['deprecated_fields'] = get_json_data_deprecated_fields(json_data_gen_paths, schema_obj)
+
+    missing_ids = get_json_data_missing_ids(json_data_gen_paths, schema_obj)
+    print(missing_ids)
+    if missing_ids:
+        context.update({'structure_warnings': {'missing_ids': missing_ids}})
 
     if not api:
         context['json_data'] = json_data
@@ -531,10 +533,10 @@ def get_json_data_missing_ids(json_data_paths, schema_obj):
             for specific_path in json_data_paths[generic_no_id]:
                 if type(specific_path[-1]) != int:
                     continue
-                if not json_data_paths[generic_no_id][specific_path].get('id'):
-                    missing_ids_paths.append(specific_path + ('id',))
+                if 'id' not in json_data_paths[generic_no_id][specific_path]:
+                    missing_ids_paths.append('/'.join(list(map(lambda i: str(i), specific_path)) + ['id']))
 
-    return missing_ids_paths
+    return sorted(missing_ids_paths)
 
 
 def _get_schema_deprecated_paths(schema_obj, obj=None, current_path=(), deprecated_paths=None):
