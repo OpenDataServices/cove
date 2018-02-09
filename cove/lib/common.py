@@ -260,7 +260,7 @@ def oneOf_draft4(validator, oneOf, instance, schema):
     else:
         yield ValidationError(
             "%s is not valid under any of the given schemas" % (
-                json.dumps(instance, sort_keys=True),),
+                json.dumps(instance, sort_keys=True, default=decimal_default),),
             context=all_errors,
         )
 
