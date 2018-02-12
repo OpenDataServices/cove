@@ -30,8 +30,8 @@ install:
 script:
   # Check that messages used by OCDS CoVE are translated
   - "python manage.py makemessages -l es"
-  - "[ \"`pocount --incomplete cove/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
-  - "[ \"`pocount --incomplete cove_ocds/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
+  - "[ \"$TRAVIS_PULL_REQUEST\" = \"false\" ] || [ \"`pocount --incomplete cove/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
+  - "[ \"$TRAVIS_PULL_REQUEST\" = \"false\" ] || [ \"`pocount --incomplete cove_ocds/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
   - "flake8 ."
   - "DJANGO_SETTINGS_MODULE=cove.settings py.test -n 2 cove --cov --cov-report="
   - "DJANGO_SETTINGS_MODULE=cove_360.settings py.test -n 2 cove_360 --cov-append --cov --cov-report="
@@ -41,6 +41,6 @@ script:
   - "DJANGO_SETTINGS_MODULE=cove_360.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver & (sleep 10s; java -jar dist/vnu.jar 'http://localhost:8000/' 'http://localhost:8000/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_360/fixtures/fundingproviders_grants_2_grants.csv
   ' 'http://localhost:8000/common_errors/' 'http://localhost:8000/additional_checks/')"
   - "DJANGO_SETTINGS_MODULE=cove_ocds.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver localhost:8001 & (sleep 10s; java -jar dist/vnu.jar http://localhost:8001/ 'http://localhost:8001/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_ocds/fixtures/tenders_releases_2_releases.json')"
-  - "python secret_data_test.py"
+  - "if [ \"$TRAVIS_PULL_REQUEST\" != \"false\" ]; then python secret_data_test.py; fi"
 
 after_success: coveralls
