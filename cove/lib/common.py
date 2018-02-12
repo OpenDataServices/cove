@@ -172,7 +172,7 @@ def common_checks_context(upload_dir, json_data, schema_obj, schema_name, contex
         with open(os.path.join(upload_dir, 'heading_source_map.json')) as heading_source_map_fp:
             heading_source_map = json.load(heading_source_map_fp)
 
-    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
     if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validation_error_fp:
             validation_errors = json.load(validation_error_fp)
@@ -413,8 +413,12 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
                 header = e.path[-1]
             message = "Invalid code found in '{}'".format(header)
 
-        unique_validator_key = [validator_type, message, path_no_number]
-        validation_errors[json.dumps(unique_validator_key)].append(value)
+        unique_validator_key = {
+            'message_type': validator_type,
+            'message': message,
+            'path_no_number': path_no_number
+        }
+        validation_errors[json.dumps(unique_validator_key, sort_keys=True)].append(value)
     return dict(validation_errors)
 
 

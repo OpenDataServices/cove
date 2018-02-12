@@ -693,7 +693,7 @@ def test_schema_after_version_change(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
 
     # test link is still there.
@@ -704,7 +704,7 @@ def test_schema_after_version_change(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
 
     resp = client.post(data.get_absolute_url(), {'version': '1.0'})
@@ -713,7 +713,7 @@ def test_schema_after_version_change(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" not in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" not in validation_errors_fp.read()
 
 
@@ -733,7 +733,7 @@ def test_schema_after_version_change_record(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
 
     # test link is still there.
@@ -744,7 +744,7 @@ def test_schema_after_version_change_record(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
 
     resp = client.post(data.get_absolute_url(), {'version': '1.0'})
@@ -753,7 +753,7 @@ def test_schema_after_version_change_record(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" not in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" not in validation_errors_fp.read()
 
 
@@ -775,9 +775,9 @@ def test_corner_cases_for_deprecated_data_fields(json_data):
 
 def test_context_api_transform_validation_additional_fields():
     context = {
-        'validation_errors': [['[\"type_a\", \"description_a\", \"field_a\"]', [{'path': 'path_to_a', 'value': 'a_value'}]],
-                              ['[\"type_b\", \"description_b\", \"field_b\"]', [{'path': 'path_to_b', 'value': ''}]],
-                              ['[\"type_c\", \"description_c\", \"field_c\"]', [{'path': 'path_to_c'}]]],
+        'validation_errors': [['{"message_type":\"type_a\", "message":\"description_a\", "path_no_number":\"field_a\"}', [{'path': 'path_to_a', 'value': 'a_value'}]],
+                              ['{"message_type":\"type_b\", "message":\"description_b\", "path_no_number":\"field_b\"}', [{'path': 'path_to_b', 'value': ''}]],
+                              ['{"message_type":\"type_c\", "message":\"description_c\", "path_no_number":\"field_c\"}', [{'path': 'path_to_c'}]]],
         'data_only': [['path_to_d', 'field_d', 1],
                       ['path_to_e', 'field_e', 2],
                       ['path_to_f', 'field_f', 3]],

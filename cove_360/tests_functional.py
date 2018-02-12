@@ -383,17 +383,17 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
             section.click()
         time.sleep(0.5)
 
-    browser.find_element_by_css_selector('a[data-target=".validation-errors-1"]').click()
+    browser.find_element_by_css_selector('a[data-target=".validation-errors-3"]').click()
 
-    modal = browser.find_element_by_css_selector('.validation-errors-1')
+    modal = browser.find_element_by_css_selector('.validation-errors-3')
     assert "in" in modal.get_attribute("class").split()
     modal_text = modal.text
     assert "24/07/2014" in modal_text
     assert "grants/0/awardDate" in modal_text
-    table_rows = browser.find_elements_by_css_selector('.validation-errors-1 tbody tr')
+    table_rows = browser.find_elements_by_css_selector('.validation-errors-3 tbody tr')
     assert len(table_rows) == 4
 
-    browser.find_element_by_css_selector('div.modal.validation-errors-1 button.close').click()
+    browser.find_element_by_css_selector('div.modal.validation-errors-3 button.close').click()
     browser.find_element_by_css_selector('a[data-target=".additional-checks-3"]').click()
 
     modal_additional_checks = browser.find_element_by_css_selector('.additional-checks-3')

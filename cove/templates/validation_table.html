@@ -14,14 +14,15 @@
   </tr> 
 </thead>
 <tbody>
-{% for error, values in validation_errors %}
+{% for error_json, values in validation_errors %}
+{% with error=error_json|json_decode %}
 <tr>
-  {% if values.0.message_safe %}
-    <td>AAAA{{ values.0.message_safe | safe }}</td>
-  {% elif error|get_message_type in common_error_types %}
-  <td><a href="{% url 'common_errors' %}#{{error|get_message_type}}"> {{error|get_message}} </a></td>
+  {% if error.message_safe %}
+    <td>{{ error.message_safe | safe }}</td>
+  {% elif error.message_type in common_error_types %}
+  <td><a href="{% url 'common_errors' %}#{{error.message_type}}"> {{error.message}} </a></td>
   {% else %}
-    <td>{{error|get_message}}</td> 
+    <td>{{error.message}}</td> 
   {% endif %}
   <td class="text-center">
     {% if values|length > 3 %}
@@ -56,6 +57,7 @@
   </td>
   {% endif %}
 </tr>
+{% endwith %}
 {% endfor %}
 </tbody>
 </table>

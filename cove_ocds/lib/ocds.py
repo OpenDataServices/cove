@@ -356,11 +356,12 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
 
     new_validation_errors = []
     for (json_key, values) in validation_errors:
-        validator_type, message, path_no_number = json.loads(json_key)
-        new_message = validation_error_lookup.get(validator_type)
+        error = json.loads(json_key)
+        new_message = validation_error_lookup.get(error['message_type'])
         if new_message:
-            message = new_message
-        new_validation_errors.append([json.dumps([validator_type, message, path_no_number]), values])
+            error['message'] = new_message
+        error['message_safe'] = conditional_escape(error['message'])
+        new_validation_errors.append([json.dumps(error, sort_keys=True), values])
     common_checks['context']['validation_errors'] = new_validation_errors
 
     context.update(common_checks['context'])
