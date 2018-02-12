@@ -18,13 +18,15 @@ from jsonschema import FormatChecker, RefResolver
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
 
+from django.utils.html import mark_safe, conditional_escape
+
 from cove.lib.exceptions import cove_spreadsheet_conversion_error
 from cove.lib.tools import cached_get_request, decimal_default
 
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
 LANGUAGE_RE = re.compile("^(.*_(((([A-Za-z]{2,3}(-([A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-([A-Za-z]{4}))?(-([A-Za-z]{2}|[0-9]{3}))?(-([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-([0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(x(-[A-Za-z0-9]{1,8})+))?)|(x(-[A-Za-z0-9]{1,8})+)))$")
-validation_error_lookup = {'date-time': 'Date is not in the correct format',
+validation_error_lookup = {'date-time': mark_safe('Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z. Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>'),
                            'uri': 'Invalid \'uri\' found',
                            'string': 'Value is not a string',
                            'integer': 'Value is not a integer',
@@ -413,6 +415,7 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
                 header = e.path[-1]
             message = "Invalid code found in '{}'".format(header)
 
+        value['message_safe'] = conditional_escape(message)
         unique_validator_key = [validator_type, message, path_no_number]
         validation_errors[json.dumps(unique_validator_key)].append(value)
     return dict(validation_errors)

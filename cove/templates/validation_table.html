@@ -16,7 +16,9 @@
 <tbody>
 {% for error, values in validation_errors %}
 <tr>
-  {% if error|get_message_type in common_error_types %}
+  {% if values.0.message_safe %}
+    <td>AAAA{{ values.0.message_safe | safe }}</td>
+  {% elif error|get_message_type in common_error_types %}
   <td><a href="{% url 'common_errors' %}#{{error|get_message_type}}"> {{error|get_message}} </a></td>
   {% else %}
     <td>{{error|get_message}}</td> 
