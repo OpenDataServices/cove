@@ -1,7 +1,15 @@
+import json
 import collections
 
 import cove.lib.tools as tools
 from cove.lib.common import common_checks_context, get_additional_codelist_values
+
+from django.utils.html import mark_safe, conditional_escape
+
+
+validation_error_lookup = {
+    'date-time': mark_safe('Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z. Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.'),
+}
 
 
 @tools.ignore_errors
@@ -345,6 +353,15 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context,
                                           fields_regex=True, api=api, cache=cache)
     validation_errors = common_checks['context']['validation_errors']
+
+    new_validation_errors = []
+    for (json_key, values) in validation_errors:
+        validator_type, message, path_no_number = json.loads(json_key)
+        new_message = validation_error_lookup.get(validator_type)
+        if new_message:
+            message = new_message
+        new_validation_errors.append([json.dumps([validator_type, message, path_no_number]), values])
+    common_checks['context']['validation_errors'] = new_validation_errors
 
     context.update(common_checks['context'])
 
