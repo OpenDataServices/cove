@@ -1012,7 +1012,7 @@ def test_cove_ocds_cli_schema_cache():
         cache_time = cache_end - cache_start
         cache_time_total += cache_time
 
-    cache_time_avg = cache_time_total / 5.0
+    cache_time_avg = cache_time_total / 6.0
 
     with open(os.path.join(output_dir, 'results.json')) as fp:
         results = json.load(fp)
