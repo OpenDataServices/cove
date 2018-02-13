@@ -4,7 +4,7 @@ import collections
 import cove.lib.tools as tools
 from cove.lib.common import common_checks_context, get_additional_codelist_values
 
-from django.utils.html import mark_safe, escape, conditional_escape
+from django.utils.html import mark_safe, escape, conditional_escape, format_html
 
 
 validation_error_lookup = {
@@ -346,17 +346,22 @@ def get_releases_aggregates(json_data):
     )
 
 
-def _lookup_schema(schema, path):
+def _lookup_schema(schema, path, ref_info=None):
     if len(path) == 0:
-        return schema
+        return schema, ref_info
+    if hasattr(schema, '__reference__'):
+        ref_info = {
+            'path': path,
+            'reference': schema.__reference__,
+        }
     path_item, *child_path = path
     if 'items' in schema:
-        return _lookup_schema(schema['items'], path)
+        return _lookup_schema(schema['items'], path, ref_info)
     elif 'properties' in schema:
         if path_item in schema['properties']:
-            return _lookup_schema(schema['properties'][path_item], child_path)
+            return _lookup_schema(schema['properties'][path_item], child_path, ref_info)
         else:
-            return None
+            return None, None
 
 
 def lookup_schema(schema, path):
@@ -378,9 +383,24 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
         if new_message:
             error['message'] = new_message
 
-        schema_block = lookup_schema(schema_obj.get_release_pkg_schema_obj(deref=True), error['path_no_number'])
-        if schema_block and 'description' in schema_block:
-            error['message'] = conditional_escape(error['message']) + mark_safe('<br/>Schema description: ') + escape(schema_block['description'])
+        schema_block, ref_info = lookup_schema(schema_obj.get_release_pkg_schema_obj(deref=True), error['path_no_number'])
+        if schema_block:
+            if 'description' in schema_block:
+                error['message'] = conditional_escape(error['message']) + mark_safe('<br/>Schema description: ') + escape(schema_block['description'])
+            if ref_info:
+                ref = ref_info['reference']['$ref']
+                print(ref_info)
+                if ref.endswith('release-schema.json'):
+                    ref = ''
+                else:
+                    ref = ref.strip('#')
+                ref_path = '/'.join(ref_info['path'])
+                schema = 'release-schema.json'
+            else:
+                ref = ''
+                ref_path = error['path_no_number']
+                schema = 'release-package-schema.json'
+            error['message'] = conditional_escape(error['message']) + format_html('<br/><a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#{},{},{}">Docs url</a>', schema, ref, ref_path)
 
         error['message_safe'] = conditional_escape(error['message'])
         new_validation_errors.append([json.dumps(error, sort_keys=True), values])
