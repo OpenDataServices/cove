@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+
+<div>
+  <h1>{% trans "Terms &amp; conditions" %}</h1>
+  <p>{% blocktrans %}This web application is free software designed to help people check data published to particular data standards.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}It is offered as service WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}If you continue to browse and use this website, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern Open Data Services Co-operative Limited's relationship with you in relation to this website. If you disagree with any part of these terms and conditions, please do not use our website.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}The term 'Open Data Services Co-operative Limited' or 'us' or 'we' refers to the owner of the website. Our company registration number is 09506232. Our registered address is 32 Church Road, Hove, East Sussex, England, BN3 2FN. There is more company information on the <a href="https://opencorporates.com/companies/gb/09506232">Open Data Services Co-operative Limited page at Open Corporates</a>. The term 'you' refers to the user or viewer of our website.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}The use of this website is subject to the following terms of use:{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}The content of the pages of this website is for your general information and use only. It is subject to change without notice.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}Neither we nor any third parties provide any warranty or guarantee as to the accuracy, timeliness, performance, completeness or suitability of the information and materials found or offered on this website for any particular purpose. You acknowledge that such information and materials may contain inaccuracies or errors and we expressly exclude liability for any such inaccuracies or errors to the fullest extent permitted by law.
+  Your use of any information or materials on this website is entirely at your own risk, for which we shall not be liable. It shall be your own responsibility to ensure that any products, services or information available through this website meet your specific requirements.
+  This website contains material which is owned by or licensed to us. This material includes, but is not limited to, the design, layout, look, appearance and graphics. Reproduction is prohibited other than in accordance with the copyright notice, which forms part of these terms and conditions.
+  All trademarks reproduced in this website which are not the property of, or licensed to, the operator are acknowledged on the website.
+  Unauthorised use of this website may give rise to a claim for damages and/or be a criminal offence.
+  From time to time this website may also include links to other websites. These links are provided for your convenience to provide further information. They do not signify that we endorse the website(s). We have no responsibility for the content of the linked website(s).
+  Your use of this website and any dispute arising out of such use of the website is subject to the laws of England, Northern Ireland, Scotland and Wales.{% endblocktrans %}</p>
+
+  <h2>{% trans "How we use cookies" %}</h2>
+  <p>{% blocktrans %}A cookie is a small file which asks permission to be placed on your computer's hard drive. Once you agree, the file is added and the cookie helps analyse web traffic or lets you know when you visit a particular site.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}Cookies allow web applications to respond to you as an individual. The web application can tailor its operations to your needs, likes and dislikes by gathering and remembering information about your preferences. A cookie in no way gives us access to your computer or any information about you, other than the data you choose to share with us.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}You can choose to accept or decline cookies. Most web browsers automatically accept cookies, but you can usually modify your browser setting to decline cookies if you prefer. This may prevent you from taking full advantage of the website.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}In this website we use cookies to:{% endblocktrans %}</p>
+
+  <ul>
+    <li>{% trans "Help us analyse how our website is used." %}</li>
+    <li>{% trans "To ensure other sites can’t “forge” requests." %}</li>
+    <li>{% trans "Remember your choices within the application, for your convenience, and where relevant remember that you are logged into the application." %}</li>
+  </ul>
+
+  <p>{% blocktrans %}We use <a href="http://piwik.org">Piwik</a> to analyse usage of our website (see Piwik section below). This uses cookies to identify you (anonymously) as the same user, so that we can analyse our web traffic better. E.g. it allows us to count how many users we have, instead of just total page views or analyse what pages people commonly visit together.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}If you do allow cookies to be used, Piwik uses 1st party cookies, set on the domain of this website. Cookies created by Piwik start with: {% endblocktrans %}</p>
+  <ul>
+    <li>_pk_ref</li>
+    <li>_pk_cvar</li>
+    <li>_pk_id</li>
+    <li>_pk_ses</li>
+  </ul>
+
+  <p>{% blocktrans %}See: <a href="http://piwik.org/faq/general/faq_146/">http://piwik.org/faq/general/faq_146/</a> for more information.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}The application is built using <a href="https://www.djangoproject.com/">Django</a> and we use that framework to set the following cookies:{% endblocktrans %}</p>
+   <ul>{% comment %}Translators: csrftoken and sessionid are names of cookies and do not need translation {% endcomment %}
+    <li>{% trans "csrftoken - (to prevent cross site scripting attacks https://docs.djangoproject.com/en/1.8/ref/csrf/#how-it-works)" %}</li>
+    <li>{% trans "sessionid - (you will get this if you interact with the application, so that we can save the things you have done, e.g. select a language)" %}</li>
+  </ul>
+
+  <p>{% blocktrans %}If you choose not to accept these cookies the application may not work for you.{% endblocktrans %}</p>
+
+  <h2>{% trans "Piwik Traffic Analytics" %}</h2>
+
+  <p>{% blocktrans %}We use our own hosted version of <a href="http://piwik.org">Piwik</a> to analyse our web traffic. We do this to get an idea of how much traffic we are getting, where from and when.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}If you have set your web browser to "I do not want to be tracked" (DoNotTrack is enabled) then Piwik will not track your visit.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}Piwik also it’s own opt out mechanism:{% endblocktrans %}</p>
+  <!-- opt out iframe - clicking this will mean people can opt out of tracking -->
+  <iframe style="border: 1; height: 150px; width: 600px;" src="https://mon.opendataservices.coop/piwik/index.php?module=CoreAdminHome&amp;action=optOut&amp;language=en"></iframe>
+
+  <h2>{% trans "Server Logs" %}</h2>
+  <p>{% blocktrans %}Open Data Services Co-operative Limited keep server logs of traffic to, and activity on, our all of our servers. Primarily this is to help us keep our servers healthy and working by knowing how much activity is taking place on them.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}We use the ELK stack (Elasticsearch, Logstash, Kibana) to analyse Server logs. {% endblocktrans %}</p> 
+  <p>{% blocktrans %}Our server logs record information such as your IP address, the browser you are using, and your operating system. Generally, this is considered not to constitute personal information, but we recognise that when aggregated, and analysed there is a chance that this data could potentially enable identification of individuals. This is not something we do. {% endblocktrans %}</p>
+
+  <h2>{% trans "Privacy Policy" %}</h2>
+  <p>{% blocktrans %}This privacy policy sets out how Open Data Services Co-operative Limited uses and protects any information that you give Open Data Services Co-operative Limited when you use this website.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}Open Data Services Co-operative Limited is committed to ensuring that your privacy is protected. Should we ask you to provide certain information by which you can be identified when using this website, then you can be assured that it will only be used in accordance with this privacy statement.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}Open Data Services Co-operative Limited may change this policy from time to time by updating this page. You should check this page from time to time to ensure that you are happy with any changes. This policy is effective from 1st April 2015.{% endblocktrans %}</p>
+
+  <h3>{% trans "What we collect" %}</h3>
+  <p>{% blocktrans %}Currently we do not collect any personal information from you when you use this website.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}This application is designed so that people can submit files to the application, allow the application to process them and to then display information about them, generate alternative file formats of the original data, and provide those files for download.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}Open Data Services Co-operative Limited does not make use of any of the data within the files for purposes other than to create reports for you about the data you have submitted and to review the operation and output of the website.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}Open Data Services Co-operative Limited does create and store metadata about your use of the application, and about the files/data that you have uploaded in order to monitor how the application is being used.{% endblocktrans %}</p>
+
+  <h2>{% trans "Deleting our copies of the files" %}</h2>
+  <p>{% blocktrans %}When you provide data to the application we store the data you have provided in order to process it for you. We also enable derived versions of the data to be downloaded. Those derived versions and the original data are stored on our server.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}After a period of time we will delete those files from our server, meaning they are no-longer available for download.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}We may also provide a means for a user to delete those files, such as a 'delete' button that a user must select.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}Information about how long files will be stored is made available to users directly through the interface, but will be for no longer than one year from the date of submission.{% endblocktrans %}</p>
+
+
+  <h2>{% trans "Controlling your personal information" %}</h2>
+  <p>{% blocktrans %}Although this application does not record any personal information you may like to know that you may request details of personal information which we hold about you under the Data Protection Act 1998. A small fee will be payable. If you would like a copy of the information held on you please email the Data Protection Officer at company@opendataservices.coop. If you would like to write to us our registered address is 32 Church Road, Hove, East Sussex, England, BN3 2FN. Further details are available on the <a href="https://opencorporates.com/companies/gb/09506232">Open Data Services Co-operative Limited page at Open Corporates</a>.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}If you believe that any information we are holding on you is incorrect or incomplete, please write to or email us as soon as possible at the above address. We will promptly correct any information found to be incorrect.{% endblocktrans %}</p>
+
+  <h2>{% trans "Security" %}</h2>
+  <p>{% blocktrans %}We are committed to ensuring that your information is secure. In order to prevent unauthorised access or disclosure, we have put in place suitable physical, electronic and managerial procedures to safeguard and secure the information we collect online.{% endblocktrans %}</p>
+
+  <h2>{% trans "Links to other websites" %}</h2>
+  <p>{% blocktrans %}Our website may contain links to other websites of interest. However, once you have used these links to leave our site, you should note that we do not have any control over that other website. Therefore, we cannot be responsible for the protection and privacy of any information which you provide whilst visiting such sites and such sites are not governed by this privacy statement. You should exercise caution and look at the privacy statement applicable to the website in question.{% endblocktrans %}</p>
+
+  <h2>{% trans "Website disclaimer" %}</h2>
+  <p>{% blocktrans %}The information contained in this website is for general information purposes only. The information is provided by Open Data Services Co-operative Limited and while we endeavour to keep the information up to date and correct, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.
+  In no event will we be liable for any loss or damage including without limitation, indirect or consequential loss or damage, or any loss or damage whatsoever arising from loss of data or profits arising out of, or in connection with, the use of this website.
+  Through this website you are able to link to other websites which are not under the control of Open Data Services Co-operative Limited. We have no control over the nature, content and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorse the views expressed within them.
+  Every effort is made to keep the website up and running smoothly. However, Open Data Services Co-operative Limited takes no responsibility for, and will not be liable for, the website being temporarily unavailable due to technical issues beyond our control.{% endblocktrans %}</p>
+
+
+</div>
+
+{% endblock %}

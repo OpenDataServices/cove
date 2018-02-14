@@ -244,9 +244,39 @@ def required_draft4(validator, required, instance, schema):
             yield ValidationError(property)
 
 
+def oneOf_draft4(validator, oneOf, instance, schema):
+    """
+    oneOf_draft4 validator from https://github.com/Julian/jsonschema/blob/d16713a4296663f3d62c50b9f9a2893cb380b7af/jsonschema/_validators.py#L337
+    patched to sort the instance.
+    """
+    subschemas = enumerate(oneOf)
+    all_errors = []
+    for index, subschema in subschemas:
+        errs = list(validator.descend(instance, subschema, schema_path=index))
+        if not errs:
+            first_valid = subschema
+            break
+        all_errors.extend(errs)
+    else:
+        yield ValidationError(
+            "%s is not valid under any of the given schemas" % (
+                json.dumps(instance, sort_keys=True, default=decimal_default),),
+            context=all_errors,
+        )
+
+    more_valid = [s for i, s in subschemas if validator.is_valid(instance, s)]
+    if more_valid:
+        more_valid.append(first_valid)
+        reprs = ", ".join(repr(schema) for schema in more_valid)
+        yield ValidationError(
+            "%r is valid under each of %s" % (instance, reprs)
+        )
+
+
 validator.VALIDATORS.pop("patternProperties")
 validator.VALIDATORS["uniqueItems"] = unique_ids
 validator.VALIDATORS["required"] = required_draft4
+validator.VALIDATORS["oneOf"] = oneOf_draft4
 
 
 def fields_present_generator(json_data, prefix=''):
