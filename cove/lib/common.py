@@ -17,6 +17,7 @@ from flattentool import unflatten
 from jsonschema import FormatChecker, RefResolver
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
+from django.utils.html import escape, conditional_escape, format_html
 
 from cove.lib.exceptions import cove_spreadsheet_conversion_error
 from cove.lib.tools import cached_get_request, decimal_default
@@ -31,6 +32,13 @@ validation_error_lookup = {'date-time': 'Date is not in the correct format',
                            'number': 'Value is not a number',
                            'object': 'Value is not an object',
                            'array': 'Value is not an array'}
+validation_error_template_lookup_safe = {'date-time': 'Date is not in the correct format',
+                           'uri': 'Invalid \'uri\' found',
+                           'string': 'Field <code>{}</code> is not a string',
+                           'integer': 'Field <code>{}</code> is not a integer',
+                           'number': 'Field <code>{}</code> is not a number',
+                           'object': 'Field <code>{}</code> is not an object',
+                           'array': 'Field <code>{}</code> is not an array'}
 
 
 class CustomJsonrefLoader(jsonref.JsonLoader):
@@ -364,19 +372,10 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
 
     our_validator = validator(pkg_schema_obj, format_checker=format_checker, resolver=resolver)
     for n, e in enumerate(our_validator.iter_errors(json_data)):
+        message_safe = None
         message = e.message
         path = "/".join(str(item) for item in e.path)
         path_no_number = "/".join(str(item) for item in e.path if not isinstance(item, int))
-
-        validator_type = e.validator
-        if e.validator in ('format', 'type'):
-            validator_type = e.validator_value
-            if isinstance(e.validator_value, list):
-                validator_type = e.validator_value[0]
-
-            new_message = validation_error_lookup.get(validator_type)
-            if new_message:
-                message = new_message
 
         value = {"path": path}
         cell_reference = cell_src_map.get(path)
@@ -387,6 +386,21 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
                 value["sheet"], value["col_alpha"], value["row_number"], value["header"] = first_reference
             if len(first_reference) == 2:
                 value["sheet"], value["row_number"] = first_reference
+
+        header = value.get('header')
+        if not header and len(e.path):
+            header = e.path[-1]
+
+        validator_type = e.validator
+        if e.validator in ('format', 'type'):
+            validator_type = e.validator_value
+            if isinstance(e.validator_value, list):
+                validator_type = e.validator_value[0]
+
+            message = validation_error_lookup.get(validator_type, message)
+            message_safe_template = validation_error_template_lookup_safe.get(validator_type)
+            if message_safe_template:
+                message_safe = format_html(message_safe_template, header)
 
         if not isinstance(e.instance, (dict, list)):
             value["value"] = e.instance
@@ -405,17 +419,20 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
                 field_name = heading[0][1]
                 value['header'] = heading[0][1]
             message = "'{}' is missing but required".format(field_name)
+            message_safe = format_html("<code>{}</code> is missing but required", field_name)
         if e.validator == 'enum':
             if "isCodelist" in e.schema:
                 continue
-            header = value.get('header')
-            if not header:
-                header = e.path[-1]
             message = "Invalid code found in '{}'".format(header)
+            message_safe = format_html("Invalid code found in <code>{}</code>", header)
+
+        if message_safe is None:
+            message_safe = escape(message)
 
         unique_validator_key = {
             'message_type': validator_type,
             'message': message,
+            'message_safe': conditional_escape(message_safe),
             'path_no_number': path_no_number
         }
         validation_errors[json.dumps(unique_validator_key, sort_keys=True)].append(value)

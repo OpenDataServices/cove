@@ -171,7 +171,7 @@ def test_500_error(server_url, browser):
                                                              'All the extensions above were applied',
                                                              'copy of the schema with extension',
                                                              'Validation Errors',
-                                                             '\'buyer:name\' is missing but required',
+                                                             'buyer:name is missing but required',
                                                              'The schema version specified in the file is 1.1',
                                                              'Party Scale'], ['scale', '/releases/parties/details', 'fetching failed'], True),
     ('tenders_1_release_with_extensions_1_1_missing_party_scale.json', ['Schema Extensions',
@@ -183,8 +183,8 @@ def test_500_error(server_url, browser):
                                                                     'A tender process may be divided into lots',
                                                                     'copy of the schema with extension',
                                                                     'Validation Errors',
-                                                                    '\'buyer:name\' is missing but required',
-                                                                    '\'items:id\' is missing but required'], ['fetching failed'], True),
+                                                                    'buyer:name is missing but required',
+                                                                    'items:id is missing but required'], ['fetching failed'], True),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Schema Extensions',
                                                                  'https://raw.githubusercontent.com/open-contracting/',
                                                                  'badprotocol://example.com',
@@ -196,7 +196,7 @@ def test_500_error(server_url, browser):
                                                                'The metrics extension supports publication of forecasts',
                                                                'Get a copy of the schema with extension patches applied',
                                                                'The following extensions failed',
-                                                               "Invalid code found in 'scale'",
+                                                               "Invalid code found in scale",
                                                                'is not valid under any of the given schemas',
                                                                '/records/compiledRelease/tender/targets',
                                                                'The schema version specified in the file is 1.1',
@@ -215,7 +215,7 @@ def test_500_error(server_url, browser):
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
                                                   'Validation Errors',
-                                                  "'id' is missing but required",
+                                                  "id is missing but required",
                                                   "Invalid 'uri' found"], [], True),
     ('tenders_releases_2_releases_codelists.json', ['oh no',
                                                     'GSINS'], [], True),
@@ -406,11 +406,11 @@ def test_url_invalid_dataset_request(server_url, browser, data_url):
 
 @pytest.mark.parametrize(('source_filename', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
     ('tenders_releases_1_release_with_extensions_1_1.json', 'validation against OCDS release package schema version 1.1',
-     '\'version\' is missing but required', 'methodRationale', 'version'),
+     'version is missing but required', 'methodRationale', 'version'),
     ('tenders_releases_1_release_with_invalid_extensions.json', 'validation against OCDS release package schema version 1.0',
-     '\'version\' is missing but required', 'methodRationale', 'version'),
+     'version is missing but required', 'methodRationale', 'version'),
     ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'validation against OCDS release package schema version 1.1',
-     '\'version\' is missing but required', 'methodRationale', 'version')
+     'version is missing but required', 'methodRationale', 'version')
 ])
 def test_url_input_with_version(server_url, url_input_browser, httpserver, source_filename, expected, not_expected,
                                 expected_additional_field, not_expected_additional_field):
@@ -434,11 +434,11 @@ def test_url_input_with_version(server_url, url_input_browser, httpserver, sourc
 
 @pytest.mark.parametrize(('source_filename', 'select_version', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
     ('tenders_releases_1_release_with_extensions_1_1.json', '1.0', 'validation against OCDS release package schema version 1.0',
-     '\'version\' is missing but required', 'version', 'publisher'),
-    ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', '\'version\' is missing but required',
+     'version is missing but required', 'version', 'publisher'),
+    ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', 'version is missing but required',
      'validation against OCDS release package schema version 1.0', 'methodRationale', 'version'),
     ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'validation against OCDS release package schema version 1.0',
-     '\'version\' is missing but required', 'version', 'publisher')
+     'version is missing but required', 'version', 'publisher')
 ])
 def test_url_input_with_version_change(server_url, url_input_browser, httpserver, select_version, source_filename, expected,
                                        not_expected, expected_additional_field, not_expected_additional_field):
