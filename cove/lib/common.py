@@ -690,7 +690,7 @@ def add_is_codelist(obj):
             add_is_codelist(value)
 
 
-def _get_schema_codelist_paths(schema_obj, obj=None, current_path=(), codelist_paths=None):
+def get_schema_codelist_paths(schema_obj, obj=None, current_path=(), codelist_paths=None, use_extensions=False):
     '''Get a dict of codelist paths including the filename and if they are open.
 
     codelist paths are given as tuples of tuples:
@@ -700,7 +700,7 @@ def _get_schema_codelist_paths(schema_obj, obj=None, current_path=(), codelist_p
         codelist_paths = {}
 
     if schema_obj:
-        obj = schema_obj.get_release_pkg_schema_obj(deref=True)
+        obj = schema_obj.get_release_pkg_schema_obj(deref=True, use_extensions=use_extensions)
 
     properties = obj.get('properties', {})
     if not isinstance(properties, dict):
@@ -715,31 +715,38 @@ def _get_schema_codelist_paths(schema_obj, obj=None, current_path=(), codelist_p
             codelist_paths[path] = (value['codelist'], value.get('openCodelist', False))
 
         if value.get('type') == 'object':
-            _get_schema_codelist_paths(None, value, path, codelist_paths)
+            get_schema_codelist_paths(None, value, path, codelist_paths)
         elif value.get('type') == 'array' and value.get('items', {}).get('properties'):
-            _get_schema_codelist_paths(None, value['items'], path, codelist_paths)
+            get_schema_codelist_paths(None, value['items'], path, codelist_paths)
 
     return codelist_paths
 
 
+def load_codelist(url):
+    codelist_map = {}
+
+    response = requests.get(url)
+    response.raise_for_status()
+    reader = csv.DictReader(line.decode("utf8") for line in response.iter_lines())
+    for record in reader:
+        code = record.get('Code') or record.get('code')
+        title = record.get('Title') or record.get('Title_en')
+        if not code or not title:
+            return {}
+        codelist_map[code] = title
+
+    return codelist_map
+
+
 @functools.lru_cache()
-def _load_codelists(codelist_url, unique_files):
+def load_core_codelists(codelist_url, unique_files):
     codelists = {}
     for codelist_file in unique_files:
         try:
-            response = requests.get(codelist_url + codelist_file)
-            response.raise_for_status()
-            reader = csv.DictReader(line.decode("utf8") for line in response.iter_lines())
-            codelists[codelist_file] = {}
-            for record in reader:
-                code = record.get('Code') or record.get('code')
-                title = record.get('Title') or record.get('Title_en')
-                codelists[codelist_file][code] = title
-
+            codelist_map = load_codelist(codelist_url + codelist_file)
         except requests.exceptions.RequestException:
-            codelists = {}
-            break
-
+            return {}
+        codelists[codelist_file] = codelist_map
     return codelists
 
 
@@ -761,12 +768,8 @@ def _generate_data_path(json_data, path=()):
             yield path + (key,), value
 
 
-def get_additional_codelist_values(schema_obj, codelist_url, json_data):
-    if not codelist_url:
-        return {}
-    codelist_schema_paths = _get_schema_codelist_paths(schema_obj)
-    unique_files = frozenset(value[0] for value in codelist_schema_paths.values())
-    codelists = _load_codelists(codelist_url, unique_files)
+def get_additional_codelist_values(schema_obj, json_data):
+    schema_obj.process_codelists()
 
     additional_codelist_values = {}
     for path, values in _generate_data_path(json_data):
@@ -775,26 +778,28 @@ def get_additional_codelist_values(schema_obj, codelist_url, json_data):
 
         path_no_num = tuple(key for key in path if isinstance(key, str))
 
-        if path_no_num not in codelist_schema_paths:
+        if path_no_num not in schema_obj.extended_codelist_schema_paths:
             continue
 
-        codelist, isopen = codelist_schema_paths[path_no_num]
+        codelist, isopen = schema_obj.extended_codelist_schema_paths[path_no_num]
 
-        codelist_values = codelists.get(codelist)
+        codelist_values = schema_obj.extended_codelists.get(codelist)
         if not codelist_values:
             continue
 
         for value in values:
             if str(value) in codelist_values:
                 continue
+
             if path_no_num not in additional_codelist_values:
                 additional_codelist_values['/'.join(path_no_num)] = {
                     "path": "/".join(path_no_num[:-1]),
                     "field": path_no_num[-1],
                     "codelist": codelist,
-                    "codelist_url": codelist_url + codelist,
+                    "codelist_url": schema_obj.codelists + codelist,
                     "isopen": isopen,
                     "values": set(),
+                    "extension_codelist": codelist not in schema_obj.core_codelists,
                     #"location_values": []
                 }
 

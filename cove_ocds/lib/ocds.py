@@ -423,7 +423,7 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
         context['records_aggregates'] = get_records_aggregates(json_data, ignore_errors=bool(validation_errors))
         context['schema_url'] = schema_obj.record_pkg_schema_url
     else:
-        additional_codelist_values = get_additional_codelist_values(schema_obj, schema_obj.codelists, json_data)
+        additional_codelist_values = get_additional_codelist_values(schema_obj, json_data)
         closed_codelist_values = {key: value for key, value in additional_codelist_values.items() if not value['isopen']}
         open_codelist_values = {key: value for key, value in additional_codelist_values.items() if value['isopen']}
 
