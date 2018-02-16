@@ -1,3 +1,7 @@
+# Check that we can import defusedexpat, as this will protect us against
+# some XML attacks in xmltodict
+import defusedexpat
+
 from cove import settings
 
 PIWIK = settings.PIWIK
