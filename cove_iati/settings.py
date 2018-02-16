@@ -1,6 +1,7 @@
 # Check that we can import defusedexpat, as this will protect us against
 # some XML attacks in xmltodict
-import defusedexpat
+# Needs a noqa comment as we don't actually use it here
+import defusedexpat  # noqa: F401
 
 from cove import settings
 
