@@ -1,0 +1,27 @@
+{
+  "version": "Should be integer.integer",
+  "uri": "tmXf6cC4QU+lwO3O73T-ZvUX4qo2GMJ0Sd",
+  "publisher": {
+    "name": "ducimus recusandae"
+  },
+  "publishedDate": "4440-04-11T01:58:02.871Z",
+  "releases": [
+    {
+      "ocid": "someid",
+      "id": "",
+      "date": "Last Tuesday",
+      "tag": [],
+      "initiationType": "badInitiationType",
+      "buyer": "This should be an object.",
+      "parties": "This should be an array.",
+      "tender": {
+        "title": 3,
+        "description": "^title should be a string",
+        "value": {
+            "amount": "This should be a number."
+        },
+        "numberOfTenderers": "This should be an integer."
+      }
+    }
+  ]
+}
