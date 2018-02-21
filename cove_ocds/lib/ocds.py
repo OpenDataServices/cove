@@ -381,17 +381,17 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
         error = json.loads(json_key)
         new_message = validation_error_lookup.get(error['message_type'])
         if new_message:
-            message_safe = conditional_escape(new_message)
+            error['message_safe'] = conditional_escape(new_message)
         else:
             if 'message_safe' in error:
-                message_safe = mark_safe(error['message_safe'])
+                error['message_safe'] = mark_safe(error['message_safe'])
             else:
-                message_safe = conditional_escape(error['message'])
+                error['message_safe'] = conditional_escape(error['message'])
 
         schema_block, ref_info = lookup_schema(schema_obj.get_release_pkg_schema_obj(deref=True), error['path_no_number'])
         if schema_block:
             if 'description' in schema_block:
-                message_safe += mark_safe('<br/>Schema description: ') + escape(schema_block['description'])
+                error['schema_description'] = escape(schema_block['description'])
             if ref_info:
                 ref = ref_info['reference']['$ref']
                 if ref.endswith('release-schema.json'):
@@ -404,9 +404,8 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
                 ref = ''
                 ref_path = error['path_no_number']
                 schema = 'release-package-schema.json'
-            message_safe += format_html('<br/><a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#{},{},{}">Docs url</a>', schema, ref, ref_path)
+            error['docs_ref'] = format_html('{},{},{}', schema, ref, ref_path)
 
-        error['message_safe'] = conditional_escape(message_safe)
         new_validation_errors.append([json.dumps(error, sort_keys=True), values])
     common_checks['context']['validation_errors'] = new_validation_errors
 

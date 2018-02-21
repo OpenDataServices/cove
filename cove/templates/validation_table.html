@@ -18,7 +18,14 @@
 {% with error=error_json|json_decode %}
 <tr>
   {% if error.message_safe %}
-    <td>{{ error.message_safe | safe }}</td>
+    <td>
+      <strong>{{ error.message_safe | safe }}</strong>
+      <p>
+        Schema description:
+        <em>{{ error.schema_description }}</em>
+        <a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#{{ error.docs_ref }}">See in the docs.</a>
+      </p>
+    </td>
   {% elif error.message_type in common_error_types %}
   <td><a href="{% url 'common_errors' %}#{{error.message_type}}"> {{error.message}} </a></td>
   {% else %}
