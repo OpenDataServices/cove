@@ -281,10 +281,28 @@ def oneOf_draft4(validator, oneOf, instance, schema):
         )
 
 
+def pattern(validator, patrn, instance, schema):
+    """
+        Render patrn as a str not a repr, so we don't get double escaping.
+        This is more consistent with the docson schema view on
+        http://standard.open-contracting.org/latest/en/schema/release_package/
+
+        Add word regex to error message.
+    """
+    if (
+        validator.is_type(instance, "string") and
+        not re.search(patrn, instance)
+    ):
+        err = ValidationError(("%r does not match regex `%s`") % (repr(instance), patrn))
+        err.patrn = patrn
+        yield err
+
+
 validator.VALIDATORS.pop("patternProperties")
 validator.VALIDATORS["uniqueItems"] = unique_ids
 validator.VALIDATORS["required"] = required_draft4
 validator.VALIDATORS["oneOf"] = oneOf_draft4
+validator.VALIDATORS["pattern"] = pattern
 
 
 def fields_present_generator(json_data, prefix=''):
@@ -420,11 +438,15 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
                 value['header'] = heading[0][1]
             message = "'{}' is missing but required".format(field_name)
             message_safe = format_html("<code>{}</code> is missing but required", field_name)
+
         if e.validator == 'enum':
             if "isCodelist" in e.schema:
                 continue
             message = "Invalid code found in '{}'".format(header)
             message_safe = format_html("Invalid code found in <code>{}</code>", header)
+
+        if e.validator == 'pattern':
+            message_safe = format_html('Field <code>{}</code> does not match the regex <code>{}</code>', header, e.patrn)
 
         if message_safe is None:
             message_safe = escape(message)
