@@ -32,13 +32,16 @@ validation_error_lookup = {'date-time': 'Date is not in the correct format',
                            'number': 'Value is not a number',
                            'object': 'Value is not an object',
                            'array': 'Value is not an array'}
+# These are "safe" html that we trust
+# Don't insert any values into these strings without ensuring escaping
+# e.g. using django's format_html function.
 validation_error_template_lookup_safe = {'date-time': 'Date is not in the correct format',
                            'uri': 'Invalid \'uri\' found',
-                           'string': 'Field <code>{}</code> is not a string',
-                           'integer': 'Field <code>{}</code> is not a integer',
-                           'number': 'Field <code>{}</code> is not a number',
-                           'object': 'Field <code>{}</code> is not an object',
-                           'array': 'Field <code>{}</code> is not an array'}
+                           'string': 'Field <code>{}</code> is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with \.',
+                           'integer': 'Field <code>{}</code> is not a integer. Check that the value {} doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ',
+                           'number': 'Field <code>{}</code> is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and `.`. Number values should not be in quotes. ',
+                           'object': 'Field <code>{}</code> is not a JSON object',
+                           'array': 'Field <code>{}</code> is not a JSON array'}
 
 
 class CustomJsonrefLoader(jsonref.JsonLoader):
@@ -281,28 +284,10 @@ def oneOf_draft4(validator, oneOf, instance, schema):
         )
 
 
-def pattern(validator, patrn, instance, schema):
-    """
-        Render patrn as a str not a repr, so we don't get double escaping.
-        This is more consistent with the docson schema view on
-        http://standard.open-contracting.org/latest/en/schema/release_package/
-
-        Add word regex to error message.
-    """
-    if (
-        validator.is_type(instance, "string") and
-        not re.search(patrn, instance)
-    ):
-        err = ValidationError(("%r does not match regex `%s`") % (repr(instance), patrn))
-        err.patrn = patrn
-        yield err
-
-
 validator.VALIDATORS.pop("patternProperties")
 validator.VALIDATORS["uniqueItems"] = unique_ids
 validator.VALIDATORS["required"] = required_draft4
 validator.VALIDATORS["oneOf"] = oneOf_draft4
-validator.VALIDATORS["pattern"] = pattern
 
 
 def fields_present_generator(json_data, prefix=''):
@@ -389,7 +374,7 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
         resolver = CustomRefResolver('', pkg_schema_obj, schema_url=schema_obj.schema_host)
 
     our_validator = validator(pkg_schema_obj, format_checker=format_checker, resolver=resolver)
-    for n, e in enumerate(our_validator.iter_errors(json_data)):
+    for e in our_validator.iter_errors(json_data):
         message_safe = None
         message = e.message
         path = "/".join(str(item) for item in e.path)
@@ -412,13 +397,18 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
         validator_type = e.validator
         if e.validator in ('format', 'type'):
             validator_type = e.validator_value
+            null_clause = ''
             if isinstance(e.validator_value, list):
                 validator_type = e.validator_value[0]
+                if 'null' not in e.validator_value:
+                    null_clause = 'is not null, and'
+            else:
+                null_clause = 'is not null, and'
 
             message = validation_error_lookup.get(validator_type, message)
             message_safe_template = validation_error_template_lookup_safe.get(validator_type)
             if message_safe_template:
-                message_safe = format_html(message_safe_template, header)
+                message_safe = format_html(message_safe_template, header, null_clause)
 
         if not isinstance(e.instance, (dict, list)):
             value["value"] = e.instance
@@ -446,7 +436,7 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
             message_safe = format_html("Invalid code found in <code>{}</code>", header)
 
         if e.validator == 'pattern':
-            message_safe = format_html('Field <code>{}</code> does not match the regex <code>{}</code>', header, e.patrn)
+            message_safe = format_html('Field <code>{}</code> does not match the regex <code>{}</code>', header, e.validator_value)
 
         if message_safe is None:
             message_safe = escape(message)
