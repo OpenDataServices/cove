@@ -86,7 +86,7 @@ def server_url(request, live_server):
     # Check that a file with a UTF-8 BOM converts correctly
     ('bom.csv', 'Grant identifiers:  1', True),
     ('nulls.json', [
-        'is not an array',
+        'is not a JSON array',
         'Date is not in the correct format',
         'Invalid code found in countryCode',
         'is not a number',
