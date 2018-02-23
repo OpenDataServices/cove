@@ -205,7 +205,6 @@ def common_checks_context(upload_dir, json_data, schema_obj, schema_name, contex
     context['deprecated_fields'] = get_json_data_deprecated_fields(json_data_gen_paths, schema_obj)
 
     missing_ids = get_json_data_missing_ids(json_data_gen_paths, schema_obj)
-    print(missing_ids)
     if missing_ids:
         context.update({'structure_warnings': {'missing_ids': missing_ids}})
 
@@ -511,7 +510,7 @@ def _get_schema_non_required_ids(schema_obj, obj=None, current_path=(), id_paths
             path = (prop,)
 
         if prop == 'id' and no_required_id and array_parent and not list_merge:
-                id_paths.append(path)
+            id_paths.append(path)
 
         if value.get('type') == 'object':
             _get_schema_non_required_ids(None, value, path, id_paths)
