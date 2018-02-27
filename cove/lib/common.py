@@ -37,9 +37,9 @@ validation_error_lookup = {'date-time': 'Date is not in the correct format',
 # e.g. using django's format_html function.
 validation_error_template_lookup_safe = {'date-time': 'Date is not in the correct format',
                            'uri': 'Invalid \'uri\' found',
-                           'string': 'Field <code>{}</code> is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with \.',
+                           'string': 'Field <code>{}</code> is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
                            'integer': 'Field <code>{}</code> is not a integer. Check that the value {} doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ',
-                           'number': 'Field <code>{}</code> is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and `.`. Number values should not be in quotes. ',
+                           'number': 'Field <code>{}</code> is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and <code>.</code>. Number values should not be in quotes. ',
                            'object': 'Field <code>{}</code> is not a JSON object',
                            'array': 'Field <code>{}</code> is not a JSON array'}
 

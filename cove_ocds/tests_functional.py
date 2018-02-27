@@ -226,11 +226,11 @@ def test_500_error(server_url, browser):
                                             'String specifying the type of initiation process used for this contract, taken from the [initiationType](http://standard.open-contracting.org/latest/en/schema/codelists/#initiation-type) codelist.',
                                             'Field numberOfTenderers is not a integer. Check that the value doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes.',
                                             'The number of parties who submit a bid.',
-                                            'Field amount is not a number. Check that the value doesn’t contain any characters other than 0-9 and `.`. Number values should not be in quotes',
+                                            'Field amount is not a number. Check that the value doesn’t contain any characters other than 0-9 and .. Number values should not be in quotes',
                                             'Amount as a number.',
-                                            'Field ocid is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with \.',
+                                            'Field ocid is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with \\',
                                             'A globally unique identifier for this Open Contracting Process. Composed of a publisher prefix and an identifier for the contracting process. For more information see the [Open Contracting Identifier guidance](http://standard.open-contracting.org/latest/en/schema/identifiers/)',
-                                            'Field title is not a string. Check that the value has quotes at the start and end. Escape any quotes in the value with \.',
+                                            'Field title is not a string. Check that the value has quotes at the start and end. Escape any quotes in the value with \\',
                                             'A title for this tender. This will often be used by applications as a headline to attract interest, and to help analysts understand the nature of this procurement',
                                             'Field parties is not a JSON array',
                                             'Information on the parties (organizations, economic operators and other participants) who are involved in the contracting process and their roles, e.g. buyer, procuring entity, supplier etc. Organization references elsewhere in the schema are used to refer back to this entries in this list.',
@@ -349,6 +349,25 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
                 assert grant1['classifications'][0]['title'] == 'Test'
             assert converted_file_response.status_code == 200
             assert int(converted_file_response.headers['content-length']) != 0
+
+
+def test_validation_error_messages(url_input_browser):
+    browser = url_input_browser('badfile_all_validation_errors.json')
+    for html in [
+        'Field <code>version</code> does not match the regex <code>^(\d+\.)(\d+)$</code>',
+        '<code>tender:id</code> is missing but required',
+        'Invalid code found in <code>initiationType</code>',
+        'Field <code>numberOfTenderers</code> is not a integer',
+        'Field <code>amount</code> is not a number. Check that the value  doesn’t contain any characters other than 0-9 and <code>.</code>.',
+        'Field <code>ocid</code> is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
+        'Field <code>title</code> is not a string. Check that the value  has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
+        'Field <code>parties</code> is not a JSON array',
+        'Field <code>buyer</code> is not a JSON object',
+        'Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.',
+        '<a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#release-schema.json,,id">See in the docs.</a>',
+        '<a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#release-schema.json,/definitions/Tender,numberOfTenderers">See in the docs.</a>',
+    ]:
+        assert html in browser.page_source
 
 
 @pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
