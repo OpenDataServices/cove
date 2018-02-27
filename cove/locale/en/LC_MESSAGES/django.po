@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-09 10:20+0000\n"
+"POT-Creation-Date: 2018-02-27 14:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -727,22 +727,27 @@ msgid ""
 msgstr ""
 
 #: cove/templates/validation_table.html:7
+#: cove/templates/validation_table_modal.html:7
 msgid "Error Description"
 msgstr ""
 
 #: cove/templates/validation_table.html:8
+#: cove/templates/validation_table_modal.html:9
 msgid "Error Count"
 msgstr ""
 
 #: cove/templates/validation_table.html:9
+#: cove/templates/validation_table_modal.html:10
 msgid "First 3 Examples"
 msgstr ""
 
 #: cove/templates/validation_table.html:10
+#: cove/templates/validation_table_modal.html:11
 msgid "Location of first 3 errors"
 msgstr ""
 
 #: cove/templates/validation_table.html:12
+#: cove/templates/validation_table_modal.html:13
 msgid "Spreadsheet Location of first 3 errors"
 msgstr ""
 
