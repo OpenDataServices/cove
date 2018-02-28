@@ -9,7 +9,7 @@ from cove_iati.rulesets.utils import get_child_full_xpath, get_xobjects, registe
 
 
 @then('at least one `{xpath_expression}` element is expected')
-@register_ruleset_errors(['openag'])
+@register_ruleset_errors()
 def step_openag_expected(context, xpath_expression):
     errors = []
     if not get_xobjects(context.xml, xpath_expression):
@@ -21,7 +21,7 @@ def step_openag_expected(context, xpath_expression):
 
 
 @then('every `{xpath_expression}` must have `{attribute}` attribute')
-@register_ruleset_errors(['openag'])
+@register_ruleset_errors()
 def step_openag_tag_attribute_expected(context, xpath_expression, attribute):
     errors = []
     fail_msg = '{} element must have @{} attribute'
@@ -36,7 +36,7 @@ def step_openag_tag_attribute_expected(context, xpath_expression, attribute):
 
 
 @then('every `{attribute}` must be equal to `{any_value}`')
-@register_ruleset_errors(['openag'])
+@register_ruleset_errors()
 def step_openag_tag_attribute_accepted_values(context, attribute, any_value):
     errors = []
     fail_msg = '"{}" is not a valid value for @{} attribute (it should be "{}")'
@@ -51,7 +51,7 @@ def step_openag_tag_attribute_accepted_values(context, attribute, any_value):
 
 
 @then('every `{xpath_expression1}` must include `{xpath_expression2}` element')
-@register_ruleset_errors(['openag'])
+@register_ruleset_errors()
 def step_openag_element_has_child_element(context, xpath_expression1, xpath_expression2):
     errors = []
     fail_msg = '{} must contain a {} element'

@@ -1,4 +1,4 @@
-<iati-activities version="2.02" xmlns:openag="http://openagfunding.readthedocs.io/en/latest/extensions/">
+<iati-activities version="2.02">
   <iati-activity>
     <iati-identifier>AA-AAA-123123-AA123</iati-identifier>
     <reporting-org ref="NO-ORGIDS-10000" type="40"><narrative>Reporting Organisation A</narrative></reporting-org>
@@ -8,6 +8,9 @@
     <activity-status code="3"/>
     <activity-date type="start-actual" iso-date="2017-01-01"/>
     <recipient-country code="TZ" percentage="100"/>
+    <tag vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_4397">
+        <narrative xml:lang="en">Livestock</narrative>
+    </tag>
     <transaction>
       <transaction-type code="2"/>
       <transaction-date iso-date="2017-01-01"/>
@@ -28,9 +31,6 @@
       <transaction-date iso-date="2017-01-01"/>
       <value value-date="2017-01-01" >40</value>
     </transaction>
-    <openag:tag vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_4397">
-        <narrative xml:lang="en">Livestock</narrative>
-    </openag:tag>
   </iati-activity>
   <iati-activity>
     <iati-identifier>BB-BBB-123123-BB123</iati-identifier>
@@ -56,6 +56,9 @@
         <location-class code="1"/>
       <feature-designation code="ADM2"/>
     </location>
+    <tag vocabulary="98" vocabulary-uri="http://bad.org" code="c_4397">
+        <narrative xml:lang="en">Livestock</narrative>
+    </tag>
     <transaction>
       <transaction-type code="2"/>
       <transaction-date iso-date="2017-01-01"/>
@@ -76,9 +79,6 @@
       <transaction-date iso-date="2017-01-01"/>
       <value value-date="2017-01-01">40</value>
     </transaction>
-    <openag:tag vocabulary="98" vocabulary-uri="http://bad.org" code="c_4397">
-        <narrative xml:lang="en">Livestock</narrative>
-    </openag:tag>
   </iati-activity>
   <iati-activity>
     <iati-identifier>CC-CCC-789789-CC789</iati-identifier>
@@ -106,6 +106,9 @@
         <location-class code="1"/>
       <feature-designation code="ADM2"/>
     </location>
+    <tag  vocabulary="01" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_4397">
+        <narrative xml:lang="en">Livestock</narrative>
+    </tag>
     <transaction>
       <transaction-type code="2"/>
       <transaction-date iso-date="2017-01-01"/>
@@ -126,9 +129,6 @@
       <transaction-date iso-date="2017-01-01"/>
       <value value-date="2017-01-01">40</value>
     </transaction>
-    <openag:tag  vocabulary="01" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_4397">
-        <narrative xml:lang="en">Livestock</narrative>
-    </openag:tag>
   </iati-activity>
   <iati-activity>
     <iati-identifier>DD-DDD-789789-DD789</iati-identifier>
@@ -155,6 +155,9 @@
         <location-class code="1"/>
       <feature-designation code="ADM2"/>
     </location>
+    <tag  vocabulary="98" vocabulary-uri="http://aims.fao.org/aos/agrovoc/">
+        <narrative xml:lang="en">Livestock</narrative>
+    </tag>
     <transaction>
       <transaction-type code="2"/>
       <transaction-date iso-date="2017-01-01"/>
@@ -175,9 +178,6 @@
       <transaction-date iso-date="2017-01-01"/>
       <value value-date="2017-01-01">40</value>
     </transaction>
-    <openag:tag  vocabulary="98" vocabulary-uri="http://aims.fao.org/aos/agrovoc/">
-        <narrative xml:lang="en">Livestock</narrative>
-    </openag:tag>
   </iati-activity>
   <iati-activity>
     <iati-identifier>EE-DDD-789789-EE789</iati-identifier>
