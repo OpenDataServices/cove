@@ -437,7 +437,7 @@ def test_cove_iati_cli_openag_output():
                  'path': '/iati-activities/iati-activity[3]/location/location-id',
                  'rule': 'location/@vocabulary must be present'},
                 {'id': 'CC-CCC-789789-CC789',
-                 'explanation': '"01" is not a valid value for @vocabulary attribute (it should be "98 or 99")',
+                 'explanation': '"01" is not a valid value for @vocabulary attribute (it should be "1 or 98 or 99")',
                  'path': '/iati-activities/iati-activity[3]/tag/@vocabulary',
                  'rule': 'tag/@vocabulary must be present with a code for "maintained by the '
                          'reporting organisation"'},
@@ -464,7 +464,7 @@ def test_cove_iati_cli_openag_output():
     assert not results.get('ruleset_errors_orgids')
 
     ruleset_errors = results.get('ruleset_errors_openag')
-    ruleset_errors.sort(key=lambda i: i['path'])
+    ruleset_errors.sort(key=lambda i: i.get('path'))
     zipped_results = zip(expected, ruleset_errors)
 
     for expected, actual in zipped_results:
