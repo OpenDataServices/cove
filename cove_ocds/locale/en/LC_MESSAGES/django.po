@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-01 15:40+0000\n"
+"POT-Creation-Date: 2018-02-27 14:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -284,57 +284,79 @@ msgid "Conversion Errors (titles)"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_base.html:234
-#: cove_ocds/templates/cove_ocds/explore_base.html:343
-#: cove_ocds/templates/cove_ocds/explore_base.html:346
+#: cove_ocds/templates/cove_ocds/explore_base.html:365
+#: cove_ocds/templates/cove_ocds/explore_base.html:368
 msgid "Validation Errors"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_base.html:248
-msgid "Codelist Validation Errors"
+#: cove_ocds/templates/cove_ocds/explore_base.html:383
+#: cove_ocds/templates/cove_ocds/explore_base.html:386
+msgid "Structure Warnings"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_base.html:270
-#: cove_ocds/templates/cove_ocds/explore_base.html:349
-#: cove_ocds/templates/cove_ocds/explore_base.html:352
+msgid "Codelist Validation Errors"
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/explore_base.html:292
+#: cove_ocds/templates/cove_ocds/explore_base.html:395
+#: cove_ocds/templates/cove_ocds/explore_base.html:398
 msgid "Additional Fields (fields in data not in schema)"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:285
+#: cove_ocds/templates/cove_ocds/explore_base.html:307
 msgid "Additional Codelist Values"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:305
-#: cove_ocds/templates/cove_ocds/explore_base.html:355
-#: cove_ocds/templates/cove_ocds/explore_base.html:358
+#: cove_ocds/templates/cove_ocds/explore_base.html:327
+#: cove_ocds/templates/cove_ocds/explore_base.html:401
+#: cove_ocds/templates/cove_ocds/explore_base.html:404
 msgid "Deprecated Fields"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:305
+#: cove_ocds/templates/cove_ocds/explore_base.html:327
 msgid ""
 "Fields flagged as 'deprecated' will be either replaced or removed in future "
 "versions of the schema."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:321
+#: cove_ocds/templates/cove_ocds/explore_base.html:343
 msgid "Save or Share these results"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:322
+#: cove_ocds/templates/cove_ocds/explore_base.html:344
 msgid "Use the following url to share these results:"
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove_ocds/templates/cove_ocds/explore_base.html:327
+#: cove_ocds/templates/cove_ocds/explore_base.html:349
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:328
+#: cove_ocds/templates/cove_ocds/explore_base.html:350
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
 "will be shown a message that tells them the file has been removed."
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/explore_base.html:371
+#: cove_ocds/templates/cove_ocds/explore_base.html:374
+msgid "Conformance (Rules)"
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/explore_base.html:377
+#: cove_ocds/templates/cove_ocds/explore_base.html:389
+#: cove_ocds/templates/cove_ocds/ocds_missing_ids_table.html:6
+msgid "View all errors &#9660;"
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/explore_base.html:380
+#: cove_ocds/templates/cove_ocds/explore_base.html:392
+msgid "View all errors &#9650;"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:12
@@ -869,6 +891,29 @@ msgid ""
 "prefer a spreadsheet format."
 msgstr ""
 
+#: cove_ocds/templates/cove_ocds/ocds_missing_ids_table.html:3
+#, python-format
+msgid ""
+" We found <strong>%(n_missing)s</strong> object within an array in your data "
+"without an <code>id</code> property.\n"
+"   "
+msgid_plural ""
+"We found <strong>%(n_missing)s</strong> objects within arrays in your data "
+"without an <code>id</code> property."
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove_ocds/templates/cove_ocds/ocds_missing_ids_table.html:5
+msgid ""
+" This may affect the creation of OCDS records, and conversion of data into "
+"other formats. We recommend that all objects within an array should have an "
+"<code>id</code> set."
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/ocds_missing_ids_table.html:10
+msgid "Path to missing ID"
+msgstr ""
+
 #: cove_ocds/templates/terms_ocds.html:6
 msgid "Terms &amp; conditions"
 msgstr ""
@@ -1108,7 +1153,7 @@ msgid ""
 "Open Data Services Co-operative Limited may change this policy from time to "
 "time by updating this page. You should check this page from time to time to "
 "ensure that you are happy with any changes. This policy is effective from "
-"1st April 2015."
+"23rd January 2018."
 msgstr ""
 
 #: cove_ocds/templates/terms_ocds.html:85

@@ -4,7 +4,7 @@ import os
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 
-from cove.lib.common import get_fields_present, _get_json_data_generic_paths
+from cove.lib.common import get_fields_present, get_json_data_generic_paths
 from cove.lib.exceptions import UnrecognisedFileType
 from cove.lib.tools import get_file_type
 
@@ -50,7 +50,7 @@ def test_get_json_data_generic_paths():
     with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
         json_data_w_deprecations = json.load(fp)
 
-    generic_paths = _get_json_data_generic_paths(json_data_w_deprecations)
+    generic_paths = get_json_data_generic_paths(json_data_w_deprecations)
     assert len(generic_paths.keys()) == 36
     assert generic_paths[('releases', 'buyer', 'name')] == {
         ('releases', 1, 'buyer', 'name'): 'Parks Canada',

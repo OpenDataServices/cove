@@ -1,0 +1,17 @@
+{% load i18n %}
+{% load cove_tags %}
+<p>{% blocktrans count n_missing=structure_warnings.missing_ids|length %} We found <strong>{{n_missing}}</strong> object within an array in your data without an <code>id</code> property.
+   {% plural %}We found <strong>{{n_missing}}</strong> objects within arrays in your data without an <code>id</code> property.{% endblocktrans %}
+   {% blocktrans %} This may affect the creation of OCDS records, and conversion of data into other formats. We recommend that all objects within an array should have an <code>id</code> set.{% endblocktrans %}
+  <a class="view-all" role="region" aria-expanded="false" aria-controls="OCDSmissingIdTable" data-toggle="collapse" data-target="#OCDSmissingIdTable"><small>{% trans "View all errors &#9660;" %}</small></a>
+</p>
+<div id="OCDSmissingIdTable" class="collapse">
+  <table class="table table-striped">
+    <thead><tr><th>{% trans "Path to missing ID" %}</th></thead>
+    <tbody>
+{% for path in structure_warnings.missing_ids %}
+      <tr><td>{{path}}</td></tr>
+{% endfor %}
+    </tbody>
+  </table>
+</div>
