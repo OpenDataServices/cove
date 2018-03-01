@@ -183,6 +183,8 @@ def common_checks_context(upload_dir, json_data, schema_obj, schema_name, contex
         with open(os.path.join(upload_dir, 'heading_source_map.json')) as heading_source_map_fp:
             heading_source_map = json.load(heading_source_map_fp)
 
+    # IMPORTANT: If you change this filename, you must change it also in cove/views.py
+    # Otherwsie people can upload a file with this name and inject HTML.
     validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
     if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validation_error_fp:

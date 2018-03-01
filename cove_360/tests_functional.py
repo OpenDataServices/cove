@@ -94,6 +94,7 @@ def server_url(request, live_server):
     ], True),
     ('decimal_amounts.csv', 'The grants were awarded in GBP with a total value of £7,000.7 and individual awards ranging from £1,000.1 (lowest) to £1,000.1 (highest).', True),
     ('decimal_amounts.json', 'The grants were awarded in GBP with a total value of £7,000.7 and individual awards ranging from £1,000.1 (lowest) to £1,000.1 (highest).', True),
+    ('validation_errors-3.json', 'Something went wrong', False),
 ])
 def test_explore_360_url_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
     """
@@ -155,6 +156,9 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
     for text in expected_text:
         assert text in body_text
+
+    if source_filename == 'validation_errors-3.json':
+        assert 'UNSAFE' not in body_text
 
     assert 'Data Quality Tool' in browser.find_element_by_class_name('title360').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
