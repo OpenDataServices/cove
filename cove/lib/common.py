@@ -417,19 +417,23 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
 
         if e.validator == 'required':
             field_name = e.message
+            parent_name = None
             if len(e.path) > 2:
                 if isinstance(e.path[-1], int):
                     parent_name = e.path[-2]
                 else:
                     parent_name = e.path[-1]
 
-                field_name = str(parent_name) + ":" + e.message
             heading = heading_src_map.get(path_no_number + '/' + e.message)
             if heading:
                 field_name = heading[0][1]
                 value['header'] = heading[0][1]
-            message = "'{}' is missing but required".format(field_name)
-            message_safe = format_html("<code>{}</code> is missing but required", field_name)
+            if parent_name:
+                message = "'{}' is missing but required within '{}'".format(field_name, parent_name)
+                message_safe = format_html("<code>{}</code> is missing but required within <code>{}</code>", field_name, parent_name)
+            else:
+                message = "'{}' is missing but required".format(field_name)
+                message_safe = format_html("<code>{}</code> is missing but required", field_name, parent_name)
 
         if e.validator == 'enum':
             if "isCodelist" in e.schema:

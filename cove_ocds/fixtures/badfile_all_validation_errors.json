@@ -11,14 +11,14 @@
       "id": "",
       "date": "Last Tuesday",
       "tag": [],
-      "initiationType": "badInitiationType",
       "buyer": "This should be an object.",
       "parties": "This should be an array.",
       "tender": {
         "title": 3,
         "description": "^title should be a string",
         "value": {
-            "amount": "This should be a number."
+            "amount": "This should be a number.",
+            "currency": "badCurrencyCode"
         },
         "numberOfTenderers": "This should be an integer."
       }
