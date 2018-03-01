@@ -113,26 +113,28 @@ class SchemaOCDS(SchemaJsonMixin):
             for codelist in codelist_list:
                 try:
                     codelist_map = load_codelist(base_url + codelist)
+                except UnicodeDecodeError as e:
+                    extension_detail['failed_codelists'][codelist] = "Unicode Error, codelists need to be in UTF-8"
                 except Exception as e:
-                    raise
-                    extension_detail['failed_codelists'][codelist] = "Unknown Exception: " + str(e)
+                    extension_detail['failed_codelists'][codelist] = "Unknown Exception, {}".format(str(e))
                     continue
 
                 if not codelist_map:
-                    extension_detail['failed_codelists'][codelist] = "Codelist Error: Could not find correct fields in codelist"
-                    continue
+                    extension_detail['failed_codelists'][codelist] = "Codelist Error, Could not find code field in codelist"
 
                 if codelist[0] in ("+", "-"):
                     codelist_extension = codelist[1:]
                     if codelist_extension not in self.extended_codelists:
-                        extension_detail['failed_codelists'][codelist] = "Extension error: Trying to extend non existing codelist " + codelist_extension
+                        extension_detail['failed_codelists'][codelist] = "Extension error, Trying to extend non existing codelist {}".format(codelist_extension)
                         continue
 
                 if codelist[0] == "+":
                     self.extended_codelists[codelist_extension].update(codelist_map)
                 elif codelist[0] == "-":
                     for code in codelist_map:
-                        self.extended_codelists[codelist_extension].pop(code)
+                        value = self.extended_codelists[codelist_extension].pop(code, None)
+                        if not value:
+                            extension_detail['failed_codelists'][codelist] = "Codelist error, Trying to remove non existing codelist value {}".format(code)
                 else:
                     self.extended_codelists[codelist] = codelist_map
 

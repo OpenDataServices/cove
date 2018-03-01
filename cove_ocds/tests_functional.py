@@ -281,7 +281,16 @@ def test_500_error(server_url, browser):
                                                                        '/definitions/OrganizationReference'], ['Convert to Spreadsheet'], False),
     ('tenders_releases_1_release_unpackaged.json', ['Missing OCDS package',
                                                     'Error message: Missing OCDS package'], ['Convert to Spreadsheet'], False),
-    ('tenders_releases_1_release_with_tariff_codelist.json', ['releases/contracts/tariffs', 'chargePaidBy.csv', 'notADocumentType', 'notAPaidByCodelist'], ['tariffIllustration, notADocumentType', 'notADocumentType, tariffIllustration'], True),
+    ('tenders_releases_1_release_with_tariff_codelist.json', ['releases/contracts/tariffs',
+                                                              'chargePaidBy.csv',
+                                                              'notADocumentType',
+                                                              'notAPaidByCodelist'], ['notADocumentType, tariffIllustration'], True),
+    ('tenders_releases_1_release_with_various_codelists.json', ['needsAssessment, notADocumentType, tariffIllustration',
+                                                               '+releaseTag.csv: Codelist Error, Could not find code field in codelist',
+                                                               '-documentType.csv: Codelist error, Trying to remove non existing codelist value notACodelistValueAtAll',
+                                                               '+method.csv: Unicode Error, codelists need to be in UTF-8',
+                                                               'chargePaidBy.csv',
+                                                               'notAPaidByCodelist'], [], True),
 ])
 def test_url_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     browser, source_url = url_input_browser(source_filename, output_source_url=True)

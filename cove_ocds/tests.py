@@ -587,7 +587,7 @@ def test_get_additional_codelist_values():
             'extension_codelist': False,
             'isopen': False,
             'path': 'releases',
-            'values': {'oh no'}
+            'values': ['oh no']
         },
         ('releases/tender/items/classification/scheme'): {
             'codelist': 'itemClassificationScheme.csv',
@@ -596,7 +596,7 @@ def test_get_additional_codelist_values():
             'field': 'scheme',
             'isopen': True,
             'path': 'releases/tender/items/classification',
-            'values': {'GSINS'}}
+            'values': ['GSINS']}
     }
 
 

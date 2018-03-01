@@ -731,7 +731,7 @@ def load_codelist(url):
     for record in reader:
         code = record.get('Code') or record.get('code')
         title = record.get('Title') or record.get('Title_en')
-        if not code or not title:
+        if not code:
             return {}
         codelist_map[code] = title
 
@@ -806,6 +806,8 @@ def get_additional_codelist_values(schema_obj, json_data):
             additional_codelist_values['/'.join(path_no_num)]['values'].add(str(value))
             #additional_codelist_values['/'.join(path_no_num)]['location_values'].append((path, value))
 
+    for codelist_value in additional_codelist_values.values():
+        codelist_value['values'] = sorted(list(codelist_value['values']))
     return additional_codelist_values
 
 
