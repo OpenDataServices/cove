@@ -1066,6 +1066,7 @@ def test_get_json_data_missing_ids():
 
     assert missin_ids_paths == results
 
+
 def test_bad_ocds_prefixes():
     file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_7_releases_check_ocids.json')
     results = [
