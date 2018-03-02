@@ -396,8 +396,7 @@
         $("#conformance-rules-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Conformance (Rules)" %}');
       });
       $("#OCDSprefixesTable").on("hide.bs.collapse", function(){
-        $(".view-all").html('<small>{% trans "View all errors &#9660;" %}</small>');
-<<<<<<< 1e8a4e2bac04c52c5da9306e4e25ae29f37ea62c
+        $(".view-all").html('<small>{% trans "view all errors &#9660;" %}</small>');
       });
       $("#OCDSprefixesTable").on("show.bs.collapse", function(){
         $(".view-all").html('<small>{% trans "View all errors &#9650;" %}</small>');
@@ -413,10 +412,9 @@
       });
       $("#OCDSmissingIdTable").on("show.bs.collapse", function(){
         $(".view-all").html('<small>{% trans "View all errors &#9650;" %}</small>');
-      $("#OcdsPrefixWarningsTable").on("hide.bs.collapse", function(){
+      });
+      $("#OCDSPrefixWarningsTable").on("hide.bs.collapse", function(){
         $("#bad-ocds-prefix-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Quality Warnings" %}');
-=======
->>>>>>> [#675] Change panel name to "Conformance (Rules)"
       });
       $("#OCDSprefixesTable").on("show.bs.collapse", function(){
         $(".view-all").html('<small>{% trans "View all errors &#9650;" %}</small>');
