@@ -444,6 +444,12 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
         if e.validator == 'pattern':
             message_safe = format_html('Field <code>{}</code> does not match the regex <code>{}</code>', header, e.validator_value)
 
+        if e.validator == 'minItems' and e.validator_value == 1:
+            message_safe = format_html('<code>{}</code> is too short. You must supply at least one value, or remove the item entirely (unless it’s required).', e.instance)
+
+        if e.validator == 'minLength' and e.validator_value == 1:
+            message_safe = format_html('<code>"{}"</code> is too short. Strings must be at least one character. This error typically indicates a missing value.', e.instance)
+
         if message_safe is None:
             message_safe = escape(message)
 

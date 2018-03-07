@@ -212,7 +212,7 @@ def test_500_error(server_url, browser):
                                                                      'None of the extensions above could be applied',
                                                                      '400: bad request'], ['copy of the schema with extension'], True),
     ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], [], True),
-    ('badfile_all_validation_errors.json', ['\'\' is too short',
+    ('badfile_all_validation_errors.json', ['"" is too short. Strings must be at least one character. This error typically indicates a missing value.',
                                             'An identifier for this particular release of information.',
                                             'Field version does not match the regex ^(\d+\.)(\d+)$',
                                             'The version of the OCDS schema used in this package, expressed as major.minor For example: 1.0 or 1.1',
@@ -237,7 +237,7 @@ def test_500_error(server_url, browser):
                                             'Information on the parties (organizations, economic operators and other participants) who are involved in the contracting process and their roles, e.g. buyer, procuring entity, supplier etc. Organization references elsewhere in the schema are used to refer back to this entries in this list.',
                                             'Field buyer is not a JSON object',
                                             'The id and name of the party being referenced. Used to cross-reference to the parties section',
-                                            '[] is too short',
+                                            '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
                                             'One or more values from the [releaseTag codelist](http://standard.open-contracting.org/latest/en/schema/codelists/#release-tag). Tags may be used to filter release and to understand the kind of information that a release might contain.',
                                             'See in the docs'], [], True),
     # Conversion should still work for files that don't validate against the schema
@@ -355,6 +355,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 def test_validation_error_messages(url_input_browser):
     browser = url_input_browser('badfile_all_validation_errors.json')
     for html in [
+        '<code>""</code> is too short',
         'Field <code>version</code> does not match the regex <code>^(\d+\.)(\d+)$</code>',
         '<code>id</code> is missing but required within <code>tender</code>',
         '<code>initiationType</code> is missing but required',
@@ -369,6 +370,7 @@ def test_validation_error_messages(url_input_browser):
         'Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.',
         '<a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#release-schema.json,,id">See in the docs.</a>',
         '<a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#release-schema.json,/definitions/Tender,numberOfTenderers">See in the docs.</a>',
+        '<code>[]</code> is too short.',
     ]:
         assert html in browser.page_source
 
