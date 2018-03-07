@@ -391,6 +391,7 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
         schema_block, ref_info = lookup_schema(schema_obj.get_release_pkg_schema_obj(deref=True), error['path_no_number'])
         if schema_block:
             if 'description' in schema_block:
+                error['schema_title'] = escape(schema_block.get('title', ''))
                 error['schema_description'] = escape(schema_block['description'])
             if ref_info:
                 ref = ref_info['reference']['$ref']

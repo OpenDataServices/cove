@@ -239,7 +239,7 @@ def test_500_error(server_url, browser):
                                             'The id and name of the party being referenced. Used to cross-reference to the parties section',
                                             '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
                                             'One or more values from the [releaseTag codelist](http://standard.open-contracting.org/latest/en/schema/codelists/#release-tag). Tags may be used to filter release and to understand the kind of information that a release might contain.',
-                                            'See in the docs'], [], True),
+                                            'Reference Docs'], [], True),
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
                                                   'Validation Errors',
@@ -368,8 +368,8 @@ def test_validation_error_messages(url_input_browser):
         'Field <code>parties</code> is not a JSON array',
         'Field <code>buyer</code> is not a JSON object',
         'Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.',
-        '<a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#release-schema.json,,id">See in the docs.</a>',
-        '<a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#release-schema.json,/definitions/Tender,numberOfTenderers">See in the docs.</a>',
+        '<a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#release-schema.json,,id">Reference Docs</a>',
+        '<a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#release-schema.json,/definitions/Tender,numberOfTenderers">Reference Docs</a>',
         '<code>[]</code> is too short.',
     ]:
         assert html in browser.page_source
