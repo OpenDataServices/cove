@@ -241,6 +241,10 @@ def test_500_error(server_url, browser):
                                             '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
                                             'One or more values from the [releaseTag codelist](http://standard.open-contracting.org/latest/en/schema/codelists/#release-tag). Tags may be used to filter release and to understand the kind of information that a release might contain.',
                                             'Reference Docs'], [], True),
+    ('badfile_extension_validation_errors.json', ['Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z.',
+                                                  'The date when this bid was received.',
+                                                  'A local identifier for this bid',
+                                                  'Summary statistics on the number and nature of bids received.'], ['Reference Docs'], True),
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
                                                   'Validation Errors',
