@@ -240,7 +240,7 @@ def test_500_error(server_url, browser):
                                             'The id and name of the party being referenced. Used to cross-reference to the parties section',
                                             '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
                                             'One or more values from the [releaseTag codelist](http://standard.open-contracting.org/latest/en/schema/codelists/#release-tag). Tags may be used to filter release and to understand the kind of information that a release might contain.',
-                                            'Reference Docs'], [], True),
+                                            ], [], True),
     ('badfile_extension_validation_errors.json', ['Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z.',
                                                   'The date when this bid was received.',
                                                   'A local identifier for this bid',
@@ -373,8 +373,6 @@ def test_validation_error_messages(url_input_browser):
         'Field <code>parties</code> is not a JSON array',
         'Field <code>buyer</code> is not a JSON object',
         'Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.',
-        '<a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#release-schema.json,,id">Reference Docs</a>',
-        '<a href="http://standard.open-contracting.org/1.1.3-dev/en/schema/reference/#release-schema.json,/definitions/Tender,numberOfTenderers">Reference Docs</a>',
         '<code>[]</code> is too short.',
     ]:
         assert html in browser.page_source
