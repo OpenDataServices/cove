@@ -217,7 +217,6 @@ def test_500_error(server_url, browser):
                                             'Field version does not match the regex ^(\d+\.)(\d+)$',
                                             'The version of the OCDS schema used in this package, expressed as major.minor For example: 1.0 or 1.1',
                                             'id is missing but required within tender',
-                                            'Data regarding tender process - publicly inviting prospective contractors to submit bids for evaluation and selecting a winner or winners.',
                                             'initiationType is missing but required',
                                             'Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z. Learn more about dates in OCDS.',
                                             'The date this information was first released, or published.',
