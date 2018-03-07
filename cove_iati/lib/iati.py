@@ -21,7 +21,7 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
     cell_source_map = {}
     validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
 
-    with open(data_file) as fp, open(schema_aiti.activity_schema) as schema_fp:
+    with open(data_file, 'rb') as fp, open(schema_aiti.activity_schema) as schema_fp:
         try:
             tree = etree.parse(fp)
         except lxml.etree.XMLSyntaxError as err:

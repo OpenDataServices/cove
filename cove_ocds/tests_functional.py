@@ -211,6 +211,8 @@ def test_500_error(server_url, browser):
                                                                      'badprotocol://example.com',
                                                                      'None of the extensions above could be applied',
                                                                      '400: bad request'], ['copy of the schema with extension'], True),
+    ('tenders_releases_2_releases_1_1_tenderers_with_missing_ids.json', ['We found 6 objects within arrays in your data without an id property',
+                                                                         'Structure Warnings'], [], True),
     ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], [], True),
     ('badfile_all_validation_errors.json', ['"" is too short. Strings must be at least one character. This error typically indicates a missing value.',
                                             'An identifier for this particular release of information.',

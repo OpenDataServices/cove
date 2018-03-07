@@ -1,4 +1,12 @@
-from cove import settings
+import sys
+if "pytest" not in sys.modules:
+    # Check that we can import defusedexpat, as this will protect us against
+    # some XML attacks in xmltodict
+    # Needs a noqa comment as we don't actually use it here
+    import defusedexpat  # noqa: F401
+
+# Needs a noqa comment to come after the above import
+from cove import settings  # noqa: E408
 
 PIWIK = settings.PIWIK
 GOOGLE_ANALYTICS_ID = settings.GOOGLE_ANALYTICS_ID
