@@ -7,7 +7,7 @@
   "version": "1.1",
   "extensions": [
     "https://raw.githubusercontent.com/open-contracting/ocds_bid_extension/master/extension.json",
-    "https://raw.githubusercontent.com/OpenDataServices/cove/951-improve-messages/cove_ocds/fixtures/evil/release-schema.json"
+    "https://raw.githubusercontent.com/OpenDataServices/cove/edcabaf773829b3a5dabde6285fe0c7542a2c944/cove_ocds/fixtures/evil/extension.json"
   ],
   "releases": [{
     "ocid": "1",
