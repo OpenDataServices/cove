@@ -23,7 +23,7 @@
       {% if 'schema_title' in error %}
       <div class="well well-sm">
         <h4>{{ error.schema_title }}</h4>
-        <p>{{ error.schema_description }}</p>
+        <p>{{ error.schema_description_safe | safe }}</p>
       </div>
       {% endif %}
     </td>

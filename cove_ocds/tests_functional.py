@@ -231,7 +231,7 @@ def test_500_error(server_url, browser):
                                             'Field amount is not a number. Check that the value doesn’t contain any characters other than 0-9 and .. Number values should not be in quotes',
                                             'Amount as a number.',
                                             'Field ocid is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with \\',
-                                            'A globally unique identifier for this Open Contracting Process. Composed of a publisher prefix and an identifier for the contracting process. For more information see the [Open Contracting Identifier guidance](http://standard.open-contracting.org/latest/en/schema/identifiers/)',
+                                            'A globally unique identifier for this Open Contracting Process. Composed of a publisher prefix and an identifier for the contracting process. For more information see the Open Contracting Identifier guidance',
                                             'Field title is not a string. Check that the value has quotes at the start and end. Escape any quotes in the value with \\',
                                             'A title for this tender. This will often be used by applications as a headline to attract interest, and to help analysts understand the nature of this procurement',
                                             'Field parties is not a JSON array',
@@ -239,7 +239,7 @@ def test_500_error(server_url, browser):
                                             'Field buyer is not a JSON object',
                                             'The id and name of the party being referenced. Used to cross-reference to the parties section',
                                             '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
-                                            'One or more values from the [releaseTag codelist](http://standard.open-contracting.org/latest/en/schema/codelists/#release-tag). Tags may be used to filter release and to understand the kind of information that a release might contain.',
+                                            'One or more values from the releaseTag codelist. Tags may be used to filter release and to understand the kind of information that a release might contain.',
                                             ], [], True),
     ('badfile_extension_validation_errors.json', ['Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z.',
                                                   'The date when this bid was received.',
@@ -364,18 +364,33 @@ def test_validation_error_messages(url_input_browser):
         'Field <code>version</code> does not match the regex <code>^(\d+\.)(\d+)$</code>',
         '<code>id</code> is missing but required within <code>tender</code>',
         '<code>initiationType</code> is missing but required',
-        'ncorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z. Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.',
+        'Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z. Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.',
         'Invalid code found in <code>currency</code>',
         'Field <code>numberOfTenderers</code> is not a integer',
         'Field <code>amount</code> is not a number. Check that the value  doesn’t contain any characters other than 0-9 and <code>.</code>.',
         'Field <code>ocid</code> is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
+        'For more information see the <a href="http://standard.open-contracting.org/latest/en/schema/identifiers/">Open Contracting Identifier guidance</a>',
         'Field <code>title</code> is not a string. Check that the value  has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
         'Field <code>parties</code> is not a JSON array',
         'Field <code>buyer</code> is not a JSON object',
-        'Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.',
         '<code>[]</code> is too short.',
+        'One or more values from the <a href="http://standard.open-contracting.org/latest/en/schema/codelists/#release-tag">releaseTag codelist</a>.',
     ]:
         assert html in browser.page_source
+
+
+def test_extension_validation_error_messages(url_input_browser):
+    browser = url_input_browser('badfile_extension_validation_errors.json')
+    for html in [
+        "&lt;script&gt;alert('badscript');&lt;/script&gt;",
+        '<a>test</a>',
+    ]:
+        assert html in browser.page_source
+    for html in [
+        "<script>alert('badscript');</script>",
+        'badlink',
+    ]:
+        assert html not in browser.page_source
 
 
 @pytest.mark.parametrize('warning_texts', [[], ['Some warning']])

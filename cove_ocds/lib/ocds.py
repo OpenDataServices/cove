@@ -6,6 +6,9 @@ from cove.lib.common import common_checks_context, get_additional_codelist_value
 
 from django.utils.html import mark_safe, escape, conditional_escape, format_html
 
+import CommonMark
+import bleach
+
 
 validation_error_lookup = {
     'date-time': mark_safe('Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z. Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.'),
@@ -392,7 +395,10 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
         if schema_block and error['message_type'] != 'required':
             if 'description' in schema_block:
                 error['schema_title'] = escape(schema_block.get('title', ''))
-                error['schema_description'] = escape(schema_block['description'])
+                error['schema_description_safe'] = mark_safe(bleach.clean(
+                    CommonMark.commonmark(schema_block['description']),
+                    tags=bleach.sanitizer.ALLOWED_TAGS + ['p']
+                ))
             if ref_info:
                 ref = ref_info['reference']['$ref']
                 if ref.endswith('release-schema.json'):
