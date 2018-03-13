@@ -32,7 +32,7 @@ for dirname in os.listdir('.'):
 os.chdir('../..')
 
 server_proc = os.fork()
-if server_proc:
+if not server_proc:
     os.environ['DJANGO_SETTINGS_MODULE'] = 'cove_360.settings'
     subprocess.call(['python', 'manage.py', 'runserver'])
     exit()
@@ -51,6 +51,7 @@ for original_file in glob.glob('360/*'):
         new_url = urlunparse(new_tuple)
         output_file.write(requests.get(new_url).text)
 
+os.kill(server_proc, signal.SIGTERM)
 
 os.chdir(os.path.join('secret_data_test', '360'))
 
@@ -58,6 +59,3 @@ for dirname in os.listdir('.'):
     print(dirname)
     with open(os.path.join(dirname, 'validation_errors.json')) as fp, open(os.path.join('..', '..', 'secret_data_test_archive', '360', dirname, 'validation_errors.json')) as fp_archive:
         assert json.load(fp) == json.load(fp_archive)
-
-
-os.kill(server_proc, signal.SIGKILL)
