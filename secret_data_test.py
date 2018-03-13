@@ -34,7 +34,7 @@ os.chdir('../..')
 server_proc = os.fork()
 if not server_proc:
     os.environ['DJANGO_SETTINGS_MODULE'] = 'cove_360.settings'
-    subprocess.call(['python', 'manage.py', 'runserver'])
+    subprocess.call(['python', 'manage.py', 'runserver', '8008'])
     exit()
 
 time.sleep(5)
@@ -44,7 +44,7 @@ for original_file in glob.glob('360/*'):
     os.makedirs(output_dir, exist_ok=True)
     output_filename = os.path.join(output_dir, 'validation_errors.json')
     with open(output_filename, 'w+') as output_file:
-        response = requests.post('http://localhost:8000/', files={'original_file': open(original_file, 'rb')}, data={'csrfmiddlewaretoken': 'foo'}, headers={'Cookie': 'csrftoken=' + 'foo'})
+        response = requests.post('http://localhost:8008/', files={'original_file': open(original_file, 'rb')}, data={'csrfmiddlewaretoken': 'foo'}, headers={'Cookie': 'csrftoken=' + 'foo'})
 
         parsed = urlparse(response.url)
         new_tuple = parsed.scheme, parsed.netloc, '/media/' + parsed.path.split('/')[-1] + '/validation_errors-2.json', '', '', ''
