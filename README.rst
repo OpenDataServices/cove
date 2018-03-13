@@ -113,7 +113,7 @@ The following steps are for Ubuntu but equivalent packages are available for oth
 
 .. code:: bash
 
-   sudo apt-get install build-essential libxml2-dev libxslt1-dev python3-dev mercurial
+   sudo apt-get install build-essential libxml2-dev libxslt1-dev python3-dev
    pip install -r requirements_iati.txt
 
 Then run the development server:
@@ -126,7 +126,7 @@ Then run the development server:
 Deployment
 ==========
 
-See https://github.com/OpenDataServices/cove/blob/master/DEPLOYMENT.md
+See https://cove.readthedocs.io/en/latest/deployment/
 
 Run tests
 =========
@@ -175,11 +175,16 @@ Translators can provide translations for this application by becomming a collabo
 
 Translations for Developers
 +++++++++++++++++++++++++++
+
 For more information about Django's translation framework, see https://docs.djangoproject.com/en/1.8/topics/i18n/translation/
 
 If you add new text to the interface, ensure to wrap it in the relevant gettext blocks/functions.
 
 In order to generate messages and post them on Transifex:
+
+First check the `Transifex lock <https://opendataservices.plan.io/projects/co-op/wiki/CoVE_Transifex_lock>`_, because only one branch can be translated on Transifex at a time.
+
+Then:
 
 .. code:: bash
 
@@ -198,11 +203,7 @@ In order to compile them:
 
     python manage.py compilemessages
 
-Do not do this process on every text change so as not to pollute the commit diffs.
-
 Keep the makemessages and pull messages steps in thier own commits seperate from the text changes.
-
-The aim is to run this process each month, but it can be done more regularly if needed.
 
 To check that all new text is written so that it is able to be translated you could install and run `django-template-i18n-lint`
 
