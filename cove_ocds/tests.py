@@ -269,7 +269,7 @@ def test_get_json_data_generic_paths():
     with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
         json_data_w_deprecations = json.load(fp)
 
-    generic_paths = cove_common._get_json_data_generic_paths(json_data_w_deprecations)
+    generic_paths = cove_common.get_json_data_generic_paths(json_data_w_deprecations)
     assert len(generic_paths.keys()) == 36
     assert generic_paths[('releases', 'buyer', 'name')] == {
         ('releases', 1, 'buyer', 'name'): 'Parks Canada',
@@ -285,7 +285,8 @@ def test_get_json_data_deprecated_fields():
     schema_obj.schema_host = os.path.join('cove_ocds', 'fixtures/')
     schema_obj.release_pkg_schema_name = 'release_package_schema_ref_release_schema_deprecated_fields.json'
     schema_obj.release_pkg_schema_url = os.path.join(schema_obj.schema_host, schema_obj.release_pkg_schema_name)
-    deprecated_data_fields = cove_common.get_json_data_deprecated_fields(json_data_w_deprecations, schema_obj)
+    json_data_paths = cove_common.get_json_data_generic_paths(json_data_w_deprecations)
+    deprecated_data_fields = cove_common.get_json_data_deprecated_fields(json_data_paths, schema_obj)
     expected_result = OrderedDict([
         ('initiationType', {"paths": ('releases/0', 'releases/1'),
                             "explanation": ('1.1', 'Not a useful field as always has to be tender')}),
@@ -764,7 +765,8 @@ def test_schema_after_version_change_record(client):
 def test_corner_cases_for_deprecated_data_fields(json_data):
     data = json.loads(json_data)
     schema = SchemaOCDS(release_data=data)
-    deprecated_fields = cove_common.get_json_data_deprecated_fields(data, schema)
+    json_data_paths = cove_common.get_json_data_generic_paths(data)
+    deprecated_fields = cove_common.get_json_data_deprecated_fields(json_data_paths, schema)
 
     assert deprecated_fields['additionalIdentifiers']['explanation'][0] == '1.1'
     assert 'parties section at the top level of a release' in deprecated_fields['additionalIdentifiers']['explanation'][1]
@@ -1012,7 +1014,7 @@ def test_cove_ocds_cli_schema_cache():
         cache_time = cache_end - cache_start
         cache_time_total += cache_time
 
-    cache_time_avg = cache_time_total / 5.0
+    cache_time_avg = cache_time_total / 6.0
 
     with open(os.path.join(output_dir, 'results.json')) as fp:
         results = json.load(fp)
@@ -1024,3 +1026,42 @@ def test_cove_ocds_cli_schema_cache():
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[0][0] == 'badprotocol://example.com'
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[1][1] == '404: not found'
     assert cache_time_avg < no_cache_time
+
+
+def test_get_schema_non_required_ids():
+    schema_obj = SchemaOCDS(select_version="1.1")
+    non_required_ids = cove_common._get_schema_non_required_ids(schema_obj)
+    results = [
+        ('releases', 'awards', 'amendments', 'id'),
+        ('releases', 'awards', 'suppliers', 'id'),
+        ('releases', 'contracts', 'amendments', 'id'),
+        ('releases', 'contracts', 'relatedProcesses', 'id'),
+        ('releases', 'parties', 'id'),
+        ('releases', 'relatedProcesses', 'id'),
+        ('releases', 'tender', 'amendments', 'id'),
+        ('releases', 'tender', 'tenderers', 'id')
+    ]
+
+    assert sorted(non_required_ids) == results
+
+
+def test_get_json_data_missing_ids():
+    file_name = os.path.join(
+        'cove_ocds', 'fixtures', 'tenders_releases_2_releases_1_1_tenderers_with_missing_ids.json'
+    )
+    with open(os.path.join(file_name)) as fp:
+        user_data = json.load(fp)
+
+    schema_obj = SchemaOCDS(release_data=user_data)
+    results = [
+        'releases/0/tender/tenderers/1/id',
+        'releases/0/tender/tenderers/2/id',
+        'releases/0/tender/tenderers/5/id',
+        'releases/1/tender/tenderers/1/id',
+        'releases/1/tender/tenderers/2/id',
+        'releases/1/tender/tenderers/4/id'
+    ]
+    user_data_paths = cove_common.get_json_data_generic_paths(user_data)
+    missin_ids_paths = cove_common.get_json_data_missing_ids(user_data_paths, schema_obj)
+
+    assert missin_ids_paths == results
