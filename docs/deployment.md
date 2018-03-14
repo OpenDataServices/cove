@@ -43,7 +43,7 @@ CUSTOM_SERVER_URL=https://dataquality.threesixtygiving.org/ DJANGO_SETTINGS_MODU
 1. Do the actual deploy. From the [opendataservices-deploy directory](https://github.com/OpenDataServices/opendataservices-deploy):
 
 ```
-salt-ssh --state-output=mixed -L 'cove-dev-2' state.highstate
+salt-ssh --state-output=mixed -L 'cove-live-iati' state.highstate
 ```
 2. Check that the latest commit is shown in the footer of <http://iati.cove.opendataservices.coop/>
 
