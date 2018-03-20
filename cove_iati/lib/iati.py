@@ -16,12 +16,11 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
     '''TODO: this function is trying to do too many things. Separate some
     of its logic into smaller functions doing one single thing each.
     '''
-    schema_aiti = SchemaIATI()
-    lxml_errors = {}
+    schema_iati = SchemaIATI()
     cell_source_map = {}
     validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
 
-    with open(data_file, 'rb') as fp, open(schema_aiti.activity_schema) as schema_fp:
+    with open(data_file, 'rb') as fp:
         try:
             tree = etree.parse(fp)
         except lxml.etree.XMLSyntaxError as err:
@@ -44,13 +43,12 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                          '</span> <strong>Error message:</strong> {}'.format(err)),
                 'error': format(err)
             })
-        schema_tree = etree.parse(schema_fp)
 
-    schema = lxml.etree.XMLSchema(schema_tree)
-    schema.validate(tree)
-    lxml_errors = lxml_errors_generator(schema.error_log)
-    errors_all = format_lxml_errors(lxml_errors)
-    invalid_data = bool(schema.error_log)
+    for schema_path in [schema_iati.organization_schema, schema_iati.activity_schema]:
+        errors_all, invalid_data = validate_against_schema(schema_path, tree)
+        if not invalid_data:
+            break
+
     return_on_error = [{'message': 'There was a problem running ruleset checks',
                         'exception': True}]
 
@@ -122,6 +120,18 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
 
         context['ruleset_errors_count'] = count_ruleset_errors
     return context
+
+
+def validate_against_schema(schema_path, tree):
+    with open(schema_path) as schema_fp:
+        schema_tree = etree.parse(schema_fp)
+
+    schema = lxml.etree.XMLSchema(schema_tree)
+    schema.validate(tree)
+    lxml_errors = lxml_errors_generator(schema.error_log)
+    errors_all = format_lxml_errors(lxml_errors)
+    invalid_data = bool(schema.error_log)
+    return errors_all, invalid_data
 
 
 def lxml_errors_generator(schema_error_log):
