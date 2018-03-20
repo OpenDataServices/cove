@@ -883,7 +883,7 @@ msgstr ""
 "prefieran un formato de hoja de cálculo."
 
 #: cove_360/views.py:37 cove_360/views.py:47
-msgid "Sorry we can't process that data"
+msgid "Sorry, we can't process that data"
 msgstr "Lo sentimos, no podemos procesar esos datos"
 
 #: cove_360/views.py:39 cove_360/views.py:49

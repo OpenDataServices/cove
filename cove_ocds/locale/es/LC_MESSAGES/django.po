@@ -1516,7 +1516,7 @@ msgstr ""
 "Hacemos todo lo posible para mantener el sitio web en marcha y funcionando sin problemas. Sin embargo, Open Data Services Co-operative Limited no se hace responsable y no será responsable de que el sitio web esté temporalmente fuera de servicio debido a problemas técnicos fuera de nuestro control."
 
 #: cove_ocds/views.py:44 cove_ocds/views.py:55
-msgid "Sorry we can't process that data"
+msgid "Sorry, we can't process that data"
 msgstr "Lo sentimos, no podemos procesar esos datos"
 
 #: cove_ocds/views.py:47

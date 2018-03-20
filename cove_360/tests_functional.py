@@ -497,7 +497,7 @@ def test_explore_360_sample_data_link(server_url, browser):
     body_text = browser.find_element_by_tag_name('body').text
 
     assert 'Data Summary' in body_text
-    assert 'Sorry we can\'t process that data' not in body_text
+    assert 'Sorry, we can\'t process that data' not in body_text
     # Show sample data link in the home page only
     with pytest.raises(NoSuchElementException):
         browser.find_element_by_partial_link_text('loading some sample data.')

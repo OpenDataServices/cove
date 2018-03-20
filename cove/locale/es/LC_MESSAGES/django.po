@@ -88,7 +88,7 @@ msgstr ""
 
 #: cove/lib/converters.py:172 cove/lib/exceptions.py:23
 #: cove/lib/exceptions.py:32 cove/lib/exceptions.py:59
-msgid "Sorry we can't process that data"
+msgid "Sorry, we can't process that data"
 msgstr "Lo sentimos, no podemos procesar esos datos"
 
 #: cove/lib/converters.py:175
