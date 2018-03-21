@@ -13,7 +13,7 @@
 
 {% block converted_files %}
   <div class="col-md-6">
-    <div class="panel panel-warning">
+    <div class="panel panel-primary">
       <div class="panel-heading">
         <h4 class="panel-title">Schema</h4>
       </div>
@@ -52,7 +52,7 @@
   </div>
 <!--Download Converted Files-->
   <div class="col-md-6">
-    <div class="panel {% if conversion_error %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-success{% endif %}">
+    <div class="panel {% if conversion_error %}panel-danger{% elif conversion_warning_messages or conversion_warning_messages_titles %}panel-warning{% else %}panel-primary{% endif %}">
       <div class="panel-heading">
         <h4 class="panel-title">
           {% trans 'Convert' %}
@@ -133,7 +133,7 @@
 {% if extensions %}
   {% with ext=extensions.extensions ext_errors=extensions.invalid_extension %}
   <a name="conversion-warning" class="anchor"></a>
-  <div class="panel panel-warning" id="schema-extensions">
+  <div class="panel panel-primary" id="schema-extensions">
     <div class="panel-heading">
       <h4 class="panel-title">
         {% trans 'Schema Extensions' %}
