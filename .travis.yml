@@ -21,11 +21,13 @@ install:
   - "pip install Cython"
   - "pip install -r requirements_iati.txt"
   - wget "https://github.com/validator/validator/releases/download/16.3.3/vnu.jar_16.3.3.zip"; unzip vnu.jar_16.3.3.zip
-  - "wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip; unzip chromedriver_linux64.zip -d chromedriver; export PATH=$PATH:`pwd`/chromedriver"
+  - "wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip; unzip chromedriver_linux64.zip -d chromedriver; export PATH=$PATH:`pwd`/chromedriver"
   - "wget http://travis:$TRAVIS_SECRET_FILES_PASSWORD@travis-secret-files.live3.default.opendataservices.uk0.bigv.io/ocdstestdata.zip"
   - "unzip ocdstestdata.zip"
-  - "wget http://travis:$TRAVIS_SECRET_FILES_PASSWORD@travis-secret-files.live3.default.opendataservices.uk0.bigv.io/secret_data_test_archive.zip"
-  - "unzip secret_data_test_archive.zip"
+  - "wget http://travis:$TRAVIS_SECRET_FILES_PASSWORD@travis-secret-files.live3.default.opendataservices.uk0.bigv.io/360testdata.zip"
+  - "unzip 360testdata.zip"
+  - "wget http://travis:$TRAVIS_SECRET_FILES_PASSWORD@travis-secret-files.live3.default.opendataservices.uk0.bigv.io/secret_data_test_archive_3.zip"
+  - "unzip secret_data_test_archive_3.zip"
 
 script:
   # Check that messages used by OCDS CoVE are translated
