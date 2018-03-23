@@ -1,4 +1,4 @@
-<iati-activities version="2.02">
+<iati-activities version="2.03">
   <iati-activity>
     <iati-identifier>AA-AAA-123123-AA123</iati-identifier>
     <reporting-org ref="NO-ORGIDS-10000" type="40"><narrative>Reporting Organisation A</narrative></reporting-org>
