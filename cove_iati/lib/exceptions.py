@@ -8,7 +8,7 @@ class RuleSetStepException(Exception):
         self.feature_name = context.feature.name
         try:
             self.id = context.xml.xpath('iati-identifier/text()')[0]
-        except Exception:
+        except IndexError:
             pass
 
     def __str__(self):
