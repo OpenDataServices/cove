@@ -95,6 +95,28 @@ def server_url(request, live_server):
     ('decimal_amounts.csv', 'The grants were awarded in GBP with a total value of £7,000.7 and individual awards ranging from £1,000.1 (lowest) to £1,000.1 (highest).', True),
     ('decimal_amounts.json', 'The grants were awarded in GBP with a total value of £7,000.7 and individual awards ranging from £1,000.1 (lowest) to £1,000.1 (highest).', True),
     ('validation_errors-3.json', 'Something went wrong', False),
+    ('badfile_all_validation_errors.json', [
+        'description is missing but required (more info)',
+        'id is missing but required within recipientOrganization (more info)',
+        'Date is not in the correct format (more info)',
+        'Field 0 is not a JSON object',
+        'Field amountAwarded is not a number. Check that the value is not null, and doesn’t contain any characters other than 0-9 and .. Number values should not be in quotes.',
+        'Field plannedDates is not a JSON array',
+        'Field title is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with \ (more info)',
+        'Invalid \'uri\' found (more info)',
+        'Invalid code found in currency (more info)',
+        '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
+
+    ], True),
+    ('badfile_all_validation_errors.xlsx', [
+        'description is missing but required (more info)',
+        'id is missing but required within recipientOrganization (more info)',
+        'Date is not in the correct format (more info)',
+        'Field Amount Awarded is not a number. Check that the value is not null, and doesn’t contain any characters other than 0-9 and .. Number values should not be in quotes.',
+        'Invalid \'uri\' found (more info)',
+        'Invalid code found in Currency (more info)',
+        '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
+    ], True),
 ])
 def test_explore_360_url_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
     """

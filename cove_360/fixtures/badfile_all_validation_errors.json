@@ -1,0 +1,21 @@
+
+{
+    "grants": [
+        {
+            "id": "360G-sampletrust-105177/Z/14/Z",
+            "awardDate": "bad date",
+            "amountAwarded": "This should be a number",
+            "url": "This should be a uri",
+            "title": 9001,
+            "currency": "bad currency",
+            "recipientOrganization": [
+                {
+                    "name": "Example Project Limited"
+                }
+            ],
+            "plannedDates": "This should be an array",
+            "actualDates": ["This should be an object"],
+            "fundingOrganization": []
+        }
+    ]
+}
