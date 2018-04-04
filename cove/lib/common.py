@@ -29,7 +29,7 @@ validation_error_template_lookup = {'date-time': 'Date is not in the correct for
                            'uri': 'Invalid \'uri\' found',
                            'string': 'Field \'{}\' is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with \'\\\'',
                            'integer': 'Field \'{}\' is not a integer. Check that the value {} doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ',
-                           'number': 'Field \'{}\' is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and \'.\'. Number values should not be in quotes. ',
+                           'number': 'Field \'{}\' is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and dot (\'.\'). Number values should not be in quotes. ',
                            'object': 'Field \'{}\' is not a JSON object',
                            'array': 'Field \'{}\' is not a JSON array'}
 # These are "safe" html that we trust
@@ -39,7 +39,7 @@ validation_error_template_lookup_safe = {'date-time': 'Date is not in the correc
                            'uri': 'Invalid \'uri\' found',
                            'string': 'Field <code>{}</code> is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
                            'integer': 'Field <code>{}</code> is not a integer. Check that the value {} doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ',
-                           'number': 'Field <code>{}</code> is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and <code>.</code>. Number values should not be in quotes. ',
+                           'number': 'Field <code>{}</code> is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and dot (<code>.</code>). Number values should not be in quotes. ',
                            'object': 'Field <code>{}</code> is not a JSON object',
                            'array': 'Field <code>{}</code> is not a JSON array'}
 

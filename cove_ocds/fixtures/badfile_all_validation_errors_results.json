@@ -58,7 +58,7 @@
       "value": "This should be a number.",
       "field": "releases/tender/value/amount",
       "path": "releases/0/tender/value/amount",
-      "description": "Field 'amount' is not a number. Check that the value  doesn\u2019t contain any characters other than 0-9 and '.'. Number values should not be in quotes. ",
+      "description": "Field 'amount' is not a number. Check that the value  doesn\u2019t contain any characters other than 0-9 and dot ('.'). Number values should not be in quotes. ",
       "type": "number"
     },
     {
