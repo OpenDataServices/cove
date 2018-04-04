@@ -583,7 +583,7 @@ def test_get_additional_codelist_values():
     additional_codelist_values = cove_common.get_additional_codelist_values(schema_obj, codelist_url, json_data_w_additial_codelists)
 
     assert additional_codelist_values == {
-        ('releases', 'tag'): {
+        ('releases/tag'): {
             'codelist': 'releaseTag.csv',
             'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/releaseTag.csv',
             'field': 'tag',
@@ -591,7 +591,7 @@ def test_get_additional_codelist_values():
             'path': 'releases',
             'values': {'oh no'}
         },
-        ('releases', 'tender', 'items', 'classification', 'scheme'): {
+        ('releases/tender/items/classification/scheme'): {
             'codelist': 'itemClassificationScheme.csv',
             'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/itemClassificationScheme.csv',
             'field': 'scheme',
