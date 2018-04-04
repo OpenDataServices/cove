@@ -940,6 +940,23 @@ def test_cove_ocds_cli(file_type, options, output):
             call_command('ocds_cli', file_name, output_dir=output_dir)
 
 
+def test_cove_ocds_cli_validation_errors():
+    file_name = os.path.join('cove_ocds', 'fixtures', 'badfile_all_validation_errors.json')
+    test_dir = str(uuid.uuid4())
+    output_dir = os.path.join('media', test_dir)
+    options = {
+        'output_dir': output_dir,
+        'schema_version': '1.1'
+    }
+    call_command('ocds_cli', file_name, **options)
+
+    with open(os.path.join(output_dir, 'results.json')) as fp, \
+            open(os.path.join('cove_ocds', 'fixtures', 'badfile_all_validation_errors_results.json')) as fp_expected:
+        results = json.load(fp)
+        expected = json.load(fp_expected)
+        assert results == expected
+
+
 @pytest.mark.parametrize('version_option', ['', '1.1', '100.100.100'])
 def test_cove_ocds_cli_schema_version(version_option):
     test_dir = str(uuid.uuid4())
