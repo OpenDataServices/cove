@@ -25,13 +25,13 @@ from cove.lib.tools import cached_get_request, decimal_default
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
 LANGUAGE_RE = re.compile("^(.*_(((([A-Za-z]{2,3}(-([A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-([A-Za-z]{4}))?(-([A-Za-z]{2}|[0-9]{3}))?(-([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-([0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(x(-[A-Za-z0-9]{1,8})+))?)|(x(-[A-Za-z0-9]{1,8})+)))$")
-validation_error_lookup = {'date-time': 'Date is not in the correct format',
+validation_error_template_lookup = {'date-time': 'Date is not in the correct format',
                            'uri': 'Invalid \'uri\' found',
-                           'string': 'Value is not a string',
-                           'integer': 'Value is not a integer',
-                           'number': 'Value is not a number',
-                           'object': 'Value is not an object',
-                           'array': 'Value is not an array'}
+                           'string': 'Field \'{}\' is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with \'\\\'',
+                           'integer': 'Field \'{}\' is not a integer. Check that the value {} doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ',
+                           'number': 'Field \'{}\' is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and \'.\'. Number values should not be in quotes. ',
+                           'object': 'Field \'{}\' is not a JSON object',
+                           'array': 'Field \'{}\' is not a JSON array'}
 # These are "safe" html that we trust
 # Don't insert any values into these strings without ensuring escaping
 # e.g. using django's format_html function.
@@ -414,8 +414,10 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
             else:
                 null_clause = 'is not null, and'
 
-            message = validation_error_lookup.get(validator_type, message)
+            message_template = validation_error_template_lookup.get(validator_type, message)
             message_safe_template = validation_error_template_lookup_safe.get(validator_type)
+            if message_template:
+                message = message_template.format(header, null_clause)
             if message_safe_template:
                 message_safe = format_html(message_safe_template, header, null_clause)
 
