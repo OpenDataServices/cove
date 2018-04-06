@@ -27,21 +27,21 @@ uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
 LANGUAGE_RE = re.compile("^(.*_(((([A-Za-z]{2,3}(-([A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-([A-Za-z]{4}))?(-([A-Za-z]{2}|[0-9]{3}))?(-([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-([0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(x(-[A-Za-z0-9]{1,8})+))?)|(x(-[A-Za-z0-9]{1,8})+)))$")
 validation_error_template_lookup = {'date-time': 'Date is not in the correct format',
                            'uri': 'Invalid \'uri\' found',
-                           'string': 'Field \'{}\' is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with \'\\\'',
-                           'integer': 'Field \'{}\' is not a integer. Check that the value {} doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ',
-                           'number': 'Field \'{}\' is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and dot (\'.\'). Number values should not be in quotes. ',
-                           'object': 'Field \'{}\' is not a JSON object',
-                           'array': 'Field \'{}\' is not a JSON array'}
+                           'string': '\'{}\' is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with \'\\\'',
+                           'integer': '\'{}\' is not a integer. Check that the value {} doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ',
+                           'number': '\'{}\' is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and dot (\'.\'). Number values should not be in quotes. ',
+                           'object': '\'{}\' is not a JSON object',
+                           'array': '\'{}\' is not a JSON array'}
 # These are "safe" html that we trust
 # Don't insert any values into these strings without ensuring escaping
 # e.g. using django's format_html function.
 validation_error_template_lookup_safe = {'date-time': 'Date is not in the correct format',
                            'uri': 'Invalid \'uri\' found',
-                           'string': 'Field <code>{}</code> is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
-                           'integer': 'Field <code>{}</code> is not a integer. Check that the value {} doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ',
-                           'number': 'Field <code>{}</code> is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and dot (<code>.</code>). Number values should not be in quotes. ',
-                           'object': 'Field <code>{}</code> is not a JSON object',
-                           'array': 'Field <code>{}</code> is not a JSON array'}
+                           'string': '<code>{}</code> is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
+                           'integer': '<code>{}</code> is not a integer. Check that the value {} doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ',
+                           'number': '<code>{}</code> is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and dot (<code>.</code>). Number values should not be in quotes. ',
+                           'object': '<code>{}</code> is not a JSON object',
+                           'array': '<code>{}</code> is not a JSON array'}
 
 
 class CustomJsonrefLoader(jsonref.JsonLoader):
@@ -451,7 +451,7 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
             message_safe = format_html("Invalid code found in <code>{}</code>", header)
 
         if e.validator == 'pattern':
-            message_safe = format_html('Field <code>{}</code> does not match the regex <code>{}</code>', header, e.validator_value)
+            message_safe = format_html('<code>{}</code> does not match the regex <code>{}</code>', header, e.validator_value)
 
         if e.validator == 'minItems' and e.validator_value == 1:
             message_safe = format_html('<code>{}</code> is too short. You must supply at least one value, or remove the item entirely (unless it’s required).', e.instance)

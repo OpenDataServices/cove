@@ -99,10 +99,10 @@ def server_url(request, live_server):
         'description is missing but required (more info)',
         'id is missing but required within recipientOrganization (more info)',
         'Date is not in the correct format (more info)',
-        'Field 0 is not a JSON object',
-        'Field amountAwarded is not a number. Check that the value is not null, and doesn’t contain any characters other than 0-9 and dot (.). Number values should not be in quotes.',
-        'Field plannedDates is not a JSON array',
-        'Field title is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with \ (more info)',
+        '0 is not a JSON object',
+        'amountAwarded is not a number. Check that the value is not null, and doesn’t contain any characters other than 0-9 and dot (.). Number values should not be in quotes.',
+        'plannedDates is not a JSON array',
+        'title is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with \ (more info)',
         'Invalid \'uri\' found (more info)',
         'Invalid code found in currency (more info)',
         '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
@@ -112,7 +112,7 @@ def server_url(request, live_server):
         'description is missing but required (more info)',
         'id is missing but required within recipientOrganization (more info)',
         'Date is not in the correct format (more info)',
-        'Field Amount Awarded is not a number. Check that the value is not null, and doesn’t contain any characters other than 0-9 and dot (.). Number values should not be in quotes.',
+        'Amount Awarded is not a number. Check that the value is not null, and doesn’t contain any characters other than 0-9 and dot (.). Number values should not be in quotes.',
         'Invalid \'uri\' found (more info)',
         'Invalid code found in Currency (more info)',
         '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
@@ -409,17 +409,17 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
             section.click()
         time.sleep(0.5)
 
-    browser.find_element_by_css_selector('a[data-target=".validation-errors-3"]').click()
+    browser.find_element_by_css_selector('a[data-target=".validation-errors-4"]').click()
 
-    modal = browser.find_element_by_css_selector('.validation-errors-3')
+    modal = browser.find_element_by_css_selector('.validation-errors-4')
     assert "in" in modal.get_attribute("class").split()
     modal_text = modal.text
     assert "24/07/2014" in modal_text
     assert "grants/0/awardDate" in modal_text
-    table_rows = browser.find_elements_by_css_selector('.validation-errors-3 tbody tr')
+    table_rows = browser.find_elements_by_css_selector('.validation-errors-4 tbody tr')
     assert len(table_rows) == 4
 
-    browser.find_element_by_css_selector('div.modal.validation-errors-3 button.close').click()
+    browser.find_element_by_css_selector('div.modal.validation-errors-4 button.close').click()
     browser.find_element_by_css_selector('a[data-target=".additional-checks-3"]').click()
 
     modal_additional_checks = browser.find_element_by_css_selector('.additional-checks-3')

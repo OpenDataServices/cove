@@ -1,123 +1,123 @@
 {
-  "version_used": "1.1",
+  "extensions": {},
   "additional_closed_codelist_values": {
     "releases/tender/value/currency": {
       "isopen": false,
+      "codelist": "currency.csv",
+      "codelist_url": "https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/currency.csv",
+      "path": "releases/tender/value",
       "values": [
         "badCurrencyCode"
       ],
-      "codelist_url": "https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/currency.csv",
-      "codelist": "currency.csv",
-      "field": "currency",
-      "path": "releases/tender/value"
+      "field": "currency"
     }
   },
-  "additional_fields": [],
-  "file_type": "json",
-  "schema_url": "http://standard.open-contracting.org/schema/1__1__2/release-package-schema.json",
-  "deprecated_fields": [],
-  "releases_aggregates": {},
-  "additional_open_codelist_values": {},
   "validation_errors": [
     {
       "value": "",
-      "field": "releases/id",
-      "path": "releases/0/id",
       "description": "'' is too short",
+      "path": "releases/0/id",
+      "field": "releases/id",
       "type": "minLength"
     },
     {
       "value": "Should be integer.integer",
-      "field": "version",
-      "path": "version",
       "description": "'Should be integer.integer' does not match '^(\\\\d+\\\\.)(\\\\d+)$'",
+      "path": "version",
+      "field": "version",
       "type": "pattern"
     },
     {
-      "value": "",
-      "field": "releases/tender",
-      "path": "releases/0/tender",
-      "description": "'id' is missing but required within 'tender'",
-      "type": "required"
-    },
-    {
-      "value": "",
-      "field": "releases",
-      "path": "releases/0",
-      "description": "'initiationType' is missing but required",
-      "type": "required"
-    },
-    {
-      "value": "Last Tuesday",
-      "field": "releases/date",
-      "path": "releases/0/date",
-      "description": "Date is not in the correct format",
-      "type": "date-time"
-    },
-    {
       "value": "This should be a number.",
-      "field": "releases/tender/value/amount",
+      "description": "'amount' is not a number. Check that the value  doesn\u2019t contain any characters other than 0-9 and dot ('.'). Number values should not be in quotes. ",
       "path": "releases/0/tender/value/amount",
-      "description": "Field 'amount' is not a number. Check that the value  doesn\u2019t contain any characters other than 0-9 and dot ('.'). Number values should not be in quotes. ",
+      "field": "releases/tender/value/amount",
       "type": "number"
     },
     {
       "value": "This should be an object.",
-      "field": "releases/buyer",
+      "description": "'buyer' is not a JSON object",
       "path": "releases/0/buyer",
-      "description": "Field 'buyer' is not a JSON object",
+      "field": "releases/buyer",
       "type": "object"
     },
     {
+      "value": "",
+      "description": "'id' is missing but required within 'tender'",
+      "path": "releases/0/tender",
+      "field": "releases/tender",
+      "type": "required"
+    },
+    {
+      "value": "",
+      "description": "'initiationType' is missing but required",
+      "path": "releases/0",
+      "field": "releases",
+      "type": "required"
+    },
+    {
       "value": "This should be an integer.",
-      "field": "releases/tender/numberOfTenderers",
+      "description": "'numberOfTenderers' is not a integer. Check that the value  doesn\u2019t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ",
       "path": "releases/0/tender/numberOfTenderers",
-      "description": "Field 'numberOfTenderers' is not a integer. Check that the value  doesn\u2019t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ",
+      "field": "releases/tender/numberOfTenderers",
       "type": "integer"
     },
     {
       "value": 3,
-      "field": "releases/ocid",
+      "description": "'ocid' is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with '\\'",
       "path": "releases/0/ocid",
-      "description": "Field 'ocid' is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with '\\'",
+      "field": "releases/ocid",
       "type": "string"
     },
     {
       "value": "This should be an array.",
-      "field": "releases/parties",
+      "description": "'parties' is not a JSON array",
       "path": "releases/0/parties",
-      "description": "Field 'parties' is not a JSON array",
+      "field": "releases/parties",
       "type": "array"
     },
     {
       "value": 3,
-      "field": "releases/tender/title",
+      "description": "'title' is not a string. Check that the value  has quotes at the start and end. Escape any quotes in the value with '\\'",
       "path": "releases/0/tender/title",
-      "description": "Field 'title' is not a string. Check that the value  has quotes at the start and end. Escape any quotes in the value with '\\'",
+      "field": "releases/tender/title",
       "type": "string"
     },
     {
+      "value": "Last Tuesday",
+      "description": "Date is not in the correct format",
+      "path": "releases/0/date",
+      "field": "releases/date",
+      "type": "date-time"
+    },
+    {
       "value": "tmXf6cC4QU+lwO3O73T-ZvUX4qo2GMJ0Sd",
-      "field": "uri",
-      "path": "uri",
       "description": "Invalid 'uri' found",
+      "path": "uri",
+      "field": "uri",
       "type": "uri"
     },
     {
       "value": "badCurrencyCode",
-      "field": "releases/tender/value/currency",
-      "path": "releases/0/tender/value/currency",
       "description": "Invalid code found in 'currency'",
+      "path": "releases/0/tender/value/currency",
+      "field": "releases/tender/value/currency",
       "type": "enum"
     },
     {
       "value": "",
-      "field": "releases/tag",
-      "path": "releases/0/tag",
       "description": "[] is too short",
+      "path": "releases/0/tag",
+      "field": "releases/tag",
       "type": "minItems"
     }
   ],
+  "version_used": "1.1",
+  "file_type": "json",
+  "releases_aggregates": {},
+  "additional_fields": [],
+  "additional_open_codelist_values": {},
+  "deprecated_fields": [],
   "common_error_types": [],
-  "extensions": {}
+  "schema_url": "http://standard.open-contracting.org/schema/1__1__2/release-package-schema.json"
 }
