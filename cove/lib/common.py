@@ -96,6 +96,14 @@ class CustomRefResolver(RefResolver):
         return result
 
 
+@functools.lru_cache()
+def _deref_schema(schema_str, schema_host):
+    loader = CustomJsonrefLoader(schema_url=schema_host)
+    deref_obj = jsonref.loads(schema_str, loader=loader, object_pairs_hook=OrderedDict)
+    # Force evaluation of jsonref.loads here
+    repr(deref_obj)
+    return deref_obj
+
 class SchemaJsonMixin():
     @cached_property
     def release_schema_str(self):
@@ -127,12 +135,8 @@ class SchemaJsonMixin():
         return json.loads(self.release_pkg_schema_str)
 
     def deref_schema(self, schema_str):
-        loader = CustomJsonrefLoader(schema_url=self.schema_host)
         try:
-            deref_obj = jsonref.loads(schema_str, loader=loader, object_pairs_hook=OrderedDict)
-            # Force evaluation of jsonref.loads here
-            repr(deref_obj)
-            return deref_obj
+            return _deref_schema(schema_str, self.schema_host)
         except jsonref.JsonRefError as e:
             self.json_deref_error = e.message
             return {}
