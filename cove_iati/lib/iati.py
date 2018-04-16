@@ -44,10 +44,11 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                 'error': format(err)
             })
 
-    for schema_path in [schema_iati.organization_schema, schema_iati.activity_schema]:
-        errors_all, invalid_data = validate_against_schema(schema_path, tree)
-        if not invalid_data:
-            break
+    if tree.getroot().tag == 'iati-organisations':
+        schema_path = schema_iati.organization_schema
+    else:
+        schema_path = schema_iati.activity_schema
+    errors_all, invalid_data = validate_against_schema(schema_path, tree)
 
     return_on_error = [{'message': 'There was a problem running ruleset checks',
                         'exception': True}]
