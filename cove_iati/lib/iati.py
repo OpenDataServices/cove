@@ -9,15 +9,19 @@ from django.utils.translation import ugettext_lazy as _
 
 from .schema import SchemaIATI
 from cove.lib.exceptions import CoveInputDataError, UnrecognisedFileTypeXML
+from cove.lib.tools import ignore_errors
 
 
 def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
+    '''TODO: this function is trying to do too many things. Separate some
+    of its logic into smaller functions doing one single thing each.
+    '''
     schema_aiti = SchemaIATI()
     lxml_errors = {}
     cell_source_map = {}
     validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
 
-    with open(data_file) as fp, open(schema_aiti.activity_schema) as schema_fp:
+    with open(data_file, 'rb') as fp, open(schema_aiti.activity_schema) as schema_fp:
         try:
             tree = etree.parse(fp)
         except lxml.etree.XMLSyntaxError as err:
@@ -41,25 +45,19 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                 'error': format(err)
             })
         schema_tree = etree.parse(schema_fp)
-        schema = lxml.etree.XMLSchema(schema_tree)
-        schema.validate(tree)
-        lxml_errors = lxml_errors_generator(schema.error_log)
-        ruleset_errors = get_iati_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset'))
 
-        if openag:
-            ruleset_errors_ag = get_openag_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_openag'))
-            context.update({'ruleset_errors_openag': ruleset_errors_ag})
-
-        if orgids:
-            ruleset_errors_orgids = get_orgids_ruleset_errors(tree, os.path.join(upload_dir, 'ruleset_orgids'))
-            context.update({'ruleset_errors_orgids': ruleset_errors_orgids})
-
+    schema = lxml.etree.XMLSchema(schema_tree)
+    schema.validate(tree)
+    lxml_errors = lxml_errors_generator(schema.error_log)
     errors_all = format_lxml_errors(lxml_errors)
+    invalid_data = bool(schema.error_log)
+    return_on_error = [{'message': 'There was a problem running ruleset checks',
+                        'exception': True}]
 
+    # Validation errors
     if file_type != 'xml':
         with open(os.path.join(upload_dir, 'cell_source_map.json')) as cell_source_map_fp:
             cell_source_map = json.load(cell_source_map_fp)
-
     if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validation_error_fp:
             validation_errors = json.load(validation_error_fp)
@@ -69,18 +67,60 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
             with open(validation_errors_path, 'w+') as validation_error_fp:
                 validation_error_fp.write(json.dumps(validation_errors))
 
+    # Ruleset errors
+    ruleset_errors = get_iati_ruleset_errors(
+        tree,
+        os.path.join(upload_dir, 'ruleset'),
+        api=api,
+        ignore_errors=invalid_data,
+        return_on_error=return_on_error
+    )
+
+    if openag:
+        ruleset_errors_ag = get_openag_ruleset_errors(
+            tree,
+            os.path.join(upload_dir, 'ruleset_openang'),
+            ignore_errors=invalid_data,
+            return_on_error=return_on_error
+        )
+        context.update({'ruleset_errors_openag': ruleset_errors_ag})
+    if orgids:
+        ruleset_errors_orgids = get_orgids_ruleset_errors(
+            tree,
+            os.path.join(upload_dir, 'ruleset_orgids'),
+            ignore_errors=invalid_data,
+            return_on_error=return_on_error
+        )
+        context.update({'ruleset_errors_orgids': ruleset_errors_orgids})
+
     context.update({
         'validation_errors': sorted(validation_errors.items()),
         'ruleset_errors': ruleset_errors
     })
+
     if not api:
         context.update({
             'validation_errors_count': sum(len(value) for value in validation_errors.values()),
-            'ruleset_errors_count': len(ruleset_errors),
             'cell_source_map': cell_source_map,
             'first_render': False
         })
+        if ruleset_errors:
+            ruleset_errors_by_activity = get_iati_ruleset_errors(
+                tree,
+                os.path.join(upload_dir, 'ruleset'),
+                group_by='activity',
+                ignore_errors=invalid_data,
+                return_on_error=return_on_error
+            )
+            context['ruleset_errors'] = [ruleset_errors, ruleset_errors_by_activity]
 
+        count_ruleset_errors = 0
+        if isinstance(ruleset_errors, dict):
+            for rules in ruleset_errors.values():
+                for errors in rules.values():
+                    count_ruleset_errors += len(errors)
+
+        context['ruleset_errors_count'] = count_ruleset_errors
     return context
 
 
@@ -256,22 +296,59 @@ def format_ruleset_errors(output_dir):
                             'id': json_line['id'],
                             'path': error['path'],
                             'rule': scenario_outline,
-                            'message': error['message']
+                            'explanation': error['explanation'],
+                            'ruleset': json_line['ruleset']
                         }
                         ruleset_errors.append(rule_error)
 
     return ruleset_errors
 
 
-def get_iati_ruleset_errors(lxml_etree, output_dir):
+def _ruleset_errors_by_rule(flat_errors):
+    ruleset_errors = {}
+    for error in flat_errors:
+        if error['ruleset'] not in ruleset_errors:
+            ruleset_errors[error['ruleset']] = {}
+        if error['rule'] not in ruleset_errors[error['ruleset']]:
+            ruleset_errors[error['ruleset']][error['rule']] = []
+        ruleset_errors[error['ruleset']][error['rule']].append([
+            error['id'], error['explanation'], error['path']
+        ])
+    return ruleset_errors
+
+
+def _ruleset_errors_by_activity(flat_errors):
+    ruleset_errors = {}
+    for error in flat_errors:
+        if error['id'] not in ruleset_errors:
+            ruleset_errors[error['id']] = {}
+        if error['ruleset'] not in ruleset_errors[error['id']]:
+            ruleset_errors[error['id']][error['ruleset']] = []
+        ruleset_errors[error['id']][error['ruleset']].append([
+            error['rule'], error['explanation'], error['path']
+        ])
+    return ruleset_errors
+
+
+@ignore_errors
+def get_iati_ruleset_errors(lxml_etree, output_dir, group_by='rule', api=False):
+    if group_by not in ['rule', 'activity']:
+        raise ValueError('Only `rule` or `activity` are valid values for group_by argument')
+
     bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
                output_path=output_dir)
 
     if not os.path.isdir(output_dir):
         return []
-    return format_ruleset_errors(output_dir)
+    if api:
+        return format_ruleset_errors(output_dir)
+    if group_by == 'rule':
+        return _ruleset_errors_by_rule(format_ruleset_errors(output_dir))
+    else:
+        return _ruleset_errors_by_activity(format_ruleset_errors(output_dir))
 
 
+@ignore_errors
 def get_openag_ruleset_errors(lxml_etree, output_dir):
     bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_openag_ruleset/'],
                output_path=output_dir)
@@ -281,6 +358,7 @@ def get_openag_ruleset_errors(lxml_etree, output_dir):
     return format_ruleset_errors(output_dir)
 
 
+@ignore_errors
 def get_orgids_ruleset_errors(lxml_etree, output_dir):
     bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_orgids_ruleset/'],
                output_path=output_dir)

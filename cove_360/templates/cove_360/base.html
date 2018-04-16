@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load static %}
 
-{% block h1 %}
+{% block heading %}
   <div class="row">
     <div class="col-md-2">
         <a href="{% url 'index' %}"><img src="{% static 'dataexplore/360Giving-logo.png' %}" alt="360Giving Logo" width=270 height=270 class="logo360"/></a>
@@ -36,7 +36,7 @@
 <li><a href="http://www.threesixtygiving.org/contact/">Support</a></li>
 {% endblock %}
 
-{% block howToUse %}
+{% block bottomcontent1 %}
 <div class="panel panel-default">
   <div class="panel-body">
     <h2 class="heading-in-panel" ><small>{% blocktrans %}How to use the {% endblocktrans %}{{ app_verbose_name }}</small></h2>
@@ -48,9 +48,13 @@
     <p>{% trans "It <strong>will not</strong>:" %}</p>
     <p class="icon-indent"><span class="font-tick cross"></span>{% blocktrans %} Check your data is accurate. Read about common data errors and how to check for them in the {% endblocktrans %}<a href="{% url 'common_errors' %}">{% trans "Common Errors " %}</a>{% trans "section" %}.</p>
     <p class="icon-indent"><span class="font-tick cross"></span>{% blocktrans %} Check the data against your own open data policy. Read more about {% endblocktrans %}<a href="http://www.threesixtygiving.org/data/publish-data/">{% trans "Publishing and Using Open Grant Data " %}</a>.</p>
+    {% if request.path == "/" %}
+    <br>
+    <p> {% blocktrans %}To preview how this tool works, try <a href="?source_url=https://github.com/ThreeSixtyGiving/sample-data/blob/master/ExampleTrust-grants-fixed.xlsx?raw=true"> loading some sample data.</a>{% endblocktrans%}</p>
+    {% endif %}
     <h3><small>{% blocktrans %}Formats{% endblocktrans %}</small></h3>
-    <p>{% blocktrans %}The application accepts data in some of the formats given in the <a href="http://www.threesixtygiving.org/standard/">360Giving Data Standard guidance</a>.
-    <br>Acceptable files are: {% endblocktrans %}</p>
+    <p>{% blocktrans %}The application accepts data in some of the formats given in the <a href="http://www.threesixtygiving.org/standard/">360Giving Data Standard guidance</a>.</p>
+    <p>Acceptable files are: {% endblocktrans %}</p>
     <ul>
       <li>{% blocktrans %}Summary Spreadsheet - <a href="https://threesixtygiving-standard.readthedocs.io/en/latest/_static/summary-table/360-giving-schema-titles.xlsx">Excel</a>, <a href="https://threesixtygiving-standard.readthedocs.io/en/latest/templates-csv">CSV</a> (UTF-8, Windows-1252 and ISO-8859-1 encodings supported){% endblocktrans %}</li>
       <li>{% blocktrans %}JSON built to the <a href="http://standard.threesixtygiving.org/en/latest/reference/#giving-json-schemas">360Giving JSON schema</a> (UTF-8 encoding supported){% endblocktrans %}</li>
@@ -60,3 +64,6 @@
 </div>
 {% endblock %}
 
+{% block bottomcontent2 %}
+{% include "cove_360/more_info.html" %}
+{% endblock %}

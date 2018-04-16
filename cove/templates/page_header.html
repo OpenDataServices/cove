@@ -1,0 +1,38 @@
+{% load i18n %}
+{% block page_header %}
+    <div class="page-header">
+        <div class="row">
+          <div class="col-md-8">
+            {% block h1 %}<h1 class="application-name"><a href="{% url 'index' %}">{{ app_verbose_name }}</a></h1>{% endblock %}
+            {% block strapline %}<p>{{ app_strapline }}</p>{% endblock %}
+          </div><!--col-md-8-->
+
+          <div class="col-md-2">
+            {% block language_select %}
+            <form class="language-select" action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+              <input name="next" type="hidden" value="{{ redirect_to }}" />
+              <select name="language" onchange="this.form.submit()">
+              {% get_current_language as LANGUAGE_CODE %}
+              {% get_available_languages as LANGUAGES %}
+              {% get_language_info_list for LANGUAGES as languages %}
+              {% for language in languages %}
+              <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                  {{ language.name_local }} ({{ language.code }})
+              </option>
+              {% endfor %}
+              </select>
+              <noscript>
+                {# Translators: Label of a button that triggers search #}
+                <input type="submit" value={% trans "Go" %} />
+              </noscript>
+            </form>
+            {% endblock %}
+          </div><!--col-md-2-->
+          <div class="col-md-2">
+            {% block header_button %}
+            {% endblock %}
+          </div>
+        </div><!--row-->
+    </div><!--page-header-->
+{% endblock %}

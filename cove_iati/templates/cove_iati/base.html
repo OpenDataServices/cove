@@ -24,25 +24,6 @@
 
 {% block strapline %}{% endblock %}
 
-{% block theme %}
-  <p class="text-muted">{% blocktrans %}Bootstrap theme {% endblocktrans %}<a href="https://bootswatch.com/sandstone/"> Sandstone</a>{% blocktrans %}
-by Bootswatch{% endblocktrans %}</p>
-{% endblock %}
-
-{% block bootstrap_css %}
-  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/fonts/tick/tick.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/bootstrap-iati.css' %}">
-  <noscript>
-    <style>
-      .collapse {display: initial !important;}
-      .glyphicon-collapse-down {display: none !important;}
-    </style>
-  </noscript>
-{% endblock %}
-
-{% block link %}
-{% endblock %}
-
 {% block howToUse %}
 <div class="panel panel-default">
   <div class="panel-body">
@@ -51,4 +32,27 @@ by Bootswatch{% endblocktrans %}</p>
   </div>
 </div>
 {% endblock %}
+
+{% block theme %}
+  <p class="text-muted">{% blocktrans %}Bootstrap theme {% endblocktrans %}<a href="https://bootswatch.com/sandstone/"> Sandstone</a>{% blocktrans %}
+by Bootswatch{% endblocktrans %}</p>
+{% endblock %}
+
+{% block bootstrap_css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/fonts/tick/tick.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'dataexplore/css/bootstrap-iati.css' %}?version=2">
+  <noscript>
+    <style>
+      .collapse {display: initial !important;}
+      .glyphicon-collapse-down {display: none !important;}
+      #ruleset-by-activity {display: block !important;}
+      button[name='ruleset-table-toggle'] {display: none !important;}
+      .noscript-notice {display:block;}
+    </style>
+  </noscript>
+{% endblock %}
+
+{% block link %}
+{% endblock %}
+
 

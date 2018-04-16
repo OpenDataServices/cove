@@ -37,7 +37,7 @@ def server_url(request, live_server):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
-    ('WellcomeTrust-grants_fixed_2_grants.json', ['A file was downloaded from',
+    ('fundingproviders-grants_fixed_2_grants.json', ['A file was downloaded from',
                                                   'This file contains 4 grants from 1 funder to 2 recipients awarded on 24/07/2014',
                                                   'The grants were awarded in GBP with a total value of £662,990',
                                                   'individual awards ranging from £152,505 (lowest) to £178,990 (highest)',
@@ -48,14 +48,14 @@ def server_url(request, live_server):
                                                   'Non-unique ID Values (first 3 shown)',
                                                   'Grant identifiers:  2',
                                                   'Funder organisation identifiers:  1',
-                                                  '360G-wellcometrust-105182/Z/14/Z'], True),
-    ('WellcomeTrust-grants_broken_grants.json', ['Invalid against Schema 17 Errors',
+                                                  '360G-fundingproviders-000002/X/00/X'], True),
+    ('fundingproviders-grants_broken_grants.json', ['Invalid against Schema 17 Errors',
                                                  'Value is not a string',
                                                  'Review 4 Grants',
                                                  'Funder organisation identifiers:  2',
                                                  'Recipient organisation identifiers:  2',
-                                                 '360G-wellcometrust-105177/Z/14/Z'], True),
-    ('WellcomeTrust-grants_2_grants.xlsx', ['This file contains 2 grants from 1 funder to 1 recipient',
+                                                 '360G-fundingproviders-000002/X/00/X'], True),
+    ('fundingproviders-grants_2_grants.xlsx', ['This file contains 2 grants from 1 funder to 1 recipient',
                                             'The grants were awarded in GBP with a total value of £331,495',
                                             # check that there's no errors after the heading
                                             'Converted to JSON\nIn order',
@@ -66,7 +66,7 @@ def server_url(request, live_server):
                                             'Review 2 Grants',
                                             'Funder organisation identifiers:  1',
                                             'Recipient organisation identifiers:  1',
-                                            '360G-wellcometrust-105177/Z/14/Z'], True),
+                                            '360G-fundingproviders-000002/X/00/X'], True),
     # Test conversion warnings are shown
     ('tenders_releases_2_releases.xlsx', ['Converted to JSON 5 Errors',
                                           'Invalid against Schema 76 Errors',
@@ -74,13 +74,13 @@ def server_url(request, live_server):
                                           ], True),
     # Test that titles that aren't in the rollup are converted correctly
     # (See @check_url_input_result_page).
-    ('WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx', [], True),
+    ('fundingproviders-grants_2_grants_titleswithoutrollup.xlsx', [], True),
     # Test a 360 csv in cp1252 encoding
-    ('WellcomeTrust-grants_2_grants_cp1252.csv', ['This file contains 2 grants from 1 funder to 1 recipient',
+    ('fundingproviders-grants_2_grants_cp1252.csv', ['This file contains 2 grants from 1 funder to 1 recipient',
                                                   'The grants were awarded in GBP with a total value of £331,495',
                                                   'This file is not \'utf-8\' encoded (it is cp1252 encoded)'], True),
     # Test a non-valid file.
-    ('paul-hamlyn-foundation-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
+    ('fundingtrust-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
     # Test a unconvertable spreadsheet (blank file)
     ('bad.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it.', False),
     # Check that a file with a UTF-8 BOM converts correctly
@@ -186,7 +186,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
         if source_filename.endswith('.xlsx') or source_filename.endswith('.csv'):
             converted_file_response = requests.get(converted_file)
-            if source_filename == 'WellcomeTrust-grants_2_grants_titleswithoutrollup.xlsx':
+            if source_filename == 'fundingproviders-grants_2_grants_titleswithoutrollup.xlsx':
                 grant1 = converted_file_response.json()['grants'][1]
                 assert grant1['recipientOrganization'][0]['department'] == 'Test data'
                 assert grant1['classifications'][0]['title'] == 'Test'
@@ -272,7 +272,7 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
 
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
     ('360Giving', '360Giving is a company limited by guarantee', 'body.home', 'http://www.threesixtygiving.org/'),
-    ('360Giving Data Standard', 'Standard', 'h1.entry-title', 'http://www.threesixtygiving.org/standard/'),
+    ('360Giving Data Standard', 'The 360Giving Standard', 'h1', 'http://www.threesixtygiving.org/standard/'),
     ])
 def test_footer_360(server_url, browser, link_text, expected_text, css_selector, url):
     browser.get(server_url)
@@ -292,8 +292,8 @@ def test_index_page_360(server_url, browser):
     assert 'JSON built to the 360Giving JSON schema' in browser.find_element_by_tag_name('body').text
     assert 'Multi-table data package - Excel' in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
-  
-  
+
+
 @pytest.mark.parametrize(('link_text', 'url'), [
     ('360Giving Data Standard guidance', 'http://www.threesixtygiving.org/standard/'),
     ('Excel', 'https://threesixtygiving-standard.readthedocs.io/en/latest/_static/summary-table/360-giving-schema-titles.xlsx'),
@@ -313,7 +313,7 @@ def test_common_index_elements(server_url, browser):
     browser.find_element_by_css_selector('#more-information .panel-title').click()
     time.sleep(0.5)
     assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
-    assert 'Why do you delete data after 7 days?' in browser.find_element_by_tag_name('body').text
+    assert 'Why do you delete data after seven days?' in browser.find_element_by_tag_name('body').text
     assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
     assert 'Terms & Conditions' in browser.find_element_by_tag_name('body').text
     assert 'Open Data Services' in browser.find_element_by_tag_name('body').text
@@ -359,7 +359,7 @@ def test_accordion(server_url, browser):
 
 
 @pytest.mark.parametrize(('source_filename'), [
-    ('WellcomeTrust-grants_fixed_2_grants.json'),
+    ('fundingproviders-grants_fixed_2_grants.json'),
     ])
 def test_error_modal(server_url, browser, httpserver, source_filename):
     with open(os.path.join('cove_360', 'fixtures', source_filename), 'rb') as fp:
@@ -399,14 +399,14 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
     modal_additional_checks = browser.find_element_by_css_selector('.additional-checks-3')
     assert "in" in modal_additional_checks.get_attribute("class").split()
     modal_additional_checks_text = modal_additional_checks.text
-    assert "4 grants have incomplete recipient organisation information" in modal_additional_checks_text
+    assert "4 grants do not have recipient organisation location information" in modal_additional_checks_text
     assert "grants/0/recipientOrganization/0/id" in modal_additional_checks_text
     table_rows = browser.find_elements_by_css_selector('.additional-checks-3 tbody tr')
     assert len(table_rows) == 4
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text'), [
-    ('WellcomeTrust-grants_fixed_2_grants.json', '360Giving JSON Package Schema')
+    ('fundingproviders-grants_fixed_2_grants.json', '360Giving JSON Package Schema')
     ])
 def test_check_schema_link_on_result_page(server_url, browser, httpserver, source_filename, expected_text):
     with open(os.path.join('cove_360', 'fixtures', source_filename), 'rb') as fp:
@@ -488,3 +488,16 @@ def test_favicon(server_url, browser):
     # we should not have a favicon link just now
     with pytest.raises(NoSuchElementException):
         browser.find_element_by_xpath("//link[@rel='icon']")
+
+
+def test_explore_360_sample_data_link(server_url, browser):
+    browser.get(server_url)
+    browser.find_element_by_partial_link_text('loading some sample data.').click()
+    time.sleep(0.5)
+    body_text = browser.find_element_by_tag_name('body').text
+
+    assert 'Data Summary' in body_text
+    assert 'Sorry we can\'t process that data' not in body_text
+    # Show sample data link in the home page only
+    with pytest.raises(NoSuchElementException):
+        browser.find_element_by_partial_link_text('loading some sample data.')

@@ -18,6 +18,6 @@ def step_openag_org_id_prefix_expected(context, attribute):
             if attr_id.startswith(prefix):
                 break
         else:
-            errors.append({'message': fail_msg.format(attribute, attr_id),
+            errors.append({'explanation': fail_msg.format(attribute, attr_id),
                            'path': '{}/@{}'.format(get_child_full_xpath(context.xml, xpath), attribute)})
     return context, errors

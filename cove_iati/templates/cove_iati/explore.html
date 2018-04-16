@@ -69,7 +69,6 @@
           {% else %}
             <p class="explanation"></p>
             {% if conversion_error %}
-                <p>{% blocktrans %}{% endblocktrans %}</p>
                 {% include 'error_extra.html' %}
             {% endif %}
           {% endif %}
@@ -110,7 +109,7 @@
         {% else %}
           {% trans "Congratulations! Your data is valid against" %}
         {% endif %}
-        <a href=""> IATI Schema</a>.
+          <a href="http://iatistandard.org/203/schema/">IATI Schema version 2.03</a>.
         </p>
         <div class="explore-help"></div>
         {% if validation_errors %}
@@ -132,8 +131,15 @@
     <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#rulesets-body">
       <h3 class="panel-title panel-title-explore">
         {% if ruleset_errors %}
-           <span class="font-tick cross" aria-hidden="true"></span>
-           {% trans "Ruleset Errors " %}<small>{% blocktrans count n_errors=ruleset_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</small>
+          {% if ruleset_errors.0.exception %}
+            <span class="glyphicon glyphicon-warning-sign text-warning" aria-hidden="true"></span>
+            {% trans "Ruleset Errors " %}
+            <small><strong>{% trans "Failed" %}</strong></small>
+          {% else %}
+            <span class="font-tick cross" aria-hidden="true"></span>
+            {% trans "Ruleset Errors " %}
+            <small><strong>{% blocktrans count n_errors=ruleset_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</strong></small>
+          {% endif %}
         {% else %}
            <span class="font-tick tick" aria-hidden="true"></span>
           {% trans "Ruleset Checks" %}
@@ -145,16 +151,27 @@
       <div class="panel-body">
         <p class="explanation">
         {% if ruleset_errors %}
-            {% trans "Sorry your data contains ruleset errors" %}
+          {% if ruleset_errors.0.exception %}
+              {% trans "There was a problem running ruleset checks." %}</p>
+            {% if validation_errors %}
+              <br>
+              <p>{% trans "This may be due to validation errors in your data, please fix them and try again." %}</p>
+            {% endif %}
+          {% else %}
+            {% trans "Sorry your data contains ruleset errors" %}</p>
+            <button name="ruleset-table-toggle" class="btn btn-success btn-sm pull-right">See same results <strong>by activity</strong></button>
+          {% endif %}
         {% else %}
-          {% trans "Congratulations! Your data passes all IATI ruleset checks" %}
+        <p class="explanation">{% trans "Congratulations! Your data passes all IATI ruleset checks" %}</p>
         {% endif %}
-        </p>
-        {% if ruleset_errors %}
+        {% if ruleset_errors and not ruleset_errors.0.exception %}
           <br>
           <p class="explanation">&nbsp;{% trans "There are some <strong>ruleset errors</strong> in your data, please check them in the table below." %}</p>
           <br>
-          {% include "cove_iati/ruleset_table.html" %}
+          <h4 class="noscript-notice">Results group by Ruleset</h2>
+          {% include "cove_iati/ruleset_table_by_rule.html" %}
+          <h4 class="noscript-notice">Results group by Activity</h2>
+          {% include "cove_iati/ruleset_table_by_activity.html" %}
         {% endif %}
       </div>
     </div>
@@ -216,10 +233,25 @@
     $("[data-toggle='collapse']").click(function() {
       var $this = $(this);
       if($this.attr("aria-expanded") === "true"){
-        $this.find('.glyphicon-collapse-up').removeClass('glyphicon-collapse-up').addClass('glyphicon-collapse-down')
+          $this.find('.glyphicon-collapse-up').removeClass('glyphicon-collapse-up').addClass('glyphicon-collapse-down')
       } else {
-        $this.find('.glyphicon-collapse-down').removeClass('glyphicon-collapse-down').addClass('glyphicon-collapse-up')
+          $this.find('.glyphicon-collapse-down').removeClass('glyphicon-collapse-down').addClass('glyphicon-collapse-up')
       }
+    });
+    $("[name='ruleset-table-toggle']").click(function() {
+        var $tableByRule = $('#ruleset-by-rule');
+        var $tableByActivity = $('#ruleset-by-activity');
+
+        if ($($tableByActivity).is(":visible")){
+            $($tableByActivity).hide();
+            $($tableByRule).fadeIn('slow');
+            $(this).html('See same results <strong>by activity</strong>');
+        }
+        else {
+            $($tableByRule).hide();
+            $($tableByActivity).fadeIn('slow');
+            $(this).html('See same results <strong>by ruleset</strong>');
+        }
     });
     function expand_all() {
         $('.collapse').collapse('show');

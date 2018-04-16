@@ -3,6 +3,8 @@
 {% load static from staticfiles %}
 
 {% block after_head %}
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
   <script src="https://use.typekit.net/xpw3jps.js"></script>
   <script>try{Typekit.load({ async: true });}catch(e){}</script>
 {% endblock %}
@@ -81,7 +83,7 @@
 <li><a href="http://standard.open-contracting.org/latest/en/support/">{% trans "Support" %}</a></li>
 {% endblock %}
 
-{% block introduction %}
+{% block bottomcontent1 %}
 <div class="row" id="introduction">
   <div class="col-sm-6">
     <div class="panel panel-default">
@@ -111,7 +113,7 @@
 </div>
 {% endblock %}
 
-{% block howToUse %}
+{% block bottomcontent2 %}
 <div class="row" id="how-to-use">
   <div class="col-xs-12">
     <div class="panel panel-default">
@@ -134,4 +136,8 @@
   </div>
 </div>
 
+{% endblock %}
+
+{% block bottomcontent3 %}	
+{% include "cove_ocds/more_info.html" %}
 {% endblock %}

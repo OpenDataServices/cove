@@ -97,6 +97,21 @@ ul.pagination a{
 	margin-top:-5px;
 }
 
+table tbody tr td.no-border-top {
+	border-top:none;
+}
+
+table tbody tr td.white-background {
+	background-color:#fff;
+}
+
+table#ruleset-by-activity {
+	display:none;
+}
+
+.noscript-notice {
+	display:none;
+}
 ////////////
 
 $web-font-path: "https://fonts.googleapis.com/css?family=Lato:400,700,400italic" !default;

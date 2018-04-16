@@ -1,7 +1,9 @@
 import datetime
 import strict_rfc3339
-from functools import wraps  # use this to preserve function signatures and docstrings
+from functools import lru_cache, wraps  # use this to preserve function signatures and docstrings
 from decimal import Decimal
+
+import requests
 
 from . exceptions import UnrecognisedFileType
 
@@ -12,7 +14,7 @@ def ignore_errors(f):
         if ignore_errors:
             try:
                 return f(json_data, *args, **kwargs)
-            except (KeyError, TypeError, IndexError, AttributeError):
+            except (KeyError, TypeError, IndexError, AttributeError, ValueError):
                 return return_on_error
         else:
             return f(json_data, *args, **kwargs)
@@ -84,3 +86,8 @@ def decimal_default(o):
         else:
             return NumberStr(o)
     raise TypeError(repr(o) + " is not JSON serializable")
+
+
+@lru_cache(maxsize=64)
+def cached_get_request(url):
+    return requests.get(url)

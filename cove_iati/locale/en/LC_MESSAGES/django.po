@@ -1,0 +1,228 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-27 14:53+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: cove_iati/lib/iati.py:29 cove_iati/lib/iati.py:39
+msgid "Sorry we can't process that data"
+msgstr ""
+
+#: cove_iati/lib/iati.py:31 cove_iati/lib/iati.py:41
+msgid "Try Again"
+msgstr ""
+
+#: cove_iati/lib/iati.py:32
+msgid ""
+"We think you tried to upload a XML file, but it is not well formed XML.\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
+"span> <strong>Error message:</strong> {}"
+msgstr ""
+
+#: cove_iati/lib/iati.py:42
+msgid ""
+"We think you tried to upload a XML file, but the encoding is incorrect.\n"
+"\n"
+"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
+"span> <strong>Error message:</strong> {}"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/base.html:30
+msgid "How to use "
+msgstr ""
+
+#: cove_iati/templates/cove_iati/base.html:37
+msgid "Bootstrap theme "
+msgstr ""
+
+#: cove_iati/templates/cove_iati/base.html:37
+msgid ""
+"\n"
+"by Bootswatch"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:29
+msgid "A file was "
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:31
+msgid "downloaded from "
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:33
+msgid "uploaded "
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:35
+msgid "on "
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:39
+msgid "Convert to Spreadsheet"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:58
+msgid "Converted to "
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:60
+#, python-format
+msgid "%(n_warnings)s Error"
+msgid_plural "%(n_warnings)s Errors"
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove_iati/templates/cove_iati/explore.html:68
+msgid "In order to validate your data we needed to convert it to XML."
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:77
+msgid "Conversion <strong>errors:</strong>"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:96
+msgid "Invalid against Schema "
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:96
+#: cove_iati/templates/cove_iati/explore.html:141
+#, python-format
+msgid " %(n_errors)s Error."
+msgid_plural "%(n_errors)s Errors "
+msgstr[0] ""
+msgstr[1] ""
+
+#: cove_iati/templates/cove_iati/explore.html:99
+msgid "Valid against Schema"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:108
+msgid "Sorry your data is invalid against"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:110
+msgid "Congratulations! Your data is valid against"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:117
+msgid ""
+"There are some <strong>validation errors</strong> in your data, please check "
+"them in the table below."
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:136
+#: cove_iati/templates/cove_iati/explore.html:140
+msgid "Ruleset Errors "
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:137
+msgid "Failed"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:145
+msgid "Ruleset Checks"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:155
+msgid "There was a problem running ruleset checks."
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:158
+msgid ""
+"This may be due to validation errors in your data, please fix them and try "
+"again."
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:161
+msgid "Sorry your data contains ruleset errors"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:165
+msgid "Congratulations! Your data passes all IATI ruleset checks"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:169
+msgid ""
+"There are some <strong>ruleset errors</strong> in your data, please check "
+"them in the table below."
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:185
+msgid "Download and Share"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:192
+msgid "The following files are available to download:"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:195
+msgid "Original file"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:215
+msgid "Use the following url to share these results:"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:221
+msgid ""
+"After 7 days all uploaded data is deleted from our servers, and the results "
+"will no longer be available. Anyone using the link to this page after that "
+"will be shown a message that tells them the file has been removed."
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:222
+msgid ""
+"These results will be available for 7 days from the day the data was first "
+"uploaded. You can revisit these results until then."
+msgstr ""
+
+#: cove_iati/templates/cove_iati/ruleset_table_by_activity.html:6
+#: cove_iati/templates/cove_iati/ruleset_table_by_rule.html:8
+msgid "Activity"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/ruleset_table_by_activity.html:7
+#: cove_iati/templates/cove_iati/ruleset_table_by_rule.html:6
+msgid "Ruleset"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/ruleset_table_by_activity.html:8
+#: cove_iati/templates/cove_iati/ruleset_table_by_rule.html:7
+msgid "Rule"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/ruleset_table_by_activity.html:9
+#: cove_iati/templates/cove_iati/ruleset_table_by_rule.html:9
+msgid "Explanation"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/ruleset_table_by_activity.html:10
+#: cove_iati/templates/cove_iati/ruleset_table_by_rule.html:10
+msgid "Path"
+msgstr ""
+
+#: cove_iati/views.py:32
+msgid "Upload a file (.csv, .xlsx, .xml)"
+msgstr ""
+
+#: cove_iati/views.py:41
+msgid "Supply a URL"
+msgstr ""
+
+#: cove_iati/views.py:46
+msgid "Paste (XML only)"
+msgstr ""

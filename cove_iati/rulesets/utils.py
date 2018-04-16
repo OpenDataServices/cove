@@ -49,7 +49,7 @@ def register_ruleset_errors(namespaces=None):
                     if not nsmap.get(ns):
                         msg = 'rule not applied: the data does not define "{}" namespace (@xmlns:{})'
                         errors = [{
-                            'message': msg.format(ns, ns),
+                            'explanation': msg.format(ns, ns),
                             'path': '/iati-activities/@xmlns'
                         }]
                         raise RuleSetStepException(context, errors)

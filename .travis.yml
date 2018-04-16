@@ -5,7 +5,6 @@ addons:
 language: python
 
 python:
-  - "3.4"
   - "3.5"
 
 before_install:
@@ -14,22 +13,36 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install oracle-java8-installer gettext build-essential libxml2-dev libxslt1-dev python3-dev
   - sudo update-java-alternatives -s java-8-oracle
+  # Install translate toolkit to get pocount binary
+  - sudo apt-get install translate-toolkit
 
 install: 
   - "pip install -r requirements_dev.txt"
   - "pip install Cython"
   - "pip install -r requirements_iati.txt"
   - wget "https://github.com/validator/validator/releases/download/16.3.3/vnu.jar_16.3.3.zip"; unzip vnu.jar_16.3.3.zip
-  - "wget https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip; unzip chromedriver_linux64.zip -d chromedriver; export PATH=$PATH:`pwd`/chromedriver"
+  - "wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip; unzip chromedriver_linux64.zip -d chromedriver; export PATH=$PATH:`pwd`/chromedriver"
+  - "wget http://travis:$TRAVIS_SECRET_FILES_PASSWORD@travis-secret-files.live3.default.opendataservices.uk0.bigv.io/ocdstestdata.zip"
+  - "unzip ocdstestdata.zip"
+  - "wget http://travis:$TRAVIS_SECRET_FILES_PASSWORD@travis-secret-files.live3.default.opendataservices.uk0.bigv.io/360testdata.zip"
+  - "unzip 360testdata.zip"
+  - "wget http://travis:$TRAVIS_SECRET_FILES_PASSWORD@travis-secret-files.live3.default.opendataservices.uk0.bigv.io/secret_data_test_archive_3.zip"
+  - "unzip secret_data_test_archive_3.zip"
 
 script:
-  - "if [ \"$TRAVIS_PYTHON_VERSION\" != \"3.4\" ]; then flake8 .; fi"
+  # Check that messages used by OCDS CoVE are translated
+  - "python manage.py makemessages -l es"
+  - "[ \"`pocount --incomplete cove/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
+  - "[ \"`pocount --incomplete cove_ocds/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
+  - "flake8 ."
   - "DJANGO_SETTINGS_MODULE=cove.settings py.test -n 2 cove --cov --cov-report="
-  - "if [ \"$TRAVIS_PYTHON_VERSION\" != \"3.4\" ]; then DJANGO_SETTINGS_MODULE=cove_360.settings py.test -n 2 cove_360 --cov-append --cov --cov-report=; fi"
+  - "DJANGO_SETTINGS_MODULE=cove_360.settings py.test -n 2 cove_360 --cov-append --cov --cov-report="
   - "DJANGO_SETTINGS_MODULE=cove_ocds.settings py.test -n 2 cove_ocds --cov-append --cov"
   - "DJANGO_SETTINGS_MODULE=cove_iati.settings py.test -n 2 cove_iati --cov-append --cov"
   - "python manage.py migrate; python manage.py compilemessages" 
-  - "if [ \"$TRAVIS_PYTHON_VERSION\" != \"3.4\" ]; then DJANGO_SETTINGS_MODULE=cove_360.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver & (sleep 10s; java -jar dist/vnu.jar 'http://localhost:8000/' 'http://localhost:8000/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_360/fixtures/WellcomeTrust-grants_2_grants.csv' 'http://localhost:8000/common_errors/' 'http://localhost:8000/additional_checks/'); fi"
+  - "DJANGO_SETTINGS_MODULE=cove_360.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver & (sleep 10s; java -jar dist/vnu.jar 'http://localhost:8000/' 'http://localhost:8000/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_360/fixtures/fundingproviders_grants_2_grants.csv
+  ' 'http://localhost:8000/common_errors/' 'http://localhost:8000/additional_checks/')"
   - "DJANGO_SETTINGS_MODULE=cove_ocds.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver localhost:8001 & (sleep 10s; java -jar dist/vnu.jar http://localhost:8001/ 'http://localhost:8001/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_ocds/fixtures/tenders_releases_2_releases.json')"
+  - "python secret_data_test.py"
 
 after_success: coveralls

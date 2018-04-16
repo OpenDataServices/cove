@@ -1,4 +1,12 @@
-from cove import settings
+import sys
+if "pytest" not in sys.modules:
+    # Check that we can import defusedexpat, as this will protect us against
+    # some XML attacks in xmltodict
+    # Needs a noqa comment as we don't actually use it here
+    import defusedexpat  # noqa: F401
+
+# Needs a noqa comment to come after the above import
+from cove import settings  # noqa: E408
 
 PIWIK = settings.PIWIK
 GOOGLE_ANALYTICS_ID = settings.GOOGLE_ANALYTICS_ID
@@ -38,7 +46,7 @@ COVE_CONFIG = {
     'core_schema': {'activity': 'iati-activities-schema.xsd', 'organization': 'iati-organisations-schema.xsd'},
     'supplementary_schema': {'common': 'iati-common.xsd', 'xml': 'xml.xsd'},
     'schema_host': 'https://raw.githubusercontent.com/IATI/IATI-Schemas/',
-    'schema_version': '2.02',
+    'schema_version': '2.03',
     'schema_directory': 'iati_schemas',
     'root_list_path': 'iati-activity',
     'root_id': None,

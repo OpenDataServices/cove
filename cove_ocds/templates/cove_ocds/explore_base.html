@@ -26,6 +26,10 @@
         <p>This data has been checked against <a href="{{ schema_url }}">OCDS {% if releases %}release {% endif %}{% if records %}record {% endif %}package schema version {{ version_used_display }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
         <br>
         <strong>Validate and explore same data against a different version of the schema</strong>
+        <div class="ttip">
+          <sup><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></sup>
+          <span class="ttiptext">Switching the schema version will result in changes to CoVE output and conversions. If you revisit or share this URL, the lastest version selected will be used to check your data</span>
+        </div>
         <br>
         <br>
         <div>
@@ -39,7 +43,8 @@
             {% endfor %}
             </select>
               {# Translators: Label of a button that triggers search #}
-              <input class="btn btn-primary" type="submit" value={% trans "Go" %} /><img id="small-loading" style="display: none; margin:0; margin-left:2%" class="spinner" src="//i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="spinner" width="20" height="20">
+              <input class="btn btn-primary" type="submit" value={% trans "Go" %} />
+              <img id="small-loading" style="display: none; margin:0; margin-left:2%" class="spinner" src="//i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="spinner" width="20" height="20">
           </form>
         </div>
       </div>
@@ -235,6 +240,28 @@
   </div>
 {% endif %}
 
+{% if structure_warnings %}
+    <a name="structure-warnings" class="anchor"></a>
+    <div class="panel panel-danger">
+      <div id="structure-warnings-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="structureWarningsTable" data-toggle="collapse" data-target="#structureWarningsTable">
+        <h4 class="panel-title">
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Structure Warnings' %}</span>
+        </h4>
+      </div>
+      <div id="structureWarningsTable" class="collapse in">
+        <div class="panel-body">
+          <p class="explanation">Fixing the following issues will improve the interoperability of your data.</p>
+          <br>
+          {% with structure_warnings=structure_warnings %}
+            {% if structure_warnings.missing_ids %}
+              {% include "cove_ocds/ocds_missing_ids_table.html" %}
+            {% endif %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+{% endif %}
+
 {% if additional_closed_codelist_values %}
     <a name="additional-fields" class="anchor"></a>
     <div class="panel panel-danger">
@@ -246,9 +273,9 @@
       <div id="additionalClosedCodelist" class="collapse in">
         <div class="panel-body">
           The fields below use closed codelists. When using these fields, you <strong> must </strong> use one of the pre-defined codelist values. If you use a value that is not on the relevant codelist, your data will not pass validation.
-        {% with additional_codelist_values=additional_closed_codelist_values %}
-        {% include "additional_codelist_values.html" %}
-        {% endwith%}
+          {% with additional_codelist_values=additional_closed_codelist_values %}
+          <div>{% include "additional_codelist_values.html" %}</div>
+          {% endwith %}
           You may need to create a mapping between your local codes and the OCDS closed codelists to address these errors. In most cases, there will be a ‘detail’ field where you can also include your local codes. If you have already completed a mapping, please review the spelling and capitalisation used in these closed codelist fields.
         </div>
       </div>
@@ -311,11 +338,6 @@
 {% block explore_additional_content %}
 {% endblock %}
 
-{% block introduction %}
-{% endblock %}
-
-{% block howToUse %}
-{% endblock %}
 
 <div class="above-footer">
   <h2>{% trans "Save or Share these results" %}</h2>
@@ -330,6 +352,12 @@
 
 {% endblock explore_content %}
 
+{% block bottomcontent1 %}
+{% endblock %}
+{% block bottomcontent2 %}
+{% endblock %}
+
+
 {% block extrafooterscript %}
   {{ block.super }} 
   <script type="text/javascript">
@@ -338,6 +366,30 @@
       });
       $("#validationTable").on("show.bs.collapse", function(){
         $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Validation Errors" %}</h4>');
+      });
+      $("#conformanceRulesTable").on("hide.bs.collapse", function(){
+        $("#conformance-rules-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Conformance (Rules)" %}');
+      });
+      $("#conformanceRulesTable").on("show.bs.collapse", function(){
+        $("#conformance-rules-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Conformance (Rules)" %}');
+      });
+      $("#OCDSprefixesTable").on("hide.bs.collapse", function(){
+        $(".view-all").html('<small>{% trans "View all errors &#9660;" %}</small>');
+      });
+      $("#OCDSprefixesTable").on("show.bs.collapse", function(){
+        $(".view-all").html('<small>{% trans "View all errors &#9650;" %}</small>');
+      });
+      $("#structureWarningsTable").on("hide.bs.collapse", function(){
+        $("#structure-warnings-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Structure Warnings" %}');
+      });
+      $("#structureWarningsTable").on("show.bs.collapse", function(){
+        $("#structure_warnings-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Structure Warnings" %}');
+      });
+      $("#OCDSmissingIdTable").on("hide.bs.collapse", function(){
+        $(".view-all").html('<small>{% trans "View all errors &#9660;" %}</small>');
+      });
+      $("#OCDSmissingIdTable").on("show.bs.collapse", function(){
+        $(".view-all").html('<small>{% trans "View all errors &#9650;" %}</small>');
       });
       $("#additionalFieldTable").on("hide.bs.collapse", function(){
         $("#additional-fields-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Additional Fields (fields in data not in schema)" %}');

@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 
 from cove.input.models import SuppliedData
+from django.views.decorators.csrf import csrf_exempt
 
 
 class UploadForm(forms.ModelForm):
@@ -37,6 +38,7 @@ default_form_classes = {
 }
 
 
+@csrf_exempt
 def data_input(request, form_classes=default_form_classes, text_file_name='test.json'):
     forms = {form_name: form_class() for form_name, form_class in form_classes.items()}
     request_data = None

@@ -19,8 +19,8 @@ tenders_releases_2_releases_with_deprecated_fields.json
 Source: Same data as tenders_releases_2_releases.json, but edited such that it contain deprecated fields.
 License: http://data.gc.ca/eng/open-government-licence-canada
 
-tenders_releases_1_release_with_extensions_version_1_1.json
-Source: Same data as tenders_releases_2_releases.json, but edited such that it contains extensions, and is missing some fields.
+tenders_releases_1_release_with_extensions_1_1.json
+Source: Same data as tenders_releases_2_releases.json, but edited such that it contains extensions, and is missing some fields, and has some additional fields added.
 License: http://data.gc.ca/eng/open-government-licence-canada
 
 tenders_releases_1_release_with_extensions_new_layout.json
@@ -33,6 +33,14 @@ License: http://data.gc.ca/eng/open-government-licence-canada
 
 tenders_releases_1_release_with_all_invalid_extensions.json
 Source: Same data as tenders_releases_2_releases.json, but edited such that it contains valid and invalid extensions.
+License: http://data.gc.ca/eng/open-government-licence-canada
+
+tenders_1_release_with_extensions_1_1_missing_party_scale.json
+Source: Same data as tenders_releases_2_releases.json, but edited such that it contains valid extensions, and with some additional fields added.
+License: http://data.gc.ca/eng/open-government-licence-canada
+
+cove_ocds/fixtures/tenders_records_1_record_with_invalid_extensions.json
+Source: Same data as tenders_releases_2_releases.json, but edited to be a record, and with some additional fields added.
 License: http://data.gc.ca/eng/open-government-licence-canada
 
 ocds_release_nulls.json
