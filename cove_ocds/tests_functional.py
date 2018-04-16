@@ -183,7 +183,6 @@ def test_500_error(server_url, browser):
                                                                     'A tender process may be divided into lots',
                                                                     'copy of the schema with extension',
                                                                     'Validation Errors',
-                                                                    '\'buyer:name\' is missing but required',
                                                                     '\'items:id\' is missing but required'], ['fetching failed'], True),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Schema Extensions',
                                                                  'https://raw.githubusercontent.com/open-contracting/',
