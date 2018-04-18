@@ -385,6 +385,11 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
             if new_message:
                 message = new_message
 
+        if e.validator == 'oneOf' and e.validator_value[0] == {'format': 'date-time'}:
+            # Give a nice date related error message for 360Giving date `oneOf`s.
+            message = validation_error_lookup['date-time']
+            validator_type = 'date-time'
+
         value = {"path": path}
         cell_reference = cell_src_map.get(path)
 
