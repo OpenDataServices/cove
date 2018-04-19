@@ -42,13 +42,13 @@ def server_url(request, live_server):
                                                   'The grants were awarded in GBP with a total value of £662,990',
                                                   'individual awards ranging from £152,505 (lowest) to £178,990 (highest)',
                                                   'Convert to Spreadsheet',
-                                                  'Invalid against Schema 13 Errors',
+                                                  'Invalid against Schema 14 Errors',
                                                   'There are some validation errors in your data, please check them in the table below',
                                                   'Non-unique ID Values (first 3 shown)',
                                                   'Grant identifiers:  2',
                                                   'Funder organisation identifiers:  1',
                                                   '360G-fundingproviders-000002/X/00/X'], True),
-    ('fundingproviders-grants_broken_grants.json', ['Invalid against Schema 13 Errors',
+    ('fundingproviders-grants_broken_grants.json', ['Invalid against Schema 14 Errors',
                                                  'Review 4 Grants',
                                                  'Funder organisation identifiers:  2',
                                                  'Recipient organisation identifiers:  2',
@@ -381,17 +381,17 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
             section.click()
         time.sleep(0.5)
 
-    browser.find_element_by_css_selector('a[data-target=".validation-errors-2"]').click()
+    browser.find_element_by_css_selector('a[data-target=".validation-errors-1"]').click()
 
-    modal = browser.find_element_by_css_selector('.validation-errors-2')
+    modal = browser.find_element_by_css_selector('.validation-errors-1')
     assert "in" in modal.get_attribute("class").split()
     modal_text = modal.text
     assert "24/07/2014" in modal_text
     assert "grants/0/awardDate" in modal_text
-    table_rows = browser.find_elements_by_css_selector('.validation-errors-2 tbody tr')
+    table_rows = browser.find_elements_by_css_selector('.validation-errors-1 tbody tr')
     assert len(table_rows) == 4
 
-    browser.find_element_by_css_selector('div.modal.validation-errors-2 button.close').click()
+    browser.find_element_by_css_selector('div.modal.validation-errors-1 button.close').click()
     browser.find_element_by_css_selector('a[data-target=".additional-checks-3"]').click()
 
     modal_additional_checks = browser.find_element_by_css_selector('.additional-checks-3')
