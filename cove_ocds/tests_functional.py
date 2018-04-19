@@ -212,6 +212,8 @@ def test_500_error(server_url, browser):
                                                                      '400: bad request'], ['copy of the schema with extension'], True),
     ('tenders_releases_2_releases_1_1_tenderers_with_missing_ids.json', ['We found 6 objects within arrays in your data without an id property',
                                                                          'Structure Warnings'], [], True),
+    ('tenders_releases_7_releases_check_ocids.json', ['Conformance (Rules)',
+                                                      '6 of your ocid fields have a problem'], [], True),
     ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], [], True),
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
