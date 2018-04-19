@@ -19,7 +19,7 @@
 <tr>
   {% if error.message_safe %}
     <td>
-      <strong>{{ error.message_safe | safe }}</strong>
+      <p> <strong>{{ error.message_safe | safe }}</strong> </p>
       {% if error.message_type in common_error_types %}
       <a href="{% url 'common_errors' %}#{{error.message_type}}" target="_blank">(more info)</a>
       {% endif %}
