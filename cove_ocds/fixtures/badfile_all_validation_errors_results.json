@@ -119,5 +119,6 @@
   "additional_open_codelist_values": {},
   "deprecated_fields": [],
   "common_error_types": [],
-  "schema_url": "http://standard.open-contracting.org/schema/1__1__2/release-package-schema.json"
+  "schema_url": "http://standard.open-contracting.org/schema/1__1__3/release-package-schema.json",
+  "ocds_prefixes_bad_format": []
 }

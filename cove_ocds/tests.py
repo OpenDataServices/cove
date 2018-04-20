@@ -15,7 +15,7 @@ from django.core.management.base import CommandError
 
 import cove.lib.common as cove_common
 from .lib.api import APIException, context_api_transform, ocds_json_output
-from .lib.ocds import get_releases_aggregates
+from .lib.ocds import get_releases_aggregates, get_bad_ocds_prefixes
 from .lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
@@ -1082,3 +1082,26 @@ def test_get_json_data_missing_ids():
     missin_ids_paths = cove_common.get_json_data_missing_ids(user_data_paths, schema_obj)
 
     assert missin_ids_paths == results
+
+
+def test_bad_ocds_prefixes():
+    file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_7_releases_check_ocids.json')
+    results = [
+        ('bad-prefix-000001', 'releases/0/ocid'),
+        ('bad-prefix-000002', 'releases/1/ocid'),
+        ('bad-prefix-000002', 'releases/2/ocid'),
+        ('ocds-bad-000004', 'releases/4/ocid'),
+        ('ocds-bad-000004', 'releases/5/ocid'),
+        ('ocds-bad-000004', 'releases/6/ocid')
+    ]
+
+    with open(os.path.join(file_name)) as fp:
+        user_data = json.load(fp)
+
+    user_data_ocids = []
+    for rel in user_data['releases']:
+        user_data_ocids.append(rel['ocid'])
+
+    assert len(user_data_ocids) == 7  # 1 good, 6 bad ocds prefixes
+    assert 'ocds-00good-000003' in user_data_ocids  # good ocds prefix
+    assert get_bad_ocds_prefixes(user_data) == results
