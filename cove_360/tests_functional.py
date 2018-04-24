@@ -473,7 +473,7 @@ def test_common_errors_page(server_url, browser):
     ('required'),
     ('enum'),
     ('string'),
-    ('integer')
+    ('number')
     ])
 def test_common_errors_page_anchors(server_url, browser, anchor_text):
     # Checks we have sections for each our error messages
