@@ -195,7 +195,7 @@ def common_checks_context(upload_dir, json_data, schema_obj, schema_name, contex
                                                          extra_checkers=extra_checkers)
         if cache:
             with open(validation_errors_path, 'w+') as validation_error_fp:
-                validation_error_fp.write(json.dumps(validation_errors, default=decimal_default))
+                json.dump(validation_errors, validation_error_fp, sort_keys=True, indent=2, default=decimal_default)
 
     extensions = None
     if getattr(schema_obj, 'extensions', None):
