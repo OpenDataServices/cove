@@ -47,7 +47,7 @@ for original_file in glob.glob('360/*'):
         response = requests.post('http://localhost:8008/', files={'original_file': open(original_file, 'rb')}, data={'csrfmiddlewaretoken': 'foo'}, headers={'Cookie': 'csrftoken=' + 'foo'})
 
         parsed = urlparse(response.url)
-        new_tuple = parsed.scheme, parsed.netloc, '/media/' + parsed.path.split('/')[-1] + '/validation_errors-2.json', '', '', ''
+        new_tuple = parsed.scheme, parsed.netloc, '/media/' + parsed.path.split('/')[-1] + '/validation_errors-3.json', '', '', ''
         new_url = urlunparse(new_tuple)
         output_file.write(requests.get(new_url).text)
 
