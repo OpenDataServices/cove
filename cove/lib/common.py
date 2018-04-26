@@ -104,6 +104,7 @@ def _deref_schema(schema_str, schema_host):
     repr(deref_obj)
     return deref_obj
 
+
 class SchemaJsonMixin():
     @cached_property
     def release_schema_str(self):
