@@ -264,6 +264,28 @@
     </div>
 {% endif %}
 
+{% if conformance_errors %}
+    <a name="conformance-rules" class="anchor"></a>
+    <div class="panel panel-danger">
+      <div id="conformance-rules-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="conformanceRulesTable" data-toggle="collapse" data-target="#conformanceRulesTable">
+        <h4 class="panel-title">
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Conformance (Rules)' %}</span>
+        </h4>
+      </div>
+      <div id="conformanceRulesTable" class="collapse in">
+        <div class="panel-body">
+          <p class="explanation">Fixing the following issues will improve the interoperability of your data.</p>
+          <br>
+          {% with conformance_errors=conformance_errors %}
+            {% if conformance_errors.ocds_prefixes_bad_format %}
+              {% include "cove_ocds/ocid_prefixes_table.html" %}
+            {% endif %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+{% endif %}
+
 {% if additional_closed_codelist_values %}
     <a name="additional-fields" class="anchor"></a>
     <div class="panel panel-danger">
@@ -376,7 +398,7 @@
         $("#conformance-rules-panel .our-title").html('<span class="glyphicon glyphicon-collapse-up"></span>{% trans "Conformance (Rules)" %}');
       });
       $("#OCDSprefixesTable").on("hide.bs.collapse", function(){
-        $(".view-all").html('<small>{% trans "View all errors &#9660;" %}</small>');
+        $(".view-all").html('<small>{% trans "view all errors &#9660;" %}</small>');
       });
       $("#OCDSprefixesTable").on("show.bs.collapse", function(){
         $(".view-all").html('<small>{% trans "View all errors &#9650;" %}</small>');
@@ -391,6 +413,12 @@
         $(".view-all").html('<small>{% trans "View all errors &#9660;" %}</small>');
       });
       $("#OCDSmissingIdTable").on("show.bs.collapse", function(){
+        $(".view-all").html('<small>{% trans "View all errors &#9650;" %}</small>');
+      });
+      $("#OCDSPrefixWarningsTable").on("hide.bs.collapse", function(){
+        $("#bad-ocds-prefix-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Quality Warnings" %}');
+      });
+      $("#OCDSprefixesTable").on("show.bs.collapse", function(){
         $(".view-all").html('<small>{% trans "View all errors &#9650;" %}</small>');
       });
       $("#additionalFieldTable").on("hide.bs.collapse", function(){

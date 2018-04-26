@@ -19,10 +19,12 @@
 <tr>
   {% if error.message_safe %}
     <td>
-      <strong>{{ error.message_safe | safe }}</strong>
-      {% if error.message_type in common_error_types %}
-      <a href="{% url 'common_errors' %}#{{error.message_type}}" target="_blank">(more info)</a>
-      {% endif %}
+      <p>
+        <strong>{{ error.message_safe | safe }}</strong>
+        {% if error.message_type in common_error_types %}
+          <a href="{% url 'common_errors' %}#{{error.message_type}}" target="_blank">(more info)</a>
+        {% endif %}
+      </p>
       {% if 'schema_title' in error %}
       <div class="well well-sm">
         <h4>{{ error.schema_title }}</h4>

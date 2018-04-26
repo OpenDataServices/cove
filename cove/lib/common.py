@@ -200,7 +200,7 @@ def common_checks_context(upload_dir, json_data, schema_obj, schema_name, contex
                                                          extra_checkers=extra_checkers)
         if cache:
             with open(validation_errors_path, 'w+') as validation_error_fp:
-                validation_error_fp.write(json.dumps(validation_errors, default=decimal_default))
+                json.dump(validation_errors, validation_error_fp, sort_keys=True, indent=2, default=decimal_default)
 
     extensions = None
     if getattr(schema_obj, 'extensions', None):
@@ -425,6 +425,12 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
                 message = message_template.format(header, null_clause)
             if message_safe_template:
                 message_safe = format_html(message_safe_template, header, null_clause)
+
+        if e.validator == 'oneOf' and e.validator_value[0] == {'format': 'date-time'}:
+            # Give a nice date related error message for 360Giving date `oneOf`s.
+            message = validation_error_template_lookup['date-time']
+            message_safe = format_html(validation_error_template_lookup_safe['date-time'])
+            validator_type = 'date-time'
 
         if not isinstance(e.instance, (dict, list)):
             value["value"] = e.instance

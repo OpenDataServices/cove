@@ -183,7 +183,6 @@ def test_500_error(server_url, browser):
                                                                     'A tender process may be divided into lots',
                                                                     'copy of the schema with extension',
                                                                     'Validation Errors',
-                                                                    'name is missing but required within buyer',
                                                                     'id is missing but required within items'], ['fetching failed'], True),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Schema Extensions',
                                                                  'https://raw.githubusercontent.com/open-contracting/',
@@ -213,6 +212,8 @@ def test_500_error(server_url, browser):
                                                                      '400: bad request'], ['copy of the schema with extension'], True),
     ('tenders_releases_2_releases_1_1_tenderers_with_missing_ids.json', ['We found 6 objects within arrays in your data without an id property',
                                                                          'Structure Warnings'], [], True),
+    ('tenders_releases_7_releases_check_ocids.json', ['Conformance (Rules)',
+                                                      '6 of your ocid fields have a problem'], [], True),
     ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], [], True),
     ('badfile_all_validation_errors.json', ['"" is too short. Strings must be at least one character. This error typically indicates a missing value.',
                                             'An identifier for this particular release of information.',
@@ -369,12 +370,12 @@ def test_validation_error_messages(url_input_browser):
         '<code>numberOfTenderers</code> is not a integer',
         '<code>amount</code> is not a number. Check that the value  doesn’t contain any characters other than 0-9 and dot (<code>.</code>).',
         '<code>ocid</code> is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
-        'For more information see the <a href="http://standard.open-contracting.org/latest/en/schema/identifiers/">Open Contracting Identifier guidance</a>',
+        'For more information see the <a href="http://standard.open-contracting.org/1.1/en/schema/identifiers/">Open Contracting Identifier guidance</a>',
         '<code>title</code> is not a string. Check that the value  has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
         '<code>parties</code> is not a JSON array',
         '<code>buyer</code> is not a JSON object',
         '<code>[]</code> is too short.',
-        'One or more values from the <a href="http://standard.open-contracting.org/latest/en/schema/codelists/#release-tag">releaseTag codelist</a>.',
+        'One or more values from the <a href="http://standard.open-contracting.org/1.1/en/schema/codelists/#release-tag">releaseTag codelist</a>.',
     ]:
         assert html in browser.page_source
 

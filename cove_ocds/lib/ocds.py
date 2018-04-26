@@ -1,5 +1,6 @@
 import json
 import collections
+import re
 
 import cove.lib.tools as tools
 from cove.lib.common import common_checks_context, get_additional_codelist_values
@@ -432,6 +433,7 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
             'additional_open_codelist_values': open_codelist_values
         })
 
+    context = add_conformance_rule_errors(context, json_data, schema_obj)
     return context
 
 
@@ -453,3 +455,55 @@ def get_records_aggregates(json_data):
         'count': count,
         'unique_ocids': unique_ocids,
     }
+
+
+def get_bad_ocds_prefixes(json_data):
+    '''Yield tuples with ('ocid', 'path/to/ocid') for ocids with malformed prefixes'''
+    prefix_regex = re.compile(r'^ocds-[a-zA-Z0-9]{6}-')
+    releases = json_data.get('releases', [])
+    records = json_data.get('records', [])
+    bad_prefixes = []
+
+    if releases and isinstance(releases, list):
+        for n_rel, release in enumerate(releases):
+            if not isinstance(release, dict):
+                continue
+            ocid = release.get('ocid', '')
+            if ocid and isinstance(ocid, str) and not prefix_regex.match(ocid):
+                bad_prefixes.append((ocid, 'releases/%s/ocid' % n_rel))
+
+    elif records and isinstance(records, list):
+        for n_rec, record in enumerate(records):
+            if not isinstance(record, dict):
+                continue
+            for n_rel, release in enumerate(record.get('releases', {})):
+                ocid = release.get('ocid', '')
+                if ocid and not prefix_regex.match(ocid):
+                    bad_prefixes.append((ocid, 'records/%s/releases/%s/ocid' % (n_rec, n_rel)))
+
+            compiled_release = record.get('compiledRelease', {})
+            if compiled_release:
+                ocid = compiled_release.get('ocid', '')
+                if ocid and not prefix_regex.match(ocid):
+                    bad_prefixes.append((ocid, 'records/%s/compiledRelease/ocid' % n_rec))
+                    bad_prefixes.append((ocid, 'records/%s/compiledRelease/ocid' % n_rec))
+
+    return bad_prefixes
+
+
+def add_conformance_rule_errors(context, json_data, schema_obj):
+    '''Return context dict augmented with conformance errors if any'''
+    ocds_prefixes_bad_format = get_bad_ocds_prefixes(json_data)
+
+    if ocds_prefixes_bad_format:
+        ocid_schema_description = schema_obj.get_release_schema_obj()['properties']['ocid']['description']
+        ocid_info_index = ocid_schema_description.index('For more information')
+        ocid_description = ocid_schema_description[:ocid_info_index]
+        ocid_info_url = ocid_schema_description[ocid_info_index:].split('[')[1].split(']')[1][1:-1]
+        context['conformance_errors'] = {
+            'ocds_prefixes_bad_format': ocds_prefixes_bad_format,
+            'ocid_description': ocid_description,
+            'ocid_info_url': ocid_info_url
+        }
+
+    return context
