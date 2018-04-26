@@ -1,0 +1,124 @@
+{
+  "extensions": {},
+  "additional_closed_codelist_values": {
+    "releases/tender/value/currency": {
+      "isopen": false,
+      "codelist": "currency.csv",
+      "codelist_url": "https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/currency.csv",
+      "path": "releases/tender/value",
+      "values": [
+        "badCurrencyCode"
+      ],
+      "field": "currency"
+    }
+  },
+  "validation_errors": [
+    {
+      "value": "",
+      "description": "'' is too short",
+      "path": "releases/0/id",
+      "field": "releases/id",
+      "type": "minLength"
+    },
+    {
+      "value": "Should be integer.integer",
+      "description": "'Should be integer.integer' does not match '^(\\\\d+\\\\.)(\\\\d+)$'",
+      "path": "version",
+      "field": "version",
+      "type": "pattern"
+    },
+    {
+      "value": "This should be a number.",
+      "description": "'amount' is not a number. Check that the value  doesn\u2019t contain any characters other than 0-9 and dot ('.'). Number values should not be in quotes. ",
+      "path": "releases/0/tender/value/amount",
+      "field": "releases/tender/value/amount",
+      "type": "number"
+    },
+    {
+      "value": "This should be an object.",
+      "description": "'buyer' is not a JSON object",
+      "path": "releases/0/buyer",
+      "field": "releases/buyer",
+      "type": "object"
+    },
+    {
+      "value": "",
+      "description": "'id' is missing but required within 'tender'",
+      "path": "releases/0/tender",
+      "field": "releases/tender",
+      "type": "required"
+    },
+    {
+      "value": "",
+      "description": "'initiationType' is missing but required",
+      "path": "releases/0",
+      "field": "releases",
+      "type": "required"
+    },
+    {
+      "value": "This should be an integer.",
+      "description": "'numberOfTenderers' is not a integer. Check that the value  doesn\u2019t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ",
+      "path": "releases/0/tender/numberOfTenderers",
+      "field": "releases/tender/numberOfTenderers",
+      "type": "integer"
+    },
+    {
+      "value": 3,
+      "description": "'ocid' is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with '\\'",
+      "path": "releases/0/ocid",
+      "field": "releases/ocid",
+      "type": "string"
+    },
+    {
+      "value": "This should be an array.",
+      "description": "'parties' is not a JSON array",
+      "path": "releases/0/parties",
+      "field": "releases/parties",
+      "type": "array"
+    },
+    {
+      "value": 3,
+      "description": "'title' is not a string. Check that the value  has quotes at the start and end. Escape any quotes in the value with '\\'",
+      "path": "releases/0/tender/title",
+      "field": "releases/tender/title",
+      "type": "string"
+    },
+    {
+      "value": "Last Tuesday",
+      "description": "Date is not in the correct format",
+      "path": "releases/0/date",
+      "field": "releases/date",
+      "type": "date-time"
+    },
+    {
+      "value": "tmXf6cC4QU+lwO3O73T-ZvUX4qo2GMJ0Sd",
+      "description": "Invalid 'uri' found",
+      "path": "uri",
+      "field": "uri",
+      "type": "uri"
+    },
+    {
+      "value": "badCurrencyCode",
+      "description": "Invalid code found in 'currency'",
+      "path": "releases/0/tender/value/currency",
+      "field": "releases/tender/value/currency",
+      "type": "enum"
+    },
+    {
+      "value": "",
+      "description": "[] is too short",
+      "path": "releases/0/tag",
+      "field": "releases/tag",
+      "type": "minItems"
+    }
+  ],
+  "version_used": "1.1",
+  "file_type": "json",
+  "releases_aggregates": {},
+  "additional_fields": [],
+  "additional_open_codelist_values": {},
+  "deprecated_fields": [],
+  "common_error_types": [],
+  "schema_url": "http://standard.open-contracting.org/schema/1__1__3/release-package-schema.json",
+  "ocds_prefixes_bad_format": []
+}

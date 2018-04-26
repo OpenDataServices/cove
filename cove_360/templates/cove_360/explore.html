@@ -155,8 +155,10 @@
           <p class="explanation">&nbsp;{% trans "There are some <strong>validation errors</strong> in your data, please check them in the table below." %}</p>
           <br>
           {% include "validation_table.html" %}
-          {% for error, values in validation_errors %}
-             {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error|get_message errorList=values file_type=file_type full_table=True %}
+          {% for error_json, values in validation_errors %}
+            {% with error=error_json|json_decode %}
+              {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
+            {% endwith %}
           {% endfor %}
         {% endif %}
       </div>

@@ -14,4 +14,6 @@ raven
 strict-rfc3339
 rfc3987
 rfc6266
+CommonMark
+bleach
 xmltodict

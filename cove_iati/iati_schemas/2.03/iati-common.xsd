@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.02">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.03">
 
   <xsd:annotation>
     <xsd:documentation xml:lang="en">
       International Aid Transparency Initiative: Common Markup Components
 
-      Release 2.02, 2015-12-07
+      Release 2.03, 2018-02-19
 
       This schema is not meant to be used on its own: it contains
       common shared markup components for the IATI activities and
@@ -37,7 +37,7 @@
           <xsd:attribute ref="xml:lang" use="optional">
             <xsd:annotation>
               <xsd:documentation xml:lang="en">
-                ISO 639-1 code specifying the language of text in this element. If a default language is specified in the iati-activity element it does not have to be repeated here.
+                A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.
               </xsd:documentation>
             </xsd:annotation>
           </xsd:attribute>
@@ -55,19 +55,12 @@
     </xsd:annotation>
   </xsd:element>
 
-  <xsd:element name="description">
+  <xsd:element name="description" type="descriptionBase">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
         A longer, human-readable description.
       </xsd:documentation>
     </xsd:annotation>
-    <xsd:complexType>
-      <xsd:sequence>
-        <xsd:element ref="narrative" minOccurs="1" maxOccurs="unbounded" />
-        <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-      </xsd:sequence>
-      <xsd:anyAttribute processContents="lax" namespace="##other"/>
-    </xsd:complexType>
   </xsd:element>
 
   <xsd:element name="comment" type="textRequiredType">
@@ -84,11 +77,11 @@
         The organisation issuing the report.
         May be a primary source (reporting on its own activity as
         donor, implementing agency, etc) or a secondary source
-        (reporting on the activities of another organisation). 
-        
+        (reporting on the activities of another organisation).
+
         Specifying the @ref attribute is mandatory.
         May contain the organisation name as content.
-        
+
         All activities in an activity xml file must contain the same
         @ref AND this @ref must be the same as the iati-identifier
         recorded in the registry publisher record of the account under
@@ -110,7 +103,7 @@
       <xsd:attribute name="ref" use="required" type="xsd:string">
         <xsd:annotation>
           <xsd:documentation xml:lang="en">
-            Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber} where {RegistrationAgency} is a valid code in the RegistrationAgency code list and {RegistrationNumber } is a valid identifier issued by the {RegistrationAgency}
+            Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber} where {RegistrationAgency} is a valid code in the Organisation Registration Agency code list and {RegistrationNumber} is a valid identifier issued by the {RegistrationAgency}.
           </xsd:documentation>
         </xsd:annotation>
       </xsd:attribute>
@@ -124,10 +117,7 @@
       <xsd:attribute name="secondary-reporter" type="xsd:boolean" use="optional">
         <xsd:annotation>
           <xsd:documentation xml:lang="en">
-            A flag indicating that the reporting organisation is a
-            secondary publisher: publishing data for which it is not
-            directly responsible. This flag must not be reported by
-            primary source publishers
+            A flag indicating that the reporting organisation of this activity is acting as a secondary reporter. A secondary reporter is one that reproduces data on the activities of an organisation for which it is not directly responsible. This does not include a publisher officially assigned as a proxy to report on behalf of another.
           </xsd:documentation>
         </xsd:annotation>
       </xsd:attribute>
@@ -152,6 +142,14 @@
       Common attribute groups and data types used by the elements above.
   -->
 
+  <xsd:complexType name="descriptionBase">
+    <xsd:sequence>
+      <xsd:element ref="narrative" minOccurs="1" maxOccurs="unbounded" />
+      <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:anyAttribute processContents="lax" namespace="##other"/>
+  </xsd:complexType>
+
   <xsd:complexType name="textType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -165,7 +163,7 @@
     </xsd:sequence>
     <xsd:anyAttribute processContents="lax" namespace="##other"/>
   </xsd:complexType>
-  
+
   <xsd:complexType name="textRequiredType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -177,6 +175,95 @@
       <xsd:element ref="narrative" minOccurs="1" maxOccurs="unbounded" />
       <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
+    <xsd:anyAttribute processContents="lax" namespace="##other"/>
+  </xsd:complexType>
+
+ <!-- documentLinkBase provides the common elements and attributes for the document-link elements in iati-activities and iati-organisations. -->
+ <xsd:complexType name="documentLinkBase">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        A link to an online, publicly accessible web page or document.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ref="title" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="description" minOccurs="0" maxOccurs="1" type="descriptionBase">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            A description of the document contents, or guidance on where to access the relevant information in the document.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="category" minOccurs="1" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            IATI Document Category Code
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+          <xsd:attribute name="code" use="required" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation xml:lang="en">
+                An IATI code defining the category of the document.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:anyAttribute processContents="lax" namespace="##other"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="language" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            The ISO 639-1 language code in which target document is written, e.g. "en". Can be repeated to describe multi-lingual documents.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+          <xsd:attribute name="code" use="required" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation xml:lang="en">
+                ISO 639-1 language code
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:anyAttribute processContents="lax" namespace="##other"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="document-date" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            The date of publication of the document that is being linked to.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+          <xsd:attribute name="iso-date" use="required" type="xsd:date"/>
+          <xsd:anyAttribute processContents="lax" namespace="##other"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="url" type="xsd:anyURI" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          The target URL of the external document, e.g. "http://www.example.org/doc.odt".
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="format" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          An IANA code for the MIME type of the document being referenced, e.g. "application/pdf".
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
     <xsd:anyAttribute processContents="lax" namespace="##other"/>
   </xsd:complexType>
 

@@ -1,5 +1,5 @@
 import os
-import re
+import json
 import shutil
 
 from .iati import common_checks_context_iati, get_file_type
@@ -18,11 +18,10 @@ def context_api_transform(context):
 
     if validation_errors:
             for error_group in validation_errors:
-                error_description = error_group[0][5:]
-                error_description = re.sub('(\[?|\s?)\"\]?', '', error_description)
+                error = json.loads(error_group[0])
                 for path_value in error_group[1]:
                     context['validation_errors'].append({
-                        'description': error_description,
+                        'description': error['message'],
                         'path': path_value.get('path', ''),
                         'value': path_value.get('value', '')
                     })

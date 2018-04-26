@@ -1,5 +1,3 @@
-import datetime
-import strict_rfc3339
 from functools import lru_cache, wraps  # use this to preserve function signatures and docstrings
 from decimal import Decimal
 
@@ -43,15 +41,6 @@ def update_docs(document_parent, counter):
         if doc_type:
             counter.update([doc_type])
     return count
-
-
-def datetime_or_date(instance):
-    if not instance:
-        raise ValueError
-    result = strict_rfc3339.validate_rfc3339(instance)
-    if result:
-        return result
-    return datetime.datetime.strptime(instance, "%Y-%m-%d")
 
 
 def get_file_type(file):

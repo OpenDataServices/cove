@@ -32,7 +32,7 @@ def explore_ocds(request, pk):
 
     post_version_choice = request.POST.get('version')
     replace = False
-    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
 
     if file_type == 'json':
         # open the data first so we can inspect for record package

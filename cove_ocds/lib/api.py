@@ -28,14 +28,16 @@ def context_api_transform(context):
     context['additional_fields'] = []
     context.pop('additional_fields_count')
 
+    context['ocds_prefixes_bad_format'] = list(context.pop('ocds_prefixes_bad_format', []))
+
     if validation_errors:
         for error_group in validation_errors:
-            error_type, error_description, error_field = json.loads(error_group[0])
+            error = json.loads(error_group[0])
             for path_value in error_group[1]:
                 context['validation_errors'].append({
-                    'type': error_type,
-                    'field': error_field,
-                    'description': error_description,
+                    'type': error['message_type'],
+                    'field': error['path_no_number'],
+                    'description': error['message'],
                     'path': path_value.get('path', ''),
                     'value': path_value.get('value', '')
                 })

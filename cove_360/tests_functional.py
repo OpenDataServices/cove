@@ -42,15 +42,13 @@ def server_url(request, live_server):
                                                   'The grants were awarded in GBP with a total value of £662,990',
                                                   'individual awards ranging from £152,505 (lowest) to £178,990 (highest)',
                                                   'Convert to Spreadsheet',
-                                                  'Invalid against Schema 17 Errors',
+                                                  'Invalid against Schema 14 Errors',
                                                   'There are some validation errors in your data, please check them in the table below',
-                                                  'Value is not a string',
                                                   'Non-unique ID Values (first 3 shown)',
                                                   'Grant identifiers:  2',
                                                   'Funder organisation identifiers:  1',
                                                   '360G-fundingproviders-000002/X/00/X'], True),
-    ('fundingproviders-grants_broken_grants.json', ['Invalid against Schema 17 Errors',
-                                                 'Value is not a string',
+    ('fundingproviders-grants_broken_grants.json', ['Invalid against Schema 14 Errors',
                                                  'Review 4 Grants',
                                                  'Funder organisation identifiers:  2',
                                                  'Recipient organisation identifiers:  2',
@@ -61,7 +59,7 @@ def server_url(request, live_server):
                                             'Converted to JSON\nIn order',
                                             'If there are conversion errors, the data may not look as you expect',
                                             'Invalid against Schema 7 Errors',
-                                            '\'description\' is missing but required',
+                                            'description is missing but required',
                                             'Sheet: grants Row: 2',
                                             'Review 2 Grants',
                                             'Funder organisation identifiers:  1',
@@ -86,14 +84,37 @@ def server_url(request, live_server):
     # Check that a file with a UTF-8 BOM converts correctly
     ('bom.csv', 'Grant identifiers:  1', True),
     ('nulls.json', [
-        'Value is not an array',
+        'is not a JSON array',
         'Date is not in the correct format',
-        'Invalid code found in \'countryCode\'',
-        'Value is not a number',
-        'Value is not a string',
+        'Invalid code found in countryCode',
+        'is not a number',
+        'is not a string',
     ], True),
     ('decimal_amounts.csv', 'The grants were awarded in GBP with a total value of £7,000.7 and individual awards ranging from £1,000.1 (lowest) to £1,000.1 (highest).', True),
     ('decimal_amounts.json', 'The grants were awarded in GBP with a total value of £7,000.7 and individual awards ranging from £1,000.1 (lowest) to £1,000.1 (highest).', True),
+    ('validation_errors-3.json', 'Something went wrong', False),
+    ('badfile_all_validation_errors.json', [
+        'description is missing but required (more info)',
+        'id is missing but required within recipientOrganization (more info)',
+        'Date is not in the correct format (more info)',
+        '0 is not a JSON object',
+        'amountAwarded is not a number. Check that the value is not null, and doesn’t contain any characters other than 0-9 and dot (.). Number values should not be in quotes.',
+        'plannedDates is not a JSON array',
+        'title is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with \ (more info)',
+        'Invalid \'uri\' found (more info)',
+        'Invalid code found in currency (more info)',
+        '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
+
+    ], True),
+    ('badfile_all_validation_errors.xlsx', [
+        'description is missing but required (more info)',
+        'id is missing but required within recipientOrganization (more info)',
+        'Date is not in the correct format (more info)',
+        'Amount Awarded is not a number. Check that the value is not null, and doesn’t contain any characters other than 0-9 and dot (.). Number values should not be in quotes.',
+        'Invalid \'uri\' found (more info)',
+        'Invalid code found in Currency (more info)',
+        '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
+    ], True),
 ])
 def test_explore_360_url_input(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
     """
@@ -155,6 +176,9 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 
     for text in expected_text:
         assert text in body_text
+
+    if source_filename == 'validation_errors-3.json':
+        assert 'UNSAFE' not in body_text
 
     assert 'Data Quality Tool' in browser.find_element_by_class_name('title360').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
@@ -383,17 +407,17 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
             section.click()
         time.sleep(0.5)
 
-    browser.find_element_by_css_selector('a[data-target=".validation-errors-1"]').click()
+    browser.find_element_by_css_selector('a[data-target=".validation-errors-3"]').click()
 
-    modal = browser.find_element_by_css_selector('.validation-errors-1')
+    modal = browser.find_element_by_css_selector('.validation-errors-3')
     assert "in" in modal.get_attribute("class").split()
     modal_text = modal.text
     assert "24/07/2014" in modal_text
     assert "grants/0/awardDate" in modal_text
-    table_rows = browser.find_elements_by_css_selector('.validation-errors-1 tbody tr')
+    table_rows = browser.find_elements_by_css_selector('.validation-errors-4 tbody tr')
     assert len(table_rows) == 4
 
-    browser.find_element_by_css_selector('div.modal.validation-errors-1 button.close').click()
+    browser.find_element_by_css_selector('div.modal.validation-errors-3 button.close').click()
     browser.find_element_by_css_selector('a[data-target=".additional-checks-3"]').click()
 
     modal_additional_checks = browser.find_element_by_css_selector('.additional-checks-3')
@@ -475,7 +499,7 @@ def test_common_errors_page(server_url, browser):
     ('required'),
     ('enum'),
     ('string'),
-    ('integer')
+    ('number')
     ])
 def test_common_errors_page_anchors(server_url, browser, anchor_text):
     # Checks we have sections for each our error messages
