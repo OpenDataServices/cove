@@ -38,4 +38,4 @@ class Command(CoveBaseCommand):
             sys.exit(1)
 
         with open(os.path.join(self.output_dir, "results.json"), 'w+') as result_file:
-            json.dump(result, result_file, indent=2, cls=SetEncoder)
+            json.dump(result, result_file, indent=2, sort_keys=True, cls=SetEncoder)

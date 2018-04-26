@@ -97,7 +97,7 @@
     
     
     <a id="string" class="anchor"></a>
-    <h3>{% trans "Value is not a string" %}</h3>
+    <h3>{% trans "Field <code>x</code> is not a string" %}</h3>
     <p>{% blocktrans %}Data in the standard is expected to be provided in a certain format.{% endblocktrans %}</p>
     <p>{% blocktrans %}Strings are generally text, but can contain other characters such as numbers. Sometimes spreadsheet software can alter the format of data so that it is no longer a string.{% endblocktrans %}</p>
     <p>{% blocktrans %}To fix these kinds of errors, check the field to make sure you are supplying a string.{% endblocktrans %}</p>
@@ -105,6 +105,7 @@
 
     <a id="number" class="anchor"></a>
     <h3>{% trans "Value is not a number" %}</h3>
+    <h3>{% trans "Field <code>x</code> is not a number" %}</h3>
     <p>{% blocktrans %}Data in the standard is expected to be provided in a certain format.{% endblocktrans %}</p>
     <p>{% blocktrans %}To fix these kinds of errors, check the field to make sure you are supplying a number.{% endblocktrans %}</p>
 

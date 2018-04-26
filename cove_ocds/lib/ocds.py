@@ -1,8 +1,19 @@
+import json
 import collections
 import re
 
 import cove.lib.tools as tools
 from cove.lib.common import common_checks_context, get_additional_codelist_values
+
+from django.utils.html import mark_safe, escape, conditional_escape, format_html
+
+import CommonMark
+import bleach
+
+
+validation_error_lookup = {
+    'date-time': mark_safe('Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z. Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.'),
+}
 
 
 @tools.ignore_errors
@@ -339,6 +350,28 @@ def get_releases_aggregates(json_data):
     )
 
 
+def _lookup_schema(schema, path, ref_info=None):
+    if len(path) == 0:
+        return schema, ref_info
+    if hasattr(schema, '__reference__'):
+        ref_info = {
+            'path': path,
+            'reference': schema.__reference__,
+        }
+    path_item, *child_path = path
+    if 'items' in schema:
+        return _lookup_schema(schema['items'], path, ref_info)
+    elif 'properties' in schema:
+        if path_item in schema['properties']:
+            return _lookup_schema(schema['properties'][path_item], child_path, ref_info)
+        else:
+            return None, None
+
+
+def lookup_schema(schema, path):
+    return _lookup_schema(schema, path.split('/'))
+
+
 def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, cache=True):
     schema_name = schema_obj.release_pkg_schema_name
     if 'records' in json_data:
@@ -346,6 +379,43 @@ def common_checks_ocds(context, upload_dir, json_data, schema_obj, api=False, ca
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context,
                                           fields_regex=True, api=api, cache=cache)
     validation_errors = common_checks['context']['validation_errors']
+
+    new_validation_errors = []
+    for (json_key, values) in validation_errors:
+        error = json.loads(json_key)
+        new_message = validation_error_lookup.get(error['message_type'])
+        if new_message:
+            error['message_safe'] = conditional_escape(new_message)
+        else:
+            if 'message_safe' in error:
+                error['message_safe'] = mark_safe(error['message_safe'])
+            else:
+                error['message_safe'] = conditional_escape(error['message'])
+
+        schema_block, ref_info = lookup_schema(schema_obj.get_release_pkg_schema_obj(deref=True), error['path_no_number'])
+        if schema_block and error['message_type'] != 'required':
+            if 'description' in schema_block:
+                error['schema_title'] = escape(schema_block.get('title', ''))
+                error['schema_description_safe'] = mark_safe(bleach.clean(
+                    CommonMark.commonmark(schema_block['description']),
+                    tags=bleach.sanitizer.ALLOWED_TAGS + ['p']
+                ))
+            if ref_info:
+                ref = ref_info['reference']['$ref']
+                if ref.endswith('release-schema.json'):
+                    ref = ''
+                else:
+                    ref = ref.strip('#')
+                ref_path = '/'.join(ref_info['path'])
+                schema = 'release-schema.json'
+            else:
+                ref = ''
+                ref_path = error['path_no_number']
+                schema = 'release-package-schema.json'
+            error['docs_ref'] = format_html('{},{},{}', schema, ref, ref_path)
+
+        new_validation_errors.append([json.dumps(error, sort_keys=True), values])
+    common_checks['context']['validation_errors'] = new_validation_errors
 
     context.update(common_checks['context'])
 
@@ -399,7 +469,7 @@ def get_bad_ocds_prefixes(json_data):
             if not isinstance(release, dict):
                 continue
             ocid = release.get('ocid', '')
-            if ocid and not prefix_regex.match(ocid):
+            if ocid and isinstance(ocid, str) and not prefix_regex.match(ocid):
                 bad_prefixes.append((ocid, 'releases/%s/ocid' % n_rel))
 
     elif records and isinstance(records, list):

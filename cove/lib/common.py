@@ -17,6 +17,7 @@ from flattentool import unflatten
 from jsonschema import FormatChecker, RefResolver
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator as validator
+from django.utils.html import escape, conditional_escape, format_html
 
 from cove.lib.exceptions import cove_spreadsheet_conversion_error
 from cove.lib.tools import cached_get_request, decimal_default
@@ -24,13 +25,23 @@ from cove.lib.tools import cached_get_request, decimal_default
 
 uniqueItemsValidator = validator.VALIDATORS.pop("uniqueItems")
 LANGUAGE_RE = re.compile("^(.*_(((([A-Za-z]{2,3}(-([A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-([A-Za-z]{4}))?(-([A-Za-z]{2}|[0-9]{3}))?(-([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-([0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(x(-[A-Za-z0-9]{1,8})+))?)|(x(-[A-Za-z0-9]{1,8})+)))$")
-validation_error_lookup = {'date-time': 'Date is not in the correct format',
+validation_error_template_lookup = {'date-time': 'Date is not in the correct format',
                            'uri': 'Invalid \'uri\' found',
-                           'string': 'Value is not a string',
-                           'integer': 'Value is not a integer',
-                           'number': 'Value is not a number',
-                           'object': 'Value is not an object',
-                           'array': 'Value is not an array'}
+                           'string': '\'{}\' is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with \'\\\'',
+                           'integer': '\'{}\' is not a integer. Check that the value {} doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ',
+                           'number': '\'{}\' is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and dot (\'.\'). Number values should not be in quotes. ',
+                           'object': '\'{}\' is not a JSON object',
+                           'array': '\'{}\' is not a JSON array'}
+# These are "safe" html that we trust
+# Don't insert any values into these strings without ensuring escaping
+# e.g. using django's format_html function.
+validation_error_template_lookup_safe = {'date-time': 'Date is not in the correct format',
+                           'uri': 'Invalid \'uri\' found',
+                           'string': '<code>{}</code> is not a string. Check that the value {} has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
+                           'integer': '<code>{}</code> is not a integer. Check that the value {} doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes. ',
+                           'number': '<code>{}</code> is not a number. Check that the value {} doesn’t contain any characters other than 0-9 and dot (<code>.</code>). Number values should not be in quotes. ',
+                           'object': '<code>{}</code> is not a JSON object',
+                           'array': '<code>{}</code> is not a JSON array'}
 
 
 class CustomJsonrefLoader(jsonref.JsonLoader):
@@ -172,7 +183,9 @@ def common_checks_context(upload_dir, json_data, schema_obj, schema_name, contex
         with open(os.path.join(upload_dir, 'heading_source_map.json')) as heading_source_map_fp:
             heading_source_map = json.load(heading_source_map_fp)
 
-    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
+    # IMPORTANT: If you change this filename, you must change it also in cove/views.py
+    # Otherwsie people can upload a file with this name and inject HTML.
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
     if os.path.exists(validation_errors_path):
         with open(validation_errors_path) as validation_error_fp:
             validation_errors = json.load(validation_error_fp)
@@ -182,7 +195,7 @@ def common_checks_context(upload_dir, json_data, schema_obj, schema_name, contex
                                                          extra_checkers=extra_checkers)
         if cache:
             with open(validation_errors_path, 'w+') as validation_error_fp:
-                validation_error_fp.write(json.dumps(validation_errors, default=decimal_default))
+                json.dump(validation_errors, validation_error_fp, sort_keys=True, indent=2, default=decimal_default)
 
     extensions = None
     if getattr(schema_obj, 'extensions', None):
@@ -370,25 +383,11 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
         resolver = CustomRefResolver('', pkg_schema_obj, schema_url=schema_obj.schema_host)
 
     our_validator = validator(pkg_schema_obj, format_checker=format_checker, resolver=resolver)
-    for n, e in enumerate(our_validator.iter_errors(json_data)):
+    for e in our_validator.iter_errors(json_data):
+        message_safe = None
         message = e.message
         path = "/".join(str(item) for item in e.path)
         path_no_number = "/".join(str(item) for item in e.path if not isinstance(item, int))
-
-        validator_type = e.validator
-        if e.validator in ('format', 'type'):
-            validator_type = e.validator_value
-            if isinstance(e.validator_value, list):
-                validator_type = e.validator_value[0]
-
-            new_message = validation_error_lookup.get(validator_type)
-            if new_message:
-                message = new_message
-
-        if e.validator == 'oneOf' and e.validator_value[0] == {'format': 'date-time'}:
-            # Give a nice date related error message for 360Giving date `oneOf`s.
-            message = validation_error_lookup['date-time']
-            validator_type = 'date-time'
 
         value = {"path": path}
         cell_reference = cell_src_map.get(path)
@@ -400,33 +399,82 @@ def get_schema_validation_errors(json_data, schema_obj, schema_name, cell_src_ma
             if len(first_reference) == 2:
                 value["sheet"], value["row_number"] = first_reference
 
+        header = value.get('header')
+        if not header and len(e.path):
+            header = e.path[-1]
+
+        validator_type = e.validator
+        if e.validator in ('format', 'type'):
+            validator_type = e.validator_value
+            null_clause = ''
+            if isinstance(e.validator_value, list):
+                validator_type = e.validator_value[0]
+                if 'null' not in e.validator_value:
+                    null_clause = 'is not null, and'
+            else:
+                null_clause = 'is not null, and'
+
+            message_template = validation_error_template_lookup.get(validator_type, message)
+            message_safe_template = validation_error_template_lookup_safe.get(validator_type)
+            if message_template:
+                message = message_template.format(header, null_clause)
+            if message_safe_template:
+                message_safe = format_html(message_safe_template, header, null_clause)
+
+        if e.validator == 'oneOf' and e.validator_value[0] == {'format': 'date-time'}:
+            # Give a nice date related error message for 360Giving date `oneOf`s.
+            message = validation_error_template_lookup['date-time']
+            message_safe = format_html(validation_error_template_lookup_safe['date-time'])
+            validator_type = 'date-time'
+
         if not isinstance(e.instance, (dict, list)):
             value["value"] = e.instance
 
         if e.validator == 'required':
             field_name = e.message
+            parent_name = None
             if len(e.path) > 2:
                 if isinstance(e.path[-1], int):
                     parent_name = e.path[-2]
                 else:
                     parent_name = e.path[-1]
 
-                field_name = str(parent_name) + ":" + e.message
             heading = heading_src_map.get(path_no_number + '/' + e.message)
             if heading:
                 field_name = heading[0][1]
                 value['header'] = heading[0][1]
-            message = "'{}' is missing but required".format(field_name)
+            if parent_name:
+                message = "'{}' is missing but required within '{}'".format(field_name, parent_name)
+                message_safe = format_html("<code>{}</code> is missing but required within <code>{}</code>", field_name, parent_name)
+            else:
+                message = "'{}' is missing but required".format(field_name)
+                message_safe = format_html("<code>{}</code> is missing but required", field_name, parent_name)
+
         if e.validator == 'enum':
             if "isCodelist" in e.schema:
                 continue
-            header = value.get('header')
-            if not header:
-                header = e.path[-1]
             message = "Invalid code found in '{}'".format(header)
+            message_safe = format_html("Invalid code found in <code>{}</code>", header)
 
-        unique_validator_key = [validator_type, message, path_no_number]
-        validation_errors[json.dumps(unique_validator_key)].append(value)
+        if e.validator == 'pattern':
+            message_safe = format_html('<code>{}</code> does not match the regex <code>{}</code>', header, e.validator_value)
+
+        if e.validator == 'minItems' and e.validator_value == 1:
+            message_safe = format_html('<code>{}</code> is too short. You must supply at least one value, or remove the item entirely (unless it’s required).', e.instance)
+
+        if e.validator == 'minLength' and e.validator_value == 1:
+            message_safe = format_html('<code>"{}"</code> is too short. Strings must be at least one character. This error typically indicates a missing value.', e.instance)
+
+        if message_safe is None:
+            message_safe = escape(message)
+
+        unique_validator_key = {
+            'message_type': validator_type,
+            'message': message,
+            'message_safe': conditional_escape(message_safe),
+            'path_no_number': path_no_number
+        }
+        validation_errors[json.dumps(unique_validator_key, sort_keys=True)].append(value)
     return dict(validation_errors)
 
 
@@ -740,7 +788,7 @@ def get_additional_codelist_values(schema_obj, codelist_url, json_data):
             if str(value) in codelist_values:
                 continue
             if path_no_num not in additional_codelist_values:
-                additional_codelist_values[path_no_num] = {
+                additional_codelist_values['/'.join(path_no_num)] = {
                     "path": "/".join(path_no_num[:-1]),
                     "field": path_no_num[-1],
                     "codelist": codelist,
@@ -750,8 +798,8 @@ def get_additional_codelist_values(schema_obj, codelist_url, json_data):
                     #"location_values": []
                 }
 
-            additional_codelist_values[path_no_num]['values'].add(str(value))
-            #additional_codelist_values[path_no_num]['location_values'].append((path, value))
+            additional_codelist_values['/'.join(path_no_num)]['values'].add(str(value))
+            #additional_codelist_values['/'.join(path_no_num)]['location_values'].append((path, value))
 
     return additional_codelist_values
 

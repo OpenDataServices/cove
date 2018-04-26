@@ -1,0 +1,3 @@
+{
+"{\"message\": \"\", \"message_safe\": \"UNSAFE<script>alert('UNSAFE');</script>\", \"message_type\": \"string\", \"path_no_number\": \"releases/tender/title\"}": [{"value": 3, "path": "releases/0/tender/title"}]
+}
