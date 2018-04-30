@@ -1302,7 +1302,7 @@ msgid ""
 msgstr ""
 
 #: cove_ocds/views.py:44 cove_ocds/views.py:55
-msgid "Sorry we can't process that data"
+msgid "Sorry, we can't process that data"
 msgstr ""
 
 #: cove_ocds/views.py:47

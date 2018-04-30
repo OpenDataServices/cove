@@ -757,7 +757,7 @@ msgid ""
 msgstr ""
 
 #: cove_360/views.py:37 cove_360/views.py:47
-msgid "Sorry we can't process that data"
+msgid "Sorry, we can't process that data"
 msgstr ""
 
 #: cove_360/views.py:39 cove_360/views.py:49

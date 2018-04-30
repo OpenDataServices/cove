@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: cove_iati/lib/iati.py:29 cove_iati/lib/iati.py:39
-msgid "Sorry we can't process that data"
+msgid "Sorry, we can't process that data"
 msgstr ""
 
 #: cove_iati/lib/iati.py:31 cove_iati/lib/iati.py:41
