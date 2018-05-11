@@ -791,8 +791,10 @@ def get_additional_codelist_values(schema_obj, json_data):
             if str(value) in codelist_values:
                 continue
 
-            if path_no_num not in additional_codelist_values:
-                additional_codelist_values['/'.join(path_no_num)] = {
+            path_string = '/'.join(path_no_num)
+
+            if path_string not in additional_codelist_values:
+                additional_codelist_values[path_string] = {
                     "path": "/".join(path_no_num[:-1]),
                     "field": path_no_num[-1],
                     "codelist": codelist,
