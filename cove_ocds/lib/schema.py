@@ -2,6 +2,7 @@ import os
 import json
 from copy import deepcopy
 from urllib.parse import urljoin, urlparse
+from collections import OrderedDict
 
 import json_merge_patch
 import requests
@@ -10,7 +11,7 @@ from django.conf import settings
 from django.utils import translation
 
 
-from cove.lib.common import SchemaJsonMixin, schema_dict_fields_generator
+from cove.lib.common import SchemaJsonMixin, schema_dict_fields_generator, get_schema_codelist_paths, load_core_codelists, load_codelist
 from cove.lib.tools import cached_get_request
 
 
@@ -69,7 +70,7 @@ class SchemaOCDS(SchemaJsonMixin):
         if hasattr(release_data, 'get'):
             data_extensions = release_data.get('extensions', {})
             if data_extensions:
-                self.extensions = {ext: tuple() for ext in data_extensions if type(ext) == str}
+                self.extensions = OrderedDict((ext, tuple()) for ext in data_extensions if type(ext) == str)
             if not select_version:
                 release_version = release_data and release_data.get('version')
                 if release_version:
@@ -85,6 +86,57 @@ class SchemaOCDS(SchemaJsonMixin):
         self.release_schema_url = urljoin(self.schema_host, self.release_schema_name)
         self.release_pkg_schema_url = urljoin(self.schema_host, self.release_pkg_schema_name)
         self.record_pkg_schema_url = urljoin(self.schema_host, self.record_pkg_schema_name)
+
+    def process_codelists(self):
+        self.core_codelist_schema_paths = get_schema_codelist_paths(self, use_extensions=False)
+        self.extended_codelist_schema_paths = get_schema_codelist_paths(self, use_extensions=True)
+
+        core_unique_files = frozenset(value[0] for value in self.core_codelist_schema_paths.values())
+        self.core_codelists = load_core_codelists(self.codelists, core_unique_files)
+
+        self.extended_codelists = deepcopy(self.core_codelists)
+        # we do not want to cache if the requests failed.
+        if not self.core_codelists:
+            load_core_codelists.cache_clear()
+            return
+
+        for extension, extension_detail in self.extensions.items():
+            if not isinstance(extension_detail, dict):
+                continue
+
+            codelist_list = extension_detail.get("codelists")
+            if not codelist_list:
+                continue
+
+            base_url = "/".join(extension.split('/')[:-1]) + "/codelists/"
+
+            for codelist in codelist_list:
+                try:
+                    codelist_map = load_codelist(base_url + codelist)
+                except UnicodeDecodeError as e:
+                    extension_detail['failed_codelists'][codelist] = "Unicode Error, codelists need to be in UTF-8"
+                except Exception as e:
+                    extension_detail['failed_codelists'][codelist] = "Unknown Exception, {}".format(str(e))
+                    continue
+
+                if not codelist_map:
+                    extension_detail['failed_codelists'][codelist] = "Codelist Error, Could not find code field in codelist"
+
+                if codelist[0] in ("+", "-"):
+                    codelist_extension = codelist[1:]
+                    if codelist_extension not in self.extended_codelists:
+                        extension_detail['failed_codelists'][codelist] = "Extension error, Trying to extend non existing codelist {}".format(codelist_extension)
+                        continue
+
+                if codelist[0] == "+":
+                    self.extended_codelists[codelist_extension].update(codelist_map)
+                elif codelist[0] == "-":
+                    for code in codelist_map:
+                        value = self.extended_codelists[codelist_extension].pop(code, None)
+                        if not value:
+                            extension_detail['failed_codelists'][codelist] = "Codelist error, Trying to remove non existing codelist value {}".format(code)
+                else:
+                    self.extended_codelists[codelist] = codelist_map
 
     def get_release_schema_obj(self, deref=False):
         release_schema_obj = self._release_schema_obj
@@ -102,10 +154,10 @@ class SchemaOCDS(SchemaJsonMixin):
                 release_schema_obj = self.deref_schema(self.release_schema_str)
         return release_schema_obj
 
-    def get_release_pkg_schema_obj(self, deref=False):
+    def get_release_pkg_schema_obj(self, deref=False, use_extensions=True):
         package_schema_obj = deepcopy(self._release_pkg_schema_obj)
         if deref:
-            if self.extended:
+            if self.extended and use_extensions:
                 deref_release_schema_obj = self.get_release_schema_obj(deref=True)
                 package_schema_obj['properties']['releases']['items'] = {}
                 release_pkg_schema_str = json.dumps(package_schema_obj)
@@ -172,6 +224,10 @@ class SchemaOCDS(SchemaJsonMixin):
                     if not field_value:
                         field_value = field_object.get('en', '')
                 extension_description[field] = field_value
+            extension_description['failed_codelists'] = {}
+            codelists = extensions_descriptor.get('codelists')
+            if codelists:
+                extension_description['codelists'] = codelists
 
             self.extensions[extensions_descriptor_url] = extension_description
             self.extended = True

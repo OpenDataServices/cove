@@ -252,9 +252,7 @@ def test_get_releases_aggregates():
 
 
 def test_get_schema_validation_errors():
-    schema_obj = SchemaOCDS()
-    schema_obj.schema_host = 'http://ocds.open-contracting.org/standard/r/1__0__RC/'
-    schema_obj.release_pkg_schema_url = os.path.join(schema_obj.schema_host, schema_obj.release_pkg_schema_name)
+    schema_obj = SchemaOCDS(select_version='1.0')
     schema_name = schema_obj.release_pkg_schema_name
 
     with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
@@ -579,25 +577,26 @@ def test_get_additional_codelist_values():
         json_data_w_additial_codelists = json.load(fp)
 
     schema_obj = SchemaOCDS(select_version='1.1')
-    codelist_url = settings.COVE_CONFIG['schema_codelists']['1.1']
-    additional_codelist_values = cove_common.get_additional_codelist_values(schema_obj, codelist_url, json_data_w_additial_codelists)
+    additional_codelist_values = cove_common.get_additional_codelist_values(schema_obj, json_data_w_additial_codelists)
 
     assert additional_codelist_values == {
         ('releases/tag'): {
             'codelist': 'releaseTag.csv',
             'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/releaseTag.csv',
             'field': 'tag',
+            'extension_codelist': False,
             'isopen': False,
             'path': 'releases',
-            'values': {'oh no'}
+            'values': ['oh no']
         },
         ('releases/tender/items/classification/scheme'): {
             'codelist': 'itemClassificationScheme.csv',
             'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/itemClassificationScheme.csv',
+            'extension_codelist': False,
             'field': 'scheme',
             'isopen': True,
             'path': 'releases/tender/items/classification',
-            'values': {'GSINS'}}
+            'values': ['GSINS']}
     }
 
 
