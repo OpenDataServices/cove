@@ -2,15 +2,37 @@
 {% load i18n %}
 {% block content %}
 
+{% with app=request.current_app %}
 <div>
   <h1>{% trans "Terms &amp; conditions" %}</h1>
-  <p>{% blocktrans %}This web application is free software designed to help people check data published to particular data standards.{% endblocktrans %}</p>
+  <p>
+    {% blocktrans %}This web application is free software designed to help people check data published to the{% endblocktrans %}
+    {% if app == 'cove_360' %}360Giving Standard.{% endif %}
+    {% if app == 'cove_ocds' %}{% trans "Open Contracting Data Standard (OCDS)" %}.{% endif %}
+    {% if app == 'cove_iati' %}IATI data standard.{% endif %}
+  </p>
 
   <p>{% blocktrans %}It is offered as service WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.{% endblocktrans %}</p>
 
-  <p>{% blocktrans %}If you continue to browse and use this website, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern Open Data Services Co-operative Limited's relationship with you in relation to this website. If you disagree with any part of these terms and conditions, please do not use our website.{% endblocktrans %}</p>
+  <p>
+    {% blocktrans %}If you continue to browse and use this website, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern{% endblocktrans %}
+      {% if app == 'cove_360' %}360Giving's{% endif %}
+      {% if app == 'cove_ocds' %}{% trans "Open Contracting Partnership's" %}{% endif %}
+      {% if app == 'cove_iati' %}Open Data Services Co-operative Limited's{% endif %}
+      {% blocktrans %}relationship with you in relation to this website. If you disagree with any part of these terms and conditions, please do not use our website.{% endblocktrans %}
+    </p>
 
-  <p>{% blocktrans %}The term 'Open Data Services Co-operative Limited' or 'us' or 'we' refers to the owner of the website. Our company registration number is 09506232. Our registered address is 32 Church Road, Hove, East Sussex, England, BN3 2FN. There is more company information on the <a href="https://opencorporates.com/companies/gb/09506232">Open Data Services Co-operative Limited page at Open Corporates</a>. The term 'you' refers to the user or viewer of our website.{% endblocktrans %}</p>
+  {% if app == 'cove_iati' %}
+    <p>{% blocktrans %}The term 'Open Data Services Co-operative Limited' or 'us' or 'we' refers to the owner of the website. Our company registration number is 09506232. Our registered address is 1st Floor, Holyoake House, Hanover Street, Manchester, Greater Manchester, England, M60 0AS. You can contact us by email <a href="mailto:company@opendataservices.coop">company@opendataservices.coop</a>. There is more company information on the <a href="https://opencorporates.com/companies/gb/09506232">Open Data Services Co-operative Limited page at Open Corporates</a>. The term 'you' refers to the user or viewer of our website.{% endblocktrans %}</p>
+  {% elif app == 'cove_360' %}
+   <p>The term ‘360Giving’ or ‘us’ or ‘we’ refers to the owner of the website. Our company registration number is 09668396. Our registered address is 17 Oval Way, London, SE11 5RR. You can contact us by email <a href="mailto:info@threesixtygiving.org">info@threesixtygiving.org</a>.</p>
+   <p>The site is operated by Open Data Services Co-operative Limited.</p>
+   <p>The term 'Open Data Services Co-operative Limited' refers to the operator of the website on behalf of 360Giving. Open Data Services Co-operative Limited's company registration number is 09506232. Their registered address is 1st Floor, Holyoake House, Hanover Street, Manchester, Greater Manchester, England, M60 0AS. Email: <a href="mailto:company@opendataservices.coop">company@opendataservices.coop</a></p>
+  {% elif app == 'cove_ocds' %}
+   <p>{% blocktrans %}The term ‘Open Contracting Partnership’ or ‘us’ or ‘we’ refers to the owner of the website. You can contact us by email <a href="mailto:data@open-contracting.org">data@open-contracting.org</a>{% endblocktrans %}</p>
+   <p>{% blocktrans %}The site is operated by Open Data Services Co-operative Limited.{% endblocktrans %}</p>
+   <p>{% blocktrans %}The term 'Open Data Services Co-operative Limited' refers to the operator of the website on behalf of the Open Contracting Partnership. Open Data Services Co-operative Limited's company registration number is 09506232. Their registered address is 1st Floor, Holyoake House, Hanover Street, Manchester, Greater Manchester, England, M60 0AS. Email: <a href="mailto:company@opendataservices.coop">company@opendataservices.coop</a>{% endblocktrans %}</p>
+  {% endif %}
 
   <p>{% blocktrans %}The use of this website is subject to the following terms of use:{% endblocktrans %}</p>
 
@@ -36,10 +58,10 @@
   <ul>
     <li>{% trans "Help us analyse how our website is used." %}</li>
     <li>{% trans "To ensure other sites can’t “forge” requests." %}</li>
-    <li>{% trans "Remember your choices within the application, for your convenience, and where relevant remember that you are logged into the application." %}</li>
+    <li>{% trans "Remember your choices within the application, for your convenience." %}</li>
   </ul>
 
-  <p>{% blocktrans %}We use <a href="http://piwik.org">Piwik</a> to analyse usage of our website (see Piwik section below). This uses cookies to identify you (anonymously) as the same user, so that we can analyse our web traffic better. E.g. it allows us to count how many users we have, instead of just total page views or analyse what pages people commonly visit together.{% endblocktrans %}</p>
+  <p>{% blocktrans %}We use <a href="http://piwik.org">Piwik</a> to analyse usage of our website (see "Understanding website visitor and traffic patterns" section below). This uses cookies to identify you (anonymously) as the same user, so that we can analyse our web traffic better. E.g. it allows us to count how many users we have, instead of just total page views or analyse what pages people commonly visit together.{% endblocktrans %}</p>
 
   <p>{% blocktrans %}If you do allow cookies to be used, Piwik uses 1st party cookies, set on the domain of this website. Cookies created by Piwik start with: {% endblocktrans %}</p>
   <ul>
@@ -59,50 +81,120 @@
 
   <p>{% blocktrans %}If you choose not to accept these cookies the application may not work for you.{% endblocktrans %}</p>
 
-  <h2>{% trans "Piwik Traffic Analytics" %}</h2>
+  <h2>{% trans "Privacy Policy" %}</h2>
 
-  <p>{% blocktrans %}We use our own hosted version of <a href="http://piwik.org">Piwik</a> to analyse our web traffic. We do this to get an idea of how much traffic we are getting, where from and when.{% endblocktrans %}</p>
+  <p>
+    {% if app == 'cove_360' %}360Giving{% endif %}
+    {% if app == 'cove_ocds' %}{% trans "Open Contracting Partnership" %}{% endif %}
+    {% if app == 'cove_iati' %}Open Data Services Co-operative Limited{% endif %}
+  is committed to ensuring that your privacy is protected. This privacy policy sets out how we collect and process any personal data when you use this website.</p>
 
-  <p>{% blocktrans %}If you have set your web browser to "I do not want to be tracked" (DoNotTrack is enabled) then Piwik will not track your visit.{% endblocktrans %}</p>
+  <p>We may change this policy from time to time by updating this page. This policy is effective from TODO.</p>
+
+  <p>Data controller:<br/>
+    {% if app == 'cove_360' %}
+      360Giving, 17 Oval Way, London, SE11 5RR.
+    {% elif app == 'cove_ocds' %}
+      Open Contracting Partnership, <a href="mailto:data@open-contracting.org">data@open-contracting.org</a>, who are based in the USA.
+    {% elif app == 'cove_iati' %}
+      Open Data Services Co-operative Limited, 1st Floor, Holyoake House, Hanover Street, Manchester, Greater Manchester, England, M60 0AS. <a href="mailto:inbox+opendataservices+443f+data-protection@plan.io">inbox+opendataservices+443f+data-protection@plan.io</a>.
+    {% endif %}
+    <br/>Contact us if would like a copy of the information held on you or if you believe that any information we are holding on you is incorrect or incomplete.
+    {% if app == 'cove_360' %}
+      You can contact us by email at: <a href="mailto:info@threesixtygiving.org">info@threesixtygiving.org</a>
+    {% endif %}
+  </p>
+
+  <p>You have the following rights concerning this data: <ul>
+     <li>Right to be informed, which is the purpose of this privacy notice</li>
+     <li>Right to Access, Rectification, Erasure, and to Restrict Processing. Note that the right to Erasure and Restrict Processing are balanced against our legitimate interests. Where relevant, you need to provide information to re-identify yourself from our pseudonymised data, see <a href="https://gdpr-info.eu/art-11-gdpr/">GDPR Article 11</a></li>
+    <li>Right to object to our processing.</li>
+  </ul></p>
+
+  <p>Our supervisory authority is the <a href="https://ico.org.uk/">ICO in the UK</a>. You have the right to lodge a complaint with them.</p>
+
+  <p>We process personal data for the following purposes: <ul>
+    <li>Understanding website visitor and traffic patterns</li>
+    <li>Understanding server behaviour</li>
+    <li>Identifying and being alerted to software errors</li>
+  </ul></p>
+
+  We rely on <a href="https://ico.org.uk/for-organisations/guide-to-the-general-data-protection-regulation-gdpr/lawful-basis-for-processing/legitimate-interests/">legitimate interests</a> (<a href="https://gdpr-info.eu/art-6-gdpr/">GDPR Article 6(1)(f)</a>) as the lawful basis for this processing. Details about the type of data, the purpose of the processing and legitimate interests, and the storage and retention of the data are set out below.
+
+
+  <h3>Understanding website visitor and traffic patterns</h3>
+  We collect data about your visits to the website, for the purpose of analysing how the website is used, so that we can improve it. A self hosted copy of Piwik is used for this.
+
+  <p>Personal data we collect:<ul>
+    <li>Your IP address - this is pseudonymised by redacting the second half of the address</li>
+    <li>Referrer (what page you arrived at one of our web pages from)</li>
+    <li>Information about your device, OS and browser</li>
+  </ul>We do not use this data to personally identify individuals, but it is possible that it could be used to do so, particularly if combined with other datasets.</p>
+
+  <p>You can opt out of this processing:
+  If you have set your web browser to "I do not want to be tracked" (DoNotTrack is enabled) then Piwik will not track your visit.</p>
 
   <p>{% blocktrans %}Piwik also it’s own opt out mechanism:{% endblocktrans %}</p>
   <!-- opt out iframe - clicking this will mean people can opt out of tracking -->
   <iframe style="border: 1; height: 150px; width: 600px;" src="https://mon.opendataservices.coop/piwik/index.php?module=CoreAdminHome&amp;action=optOut&amp;language=en"></iframe>
 
-  <h2>{% trans "Server Logs" %}</h2>
-  <p>{% blocktrans %}Open Data Services Co-operative Limited keep server logs of traffic to, and activity on, our all of our servers. Primarily this is to help us keep our servers healthy and working by knowing how much activity is taking place on them.{% endblocktrans %}</p>
+  <p>Data processors: {% if app != 'cove_iati' %}Open Data Services Co-operative Limited, {% endif %}Bytemark.</p>
+  {% if app == 'cove_ocds' %}
+    <p>The data controller (Open Contracting Partnership) is based in the USA.</p>
+  {% else %}
+    <p>No data is transferred to third countries or international organisations.</p>
+  {% endif %}
+  <p>The data is kept indefinitely, in pseudonymised form.</p>
 
-  <p>{% blocktrans %}We use the ELK stack (Elasticsearch, Logstash, Kibana) to analyse Server logs. {% endblocktrans %}</p> 
-  <p>{% blocktrans %}Our server logs record information such as your IP address, the browser you are using, and your operating system. Generally, this is considered not to constitute personal information, but we recognise that when aggregated, and analysed there is a chance that this data could potentially enable identification of individuals. This is not something we do. {% endblocktrans %}</p>
+  <h3>Understanding server behaviour</h3>
+  We collect data about your visits to the website in server logs. This is for the purpose of debugging network issues, monitoring server usage, and identifying malicious usage.
 
-  <h2>{% trans "Privacy Policy" %}</h2>
-  <p>{% blocktrans %}This privacy policy sets out how Open Data Services Co-operative Limited uses and protects any information that you give Open Data Services Co-operative Limited when you use this website.{% endblocktrans %}</p>
+  <p>Personal data we collect:<ul>
+    <li>Your IP address</li>
+    <li>User agent (information about the OS and browser that you use)</li>
+    <li>Referrer (what page you arrived at one of our web pages from)</li>
+  </ul>We do not use this data to personally identify individuals, but it is possible that it could be used to do so, particularly if combined with other datasets.</p>
 
-  <p>{% blocktrans %}Open Data Services Co-operative Limited is committed to ensuring that your privacy is protected. Should we ask you to provide certain information by which you can be identified when using this website, then you can be assured that it will only be used in accordance with this privacy statement.{% endblocktrans %}</p>
+  <p>Data processors: {% if app != 'cove_iati' %}Open Data Services Co-operative Limited, {% endif %}Bytemark.</p>
+  {% if app == 'cove_ocds' %}
+    <p>The data controller (Open Contracting Partnership) is based in the USA.</p>
+  {% else %}
+    <p>No data is transferred to third countries or international organisations.</p>
+  {% endif %}
+  <p>The data is kept indefinitely.</p>
 
-  <p>{% blocktrans %}Open Data Services Co-operative Limited may change this policy from time to time by updating this page. You should check this page from time to time to ensure that you are happy with any changes. This policy is effective from 1st April 2015.{% endblocktrans %}</p>
+  <h3>Identifying and being alerted to software errors</h3>
+  When an error occurs on our site, we record details about the visit that caused it. We use <a href="https://sentry.io/welcome/">Sentry</a> for this.
 
-  <h3>{% trans "What we collect" %}</h3>
-  <p>{% blocktrans %}Currently we do not collect any personal information from you when you use this website.{% endblocktrans %}</p>
+  <p>Data we collect:<ul>
+    <li>Your IP address</li>
+    <li>User agent (information about the OS and browser that you use)</li>
+    <li>Referrer (what page you arrived at one of our web pages from)</li>
+  </ul>We do not use this data to personally identify individuals, but it is possible that it could be used to do so, particularly if combined with other datasets.</p>
+
+  <p>Data processors: {% if app != 'cove_iati' %}Open Data Services Co-operative Limited, {% endif %}Sentry (Functional Software, Inc.)</p>
+  {% if app == 'cove_ocds' %}
+    <p>The data controller (Open Contracting Partnership) is based in the USA.</p>
+  {% endif %}
+  <p>Data is transferred to Functional Software, Inc. who are based in the USA.</p>
+  <p>The data is kept for 90 days.</p>
+
+  <h2>{% trans "Data uploaded to this website" %}</h2>
 
   <p>{% blocktrans %}This application is designed so that people can submit files to the application, allow the application to process them and to then display information about them, generate alternative file formats of the original data, and provide those files for download.{% endblocktrans %}</p>
 
-  <p>{% blocktrans %}Open Data Services Co-operative Limited does not make use of any of the data within the files for purposes other than to create reports for you about the data you have submitted.{% endblocktrans %}</p>
+  <p>{% blocktrans %}Please do not submit any non-public personal data to this application.{% endblocktrans %}</p>
 
-  <p>{% blocktrans %}Open Data Services Co-operative Limited does create and store metadata about your use of the application, and about the files/data that you have uploaded in order to monitor how the application is being used.{% endblocktrans %}</p>
+  <p>{% blocktrans %}We do not make use of any of the data within the files for purposes other than to create reports for you about the data you have submitted.{% endblocktrans %}</p>
+
+  <p>{% blocktrans %}We do create and store metadata about your use of the application, and about the files/data that you have uploaded in order to monitor how the application is being used.{% endblocktrans %}</p>
 
   <h2>{% trans "Deleting our copies of the files" %}</h2>
   <p>{% blocktrans %}When you provide data to the application we store the data you have provided in order to process it for you. We also enable derived versions of the data to be downloaded. Those derived versions and the original data are stored on our server.{% endblocktrans %}</p>
 
   <p>{% blocktrans %}After a period of time we will delete those files from our server, meaning they are no-longer available for download.{% endblocktrans %}</p>
 
-  <p>{% blocktrans %}We may also provide a means for a user to delete those files, such as a 'delete' button that a user must select.{% endblocktrans %}</p>
-
   <p>{% blocktrans %}Information about how long files will be stored is made available to users directly through the interface, but will be for no longer than one year from the date of submission.{% endblocktrans %}</p>
-
-
-  <h2>{% trans "Controlling your personal information" %}</h2>
-  <p>{% blocktrans %}Although this application does not record any personal information you may like to know that you may request details of personal information which we hold about you under the Data Protection Act 1998. A small fee will be payable. If you would like a copy of the information held on you please email the Data Protection Officer at company@opendataservices.coop. If you would like to write to us our registered address is 32 Church Road, Hove, East Sussex, England, BN3 2FN. Further details are available on the <a href="https://opencorporates.com/companies/gb/09506232">Open Data Services Co-operative Limited page at Open Corporates</a>.{% endblocktrans %}</p>
 
   <p>{% blocktrans %}If you believe that any information we are holding on you is incorrect or incomplete, please write to or email us as soon as possible at the above address. We will promptly correct any information found to be incorrect.{% endblocktrans %}</p>
 
@@ -113,12 +205,13 @@
   <p>{% blocktrans %}Our website may contain links to other websites of interest. However, once you have used these links to leave our site, you should note that we do not have any control over that other website. Therefore, we cannot be responsible for the protection and privacy of any information which you provide whilst visiting such sites and such sites are not governed by this privacy statement. You should exercise caution and look at the privacy statement applicable to the website in question.{% endblocktrans %}</p>
 
   <h2>{% trans "Website disclaimer" %}</h2>
-  <p>{% blocktrans %}The information contained in this website is for general information purposes only. The information is provided by Open Data Services Co-operative Limited and while we endeavour to keep the information up to date and correct, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.
+  <p>{% blocktrans %}The information contained in this website is for general information purposes only. The information is provided by us and while we endeavour to keep the information up to date and correct, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.
   In no event will we be liable for any loss or damage including without limitation, indirect or consequential loss or damage, or any loss or damage whatsoever arising from loss of data or profits arising out of, or in connection with, the use of this website.
-  Through this website you are able to link to other websites which are not under the control of Open Data Services Co-operative Limited. We have no control over the nature, content and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorse the views expressed within them.
-  Every effort is made to keep the website up and running smoothly. However, Open Data Services Co-operative Limited takes no responsibility for, and will not be liable for, the website being temporarily unavailable due to technical issues beyond our control.{% endblocktrans %}</p>
+  Through this website you are able to link to other websites which are not under the control of us. We have no control over the nature, content and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorse the views expressed within them.
+  Every effort is made to keep the website up and running smoothly. However, we take no responsibility for, and will not be liable for, the website being temporarily unavailable due to technical issues beyond our control.{% endblocktrans %}</p>
 
 
+{% endwith %}
 </div>
 
 {% endblock %}
