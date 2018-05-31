@@ -326,8 +326,11 @@
           <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Fields (fields in data not in schema)' %}</span>
         </h4>
       </div>
-      <div id="additionalFieldTable" class="collapse in">
-        {% include "additional_fields_table.html" %}
+      <div class="panel-body">
+        <p>This data includes the following fields which are not part of the OCDS schema. You should check whether the data in these fields could be provided by using a field in the OCDS schema or by using an existing <a href="http://standard.open-contracting.org/latest/en/extensions/">extension</a> to the schema.</p>
+        <div id="additionalFieldTable" class="collapse in">
+          {% include "additional_fields_table.html" %}
+        </div>
       </div>
     </div>
 {% endif %}
