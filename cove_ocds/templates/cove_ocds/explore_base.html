@@ -149,7 +149,11 @@
       <ul>
         {% for ext_descriptor_url, ext_details in ext.items %}
           {% if ext_details %}
-          <li><a href="{% if ext_details.documentation_url %}{{ext_details.documentation_url}}{% else %}{{ext_details.url}}{% endif %}">{{ext_details.name}}</a> &nbsp;&nbsp;<span class="font-tick tick"></span><p><small>{{ext_details.description}}</small><p>
+          <li><a href="{% if ext_details.documentation_url %}{{ext_details.documentation_url}}{% else %}{{ext_details.url}}{% endif %}">{{ext_details.name}}</a>
+            {% if ext_details.release_schema_url %}
+              &nbsp;(<a href="{{ext_details.release_schema_url}}">release schema</a>)
+            {% endif %} 
+            &nbsp;&nbsp;<span class="font-tick tick"></span><p><small>{{ext_details.description}}</small><p>
             {% if ext_details.failed_codelists %}
               <ul class="list-unstyled">
                 {% for codelist, codelist_error in ext_details.failed_codelists.items %}
