@@ -174,6 +174,18 @@ class SchemaOCDS(SchemaJsonMixin):
         if not self.extensions:
             return
         for extensions_descriptor_url in self.extensions.keys():
+
+            try:
+                response = requests.get(extensions_descriptor_url)
+                if not response.ok:
+                    # extension descriptor is required to proceed
+                    self.invalid_extension[extensions_descriptor_url] = '{}: {}'.format(
+                        response.status_code, response.reason.lower())
+                    continue
+            except requests.exceptions.RequestException:
+                self.invalid_extension[extensions_descriptor_url] = 'fetching failed'
+                continue
+
             i = extensions_descriptor_url.rfind('/')
             url = '{}/{}'.format(extensions_descriptor_url[:i], 'release-schema.json')
 
@@ -195,8 +207,8 @@ class SchemaOCDS(SchemaJsonMixin):
                 url = None
                 extension_data = {}
             else:
-                self.invalid_extension[extensions_descriptor_url] = '{}: {}'.format(extension.status_code,
-                                                                                    extension.reason.lower())
+                self.invalid_extension[extensions_descriptor_url] = '{}: {}'.format(
+                    extension.status_code, extension.reason.lower())
                 continue
 
             schema_obj = json_merge_patch.merge(schema_obj, extension_data)
