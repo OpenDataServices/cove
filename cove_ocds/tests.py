@@ -206,6 +206,7 @@ EXPECTED_RELEASE_AGGREGATE_RANDOM = {
 
 DEFAULT_OCDS_VERSION = settings.COVE_CONFIG['schema_version']
 METRICS_EXT = 'https://raw.githubusercontent.com/open-contracting/ocds_metrics_extension/master/extension.json'
+CODELIST_EXT = 'https://raw.githubusercontent.com/INAImexico/ocds_extendedProcurementCategory_extension/0ed54770c85500cf21f46e88fb06a30a5a2132b1/extension.json'
 UNKNOWN_URL_EXT = 'http://bad-url-for-extensions.com/extension.json'
 NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
 
@@ -629,14 +630,15 @@ def test_schema_ocds_constructor(select_version, release_data, version, invalid_
     assert schema.extensions == extensions
 
 
-@pytest.mark.parametrize(('release_data', 'extensions', 'invalid_extension', 'extended'), [
-    (None, {}, {}, False),
-    ({'version': '1.1', 'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False),
-    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False),
-    ({'version': '1.1', 'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True),
-    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True),
+@pytest.mark.parametrize(('release_data', 'extensions', 'invalid_extension', 'extended', 'extends_schema'), [
+    (None, {}, {}, False, False),
+    ({'version': '1.1', 'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False, False),
+    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False, False),
+    ({'version': '1.1', 'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True, True),
+    ({'version': '1.1', 'extensions': [CODELIST_EXT]}, {CODELIST_EXT: ()}, {}, True, False),
+    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True, True),
 ])
-def test_schema_ocds_extensions(release_data, extensions, invalid_extension, extended):
+def test_schema_ocds_extensions(release_data, extensions, invalid_extension, extended, extends_schema):
     schema = SchemaOCDS(release_data=release_data)
     assert schema.extensions == extensions
     assert not schema.extended
@@ -645,7 +647,7 @@ def test_schema_ocds_extensions(release_data, extensions, invalid_extension, ext
     assert schema.invalid_extension == invalid_extension
     assert schema.extended == extended
 
-    if extended:
+    if extends_schema:
         assert 'Metric' in release_schema_obj['definitions'].keys()
         assert release_schema_obj['definitions']['Award']['properties'].get('agreedMetrics')
     else:
