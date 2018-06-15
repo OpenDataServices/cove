@@ -149,7 +149,7 @@
       <ul>
         {% for ext_descriptor_url, ext_details in ext.items %}
           {% if ext_details %}
-          <li><a href="{% if ext_details.documentation_url %}{{ext_details.documentation_url}}{% else %}{{ext_details.url}}{% endif %}">{{ext_details.name}}</a>
+          <li><a href="{% if ext_details.documentationUrl %}{{ext_details.documentationUrl}}{% else %}{{ext_details.url}}{% endif %}">{{ext_details.name}}</a>
             {% if ext_details.release_schema_url %}
               &nbsp;(<a href="{{ext_details.release_schema_url}}">release schema</a>)
             {% endif %} 
