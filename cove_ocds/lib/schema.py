@@ -226,12 +226,6 @@ class SchemaOCDS(SchemaJsonMixin):
 
             extension_description = {'url': extensions_descriptor_url, 'release_schema_url': url}
 
-            # Section to be removed when extensions conform to new schema
-            old_documentation_url = extensions_descriptor.get('documentation_url', '')
-            if old_documentation_url and 'documentationUrl' not in extensions_descriptor:
-                extensions_descriptor['documentationUrl'] = {'en': old_documentation_url}
-            # End section
-
             for field in ['description', 'name', 'documentationUrl']:
                 field_object = extensions_descriptor.get(field, {})
                 if isinstance(field_object, str):
