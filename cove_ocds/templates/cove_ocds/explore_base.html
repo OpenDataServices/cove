@@ -323,11 +323,14 @@
     <div class="panel panel-warning">
       <div id="additional-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalFieldTable" data-toggle="collapse" data-target="#additionalFieldTable">
         <h4 class="panel-title">
-          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Fields (fields in data not in schema)' %}</span>
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Fields' %}</span>
         </h4>
       </div>
-      <div id="additionalFieldTable" class="collapse in">
-        {% include "additional_fields_table.html" %}
+      <div class="panel-body">
+        <p>{% blocktrans %}This data includes the following fields which are not part of the OCDS schema. You should check whether the data in these fields could be provided by using a field in the OCDS schema or by using an existing <a href="http://standard.open-contracting.org/latest/en/extensions/">extension</a> to the schema.{% endblocktrans %}</p>
+        <div id="additionalFieldTable" class="collapse in">
+          {% include "additional_fields_table.html" %}
+        </div>
       </div>
     </div>
 {% endif %}
