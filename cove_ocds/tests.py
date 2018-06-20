@@ -19,6 +19,7 @@ from .lib.ocds import get_releases_aggregates, get_bad_ocds_prefixes
 from .lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
+from cove.lib.tools import cached_get_request
 
 
 OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
@@ -1001,6 +1002,9 @@ def test_cove_ocds_cli_schema_version_override(file_name, version_option):
 
 
 def test_cove_ocds_cli_schema_cache():
+    #clear url cache
+    cached_get_request.cache_clear()
+
     test_dir = str(uuid.uuid4())
     file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_invalid_extensions.json')
     output_dir = os.path.join('media', test_dir)
