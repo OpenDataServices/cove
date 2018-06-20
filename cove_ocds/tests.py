@@ -19,6 +19,7 @@ from .lib.ocds import get_releases_aggregates, get_bad_ocds_prefixes
 from .lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
+from cove.lib.tools import cached_get_request
 
 
 OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
@@ -206,6 +207,7 @@ EXPECTED_RELEASE_AGGREGATE_RANDOM = {
 
 DEFAULT_OCDS_VERSION = settings.COVE_CONFIG['schema_version']
 METRICS_EXT = 'https://raw.githubusercontent.com/open-contracting/ocds_metrics_extension/master/extension.json'
+CODELIST_EXT = 'https://raw.githubusercontent.com/INAImexico/ocds_extendedProcurementCategory_extension/0ed54770c85500cf21f46e88fb06a30a5a2132b1/extension.json'
 UNKNOWN_URL_EXT = 'http://bad-url-for-extensions.com/extension.json'
 NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
 
@@ -252,9 +254,7 @@ def test_get_releases_aggregates():
 
 
 def test_get_schema_validation_errors():
-    schema_obj = SchemaOCDS()
-    schema_obj.schema_host = 'http://ocds.open-contracting.org/standard/r/1__0__RC/'
-    schema_obj.release_pkg_schema_url = os.path.join(schema_obj.schema_host, schema_obj.release_pkg_schema_name)
+    schema_obj = SchemaOCDS(select_version='1.0')
     schema_name = schema_obj.release_pkg_schema_name
 
     with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
@@ -579,25 +579,26 @@ def test_get_additional_codelist_values():
         json_data_w_additial_codelists = json.load(fp)
 
     schema_obj = SchemaOCDS(select_version='1.1')
-    codelist_url = settings.COVE_CONFIG['schema_codelists']['1.1']
-    additional_codelist_values = cove_common.get_additional_codelist_values(schema_obj, codelist_url, json_data_w_additial_codelists)
+    additional_codelist_values = cove_common.get_additional_codelist_values(schema_obj, json_data_w_additial_codelists)
 
     assert additional_codelist_values == {
         ('releases/tag'): {
             'codelist': 'releaseTag.csv',
             'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/releaseTag.csv',
             'field': 'tag',
+            'extension_codelist': False,
             'isopen': False,
             'path': 'releases',
-            'values': {'oh no'}
+            'values': ['oh no']
         },
         ('releases/tender/items/classification/scheme'): {
             'codelist': 'itemClassificationScheme.csv',
             'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/itemClassificationScheme.csv',
+            'extension_codelist': False,
             'field': 'scheme',
             'isopen': True,
             'path': 'releases/tender/items/classification',
-            'values': {'GSINS'}}
+            'values': ['GSINS']}
     }
 
 
@@ -630,14 +631,15 @@ def test_schema_ocds_constructor(select_version, release_data, version, invalid_
     assert schema.extensions == extensions
 
 
-@pytest.mark.parametrize(('release_data', 'extensions', 'invalid_extension', 'extended'), [
-    (None, {}, {}, False),
-    ({'version': '1.1', 'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False),
-    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False),
-    ({'version': '1.1', 'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True),
-    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True),
+@pytest.mark.parametrize(('release_data', 'extensions', 'invalid_extension', 'extended', 'extends_schema'), [
+    (None, {}, {}, False, False),
+    ({'version': '1.1', 'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False, False),
+    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False, False),
+    ({'version': '1.1', 'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True, True),
+    ({'version': '1.1', 'extensions': [CODELIST_EXT]}, {CODELIST_EXT: ()}, {}, True, False),
+    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True, True),
 ])
-def test_schema_ocds_extensions(release_data, extensions, invalid_extension, extended):
+def test_schema_ocds_extensions(release_data, extensions, invalid_extension, extended, extends_schema):
     schema = SchemaOCDS(release_data=release_data)
     assert schema.extensions == extensions
     assert not schema.extended
@@ -646,7 +648,7 @@ def test_schema_ocds_extensions(release_data, extensions, invalid_extension, ext
     assert schema.invalid_extension == invalid_extension
     assert schema.extended == extended
 
-    if extended:
+    if extends_schema:
         assert 'Metric' in release_schema_obj['definitions'].keys()
         assert release_schema_obj['definitions']['Award']['properties'].get('agreedMetrics')
     else:
@@ -1000,6 +1002,9 @@ def test_cove_ocds_cli_schema_version_override(file_name, version_option):
 
 
 def test_cove_ocds_cli_schema_cache():
+    #clear url cache
+    cached_get_request.cache_clear()
+
     test_dir = str(uuid.uuid4())
     file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_invalid_extensions.json')
     output_dir = os.path.join('media', test_dir)

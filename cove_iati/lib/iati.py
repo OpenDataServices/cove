@@ -26,7 +26,7 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
             tree = etree.parse(fp)
         except lxml.etree.XMLSyntaxError as err:
             raise CoveInputDataError(context={
-                'sub_title': _("Sorry we can't process that data"),
+                'sub_title': _("Sorry, we can't process that data"),
                 'link': 'index',
                 'link_text': _('Try Again'),
                 'msg': _('We think you tried to upload a XML file, but it is not well formed XML.'
@@ -36,7 +36,7 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
             })
         except UnicodeDecodeError as err:
             raise CoveInputDataError(context={
-                'sub_title': _("Sorry we can't process that data"),
+                'sub_title': _("Sorry, we can't process that data"),
                 'link': 'index',
                 'link_text': _('Try Again'),
                 'msg': _('We think you tried to upload a XML file, but the encoding is incorrect.'

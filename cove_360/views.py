@@ -34,7 +34,7 @@ def explore_360(request, pk, template='cove_360/explore.html'):
                 json_data = json.load(fp, parse_float=Decimal)
             except ValueError as err:
                 raise CoveInputDataError(context={
-                    'sub_title': _("Sorry we can't process that data"),
+                    'sub_title': _("Sorry, we can't process that data"),
                     'link': 'index',
                     'link_text': _('Try Again'),
                     'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.'
@@ -44,7 +44,7 @@ def explore_360(request, pk, template='cove_360/explore.html'):
                 })
             if not isinstance(json_data, dict):
                 raise CoveInputDataError(context={
-                    'sub_title': _("Sorry we can't process that data"),
+                    'sub_title': _("Sorry, we can't process that data"),
                     'link': 'index',
                     'link_text': _('Try Again'),
                     'msg': _('360Giving JSON should have an object as the top level, the JSON you supplied does not.'),
