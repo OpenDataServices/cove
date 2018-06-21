@@ -70,32 +70,34 @@ def context_api_transform(context):
     return context
 
 
-def ocds_json_output(output_dir, file, schema_version, convert, cache_schema=False):
+def ocds_json_output(output_dir, file, schema_version, convert, cache_schema=False, file_type=None, json_data=None):
     context = {}
-    file_type = get_file_type(file)
+    if not file_type:
+        file_type = get_file_type(file)
     context = {"file_type": file_type}
 
     if file_type == 'json':
-        with open(file, encoding='utf-8') as fp:
-            try:
-                json_data = json.load(fp)
-            except ValueError:
-                raise APIException('The file looks like invalid json')
+        if not json_data:
+            with open(file, encoding='utf-8') as fp:
+                try:
+                    json_data = json.load(fp)
+                except ValueError:
+                    raise APIException('The file looks like invalid json')
 
-            schema_ocds = SchemaOCDS(schema_version, json_data, cache_schema=cache_schema)
+        schema_ocds = SchemaOCDS(schema_version, json_data, cache_schema=cache_schema)
 
-            if schema_ocds.invalid_version_data:
-                msg = '\033[1;31mThe schema version in your data is not valid. Accepted values: {}\033[1;m'
-                raise APIException(msg.format(str(list(schema_ocds.version_choices.keys()))))
-            if schema_ocds.extensions:
-                schema_ocds.create_extended_release_schema_file(output_dir, "")
+        if schema_ocds.invalid_version_data:
+            msg = '\033[1;31mThe schema version in your data is not valid. Accepted values: {}\033[1;m'
+            raise APIException(msg.format(str(list(schema_ocds.version_choices.keys()))))
+        if schema_ocds.extensions:
+            schema_ocds.create_extended_release_schema_file(output_dir, "")
 
-            url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
+        url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
 
-            if convert:
-                context.update(convert_json(
-                    output_dir, '', file, schema_url=url, flatten=True, cache=False)
-                )
+        if convert:
+            context.update(convert_json(
+                output_dir, '', file, schema_url=url, flatten=True, cache=False)
+            )
 
     else:
         metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
