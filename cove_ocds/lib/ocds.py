@@ -134,7 +134,7 @@ def get_releases_aggregates(json_data):
         release_date = release.get('date', '')
         if release_date:
             release['date'] = dateutil.parser.parse(release_date)
-            release_dates.append(dateutil.parser.parse(release_date))
+            release_dates.append(release['date'])
 
         if 'language' in release:
             unique_lang.add(release['language'])
