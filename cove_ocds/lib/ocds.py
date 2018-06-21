@@ -1,7 +1,6 @@
 import re
 import json
 import collections
-import dateutil.parser
 
 import cove.lib.tools as tools
 from cove.lib.common import common_checks_context, get_additional_codelist_values
@@ -133,7 +132,6 @@ def get_releases_aggregates(json_data):
 
         release_date = release.get('date', '')
         if release_date:
-            release['date'] = dateutil.parser.parse(release_date)
             release_dates.append(release['date'])
 
         if 'language' in release:
@@ -157,7 +155,7 @@ def get_releases_aggregates(json_data):
             if tender_period:
                 start_date = tender_period.get('startDate', '')
                 if start_date:
-                    tender_dates.append(dateutil.parser.parse(start_date))
+                    tender_dates.append(start_date)
             procuring_entity = tender.get('procuringEntity')
             if procuring_entity:
                 process_org(procuring_entity, unique_procuring_identifier, unique_procuring_name_no_id)
@@ -187,7 +185,7 @@ def get_releases_aggregates(json_data):
                 awardid_ocids.add((award_id, ocid))
             award_date = award.get('date', '')
             if award_date:
-                award_dates.append(dateutil.parser.parse(award_date))
+                award_dates.append(award_date)
             award_items = award.get('items', [])
             for item in award_items:
                 item_id = item.get('id')
@@ -210,7 +208,7 @@ def get_releases_aggregates(json_data):
             if period:
                 start_date = period.get('startDate', '')
                 if start_date:
-                    contract_dates.append(dateutil.parser.parse(start_date))
+                    contract_dates.append(start_date)
             contract_items = contract.get('items', [])
             for item in contract_items:
                 item_id = item.get('id')
