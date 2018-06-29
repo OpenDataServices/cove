@@ -11,7 +11,7 @@ selenium
 transifex-client
 libsass
 Sphinx
-recommonmark
+-e git+https://github.com/rtfd/recommonmark.git@3238b029b6e19b9cbceb9b85d81304f86b12c012#egg=recommonmark
 sphinx_rtd_theme
 hypothesis
 

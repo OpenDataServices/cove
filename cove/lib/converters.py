@@ -169,7 +169,7 @@ def convert_json(upload_dir, upload_url, file_name, schema_url=None, replace=Fal
 
     except BadlyFormedJSONError as err:
         raise CoveInputDataError(context={
-            'sub_title': _("Sorry we can't process that data"),
+            'sub_title': _("Sorry, we can't process that data"),
             'link': 'index',
             'link_text': _('Try Again'),
             'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.\n\nError message: {}'.format(err))

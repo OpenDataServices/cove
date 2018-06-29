@@ -32,7 +32,7 @@ def explore_ocds(request, pk):
 
     post_version_choice = request.POST.get('version')
     replace = False
-    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
 
     if file_type == 'json':
         # open the data first so we can inspect for record package
@@ -41,7 +41,7 @@ def explore_ocds(request, pk):
                 json_data = json.load(fp, parse_float=Decimal)
             except ValueError as err:
                 raise CoveInputDataError(context={
-                    'sub_title': _("Sorry we can't process that data"),
+                    'sub_title': _("Sorry, we can't process that data"),
                     'link': 'index',
                     'link_text': _('Try Again'),
                     'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.'
@@ -52,7 +52,7 @@ def explore_ocds(request, pk):
 
             if not isinstance(json_data, dict):
                 raise CoveInputDataError(context={
-                    'sub_title': _("Sorry we can't process that data"),
+                    'sub_title': _("Sorry, we can't process that data"),
                     'link': 'index',
                     'link_text': _('Try Again'),
                     'msg': _('OCDS JSON should have an object as the top level, the JSON you supplied does not.'),

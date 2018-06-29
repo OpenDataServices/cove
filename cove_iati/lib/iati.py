@@ -19,14 +19,14 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
     schema_aiti = SchemaIATI()
     lxml_errors = {}
     cell_source_map = {}
-    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
 
     with open(data_file, 'rb') as fp, open(schema_aiti.activity_schema) as schema_fp:
         try:
             tree = etree.parse(fp)
         except lxml.etree.XMLSyntaxError as err:
             raise CoveInputDataError(context={
-                'sub_title': _("Sorry we can't process that data"),
+                'sub_title': _("Sorry, we can't process that data"),
                 'link': 'index',
                 'link_text': _('Try Again'),
                 'msg': _('We think you tried to upload a XML file, but it is not well formed XML.'
@@ -36,7 +36,7 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
             })
         except UnicodeDecodeError as err:
             raise CoveInputDataError(context={
-                'sub_title': _("Sorry we can't process that data"),
+                'sub_title': _("Sorry, we can't process that data"),
                 'link': 'index',
                 'link_text': _('Try Again'),
                 'msg': _('We think you tried to upload a XML file, but the encoding is incorrect.'
@@ -261,7 +261,7 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
                 cell_source_map_paths[generic_cell_path] = [cell_path]
 
     for error in errors:
-        validation_key = json.dumps(['', error['message']])
+        validation_key = json.dumps({'message': error['message']}, sort_keys=True)
         if not validation_errors.get(validation_key):
             validation_errors[validation_key] = []
 

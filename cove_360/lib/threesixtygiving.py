@@ -4,7 +4,6 @@ from decimal import Decimal
 
 import cove.lib.tools as tools
 from cove.lib.common import common_checks_context, get_orgids_prefixes
-from cove.lib.tools import datetime_or_date
 
 
 orgids_prefixes = get_orgids_prefixes()
@@ -106,8 +105,7 @@ def get_grants_aggregates(json_data):
 
 def common_checks_360(context, upload_dir, json_data, schema_obj):
     schema_name = schema_obj.release_pkg_schema_name
-    checkers = {'date-time': (datetime_or_date, ValueError)}
-    common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context, extra_checkers=checkers)
+    common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
     cell_source_map = common_checks['cell_source_map']
     additional_checks = run_additional_checks(json_data, cell_source_map, ignore_errors=True, return_on_error=None)
 
@@ -117,7 +115,7 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
         'additional_checks_errored': additional_checks is None,
         'additional_checks': additional_checks,
         'additional_checks_count': (len(additional_checks) if additional_checks else 0) + (1 if context['data_only'] else 0),
-        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'integer', 'string']
+        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string']
     })
 
     return context

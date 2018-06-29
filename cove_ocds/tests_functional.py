@@ -171,7 +171,7 @@ def test_500_error(server_url, browser):
                                                              'All the extensions above were applied',
                                                              'copy of the schema with extension',
                                                              'Validation Errors',
-                                                             '\'buyer:name\' is missing but required',
+                                                             'name is missing but required within buyer',
                                                              'The schema version specified in the file is 1.1',
                                                              'Party Scale'], ['scale', '/releases/parties/details', 'fetching failed'], True),
     ('tenders_1_release_with_extensions_1_1_missing_party_scale.json', ['Schema Extensions',
@@ -183,8 +183,7 @@ def test_500_error(server_url, browser):
                                                                     'A tender process may be divided into lots',
                                                                     'copy of the schema with extension',
                                                                     'Validation Errors',
-                                                                    '\'buyer:name\' is missing but required',
-                                                                    '\'items:id\' is missing but required'], ['fetching failed'], True),
+                                                                    'id is missing but required within items'], ['fetching failed'], True),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Schema Extensions',
                                                                  'https://raw.githubusercontent.com/open-contracting/',
                                                                  'badprotocol://example.com',
@@ -196,7 +195,7 @@ def test_500_error(server_url, browser):
                                                                'The metrics extension supports publication of forecasts',
                                                                'Get a copy of the schema with extension patches applied',
                                                                'The following extensions failed',
-                                                               "Invalid code found in 'scale'",
+                                                               "Invalid code found in scale",
                                                                'is not valid under any of the given schemas',
                                                                '/records/compiledRelease/tender/targets',
                                                                'The schema version specified in the file is 1.1',
@@ -213,11 +212,44 @@ def test_500_error(server_url, browser):
                                                                      '400: bad request'], ['copy of the schema with extension'], True),
     ('tenders_releases_2_releases_1_1_tenderers_with_missing_ids.json', ['We found 6 objects within arrays in your data without an id property',
                                                                          'Structure Warnings'], [], True),
+    ('tenders_releases_7_releases_check_ocids.json', ['Conformance (Rules)',
+                                                      '6 of your ocid fields have a problem'], [], True),
     ('ocds_release_nulls.json', ['Convert', 'Save or Share these results'], [], True),
+    ('badfile_all_validation_errors.json', ['"" is too short. Strings must be at least one character. This error typically indicates a missing value.',
+                                            'An identifier for this particular release of information.',
+                                            'version does not match the regex ^(\d+\.)(\d+)$',
+                                            'The version of the OCDS schema used in this package, expressed as major.minor For example: 1.0 or 1.1',
+                                            'id is missing but required within tender',
+                                            'initiationType is missing but required',
+                                            'Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z. Learn more about dates in OCDS.',
+                                            'The date this information was first released, or published.',
+                                            'Invalid \'uri\' found',
+                                            'The URI of this package that identifies it uniquely in the world.',
+                                            'Invalid code found in currency',
+                                            'The currency for each amount should always be specified using the uppercase 3-letter currency code from ISO4217.',
+                                            'numberOfTenderers is not a integer. Check that the value doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes.',
+                                            'The number of parties who submit a bid.',
+                                            'amount is not a number. Check that the value doesn’t contain any characters other than 0-9 and dot (.). Number values should not be in quotes',
+                                            'Amount as a number.',
+                                            'ocid is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with \\',
+                                            'A globally unique identifier for this Open Contracting Process. Composed of a publisher prefix and an identifier for the contracting process. For more information see the Open Contracting Identifier guidance',
+                                            'title is not a string. Check that the value has quotes at the start and end. Escape any quotes in the value with \\',
+                                            'A title for this tender. This will often be used by applications as a headline to attract interest, and to help analysts understand the nature of this procurement',
+                                            'parties is not a JSON array',
+                                            'Information on the parties (organizations, economic operators and other participants) who are involved in the contracting process and their roles, e.g. buyer, procuring entity, supplier etc. Organization references elsewhere in the schema are used to refer back to this entries in this list.',
+                                            'buyer is not a JSON object',
+                                            'The id and name of the party being referenced. Used to cross-reference to the parties section',
+                                            '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
+                                            'One or more values from the releaseTag codelist. Tags may be used to filter release and to understand the kind of information that a release might contain.',
+                                            ], [], True),
+    ('badfile_extension_validation_errors.json', ['Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z.',
+                                                  'The date when this bid was received.',
+                                                  'A local identifier for this bid',
+                                                  'Summary statistics on the number and nature of bids received.'], ['Reference Docs'], True),
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
                                                   'Validation Errors',
-                                                  "'id' is missing but required",
+                                                  "id is missing but required",
                                                   "Invalid 'uri' found"], [], True),
     ('tenders_releases_2_releases_codelists.json', ['oh no',
                                                     'GSINS'], [], True),
@@ -249,6 +281,16 @@ def test_500_error(server_url, browser):
                                                                        '/definitions/OrganizationReference'], ['Convert to Spreadsheet'], False),
     ('tenders_releases_1_release_unpackaged.json', ['Missing OCDS package',
                                                     'Error message: Missing OCDS package'], ['Convert to Spreadsheet'], False),
+    ('tenders_releases_1_release_with_tariff_codelist.json', ['releases/contracts/tariffs',
+                                                              'chargePaidBy.csv',
+                                                              'notADocumentType',
+                                                              'notAPaidByCodelist'], ['notADocumentType, tariffIllustration'], True),
+    ('tenders_releases_1_release_with_various_codelists.json', ['needsAssessment, notADocumentType, tariffIllustration',
+                                                               '+releaseTag.csv: Codelist Error, Could not find code field in codelist',
+                                                               '-documentType.csv: Codelist error, Trying to remove non existing codelist value notACodelistValueAtAll',
+                                                               '+method.csv: Unicode Error, codelists need to be in UTF-8',
+                                                               'chargePaidBy.csv',
+                                                               'notAPaidByCodelist'], [], True),
 ])
 def test_url_input(server_url, url_input_browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful):
     browser, source_url = url_input_browser(source_filename, output_source_url=True)
@@ -324,6 +366,42 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
                 assert grant1['classifications'][0]['title'] == 'Test'
             assert converted_file_response.status_code == 200
             assert int(converted_file_response.headers['content-length']) != 0
+
+
+def test_validation_error_messages(url_input_browser):
+    browser = url_input_browser('badfile_all_validation_errors.json')
+    for html in [
+        '<code>""</code> is too short',
+        '<code>version</code> does not match the regex <code>^(\d+\.)(\d+)$</code>',
+        '<code>id</code> is missing but required within <code>tender</code>',
+        '<code>initiationType</code> is missing but required',
+        'Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z. Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.',
+        'Invalid code found in <code>currency</code>',
+        '<code>numberOfTenderers</code> is not a integer',
+        '<code>amount</code> is not a number. Check that the value  doesn’t contain any characters other than 0-9 and dot (<code>.</code>).',
+        '<code>ocid</code> is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
+        'For more information see the <a href="http://standard.open-contracting.org/1.1/en/schema/identifiers/">Open Contracting Identifier guidance</a>',
+        '<code>title</code> is not a string. Check that the value  has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
+        '<code>parties</code> is not a JSON array',
+        '<code>buyer</code> is not a JSON object',
+        '<code>[]</code> is too short.',
+        'One or more values from the <a href="http://standard.open-contracting.org/1.1/en/schema/codelists/#release-tag">releaseTag codelist</a>.',
+    ]:
+        assert html in browser.page_source
+
+
+def test_extension_validation_error_messages(url_input_browser):
+    browser = url_input_browser('badfile_extension_validation_errors.json')
+    for html in [
+        "&lt;script&gt;alert('badscript');&lt;/script&gt;",
+        '<a>test</a>',
+    ]:
+        assert html in browser.page_source
+    for html in [
+        "<script>alert('badscript');</script>",
+        'badlink',
+    ]:
+        assert html not in browser.page_source
 
 
 @pytest.mark.parametrize('warning_texts', [[], ['Some warning']])
@@ -408,11 +486,11 @@ def test_url_invalid_dataset_request(server_url, browser, data_url):
 
 @pytest.mark.parametrize(('source_filename', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
     ('tenders_releases_1_release_with_extensions_1_1.json', 'validation against OCDS release package schema version 1.1',
-     '\'version\' is missing but required', 'methodRationale', 'version'),
+     'version is missing but required', 'methodRationale', 'version'),
     ('tenders_releases_1_release_with_invalid_extensions.json', 'validation against OCDS release package schema version 1.0',
-     '\'version\' is missing but required', 'methodRationale', 'version'),
+     'version is missing but required', 'methodRationale', 'version'),
     ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'validation against OCDS release package schema version 1.1',
-     '\'version\' is missing but required', 'methodRationale', 'version')
+     'version is missing but required', 'methodRationale', 'version')
 ])
 def test_url_input_with_version(server_url, url_input_browser, httpserver, source_filename, expected, not_expected,
                                 expected_additional_field, not_expected_additional_field):
@@ -436,11 +514,11 @@ def test_url_input_with_version(server_url, url_input_browser, httpserver, sourc
 
 @pytest.mark.parametrize(('source_filename', 'select_version', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
     ('tenders_releases_1_release_with_extensions_1_1.json', '1.0', 'validation against OCDS release package schema version 1.0',
-     '\'version\' is missing but required', 'version', 'publisher'),
-    ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', '\'version\' is missing but required',
+     'version is missing but required', 'version', 'publisher'),
+    ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', 'version is missing but required',
      'validation against OCDS release package schema version 1.0', 'methodRationale', 'version'),
     ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'validation against OCDS release package schema version 1.0',
-     '\'version\' is missing but required', 'version', 'publisher')
+     'version is missing but required', 'version', 'publisher')
 ])
 def test_url_input_with_version_change(server_url, url_input_browser, httpserver, select_version, source_filename, expected,
                                        not_expected, expected_additional_field, not_expected_additional_field):
