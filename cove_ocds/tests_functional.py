@@ -281,6 +281,7 @@ def test_500_error(server_url, browser):
                                                                        '/definitions/OrganizationReference'], ['Convert to Spreadsheet'], False),
     ('tenders_releases_1_release_unpackaged.json', ['Missing OCDS package',
                                                     'Error message: Missing OCDS package'], ['Convert to Spreadsheet'], False),
+    ('tenders_releases_1_release_with_closed_codelist.json', ['Failed validation'], ['Passed validation'], True),
     ('tenders_releases_1_release_with_tariff_codelist.json', ['releases/contracts/tariffs',
                                                               'chargePaidBy.csv',
                                                               'notADocumentType',
