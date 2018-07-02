@@ -10,6 +10,7 @@ dealer
 django-environ
 jsonschema
 json-merge-patch
+python-dateutil
 raven
 strict-rfc3339
 rfc3987

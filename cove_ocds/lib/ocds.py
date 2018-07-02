@@ -1,6 +1,6 @@
+import re
 import json
 import collections
-import re
 
 import cove.lib.tools as tools
 from cove.lib.common import common_checks_context, get_additional_codelist_values
