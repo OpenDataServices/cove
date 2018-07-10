@@ -15,7 +15,19 @@
       <tr>
         <td>{{detail.field}}</td> <td>{{detail.path}}</td> 
         <td>
-          <a href="http://datapipes.okfnlabs.org/csv/html/?url={{detail.codelist_url}}" >{{detail.codelist}}</td> 
+          <a href="http://datapipes.okfnlabs.org/csv/html/?url={{detail.codelist_url}}" >{{detail.codelist}}</a>
+          {% if detail.codelist_add_url or detail.codelist_sub_url %}
+            ( 
+            {% if detail.codelist_add_url %}
+              <a href="http://datapipes.okfnlabs.org/csv/html/?url={{detail.codelist_add_url|urlencode}}">+</a> 
+            {% endif %}
+            {% if detail.codelist_sub_url %}
+              <a href="http://datapipes.okfnlabs.org/csv/html/?url={{detail.codelist_sub_url|urlencode}}">-</a>
+            {% endif %}
+            )
+          {% endif %}
+
+        </td> 
         <td>{{detail.values|join:", "}}</td>
       </tr>
    {% endfor %}

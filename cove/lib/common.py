@@ -800,16 +800,29 @@ def get_additional_codelist_values(schema_obj, json_data):
 
             if path_string not in additional_codelist_values:
                 
-                if schema_obj.extended_codelist_urls and schema_obj.extended_codelist_urls.get(codelist):
-                    codelist_url = schema_obj.extended_codelist_urls[codelist]
-                else:
-                    codelist_url = schema_obj.codelists + codelist
+                codelist_url = schema_obj.codelists + codelist
+                codelist_add_url = None
+                codelist_sub_url = None
+                if hasattr(schema_obj, 'extended_codelist_urls'):
+                    
+                    if schema_obj.extended_codelist_urls.get(codelist):
+                        codelist_url = schema_obj.extended_codelist_urls[codelist]
+
+                    codelistadd = "+" + codelist
+                    if schema_obj.extended_codelist_urls.get(codelistadd):
+                        codelist_add_url = schema_obj.extended_codelist_urls[codelistadd]
+
+                    codelistsub = "-" + codelist
+                    if schema_obj.extended_codelist_urls.get(codelistsub):
+                        codelist_sub_url = schema_obj.extended_codelist_urls[codelistsub]
 
                 additional_codelist_values[path_string] = {
                     "path": "/".join(path_no_num[:-1]),
                     "field": path_no_num[-1],
                     "codelist": codelist,
                     "codelist_url": codelist_url,
+                    "codelist_add_url": codelist_add_url,
+                    "codelist_sub_url": codelist_sub_url,
                     "isopen": isopen,
                     "values": set(),
                     "extension_codelist": codelist not in schema_obj.core_codelists,
