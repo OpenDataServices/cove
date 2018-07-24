@@ -25,6 +25,8 @@ def get_grants_aggregates(json_data):
     duplicate_ids = set()
     max_award_date = ""
     min_award_date = ""
+    max_date_modified = ""
+    min_date_modified = ""
     distinct_funding_org_identifier = set()
     distinct_recipient_org_identifier = set()
     currencies = {}
@@ -58,6 +60,13 @@ def get_grants_aggregates(json_data):
                 if not min_award_date:
                     min_award_date = award_date
                 min_award_date = min(award_date, min_award_date)
+
+            date_modified = str(grant.get('dateModified', ''))
+            if date_modified:
+                max_date_modified = max(date_modified, max_date_modified)
+                if not min_date_modified:
+                    min_date_modified = date_modified
+                min_date_modified = min(date_modified, min_date_modified)
 
             grant_id = grant.get('id')
             if grant_id:
@@ -93,6 +102,8 @@ def get_grants_aggregates(json_data):
         'duplicate_ids': duplicate_ids,
         'max_award_date': max_award_date.split("T")[0],
         'min_award_date': min_award_date.split("T")[0],
+        'max_date_modified': max_date_modified.split("T")[0],
+        'min_date_modified': min_date_modified.split("T")[0],
         'distinct_funding_org_identifier': distinct_funding_org_identifier,
         'distinct_recipient_org_identifier': distinct_recipient_org_identifier,
         'currencies': currencies,
