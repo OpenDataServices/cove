@@ -1,7 +1,7 @@
 import os
 import json
 from copy import deepcopy
-from urllib.parse import urljoin, urlparse, urlencode
+from urllib.parse import urljoin, urlparse
 from collections import OrderedDict
 
 import json_merge_patch
@@ -142,7 +142,10 @@ class SchemaOCDS(SchemaJsonMixin):
                 else:
                     self.extended_codelists[codelist] = codelist_map
 
-                self.extended_codelist_urls[codelist] = base_url + codelist
+                try:
+                    self.extended_codelist_urls[codelist].append(base_url + codelist)
+                except KeyError:
+                    self.extended_codelist_urls[codelist] = [base_url + codelist]
 
     def get_release_schema_obj(self, deref=False):
         release_schema_obj = self._release_schema_obj

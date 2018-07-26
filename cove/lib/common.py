@@ -801,28 +801,30 @@ def get_additional_codelist_values(schema_obj, json_data):
             if path_string not in additional_codelist_values:
                 
                 codelist_url = schema_obj.codelists + codelist
-                codelist_add_url = None
-                codelist_sub_url = None
+                codelist_amend_urls = []
                 if hasattr(schema_obj, 'extended_codelist_urls'):
                     
+                    # Replace URL if this codelist is overridden by an extension.
+                    # Last one to be applied wins.
                     if schema_obj.extended_codelist_urls.get(codelist):
-                        codelist_url = schema_obj.extended_codelist_urls[codelist]
+                        codelist_url = schema_obj.extended_codelist_urls[codelist][-1]
 
                     codelistadd = "+" + codelist
-                    if schema_obj.extended_codelist_urls.get(codelistadd):
-                        codelist_add_url = schema_obj.extended_codelist_urls[codelistadd]
-
                     codelistsub = "-" + codelist
-                    if schema_obj.extended_codelist_urls.get(codelistsub):
-                        codelist_sub_url = schema_obj.extended_codelist_urls[codelistsub]
+                    for codelist_key in schema_obj.extended_codelist_urls.keys():
+                        if codelist_key == codelistadd:
+                            for amended_codelist in schema_obj.extended_codelist_urls[codelist_key]:
+                                codelist_amend_urls.append(('+', amended_codelist))
+                        if codelist_key == codelistsub:
+                            for amended_codelist in schema_obj.extended_codelist_urls[codelist_key]:
+                                codelist_amend_urls.append(('-', amended_codelist))
 
                 additional_codelist_values[path_string] = {
                     "path": "/".join(path_no_num[:-1]),
                     "field": path_no_num[-1],
                     "codelist": codelist,
                     "codelist_url": codelist_url,
-                    "codelist_add_url": codelist_add_url,
-                    "codelist_sub_url": codelist_sub_url,
+                    "codelist_amend_urls": codelist_amend_urls,
                     "isopen": isopen,
                     "values": set(),
                     "extension_codelist": codelist not in schema_obj.core_codelists,
