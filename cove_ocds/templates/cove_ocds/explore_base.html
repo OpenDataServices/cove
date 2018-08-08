@@ -145,7 +145,7 @@
           <small><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> &nbsp;Your data has been checked against schema version <strong>1.0</strong> and includes extensions but extensions were not introduced in the schema until version <strong>1.1</strong>.</small>
         </div>
       {% endif %}
-      <p>You data contains the following schema extensions{% if not extensions.is_extended_schema %} but it wasn't possible to fetch them{% endif %}:</p>
+      <p>Your data contains the following schema extensions{% if not extensions.is_extended_schema %} but it wasn't possible to fetch them{% endif %}:</p>
       <ul>
         {% for ext_descriptor_url, ext_details in ext.items %}
           {% if ext_details %}
