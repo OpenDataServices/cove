@@ -57,7 +57,7 @@ lxml==4.2.1
 MarkupSafe==1.0
 mccabe==0.6.1
 more-itertools==4.1.0
-openpyxl==2.5.1
+openpyxl==2.5.5
 packaging==17.1
 
 pluggy==0.6.0
