@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
+from django.utils.html import format_html
 
 from . lib.schema import Schema360
 from . lib.threesixtygiving import common_checks_360
@@ -37,9 +38,9 @@ def explore_360(request, pk, template='cove_360/explore.html'):
                     'sub_title': _("Sorry, we can't process that data"),
                     'link': 'index',
                     'link_text': _('Try Again'),
-                    'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.'
+                    'msg': _(format_html('We think you tried to upload a JSON file, but it is not well formed JSON.'
                              '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
-                             '</span> <strong>Error message:</strong> {}'.format(err)),
+                             '</span> <strong>Error message:</strong> {}', err)),
                     'error': format(err)
                 })
             if not isinstance(json_data, dict):

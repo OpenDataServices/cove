@@ -6,6 +6,7 @@ import defusedxml.lxml as etree
 import lxml.etree
 from bdd_tester import bdd_tester
 from django.utils.translation import ugettext_lazy as _
+from django.utils.html import format_html
 
 from .schema import SchemaIATI
 from cove.lib.exceptions import CoveInputDataError, UnrecognisedFileTypeXML
@@ -29,9 +30,9 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                 'sub_title': _("Sorry, we can't process that data"),
                 'link': 'index',
                 'link_text': _('Try Again'),
-                'msg': _('We think you tried to upload a XML file, but it is not well formed XML.'
+                'msg': _(format_html('We think you tried to upload a XML file, but it is not well formed XML.'
                          '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
-                         '</span> <strong>Error message:</strong> {}'.format(err)),
+                         '</span> <strong>Error message:</strong> {}', err)),
                 'error': format(err)
             })
         except UnicodeDecodeError as err:
@@ -39,9 +40,9 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                 'sub_title': _("Sorry, we can't process that data"),
                 'link': 'index',
                 'link_text': _('Try Again'),
-                'msg': _('We think you tried to upload a XML file, but the encoding is incorrect.'
+                'msg': _(format_html('We think you tried to upload a XML file, but the encoding is incorrect.'
                          '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
-                         '</span> <strong>Error message:</strong> {}'.format(err)),
+                         '</span> <strong>Error message:</strong> {}', err)),
                 'error': format(err)
             })
         schema_tree = etree.parse(schema_fp)
