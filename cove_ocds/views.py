@@ -2,6 +2,8 @@ import json
 import logging
 import os
 import re
+from dateutil import parser
+from strict_rfc3339 import validate_rfc3339
 from decimal import Decimal
 
 from django.shortcuts import render
@@ -32,7 +34,7 @@ def explore_ocds(request, pk):
 
     post_version_choice = request.POST.get('version')
     replace = False
-    validation_errors_path = os.path.join(upload_dir, 'validation_errors-2.json')
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
 
     if file_type == 'json':
         # open the data first so we can inspect for record package
@@ -41,7 +43,7 @@ def explore_ocds(request, pk):
                 json_data = json.load(fp, parse_float=Decimal)
             except ValueError as err:
                 raise CoveInputDataError(context={
-                    'sub_title': _("Sorry we can't process that data"),
+                    'sub_title': _("Sorry, we can't process that data"),
                     'link': 'index',
                     'link_text': _('Try Again'),
                     'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.'
@@ -52,7 +54,7 @@ def explore_ocds(request, pk):
 
             if not isinstance(json_data, dict):
                 raise CoveInputDataError(context={
-                    'sub_title': _("Sorry we can't process that data"),
+                    'sub_title': _("Sorry, we can't process that data"),
                     'link': 'index',
                     'link_text': _('Try Again'),
                     'msg': _('OCDS JSON should have an object as the top level, the JSON you supplied does not.'),
@@ -162,6 +164,22 @@ def explore_ocds(request, pk):
         template = 'cove_ocds/explore_release.html'
         if hasattr(json_data, 'get') and hasattr(json_data.get('releases'), '__iter__'):
             context['releases'] = json_data['releases']
+
+            # Parse release dates into objects so the template can format them.
+            for release in context['releases']:
+                if hasattr(release, 'get') and release.get('date'):
+                    if validate_rfc3339(release['date']):
+                        release['date'] = parser.parse(release['date'])
+                    else:
+                        release['date'] = None
+            if context.get('releases_aggregates'):
+                date_fields = ['max_award_date', 'max_contract_date', 'max_release_date', 'max_tender_date', 'min_award_date', 'min_contract_date', 'min_release_date', 'min_tender_date']
+                for field in date_fields:
+                    if context['releases_aggregates'].get(field):
+                        if(validate_rfc3339(context['releases_aggregates'][field])):
+                            context['releases_aggregates'][field] = parser.parse(context['releases_aggregates'][field])
+                        else:
+                            context['releases_aggregates'][field] = None
         else:
             context['releases'] = []
 

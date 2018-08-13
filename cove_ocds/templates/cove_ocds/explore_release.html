@@ -15,7 +15,7 @@
           <div class="conversion message"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>{% blocktrans %}Please read the <a href="#conversion-warning">conversion warnings</a> below.{% endblocktrans %}</div>
         {% endif %} 
         <div class="validation message">
-        {% if validation_errors %}
+        {% if validation_errors or additional_closed_codelist_values %}
           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span><b>{% trans "Failed " %}</b>
         {% else %} 
           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% trans "Passed " %} 
@@ -143,14 +143,14 @@
             </ul>
           </div>
           <div class="col-md-4">
-            <b>{% trans "Earliest release: " %}</b> {{ra.min_release_date}}<br/>
-            <b>{% trans "Latest release: " %}</b> {{ra.max_release_date}}<br/><br/>
-            <b>{% trans "Earliest tender start: " %}</b> {{ra.min_tender_date}}<br/>
-            <b>{% trans "Latest tender start: " %}</b> {{ra.max_tender_date}}<br/><br/>
-            <b>{% trans "Earliest award: " %}</b> {{ra.min_award_date}}<br/>
-            <b>{% trans "Latest award: " %}</b> {{ra.max_award_date}}<br/><br/>
-            <b>{% trans "Earliest contract start: " %}</b> {{ra.min_contract_date}}<br/>
-            <b>{% trans "Latest contract start: " %}</b> {{ra.max_contract_date}}<br/><br/>
+            <b>{% trans "Earliest release: " %}</b> {{ra.min_release_date|date:"j M Y, H:i (e)"}}<br/>
+            <b>{% trans "Latest release: " %}</b> {{ra.max_release_date|date:"j M Y, H:i (e)"}}<br/><br/>
+            <b>{% trans "Earliest tender start: " %}</b> {{ra.min_tender_date|date:"j M Y, H:i (e)"}}<br/>
+            <b>{% trans "Latest tender start: " %}</b> {{ra.max_tender_date|date:"j M Y, H:i (e)"}}<br/><br/>
+            <b>{% trans "Earliest award: " %}</b> {{ra.min_award_date|date:"j M Y, H:i (e)"}}<br/>
+            <b>{% trans "Latest award: " %}</b> {{ra.max_award_date|date:"j M Y, H:i (e)"}}<br/><br/>
+            <b>{% trans "Earliest contract start: " %}</b> {{ra.min_contract_date|date:"j M Y, H:i (e)"}}<br/>
+            <b>{% trans "Latest contract start: " %}</b> {{ra.max_contract_date|date:"j M Y, H:i (e)"}}<br/><br/>
           </div>
           <div class="col-md-4">
             <b>{% trans "Total Unique Organizations: " %}</b> {{ra.unique_org_count}}<br/>
@@ -350,7 +350,7 @@
             {% for release in releases %}
             <tr>
               <td>{{ release.ocid }}</td>
-              <td>{{ release.date }}</td>
+              <td>{{ release.date|date:"j M Y, H:i (e)" }}</td>
               <td>{% if release.tag %}{{ release.tag|join:", " }}{% endif %}</td>
               <td>
                 <ul class="list-unstyled">

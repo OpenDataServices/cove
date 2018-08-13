@@ -15,14 +15,9 @@ def cove_modal_errors(**kw):
     return kw
 
 
-@register.filter(name='get_message')
-def get_message(error):
-    return json.loads(error)[1]
-
-
-@register.filter(name='get_message_type')
-def get_message_type(error):
-    return json.loads(error)[0]
+@register.filter(name='json_decode')
+def json_decode(error_json):
+    return json.loads(error_json)
 
 
 @register.filter(name='concat')

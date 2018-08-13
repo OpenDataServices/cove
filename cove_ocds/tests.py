@@ -15,10 +15,11 @@ from django.core.management.base import CommandError
 
 import cove.lib.common as cove_common
 from .lib.api import APIException, context_api_transform, ocds_json_output
-from .lib.ocds import get_releases_aggregates
+from .lib.ocds import get_releases_aggregates, get_bad_ocds_prefixes
 from .lib.schema import SchemaOCDS
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
+from cove.lib.tools import cached_get_request
 
 
 OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
@@ -206,6 +207,7 @@ EXPECTED_RELEASE_AGGREGATE_RANDOM = {
 
 DEFAULT_OCDS_VERSION = settings.COVE_CONFIG['schema_version']
 METRICS_EXT = 'https://raw.githubusercontent.com/open-contracting/ocds_metrics_extension/master/extension.json'
+CODELIST_EXT = 'https://raw.githubusercontent.com/INAImexico/ocds_extendedProcurementCategory_extension/0ed54770c85500cf21f46e88fb06a30a5a2132b1/extension.json'
 UNKNOWN_URL_EXT = 'http://bad-url-for-extensions.com/extension.json'
 NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
 
@@ -252,9 +254,7 @@ def test_get_releases_aggregates():
 
 
 def test_get_schema_validation_errors():
-    schema_obj = SchemaOCDS()
-    schema_obj.schema_host = 'http://ocds.open-contracting.org/standard/r/1__0__RC/'
-    schema_obj.release_pkg_schema_url = os.path.join(schema_obj.schema_host, schema_obj.release_pkg_schema_name)
+    schema_obj = SchemaOCDS(select_version='1.0')
     schema_name = schema_obj.release_pkg_schema_name
 
     with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases.json')) as fp:
@@ -579,25 +579,28 @@ def test_get_additional_codelist_values():
         json_data_w_additial_codelists = json.load(fp)
 
     schema_obj = SchemaOCDS(select_version='1.1')
-    codelist_url = settings.COVE_CONFIG['schema_codelists']['1.1']
-    additional_codelist_values = cove_common.get_additional_codelist_values(schema_obj, codelist_url, json_data_w_additial_codelists)
+    additional_codelist_values = cove_common.get_additional_codelist_values(schema_obj, json_data_w_additial_codelists)
 
     assert additional_codelist_values == {
-        ('releases', 'tag'): {
+        ('releases/tag'): {
             'codelist': 'releaseTag.csv',
             'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/releaseTag.csv',
+            'codelist_amend_urls': [],
             'field': 'tag',
+            'extension_codelist': False,
             'isopen': False,
             'path': 'releases',
-            'values': {'oh no'}
+            'values': ['oh no']
         },
-        ('releases', 'tender', 'items', 'classification', 'scheme'): {
+        ('releases/tender/items/classification/scheme'): {
             'codelist': 'itemClassificationScheme.csv',
             'codelist_url': 'https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/itemClassificationScheme.csv',
+            'codelist_amend_urls': [],
+            'extension_codelist': False,
             'field': 'scheme',
             'isopen': True,
             'path': 'releases/tender/items/classification',
-            'values': {'GSINS'}}
+            'values': ['GSINS']}
     }
 
 
@@ -630,14 +633,15 @@ def test_schema_ocds_constructor(select_version, release_data, version, invalid_
     assert schema.extensions == extensions
 
 
-@pytest.mark.parametrize(('release_data', 'extensions', 'invalid_extension', 'extended'), [
-    (None, {}, {}, False),
-    ({'version': '1.1', 'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False),
-    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False),
-    ({'version': '1.1', 'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True),
-    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True),
+@pytest.mark.parametrize(('release_data', 'extensions', 'invalid_extension', 'extended', 'extends_schema'), [
+    (None, {}, {}, False, False),
+    ({'version': '1.1', 'extensions': [NOT_FOUND_URL_EXT]}, {NOT_FOUND_URL_EXT: ()}, {NOT_FOUND_URL_EXT: '404: not found'}, False, False),
+    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT]}, {UNKNOWN_URL_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, False, False),
+    ({'version': '1.1', 'extensions': [METRICS_EXT]}, {METRICS_EXT: ()}, {}, True, True),
+    ({'version': '1.1', 'extensions': [CODELIST_EXT]}, {CODELIST_EXT: ()}, {}, True, False),
+    ({'version': '1.1', 'extensions': [UNKNOWN_URL_EXT, METRICS_EXT]}, {UNKNOWN_URL_EXT: (), METRICS_EXT: ()}, {UNKNOWN_URL_EXT: 'fetching failed'}, True, True),
 ])
-def test_schema_ocds_extensions(release_data, extensions, invalid_extension, extended):
+def test_schema_ocds_extensions(release_data, extensions, invalid_extension, extended, extends_schema):
     schema = SchemaOCDS(release_data=release_data)
     assert schema.extensions == extensions
     assert not schema.extended
@@ -646,7 +650,7 @@ def test_schema_ocds_extensions(release_data, extensions, invalid_extension, ext
     assert schema.invalid_extension == invalid_extension
     assert schema.extended == extended
 
-    if extended:
+    if extends_schema:
         assert 'Metric' in release_schema_obj['definitions'].keys()
         assert release_schema_obj['definitions']['Award']['properties'].get('agreedMetrics')
     else:
@@ -694,7 +698,7 @@ def test_schema_after_version_change(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
 
     # test link is still there.
@@ -705,7 +709,7 @@ def test_schema_after_version_change(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
 
     resp = client.post(data.get_absolute_url(), {'version': '1.0'})
@@ -714,7 +718,7 @@ def test_schema_after_version_change(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" not in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" not in validation_errors_fp.read()
 
 
@@ -734,7 +738,7 @@ def test_schema_after_version_change_record(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
 
     # test link is still there.
@@ -745,7 +749,7 @@ def test_schema_after_version_change_record(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" in validation_errors_fp.read()
 
     resp = client.post(data.get_absolute_url(), {'version': '1.0'})
@@ -754,7 +758,7 @@ def test_schema_after_version_change_record(client):
     with open(os.path.join(data.upload_dir(), 'extended_release_schema.json')) as extended_release_fp:
         assert "mainProcurementCategory" not in json.load(extended_release_fp)['definitions']['Tender']['properties']
 
-    with open(os.path.join(data.upload_dir(), 'validation_errors-2.json')) as validation_errors_fp:
+    with open(os.path.join(data.upload_dir(), 'validation_errors-3.json')) as validation_errors_fp:
         assert "'version' is missing but required" not in validation_errors_fp.read()
 
 
@@ -777,9 +781,9 @@ def test_corner_cases_for_deprecated_data_fields(json_data):
 
 def test_context_api_transform_validation_additional_fields():
     context = {
-        'validation_errors': [['[\"type_a\", \"description_a\", \"field_a\"]', [{'path': 'path_to_a', 'value': 'a_value'}]],
-                              ['[\"type_b\", \"description_b\", \"field_b\"]', [{'path': 'path_to_b', 'value': ''}]],
-                              ['[\"type_c\", \"description_c\", \"field_c\"]', [{'path': 'path_to_c'}]]],
+        'validation_errors': [['{"message_type":\"type_a\", "message":\"description_a\", "path_no_number":\"field_a\"}', [{'path': 'path_to_a', 'value': 'a_value'}]],
+                              ['{"message_type":\"type_b\", "message":\"description_b\", "path_no_number":\"field_b\"}', [{'path': 'path_to_b', 'value': ''}]],
+                              ['{"message_type":\"type_c\", "message":\"description_c\", "path_no_number":\"field_c\"}', [{'path': 'path_to_c'}]]],
         'data_only': [['path_to_d', 'field_d', 1],
                       ['path_to_e', 'field_e', 2],
                       ['path_to_f', 'field_f', 3]],
@@ -940,6 +944,23 @@ def test_cove_ocds_cli(file_type, options, output):
             call_command('ocds_cli', file_name, output_dir=output_dir)
 
 
+def test_cove_ocds_cli_validation_errors():
+    file_name = os.path.join('cove_ocds', 'fixtures', 'badfile_all_validation_errors.json')
+    test_dir = str(uuid.uuid4())
+    output_dir = os.path.join('media', test_dir)
+    options = {
+        'output_dir': output_dir,
+        'schema_version': '1.1'
+    }
+    call_command('ocds_cli', file_name, **options)
+
+    with open(os.path.join(output_dir, 'results.json')) as fp, \
+            open(os.path.join('cove_ocds', 'fixtures', 'badfile_all_validation_errors_results.json')) as fp_expected:
+        results = json.load(fp)
+        expected = json.load(fp_expected)
+        assert results == expected
+
+
 @pytest.mark.parametrize('version_option', ['', '1.1', '100.100.100'])
 def test_cove_ocds_cli_schema_version(version_option):
     test_dir = str(uuid.uuid4())
@@ -983,6 +1004,9 @@ def test_cove_ocds_cli_schema_version_override(file_name, version_option):
 
 
 def test_cove_ocds_cli_schema_cache():
+    #clear url cache
+    cached_get_request.cache_clear()
+
     test_dir = str(uuid.uuid4())
     file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_1_release_with_invalid_extensions.json')
     output_dir = os.path.join('media', test_dir)
@@ -999,7 +1023,7 @@ def test_cove_ocds_cli_schema_cache():
 
     assert results['version_used'] == '1.0'
     assert results['schema_url'] == 'http://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
-    assert sorted(results['validation_errors'], key=lambda k: k['description'])[0]['description'] == "'buyer:id' is missing but required"
+    assert sorted(results['validation_errors'], key=lambda k: k['description'])[0]['description'].startswith("'id' is missing but required within 'buyer'")
     assert sorted(results['extensions']['extensions'], key=lambda k: k['name'])[2]['description'] == "For classifying organizations as micro, sme or large."
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[0][0] == 'badprotocol://example.com'
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[1][1] == '404: not found'
@@ -1021,7 +1045,7 @@ def test_cove_ocds_cli_schema_cache():
 
     assert results['version_used'] == '1.0'
     assert results['schema_url'] == 'http://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
-    assert sorted(results['validation_errors'], key=lambda k: k['description'])[0]['description'] == "'buyer:id' is missing but required"
+    assert sorted(results['validation_errors'], key=lambda k: k['description'])[0]['description'].startswith("'id' is missing but required within 'buyer'")
     assert sorted(results['extensions']['extensions'], key=lambda k: k['name'])[2]['description'] == "For classifying organizations as micro, sme or large."
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[0][0] == 'badprotocol://example.com'
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[1][1] == '404: not found'
@@ -1065,3 +1089,26 @@ def test_get_json_data_missing_ids():
     missin_ids_paths = cove_common.get_json_data_missing_ids(user_data_paths, schema_obj)
 
     assert missin_ids_paths == results
+
+
+def test_bad_ocds_prefixes():
+    file_name = os.path.join('cove_ocds', 'fixtures', 'tenders_releases_7_releases_check_ocids.json')
+    results = [
+        ('bad-prefix-000001', 'releases/0/ocid'),
+        ('bad-prefix-000002', 'releases/1/ocid'),
+        ('bad-prefix-000002', 'releases/2/ocid'),
+        ('ocds-bad-000004', 'releases/4/ocid'),
+        ('ocds-bad-000004', 'releases/5/ocid'),
+        ('ocds-bad-000004', 'releases/6/ocid')
+    ]
+
+    with open(os.path.join(file_name)) as fp:
+        user_data = json.load(fp)
+
+    user_data_ocids = []
+    for rel in user_data['releases']:
+        user_data_ocids.append(rel['ocid'])
+
+    assert len(user_data_ocids) == 7  # 1 good, 6 bad ocds prefixes
+    assert 'ocds-00good-000003' in user_data_ocids  # good ocds prefix
+    assert get_bad_ocds_prefixes(user_data) == results

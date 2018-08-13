@@ -17,7 +17,7 @@
           <div class="conversion message"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>{% blocktrans %}Please read the <a href="#conversion-warning">conversion warnings</a> below.{% endblocktrans %}</div>
         {% endif %} 
         <div class="validation message">  
-        {% if validation_errors %}
+        {% if validation_errors or additional_closed_codelist_values %}
           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span><b>{% trans "Failed " %}</b>
         {% else %} 
           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% trans "Passed " %} 
@@ -136,7 +136,7 @@
       <thead>
         <tr>
           <th>ocid</th>
-          <th>record count</th>
+          <th>release count</th>
           <th>compiledRelease</th>
           <th>versionedRelease</th>
         </tr>

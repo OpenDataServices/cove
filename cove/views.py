@@ -28,7 +28,9 @@ def explore_data_context(request, pk, get_file_type=None):
             }, status=404)
 
     try:
-        data.original_file.file.name
+        file_name = data.original_file.file.name
+        if file_name.endswith('validation_errors-3.json'):
+            raise PermissionError('You are not allowed to upload a file with this name.')
     except FileNotFoundError:
         return {}, None, render(request, 'error.html', {
             'sub_title': _('Sorry, the page you are looking for is not available'),

@@ -1,0 +1,9 @@
+{
+  "properties": {
+    "newfield": {
+      "type": "integer",
+      "title": "New field",
+      "description": "<script>alert('badscript');</script><a href=\"javascript:alert('badlink')\">test</a>"
+    }
+  }
+}
