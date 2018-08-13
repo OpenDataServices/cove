@@ -145,7 +145,7 @@
           <small><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> &nbsp;Your data has been checked against schema version <strong>1.0</strong> and includes extensions but extensions were not introduced in the schema until version <strong>1.1</strong>.</small>
         </div>
       {% endif %}
-      <p>You data contains the following schema extensions{% if not extensions.is_extended_schema %} but it wasn't possible to fetch them{% endif %}:</p>
+      <p>Your data contains the following schema extensions{% if not extensions.is_extended_schema %} but it wasn't possible to fetch them{% endif %}:</p>
       <ul>
         {% for ext_descriptor_url, ext_details in ext.items %}
           {% if ext_details %}
@@ -310,7 +310,7 @@
       </div>
       <div id="additionalClosedCodelist" class="collapse in">
         <div class="panel-body">
-          The fields below use closed codelists. When using these fields, you <strong> must </strong> use one of the pre-defined codelist values. If you use a value that is not on the relevant codelist, your data will not pass validation.
+          The fields below use closed codelists. When using these fields, you <strong> must </strong> use one of the pre-defined codelist values. If you use a value that is not on the relevant codelist, your data will not pass validation. Where you see + or - this indicates that the codelist has been modified with these additions (+) or subtractions (-) by one or more extensions.
           {% with additional_codelist_values=additional_closed_codelist_values %}
           <div>{% include "additional_codelist_values.html" %}</div>
           {% endwith %}
@@ -349,7 +349,7 @@
         </h4>
       </div>
       <div class="panel-body">
-        Your data contains a number of fields that use an open codelist. You should use values from the codelist whenever possible, but if the codelist does not provide the values you need, you are permitted to add additional values. The values below do not appear in the codelist; you should check that you intended these as additional values.
+        Your data contains a number of fields that use an open codelist. You should use values from the codelist whenever possible, but if the codelist does not provide the values you need, you are permitted to add additional values. The values below do not appear in the codelist; you should check that you intended these as additional values. Where you see + or - this indicates that the codelist has been modified with these additions (+) or subtractions (-) by one or more extensions.
         <div id="additionalOpenCodelist" class="collapse in">
           {% with additional_codelist_values=additional_open_codelist_values %}
           {% include "additional_codelist_values.html" %}

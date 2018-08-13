@@ -95,6 +95,7 @@ class SchemaOCDS(SchemaJsonMixin):
         self.core_codelists = load_core_codelists(self.codelists, core_unique_files)
 
         self.extended_codelists = deepcopy(self.core_codelists)
+        self.extended_codelist_urls = {}
         # we do not want to cache if the requests failed.
         if not self.core_codelists:
             load_core_codelists.cache_clear()
@@ -140,6 +141,11 @@ class SchemaOCDS(SchemaJsonMixin):
                                 codelist] = "Codelist error, Trying to remove non existing codelist value {}".format(code)
                 else:
                     self.extended_codelists[codelist] = codelist_map
+
+                try:
+                    self.extended_codelist_urls[codelist].append(base_url + codelist)
+                except KeyError:
+                    self.extended_codelist_urls[codelist] = [base_url + codelist]
 
     def get_release_schema_obj(self, deref=False):
         release_schema_obj = self._release_schema_obj

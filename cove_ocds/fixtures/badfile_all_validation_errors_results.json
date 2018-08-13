@@ -5,6 +5,7 @@
       "isopen": false,
       "codelist": "currency.csv",
       "codelist_url": "https://raw.githubusercontent.com/open-contracting/standard/1.1/standard/schema/codelists/currency.csv",
+      "codelist_amend_urls": [],
       "extension_codelist": false,
       "path": "releases/tender/value",
       "values": [
