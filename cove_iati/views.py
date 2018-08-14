@@ -17,7 +17,6 @@ from cove.input.views import data_input
 from cove.views import explore_data_context
 from .lib.iati import common_checks_context_iati, get_file_type
 from .lib.api import iati_json_output
-from .lib.iati_utils import sort_iati_xml_file
 from .lib.schema import SchemaIATI
 
 
@@ -74,10 +73,11 @@ def explore_iati(request, pk):
     if file_type != 'xml':
         schema_iati = SchemaIATI()
         context.update(convert_spreadsheet(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
-                       file_type, schema_iati.activity_schema, xml=True))
+            file_type, xml=True, xml_schemas=[
+                schema_iati.activity_schema,
+                schema_iati.common_schema,
+            ]))
         data_file = context['converted_path']
-        # sort converted xml
-        sort_iati_xml_file(context['converted_path'], context['converted_path'])
     else:
         data_file = db_data.original_file.file.name
         context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,

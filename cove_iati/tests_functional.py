@@ -142,7 +142,8 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
     <myns:test>1</myns:test>
     <test2>2</test2>
   </iati-activity>
-</iati-activities>'''
+</iati-activities>
+'''
 
 
 def test_rulesets_table_toggle(server_url, browser, httpserver):

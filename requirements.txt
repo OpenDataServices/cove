@@ -1,6 +1,6 @@
 pip==9.0.3
 Django==1.11.15 # rq.filter: <1.12
--e git+https://github.com/OpenDataServices/flatten-tool.git@v0.1.2#egg=flattentool
+-e git+https://github.com/OpenDataServices/flatten-tool.git@v0.2.0#egg=flattentool
 django-bootstrap3==9.1.0
 django-debug-toolbar==1.9.1
 requests==2.18.4
