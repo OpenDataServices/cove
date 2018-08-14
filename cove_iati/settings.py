@@ -51,10 +51,6 @@ COVE_CONFIG = {
     'root_list_path': 'iati-activity',
     'root_id': None,
     'id_name': 'iati-identifier',
-    'xml_schemas': [
-        'cove_iati/iati_schemas/2.03/iati-activities-schema.xsd',
-        'cove_iati/iati_schemas/2.03/iati-common.xsd',
-    ],
     'convert_titles': False,
     'input_methods': ['upload', 'url', 'text'],
     'support_email': None

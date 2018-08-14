@@ -73,7 +73,10 @@ def explore_iati(request, pk):
     if file_type != 'xml':
         schema_iati = SchemaIATI()
         context.update(convert_spreadsheet(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
-                       file_type, schema_iati.activity_schema, xml=True))
+            file_type, xml=True, xml_schemas=[
+                schema_iati.activity_schema,
+                schema_iati.common_schema,
+            ]))
         data_file = context['converted_path']
     else:
         data_file = db_data.original_file.file.name

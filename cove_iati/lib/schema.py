@@ -34,3 +34,4 @@ class SchemaIATI():
 
         self.activity_schema = os.path.join(self.schema_directory, self.activity_schema_name)
         self.organization_schema = os.path.join(self.schema_directory, self.organization_schema_name)
+        self.common_schema = os.path.join(self.schema_directory, self.common_schema_name)
