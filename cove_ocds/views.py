@@ -8,6 +8,7 @@ from decimal import Decimal
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
+from django.utils.html import format_html
 
 from . lib import exceptions
 from . lib.ocds import common_checks_ocds
@@ -46,9 +47,9 @@ def explore_ocds(request, pk):
                     'sub_title': _("Sorry, we can't process that data"),
                     'link': 'index',
                     'link_text': _('Try Again'),
-                    'msg': _('We think you tried to upload a JSON file, but it is not well formed JSON.'
+                    'msg': _(format_html('We think you tried to upload a JSON file, but it is not well formed JSON.'
                              '\n\n<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">'
-                             '</span> <strong>Error message:</strong> {}'.format(err)),
+                             '</span> <strong>Error message:</strong> {}', err)),
                     'error': format(err)
                 })
 
