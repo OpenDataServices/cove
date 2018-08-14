@@ -80,8 +80,8 @@ def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector
 
 def test_index_page_ocds(server_url, browser):
     browser.get(server_url)
-    assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
-    assert 'Using the validator' in browser.find_element_by_tag_name('body').text
+    assert 'Data Review Tool' in browser.find_element_by_tag_name('body').text
+    assert 'Using the data review tool' in browser.find_element_by_tag_name('body').text
     assert "'release'" in browser.find_element_by_tag_name('body').text
     assert "'record'" in browser.find_element_by_tag_name('body').text
 
@@ -329,7 +329,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
     for text in not_expected_text:
         assert text not in body_text
 
-    assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
+    assert 'Data Review Tool' in browser.find_element_by_tag_name('body').text
     # assert 'Release Table' in browser.find_element_by_tag_name('body').text
 
     if conversion_successful:
