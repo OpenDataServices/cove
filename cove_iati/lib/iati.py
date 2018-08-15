@@ -46,7 +46,7 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
             })
 
     if tree.getroot().tag == 'iati-organisations':
-        schema_path = schema_iati.organization_schema
+        schema_path = schema_iati.organisation_schema
     else:
         schema_path = schema_iati.activity_schema
     errors_all, invalid_data = validate_against_schema(schema_path, tree)
