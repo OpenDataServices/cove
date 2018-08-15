@@ -3,7 +3,6 @@ import json
 import shutil
 
 from .iati import common_checks_context_iati, get_file_type
-from .iati_utils import sort_iati_xml_file
 from .schema import SchemaIATI
 from cove.lib.converters import convert_spreadsheet
 
@@ -38,10 +37,11 @@ def iati_json_output(output_dir, file, openag=False, orgids=False):
     if file_type != 'xml':
         schema_iati = SchemaIATI()
         context.update(convert_spreadsheet(output_dir, '', file, file_type,
-                       schema_iati.activity_schema, xml=True, cache=False))
+            cache=False, xml=True, xml_schemas=[
+                schema_iati.activity_schema,
+                schema_iati.common_schema,
+            ]))
         data_file = context['converted_path']
-        # sort converted xml
-        sort_iati_xml_file(context['converted_path'], context['converted_path'])
     else:
         data_file = file
 
