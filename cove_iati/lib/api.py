@@ -39,6 +39,7 @@ def iati_json_output(output_dir, file, openag=False, orgids=False):
         context.update(convert_spreadsheet(output_dir, '', file, file_type,
             cache=False, xml=True, xml_schemas=[
                 schema_iati.activity_schema,
+                schema_iati.organisation_schema,
                 schema_iati.common_schema,
             ]))
         data_file = context['converted_path']
