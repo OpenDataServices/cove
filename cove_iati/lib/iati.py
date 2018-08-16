@@ -47,8 +47,14 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
 
     if tree.getroot().tag == 'iati-organisations':
         schema_path = schema_iati.organisation_schema
+        schema_name = 'Organisation'
+        # rulesets don't support orgnisation files properly yet
+        # so disable rather than give partial information
+        ruleset_disabled = True
     else:
         schema_path = schema_iati.activity_schema
+        schema_name = 'Activity'
+        ruleset_disabled = False
     errors_all, invalid_data = validate_against_schema(schema_path, tree)
 
     return_on_error = [{'message': 'There was a problem running ruleset checks',
@@ -68,13 +74,16 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                 validation_error_fp.write(json.dumps(validation_errors))
 
     # Ruleset errors
-    ruleset_errors = get_iati_ruleset_errors(
-        tree,
-        os.path.join(upload_dir, 'ruleset'),
-        api=api,
-        ignore_errors=invalid_data,
-        return_on_error=return_on_error
-    )
+    if ruleset_disabled:
+        ruleset_errors = None
+    else:
+        ruleset_errors = get_iati_ruleset_errors(
+            tree,
+            os.path.join(upload_dir, 'ruleset'),
+            api=api,
+            ignore_errors=invalid_data,
+            return_on_error=return_on_error
+        )
 
     if openag:
         ruleset_errors_ag = get_openag_ruleset_errors(
@@ -102,7 +111,9 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         context.update({
             'validation_errors_count': sum(len(value) for value in validation_errors.values()),
             'cell_source_map': cell_source_map,
-            'first_render': False
+            'first_render': False,
+            'schema_name': schema_name,
+            'ruleset_disabled': ruleset_disabled
         })
         if ruleset_errors:
             ruleset_errors_by_activity = get_iati_ruleset_errors(
