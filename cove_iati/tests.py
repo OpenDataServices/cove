@@ -523,6 +523,8 @@ def test_common_checks_context_iati_ruleset():
     context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', api=True)
     assert len(context['ruleset_errors']) == 17
 
+
+def test_common_checks_context_iati_org_validation():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid.xml')
     upload_dir = os.path.join('media', str(uuid.uuid4()))
     context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', api=True)
