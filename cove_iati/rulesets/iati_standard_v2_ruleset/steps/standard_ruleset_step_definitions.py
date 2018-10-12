@@ -3,7 +3,7 @@ Adapted from https://github.com/pwyf/bdd-tester/blob/master/steps/standard_rules
 Released under MIT License
 License: https://github.com/pwyf/bdd-tester/blob/master/LICENSE
 '''
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 import datetime
 import re
 
@@ -190,8 +190,11 @@ def step_attr_add_to_hundred(context, attribute):
     attr_sum = 0
     for el in elements:
         percentage = el.attrib.get(attribute)
-        if percentage and percentage.isdigit():
-            attr_sum += Decimal(percentage)
+        if percentage:
+            try:
+                attr_sum += Decimal(percentage)
+            except InvalidOperation:
+                pass
     if attr_sum != 100:
         errors.append({'explanation': '{}/@{} adds up to {}%'.format(context.xpath_expression, attribute, attr_sum),
                        'path': ' & '.join(get_child_full_xpath(context.xml, element) for element in elements)})

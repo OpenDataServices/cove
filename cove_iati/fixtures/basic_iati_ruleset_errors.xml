@@ -90,7 +90,8 @@
     <activity-date type="2" iso-date="22000101"/>
     <activity-date type="4" iso-date="24000101"/>
     <recipient-country code="AF" percentage="30"/>
-    <recipient-region code="489" percentage="70"/>
+    <recipient-region code="489" percentage="40.5"/>
+    <recipient-region code="489" percentage="29.5"/>
     <sector vocabulary="1" code="1"/>
     <budget>
       <period-start iso-date="2010-01-01"/>
@@ -168,7 +169,7 @@
     <participating-org role="1" ref="TZ-BRLA-10"/>
     <activity-status code="3"/>
     <activity-date iso-date="2017-01-01"/>
-    <recipient-country code="AF" percentage="30"/>
+    <recipient-country code="AF" percentage="bad number"/>
     <sector vocabulary="1" code="1"/>
     <transaction>
       <transaction-type code="2"/>

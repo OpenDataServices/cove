@@ -263,7 +263,10 @@ def test_cove_iati_cli_output():
                        'value': ''},
                       {'description': "'activity-date': The attribute 'type' is required but missing.",
                        'path': "iati-activity/4/activity-date/@type' is required but missing",
-                       'value': ''}]
+                       'value': ''},
+                      {'description': "'recipient-country', attribute 'percentage' is not a valid value of the atomic type 'xs:decimal'.",
+                       'path': "iati-activity/4/recipient-country/@percentage",
+                       'value': 'bad number'}]
 
     exp_rulesets = [{'id': 'TZ-BRLA-1-AAA-123123-AA123',
                      'explanation': '2200-01-01 must be on or before today (2017-10-04)',
@@ -326,7 +329,7 @@ def test_cove_iati_cli_output():
                     'path': '/iati-activities/iati-activity[5]',
                     'rule': 'activity-date[date @type="1"] or activity-date[@type="2"] must be present'},
                    {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                    'explanation': 'recipient-country|recipient-region/@percentage adds up to 30%',
+                    'explanation': 'recipient-country|recipient-region/@percentage adds up to 0%',
                     'path': '/iati-activities/iati-activity[5]/recipient-country',
                     'rule': 'recipient-country/@percentage and recipient-region/@percentage must sum to 100%'},
                    {'id': 'TZ-BRLA-9-EEE-123123-EE123',
