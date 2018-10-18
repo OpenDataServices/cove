@@ -13,7 +13,7 @@ class SchemaIATI():
     default_schema_host = config['schema_host']
     default_version = config['schema_version']
     activity_schema_name = config['core_schema']['activity']
-    organization_schema_name = config['core_schema']['organization']
+    organisation_schema_name = config['core_schema']['organisation']
     common_schema_name = config['supplementary_schema']['common']
     xml_schema_name = config['supplementary_schema']['xml']
 
@@ -25,7 +25,7 @@ class SchemaIATI():
         if not os.path.isdir(self.schema_directory):
             os.makedirs(self.schema_directory)
 
-            for filename in [self.activity_schema_name, self.organization_schema_name,
+            for filename in [self.activity_schema_name, self.organisation_schema_name,
                              self.common_schema_name, self.xml_schema_name]:
                 with open(os.path.join(self.schema_directory, filename), 'w') as schema_file:
                     schema_file_url = urljoin(self.schema_host, filename)
@@ -33,5 +33,5 @@ class SchemaIATI():
                     schema_file.write(xml_text)
 
         self.activity_schema = os.path.join(self.schema_directory, self.activity_schema_name)
-        self.organization_schema = os.path.join(self.schema_directory, self.organization_schema_name)
+        self.organisation_schema = os.path.join(self.schema_directory, self.organisation_schema_name)
         self.common_schema = os.path.join(self.schema_directory, self.common_schema_name)

@@ -75,6 +75,7 @@ def explore_iati(request, pk):
         context.update(convert_spreadsheet(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
             file_type, xml=True, xml_schemas=[
                 schema_iati.activity_schema,
+                schema_iati.organisation_schema,
                 schema_iati.common_schema,
             ]))
         data_file = context['converted_path']
