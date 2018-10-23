@@ -14,7 +14,6 @@ CoVE - Convert Validate & Explore
 .. image:: https://img.shields.io/badge/license-AGPLv3-blue.svg
     :target: https://github.com/OpenDataServices/cove/blob/master/AGPLv3.txt
 
-Development work on CoVE by Open Data Services is carried out in sprints. The issues for each sprint can be found at https://github.com/OpenDataServices/cove/projects . Other work is carried out from time to time, and contributions from the community are welcome. Outstanding issues for CoVE can be found at https://github.com/OpenDataServices/cove/issues . Please report any bugs!
 
 Introduction
 ============
@@ -276,3 +275,16 @@ If the file is in spreadsheet format, the output directory will contain a *unfla
 **OpenaAg** rulesets check that the data contains the XML elements ``<opeang:tag>`` and ``<location>``, and that they include the right attributes expected for OpenAg data. Please read `OpenAg ruleset feature files <cove_iati/rulesets/iati_openag_ruleset/>`_ (written in `Gerkhin <https://github.com/cucumber/cucumber/wiki/Gherkin/>`_ style) for more information.
 
 **Org-ids** rulesets check that all organisation identifiers are prefixed with a registered `org-ids <http://org-id.guide>`_ prefix. Please read `Org-ids ruleset feature file <cove_iati/rulesets/iati_orgids_ruleset/>`_ for more information
+
+Development & Contributions
+===========================
+
+Development work on CoVE by Open Data Services is carried out in sprints. The issues for each sprint can be found at https://github.com/OpenDataServices/cove/projects . Other work is carried out from time to time. Outstanding issues for CoVE can be found at https://github.com/OpenDataServices/cove/issues . Please report any bugs!
+
+Community contributions to CoVE are welcome - please open an issue to discuss with the community before starting work.
+
+Credits
++++++++
+
+Thanks to `@andylolz <https://github.com/andylolz>`_ from `@pwyf <https://github.com/pwyf>`_ and `@siemvassen <https://github.com/siemvassen>`_ from `@zimmerman-zimmerman <https://github.com/zimmerman-zimmerman>`_ for code and input around CoVE for IATI, especially organisation file support. 
+
