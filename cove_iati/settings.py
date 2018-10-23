@@ -43,7 +43,7 @@ COVE_CONFIG = {
     'app_base_template': 'cove_iati/base.html',
     'app_verbose_name': 'IATI CoVE',
     'app_strapline': 'Convert, Validate, Explore IATI Data',
-    'core_schema': {'activity': 'iati-activities-schema.xsd', 'organization': 'iati-organisations-schema.xsd'},
+    'core_schema': {'activity': 'iati-activities-schema.xsd', 'organisation': 'iati-organisations-schema.xsd'},
     'supplementary_schema': {'common': 'iati-common.xsd', 'xml': 'xml.xsd'},
     'schema_host': 'https://raw.githubusercontent.com/IATI/IATI-Schemas/',
     'schema_version': '2.03',
