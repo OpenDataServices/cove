@@ -43,7 +43,7 @@ Before contributions to any of our projects are accepted, we require you to comp
 
 ### Submission Instructions
 
-We have a [generic agreement](http://contributoragreements.org/u2s/bm1v4q5je) that covers all code projects in the [Open Data Services GitHub Organisation](https://github.com/opendataservices)
+We have a [generic agreement](http://contributoragreements.org/u2s/mzjtkfedi) that covers all code projects in the [Open Data Services GitHub Organisation](https://github.com/opendataservices)
 
 If this is amenable to you, feel free to complete it. We will be automatically notified that you have submitted an agreement and will contact you (usually in the same day, but in no more than 3 working days)
 
