@@ -286,5 +286,12 @@ Community contributions to CoVE are welcome - please open an issue to discuss wi
 Credits
 +++++++
 
-Thanks to `@andylolz <https://github.com/andylolz>`_ from `@pwyf <https://github.com/pwyf>`_ and `@siemvassen <https://github.com/siemvassen>`_ from `@zimmerman-zimmerman <https://github.com/zimmerman-zimmerman>`_ for code and input around CoVE for IATI, especially organisation file support. 
+CoVE has been supported by open data standards organisations since its creation in 2015, as well as investment from Open Data Services. Key financial contributors have been:
+`Open Contracting Partnership <https://www.open-contracting.org/>`_
+`360Giving <http://www.threesixtygiving.org/>`_
+`Initiative For Open Ag Funding / InterAction <https://www.interaction.org/project/open-ag-funding/overview>`_
+
+As well as the team at Open Data Services, code contributions have been received from `@andylolz <https://github.com/andylolz>`_. Thanks! 
+
+An open source project relies on contributions of all kinds, and so thanks to `@siemvaessen <https://github.com/siemvaessen>`_ from `@zimmerman-zimmerman <https://github.com/zimmerman-zimmerman>`_ for input around CoVE for IATI, especially organisation file support, and for providing valuable feedback as Z&Z use CoVE in their work. 
 
