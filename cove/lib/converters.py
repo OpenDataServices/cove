@@ -28,7 +28,8 @@ def filter_conversion_warnings(conversion_warnings):
 
 @cove_spreadsheet_conversion_error
 def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url=None, pkg_schema_url=None,
-                        metatab_name='Meta', replace=False, xml=False, xml_schemas=None, cache=True):
+                        metatab_name='Meta', replace=False, xml=False, xml_schemas=None, cache=True,
+                        xml_comment=None):
     context = {}
     if xml:
         output_file = 'unflattened.xml'
@@ -78,6 +79,9 @@ def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url
         flattentool_options['xml'] = True
         flattentool_options['default_configuration'] += ',IDName {}'.format(config.get('id_name', 'id'))
         flattentool_options['xml_schemas'] = xml_schemas
+        if xml_comment:
+            flattentool_options['xml_comment'] = xml_comment
+
     else:
         flattentool_options.update({
             'schema': schema_url,
