@@ -12,7 +12,7 @@ from django.utils.html import format_html
 
 from . lib import exceptions
 from . lib.ocds import common_checks_ocds
-from . lib.schema import SchemaOCDS
+from libcoveocds.schema import SchemaOCDS
 from cove.lib.common import get_spreadsheet_meta_data
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
