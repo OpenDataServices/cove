@@ -9,7 +9,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.options import Options
 
-PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/validator/')
+PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/review/')
 
 BROWSER = os.environ.get('BROWSER', 'ChromeHeadless')
 
