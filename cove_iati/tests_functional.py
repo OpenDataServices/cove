@@ -60,6 +60,15 @@ def test_accordion(server_url, browser):
     assert buttons() == [False, False, True]
 
 
+def test_common_index_elements(server_url, browser):
+    browser.get(server_url)
+    browser.find_element_by_css_selector('#more-information .panel-title').click()
+    time.sleep(0.5)
+    assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
+    assert 'Why do you delete data after seven days?' in browser.find_element_by_tag_name('body').text
+    assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
+
+
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
     ('example.xml', ['Valid against Schema'], False),
     ('basic_iati_unordered_valid.xlsx', ['Valid against Schema'], True),
