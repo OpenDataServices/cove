@@ -74,6 +74,9 @@ def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url
         'metatab_vertical_orientation': True
     }
 
+    if config.get('hashcomments'):
+        flattentool_options['default_configuration'] += ',hashcomments'
+
     if xml:
         flattentool_options['xml'] = True
         flattentool_options['default_configuration'] += ',IDName {}'.format(config.get('id_name', 'id'))
