@@ -68,20 +68,39 @@ def test_index_page_iati(server_url, browser):
 
 
 @pytest.mark.parametrize(('link_text', 'url'), [
-    ('IATI schema', 'http://reference.iatistandard.org/203/schema/'),
+    ('IATI schema', 'http://reference.iatistandard.org/203/schema/')
+    ])
+def test_index_page_iati_links(server_url, browser, link_text, url):
+    browser.get(server_url)
+    link = browser.find_element_by_link_text(link_text)
+    href = link.get_attribute("href")
+    assert url in href
+
+
+@pytest.mark.parametrize(('link_text', 'url'), [
     ('xlsx', 'https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/export?format=xlsx'),
     ('convert to xml', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-activity-standard.xml?raw=true'),
     ('xml', 'https://github.com/OpenDataServices/iati-sample-data/blob/master/IATI-CoVE-sample-activity-standard.xml'),
     ('convert to spreadsheet', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/export?format=xlsx'),
     ('google doc', 'https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/edit?usp=sharing'),
+    ])
+def test_activity_file_iait_links(server_url, browser, link_text, url):
+    browser.get(server_url)
+    link = browser.find_element_by_link_text(link_text)[0]
+    href = link.get_attribute("href")
+    assert url in href
+
+
+@pytest.mark.parametrize(('link_text', 'url'), [
     ('xlsx', 'https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx'),
     ('convert to xml', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-organisation-standard.xml?raw=true'),
     ('xml', 'https://github.com/OpenDataServices/iati-sample-data/blob/master/IATI-CoVE-sample-organisation-standard.xml'),
-    ('convert to spreadsheet', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx')
+    ('convert to spreadsheet', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx'),
+    ('google doc', 'https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/edit?usp=sharing')
     ])
-def test_index_page_iati_links(server_url, browser, link_text, url):
+def test_organisation_file_iait_links(server_url, browser, link_text, url):
     browser.get(server_url)
-    link = browser.find_element_by_link_text(link_text)
+    link = browser.find_element_by_link_text(link_text)[1]
     href = link.get_attribute("href")
     assert url in href
 
