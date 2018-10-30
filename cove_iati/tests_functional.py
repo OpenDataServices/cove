@@ -77,8 +77,7 @@ def test_index_page_iati(server_url, browser):
     ('xlsx', 'https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx'),
     ('convert to xml', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-organisation-standard.xml?raw=true'),
     ('xml', 'https://github.com/OpenDataServices/iati-sample-data/blob/master/IATI-CoVE-sample-organisation-standard.xml'),
-    ('convert to spreadsheet', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx'),
-    ('google doc', 'https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/edit?usp=sharing')
+    ('convert to spreadsheet', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx')
     ])
 def test_index_page_iati_links(server_url, browser, link_text, url):
     browser.get(server_url)
