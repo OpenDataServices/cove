@@ -1,0 +1,53 @@
+{% load i18n %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    <h2 class="heading-in-panel" ><small>{% blocktrans %}How to use the {% endblocktrans %}{{ app_verbose_name }}</small></h2>
+    {% comment %}Translators: Paragraph that describes the application{% endcomment %}
+    <p>{% blocktrans %}Upload, paste or provide a link to data in the IATI Data Standard format, and this application will convert between JSON, Excel and CSV formats, allowing you to download the original file, and the converted versions.{% endblocktrans %}</p>
+    <p>{% blocktrans %}You will also be able to inspect key information from the data that the application is able to find, so that you can check the data.{% endblocktrans %}</p>
+    <p>{% trans "This tool will:" %}</p>
+    <p class="icon-indent"><span class="font-tick tick"></span>{% trans "Check your data is valid. When it passes these checks, you will know that it is formatted for re-use." %}</p>
+    <p>{% trans "It <strong>will not</strong>:" %}</p>
+    <p class="icon-indent"><span class="font-tick cross"></span>{% blocktrans %} Check your data is accurate.{% endblocktrans %}</p>
+    <p class="icon-indent"><span class="font-tick cross"></span>{% blocktrans %} Check the data against your own open data policy.{% endblocktrans %}</p>
+    {% if request.path == "/" %}
+    <br>
+    <p> {% blocktrans %}To preview how this tool works, try <a href="#sample_data"> loading some sample data.</a>{% endblocktrans%}</p>
+    {% endif %}
+    <h3><small>{% blocktrans %}Formats{% endblocktrans %}</small></h3>
+    <p>{% blocktrans %}The application accepts data in these formats:{% endblocktrans %}</p>
+    <ul>
+      <li>{% blocktrans %}XML - according to version 2.03 of the <a href="http://reference.iatistandard.org/203/schema/">IATI schema</a>{% endblocktrans %}</li>
+      <li>{% blocktrans %}Spreadsheet - Excel, CSV (UTF-8, Windows-1252 and ISO-8859-1 encodings supported) - <a href="#sample_data">see sample data</a>{% endblocktrans %}</li>
+    </ul>
+    <h3 id="sample_data"><small>{% blocktrans %}Sample data{% endblocktrans %}</small></h3>
+    <p>{% blocktrans %}IATI CoVE works with data in different formats.  {% endblocktrans %}</p>
+    <p>{% blocktrans %}Try these to get started try these:{% endblocktrans %}</p>
+    <ul>
+      <li>Activity File</li>
+        <ul>
+          <li>
+            [ <a href="https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/export?format=xlsx ">xlsx</a> ]
+            [ <a href="?source_url=http://iati.cove.opendataservices.coop/?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-activity-standard.xml?raw=true">convert to xml</a> ]
+          </li>
+          <li>
+            [ <a href="https://github.com/OpenDataServices/iati-sample-data/blob/master/IATI-CoVE-sample-activity-standard.xml">xml</a> ]
+            [ <a href="?source_url=http://iati.cove.opendataservices.coop/?source_url=https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/export?format=xlsx">convert to spreadsheet</a> ]
+          </li>
+          <li>[ <a href="https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/edit?usp=sharing ">google doc</a> ]</li>
+        </ul>
+      <li>Organisation File</li>
+        <ul>
+          <li>
+            [ <a href="https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx ">xlsx</a> ]
+            [ <a href="?source_url=http://iati.cove.opendataservices.coop/?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-organisation-standard.xml?raw=true">convert to xml</a> ]
+          </li>
+          <li>
+            [ <a href="https://github.com/OpenDataServices/iati-sample-data/blob/master/IATI-CoVE-sample-organisation-standard.xml">xml</a> ]
+            [ <a href="?source_url=http://iati.cove.opendataservices.coop/?source_url=https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx ">convert to spreadsheet</a> ]
+          </li>
+          <li>[ <a href="https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/edit?usp=sharing">google doc</a> ]</li>
+        </ul>
+    </ul>
+  </div>
+</div>
