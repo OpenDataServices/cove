@@ -33,8 +33,8 @@ ROOT_URLCONF = 'cove_ocds.urls'
 COVE_CONFIG = {
     'app_name': 'cove_ocds',
     'app_base_template': 'cove_ocds/base.html',
-    'app_verbose_name': 'Open Contracting Data Standard Validator',
-    'app_strapline': 'Validate and Explore your data.',
+    'app_verbose_name': 'Open Contracting Data Review Tool',
+    'app_strapline': 'Review your OCDS data.',
     'schema_name': {'release': 'release-package-schema.json', 'record': 'record-package-schema.json'},
     'schema_item_name': 'release-schema.json',
     'schema_host': None,

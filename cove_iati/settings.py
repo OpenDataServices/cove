@@ -53,5 +53,6 @@ COVE_CONFIG = {
     'id_name': 'iati-identifier',
     'convert_titles': False,
     'input_methods': ['upload', 'url', 'text'],
-    'support_email': None
+    'support_email': None,
+    'hashcomments': True
 }

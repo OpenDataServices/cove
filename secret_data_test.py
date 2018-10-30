@@ -63,7 +63,7 @@ for original_file in glob.glob('ocds/*'):
     os.makedirs(output_dir, exist_ok=True)
     output_filename = os.path.join(output_dir, 'validation_errors.json')
     with open(output_filename, 'w+') as output_file:
-        response = requests.post('http://localhost:8009/validator/', files={'original_file': open(original_file, 'rb')}, data={'csrfmiddlewaretoken': 'foo'}, headers={'Cookie': 'csrftoken=' + 'foo'})
+        response = requests.post('http://localhost:8009/review/', files={'original_file': open(original_file, 'rb')}, data={'csrfmiddlewaretoken': 'foo'}, headers={'Cookie': 'csrftoken=' + 'foo'})
 
         parsed = urlparse(response.url)
         new_tuple = parsed.scheme, parsed.netloc, '/media/' + parsed.path.split('/')[-1] + '/validation_errors-3.json', '', '', ''
