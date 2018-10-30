@@ -86,7 +86,7 @@ def test_index_page_iati_links(server_url, browser, link_text, url):
     ])
 def test_activity_file_iait_links(server_url, browser, link_text, url):
     browser.get(server_url)
-    link = browser.find_element_by_link_text(link_text)[0]
+    link = browser.find_elements_by_link_text(link_text)[0]
     href = link.get_attribute("href")
     assert url in href
 
@@ -100,7 +100,7 @@ def test_activity_file_iait_links(server_url, browser, link_text, url):
     ])
 def test_organisation_file_iait_links(server_url, browser, link_text, url):
     browser.get(server_url)
-    link = browser.find_element_by_link_text(link_text)[1]
+    link = browser.find_elements_by_link_text(link_text)[1]
     href = link.get_attribute("href")
     assert url in href
 
