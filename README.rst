@@ -54,7 +54,7 @@ Release Cycle
 CoVE is in constant development.
 There are public instances in use at:
 https://dataquality.threesixtygiving.org/
-http://standard.open-contracting.org/validator/
+http://standard.open-contracting.org/review/
 
 We deploy the latest version of CoVE at the end of each calendar month (usually the last Thursday of the month).
 We make a development version ready for user testing (mainly internally) two weeks before deployment. Our cut off date for new features to be considered in that cycle is the week before that.

@@ -17,12 +17,11 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
     '''TODO: this function is trying to do too many things. Separate some
     of its logic into smaller functions doing one single thing each.
     '''
-    schema_aiti = SchemaIATI()
-    lxml_errors = {}
+    schema_iati = SchemaIATI()
     cell_source_map = {}
     validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
 
-    with open(data_file, 'rb') as fp, open(schema_aiti.activity_schema) as schema_fp:
+    with open(data_file, 'rb') as fp:
         try:
             tree = etree.parse(fp)
         except lxml.etree.XMLSyntaxError as err:
@@ -45,13 +44,19 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                          '</span> <strong>Error message:</strong> {}', err)),
                 'error': format(err)
             })
-        schema_tree = etree.parse(schema_fp)
 
-    schema = lxml.etree.XMLSchema(schema_tree)
-    schema.validate(tree)
-    lxml_errors = lxml_errors_generator(schema.error_log)
-    errors_all = format_lxml_errors(lxml_errors)
-    invalid_data = bool(schema.error_log)
+    if tree.getroot().tag == 'iati-organisations':
+        schema_path = schema_iati.organisation_schema
+        schema_name = 'Organisation'
+        # rulesets don't support orgnisation files properly yet
+        # so disable rather than give partial information
+        ruleset_disabled = True
+    else:
+        schema_path = schema_iati.activity_schema
+        schema_name = 'Activity'
+        ruleset_disabled = False
+    errors_all, invalid_data = validate_against_schema(schema_path, tree)
+
     return_on_error = [{'message': 'There was a problem running ruleset checks',
                         'exception': True}]
 
@@ -69,13 +74,16 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                 validation_error_fp.write(json.dumps(validation_errors))
 
     # Ruleset errors
-    ruleset_errors = get_iati_ruleset_errors(
-        tree,
-        os.path.join(upload_dir, 'ruleset'),
-        api=api,
-        ignore_errors=invalid_data,
-        return_on_error=return_on_error
-    )
+    if ruleset_disabled:
+        ruleset_errors = None
+    else:
+        ruleset_errors = get_iati_ruleset_errors(
+            tree,
+            os.path.join(upload_dir, 'ruleset'),
+            api=api,
+            ignore_errors=invalid_data,
+            return_on_error=return_on_error
+        )
 
     if openag:
         ruleset_errors_ag = get_openag_ruleset_errors(
@@ -103,7 +111,9 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
         context.update({
             'validation_errors_count': sum(len(value) for value in validation_errors.values()),
             'cell_source_map': cell_source_map,
-            'first_render': False
+            'first_render': False,
+            'schema_name': schema_name,
+            'ruleset_disabled': ruleset_disabled
         })
         if ruleset_errors:
             ruleset_errors_by_activity = get_iati_ruleset_errors(
@@ -123,6 +133,18 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
 
         context['ruleset_errors_count'] = count_ruleset_errors
     return context
+
+
+def validate_against_schema(schema_path, tree):
+    with open(schema_path) as schema_fp:
+        schema_tree = etree.parse(schema_fp)
+
+    schema = lxml.etree.XMLSchema(schema_tree)
+    schema.validate(tree)
+    lxml_errors = lxml_errors_generator(schema.error_log)
+    errors_all = format_lxml_errors(lxml_errors)
+    invalid_data = bool(schema.error_log)
+    return errors_all, invalid_data
 
 
 def lxml_errors_generator(schema_error_log):

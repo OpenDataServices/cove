@@ -26,7 +26,7 @@
       <div id="data-supplied-body" class="collapse in">
         <div class="panel-body">
            <p class="explanation">
-             {% trans "A file was " %} 
+             {% blocktrans %}An IATI {{ schema_name }} file was{% endblocktrans %}
              {% if source_url %}
                 {% trans "downloaded from " %} <a href="{{source_url}}">{{source_url}}</a>
              {% else %}
@@ -109,7 +109,7 @@
         {% else %}
           {% trans "Congratulations! Your data is valid against" %}
         {% endif %}
-          <a href="http://iatistandard.org/203/schema/">IATI Schema version 2.03</a>.
+          <a href="http://iatistandard.org/203/schema/">IATI {{ schema_name}} Schema version 2.03</a>.
         </p>
         <div class="explore-help"></div>
         {% if validation_errors %}
@@ -129,6 +129,7 @@
   {% endblock validation %}
 
   {% block ruleset %}
+  {% if not ruleset_disabled %}
   <div class="panel panel-default">
     <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#rulesets-body">
       <h3 class="panel-title panel-title-explore">
@@ -178,6 +179,7 @@
       </div>
     </div>
   </div>
+  {% endif %}
   {% endblock ruleset %}
 
   {% block download_and_share %}

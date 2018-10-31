@@ -65,7 +65,7 @@ def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url
     flattentool_options = {
         'output_name': converted_path,
         'input_format': file_type,
-        'root_list_path': config['root_list_path'],
+        'default_configuration': 'RootListPath {}'.format(config['root_list_path']),
         'encoding': encoding,
         'cell_source_map': cell_source_map_path,
         'heading_source_map': heading_source_map_path,
@@ -74,10 +74,16 @@ def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url
         'metatab_vertical_orientation': True
     }
 
+    if config.get('hashcomments'):
+        flattentool_options['default_configuration'] += ',hashcomments'
+
     if xml:
         flattentool_options['xml'] = True
-        flattentool_options['id_name'] = config.get('id_name', 'id')
+        flattentool_options['default_configuration'] += ',IDName {}'.format(config.get('id_name', 'id'))
         flattentool_options['xml_schemas'] = xml_schemas
+        if config.get('xml_comment'):
+            flattentool_options['xml_comment'] = config.get('xml_comment')
+
     else:
         flattentool_options.update({
             'schema': schema_url,

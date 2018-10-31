@@ -9,7 +9,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.options import Options
 
-PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/validator/')
+PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/review/')
 
 BROWSER = os.environ.get('BROWSER', 'ChromeHeadless')
 
@@ -80,8 +80,8 @@ def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector
 
 def test_index_page_ocds(server_url, browser):
     browser.get(server_url)
-    assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
-    assert 'Using the validator' in browser.find_element_by_tag_name('body').text
+    assert 'Data Review Tool' in browser.find_element_by_tag_name('body').text
+    assert 'Using the data review tool' in browser.find_element_by_tag_name('body').text
     assert "'release'" in browser.find_element_by_tag_name('body').text
     assert "'record'" in browser.find_element_by_tag_name('body').text
 
@@ -199,7 +199,7 @@ def test_500_error(server_url, browser):
                                                                'is not valid under any of the given schemas',
                                                                '/records/compiledRelease/tender/targets',
                                                                'The schema version specified in the file is 1.1',
-                                                               '/records/releases/tender/targets'], ['validated against a schema with no extensions'], True),
+                                                               '/records/releases/tender/targets'], ['checked against a schema with no extensions'], True),
     ('tenders_releases_deprecated_fields_against_1_1_live.json', ['Deprecated Fields',
                                                                   'The single amendment object has been deprecated',
                                                                   'documents at the milestone level is now deprecated',
@@ -265,7 +265,7 @@ def test_500_error(server_url, browser):
     # Test "version" value in data
     ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 123.123 which is not recognised',
                                                                    'checked against OCDS release package schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
-                                                                   'validated against the current default version.',
+                                                                   'checked against the current default version.',
                                                                    'Convert to Spreadsheet'],
                                                                   ['Additional Fields (fields in data not in schema)', 'Error message'], False),
     ('tenders_releases_1_release_with_wrong_version_type.json', ['Your data specifies a version 1000 (it must be a string) which is not recognised',
@@ -329,7 +329,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
     for text in not_expected_text:
         assert text not in body_text
 
-    assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
+    assert 'Data Review Tool' in browser.find_element_by_tag_name('body').text
     # assert 'Release Table' in browser.find_element_by_tag_name('body').text
 
     if conversion_successful:
@@ -558,7 +558,7 @@ def test_url_input_with_version_change(server_url, url_input_browser, httpserver
                                                                  'Get a copy of the schema with extension patches applied',
                                                                  'The following extensions failed',
                                                                  'extensions were not introduced in the schema until version 1.1.'],
-                                                                ['validated against a schema with no extensions']),
+                                                                ['checked against a schema with no extensions']),
     ('tenders_releases_1_release_with_all_invalid_extensions.json', ['None of the extensions above could be applied',
                                                                      'extensions were not introduced in the schema until version 1.1.'],
                                                                     ['Party Scale',

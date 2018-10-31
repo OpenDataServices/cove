@@ -13,8 +13,8 @@ import cove_ocds.views
 urlpatterns_core += [url(r'^data/(.+)$', cove_ocds.views.explore_ocds, name='explore')]
 
 urlpatterns = [
-    url(r'^$', RedirectView.as_view(url='validator/', permanent=False)),
-    url('^validator/', include(urlpatterns_core)),
+    url(r'^$', RedirectView.as_view(url='review/', permanent=False)),
+    url('^review/', include(urlpatterns_core)),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
