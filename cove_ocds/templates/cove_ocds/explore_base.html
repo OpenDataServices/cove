@@ -5,6 +5,11 @@
   <a href="{% url 'index' %}" class="btn btn-large btn-success">{% trans 'Load New File' %}</a>
 {% endblock %}
 
+{% block after_head %}
+  {{block.super}}
+  <link href="https://open-contracting.github.io/ocds-show/css/custom.css" rel="stylesheet">
+{% endblock %}
+
 {% block explore_content %}
 <div class="row">
 
@@ -456,5 +461,286 @@
       $('form').submit(function() {
           $('#small-loading').css({"display": "inline"});
       });
+  </script>
+  <script src="https://vega.github.io/vega/vega.min.js"></script>
+  <script src="https://open-contracting.github.io/ocds-show/js/nunjucks.min.js"></script>
+  <script src="https://open-contracting.github.io/ocds-show/js/merge.js"></script>
+  <script src="https://open-contracting.github.io/ocds-show/js/filereader.js"></script>
+  <script src="https://open-contracting.github.io/ocds-show/templates.js"></script>
+  <script>
+     var jsonInput = $('#input-json')
+     var container = $('#container')
+     var jsonInputView = function() {
+       return !$("#input-json-container").hasClass("hide")
+     }
+     
+     var gettext = function(text) {
+        return text
+     }
+     var env = nunjucks.configure()
+     // this needs replacing with something readable
+     env.addFilter('currency', function(number) {
+        try {
+          return number.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+        } catch (e) {
+          return ""
+        }
+     })
+     var render_json = function (context) {
+       context = context || {}
+       var currentValue = jsonInput.val()
+       if (!currentValue & jsonInputView()) {
+         container.html('')
+         return
+       }
+       if (!currentValue) {
+         container.html('<h1> OCDS Show. </h1> <h4>Please supply either an OCDS release or OCDS record. Use upload file or text input buttons above.</h4>')
+         return
+       }
+       try {
+         var input = JSON.parse(jsonInput.val())
+       } catch (e) {
+         container.html('<h2> Invalid JSON data </h2>')
+         return
+       }
+       input['gettext'] = gettext
+       if (input.hasOwnProperty("records")) {
+         input.ocids = input.records.map(function (value) {
+           return value.ocid
+         })
+         if (context.id) {
+            id = context.id
+         } else if(context.newData) {
+           id = input.ocids[0]
+         } else {
+           id = $('#id-select').val() 
+         }
+         input['ocid'] = id
+         var current_record;
+         input.records.some(function (value) {
+           if (value.ocid === id) {
+             current_record = value
+             return true
+           }
+         })
+         var releaseNumber = context["releaseNumber"] || 0
+         input['releaseNumber'] = releaseNumber
+         input['releases'] = current_record.releases
+         input['releases'].sort(function (a, b) {
+           if (a.date) {
+             return a.date.localeCompare( b.date );
+           }
+           return -1
+         });
+         var prev_release = merge(input.releases.slice(0, releaseNumber))
+         var current_release =  merge(input.releases.slice(0, releaseNumber + 1))
+         var changes = get_changes(flatten_all(prev_release), flatten_all(current_release))
+         input['release'] = augment_path(current_release)
+         var parties = input['release']['parties'] || []
+         input.parties = {}
+         //input.socialWitness = []
+         parties.forEach(function (party) {
+           input.parties[party.id] = party
+         //  if (party.roles && party.roles.indexOf('socialWitness') !== -1) {
+         //     input.socialWitness.push(party)
+         //  }
+         })
+         function get_change(obj, field) {
+           if (!obj) {return}
+           var path = obj.__path;
+           if (!path) {return}
+           var path_list = JSON.parse(path)
+           if (field) {
+             path_list.push(field)
+           }
+           var full_path = JSON.stringify(path_list)
+           return changes[full_path]
+         }
+         input['get_change'] = get_change
+         container.empty()
+         var content = env.render('record_select.html', input);
+         container.append(content)
+         var content = env.render('record_release.html', input);
+         container.append(content)
+         $('[data-toggle="popover"]').popover()
+         $('[data-toggle="tooltip"]').tooltip()
+       } else {
+         input['releases'].sort(function (a, b) {
+           if (a.date) {
+             return a.date.localeCompare( b.date );
+           }
+           return -1
+         });
+         input.release_ids = input.releases.map(function (value) {
+           return value.id
+         })
+         if (context.id) {
+            id = context.id 
+          } else if (context.newData) {
+           id = input.release_ids[0]
+         } else {
+           id = $('#id-select').val() 
+         }
+         var current_release;
+         input.releases.some(function (value) {
+           if (value.id === id) {
+             current_release = value
+             return true
+           }
+         })
+         container.empty()
+         input['release'] = current_release
+         input['release_id'] = id
+         var parties = input['release']['parties'] || []
+         input.parties = {}
+         //input.release.socialWitness = []
+         parties.forEach(function (party) {
+           input.parties[party.id] = party
+         //   if (party.roles.indexOf('socialWitness') !== -1) {
+         //     input.release.socialWitness.push(party)
+         //  }
+         })
+         var content = env.render('release_select.html', input);
+         container.append(content)
+         var content = env.render('release.html', input);
+         container.append(content)
+         $('[data-toggle="popover"]').popover()
+         $('[data-toggle="tooltip"]').tooltip()
+       }
+       // Shareholder pie chart
+         var shareholders = $('.shareholders-chart');
+         if (shareholders.length > 0) {
+           var data = {
+            '$schema': 'https://vega.github.io/schema/vega/v3.0.json',
+            'width': 200,
+            'height': 200,
+            'padding': 20,
+            'autosize': 'pad',
+            'data': [
+              {
+                'name': 'pieChart',
+                'values': null,
+                'transform': [
+                  {
+                    'type': 'pie',
+                    'field': 'percent'
+                  }
+                ]
+              }
+            ],
+            'scales': [
+              {
+                'name': 'color',
+                'type': 'ordinal',
+                'domain': {'data': 'pieChart', 'field': 'shareholder'},
+                'range': {'scheme': 'category20'}
+              }
+            ],
+            'marks': [
+              {
+                'type': 'arc',
+                'from': {'data': 'pieChart'},
+                'encode': {
+                  'enter': {
+                    'fill': {'scale': 'color', 'field': 'shareholder'},
+                    'x': {'signal': 'width / 2', 'value': 'field'},
+                    'y': {'signal': 'height / 2'},
+                    'startAngle': {'field': 'startAngle'},
+                    'endAngle': {'field': 'endAngle'},
+                    'innerRadius': {'value': 60},
+                    'outerRadius': {'signal': 'width / 2'}
+                  }
+                }
+              },
+              {
+                'type': 'text',
+                'from': {'data': 'pieChart'},
+                'encode': {
+                  'enter': {
+                    'x': {'field': {'group': 'width'}, 'mult': 0.5},
+                    'y': {'field': {'group': 'height'}, 'mult': 0.5},
+                    'radius': {'value': 80},
+                    'theta': {'signal': '(datum.startAngle + datum.endAngle)/2'},
+                    'fontSize': {'value': 12},
+                    'fontWeight': {'value': 'bold'},
+                    'fill': {'value': '#444'},
+                    'align': {'value': 'center'},
+                    'baseline': {'value': 'middle'},
+                    'text': {'field': 'percentString'}
+                  }
+                }
+              }
+            ],
+            'legends': [
+              {
+                'orient': 'right',
+                'title': 'Shareholders',
+                'fill': 'color'
+              }
+            ]
+           }
+           shareholders.each(function() {
+             var shareData = [];
+             var shareObj = JSON.parse(this.dataset.shareholdersChart);
+             shareObj.forEach(function(shareholder) {
+               
+               shareData.push({
+                'percent': shareholder.shareholding,
+                'percentString': (shareholder.shareholding * 100) + '%',
+                "shareholder": shareholder.shareholder.name + ' (' + shareholder.shareholder.id + ')'
+               })
+             });
+             data.data[0].values = shareData;
+             var view = new vega.View(vega.parse(data))
+               .renderer('canvas')
+               .initialize(this)
+               .hover()
+               .run();
+           })
+         }
+     }
+     function getUrlVars()
+      {
+          var vars = [], hash;
+          var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+          for(var i = 0; i < hashes.length; i++)
+          {
+              hash = hashes[i].split('=');
+              vars.push(hash[0]);
+              vars[hash[0]] = hash[1];
+          }
+          return vars;
+      }
+     
+     render_json({"newData": true});
+     $('#input-json').on("input", function(e) {
+       render_json({"newData": true});
+     })
+     $('#container').on("click", ".release-button", function(e) {
+       render_json({"releaseNumber": $(this).data()["releaseNumber"]})
+     })
+     $('#hide-input-button').on("click", function(e) {
+       e.preventDefault()
+       $("#input-json-container").addClass("hide")
+     })
+     $('#text-input').on("click", function(e) {
+       e.preventDefault()
+       if (jsonInputView()) {
+         $("#input-json-container").addClass("hide")
+       } else {
+         $("#input-json-container").removeClass("hide")
+       }
+       render_json({"newData": true});
+     })
+     $('#container').on("click", ".nav a", function(e) {
+       e.preventDefault()
+       if (!$(this).parent().hasClass("disabled")) {
+         $(this).tab('show');
+       }
+     })
+     $('#container').on("change", "#id-select", function(e) {
+       e.preventDefault()
+       render_json()
+     })
   </script>
 {% endblock extrafooterscript %}

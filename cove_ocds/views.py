@@ -173,16 +173,21 @@ def explore_ocds(request, pk):
 
     db_data.save()
 
+
     if 'records' in json_data:
         template = 'cove_ocds/explore_record.html'
         if hasattr(json_data, 'get') and hasattr(json_data.get('records'), '__iter__'):
             context['records'] = json_data['records']
         else:
             context['records'] = []
+        if len(json_data['records']) < 100:
+            context['ocds_show_data'] = json.dumps(json_data)
     else:
         template = 'cove_ocds/explore_release.html'
         if hasattr(json_data, 'get') and hasattr(json_data.get('releases'), '__iter__'):
             context['releases'] = json_data['releases']
+            if len(json_data['releases']) < 100:
+                context['ocds_show_data'] = json.dumps(json_data)
 
             # Parse release dates into objects so the template can format them.
             for release in context['releases']:

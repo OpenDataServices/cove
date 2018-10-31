@@ -1,7 +1,7 @@
 {% extends 'cove_ocds/explore_base.html' %}
 {% load i18n %}
 {% load cove_tags %}
-
+{% load staticfiles %}
 
 {% block key_facts %}
 {% with releases_aggregates as ra %}
@@ -407,5 +407,37 @@
     </div>
   </div>
 </div><!--End Row-->
+
+{% if ocds_show_data %}
+  <div class="row"> 
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+             {% trans "Explore your data:" %}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <p>
+            As your file is has less than 100 releases, we've loaded it into the OCDS Show tool to let you browse it. 
+          </p><!-- I know this should be in translation.... this is just a quick test. -->
+
+            <div id="input-json-container" class="hide">
+              <h3> Input a valid OCDS record/release 
+                <button id="hide-input-button" class="pull-right btn btn-primary btn-sm">Hide Input</button>
+              </h3>
+              <input id="input-json" name="input-json" value="{{ocds_show_data}}">
+            </div>
+
+            <div id="container">
+            </div>
+          <div id="graph"></div>  
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+
 
 {% endblock %}
