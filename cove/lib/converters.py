@@ -81,6 +81,9 @@ def convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url
         flattentool_options['xml'] = True
         flattentool_options['default_configuration'] += ',IDName {}'.format(config.get('id_name', 'id'))
         flattentool_options['xml_schemas'] = xml_schemas
+        if config.get('xml_comment'):
+            flattentool_options['xml_comment'] = config.get('xml_comment')
+
     else:
         flattentool_options.update({
             'schema': schema_url,
