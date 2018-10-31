@@ -60,6 +60,51 @@ def test_accordion(server_url, browser):
     assert buttons() == [False, False, True]
 
 
+def test_index_page_iati(server_url, browser):
+    browser.get(server_url)
+    assert 'How to use IATI CoVE' in browser.find_element_by_tag_name('body').text
+    assert 'XML - according to version 2.03 of the IATI schema' in browser.find_element_by_tag_name('body').text
+    assert 'Spreadsheet - Excel, CSV (UTF-8, Windows-1252 and ISO-8859-1 encodings supported) - see sample data' in browser.find_element_by_tag_name('body').text
+
+
+@pytest.mark.parametrize(('link_text', 'url'), [
+    ('IATI schema', 'http://reference.iatistandard.org/203/schema/')
+    ])
+def test_index_page_iati_links(server_url, browser, link_text, url):
+    browser.get(server_url)
+    link = browser.find_element_by_link_text(link_text)
+    href = link.get_attribute("href")
+    assert url in href
+
+
+@pytest.mark.parametrize(('link_text', 'url'), [
+    ('xlsx', 'https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/export?format=xlsx'),
+    ('convert to xml', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-activity-standard.xml?raw=true'),
+    ('xml', 'https://github.com/OpenDataServices/iati-sample-data/blob/master/IATI-CoVE-sample-activity-standard.xml'),
+    ('convert to spreadsheet', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/export?format=xlsx'),
+    ('google doc', 'https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/edit?usp=sharing'),
+    ])
+def test_activity_file_iait_links(server_url, browser, link_text, url):
+    browser.get(server_url)
+    link = browser.find_elements_by_link_text(link_text)[0]
+    href = link.get_attribute("href")
+    assert url in href
+
+
+@pytest.mark.parametrize(('link_text', 'url'), [
+    ('xlsx', 'https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx'),
+    ('convert to xml', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-organisation-standard.xml?raw=true'),
+    ('xml', 'https://github.com/OpenDataServices/iati-sample-data/blob/master/IATI-CoVE-sample-organisation-standard.xml'),
+    ('convert to spreadsheet', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx'),
+    ('google doc', 'https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/edit?usp=sharing')
+    ])
+def test_organisation_file_iait_links(server_url, browser, link_text, url):
+    browser.get(server_url)
+    link = browser.find_elements_by_link_text(link_text)[1]
+    href = link.get_attribute("href")
+    assert url in href
+
+
 def test_common_index_elements(server_url, browser):
     browser.get(server_url)
     browser.find_element_by_css_selector('#more-information .panel-title').click()
