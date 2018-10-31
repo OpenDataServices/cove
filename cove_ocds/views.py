@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.html import format_html
 
 from . lib import exceptions
-from . lib.ocds import common_checks_ocds
+from libcoveocds.common_checks import common_checks_ocds
 from libcoveocds.schema import SchemaOCDS
 from cove.lib.common import get_spreadsheet_meta_data
 from cove.lib.converters import convert_spreadsheet, convert_json

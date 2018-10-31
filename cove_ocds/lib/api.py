@@ -2,7 +2,7 @@ import json
 import os
 
 from libcoveocds.schema import SchemaOCDS
-from .ocds import common_checks_ocds
+from libcoveocds.common_checks import common_checks_ocds
 from cove.lib.common import get_spreadsheet_meta_data
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.tools import get_file_type
