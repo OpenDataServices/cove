@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-20 09:48+0000\n"
+"POT-Creation-Date: 2018-10-30 16:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,83 +17,34 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: cove_ocds/lib/exceptions.py:8
+#: cove_ocds/lib/exceptions.py:9
 msgid "Unrecognised version of the schema"
 msgstr ""
 
-#: cove_ocds/lib/exceptions.py:10 cove_ocds/lib/exceptions.py:23
-#: cove_ocds/lib/exceptions.py:39 cove_ocds/lib/exceptions.py:52
-#: cove_ocds/views.py:46 cove_ocds/views.py:57
+#: cove_ocds/lib/exceptions.py:11 cove_ocds/lib/exceptions.py:24
+#: cove_ocds/lib/exceptions.py:40 cove_ocds/lib/exceptions.py:53
+#: cove_ocds/views.py:49 cove_ocds/views.py:60
 msgid "Try Again"
 msgstr ""
 
-#: cove_ocds/lib/exceptions.py:11
-msgid ""
-"We think you tried to run your data against an unrecognised version of the "
-"schema.\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
-"span> <strong>Error message:</strong> <em>{}</em> is not a recognised choice "
-"for the schema version"
-msgstr ""
-
-#: cove_ocds/lib/exceptions.py:15 cove_ocds/lib/exceptions.py:31
+#: cove_ocds/lib/exceptions.py:16 cove_ocds/lib/exceptions.py:32
 msgid "{} is not a valid schema version"
 msgstr ""
 
-#: cove_ocds/lib/exceptions.py:21
+#: cove_ocds/lib/exceptions.py:22
 msgid "Version format does not comply with the schema"
 msgstr ""
 
-#: cove_ocds/lib/exceptions.py:24
-msgid ""
-"The value for the <em>\"version\"</em> field in your data follows the "
-"<em>major.minor.patch</em> pattern but according to the schema the patch "
-"digit shouldn't be included (e.g. <em>\"1.1.0\"</em> should appear as <em>"
-"\"1.1\"</em> in your data as the validator always uses the latest patch "
-"release for a major.minor version).\n"
-"\n"
-"Please get rid of the patch digit and try again.\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
-"span> <strong>Error message: </strong> <em>{}</em> format does not comply "
-"with the schema"
-msgstr ""
-
-#: cove_ocds/lib/exceptions.py:37
+#: cove_ocds/lib/exceptions.py:38
 msgid "JSON reference error"
 msgstr ""
 
-#: cove_ocds/lib/exceptions.py:40
-msgid ""
-"We have detected a JSON reference error in the schema. This <em> may be </"
-"em> due to some extension trying to resolve non-existing references. \n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
-"span> <strong>Error message:</strong> <em>{}</em>"
-msgstr ""
-
-#: cove_ocds/lib/exceptions.py:44
+#: cove_ocds/lib/exceptions.py:45
 msgid "{}"
 msgstr ""
 
-#: cove_ocds/lib/exceptions.py:50 cove_ocds/lib/exceptions.py:63
+#: cove_ocds/lib/exceptions.py:51 cove_ocds/lib/exceptions.py:64
 msgid "Missing OCDS package"
-msgstr ""
-
-#: cove_ocds/lib/exceptions.py:53
-msgid ""
-"We could not detect a package structure at the top-level of your data. OCDS "
-"releases and records should be published within a <a href=\"http://standard."
-"open-contracting.org/latest/en/schema/release_package/\">release package </"
-"a> or <a href=\"http://standard.open-contracting.org/latest/en/schema/"
-"record_package/\"> record package</a> to provide important meta-data. For "
-"more information, please refer to the <a href=\"http://standard.open-"
-"contracting.org/latest/en/getting_started/releases_and_records/\"> Releases "
-"and Records section </a> in the OCDS documentation.\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
-"span> <strong>Error message:</strong> <em>Missing OCDS package</em>"
 msgstr ""
 
 #. Translators: Label of a button that triggers search
@@ -103,7 +54,7 @@ msgid "Go"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:55
-msgid " Data <span> Standard </span> Validator"
+msgid " Data <span> Review </span> Tool"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:58
@@ -141,7 +92,7 @@ msgid ""
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:102
-msgid "Validate and Explore"
+msgid "Check and Review"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:103
@@ -155,17 +106,17 @@ msgid ""
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:106
-msgid "Inspect key contents of your data to check data quality"
+msgid "Inspect key contents of your data to review data quality"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:107
 msgid ""
 "Access your data in different formats (spreadsheet and JSON) to support "
-"further data validation."
+"further review."
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:122
-msgid "Using the validator"
+msgid "Using the data review tool"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:123
@@ -202,9 +153,9 @@ msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:131
 msgid ""
-"If your data passes basic validation checks, the tool will then present a "
-"report on data quality, and information about the contents of your file. It "
-"will also offer alternative copies of the data for download. "
+"If your data passes basic schema validation checks, the tool will then "
+"present a report on data quality, and information about the contents of your "
+"file. It will also offer alternative copies of the data for download. "
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:132
@@ -215,7 +166,7 @@ msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:133
 msgid ""
-"To preview how the validator works, try <a href=\"/validator/?"
+"To preview how the data review tool works, try <a href=\"/review/?"
 "source_url=https://raw.githubusercontent.com/open-contracting/sample-data/"
 "master/fictional-example/1.1/ocds-213czf-000-00001-02-tender.json\"> loading "
 "some sample data. </a>"
@@ -275,41 +226,41 @@ msgstr ""
 msgid "Schema Extensions"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:196
+#: cove_ocds/templates/cove_ocds/explore_base.html:200
 msgid "Conversion Errors"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:218
+#: cove_ocds/templates/cove_ocds/explore_base.html:222
 msgid "Conversion Errors (titles)"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:246
-#: cove_ocds/templates/cove_ocds/explore_base.html:402
-#: cove_ocds/templates/cove_ocds/explore_base.html:405
+#: cove_ocds/templates/cove_ocds/explore_base.html:250
+#: cove_ocds/templates/cove_ocds/explore_base.html:406
+#: cove_ocds/templates/cove_ocds/explore_base.html:409
 msgid "Validation Errors"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:260
-#: cove_ocds/templates/cove_ocds/explore_base.html:420
-#: cove_ocds/templates/cove_ocds/explore_base.html:423
+#: cove_ocds/templates/cove_ocds/explore_base.html:264
+#: cove_ocds/templates/cove_ocds/explore_base.html:424
+#: cove_ocds/templates/cove_ocds/explore_base.html:427
 msgid "Structure Warnings"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:282
-#: cove_ocds/templates/cove_ocds/explore_base.html:408
-#: cove_ocds/templates/cove_ocds/explore_base.html:411
+#: cove_ocds/templates/cove_ocds/explore_base.html:286
+#: cove_ocds/templates/cove_ocds/explore_base.html:412
+#: cove_ocds/templates/cove_ocds/explore_base.html:415
 msgid "Conformance (Rules)"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:304
+#: cove_ocds/templates/cove_ocds/explore_base.html:308
 msgid "Codelist Validation Errors"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:326
+#: cove_ocds/templates/cove_ocds/explore_base.html:330
 msgid "Additional Fields"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:330
+#: cove_ocds/templates/cove_ocds/explore_base.html:334
 msgid ""
 "This data includes the following fields which are not part of the OCDS "
 "schema. You should check whether the data in these fields could be provided "
@@ -318,66 +269,66 @@ msgid ""
 "schema."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:344
+#: cove_ocds/templates/cove_ocds/explore_base.html:348
 msgid "Additional Codelist Values"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:364
-#: cove_ocds/templates/cove_ocds/explore_base.html:444
-#: cove_ocds/templates/cove_ocds/explore_base.html:447
+#: cove_ocds/templates/cove_ocds/explore_base.html:368
+#: cove_ocds/templates/cove_ocds/explore_base.html:448
+#: cove_ocds/templates/cove_ocds/explore_base.html:451
 msgid "Deprecated Fields"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:364
+#: cove_ocds/templates/cove_ocds/explore_base.html:368
 msgid ""
 "Fields flagged as 'deprecated' will be either replaced or removed in future "
 "versions of the schema."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:380
+#: cove_ocds/templates/cove_ocds/explore_base.html:384
 msgid "Save or Share these results"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:381
+#: cove_ocds/templates/cove_ocds/explore_base.html:385
 msgid "Use the following url to share these results:"
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove_ocds/templates/cove_ocds/explore_base.html:386
+#: cove_ocds/templates/cove_ocds/explore_base.html:390
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:387
+#: cove_ocds/templates/cove_ocds/explore_base.html:391
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
 "will be shown a message that tells them the file has been removed."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:414
+#: cove_ocds/templates/cove_ocds/explore_base.html:418
 msgid "view all errors &#9660;"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:417
-#: cove_ocds/templates/cove_ocds/explore_base.html:429
-#: cove_ocds/templates/cove_ocds/explore_base.html:435
+#: cove_ocds/templates/cove_ocds/explore_base.html:421
+#: cove_ocds/templates/cove_ocds/explore_base.html:433
+#: cove_ocds/templates/cove_ocds/explore_base.html:439
 msgid "View all errors &#9650;"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:426
+#: cove_ocds/templates/cove_ocds/explore_base.html:430
 #: cove_ocds/templates/cove_ocds/ocds_missing_ids_table.html:6
 #: cove_ocds/templates/cove_ocds/ocid_prefixes_table.html:5
 msgid "View all errors &#9660;"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:432
+#: cove_ocds/templates/cove_ocds/explore_base.html:436
 msgid "Quality Warnings"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:438
-#: cove_ocds/templates/cove_ocds/explore_base.html:441
+#: cove_ocds/templates/cove_ocds/explore_base.html:442
+#: cove_ocds/templates/cove_ocds/explore_base.html:445
 msgid "Additional Fields (fields in data not in schema)"
 msgstr ""
 
@@ -409,7 +360,6 @@ msgid "validation against "
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:26
-#: cove_ocds/templates/cove_ocds/explore_release.html:24
 msgid "See <a href=\"#validation-errors\">Validation Errors</a> below."
 msgstr ""
 
@@ -510,6 +460,10 @@ msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:135
 msgid "Records Table:"
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/explore_release.html:24
+msgid "See <a href=\"#validation-errors\">Schema validation Errors</a> below."
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_release.html:28
@@ -972,19 +926,11 @@ msgstr ""
 msgid "Open Contracting Identifier guidance"
 msgstr ""
 
-#: cove_ocds/views.py:44 cove_ocds/views.py:55
+#: cove_ocds/views.py:47 cove_ocds/views.py:58
 msgid "Sorry, we can't process that data"
 msgstr ""
 
-#: cove_ocds/views.py:47
-msgid ""
-"We think you tried to upload a JSON file, but it is not well formed JSON.\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
-"span> <strong>Error message:</strong> {}"
-msgstr ""
-
-#: cove_ocds/views.py:58
+#: cove_ocds/views.py:61
 msgid ""
 "OCDS JSON should have an object as the top level, the JSON you supplied does "
 "not."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-20 09:48+0000\n"
+"POT-Creation-Date: 2018-10-30 16:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,22 +23,6 @@ msgstr ""
 
 #: cove_iati/lib/iati.py:31 cove_iati/lib/iati.py:41
 msgid "Try Again"
-msgstr ""
-
-#: cove_iati/lib/iati.py:32
-msgid ""
-"We think you tried to upload a XML file, but it is not well formed XML.\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
-"span> <strong>Error message:</strong> {}"
-msgstr ""
-
-#: cove_iati/lib/iati.py:42
-msgid ""
-"We think you tried to upload a XML file, but the encoding is incorrect.\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
-"span> <strong>Error message:</strong> {}"
 msgstr ""
 
 #: cove_iati/templates/cove_iati/base.html:30
@@ -56,7 +40,8 @@ msgid ""
 msgstr ""
 
 #: cove_iati/templates/cove_iati/explore.html:29
-msgid "A file was "
+#, python-format
+msgid "An IATI %(schema_name)s file was"
 msgstr ""
 
 #: cove_iati/templates/cove_iati/explore.html:31
@@ -99,7 +84,7 @@ msgid "Invalid against Schema "
 msgstr ""
 
 #: cove_iati/templates/cove_iati/explore.html:96
-#: cove_iati/templates/cove_iati/explore.html:143
+#: cove_iati/templates/cove_iati/explore.html:144
 #, python-format
 msgid " %(n_errors)s Error."
 msgid_plural "%(n_errors)s Errors "
@@ -124,67 +109,67 @@ msgid ""
 "them in the table below."
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:138
-#: cove_iati/templates/cove_iati/explore.html:142
+#: cove_iati/templates/cove_iati/explore.html:139
+#: cove_iati/templates/cove_iati/explore.html:143
 msgid "Ruleset Errors "
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:139
+#: cove_iati/templates/cove_iati/explore.html:140
 msgid "Failed"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:147
+#: cove_iati/templates/cove_iati/explore.html:148
 msgid "Ruleset Checks"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:157
+#: cove_iati/templates/cove_iati/explore.html:158
 msgid "There was a problem running ruleset checks."
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:160
+#: cove_iati/templates/cove_iati/explore.html:161
 msgid ""
 "This may be due to validation errors in your data, please fix them and try "
 "again."
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:163
+#: cove_iati/templates/cove_iati/explore.html:164
 msgid "Sorry your data contains ruleset errors"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:167
+#: cove_iati/templates/cove_iati/explore.html:168
 msgid "Congratulations! Your data passes all IATI ruleset checks"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:171
+#: cove_iati/templates/cove_iati/explore.html:172
 msgid ""
 "There are some <strong>ruleset errors</strong> in your data, please check "
 "them in the table below."
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:187
+#: cove_iati/templates/cove_iati/explore.html:189
 msgid "Download and Share"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:194
+#: cove_iati/templates/cove_iati/explore.html:196
 msgid "The following files are available to download:"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:197
+#: cove_iati/templates/cove_iati/explore.html:199
 msgid "Original file"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:217
+#: cove_iati/templates/cove_iati/explore.html:219
 msgid "Use the following url to share these results:"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:223
+#: cove_iati/templates/cove_iati/explore.html:225
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
 "will be shown a message that tells them the file has been removed."
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:224
+#: cove_iati/templates/cove_iati/explore.html:226
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
@@ -215,14 +200,14 @@ msgstr ""
 msgid "Path"
 msgstr ""
 
-#: cove_iati/views.py:32
+#: cove_iati/views.py:31
 msgid "Upload a file (.csv, .xlsx, .xml)"
 msgstr ""
 
-#: cove_iati/views.py:41
+#: cove_iati/views.py:40
 msgid "Supply a URL"
 msgstr ""
 
-#: cove_iati/views.py:46
+#: cove_iati/views.py:45
 msgid "Paste (XML only)"
 msgstr ""

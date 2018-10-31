@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-20 09:48+0000\n"
+"POT-Creation-Date: 2018-10-30 16:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Sorry we got a ConnectionError whilst trying to download that file"
 msgstr ""
 
-#: cove/input/views.py:73 cove/input/views.py:81 cove/lib/converters.py:174
+#: cove/input/views.py:73 cove/input/views.py:81 cove/lib/converters.py:178
 #: cove/lib/exceptions.py:25 cove/lib/exceptions.py:34
 #: cove/lib/exceptions.py:61
 msgid "Try Again"
@@ -77,12 +77,12 @@ msgid ""
 "related to permissions, or you may be blocking certain user agents."
 msgstr ""
 
-#: cove/lib/converters.py:172 cove/lib/exceptions.py:23
+#: cove/lib/converters.py:176 cove/lib/exceptions.py:23
 #: cove/lib/exceptions.py:32 cove/lib/exceptions.py:59
 msgid "Sorry, we can't process that data"
 msgstr ""
 
-#: cove/lib/converters.py:175
+#: cove/lib/converters.py:179
 msgid ""
 "We think you tried to upload a JSON file, but it is not well formed JSON.\n"
 "\n"
@@ -341,27 +341,22 @@ msgid "days"
 msgstr ""
 
 #: cove/templates/validation_table.html:7
-#: cove/templates/validation_table_modal.html:7
 msgid "Error Description"
 msgstr ""
 
 #: cove/templates/validation_table.html:8
-#: cove/templates/validation_table_modal.html:9
 msgid "Error Count"
 msgstr ""
 
 #: cove/templates/validation_table.html:9
-#: cove/templates/validation_table_modal.html:10
 msgid "First 3 Examples"
 msgstr ""
 
 #: cove/templates/validation_table.html:10
-#: cove/templates/validation_table_modal.html:11
 msgid "Location of first 3 errors"
 msgstr ""
 
 #: cove/templates/validation_table.html:12
-#: cove/templates/validation_table_modal.html:13
 msgid "Spreadsheet Location of first 3 errors"
 msgstr ""
 
