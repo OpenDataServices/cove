@@ -1,0 +1,51 @@
+{% load i18n %}
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      {{ codelist_item.codelist_name }} has {{ codelist_item.invalid_list|length }} invalid value(s).</small>  <small class="pull-right">{{ codelist_item.codelist_path }}</small>
+    </h4>
+  </div>
+  <table class="table table-condensed">
+    <thead> 
+      <tr> 
+        <th>{% trans 'Invalid Value' %}</th> 
+        <th>{% trans 'Identifier' %}</th> 
+        <th>{% trans 'Location of error' %}</th> 
+        {% if file_type == 'xlsx' or file_type == 'csv' %}
+          <th>{% trans 'Spreadsheet Location' %}</th> 
+        {% endif %}
+      </tr> 
+    </thead>
+    <tbody>
+      {% for value in codelist_item.invalid_list %}
+        {% if forloop.counter < 11 or full_list %}
+          <tr>
+            <td>
+              {{ value.value }}
+            </td>
+            <td>
+              {{ value.current_identifier }}
+            </td>
+            <td>
+              {{ value.xpath }}
+            </td>
+            {% if file_type == 'xlsx' or file_type == 'csv' %}
+              <td>
+                <strong>Sheet: </strong> {{ value.source_map_data.0 }}
+                <strong>Column: </strong> {{ value.source_map_data.1 }}
+                <strong>Row: </strong> {{ value.source_map_data.2 }}
+              </td> 
+            {% endif %}
+          </tr>
+        {% endif  %}
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not full_list and codelist_item.invalid_list|length > 10 %}
+    <div class="panel-body">
+      <a data-toggle="modal" data-target="#{{codelist_item.codelist_path_slug}}_modal"> See All </a>
+    </div>
+  {% endif %}
+
+</div>

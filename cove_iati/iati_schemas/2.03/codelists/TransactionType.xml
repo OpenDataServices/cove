@@ -1,0 +1,126 @@
+<codelist name="TransactionType" xml:lang="en" complete="1">
+    <metadata>
+        <name>
+            <narrative>Transaction Type</narrative>
+        </name>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>1</code>
+            <name>
+                <narrative>Incoming Funds</narrative>
+            </name>
+            <description>
+                <narrative>Funds recieved for use on the activity, which can be from an external or internal source. </narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>2</code>
+            <name>
+                <narrative>Outgoing Commitment</narrative>
+            </name>
+            <description>
+                <narrative>A firm, written obligation from a donor or provider to provide a specified amount of funds, under particular terms and conditions, for specific purposes, for the benefit of the recipient. </narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>3</code>
+            <name>
+                <narrative>Disbursement</narrative>
+            </name>
+            <description>
+                <narrative>Outgoing funds that are placed at the disposal of a recipient government or organisation, or funds transferred between two separately reported activities.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>4</code>
+            <name>
+                <narrative>Expenditure</narrative>
+            </name>
+            <description>
+                <narrative>Outgoing funds that are spent on goods and services for the activity.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>5</code>
+            <name>
+                <narrative>Interest Payment</narrative>
+            </name>
+            <description>
+                <narrative>The actual amount of interest paid on a loan or line of credit, including fees.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>6</code>
+            <name>
+                <narrative>Loan Repayment</narrative>
+            </name>
+            <description>
+                <narrative>The actual amount of principal (amortisation) repaid, including any arrears. </narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>7</code>
+            <name>
+                <narrative>Reimbursement</narrative>
+            </name>
+            <description>
+                <narrative>A type of disbursement that covers funds that have already been spent by the recipient, as agreed in the terms of the grant or loan</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>8</code>
+            <name>
+                <narrative>Purchase of Equity</narrative>
+            </name>
+            <description>
+                <narrative>Outgoing funds that are used to purchase equity in a business</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>9</code>
+            <name>
+                <narrative>Sale of Equity</narrative>
+            </name>
+            <description>
+                <narrative>Incoming funds from the sale of equity. </narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>10</code>
+            <name>
+                <narrative>Credit Guarantee</narrative>
+            </name>
+            <description>
+                <narrative>A commitment made by a funding organisation to underwrite a loan or line of credit entered into by a third party. </narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>11</code>
+            <name>
+                <narrative>Incoming Commitment</narrative>
+            </name>
+            <description>
+                <narrative>A firm, written obligation from a donor or provider to provide a specified amount of funds, under particular terms and conditions, reported by a recipient for this activity.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>12</code>
+            <name>
+                <narrative>Outgoing Pledge</narrative>
+            </name>
+            <description>
+                <narrative>Indicative, non-binding advice of an intended outgoing commitment.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>13</code>
+            <name>
+                <narrative>Incoming Pledge</narrative>
+            </name>
+            <description>
+                <narrative>Indicative, non-binding advice of an intended incoming commitment.</narrative>
+            </description>
+        </codelist-item>
+    </codelist-items>
+</codelist>

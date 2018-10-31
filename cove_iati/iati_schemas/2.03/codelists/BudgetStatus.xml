@@ -1,0 +1,32 @@
+<codelist name="BudgetStatus" xml:lang="en" complete="1">
+    <metadata>
+        <name>
+            <narrative>Budget Status</narrative>
+        </name>
+        <description>
+            <narrative>Code to denote if the described budget is binding.</narrative>
+        </description>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>1</code>
+            <name>
+                <narrative>Indicative</narrative>
+                <narrative xml:lang="en">Indicative</narrative>
+            </name>
+            <description>
+                <narrative>A non-binding estimate for the described budget.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>2</code>
+            <name>
+                <narrative>Committed</narrative>
+                <narrative xml:lang="en">Committed</narrative>
+            </name>
+            <description>
+                <narrative>A binding agreement for the described budget.</narrative>
+            </description>
+        </codelist-item>
+    </codelist-items>
+</codelist>

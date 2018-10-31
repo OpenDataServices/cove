@@ -1,0 +1,65 @@
+<codelist name="RelatedActivityType" xml:lang="en" complete="1">
+    <metadata>
+        <name>
+            <narrative>Related Activity Type</narrative>
+            <narrative xml:lang="fr">Type d’activité connexe</narrative>
+        </name>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>1</code>
+            <name>
+                <narrative>Parent</narrative>
+                <narrative xml:lang="fr">Parent</narrative>
+            </name>
+            <description>
+                <narrative>An activity that contains sub-activities (sub-components) which are reported separately to IATI</narrative>
+                <narrative xml:lang="fr">Activité qui comprend des sous-activités (sous-composantes) qui sont communiquées séparément à l’IITA</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>2</code>
+            <name>
+                <narrative>Child</narrative>
+                <narrative xml:lang="fr">Descendant</narrative>
+            </name>
+            <description>
+                <narrative>A sub-activity (or sub-component) that sits within a larger activity (parent) which is also reported to IATI</narrative>
+                <narrative xml:lang="fr">Sous-activité (ou sous-composante) faisant partie d’une activité plus large (mère) et communiquée spécifiquement à l’IITA</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>3</code>
+            <name>
+                <narrative>Sibling</narrative>
+                <narrative xml:lang="fr">Fratrie</narrative>
+            </name>
+            <description>
+                <narrative>A sub-activity (or sub-component) that is related to another sub-activity with the same parent </narrative>
+                <narrative xml:lang="fr">Sous-activité (ou sous-composante) en lien avec une autre sous-activité dans le cadre d’une activité mère commune</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>4</code>
+            <name>
+                <narrative>Co-funded</narrative>
+                <narrative xml:lang="fr">Co-financée</narrative>
+            </name>
+            <description>
+                <narrative>An activity that receives funding from more than one organisation</narrative>
+                <narrative xml:lang="fr">Activité financée par plusieurs organisations</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>5</code>
+            <name>
+                <narrative>Third Party</narrative>
+                <narrative xml:lang="fr">Tiers</narrative>
+            </name>
+            <description>
+                <narrative>A report by another organisation on the same activity you are reporting (excluding activities reported as part of a financial transaction - e.g. provider-activity-id or a co-funded activity, using code 4)</narrative>
+                <narrative xml:lang="fr">Rapport d’une autre organisation sur la même activité que celle dont vous rendez compte (à l’exclusion des activités communiquées dans le cadre d’une transaction financière, p. ex., identifiant de l’activité d’un prestataire ou activité co-financée, en utilisant le code 4)</narrative>
+            </description>
+        </codelist-item>
+    </codelist-items>
+</codelist>
