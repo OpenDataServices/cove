@@ -14,7 +14,8 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 
 import cove.lib.common as cove_common
-from .lib.api import APIException, context_api_transform, ocds_json_output
+from libcoveocds.api import APIException, ocds_json_output
+from libcoveocds.lib.api import context_api_transform
 from libcoveocds.lib.common_checks import get_releases_aggregates, get_bad_ocds_prefixes
 from libcoveocds.schema import SchemaOCDS
 from cove.input.models import SuppliedData
