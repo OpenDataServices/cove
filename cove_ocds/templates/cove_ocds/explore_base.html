@@ -463,10 +463,10 @@
       });
   </script>
   <script src="https://vega.github.io/vega/vega.min.js"></script>
-  <script src="https://open-contracting.github.io/ocds-show/js/nunjucks.min.js"></script>
-  <script src="https://open-contracting.github.io/ocds-show/js/merge.js"></script>
-  <script src="https://open-contracting.github.io/ocds-show/js/filereader.js"></script>
-  <script src="https://open-contracting.github.io/ocds-show/templates.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/gh/open-contracting/ocds-show@v0.1/js/nunjucks.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/open-contracting/ocds-show@v0.1/js/merge.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/open-contracting/ocds-show@v0.1/templates.js"></script>
   <script>
      var jsonInput = $('#input-json')
      var container = $('#container')
@@ -717,6 +717,7 @@
        render_json({"newData": true});
      })
      $('#container').on("click", ".release-button", function(e) {
+       e.preventDefault()
        render_json({"releaseNumber": $(this).data()["releaseNumber"]})
      })
      $('#hide-input-button').on("click", function(e) {
