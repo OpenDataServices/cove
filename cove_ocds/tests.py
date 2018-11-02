@@ -20,7 +20,7 @@ from libcoveocds.lib.common_checks import get_releases_aggregates, get_bad_ocds_
 from libcoveocds.schema import SchemaOCDS
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
-from cove.lib.tools import cached_get_request
+from libcoveocds.libcore.tools import cached_get_request
 
 
 OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
