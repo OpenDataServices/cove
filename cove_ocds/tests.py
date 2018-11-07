@@ -14,12 +14,13 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 
 import cove.lib.common as cove_common
-from .lib.api import APIException, context_api_transform, ocds_json_output
-from .lib.ocds import get_releases_aggregates, get_bad_ocds_prefixes
-from .lib.schema import SchemaOCDS
+from libcoveocds.api import APIException, ocds_json_output
+from libcoveocds.lib.api import context_api_transform
+from libcoveocds.lib.common_checks import get_releases_aggregates, get_bad_ocds_prefixes
+from libcoveocds.schema import SchemaOCDS
 from cove.input.models import SuppliedData
 from cove.lib.converters import convert_json, convert_spreadsheet
-from cove.lib.tools import cached_get_request
+from libcoveocds.libcore.tools import cached_get_request
 
 
 OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']

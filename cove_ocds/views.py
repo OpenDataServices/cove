@@ -8,11 +8,13 @@ from decimal import Decimal
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
+from django.utils import translation
 from django.utils.html import format_html
 
 from . lib import exceptions
-from . lib.ocds import common_checks_ocds
-from . lib.schema import SchemaOCDS
+from libcoveocds.common_checks import common_checks_ocds
+from libcoveocds.schema import SchemaOCDS
+from libcoveocds.config import LibCoveOCDSConfig
 from cove.lib.common import get_spreadsheet_meta_data
 from cove.lib.converters import convert_spreadsheet, convert_json
 from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
@@ -27,6 +29,9 @@ def explore_ocds(request, pk):
     context, db_data, error = explore_data_context(request, pk)
     if error:
         return error
+
+    lib_cove_ocds_config = LibCoveOCDSConfig()
+    lib_cove_ocds_config.config['current_language'] = translation.get_language()
 
     upload_dir = db_data.upload_dir()
     upload_url = db_data.upload_url()
@@ -64,7 +69,7 @@ def explore_ocds(request, pk):
             version_in_data = json_data.get('version', '')
             db_data.data_schema_version = version_in_data
             select_version = post_version_choice or db_data.schema_version
-            schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data)
+            schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data, lib_cove_ocds_config=lib_cove_ocds_config)
 
             if schema_ocds.missing_package:
                 exceptions.raise_missing_package_error()
@@ -97,7 +102,7 @@ def explore_ocds(request, pk):
 
     else:
         # Use the lowest release pkg schema version accepting 'version' field
-        metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
+        metatab_schema_url = SchemaOCDS(select_version='1.1', lib_cove_ocds_config=lib_cove_ocds_config).release_pkg_schema_url
         metatab_data = get_spreadsheet_meta_data(upload_dir, file_name, metatab_schema_url, file_type)
         if 'version' not in metatab_data:
             metatab_data['version'] = '1.0'
@@ -105,7 +110,7 @@ def explore_ocds(request, pk):
             db_data.data_schema_version = metatab_data['version']
 
         select_version = post_version_choice or db_data.schema_version
-        schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
+        schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data, lib_cove_ocds_config=lib_cove_ocds_config)
 
         # Unlike for JSON data case above, do not check for missing data package
         if schema_ocds.invalid_version_argument:
