@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+import functools
 from dateutil import parser
 from strict_rfc3339 import validate_rfc3339
 from decimal import Decimal
@@ -15,13 +16,23 @@ from . lib import exceptions
 from libcoveocds.common_checks import common_checks_ocds
 from libcoveocds.schema import SchemaOCDS
 from libcoveocds.config import LibCoveOCDSConfig
-from cove.lib.common import get_spreadsheet_meta_data
-from cove.lib.converters import convert_spreadsheet, convert_json
-from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
+from libcoveocds.libcore.common import get_spreadsheet_meta_data
+from libcoveocds.libcore.converters import convert_spreadsheet, convert_json
+from libcoveocds.libcore.exceptions import CoveInputDataError
 from cove.views import explore_data_context
 
 
 logger = logging.getLogger(__name__)
+
+
+def cove_web_input_error(func):
+    @functools.wraps(func)
+    def wrapper(request, *args, **kwargs):
+        try:
+            return func(request, *args, **kwargs)
+        except CoveInputDataError as err:
+            return render(request, 'error.html', context=err.context)
+    return wrapper
 
 
 @cove_web_input_error
@@ -97,7 +108,8 @@ def explore_ocds(request, pk):
                 # Replace the spreadsheet conversion only if it exists already.
                 converted_path = os.path.join(upload_dir, 'flattened')
                 replace_converted = replace and os.path.exists(converted_path + '.xlsx')
-                context.update(convert_json(upload_dir, upload_url, file_name, schema_url=url, replace=replace_converted,
+                context.update(convert_json(upload_dir, upload_url, file_name, lib_cove_ocds_config,
+                                            schema_url=url, replace=replace_converted,
                                             request=request, flatten=request.POST.get('flatten')))
 
     else:
@@ -132,7 +144,8 @@ def explore_ocds(request, pk):
         url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
         pkg_url = schema_ocds.release_pkg_schema_url
 
-        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url=url,
+        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, lib_cove_ocds_config,
+                                           schema_url=url,
                                            pkg_schema_url=pkg_url, replace=replace))
 
         with open(context['converted_path'], encoding='utf-8') as fp:
