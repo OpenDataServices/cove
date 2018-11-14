@@ -19,7 +19,7 @@ from libcoveocds.lib.api import context_api_transform
 from libcoveocds.lib.common_checks import get_releases_aggregates, get_bad_ocds_prefixes
 from libcoveocds.schema import SchemaOCDS
 from cove.input.models import SuppliedData
-from cove.lib.converters import convert_json, convert_spreadsheet
+from libcoveocds.libcore.converters import convert_json, convert_spreadsheet
 from libcoveocds.libcore.tools import cached_get_request
 
 

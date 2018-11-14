@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.utils.html import mark_safe, format_html
 
-from cove.lib.exceptions import CoveInputDataError
+from libcoveocds.libcore.exceptions import CoveInputDataError
 
 
 def raise_invalid_version_argument(version):
