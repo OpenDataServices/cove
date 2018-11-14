@@ -7,7 +7,8 @@
 
 {% block after_head %}
   {{block.super}}
-  <link href="https://open-contracting.github.io/ocds-show/css/custom.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/gh/open-contracting/ocds-show@v0.2.1/css/custom.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/marianoguerra/json.human.js@0.1.1/css/json.human.css">
 {% endblock %}
 
 {% block explore_content %}
@@ -464,9 +465,10 @@
   </script>
   <script src="https://vega.github.io/vega/vega.min.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/gh/open-contracting/ocds-show@v0.1/js/nunjucks.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/open-contracting/ocds-show@v0.1/js/merge.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/open-contracting/ocds-show@v0.1/templates.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/open-contracting/ocds-show@v0.2.1/js/nunjucks.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/open-contracting/ocds-show@v0.2.1/js/merge.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/open-contracting/ocds-show@v0.2.1/templates.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/marianoguerra/json.human.js@0.1.1/src/json.human.js"></script>
   <script>
      var jsonInput = $('#input-json')
      var container = $('#container')
@@ -477,6 +479,24 @@
      var gettext = function(text) {
         return text
      }
+     id_counter_value = 0
+     var id_counter = function() {
+        id_counter_value = id_counter_value + 1
+        return id_counter_value
+     }
+
+     var after_release_render = function() {
+       $('[data-toggle="popover"]').popover()
+       $('[data-toggle="tooltip"]').tooltip()
+
+       $(".extra_view").each(function (index, extra_view) {
+          var jq_extra_view = $(extra_view)
+          var extra_data = jq_extra_view.data()["extra"]
+          jq_extra_view.append(JsonHuman.format(extra_data))
+       })
+     }
+
+
      var env = nunjucks.configure()
      // this needs replacing with something readable
      env.addFilter('currency', function(number) {
@@ -504,6 +524,7 @@
          return
        }
        input['gettext'] = gettext
+       input['id_counter'] = id_counter
        if (input.hasOwnProperty("records")) {
          input.ocids = input.records.map(function (value) {
            return value.ocid
@@ -562,8 +583,7 @@
          container.append(content)
          var content = env.render('record_release.html', input);
          container.append(content)
-         $('[data-toggle="popover"]').popover()
-         $('[data-toggle="tooltip"]').tooltip()
+         after_release_render()
        } else {
          input['releases'].sort(function (a, b) {
            if (a.date) {
@@ -604,8 +624,7 @@
          container.append(content)
          var content = env.render('release.html', input);
          container.append(content)
-         $('[data-toggle="popover"]').popover()
-         $('[data-toggle="tooltip"]').tooltip()
+         after_release_render()
        }
        // Shareholder pie chart
          var shareholders = $('.shareholders-chart');

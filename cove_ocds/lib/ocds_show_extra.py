@@ -34,3 +34,5 @@ def add_extra_fields_to_obj(obj, all_schema_fields, current_path):
         elif isinstance(value, dict):
             add_extra_fields_to_obj(value, all_schema_fields, new_path)
 
+    if not obj['__extra']:
+        obj.pop('__extra')
