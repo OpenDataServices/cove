@@ -558,6 +558,9 @@
          var changes = get_changes(flatten_all(prev_release), flatten_all(current_release))
          input['release'] = augment_path(current_release)
          var parties = input['release']['parties'] || []
+         if (!(parties instanceof Array)) {
+           parties = []
+         }
          input.parties = {}
          //input.socialWitness = []
          parties.forEach(function (party) {
@@ -612,6 +615,9 @@
          input['release'] = current_release
          input['release_id'] = id
          var parties = input['release']['parties'] || []
+         if (!(parties instanceof Array)) {
+           parties = []
+         }
          input.parties = {}
          //input.release.socialWitness = []
          parties.forEach(function (party) {
