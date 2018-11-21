@@ -128,7 +128,8 @@ def convert_json(upload_dir, upload_url, file_name, schema_url=None, replace=Fal
         main_sheet_name=config['root_list_path'],
         root_list_path=config['root_list_path'],
         root_id=config['root_id'],
-        schema=schema_url
+        schema=schema_url,
+        remove_empty_schema_columns=True
     )
 
     if xml:
