@@ -253,7 +253,7 @@
   <div class="panel panel-danger">
     <div id="validation-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
       <h4 class="panel-title">
-        <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Validation Errors' %}
+        <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Structural Correctness Errors' %}
       </h4>
     </div>
     <div id="validationTable" class="collapse in">
@@ -311,12 +311,12 @@
     <div class="panel panel-danger">
       <div id="additional-fields-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalClosedCodelist" data-toggle="collapse" data-target="#additionalClosedCodelist">
         <h4 class="panel-title">
-          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Codelist Validation Errors' %}</span>
+          <span class="our-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Codelist Errors' %}</span>
         </h4>
       </div>
       <div id="additionalClosedCodelist" class="collapse in">
         <div class="panel-body">
-          The fields below use closed codelists. When using these fields, you <strong> must </strong> use one of the pre-defined codelist values. If you use a value that is not on the relevant codelist, your data will not pass schema validation checks. Where you see + or - this indicates that the codelist has been modified with these additions (+) or subtractions (-) by one or more extensions.
+          The fields below use closed codelists. When using these fields, you <strong> must </strong> use one of the pre-defined codelist values. If you use a value that is not on the relevant codelist, your data will not pass structural correctness checks. Where you see + or - this indicates that the codelist has been modified with these additions (+) or subtractions (-) by one or more extensions.
           {% with additional_codelist_values=additional_closed_codelist_values %}
           <div>{% include "additional_codelist_values.html" %}</div>
           {% endwith %}
@@ -409,10 +409,10 @@
   {{ block.super }} 
   <script type="text/javascript">
       $("#validationTable").on("hide.bs.collapse", function(){
-        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-down"></span>{% trans "Validation Errors" %}</h4>');
+        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-down"></span>{% trans "Structural Correctness Errors" %}</h4>');
       });
       $("#validationTable").on("show.bs.collapse", function(){
-        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Validation Errors" %}</h4>');
+        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Structural Correctness Errors" %}</h4>');
       });
       $("#conformanceRulesTable").on("hide.bs.collapse", function(){
         $("#conformance-rules-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Conformance (Rules)" %}');

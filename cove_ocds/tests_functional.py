@@ -170,7 +170,7 @@ def test_500_error(server_url, browser):
                                                              'Contract Parties (Organization structure)',
                                                              'All the extensions above were applied',
                                                              'copy of the schema with extension',
-                                                             'Validation Errors',
+                                                             'Structural Correctness Errors',
                                                              'name is missing but required within buyer',
                                                              'The schema version specified in the file is 1.1',
                                                              'Party Scale'], ['scale', '/releases/parties/details', 'fetching failed'], True),
@@ -182,7 +182,7 @@ def test_500_error(server_url, browser):
                                                                     'Lots',
                                                                     'A tender process may be divided into lots',
                                                                     'copy of the schema with extension',
-                                                                    'Validation Errors',
+                                                                    'Structural Correctness Errors',
                                                                     'id is missing but required within items'], ['fetching failed'], True),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Schema Extensions',
                                                                  'https://raw.githubusercontent.com/open-contracting/',
@@ -190,7 +190,7 @@ def test_500_error(server_url, browser):
                                                                  '400: bad request',
                                                                  'Only those extensions successfully fetched',
                                                                  'copy of the schema with extension',
-                                                                 'Validation Errors'], ['All the extensions above were applied'], True),
+                                                                 'Structural Correctness Errors'], ['All the extensions above were applied'], True),
     ('tenders_records_1_record_with_invalid_extensions.json', ['Party Scale',
                                                                'The metrics extension supports publication of forecasts',
                                                                'Get a copy of the schema with extension patches applied',
@@ -248,7 +248,7 @@ def test_500_error(server_url, browser):
                                                   'Summary statistics on the number and nature of bids received.'], ['Reference Docs'], True),
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
-                                                  'Validation Errors',
+                                                  'Structural Correctness Errors',
                                                   "id is missing but required",
                                                   "Invalid 'uri' found"], [], True),
     ('tenders_releases_2_releases_codelists.json', ['oh no',
@@ -261,7 +261,7 @@ def test_500_error(server_url, browser):
     ('badfile.json', 'Statistics can not produced', [], True),
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', [], False),
-    ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], [], True),
+    ('full_record.json', ['Number of records', 'Structural Correctness Errors', 'compiledRelease', 'versionedRelease'], [], True),
     # Test "version" value in data
     ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 123.123 which is not recognised',
                                                                    'checked against OCDS release package schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
@@ -281,7 +281,7 @@ def test_500_error(server_url, browser):
                                                                        '/definitions/OrganizationReference'], ['Convert to Spreadsheet'], False),
     ('tenders_releases_1_release_unpackaged.json', ['Missing OCDS package',
                                                     'Error message: Missing OCDS package'], ['Convert to Spreadsheet'], False),
-    ('tenders_releases_1_release_with_closed_codelist.json', ['Failed validation'], ['Passed validation'], True),
+    ('tenders_releases_1_release_with_closed_codelist.json', ['Failed structural correctness checks'], ['Passed structural correctness checks'], True),
     ('tenders_releases_1_release_with_tariff_codelist.json', ['releases/contracts/tariffs',
                                                               'chargePaidBy.csv',
                                                               'notADocumentType',
@@ -486,11 +486,11 @@ def test_url_invalid_dataset_request(server_url, browser, data_url):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_1_1.json', 'validation against OCDS release package schema version 1.1',
+    ('tenders_releases_1_release_with_extensions_1_1.json', 'structural correctness checks against OCDS release package schema version 1.1',
      'version is missing but required', 'methodRationale', 'version'),
-    ('tenders_releases_1_release_with_invalid_extensions.json', 'validation against OCDS release package schema version 1.0',
+    ('tenders_releases_1_release_with_invalid_extensions.json', 'structural correctness checks against OCDS release package schema version 1.0',
      'version is missing but required', 'methodRationale', 'version'),
-    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'validation against OCDS release package schema version 1.1',
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'structural correctness checks against OCDS release package schema version 1.1',
      'version is missing but required', 'methodRationale', 'version')
 ])
 def test_url_input_with_version(server_url, url_input_browser, httpserver, source_filename, expected, not_expected,
@@ -514,11 +514,11 @@ def test_url_input_with_version(server_url, url_input_browser, httpserver, sourc
 
 
 @pytest.mark.parametrize(('source_filename', 'select_version', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_1_1.json', '1.0', 'validation against OCDS release package schema version 1.0',
+    ('tenders_releases_1_release_with_extensions_1_1.json', '1.0', 'structural correctness checks against OCDS release package schema version 1.0',
      'version is missing but required', 'version', 'publisher'),
     ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', 'version is missing but required',
-     'validation against OCDS release package schema version 1.0', 'methodRationale', 'version'),
-    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'validation against OCDS release package schema version 1.0',
+     'structural correctness checks against OCDS release package schema version 1.0', 'methodRationale', 'version'),
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'structural correctness checks against OCDS release package schema version 1.0',
      'version is missing but required', 'version', 'publisher')
 ])
 def test_url_input_with_version_change(server_url, url_input_browser, httpserver, select_version, source_filename, expected,
