@@ -21,7 +21,7 @@
           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% trans "Passed " %} 
         {% endif %}
         {% blocktrans %}structural correctness checks against {% endblocktrans %}<a href="{{ schema_url }}">OCDS release package schema version {{ version_used_display }}</a>.
-        {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Structural Correctness Errors</a> below.{% endblocktrans %}{% endif %}
+        {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Structural Errors</a> below.{% endblocktrans %}{% endif %}
         </div>
         {% if extensions and extensions.invalid_extension %}
         <div class="message">
