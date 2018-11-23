@@ -253,7 +253,7 @@
   <div class="panel panel-danger">
     <div id="validation-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
       <h4 class="panel-title">
-        <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Structural Correctness Errors' %}
+        <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Structural Errors' %}
       </h4>
     </div>
     <div id="validationTable" class="collapse in">
@@ -409,10 +409,10 @@
   {{ block.super }} 
   <script type="text/javascript">
       $("#validationTable").on("hide.bs.collapse", function(){
-        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-down"></span>{% trans "Structural Correctness Errors" %}</h4>');
+        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-down"></span>{% trans "Structural Errors" %}</h4>');
       });
       $("#validationTable").on("show.bs.collapse", function(){
-        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Structural Correctness Errors" %}</h4>');
+        $("#validation-panel.panel-heading").html('<h4 class="panel-title"><span class="glyphicon glyphicon-collapse-up"></span>{% trans "Structural Errors" %}</h4>');
       });
       $("#conformanceRulesTable").on("hide.bs.collapse", function(){
         $("#conformance-rules-panel .our-title").html('<span class="glyphicon glyphicon-collapse-down"></span>{% trans "Conformance (Rules)" %}');
