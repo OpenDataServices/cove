@@ -44,5 +44,6 @@ COVE_CONFIG = {
     'root_id': '',
     'convert_titles': True,
     'input_methods': ['upload', 'url', 'text'],
-    'support_email': 'support@threesixtygiving.org'
+    'support_email': 'support@threesixtygiving.org',
+    'hashcomments': True
 }
