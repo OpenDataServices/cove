@@ -5,10 +5,14 @@ def add_extra_fields(data, deref_release_schema):
     all_schema_fields = set(schema_dict_fields_generator(deref_release_schema))
 
     if 'releases' in data:
-        for release in data['releases']:
+        for release in data.get('releases', []):
+            if not isinstance(release, dict):
+                return
             add_extra_fields_to_obj(release, all_schema_fields, "")
     elif 'records' in data:
-        for record in data['records']:
+        for record in data.get('records', []):
+            if not isinstance(record, dict):
+                return
             for release in record.get('releases', []):
                 add_extra_fields_to_obj(release, all_schema_fields, "")
             

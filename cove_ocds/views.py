@@ -184,13 +184,13 @@ def explore_ocds(request, pk):
             context['records'] = json_data['records']
         else:
             context['records'] = []
-        if len(json_data['records']) < 100:
+        if isinstance(json_data['records'], list) and len(json_data['records']) < 100:
             context['ocds_show_data'] = ocds_show_data(json_data, ocds_show_deref_schema)
     else:
         template = 'cove_ocds/explore_release.html'
         if hasattr(json_data, 'get') and hasattr(json_data.get('releases'), '__iter__'):
             context['releases'] = json_data['releases']
-            if len(json_data['releases']) < 100:
+            if isinstance(json_data['releases'], list) and len(json_data['releases']) < 100:
                 context['ocds_show_data'] = ocds_show_data(json_data, ocds_show_deref_schema)
 
             # Parse release dates into objects so the template can format them.
@@ -210,8 +210,6 @@ def explore_ocds(request, pk):
                             context['releases_aggregates'][field] = None
         else:
             context['releases'] = []
-
-    #new schema not related
 
     return render(request, template, context)
 
