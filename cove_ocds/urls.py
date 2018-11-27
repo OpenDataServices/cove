@@ -14,10 +14,6 @@ urlpatterns_core += [url(r'^data/(.+)$', cove_ocds.views.explore_ocds, name='exp
 
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='review/', permanent=False)),
-    # This is the old URL's.
-    url('^validator/', include(urlpatterns_core)),
-    # This is the new URL's. This is last in order so that it is more important.
-    # When the user submits some data, they will be redirected to a page with a /review URL.
     url('^review/', include(urlpatterns_core)),
 ]
 
