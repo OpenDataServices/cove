@@ -1,2 +1,0 @@
-{% load i18n %}
-<p>{% blocktrans %}If you think this is a bug, you can <a href="https://github.com/OpenDataServices/cove/issues">file an issue publicly on GitHub</a> or {% endblocktrans %}<a href="mailto:{{support_email}}">{% trans "get in touch via email" %}</a>{% if request.sentry.id %}, {% blocktrans %}referencing this error as {% endblocktrans %}<strong>{{ request.sentry.id }}</strong>{% endif %}.
