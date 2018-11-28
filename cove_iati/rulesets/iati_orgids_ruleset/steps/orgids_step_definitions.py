@@ -1,6 +1,6 @@
 from behave import then
 
-from cove.lib.common import get_orgids_prefixes
+from libcove.lib.common import get_orgids_prefixes
 from cove_iati.rulesets.utils import get_child_full_xpath, get_xobjects, register_ruleset_errors
 
 ORGIDS_PREFIXES = get_orgids_prefixes()

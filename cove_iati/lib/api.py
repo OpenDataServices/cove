@@ -4,7 +4,7 @@ import shutil
 
 from .iati import common_checks_context_iati, get_file_type
 from .schema import SchemaIATI
-from cove.lib.converters import convert_spreadsheet
+from libcove.lib.converters import convert_spreadsheet
 
 
 class APIException(Exception):

@@ -2,6 +2,7 @@ import logging
 import json
 import tempfile
 import os
+import functools
 
 from django.shortcuts import render
 from django import forms
@@ -10,8 +11,8 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseBadRequest
 
-from cove.lib.converters import convert_spreadsheet, convert_json
-from cove.lib.exceptions import cove_web_input_error
+from libcove.lib.exceptions import CoveInputDataError
+from libcove.lib.converters import convert_spreadsheet, convert_json
 from cove.input.models import SuppliedData
 from cove.input.views import data_input
 from cove.views import explore_data_context
@@ -21,6 +22,16 @@ from .lib.schema import SchemaIATI
 
 
 logger = logging.getLogger(__name__)
+
+
+def cove_web_input_error(func):
+    @functools.wraps(func)
+    def wrapper(request, *args, **kwargs):
+        try:
+            return func(request, *args, **kwargs)
+        except CoveInputDataError as err:
+            return render(request, 'error.html', context=err.context)
+    return wrapper
 
 
 class UploadForm(forms.ModelForm):
