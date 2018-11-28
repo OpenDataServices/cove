@@ -2,8 +2,8 @@ import re
 from collections import defaultdict, OrderedDict
 from decimal import Decimal
 
-import cove.lib.tools as tools
-from cove.lib.common import common_checks_context, get_orgids_prefixes
+import libcove.lib.tools as tools
+from libcove.lib.common import common_checks_context, get_orgids_prefixes
 
 
 orgids_prefixes = get_orgids_prefixes()

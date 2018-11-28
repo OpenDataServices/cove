@@ -1,6 +1,7 @@
 import json
 import logging
 from decimal import Decimal
+import functools
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
@@ -9,11 +10,21 @@ from django.utils.html import format_html
 from . lib.schema import Schema360
 from . lib.threesixtygiving import common_checks_360
 from . lib.threesixtygiving import TEST_CLASSES
-from cove.lib.converters import convert_spreadsheet, convert_json
-from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
+from libcove.lib.converters import convert_spreadsheet, convert_json
+from libcove.lib.exceptions import CoveInputDataError
 from cove.views import explore_data_context
 
 logger = logging.getLogger(__name__)
+
+
+def cove_web_input_error(func):
+    @functools.wraps(func)
+    def wrapper(request, *args, **kwargs):
+        try:
+            return func(request, *args, **kwargs)
+        except CoveInputDataError as err:
+            return render(request, 'error.html', context=err.context)
+    return wrapper
 
 
 @cove_web_input_error
