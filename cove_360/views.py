@@ -12,6 +12,9 @@ from . lib.threesixtygiving import common_checks_360
 from . lib.threesixtygiving import TEST_CLASSES
 from libcove.lib.converters import convert_spreadsheet, convert_json
 from libcove.lib.exceptions import CoveInputDataError
+from libcove.config import LibCoveConfig
+from django.conf import settings
+
 from cove.views import explore_data_context
 
 logger = logging.getLogger(__name__)
@@ -33,6 +36,9 @@ def explore_360(request, pk, template='cove_360/explore.html'):
     context, db_data, error = explore_data_context(request, pk)
     if error:
         return error
+
+    lib_cove_config = LibCoveConfig()
+    lib_cove_config.config.update(settings.COVE_CONFIG)
 
     upload_dir = db_data.upload_dir()
     upload_url = db_data.upload_url()
@@ -63,10 +69,12 @@ def explore_360(request, pk, template='cove_360/explore.html'):
                 })
 
             context.update(convert_json(upload_dir, upload_url, file_name, schema_url=schema_360.release_schema_url,
-                                        request=request, flatten=request.POST.get('flatten')))
+                                        request=request, flatten=request.POST.get('flatten'),
+                                        lib_cove_config=lib_cove_config))
 
     else:
-        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_360.release_schema_url, schema_360.release_pkg_schema_url))
+        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, lib_cove_config, schema_360.release_schema_url,
+                                           schema_360.release_pkg_schema_url))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp, parse_float=Decimal)
 

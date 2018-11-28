@@ -29,7 +29,6 @@ script:
   - "[ \"$TRAVIS_PULL_REQUEST\" = \"false\" ] || [ \"`pocount --incomplete cove/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
   - "[ \"$TRAVIS_PULL_REQUEST\" = \"false\" ] || [ \"`pocount --incomplete cove_ocds/locale/es/LC_MESSAGES/django.po`\" = \"\" ]"
   - "flake8 ."
-  - "DJANGO_SETTINGS_MODULE=cove.settings py.test -n 2 cove --cov --cov-report="
   - "DJANGO_SETTINGS_MODULE=cove_360.settings py.test -n 2 cove_360 --cov-append --cov --cov-report="
   - "DJANGO_SETTINGS_MODULE=cove_ocds.settings py.test -n 2 cove_ocds --cov-append --cov"
   - "DJANGO_SETTINGS_MODULE=cove_iati.settings py.test -n 2 cove_iati --cov-append --cov"

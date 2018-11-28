@@ -5,6 +5,8 @@ import shutil
 from .iati import common_checks_context_iati, get_file_type
 from .schema import SchemaIATI
 from libcove.lib.converters import convert_spreadsheet
+from libcove.config import LibCoveConfig
+from cove_iati.settings import COVE_CONFIG
 
 
 class APIException(Exception):
@@ -34,9 +36,12 @@ def iati_json_output(output_dir, file, openag=False, orgids=False):
     context = {"file_type": file_type}
     file_type = context['file_type']
 
+    lib_cove_config = LibCoveConfig()
+    lib_cove_config.config.update(COVE_CONFIG)
+
     if file_type != 'xml':
         schema_iati = SchemaIATI()
-        context.update(convert_spreadsheet(output_dir, '', file, file_type,
+        context.update(convert_spreadsheet(output_dir, '', file, file_type, lib_cove_config,
             cache=False, xml=True, xml_schemas=[
                 schema_iati.activity_schema,
                 schema_iati.organisation_schema,
