@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 addons:
   chrome: stable
 
@@ -11,8 +11,7 @@ before_install:
   # install Java 8 as required by vnu.jar
   # install gettext for translations
   - sudo apt-get update
-  - sudo apt-get install oracle-java8-installer gettext build-essential libxml2-dev libxslt1-dev python3-dev
-  - sudo update-java-alternatives -s java-8-oracle
+  - sudo apt-get install openjdk-8-jdk gettext build-essential libxml2-dev libxslt1-dev python3-dev
   # Install translate toolkit to get pocount binary
   - sudo apt-get install translate-toolkit
 
