@@ -37,7 +37,7 @@ def explore_data_context(request, pk, get_file_type=None):
             'link': 'index',
             'link_text': _('Go to Home page'),
             'msg': _('The data you were hoping to explore no longer exists.\n\nThis is because all '
-                     'data suplied to this website is automatically deleted after 7 days, and therefore '
+                     'data supplied to this website is automatically deleted after 7 days, and therefore '
                      'the analysis of that data is no longer available.')
         }, status=404)
 
