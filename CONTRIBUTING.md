@@ -56,7 +56,7 @@ Once we have reviewed and signed a copy of the agreement we will be able accept 
 ## How we use branches in this repository
 
 * `master` represents our main development branch, which gets deployed frequently to http://dev.cove.opendataservices.coop/
-* `live` corresponds to the code currently running in our live deployments at http://cove.opendataservices.coop/ and http://standard.open-contracting.org/validator/
+* `live` corresponds to the code currently running in our live deployments at http://cove.opendataservices.coop/ and http://standard.open-contracting.org/review/
 * Branches of the form `release-...` are for a release of Cove. These diverge from `master` so that we can have a testing period with no new features. Once a release is ready it gets merged into `live`. We currently have a monthly release cyle: https://github.com/OpenDataServices/cove#release-cycle
 * Other branches represent development work or bug fixes.
 

@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 
 from django.conf import settings
 
-from cove.lib.common import SchemaJsonMixin
+from libcove.lib.common import SchemaJsonMixin
 
 
 config = settings.COVE_CONFIG

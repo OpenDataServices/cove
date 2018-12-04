@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-20 09:48+0000\n"
+"POT-Creation-Date: 2018-10-30 16:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -756,23 +756,15 @@ msgid ""
 "prefer a spreadsheet format."
 msgstr ""
 
-#: cove_360/views.py:37 cove_360/views.py:47
+#: cove_360/views.py:38 cove_360/views.py:48
 msgid "Sorry, we can't process that data"
 msgstr ""
 
-#: cove_360/views.py:39 cove_360/views.py:49
+#: cove_360/views.py:40 cove_360/views.py:50
 msgid "Try Again"
 msgstr ""
 
-#: cove_360/views.py:40
-msgid ""
-"We think you tried to upload a JSON file, but it is not well formed JSON.\n"
-"\n"
-"<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></"
-"span> <strong>Error message:</strong> {}"
-msgstr ""
-
-#: cove_360/views.py:50
+#: cove_360/views.py:51
 msgid ""
 "360Giving JSON should have an object as the top level, the JSON you supplied "
 "does not."

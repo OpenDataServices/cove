@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.management.base import CommandError
 
 from cove.management.commands.base_command import CoveBaseCommand, SetEncoder
-from cove_ocds.lib.api import APIException, ocds_json_output
+from libcoveocds.api import APIException, ocds_json_output
 
 
 class Command(CoveBaseCommand):

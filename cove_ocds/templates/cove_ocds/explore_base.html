@@ -20,12 +20,12 @@
       <div class="panel-body">
         {% if unrecognized_version_data %}
           <div class="bg-danger in-panel-warning">
-            <small><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> &nbsp;Your data specifies a version <strong>{{unrecognized_version_data}}</strong> which is not recognised. For that reason, it's been validated against the current default version.</small>
+            <small><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> &nbsp;Your data specifies a version <strong>{{unrecognized_version_data}}</strong> which is not recognised. For that reason, it's been checked against the current default version.</small>
           </div>
         {% endif %}
-        <p>This data has been checked against <a href="{{ schema_url }}">OCDS {% if releases %}release {% endif %}{% if records %}record {% endif %}package schema version {{ version_used_display }}</a>. You can choose a different version of the schema to validate and explore your data.</p>
+        <p>This data has been checked against <a href="{{ schema_url }}">OCDS {% if releases %}release {% endif %}{% if records %}record {% endif %}package schema version {{ version_used_display }}</a>. You can choose a different version of the schema to check and explore your data.</p>
         <br>
-        <strong>Validate and explore same data against a different version of the schema</strong>
+        <strong>Check and explore same data against a different version of the schema</strong>
         <div class="ttip">
           <sup><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></sup>
           <span class="ttiptext">Switching the schema version will result in changes to CoVE output and conversions. If you revisit or share this URL, the lastest version selected will be used to check your data</span>
@@ -184,7 +184,7 @@
         {% endif %}
         <span class="glyphicon glyphicon-download" aria-hidden="true"></span> <a href="{{extensions.extended_schema_url}}"> &nbsp;Get a copy of the schema with extension patches applied</a>
       {% else %}
-        <p>None of the extensions above could be applied. Your data has been validated against a schema with no extensions.</p>
+        <p>None of the extensions above could be applied. Your data has been checked against a schema with no extensions.</p>
       {% endif %}
 
     </div>
@@ -202,7 +202,7 @@
     </div>
     <div class="panel-body">
       {% if file_type == 'xlsx' or file_type == 'csv' %}
-        <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+        <p class="explanation">In order to check your data we need to convert it. During that conversion we found the following issues:</p>
       {% endif %}
       <ul>
         {% for warning_message in conversion_warning_messages %}
@@ -224,7 +224,7 @@
     </div>
     <div class="panel-body">
     {% if file_type == 'xlsx' or file_type == 'csv' %}
-      <p class="explanation">In order to validate your data we need to convert it. During that conversion we found the following issues:</p>
+      <p class="explanation">In order to check your data we need to convert it. During that conversion we found the following issues:</p>
     {% endif %}
     <ul>
       {% for warning_message in conversion_warning_messages_titles %}
@@ -310,7 +310,7 @@
       </div>
       <div id="additionalClosedCodelist" class="collapse in">
         <div class="panel-body">
-          The fields below use closed codelists. When using these fields, you <strong> must </strong> use one of the pre-defined codelist values. If you use a value that is not on the relevant codelist, your data will not pass validation. Where you see + or - this indicates that the codelist has been modified with these additions (+) or subtractions (-) by one or more extensions.
+          The fields below use closed codelists. When using these fields, you <strong> must </strong> use one of the pre-defined codelist values. If you use a value that is not on the relevant codelist, your data will not pass schema validation checks. Where you see + or - this indicates that the codelist has been modified with these additions (+) or subtractions (-) by one or more extensions.
           {% with additional_codelist_values=additional_closed_codelist_values %}
           <div>{% include "additional_codelist_values.html" %}</div>
           {% endwith %}

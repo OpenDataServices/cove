@@ -13,13 +13,14 @@ from django.core.files.uploadedfile import UploadedFile
 from django.core.management import call_command
 from django.core.management.base import CommandError
 
-import cove.lib.common as cove_common
-from .lib.api import APIException, context_api_transform, ocds_json_output
-from .lib.ocds import get_releases_aggregates, get_bad_ocds_prefixes
-from .lib.schema import SchemaOCDS
+import libcove.lib.common as cove_common
+from libcoveocds.api import APIException, ocds_json_output
+from libcoveocds.lib.api import context_api_transform
+from libcoveocds.lib.common_checks import get_releases_aggregates, get_bad_ocds_prefixes
+from libcoveocds.schema import SchemaOCDS
 from cove.input.models import SuppliedData
-from cove.lib.converters import convert_json, convert_spreadsheet
-from cove.lib.tools import cached_get_request
+from libcoveocds.libcore.converters import convert_json, convert_spreadsheet
+from libcoveocds.libcore.tools import cached_get_request
 
 
 OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
@@ -245,7 +246,7 @@ def test_get_releases_aggregates():
 
     assert actual_cleaned == EXPECTED_RELEASE_AGGREGATE_RANDOM
 
-    with open(os.path.join('cove', 'fixtures', 'badfile.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'badfile.json')) as fp:
         data = json.load(fp)
 
     actual = get_releases_aggregates(data, ignore_errors=True)
@@ -278,7 +279,7 @@ def test_get_json_data_generic_paths():
 
 
 def test_get_json_data_deprecated_fields():
-    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
         json_data_w_deprecations = json.load(fp)
 
     schema_obj = SchemaOCDS()
@@ -409,7 +410,7 @@ def test_explore_not_json(client):
 @pytest.mark.django_db
 def test_explore_unconvertable_spreadsheet(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove', 'fixtures', 'bad.xlsx'), 'rb') as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'bad.xlsx'), 'rb') as fp:
         data.original_file.save('basic.xlsx', UploadedFile(fp))
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200

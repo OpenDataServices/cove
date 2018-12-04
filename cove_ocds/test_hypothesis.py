@@ -1,4 +1,4 @@
-from cove_ocds.lib.ocds import get_releases_aggregates
+from libcoveocds.lib.common_checks import get_releases_aggregates
 from hypothesis import given, assume, strategies as st, example, settings
 from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
