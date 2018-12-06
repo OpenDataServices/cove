@@ -78,7 +78,7 @@ Steps to installation:
 * Create a virtual environment (note this application uses python3)
 * Activate the virtual environment
 * Install dependencies
-* Set up the database (sqlite3)
+* Set up the database (sqlite3) (you need to pass the django settings for the module (ie. ocds, 360, iati) you want to run)
 * Compile the translations
 * Run the development server
 
@@ -89,7 +89,7 @@ Steps to installation:
     virtualenv .ve --python=/usr/bin/python3
     source .ve/bin/activate
     pip install -r requirements_dev.txt
-    python manage.py migrate
+    DJANGO_SETTINGS_MODULE={cove_MODULENAME}.settings python manage.py migrate
     python manage.py compilemessages
 
 Then, for 360Giving run:
