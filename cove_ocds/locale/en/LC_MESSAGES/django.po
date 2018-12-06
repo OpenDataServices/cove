@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-30 16:05+0000\n"
+"POT-Creation-Date: 2018-12-06 13:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: cove_ocds/lib/exceptions.py:11 cove_ocds/lib/exceptions.py:24
 #: cove_ocds/lib/exceptions.py:40 cove_ocds/lib/exceptions.py:53
-#: cove_ocds/views.py:49 cove_ocds/views.py:60
+#: cove_ocds/views.py:65 cove_ocds/views.py:76
 msgid "Try Again"
 msgstr ""
 
@@ -926,11 +926,11 @@ msgstr ""
 msgid "Open Contracting Identifier guidance"
 msgstr ""
 
-#: cove_ocds/views.py:47 cove_ocds/views.py:58
+#: cove_ocds/views.py:63 cove_ocds/views.py:74
 msgid "Sorry, we can't process that data"
 msgstr ""
 
-#: cove_ocds/views.py:61
+#: cove_ocds/views.py:77
 msgid ""
 "OCDS JSON should have an object as the top level, the JSON you supplied does "
 "not."
