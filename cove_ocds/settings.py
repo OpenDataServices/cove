@@ -84,3 +84,6 @@ COVE_CONFIG = {
 
 # Set default schema version to the latest version
 COVE_CONFIG['schema_version'] = list(COVE_CONFIG['schema_version_choices'].keys())[-1]
+
+# https://github.com/OpenDataServices/cove/issues/1098
+FILE_UPLOAD_PERMISSIONS = 0o644

@@ -91,3 +91,7 @@ COVE_CONFIG = {
     },
     'hashcomments': True
 }
+
+
+# https://github.com/OpenDataServices/cove/issues/1098
+FILE_UPLOAD_PERMISSIONS = 0o644
