@@ -258,7 +258,7 @@ def test_500_error(server_url, browser):
     # But we expect to see an error message if a file is not well formed JSON at all
     ('tenders_releases_2_releases_not_json.json', 'not well formed JSON', [], False),
     ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, ['Missing OCDS package'], True),
-    ('badfile.json', 'Statistics can not produced', [], True),
+    ('badfile.json', 'Statistics cannot be produced', [], True),
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', [], False),
     ('full_record.json', ['Number of records', 'Structural Errors', 'compiledRelease', 'versionedRelease'], [], True),
