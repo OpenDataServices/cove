@@ -281,7 +281,7 @@ def test_500_error(server_url, browser):
                                                                        '/definitions/OrganizationReference'], ['Convert to Spreadsheet'], False),
     ('tenders_releases_1_release_unpackaged.json', ['Missing OCDS package',
                                                     'Error message: Missing OCDS package'], ['Convert to Spreadsheet'], False),
-    ('tenders_releases_1_release_with_closed_codelist.json', ['Failed structural correctness checks'], ['Passed structural correctness checks'], True),
+    ('tenders_releases_1_release_with_closed_codelist.json', ['Failed structural checks'], ['Passed structural checks'], True),
     ('tenders_releases_1_release_with_tariff_codelist.json', ['releases/contracts/tariffs',
                                                               'chargePaidBy.csv',
                                                               'notADocumentType',
@@ -486,11 +486,11 @@ def test_url_invalid_dataset_request(server_url, browser, data_url):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_1_1.json', 'structural correctness checks against OCDS release package schema version 1.1',
+    ('tenders_releases_1_release_with_extensions_1_1.json', 'structural checks against OCDS release package schema version 1.1',
      'version is missing but required', 'methodRationale', 'version'),
-    ('tenders_releases_1_release_with_invalid_extensions.json', 'structural correctness checks against OCDS release package schema version 1.0',
+    ('tenders_releases_1_release_with_invalid_extensions.json', 'structural checks against OCDS release package schema version 1.0',
      'version is missing but required', 'methodRationale', 'version'),
-    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'structural correctness checks against OCDS release package schema version 1.1',
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'structural checks against OCDS release package schema version 1.1',
      'version is missing but required', 'methodRationale', 'version')
 ])
 def test_url_input_with_version(server_url, url_input_browser, httpserver, source_filename, expected, not_expected,
@@ -514,11 +514,11 @@ def test_url_input_with_version(server_url, url_input_browser, httpserver, sourc
 
 
 @pytest.mark.parametrize(('source_filename', 'select_version', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_1_1.json', '1.0', 'structural correctness checks against OCDS release package schema version 1.0',
+    ('tenders_releases_1_release_with_extensions_1_1.json', '1.0', 'structural checks against OCDS release package schema version 1.0',
      'version is missing but required', 'version', 'publisher'),
     ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', 'version is missing but required',
-     'structural correctness checks against OCDS release package schema version 1.0', 'methodRationale', 'version'),
-    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'structural correctness checks against OCDS release package schema version 1.0',
+     'structural checks against OCDS release package schema version 1.0', 'methodRationale', 'version'),
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'structural checks against OCDS release package schema version 1.0',
      'version is missing but required', 'version', 'publisher')
 ])
 def test_url_input_with_version_change(server_url, url_input_browser, httpserver, select_version, source_filename, expected,
