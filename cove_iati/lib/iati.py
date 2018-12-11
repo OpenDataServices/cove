@@ -9,8 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.html import format_html
 
 from .schema import SchemaIATI
-from cove.lib.exceptions import CoveInputDataError, UnrecognisedFileTypeXML
-from cove.lib.tools import ignore_errors
+from libcove.lib.exceptions import CoveInputDataError
+from cove_iati.lib.exceptions import UnrecognisedFileTypeXML
+from libcove.lib.tools import ignore_errors
 
 
 def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):

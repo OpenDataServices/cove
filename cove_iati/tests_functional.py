@@ -78,11 +78,11 @@ def test_index_page_iati_links(server_url, browser, link_text, url):
 
 
 @pytest.mark.parametrize(('link_text', 'url'), [
-    ('xlsx', 'https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/export?format=xlsx'),
-    ('convert to xml', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-activity-standard.xml?raw=true'),
+    ('xlsx', 'https://docs.google.com/spreadsheets/d/1V8Cs4rivr6HDiDsne2bVECJiAXHcHBDiy_JEU9oPgRQ/export?format=xlsx'),
+    ('convert to spreadsheet', '?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-activity-standard.xml?raw=true'),
     ('xml', 'https://github.com/OpenDataServices/iati-sample-data/blob/master/IATI-CoVE-sample-activity-standard.xml'),
-    ('convert to spreadsheet', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/export?format=xlsx'),
-    ('google doc', 'https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/edit?usp=sharing'),
+    ('convert to xml', '?source_url=https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/export?format=xlsx'),
+    ('google doc', 'https://docs.google.com/spreadsheets/d/1V8Cs4rivr6HDiDsne2bVECJiAXHcHBDiy_JEU9oPgRQ//edit?usp=sharing'),
     ])
 def test_activity_file_iait_links(server_url, browser, link_text, url):
     browser.get(server_url)
@@ -93,9 +93,9 @@ def test_activity_file_iait_links(server_url, browser, link_text, url):
 
 @pytest.mark.parametrize(('link_text', 'url'), [
     ('xlsx', 'https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx'),
-    ('convert to xml', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-organisation-standard.xml?raw=true'),
+    ('convert to spreadsheet', '?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-organisation-standard.xml?raw=true'),
     ('xml', 'https://github.com/OpenDataServices/iati-sample-data/blob/master/IATI-CoVE-sample-organisation-standard.xml'),
-    ('convert to spreadsheet', '?source_url=http://iati.cove.opendataservices.coop/?source_url=https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx'),
+    ('convert to xml', '?source_url=https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/export?format=xlsx'),
     ('google doc', 'https://docs.google.com/spreadsheets/d/1MXjepDgfzKw0ULUWzKmXVS0Al6rMhMHlgN-ZF6hLc70/edit?usp=sharing')
     ])
 def test_organisation_file_iait_links(server_url, browser, link_text, url):
