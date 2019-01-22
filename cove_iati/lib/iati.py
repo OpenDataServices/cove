@@ -164,7 +164,11 @@ def lxml_errors_generator(schema_error_log):
     as the latter does include an index position for sequences with a single array.
     '''
     for error in schema_error_log:
-        yield {'path': error.path, 'message': error.message}
+        yield {
+            'path': error.path,
+            'message': error.message,
+            'line': error.line,
+        }
 
 
 def format_lxml_errors(lxml_errors):
@@ -199,7 +203,12 @@ def format_lxml_errors(lxml_errors):
             value = value[:val_end]
         message = message.replace('Element ', '').replace(": '{}'".format(value), '')
 
-        yield {'path': path, 'message': message, 'value': value}
+        yield {
+            'path': path,
+            'message': message,
+            'value': value,
+            'line': error['line'],
+        }
 
 
 def get_zero_paths_list(cell_path):
@@ -293,13 +302,13 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
             generic_error_path = re.sub(r'/\d+', '', error['path'])
             cell_paths = cell_source_map_paths.get(generic_error_path, [])
             source = error_path_source(error, cell_paths, cell_source_map)
-            if source:
-                validation_errors[validation_key].append(source)
-            else:
+            if not source:
                 source = error_path_source(error, cell_paths, cell_source_map, missing_zeros=True)
-                validation_errors[validation_key].append(source)
         else:
-            validation_errors[validation_key].append({'path': error['path'], 'value': error['value']})
+            source = {'path': error['path'], 'value': error['value']}
+
+        source.update({'line': error['line']})
+        validation_errors[validation_key].append(source)
 
     return validation_errors
 
