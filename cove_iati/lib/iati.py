@@ -184,7 +184,7 @@ def format_lxml_errors(lxml_errors):
         path = re.sub(r'/iati-activities/', '', path)
         if attribute:
             path = '{}/@{}'.format(path, attribute)
-        
+
         message = error['message']
         value = ''
 

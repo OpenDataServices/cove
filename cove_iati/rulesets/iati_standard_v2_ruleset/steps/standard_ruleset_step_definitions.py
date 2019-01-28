@@ -112,7 +112,7 @@ def step_either_or_expected_not_both(context, xpath_expression1, xpath_expressio
     fail_msg_both = 'Either {} or {} are expected (not both)'
     xpaths1 = get_xobjects(context.xml, xpath_expression1)
     xpaths2 = get_xobjects(context.xml, xpath_expression2)
-    
+
     if not xpaths1 and not xpaths2:
         errors = [{'explanation': fail_msg_neither.format(xpath_expression1, xpath_expression2),
                    'path': get_child_full_xpath(context.xml, context.xml)}]
@@ -183,7 +183,7 @@ def step_start_date_before_end_date(context, xpath1, xpath2):
 def step_attr_add_to_hundred(context, attribute):
     elements = get_xobjects(context.xml, context.xpath_expression)
     errors = []
-    
+
     if len(elements) == 0 or (len(elements) == 1 and elements[0].attrib.get(attribute, '100') == '100'):
         return context, errors
 

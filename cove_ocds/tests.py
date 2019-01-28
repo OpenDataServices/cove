@@ -561,7 +561,7 @@ def test_data_supplied_schema_version(client):
     with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases.xlsx'), 'rb') as fp:
         data.original_file.save('test.xlsx', UploadedFile(fp))
     data.current_app = 'cove_ocds'
-    
+
     assert data.schema_version == ''
 
     resp = client.get(data.get_absolute_url())
@@ -646,7 +646,7 @@ def test_schema_ocds_extensions(release_data, extensions, invalid_extension, ext
     schema = SchemaOCDS(release_data=release_data)
     assert schema.extensions == extensions
     assert not schema.extended
-    
+
     release_schema_obj = schema.get_release_schema_obj()
     assert schema.invalid_extension == invalid_extension
     assert schema.extended == extended

@@ -89,7 +89,7 @@ GRANTS = {
                     "name": "Gateshed",
                     "geoCodeType": "MD",
                     "geoCode": "E08000037",
-                    
+
                 }],
                 'dateModified': '13-03-2015',
                 'description': 'Excepteur sint occaecat cupidatat non proident, sunt in culpa '

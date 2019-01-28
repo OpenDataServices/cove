@@ -81,7 +81,7 @@ def get_grants_aggregates(json_data):
     recipient_org_prefixes = get_prefixes(distinct_recipient_org_identifier)
     recipient_org_identifier_prefixes = recipient_org_prefixes['prefixes']
     recipient_org_identifiers_unrecognised_prefixes = recipient_org_prefixes['unrecognised_prefixes']
-    
+
     funding_org_prefixes = get_prefixes(distinct_funding_org_identifier)
     funding_org_identifier_prefixes = funding_org_prefixes['prefixes']
     funding_org_identifiers_unrecognised_prefixes = funding_org_prefixes['unrecognised_prefixes']
@@ -133,7 +133,7 @@ def get_prefixes(distinct_identifiers):
                 break
         else:
             org_identifiers_unrecognised_prefixes[org_identifier] += 1
-    
+
     return {
         'prefixes': org_identifier_prefixes,
         'unrecognised_prefixes': org_identifiers_unrecognised_prefixes,
@@ -199,7 +199,7 @@ class AdditionalTest():
 
     def format_heading_count(self, message, verb='have'):
         '''Build a string with count of grants plus message
-        
+
         The grant count phrase for the test is pluralized and
         prepended to message, eg: 1 grant has + message,
         2 grants have + message or 3 grants contain + message.
@@ -600,7 +600,7 @@ class OrganizationIdLooksInvalid(AdditionalTest):
 
     Looks at the start of the ID - if it's GB-CHC- or GB-COH-, performs the relevant format check
     """
- 
+
     check_text = {
         "heading": "funder or recipient organisation IDs that might not be valid",
         "message": "The IDs might not be valid for the registration agency that they refer to - for example, a 'GB-CHC' ID that contains an invalid charity number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field."

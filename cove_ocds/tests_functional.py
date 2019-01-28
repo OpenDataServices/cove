@@ -99,8 +99,8 @@ def test_index_page_ocds_links(server_url, browser, css_id, link_text, url):
     link = section.find_element_by_link_text(link_text)
     href = link.get_attribute("href")
     assert url in href
-    
-    
+
+
 def test_common_index_elements(server_url, browser):
     browser.get(server_url)
     browser.find_element_by_css_selector('#more-information .panel-title').click()
@@ -119,7 +119,7 @@ def test_terms_page(server_url, browser):
     assert 'Open Data Services Co-operative Limited' in browser.find_element_by_tag_name('body').text
     assert 'Open Data Services Limited' not in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
-    
+
 
 def test_accordion(server_url, browser):
     browser.get(server_url)

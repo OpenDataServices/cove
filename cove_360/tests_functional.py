@@ -350,7 +350,7 @@ def test_terms_page(server_url, browser):
     assert 'Open Data Services Co-operative Limited' in browser.find_element_by_tag_name('body').text
     assert 'Open Data Services Limited' not in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
-    
+
 
 def test_accordion(server_url, browser):
     browser.get(server_url)
@@ -446,7 +446,7 @@ def test_check_schema_link_on_result_page(server_url, browser, httpserver, sourc
     time.sleep(0.5)
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
-    
+
     # Click and un-collapse all explore sections
     all_sections = browser.find_elements_by_class_name('panel-heading')
     for section in all_sections:
