@@ -164,7 +164,7 @@ def test_explore_iati_url_input(server_url, browser, httpserver, source_filename
     # Do the assertions
     check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful)
 
-    #refresh page to now check if tests still work after caching some data
+    # refresh page to now check if tests still work after caching some data
     browser.get(data_url)
 
     # Expand all sections with the expand all button this time

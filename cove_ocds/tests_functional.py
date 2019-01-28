@@ -300,7 +300,7 @@ def test_url_input(server_url, url_input_browser, httpserver, source_filename, e
     selected_examples = ['tenders_releases_2_releases_invalid.json']
 
     if source_filename in selected_examples:
-        #refresh page to now check if tests still work after caching some data
+        # refresh page to now check if tests still work after caching some data
         browser.get(browser.current_url)
         check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, not_expected_text, conversion_successful)
         browser.get(server_url + '?source_url=' + source_url)
@@ -480,7 +480,7 @@ def test_url_invalid_dataset_request(server_url, browser, data_url):
     browser.get(server_url + 'data/38e267ce-d395-46ba-acbf-2540cdd0c810')
     assert "We don't seem to be able to find the data you requested." in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
-    #363 - Tests there is padding round the 'go to home' button
+    # #363 - Tests there is padding round the 'go to home' button
     success_button = browser.find_element_by_class_name('success-button')
     assert success_button.value_of_css_property('padding-bottom') == '20px'
 

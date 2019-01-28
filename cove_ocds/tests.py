@@ -1005,7 +1005,7 @@ def test_cove_ocds_cli_schema_version_override(file_name, version_option):
 
 
 def test_cove_ocds_cli_schema_cache():
-    #clear url cache
+    # clear url cache
     cached_get_request.cache_clear()
 
     test_dir = str(uuid.uuid4())
