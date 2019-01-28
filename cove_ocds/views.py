@@ -88,7 +88,7 @@ def explore_ocds(request, pk):
                 # This shouldn't happen unless the user sends random POST data.
                 exceptions.raise_invalid_version_argument(post_version_choice)
             if schema_ocds.invalid_version_data:
-                if isinstance(version_in_data, str) and re.compile('^\d+\.\d+\.\d+$').match(version_in_data):
+                if isinstance(version_in_data, str) and re.compile(r'^\d+\.\d+\.\d+$').match(version_in_data):
                     exceptions.raise_invalid_version_data_with_patch(version_in_data)
                 else:
                     if not isinstance(version_in_data, str):
@@ -130,7 +130,7 @@ def explore_ocds(request, pk):
             exceptions.raise_invalid_version_argument(post_version_choice)
         if schema_ocds.invalid_version_data:
             version_in_data = metatab_data.get('version')
-            if re.compile('^\d+\.\d+\.\d+$').match(version_in_data):
+            if re.compile(r'^\d+\.\d+\.\d+$').match(version_in_data):
                 exceptions.raise_invalid_version_data_with_patch(version_in_data)
             else:
                 context['unrecognized_version_data'] = version_in_data

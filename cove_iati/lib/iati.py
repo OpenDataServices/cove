@@ -309,7 +309,7 @@ def format_ruleset_errors(output_dir):
 
     for output_file in os.listdir(output_dir):
         with open(os.path.join(output_dir, output_file)) as fp:
-            scenario_outline = ' '.join(re.sub('\.', '/', output_file[:-7]).split('_'))
+            scenario_outline = ' '.join(re.sub(r'\.', '/', output_file[:-7]).split('_'))
             for line in fp:
                 line = line.strip()
 

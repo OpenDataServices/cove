@@ -492,7 +492,7 @@ class MoreThanOneFundingOrg(AdditionalTest):
         self.message = self.check_text["message"]
 
 
-compiled_email_re = re.compile('[\w.-]+@[\w.-]+\.[\w.-]+')
+compiled_email_re = re.compile(r'[\w.-]+@[\w.-]+\.[\w.-]+')
 
 
 class LooksLikeEmail(AdditionalTest):
