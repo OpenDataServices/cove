@@ -297,7 +297,7 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
     ('360Giving', '360Giving is a company limited by guarantee', 'body.home', 'http://www.threesixtygiving.org/'),
     ('360Giving Data Standard', 'The 360Giving Standard', 'h1', 'http://www.threesixtygiving.org/standard/'),
-    ])
+])
 def test_footer_360(server_url, browser, link_text, expected_text, css_selector, url):
     browser.get(server_url)
     link = browser.find_element_by_link_text(link_text)
@@ -324,7 +324,7 @@ def test_index_page_360(server_url, browser):
     ('CSV', 'https://threesixtygiving-standard.readthedocs.io/en/latest/templates-csv'),
     ('360Giving JSON schema', 'http://standard.threesixtygiving.org/en/latest/reference/#giving-json-schemas'),
     ('Multi-table data package - Excel', 'https://threesixtygiving-standard.readthedocs.io/en/latest/_static/multi-table/360-giving-schema-fields.xlsx')
-    ])
+])
 def test_index_page_360_links(server_url, browser, link_text, url):
     browser.get(server_url)
     link = browser.find_element_by_link_text(link_text)
@@ -384,7 +384,7 @@ def test_accordion(server_url, browser):
 
 @pytest.mark.parametrize(('source_filename'), [
     ('fundingproviders-grants_fixed_2_grants.json'),
-    ])
+])
 def test_error_modal(server_url, browser, httpserver, source_filename):
     with open(os.path.join('cove_360', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
@@ -431,7 +431,7 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
 
 @pytest.mark.parametrize(('source_filename', 'expected_text'), [
     ('fundingproviders-grants_fixed_2_grants.json', '360Giving JSON Package Schema')
-    ])
+])
 def test_check_schema_link_on_result_page(server_url, browser, httpserver, source_filename, expected_text):
     with open(os.path.join('cove_360', 'fixtures', source_filename), 'rb') as fp:
         httpserver.serve_content(fp.read())
@@ -500,7 +500,7 @@ def test_common_errors_page(server_url, browser):
     ('enum'),
     ('string'),
     ('number')
-    ])
+])
 def test_common_errors_page_anchors(server_url, browser, anchor_text):
     # Checks we have sections for each our error messages
     browser.get(server_url + 'common_errors/')

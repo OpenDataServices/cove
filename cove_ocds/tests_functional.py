@@ -66,7 +66,7 @@ def url_input_browser(request, server_url, browser, httpserver):
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
     ('Open Contracting', 'We connect governments', 'h1', 'http://www.open-contracting.org/'),
     ('Open Contracting Data Standard', 'Open Contracting Data Standard: Documentation', '#open-contracting-data-standard-documentation', 'http://standard.open-contracting.org/'),
-    ])
+])
 def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector, url):
     browser.get(server_url)
     footer = browser.find_element_by_id('footer')
@@ -92,7 +92,7 @@ def test_index_page_ocds(server_url, browser):
     ('how-to-use', "'release' and 'record'", 'http://standard.open-contracting.org/latest/en/getting_started/releases_and_records/'),
     ('how-to-use', 'flattened serialization of OCDS', 'http://standard.open-contracting.org/latest/en/implementation/serialization/'),
     ('how-to-use', 'Open Contracting Data Standard', 'http://standard.open-contracting.org/')
-    ])
+])
 def test_index_page_ocds_links(server_url, browser, css_id, link_text, url):
     browser.get(server_url)
     section = browser.find_element_by_id(css_id)

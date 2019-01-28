@@ -47,7 +47,7 @@ templates_path = ['_templates']
 # source_suffix = ['.rst', '.md']
 source_parsers = {
     '.md': CommonMarkParser,
-    }
+}
 
 source_suffix = ['.rst', '.md']
 
@@ -355,5 +355,5 @@ def setup(app):
         # 'url_resolver': lambda url: github_doc_root + url,
         'auto_toc_tree_section': 'Contents',
         'enable_eval_rst': True
-        }, True)
+    }, True)
     app.add_transform(AutoStructify)
