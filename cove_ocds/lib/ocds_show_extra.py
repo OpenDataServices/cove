@@ -1,4 +1,4 @@
-from cove.lib.common import schema_dict_fields_generator
+from libcove.lib.common import schema_dict_fields_generator
 
 
 def add_extra_fields(data, deref_release_schema):
