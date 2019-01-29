@@ -167,10 +167,13 @@
         </div>
         <div class="panel-body">
           <p>
-            As your file is has less than 100 releases, we've loaded it into the OCDS Show tool to let you browse it.
+            {% blocktrans %}This section provides a visual representation of the data, use it to check whether the data makes sense in the type of tool a user might use to explore it.{% endblocktrans %}
           </p>
           <p>
-            OCDS Show is a visual representation of your OCDS releases. It primaraly displays fields from within the standard but any field either in an extension or an additional field are shown within the by pressing "Extra fields" button or "Extra fields" sections.
+            {% blocktrans %}Extensions and additional fields are hidden by default, click the 'Extra fields' buttons or open the 'Extra fields' section to view them.{% endblocktrans %}
+          </p>
+          <p>
+            {% blocktrans %}When viewing an OCDS record, use the numbers at the top of the visualization to browse the change history. New and changed fields are highlighted, use this feature to check whether any fields have changed unexpectedly.{% endblocktrans %}
           </p>
             <div id="input-json-container" class="hide">
               <input id="input-json" name="input-json" value="{{ocds_show_data}}">
