@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-06 13:57+0000\n"
+"POT-Creation-Date: 2019-01-29 07:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: cove_ocds/lib/exceptions.py:11 cove_ocds/lib/exceptions.py:24
 #: cove_ocds/lib/exceptions.py:40 cove_ocds/lib/exceptions.py:53
-#: cove_ocds/views.py:65 cove_ocds/views.py:76
+#: cove_ocds/views.py:67 cove_ocds/views.py:78
 msgid "Try Again"
 msgstr ""
 
@@ -49,7 +49,7 @@ msgstr ""
 
 #. Translators: Label of a button that triggers search
 #: cove_ocds/templates/cove_ocds/base.html:48
-#: cove_ocds/templates/cove_ocds/explore_base.html:46
+#: cove_ocds/templates/cove_ocds/explore_base.html:52
 msgid "Go"
 msgstr ""
 
@@ -204,63 +204,63 @@ msgstr ""
 msgid "Load New File"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:58
+#: cove_ocds/templates/cove_ocds/explore_base.html:64
 msgid "Convert"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:75
-#: cove_ocds/templates/cove_ocds/explore_base.html:80
-#: cove_ocds/templates/cove_ocds/explore_base.html:106
+#: cove_ocds/templates/cove_ocds/explore_base.html:81
+#: cove_ocds/templates/cove_ocds/explore_base.html:86
+#: cove_ocds/templates/cove_ocds/explore_base.html:112
 msgid "using schema version"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:86
+#: cove_ocds/templates/cove_ocds/explore_base.html:92
 msgid "The JSON could not be converted to Spreadsheet due to the error:"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:118
+#: cove_ocds/templates/cove_ocds/explore_base.html:124
 msgid "Convert to Spreadsheet"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:139
+#: cove_ocds/templates/cove_ocds/explore_base.html:145
 msgid "Schema Extensions"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:200
+#: cove_ocds/templates/cove_ocds/explore_base.html:206
 msgid "Conversion Errors"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:222
+#: cove_ocds/templates/cove_ocds/explore_base.html:228
 msgid "Conversion Errors (titles)"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:250
-#: cove_ocds/templates/cove_ocds/explore_base.html:406
-#: cove_ocds/templates/cove_ocds/explore_base.html:409
+#: cove_ocds/templates/cove_ocds/explore_base.html:256
+#: cove_ocds/templates/cove_ocds/explore_base.html:412
+#: cove_ocds/templates/cove_ocds/explore_base.html:415
 msgid "Validation Errors"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:264
-#: cove_ocds/templates/cove_ocds/explore_base.html:424
-#: cove_ocds/templates/cove_ocds/explore_base.html:427
+#: cove_ocds/templates/cove_ocds/explore_base.html:270
+#: cove_ocds/templates/cove_ocds/explore_base.html:430
+#: cove_ocds/templates/cove_ocds/explore_base.html:433
 msgid "Structure Warnings"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:286
-#: cove_ocds/templates/cove_ocds/explore_base.html:412
-#: cove_ocds/templates/cove_ocds/explore_base.html:415
+#: cove_ocds/templates/cove_ocds/explore_base.html:292
+#: cove_ocds/templates/cove_ocds/explore_base.html:418
+#: cove_ocds/templates/cove_ocds/explore_base.html:421
 msgid "Conformance (Rules)"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:308
+#: cove_ocds/templates/cove_ocds/explore_base.html:314
 msgid "Codelist Validation Errors"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:330
+#: cove_ocds/templates/cove_ocds/explore_base.html:336
 msgid "Additional Fields"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:334
+#: cove_ocds/templates/cove_ocds/explore_base.html:340
 msgid ""
 "This data includes the following fields which are not part of the OCDS "
 "schema. You should check whether the data in these fields could be provided "
@@ -269,66 +269,66 @@ msgid ""
 "schema."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:348
+#: cove_ocds/templates/cove_ocds/explore_base.html:354
 msgid "Additional Codelist Values"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:368
-#: cove_ocds/templates/cove_ocds/explore_base.html:448
-#: cove_ocds/templates/cove_ocds/explore_base.html:451
+#: cove_ocds/templates/cove_ocds/explore_base.html:374
+#: cove_ocds/templates/cove_ocds/explore_base.html:454
+#: cove_ocds/templates/cove_ocds/explore_base.html:457
 msgid "Deprecated Fields"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:368
+#: cove_ocds/templates/cove_ocds/explore_base.html:374
 msgid ""
 "Fields flagged as 'deprecated' will be either replaced or removed in future "
 "versions of the schema."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:384
+#: cove_ocds/templates/cove_ocds/explore_base.html:390
 msgid "Save or Share these results"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:385
+#: cove_ocds/templates/cove_ocds/explore_base.html:391
 msgid "Use the following url to share these results:"
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove_ocds/templates/cove_ocds/explore_base.html:390
+#: cove_ocds/templates/cove_ocds/explore_base.html:396
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:391
+#: cove_ocds/templates/cove_ocds/explore_base.html:397
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
 "will be shown a message that tells them the file has been removed."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:418
+#: cove_ocds/templates/cove_ocds/explore_base.html:424
 msgid "view all errors &#9660;"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:421
-#: cove_ocds/templates/cove_ocds/explore_base.html:433
+#: cove_ocds/templates/cove_ocds/explore_base.html:427
 #: cove_ocds/templates/cove_ocds/explore_base.html:439
+#: cove_ocds/templates/cove_ocds/explore_base.html:445
 msgid "View all errors &#9650;"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:430
+#: cove_ocds/templates/cove_ocds/explore_base.html:436
 #: cove_ocds/templates/cove_ocds/ocds_missing_ids_table.html:6
 #: cove_ocds/templates/cove_ocds/ocid_prefixes_table.html:5
 msgid "View all errors &#9660;"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:436
+#: cove_ocds/templates/cove_ocds/explore_base.html:442
 msgid "Quality Warnings"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:442
-#: cove_ocds/templates/cove_ocds/explore_base.html:445
+#: cove_ocds/templates/cove_ocds/explore_base.html:448
+#: cove_ocds/templates/cove_ocds/explore_base.html:451
 msgid "Additional Fields (fields in data not in schema)"
 msgstr ""
 
@@ -460,6 +460,34 @@ msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:135
 msgid "Records Table:"
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/explore_record.html:165
+#: cove_ocds/templates/cove_ocds/explore_release.html:417
+msgid "Explore your data:"
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/explore_record.html:170
+#: cove_ocds/templates/cove_ocds/explore_release.html:422
+msgid ""
+"This section provides a visual representation of the data, use it to check "
+"whether the data makes sense in the type of tool a user might use to explore "
+"it."
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/explore_record.html:173
+#: cove_ocds/templates/cove_ocds/explore_release.html:425
+msgid ""
+"Extensions and additional fields are hidden by default, click the 'Extra "
+"fields' buttons or open the 'Extra fields' section to view them."
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/explore_record.html:176
+#: cove_ocds/templates/cove_ocds/explore_release.html:428
+msgid ""
+"When viewing an OCDS record, use the numbers at the top of the visualization "
+"to browse the change history. New and changed fields are highlighted, use "
+"this feature to check whether any fields have changed unexpectedly."
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_release.html:24
@@ -926,11 +954,11 @@ msgstr ""
 msgid "Open Contracting Identifier guidance"
 msgstr ""
 
-#: cove_ocds/views.py:63 cove_ocds/views.py:74
+#: cove_ocds/views.py:65 cove_ocds/views.py:76
 msgid "Sorry, we can't process that data"
 msgstr ""
 
-#: cove_ocds/views.py:77
+#: cove_ocds/views.py:79
 msgid ""
 "OCDS JSON should have an object as the top level, the JSON you supplied does "
 "not."
