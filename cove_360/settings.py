@@ -1,9 +1,22 @@
 from cove import settings
+import os
+import environ
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+env = environ.Env(  # set default values and casting
+    DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
+)
 
 PIWIK = settings.PIWIK
 GOOGLE_ANALYTICS_ID = settings.GOOGLE_ANALYTICS_ID
-MEDIA_ROOT = settings.MEDIA_ROOT
-MEDIA_URL = settings.MEDIA_URL
+
+# We can't take MEDIA_ROOT and MEDIA_URL from cove settings,
+# ... otherwise the files appear under the BASE_DIR that is the Cove library install.
+# That could get messy. We want them to appear in our directory.
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 DEALER_TYPE = settings.DEALER_TYPE
 SECRET_KEY = settings.SECRET_KEY
 DEBUG = settings.DEBUG
@@ -12,16 +25,31 @@ MIDDLEWARE_CLASSES = settings.MIDDLEWARE_CLASSES
 ROOT_URLCONF = settings.ROOT_URLCONF
 TEMPLATES = settings.TEMPLATES
 WSGI_APPLICATION = settings.WSGI_APPLICATION
-DATABASES = settings.DATABASES
+
+# We can't take DATABASES from cove settings,
+# ... otherwise the files appear under the BASE_DIR that is the Cove library install.
+# That could get messy. We want them to appear in our directory.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': env('DB_NAME'),
+    }
+}
 LANGUAGE_CODE = settings.LANGUAGE_CODE
 TIME_ZONE = settings.TIME_ZONE
 USE_I18N = settings.USE_I18N
 USE_L10N = settings.USE_L10N
 USE_TZ = settings.USE_TZ
-STATIC_URL = settings.STATIC_URL
-STATIC_ROOT = settings.STATIC_ROOT
+
+# We can't take STATIC_URL and STATIC_ROOT from cove settings,
+# ... otherwise the files appear under the BASE_DIR that is the Cove library install.
+# and that doesn't work with our standard Apache setup.
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 LANGUAGES = settings.LANGUAGES
 LOCALE_PATHS = settings.LOCALE_PATHS
+LOCALE_PATHS += os.path.join(BASE_DIR, 'cove_360', 'locale'),
 LOGGING = settings.LOGGING
 
 if getattr(settings, 'RAVEN_CONFIG', None):
@@ -47,3 +75,6 @@ COVE_CONFIG = {
     'support_email': 'support@threesixtygiving.org',
     'hashcomments': True
 }
+
+# https://github.com/OpenDataServices/cove/issues/1098
+FILE_UPLOAD_PERMISSIONS = 0o644

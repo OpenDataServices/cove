@@ -3,7 +3,7 @@ import os
 import sys
 
 
-from cove.lib.exceptions import CoveInputDataError
+from libcove.lib.exceptions import CoveInputDataError
 from cove.management.commands.base_command import CoveBaseCommand, SetEncoder
 from cove_iati.lib.api import APIException, iati_json_output
 

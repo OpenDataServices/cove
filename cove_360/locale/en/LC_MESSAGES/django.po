@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-30 16:05+0000\n"
+"POT-Creation-Date: 2018-12-06 13:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -756,15 +756,15 @@ msgid ""
 "prefer a spreadsheet format."
 msgstr ""
 
-#: cove_360/views.py:38 cove_360/views.py:48
+#: cove_360/views.py:55 cove_360/views.py:65
 msgid "Sorry, we can't process that data"
 msgstr ""
 
-#: cove_360/views.py:40 cove_360/views.py:50
+#: cove_360/views.py:57 cove_360/views.py:67
 msgid "Try Again"
 msgstr ""
 
-#: cove_360/views.py:51
+#: cove_360/views.py:68
 msgid ""
 "360Giving JSON should have an object as the top level, the JSON you supplied "
 "does not."
