@@ -1,0 +1,340 @@
+<codelist name="DocumentCategory" xml:lang="en" category-codelist="DocumentCategory-category" complete="1">
+    <metadata>
+        <name>
+            <narrative>Document Category</narrative>
+            <narrative xml:lang="fr">Catégorie du document</narrative>
+        </name>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>A01</code>
+            <name>
+                <narrative>Pre- and post-project impact appraisal</narrative>
+                <narrative xml:lang="fr">Évaluation de l’impact avant et après le projet</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>A02</code>
+            <name>
+                <narrative>Objectives / Purpose of activity</narrative>
+                <narrative xml:lang="fr">Objectifs/finalités de l’activité</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>A03</code>
+            <name>
+                <narrative>Intended ultimate beneficiaries</narrative>
+                <narrative xml:lang="fr">Bénéficiaires finaux visés</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>A04</code>
+            <name>
+                <narrative>Conditions</narrative>
+                <narrative xml:lang="fr">Conditions</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>A05</code>
+            <name>
+                <narrative>Budget</narrative>
+                <narrative xml:lang="fr">Budget</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>A06</code>
+            <name>
+                <narrative>Summary information about contract</narrative>
+                <narrative xml:lang="fr">Résumé du contrat</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>A07</code>
+            <name>
+                <narrative>Review of project performance and evaluation</narrative>
+                <narrative xml:lang="fr">Examen de la performance du projet et évaluation</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>A08</code>
+            <name>
+                <narrative>Results, outcomes and outputs</narrative>
+                <narrative xml:lang="fr">Résultats, réalisations et produits</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>A09</code>
+            <name>
+                <narrative>Memorandum of understanding (If agreed by all parties)</narrative>
+                <narrative xml:lang="fr">Protocole d’accord (si celui-ci a été approuvé par toutes les parties)</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>A10</code>
+            <name>
+                <narrative>Tender</narrative>
+                <narrative xml:lang="fr">Appel d’offres</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>A11</code>
+            <name>
+                <narrative>Contract</narrative>
+                <narrative xml:lang="fr">Contrat</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>A12</code>
+            <name>
+                <narrative>Activity web page</narrative>
+                <narrative xml:lang="fr">Page Web sur les activités</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>A</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B01</code>
+            <name>
+                <narrative>Annual report</narrative>
+                <narrative xml:lang="fr">Rapport annuel</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B02</code>
+            <name>
+                <narrative>Institutional Strategy paper</narrative>
+                <narrative xml:lang="fr">Document de stratégie institutionnelle</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B03</code>
+            <name>
+                <narrative>Country strategy paper</narrative>
+                <narrative xml:lang="fr">Document de stratégie nationale</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B04</code>
+            <name>
+                <narrative>Aid Allocation Policy</narrative>
+                <narrative xml:lang="fr">Politique d’affectation de l’aide</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B05</code>
+            <name>
+                <narrative>Procurement Policy and Procedure</narrative>
+                <narrative xml:lang="fr">Politique et procédure d’approvisionnement</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B06</code>
+            <name>
+                <narrative>Institutional Audit Report</narrative>
+                <narrative xml:lang="fr">Rapport d’audit institutionnel</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B07</code>
+            <name>
+                <narrative>Country Audit Report</narrative>
+                <narrative xml:lang="fr">Rapport d’audit de pays</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B08</code>
+            <name>
+                <narrative>Exclusions Policy</narrative>
+                <narrative xml:lang="fr">Politique relative aux exclusions</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B09</code>
+            <name>
+                <narrative>Institutional Evaluation Report</narrative>
+                <narrative xml:lang="fr">Rapport d’évaluation institutionnelle</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B10</code>
+            <name>
+                <narrative>Country Evaluation Report</narrative>
+                <narrative xml:lang="fr">Rapport d’évaluation nationale</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B11</code>
+            <name>
+                <narrative>Sector strategy</narrative>
+                <narrative xml:lang="fr">Stratégie sectorielle</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B12</code>
+            <name>
+                <narrative>Thematic strategy</narrative>
+                <narrative xml:lang="fr">Stratégie thématique</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B13</code>
+            <name>
+                <narrative>Country-level Memorandum of Understanding</narrative>
+                <narrative xml:lang="fr">Protocole d’accord national</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B14</code>
+            <name>
+                <narrative>Evaluations policy</narrative>
+                <narrative xml:lang="fr">Politique relative aux évaluations</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B15</code>
+            <name>
+                <narrative>General Terms and Conditions</narrative>
+                <narrative xml:lang="fr">Conditions générales</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B16</code>
+            <name>
+                <narrative>Organisation web page</narrative>
+                <narrative xml:lang="fr">Page Web sur l’organisation</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B17</code>
+            <name>
+                <narrative>Country/Region web page</narrative>
+                <narrative xml:lang="fr">Page Web sur les pays/régions</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+        <codelist-item>
+            <code>B18</code>
+            <name>
+                <narrative>Sector web page</narrative>
+                <narrative xml:lang="fr">Page Web sur les secteurs</narrative>
+            </name>
+            <description>
+                <narrative/>
+            </description>
+            <category>B</category>
+        </codelist-item>
+    </codelist-items>
+</codelist>

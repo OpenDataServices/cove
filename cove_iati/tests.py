@@ -4,10 +4,13 @@ import json
 import lxml.etree
 import os
 import uuid
+import tempfile
 
 from django.core.management import call_command
 
 from .lib import iati
+from .lib import api
+from .lib.process_codelists import invalid_embedded_codelist_values
 from .lib.exceptions import RuleSetStepException
 from .rulesets.utils import invalid_date_format, get_child_full_xpath, get_xobjects, register_ruleset_errors
 
@@ -553,3 +556,21 @@ def test_post_api(client):
     resp = client.post('/api_test', {'file': open(file_path, 'rb')})
     assert resp.status_code == 400
     assert resp.json() == {'name': ['This field is required.']}
+
+
+def test_process_codelist():
+    file_path = os.path.join('cove_iati', 'fixtures', 'unflattened_bad_codelist_xlsx.xml')
+    source_map_path = os.path.join('cove_iati', 'fixtures', 'cell_source_map_bad_codelist_xlsx.json')
+    schema_directory = os.path.join('cove_iati', 'iati_schemas', '2.03')
+    result = invalid_embedded_codelist_values(schema_directory, file_path, source_map_path)
+    assert len(result) == 3
+    assert set(item['value'] for item in result) == set(["what", "is", "100"])
+
+
+def test_codelist_full():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_bad_codelist.xlsx')
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        context = api.iati_json_output(tmpdirname, file_path)
+        print('created temporary directory', tmpdirname)
+    assert len(context['invalid_embedded_codelist_values']) == 3
+    assert set(item['value'] for item in context['invalid_embedded_codelist_values']) == set(["what", "is", "100"])

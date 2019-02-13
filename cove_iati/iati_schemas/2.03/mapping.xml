@@ -1,0 +1,463 @@
+<mappings>
+    <mapping>
+        <path>//iati-activities/@version</path>
+        <codelist ref="Version" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/@budget-not-provided</path>
+        <codelist ref="BudgetNotProvided" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/@default-currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/activity-date/@type</path>
+        <codelist ref="ActivityDateType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/activity-status/@code</path>
+        <codelist ref="ActivityStatus" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/activity-scope/@code</path>
+        <codelist ref="ActivityScope" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/budget/@status</path>
+        <codelist ref="BudgetStatus" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/budget/@type</path>
+        <codelist ref="BudgetType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/budget/value/@currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/collaboration-type/@code</path>
+        <codelist ref="CollaborationType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/conditions/condition/@type</path>
+        <codelist ref="ConditionType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/contact-info/@type</path>
+        <codelist ref="ContactType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/country-budget-items/@vocabulary</path>
+        <codelist ref="BudgetIdentifierVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/country-budget-items/budget-item/@code</path>
+        <codelist ref="BudgetIdentifier" />
+        <condition>@vocabulary = '1'</condition>
+    </mapping>
+    <mapping>
+        <path>//iati-activity/country-budget-items/budget-item/description/@type</path>
+        <codelist ref="DescriptionType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/crs-add/channel-code/text()</path>
+        <codelist ref="CRSChannelCode" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/crs-add/other-flags/@code</path>
+        <codelist ref="CRSAddOtherFlags" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/crs-add/loan-status/@currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/crs-add/loan-terms/repayment-plan/@code</path>
+        <codelist ref="LoanRepaymentPeriod" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/crs-add/loan-terms/repayment-type/@code</path>
+        <codelist ref="LoanRepaymentType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/default-aid-type/@code</path>
+        <codelist ref="AidType" />
+        <condition>@vocabulary = '1' or not(@vocabulary)</condition>
+    </mapping>
+    <mapping>
+        <path>//iati-activity/default-aid-type/@vocabulary</path>
+        <codelist ref="AidTypeVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/default-finance-type/@code</path>
+        <codelist ref="FinanceType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/default-flow-type/@code</path>
+        <codelist ref="FlowType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/default-tied-status/@code</path>
+        <codelist ref="TiedStatus" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/description/@type</path>
+        <codelist ref="DescriptionType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/document-link/@format</path>
+        <codelist ref="FileFormat" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/document-link/category/@code</path>
+        <codelist ref="DocumentCategory" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/document-link/language/@code</path>
+        <codelist ref="Language" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/fss/forecast/@currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/humanitarian-scope/@type</path>
+        <codelist ref="HumanitarianScopeType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/humanitarian-scope/@vocabulary</path>
+        <codelist ref="HumanitarianScopeVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/location/administrative/@vocabulary</path>
+        <codelist ref="GeographicVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/location/feature-designation/@code</path>
+        <codelist ref="LocationType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/location/location-class/@code</path>
+        <codelist ref="GeographicLocationClass" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/location/location-id/@vocabulary</path>
+        <codelist ref="GeographicVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/location/location-reach/@code</path>
+        <codelist ref="GeographicLocationReach" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/location/exactness/@code</path>
+        <codelist ref="GeographicExactness" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/other-identifier/@type</path>
+        <codelist ref="OtherIdentifierType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/participating-org/@crs-channel-code</path>
+        <codelist ref="CRSChannelCode" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/participating-org/@role</path>
+        <codelist ref="OrganisationRole" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/participating-org/@type</path>
+        <codelist ref="OrganisationType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/planned-disbursement/@type</path>
+        <codelist ref="BudgetType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/planned-disbursement/provider-org/@type</path>
+        <codelist ref="OrganisationType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/planned-disbursement/receiver-org/@type</path>
+        <codelist ref="OrganisationType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/planned-disbursement/value/@currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/policy-marker/@code</path>
+        <codelist ref="PolicyMarker" />
+        <condition>@vocabulary = '1' or not(@vocabulary)</condition>
+    </mapping>
+    <mapping>
+        <path>//iati-activity/policy-marker/@significance</path>
+        <codelist ref="PolicySignificance" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/policy-marker/@vocabulary</path>
+        <codelist ref="PolicyMarkerVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/recipient-country/@code</path>
+        <codelist ref="Country" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/recipient-region/@code</path>
+        <codelist ref="Region" />
+        <condition>@vocabulary = '1' or not(@vocabulary)</condition>
+    </mapping>
+    <mapping>
+        <path>//iati-activity/recipient-region/@vocabulary</path>
+        <codelist ref="RegionVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/related-activity/@type</path>
+        <codelist ref="RelatedActivityType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/reporting-org/@type</path>
+        <codelist ref="OrganisationType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/@type</path>
+        <codelist ref="ResultType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/description/@type</path>
+        <codelist ref="DescriptionType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/document-link/@format</path>
+        <codelist ref="FileFormat" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/document-link/category/@code</path>
+        <codelist ref="DocumentCategory" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/document-link/language/@code</path>
+        <codelist ref="Language" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/@measure</path>
+        <codelist ref="IndicatorMeasure" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/baseline/document-link/@format</path>
+        <codelist ref="FileFormat" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/baseline/document-link/category/@code</path>
+        <codelist ref="DocumentCategory" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/baseline/document-link/language/@code</path>
+        <codelist ref="Language" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/description/@type</path>
+        <codelist ref="DescriptionType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/document-link/@format</path>
+        <codelist ref="FileFormat" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/document-link/category/@code</path>
+        <codelist ref="DocumentCategory" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/document-link/language/@code</path>
+        <codelist ref="Language" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/period/actual/document-link/@format</path>
+        <codelist ref="FileFormat" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/period/actual/document-link/category/@code</path>
+        <codelist ref="DocumentCategory" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/period/actual/document-link/language/@code</path>
+        <codelist ref="Language" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/period/target/document-link/@format</path>
+        <codelist ref="FileFormat" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/period/target/document-link/category/@code</path>
+        <codelist ref="DocumentCategory" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/period/target/document-link/language/@code</path>
+        <codelist ref="Language" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/indicator/reference/@vocabulary</path>
+        <codelist ref="IndicatorVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/result/reference/@vocabulary</path>
+        <codelist ref="ResultVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/sector/@code</path>
+        <codelist ref="Sector" />
+        <condition>@vocabulary = '1' or not(@vocabulary)</condition>
+    </mapping>
+    <mapping>
+        <path>//iati-activity/sector/@vocabulary</path>
+        <codelist ref="SectorVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/tag/@vocabulary</path>
+        <codelist ref="TagVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/aid-type/@code</path>
+        <codelist ref="AidType" />
+        <condition>@vocabulary = '1' or not(@vocabulary)</condition>
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/aid-type/@vocabulary</path>
+        <codelist ref="AidTypeVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/disbursement-channel/@code</path>
+        <codelist ref="DisbursementChannel" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/finance-type/@code</path>
+        <codelist ref="FinanceType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/flow-type/@code</path>
+        <codelist ref="FlowType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/recipient-country/@code</path>
+        <codelist ref="Country" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/recipient-region/@code</path>
+        <codelist ref="Region" />
+        <condition>@vocabulary = '1'</condition>
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/recipient-region/@vocabulary</path>
+        <codelist ref="RegionVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/provider-org/@type</path>
+        <codelist ref="OrganisationType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/receiver-org/@type</path>
+        <codelist ref="OrganisationType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/sector/@code</path>
+        <codelist ref="Sector" />
+        <condition>@vocabulary = '1' or not(@vocabulary)</condition>
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/sector/@vocabulary</path>
+        <codelist ref="SectorVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/tied-status/@code</path>
+        <codelist ref="TiedStatus" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/transaction-type/@code</path>
+        <codelist ref="TransactionType" />
+    </mapping>
+    <mapping>
+        <path>//iati-activity/transaction/value/@currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+    <mapping>
+        <path>//@xml:lang</path>
+        <codelist ref="Language" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/@default-currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisations/@version</path>
+        <codelist ref="Version" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/document-link/@format</path>
+        <codelist ref="FileFormat" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/document-link/category/@code</path>
+        <codelist ref="DocumentCategory" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/document-link/language/@code</path>
+        <codelist ref="Language" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/document-link/recipient-country/@code</path>
+        <codelist ref="Country" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/recipient-country-budget/@status</path>
+        <codelist ref="BudgetStatus" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/recipient-country-budget/recipient-country/@code</path>
+        <codelist ref="Country" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/recipient-country-budget/value/@currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/recipient-org-budget/@status</path>
+        <codelist ref="BudgetStatus" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/recipient-org-budget/value/@currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/recipient-region-budget/@status</path>
+        <codelist ref="BudgetStatus" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/recipient-region-budget/@code</path>
+        <codelist ref="Region" />
+        <condition>@vocabulary = '1' or not(@vocabulary)</condition>
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/recipient-region-budget/recipient-region/@vocabulary</path>
+        <codelist ref="RegionVocabulary" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/recipient-region-budget/budget-line/value/@currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/recipient-region-budget/value/@currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/reporting-org/@type</path>
+        <codelist ref="OrganisationType" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/total-budget/@status</path>
+        <codelist ref="BudgetStatus" />
+    </mapping>
+    <mapping>
+        <path>//iati-organisation/total-budget/value/@currency</path>
+        <codelist ref="Currency" />
+    </mapping>
+</mappings>

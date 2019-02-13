@@ -12,6 +12,7 @@ from .schema import SchemaIATI
 from libcove.lib.exceptions import CoveInputDataError
 from cove_iati.lib.exceptions import UnrecognisedFileTypeXML
 from libcove.lib.tools import ignore_errors
+from cove_iati.lib.process_codelists import invalid_embedded_codelist_values
 
 
 def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
@@ -105,7 +106,13 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
 
     context.update({
         'validation_errors': sorted(validation_errors.items()),
-        'ruleset_errors': ruleset_errors
+        'ruleset_errors': ruleset_errors,
+        'file_type': file_type,
+        'invalid_embedded_codelist_values': invalid_embedded_codelist_values(
+            schema_iati.schema_directory,
+            data_file,
+            os.path.join(upload_dir, 'cell_source_map.json') if file_type != 'xml' else None
+        )
     })
 
     if not api:
