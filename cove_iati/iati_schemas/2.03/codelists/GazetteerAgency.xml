@@ -1,0 +1,30 @@
+<codelist name="GazetteerAgency" xml:lang="en" complete="1">
+    <metadata>
+        <name>
+            <narrative>Gazetteer Agency</narrative>
+        </name>
+        <description>
+            <narrative>An online resource that holds coordinates and descriptions of geographic locations </narrative>
+        </description>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>1</code>
+            <name>
+                <narrative>Geonames.org</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>2</code>
+            <name>
+                <narrative>National Geospatial-Intelligence Agency</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>3</code>
+            <name>
+                <narrative>Open Street Map</narrative>
+            </name>
+        </codelist-item>
+    </codelist-items>
+</codelist>

@@ -18,6 +18,7 @@ from cove.input.models import SuppliedData
 from cove.input.views import data_input
 from cove.views import explore_data_context
 from .lib.iati import common_checks_context_iati, get_file_type
+from .lib.process_codelists import aggregate_results
 from .lib.api import iati_json_output
 from .lib.schema import SchemaIATI
 from django.conf import settings
@@ -104,6 +105,7 @@ def explore_iati(request, pk):
 
     context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type)
     context['first_render'] = not db_data.rendered
+    context['invalid_embedded_codelist_values'] = aggregate_results(context['invalid_embedded_codelist_values'])
 
     if not db_data.rendered:
         db_data.rendered = True
