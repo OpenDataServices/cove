@@ -1,0 +1,32 @@
+<codelist name="BudgetType" xml:lang="en" complete="1">
+    <metadata>
+        <name>
+            <narrative>Budget Type</narrative>
+        </name>
+        <description>
+            <narrative>OECD DAC classification used to determine the character of resource flows (bilateral or multilateral).</narrative>
+        </description>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>1</code>
+            <name>
+                <narrative>Original</narrative>
+                <narrative xml:lang="en">Original</narrative>
+            </name>
+            <description>
+                <narrative>The original budget allocated to the activity</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>2</code>
+            <name>
+                <narrative>Revised</narrative>
+                <narrative xml:lang="fr">Révisé</narrative>
+            </name>
+            <description>
+                <narrative>The updated budget for an activity</narrative>
+            </description>
+        </codelist-item>
+    </codelist-items>
+</codelist>

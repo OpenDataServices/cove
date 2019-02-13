@@ -6,6 +6,7 @@ if "pytest" not in sys.modules:
     # some XML attacks in xmltodict
     # Needs a noqa comment as we don't actually use it here
     import defusedexpat  # noqa: F401
+    pass
 
 # Needs a noqa comment to come after the above import
 from cove import settings  # noqa: E408
