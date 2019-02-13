@@ -1,0 +1,59 @@
+<codelist name="ActivityDateType" xml:lang="en" complete="1">
+    <metadata>
+        <name>
+            <narrative>Activity Date Type</narrative>
+        </name>
+        <description>
+            <narrative>
+            Types of date for activities.
+        
+            There are many different business models and dates that can be used
+            to describe the start and end of activities. It is recommended that
+            each publisher adopts their own consistent approach that provides
+            users with a meaningful indication of the lifespan of an activity.
+        </narrative>
+        </description>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>1</code>
+            <name>
+                <narrative>Planned start</narrative>
+                <narrative xml:lang="fr">Début prévu</narrative>
+            </name>
+            <description>
+                <narrative>The date on which the activity is planned to start, for example the date of the first planned disbursement or when physical activity starts.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>2</code>
+            <name>
+                <narrative>Actual start</narrative>
+                <narrative xml:lang="fr">Début réel</narrative>
+            </name>
+            <description>
+                <narrative>The actual date the activity starts, for example the date of the first disbursement or when physical activity starts.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>3</code>
+            <name>
+                <narrative>Planned End</narrative>
+                <narrative xml:lang="fr">Fin prévue</narrative>
+            </name>
+            <description>
+                <narrative>The date on which the activity is planned to end, for example the date of the last planned disbursement or when physical activity is complete.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>4</code>
+            <name>
+                <narrative>Actual end</narrative>
+                <narrative xml:lang="fr">Fin réelle</narrative>
+            </name>
+            <description>
+                <narrative>The actual date the activity ends, for example the date of the last disbursement or when physical activity is complete.</narrative>
+            </description>
+        </codelist-item>
+    </codelist-items>
+</codelist>
