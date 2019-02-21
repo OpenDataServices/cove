@@ -107,11 +107,15 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
     schema_name = schema_obj.release_pkg_schema_name
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
     cell_source_map = common_checks['cell_source_map']
+    quality_accuracy_checks = run_quality_accuracy_checks(json_data, cell_source_map, ignore_errors=True, return_on_error=None)
     additional_checks = run_additional_checks(json_data, cell_source_map, ignore_errors=True, return_on_error=None)
 
     context.update(common_checks['context'])
     context.update({
         'grants_aggregates': get_grants_aggregates(json_data, ignore_errors=True),
+        'quality_accuracy_checks_errored': quality_accuracy_checks is None,
+        'quality_accuracy_checks': quality_accuracy_checks,
+        'quality_accuracy_checks_count': (len(quality_accuracy_checks) if quality_accuracy_checks else 0) + (1 if context['data_only'] else 0),
         'additional_checks_errored': additional_checks is None,
         'additional_checks': additional_checks,
         'additional_checks_count': (len(additional_checks) if additional_checks else 0) + (1 if context['data_only'] else 0),
@@ -715,6 +719,36 @@ TEST_CLASSES = [
 
 @tools.ignore_errors
 def run_additional_checks(json_data, cell_source_map):
+    if 'grants' not in json_data:
+        return []
+    test_instances = [test_cls(grants=json_data['grants']) for test_cls in TEST_CLASSES]
+
+    for num, grant in enumerate(json_data['grants']):
+        for test_instance in test_instances:
+            test_instance.process(grant, 'grants/{}'.format(num))
+
+    results = []
+
+    for test_instance in test_instances:
+        if not test_instance.failed:
+            continue
+
+        spreadsheet_locations = []
+        spreadsheet_keys = ('sheet', 'letter', 'row_number', 'header')
+        if cell_source_map:
+            try:
+                spreadsheet_locations = [dict(zip(spreadsheet_keys, cell_source_map[location][0]))
+                                         for location in test_instance.json_locations]
+            except KeyError:
+                continue
+        results.append((test_instance.produce_message(),
+                        test_instance.json_locations,
+                        spreadsheet_locations))
+    return results
+
+
+@tools.ignore_errors
+def run_quality_accuracy_checks(json_data, cell_source_map):
     if 'grants' not in json_data:
         return []
     test_instances = [test_cls(grants=json_data['grants']) for test_cls in TEST_CLASSES]
