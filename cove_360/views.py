@@ -9,7 +9,7 @@ from django.utils.html import format_html
 
 from . lib.schema import Schema360
 from . lib.threesixtygiving import common_checks_360
-from . lib.threesixtygiving import TEST_CLASSES
+from . lib.threesixtygiving import TEST_CLASSES, QUALITY_ACCURACY_TEST_CLASSES
 from libcove.lib.converters import convert_spreadsheet, convert_json
 from libcove.lib.exceptions import CoveInputDataError
 from libcove.config import LibCoveConfig
@@ -105,5 +105,5 @@ def additional_checks(request):
 
 def quality_accuracy_checks(request):
     context = {}
-    context["checks"] = [{**check.check_text, 'desc': check.__doc__} for check in TEST_CLASSES]
+    context["checks"] = [{**check.check_text, 'desc': check.__doc__} for check in QUALITY_ACCURACY_TEST_CLASSES]
     return render(request, 'cove_360/quality_accuracy.html', context)
