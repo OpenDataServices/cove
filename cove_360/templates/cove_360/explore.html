@@ -166,6 +166,99 @@
   </div>
   {% endblock validation %}
 
+  {% block quality_accuracy %}
+  <div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" data-target="#quality-accuracy-body">
+      <h3 class="panel-title panel-title-explore">
+        <span class="font-tick question" aria-hidden="true"></span>
+          {% trans "Quality / Accuracy" %}
+          {% if quality_accuracy_checks_count %}
+            <small>{% blocktrans count n_quality_accuracy_checks=quality_accuracy_checks_count %} Quality / Accuracy checks{% plural %}{{n_quality_accuracy_checks}} Quality / Accuracy checks{% endblocktrans %}</small>
+          {% endif %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="quality-accuracy-body" class="collapse panel-body">
+        {% if quality_accuracy_checks_errored %}
+        <div class="row"> <!--Start Row (Detail Table)-->
+          <div class="col-xs-12">
+            <div class="alert alert-danger">
+              {% blocktrans %}Quality / Accuracy checks failed due to an issue with the data. Fix some validation errors first.{% endblocktrans %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% if quality_accuracy_checks %}
+        <p class="explanation">{% blocktrans %}Quality / Accuracy checks have been made on your data.{% endblocktrans %}</p>
+        <br>
+        <p>
+            {% blocktrans %}
+            Quality / Accuracy checks highlight some specific areas where the source data may be incorrect or require further attention.
+            They can also suggest ways to increase the usefulness of the data.
+            In any case, these checks do not indicate validation errors and can be ignored if they are not relevant.
+            {% endblocktrans %}
+        </p>
+        <br>
+        <table class="table no-bottom-margin">
+        <thead>
+          <tr>
+            <th>{% trans 'Check Description' %} </th>
+            <th>{% trans 'First 3 Locations' %}</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for message, json_location, spreadsheet_location in quality_accuracy_checks %}
+        <tr>
+            <td>
+              <strong>{{message.heading}}</strong><br>{{message.message}}
+            </td>
+          {% if file_type == 'xlsx' or file_type == 'csv' %}
+            <td style="white-space: nowrap">
+              <ul class="list-unstyled">
+                {% for location in spreadsheet_location|slice:":3" %}
+                <li> <b>Sheet:</b> {{location.sheet}} <b>Row:</b> {{location.row_number}} {% if location.header %} <b>Header:</b> {{location.header}} {% endif %} </li>
+                {% endfor %}
+                {% if spreadsheet_location|length > 3 %}
+                  <li><a data-toggle="modal" data-target=".{{"quality_accuracy-checks-"|concat:forloop.counter}}"><sup>see all</sup></a></li>
+                {% endif %}
+              </ul>
+            </td>
+          {% else %}
+            <td>
+              <ul class="list-unstyled">
+                {% for location in json_location|slice:":3" %}
+                   <li>{{location}}</li>
+                {% endfor %}
+                {% if json_location|length > 3 %}
+                  <li><a data-toggle="modal" data-target=".{{"quality_accuracy-checks-"|concat:forloop.counter}}"><sup>see all</sup></a></li>
+                {% endif %}
+              </ul>
+            </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        {% endif %}
+
+        {% if data_only %}
+          <hr class="heading-in-panel">
+            <p class="left-space"> {% trans "<strong>Additional fields</strong> were found in your data. Please check them to see that they are intended additions and not just the result of spelling mistakes." %}</p>
+          {% include "additional_fields_table.html" %}
+        {% endif %}
+    </div>
+    {% for message, json_location, spreadsheet_location in quality_accuracy_checks %}
+      {% with msg=message.heading %}
+        {% if file_type == 'json' %}
+          {% cove_modal_errors className="additional-checks-"|concat:forloop.counter modalTitle=msg errorList=json_location file_type=file_type full_table=False %}
+        {% else %}
+          {% cove_modal_errors className="additional-checks-"|concat:forloop.counter modalTitle=msg errorList=spreadsheet_location file_type=file_type full_table=False %}
+        {% endif %}
+      {% endwith %}
+    {% endfor %}
+  </div>
+  {% endblock quality_accuracy %}
+
   {% block additional_checks %}
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#additional-checks-body">
