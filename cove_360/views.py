@@ -106,7 +106,7 @@ def additional_checks(request):
 def quality_accuracy_checks(request):
     context = {}
     context["checks"] = [{**check.check_text, 'desc': check.__doc__} for check in QUALITY_ACCURACY_TEST_CLASSES]
-    return render(request, 'cove_360/quality_accuracy.html', context)
+    return render(request, 'cove_360/quality_accuracy_checks.html', context)
 
 
 def usefulness_checks(request):
