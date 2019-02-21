@@ -695,16 +695,10 @@ class NoDataSource(AdditionalTest):
 
 
 TEST_CLASSES = [
-    ZeroAmountTest,
     RecipientOrg360GPrefix,
     FundingOrg360GPrefix,
-    RecipientOrgUnrecognisedPrefix,
-    FundingOrgUnrecognisedPrefix,
-    RecipientOrgCharityNumber,
-    RecipientOrgCompanyNumber,
     NoRecipientOrgCompanyCharityNumber,
     IncompleteRecipientOrg,
-    MoreThanOneFundingOrg,
     LooksLikeEmail,
     NoGrantProgramme,
     NoBeneficiaryLocation,
@@ -747,11 +741,20 @@ def run_additional_checks(json_data, cell_source_map):
     return results
 
 
+QUALITY_ACCURACY_TEST_CLASSES = [
+    ZeroAmountTest,
+    FundingOrgUnrecognisedPrefix,
+    RecipientOrgUnrecognisedPrefix,
+    RecipientOrgCharityNumber,
+    RecipientOrgCompanyNumber,
+    MoreThanOneFundingOrg,
+]
+
 @tools.ignore_errors
 def run_quality_accuracy_checks(json_data, cell_source_map):
     if 'grants' not in json_data:
         return []
-    test_instances = [test_cls(grants=json_data['grants']) for test_cls in TEST_CLASSES]
+    test_instances = [test_cls(grants=json_data['grants']) for test_cls in QUALITY_ACCURACY_TEST_CLASSES]
 
     for num, grant in enumerate(json_data['grants']):
         for test_instance in test_instances:

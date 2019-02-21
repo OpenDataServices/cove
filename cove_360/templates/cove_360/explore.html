@@ -240,19 +240,13 @@
         </tbody>
         </table>
         {% endif %}
-
-        {% if data_only %}
-          <hr class="heading-in-panel">
-            <p class="left-space"> {% trans "<strong>Additional fields</strong> were found in your data. Please check them to see that they are intended additions and not just the result of spelling mistakes." %}</p>
-          {% include "additional_fields_table.html" %}
-        {% endif %}
     </div>
     {% for message, json_location, spreadsheet_location in quality_accuracy_checks %}
       {% with msg=message.heading %}
         {% if file_type == 'json' %}
-          {% cove_modal_errors className="additional-checks-"|concat:forloop.counter modalTitle=msg errorList=json_location file_type=file_type full_table=False %}
+          {% cove_modal_errors className="quality_accuracy-checks-"|concat:forloop.counter modalTitle=msg errorList=json_location file_type=file_type full_table=False %}
         {% else %}
-          {% cove_modal_errors className="additional-checks-"|concat:forloop.counter modalTitle=msg errorList=spreadsheet_location file_type=file_type full_table=False %}
+          {% cove_modal_errors className="quality_accuracy-checks-"|concat:forloop.counter modalTitle=msg errorList=spreadsheet_location file_type=file_type full_table=False %}
         {% endif %}
       {% endwith %}
     {% endfor %}
