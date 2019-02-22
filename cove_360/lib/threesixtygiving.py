@@ -108,11 +108,11 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
     cell_source_map = common_checks['cell_source_map']
     quality_accuracy_checks = run_extra_checks(
-        json_data, cell_source_map, QUALITY_ACCURACY_TEST_CLASSES, ignore_errors=True, return_on_error=None)
+        json_data, cell_source_map, TEST_CLASSES['quality_accuracy'], ignore_errors=True, return_on_error=None)
     usefulness_checks = run_extra_checks(
-        json_data, cell_source_map, USEFULNESS_TEST_CLASSES, ignore_errors=True, return_on_error=None)
+        json_data, cell_source_map, TEST_CLASSES['usefulness'], ignore_errors=True, return_on_error=None)
     additional_checks = run_extra_checks(
-        json_data, cell_source_map, TEST_CLASSES, ignore_errors=True, return_on_error=None)
+        json_data, cell_source_map, TEST_CLASSES['additional'], ignore_errors=True, return_on_error=None)
 
     context.update(common_checks['context'])
     context.update({
@@ -701,33 +701,33 @@ class NoDataSource(AdditionalTest):
 #         self.message = self.check_text["message"]
 
 
-TEST_CLASSES = [
-    IncompleteRecipientOrg,
-    LooksLikeEmail,
-    NoGrantProgramme,
-    NoBeneficiaryLocation,
-    TitleDescriptionSame,
-    TitleLength,
-    OrganizationIdLooksInvalid,
-    # IncompleteBeneficiaryLocation
-]
-
-QUALITY_ACCURACY_TEST_CLASSES = [
-    ZeroAmountTest,
-    FundingOrgUnrecognisedPrefix,
-    RecipientOrgUnrecognisedPrefix,
-    RecipientOrgCharityNumber,
-    RecipientOrgCompanyNumber,
-    MoreThanOneFundingOrg,
-]
-
-USEFULNESS_TEST_CLASSES = [
-    RecipientOrg360GPrefix,
-    FundingOrg360GPrefix,
-    NoRecipientOrgCompanyCharityNumber,
-    NoLastModified,
-    NoDataSource,
-]
+TEST_CLASSES = {
+    'additional': [
+        IncompleteRecipientOrg,
+        LooksLikeEmail,
+        NoGrantProgramme,
+        NoBeneficiaryLocation,
+        TitleDescriptionSame,
+        TitleLength,
+        OrganizationIdLooksInvalid,
+        # IncompleteBeneficiaryLocation
+    ],
+    'quality_accuracy': [
+        ZeroAmountTest,
+        FundingOrgUnrecognisedPrefix,
+        RecipientOrgUnrecognisedPrefix,
+        RecipientOrgCharityNumber,
+        RecipientOrgCompanyNumber,
+        MoreThanOneFundingOrg,
+    ],
+    'usefulness': [
+        RecipientOrg360GPrefix,
+        FundingOrg360GPrefix,
+        NoRecipientOrgCompanyCharityNumber,
+        NoLastModified,
+        NoDataSource,
+    ]
+}
 
 
 @tools.ignore_errors
