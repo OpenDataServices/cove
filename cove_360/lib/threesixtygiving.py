@@ -107,9 +107,12 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
     schema_name = schema_obj.release_pkg_schema_name
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
     cell_source_map = common_checks['cell_source_map']
-    quality_accuracy_checks = run_quality_accuracy_checks(json_data, cell_source_map, ignore_errors=True, return_on_error=None)
-    usefulness_checks = run_usefulness_checks(json_data, cell_source_map, ignore_errors=True, return_on_error=None)
-    additional_checks = run_additional_checks(json_data, cell_source_map, ignore_errors=True, return_on_error=None)
+    quality_accuracy_checks = run_extra_checks(
+        json_data, cell_source_map, QUALITY_ACCURACY_TEST_CLASSES, ignore_errors=True, return_on_error=None)
+    usefulness_checks = run_extra_checks(
+        json_data, cell_source_map, USEFULNESS_TEST_CLASSES, ignore_errors=True, return_on_error=None)
+    additional_checks = run_extra_checks(
+        json_data, cell_source_map, TEST_CLASSES, ignore_errors=True, return_on_error=None)
 
     context.update(common_checks['context'])
     context.update({
@@ -709,37 +712,6 @@ TEST_CLASSES = [
     # IncompleteBeneficiaryLocation
 ]
 
-
-@tools.ignore_errors
-def run_additional_checks(json_data, cell_source_map):
-    if 'grants' not in json_data:
-        return []
-    test_instances = [test_cls(grants=json_data['grants']) for test_cls in TEST_CLASSES]
-
-    for num, grant in enumerate(json_data['grants']):
-        for test_instance in test_instances:
-            test_instance.process(grant, 'grants/{}'.format(num))
-
-    results = []
-
-    for test_instance in test_instances:
-        if not test_instance.failed:
-            continue
-
-        spreadsheet_locations = []
-        spreadsheet_keys = ('sheet', 'letter', 'row_number', 'header')
-        if cell_source_map:
-            try:
-                spreadsheet_locations = [dict(zip(spreadsheet_keys, cell_source_map[location][0]))
-                                         for location in test_instance.json_locations]
-            except KeyError:
-                continue
-        results.append((test_instance.produce_message(),
-                        test_instance.json_locations,
-                        spreadsheet_locations))
-    return results
-
-
 QUALITY_ACCURACY_TEST_CLASSES = [
     ZeroAmountTest,
     FundingOrgUnrecognisedPrefix,
@@ -748,37 +720,6 @@ QUALITY_ACCURACY_TEST_CLASSES = [
     RecipientOrgCompanyNumber,
     MoreThanOneFundingOrg,
 ]
-
-
-@tools.ignore_errors
-def run_quality_accuracy_checks(json_data, cell_source_map):
-    if 'grants' not in json_data:
-        return []
-    test_instances = [test_cls(grants=json_data['grants']) for test_cls in QUALITY_ACCURACY_TEST_CLASSES]
-
-    for num, grant in enumerate(json_data['grants']):
-        for test_instance in test_instances:
-            test_instance.process(grant, 'grants/{}'.format(num))
-
-    results = []
-
-    for test_instance in test_instances:
-        if not test_instance.failed:
-            continue
-
-        spreadsheet_locations = []
-        spreadsheet_keys = ('sheet', 'letter', 'row_number', 'header')
-        if cell_source_map:
-            try:
-                spreadsheet_locations = [dict(zip(spreadsheet_keys, cell_source_map[location][0]))
-                                         for location in test_instance.json_locations]
-            except KeyError:
-                continue
-        results.append((test_instance.produce_message(),
-                        test_instance.json_locations,
-                        spreadsheet_locations))
-    return results
-
 
 USEFULNESS_TEST_CLASSES = [
     RecipientOrg360GPrefix,
@@ -790,10 +731,10 @@ USEFULNESS_TEST_CLASSES = [
 
 
 @tools.ignore_errors
-def run_usefulness_checks(json_data, cell_source_map):
+def run_extra_checks(json_data, cell_source_map, test_classes):
     if 'grants' not in json_data:
         return []
-    test_instances = [test_cls(grants=json_data['grants']) for test_cls in USEFULNESS_TEST_CLASSES]
+    test_instances = [test_cls(grants=json_data['grants']) for test_cls in test_classes]
 
     for num, grant in enumerate(json_data['grants']):
         for test_instance in test_instances:
