@@ -107,27 +107,21 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
     schema_name = schema_obj.release_pkg_schema_name
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
     cell_source_map = common_checks['cell_source_map']
-    quality_accuracy_checks = run_extra_checks(
-        json_data, cell_source_map, TEST_CLASSES['quality_accuracy'], ignore_errors=True, return_on_error=None)
-    usefulness_checks = run_extra_checks(
-        json_data, cell_source_map, TEST_CLASSES['usefulness'], ignore_errors=True, return_on_error=None)
-    additional_checks = run_extra_checks(
-        json_data, cell_source_map, TEST_CLASSES['additional'], ignore_errors=True, return_on_error=None)
 
     context.update(common_checks['context'])
     context.update({
         'grants_aggregates': get_grants_aggregates(json_data, ignore_errors=True),
-        'quality_accuracy_checks_errored': quality_accuracy_checks is None,
-        'quality_accuracy_checks': quality_accuracy_checks,
-        'quality_accuracy_checks_count': (len(quality_accuracy_checks) if quality_accuracy_checks else 0) + (1 if context['data_only'] else 0),
-        'usefulness_checks_errored': usefulness_checks is None,
-        'usefulness_checks': usefulness_checks,
-        'usefulness_checks_count': (len(usefulness_checks) if usefulness_checks else 0) + (1 if context['data_only'] else 0),
-        'additional_checks_errored': additional_checks is None,
-        'additional_checks': additional_checks,
-        'additional_checks_count': (len(additional_checks) if additional_checks else 0) + (1 if context['data_only'] else 0),
-        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string']
+        'common_error_types': ['uri', 'date - time', 'required', 'enum', 'number', 'string']
     })
+
+    for check in ['quality_accuracy', 'usefulness', 'additional']:
+        extra_checks = run_extra_checks(
+            json_data, cell_source_map, TEST_CLASSES[check], ignore_errors=True, return_on_error=None)
+        context.update({
+            '{}_errored'.format(check): extra_checks is None,
+            '{}_checks'.format(check): extra_checks,
+            '{}_checks_count'.format(check): (len(extra_checks) if extra_checks else 0) + (1 if context['data_only'] else 0)
+        })
 
     return context
 
