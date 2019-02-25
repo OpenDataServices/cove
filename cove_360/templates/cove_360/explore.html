@@ -154,16 +154,27 @@
           <br>
           <p class="explanation">&nbsp;{% trans "There are some <strong>validation errors</strong> in your data, please check them in the table below." %}</p>
           <br>
+          <h4>Missing Fields</h4>
+          {% with validation_errors=validation_errors_grouped.required %}
           {% include "validation_table.html" %}
-          {% for error_json, values in validation_errors %}
-            {% with error=error_json|json_decode %}
-              {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
-            {% endwith %}
-          {% endfor %}
+          {% endwith %}
+          <h4>Incorrect Formats</h4>
+          {% with validation_errors=validation_errors_grouped.format %}
+          {% include "validation_table.html" %}
+          {% endwith %}
+          <h4>Other</h4>
+          {% with validation_errors=validation_errors_grouped.other %}
+          {% include "validation_table.html" %}
+          {% endwith %}
         {% endif %}
       </div>
     </div>
   </div>
+  {% for error_json, values in validation_errors %}
+    {% with error=error_json|json_decode %}
+      {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
+    {% endwith %}
+  {% endfor %}
   {% endblock validation %}
 
   {% block additional_checks %}
