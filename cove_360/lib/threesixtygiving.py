@@ -125,11 +125,7 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
     context.update(common_checks['context'])
     context.update({
         'grants_aggregates': get_grants_aggregates(json_data, ignore_errors=True),
-        'additional_checks_errored': additional_checks is None,
-        'additional_checks': additional_checks,
-        'additional_checks_count': (len(additional_checks) if additional_checks else 0) + (1 if context['data_only'] else 0),
-        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string'],
-        'validation_errors_grouped': validation_errors_grouped
+        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string']
     })
 
     for check in ['quality_accuracy', 'usefulness', 'additional']:
