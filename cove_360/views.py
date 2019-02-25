@@ -97,7 +97,18 @@ def common_errors(request):
     return render(request, 'cove_360/common_errors.html')
 
 
-def additional_checks(request):
+def get_extra_checks_context(test_classes_type):
     context = {}
-    context["checks"] = [{**check.check_text, 'desc': check.__doc__} for check in TEST_CLASSES]
-    return render(request, 'cove_360/additional_checks.html', context)
+    context["checks"] = [{**check.check_text, 'desc': check.__doc__} for check in TEST_CLASSES[test_classes_type]]
+
+
+def additional_checks(request):
+    return render(request, 'cove_360/additional_checks.html', get_extra_checks_context('additional'))
+
+
+def quality_accuracy_checks(request):
+    return render(request, 'cove_360/quality_accuracy_checks.html', get_extra_checks_context('quality_accuracy'))
+
+
+def usefulness_checks(request):
+    return render(request, 'cove_360/usefulness_checks.html', get_extra_checks_context('usefulness'))
