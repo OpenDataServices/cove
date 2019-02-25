@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import functools
+import copy
 from dateutil import parser
 from strict_rfc3339 import validate_rfc3339
 from decimal import Decimal
@@ -19,6 +20,7 @@ from libcoveocds.config import LibCoveOCDSConfig
 from libcoveocds.libcore.common import get_spreadsheet_meta_data
 from libcoveocds.libcore.converters import convert_spreadsheet, convert_json
 from libcoveocds.libcore.exceptions import CoveInputDataError
+from . lib.ocds_show_extra import add_extra_fields
 from cove.views import explore_data_context
 
 
@@ -173,16 +175,23 @@ def explore_ocds(request, pk):
 
     db_data.save()
 
+    ocds_show_schema = SchemaOCDS()
+    ocds_show_deref_schema = ocds_show_schema.get_release_schema_obj(deref=True)
+
     if 'records' in json_data:
         template = 'cove_ocds/explore_record.html'
         if hasattr(json_data, 'get') and hasattr(json_data.get('records'), '__iter__'):
             context['records'] = json_data['records']
         else:
             context['records'] = []
+        if isinstance(json_data['records'], list) and len(json_data['records']) < 100:
+            context['ocds_show_data'] = ocds_show_data(json_data, ocds_show_deref_schema)
     else:
         template = 'cove_ocds/explore_release.html'
         if hasattr(json_data, 'get') and hasattr(json_data.get('releases'), '__iter__'):
             context['releases'] = json_data['releases']
+            if isinstance(json_data['releases'], list) and len(json_data['releases']) < 100:
+                context['ocds_show_data'] = ocds_show_data(json_data, ocds_show_deref_schema)
 
             # Parse release dates into objects so the template can format them.
             for release in context['releases']:
@@ -203,3 +212,18 @@ def explore_ocds(request, pk):
             context['releases'] = []
 
     return render(request, template, context)
+
+
+# This should only be run when data is small.
+def ocds_show_data(json_data, ocds_show_deref_schema):
+    new_json_data = copy.deepcopy(json_data)
+    add_extra_fields(new_json_data, ocds_show_deref_schema)
+    return json.dumps(new_json_data, cls=DecimalEncoder)
+
+
+# From stackoverflow:  https://stackoverflow.com/questions/1960516/python-json-serialize-a-decimal-object
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, Decimal):
+            return float(o)
+        return super(DecimalEncoder, self).default(o)

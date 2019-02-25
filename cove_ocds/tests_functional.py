@@ -606,3 +606,19 @@ def test_url_input_extension_headlines(server_url, url_input_browser, httpserver
         assert text in headlines_box_text
     for text in not_expected:
         assert text not in headlines_box_text
+
+
+@pytest.mark.parametrize(('source_filename', 'expected', 'not_expected'), [
+    ('tenders_releases_extra_data.json', ['uniquedata'], []),
+])
+def test_ocds_show(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
+    browser = url_input_browser(source_filename)
+
+    browser.find_element_by_css_selector("a[href='#extra']").click()
+
+    body_text = browser.find_element_by_tag_name('body').text
+
+    for text in expected:
+        assert text in body_text
+    for text in not_expected:
+        assert text not in body_text
