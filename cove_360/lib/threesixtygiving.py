@@ -114,13 +114,13 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
         'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string']
     })
 
-    for check in ['quality_accuracy', 'usefulness', 'additional']:
+    for test_classes_type in ['quality_accuracy', 'usefulness', 'additional']:
         extra_checks = run_extra_checks(
-            json_data, cell_source_map, TEST_CLASSES[check], ignore_errors=True, return_on_error=None)
+            json_data, cell_source_map, TEST_CLASSES[test_classes_type], ignore_errors=True, return_on_error=None)
         context.update({
-            '{}_errored'.format(check): extra_checks is None,
-            '{}_checks'.format(check): extra_checks,
-            '{}_checks_count'.format(check): (len(extra_checks) if extra_checks else 0) + (1 if context['data_only'] else 0)
+            '{}_errored'.format(test_classes_type): extra_checks is None,
+            '{}_checks'.format(test_classes_type): extra_checks,
+            '{}_checks_count'.format(test_classes_type): (len(extra_checks) if extra_checks else 0) + (1 if context['data_only'] else 0)
         })
 
     return context
