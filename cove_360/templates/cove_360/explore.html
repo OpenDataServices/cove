@@ -221,7 +221,7 @@
         {% for message, json_location, spreadsheet_location in quality_accuracy_checks %}
         <tr>
             <td>
-              <strong>{{message.heading}}</strong><br>{{message.message}}
+              <strong>{{ message.heading | safe }}</strong><br>{{ message.message | safe }}
             </td>
           {% if file_type == 'xlsx' or file_type == 'csv' %}
             <td style="white-space: nowrap">
@@ -308,7 +308,7 @@
         {% for message, json_location, spreadsheet_location in usefulness_checks %}
         <tr>
             <td>
-              <strong>{{message.heading}}</strong><br>{{message.message}}
+              <strong>{{ message.heading | safe }}</strong><br>{{ message.message | safe }}
             </td>
           {% if file_type == 'xlsx' or file_type == 'csv' %}
             <td style="white-space: nowrap">
@@ -392,7 +392,7 @@
         {% for message, json_location, spreadsheet_location in additional_checks %}
         <tr>
             <td>
-              <strong>{{message.heading}}</strong><br>{{message.message}}
+              <strong>{{ message.heading | safe }}</strong><br>{{ message.message | safe }}
             </td>
           {% if file_type == 'xlsx' or file_type == 'csv' %}
             <td style="white-space: nowrap">
