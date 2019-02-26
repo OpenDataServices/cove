@@ -187,6 +187,7 @@ def flatten_dict(grant, path=""):
 class AdditionalTest():
     def __init__(self, **kw):
         self.grants = kw['grants']
+        self.grants_count = len(self.grants)
         self.json_locations = []
         self.failed = False
         self.count = 0
@@ -202,22 +203,27 @@ class AdditionalTest():
             'message': self.message
         }
 
+    def get_heading_count(self):
+        if self.grants_count == 1 and self.count == 1:
+            return '1'
+        return '{:.0%} of'.format(self.count / self.grants_count)
+
     def format_heading_count(self, message, verb='have'):
-        '''Build a string with count of grants plus message
+        """Build a string with count of grants plus message
         
         The grant count phrase for the test is pluralized and
         prepended to message, eg: 1 grant has + message,
         2 grants have + message or 3 grants contain + message.
-        '''
-        noun = 'grant' if self.count == 1 else 'grants'
+        """
+        noun = 'grant' if self.grants_count == 1 else 'grants'
         if verb == 'have':
-            verb = 'has' if self.count == 1 else verb
+            verb = 'has' if self.grants_count == 1 else verb
         elif verb == 'do':
-            verb = 'does' if self.count == 1 else verb
+            verb = 'does' if self.grants_count == 1 else verb
         else:
             # Naively!
-            verb = verb + 's' if self.count == 1 else verb
-        return '{} {} {} {}'.format(self.count, noun, verb, message)
+            verb = verb + 's' if self.grants_count == 1 else verb
+        return '{} {} {} {}'.format(self.get_heading_count(), noun, verb, message)
 
 
 class ZeroAmountTest(AdditionalTest):
