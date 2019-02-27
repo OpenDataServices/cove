@@ -421,7 +421,10 @@ class RecipientOrgCompanyNumber(AdditionalTest):
                     "<span class=\"highlight-background-text\">Recipient Org: Company Number</span> "
                     "column that doesn’t look like a company number"),
         "message": ("Common causes of this are missing leading digits, typos or incorrect values "
-                    "being entered into this field.")
+                    "being entered into this field. Company numbers are typically 8 digits, possibly starting SC, "
+                    "for example <span class=\"highlight-background-text\">SC01234569</span> or "
+                    "<span class=\"highlight-background-text\">09876543</span>. You can check company numbers online "
+                    "at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House")
     }
 
     def process(self, grant, path_prefix):
