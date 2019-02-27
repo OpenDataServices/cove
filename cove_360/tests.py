@@ -392,7 +392,10 @@ QUALITY_ACCURACY_CHECKS_RESULTS = [
                   "<span class=\"highlight-background-text\">Recipient Org: Company Number</span> column "
                   "that doesn’t look like a company number"),
       'message': ("Common causes of this are missing leading digits, typos or incorrect "
-                  "values being entered into this field.")},
+                  "values being entered into this field. Company numbers are typically 8 digits, possibly starting SC, "
+                  "for example <span class=\"highlight-background-text\">SC01234569</span> or "
+                  "<span class=\"highlight-background-text\">09876543</span>. You can check company numbers online "
+                  "at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House")},
      ['grants/0/recipientOrganization/0/companyNumber'],
      [{'sheet': 'grants', 'letter': 'L', 'row_number': 2, 'header': 'Recipient Org:Company Number'}]),
     ({'heading': "There are 3 different funding organisation IDs listed",
