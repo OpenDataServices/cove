@@ -273,7 +273,7 @@ class RecipientOrg360GPrefix(AdditionalTest):
     """Check if any grants are using RecipientOrg IDs that start 360G or 360g"""
 
     check_text = {
-        "heading": "a <span style=\"background-color: #E7EBE8\">Recipient Org:Identifier</span> that starts '360G-'",
+        "heading": "a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> that starts '360G-'",
         "message": ("If the grant is to a recipient organisation that has an external identifier "
                     "(such as a charity or company number), then this should be used instead. Using external "
                     "identifiers helps people using your data to match it up against other data - for example to see "
@@ -299,7 +299,7 @@ class FundingOrg360GPrefix(AdditionalTest):
     """Check if any grants are using FundingOrg IDs that start 360G or 360g"""
 
     check_text = {
-        "heading": "a <span style=\"background-color: #E7EBE8\">Funding Org:Identifier</span> that starts '360G-'",
+        "heading": "a <span class=\"highlight-background-text\">Funding Org:Identifier</span> that starts '360G-'",
         "message": ("If the grant is from a funding organisation that has an external identifier "
                     "(such as a charity or company number), then this should be used instead. "
                     "If no other identifier can be used, then you can ignore this notice.")
@@ -323,7 +323,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
     """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
-        "heading": ("a <span style=\"background-color: #E7EBE8\">Recipient Org:Identifier</span> "
+        "heading": ("a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> "
                     "that does not draw from a recognised register."),
         "message": ("Using external identifiers (such as a charity or company number) helps people using your data "
                     "to match it up against other data - for example to see who else has given grants to the same "
@@ -357,7 +357,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
     """Check if any grants have FundingOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
-        "heading": ("a <span style=\"background-color: #E7EBE8\">Funding Org:Identifier</span> "
+        "heading": ("a <span class=\"highlight-background-text\">Funding Org:Identifier</span> "
                     "that does not draw from a recognised register."),
         "message": ("Using external identifiers (such as a charity or company number) helps people using your data to "
                     "match it up against other data - for example to see who else has given grants to the same "
@@ -396,7 +396,7 @@ class RecipientOrgCharityNumber(AdditionalTest):
 
     check_text = {
         "heading": ("a value provided in the "
-                    "<span style=\"background-color: #E7EBE8\">Recipient Org: Charity Number</span> "
+                    "<span class=\"highlight-background-text\">Recipient Org: Charity Number</span> "
                     "column that doesn’t look like a charity number"),
         "message": ("Common causes of this are missing leading digits, typos or incorrect values "
                     "being entered into this field.")
@@ -432,7 +432,7 @@ class RecipientOrgCompanyNumber(AdditionalTest):
 
     check_text = {
         "heading": ("a value provided in the "
-                    "<span style=\"background-color: #E7EBE8\">Recipient Org: Company Number</span> "
+                    "<span class=\"highlight-background-text\">Recipient Org: Company Number</span> "
                     "column that doesn’t look like a company number"),
         "message": ("Common causes of this are missing leading digits, typos or incorrect values "
                     "being entered into this field.")
@@ -462,8 +462,8 @@ class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
 
     check_text = {
         "heading": ("not have either a "
-                    "<span style=\"background-color: #E7EBE8\">Recipient Org:Company Number</span> or a "
-                    "<span style=\"background-color: #E7EBE8\">Recipient Org:Charity Number</span>"),
+                    "<span class=\"highlight-background-text\">Recipient Org:Company Number</span> or a "
+                    "<span class=\"highlight-background-text\">Recipient Org:Charity Number</span>"),
         "message": ("Providing one or both of these, if possible, makes it easier for users to join up your data with "
                     "other data sources to provide better insight into grantmaking. If your grants are to "
                     "organisations that don’t have UK Company or UK Charity numbers, then you can ignore this notice.")
@@ -497,9 +497,9 @@ class IncompleteRecipientOrg(AdditionalTest):
     check_text = {
         "heading": "not have recipient organisation location information",
         "message": ("Your data is missing information about the geographic location of recipient organisations; either "
-                    "<span style=\"background-color: #E7EBE8\">Recipient Org:Postal Code</span> or "
-                    "<span style=\"background-color: #E7EBE8\">Recipient Org:Location:Geographic Code</span> combined "
-                    "with <span style=\"background-color: #E7EBE8\">Recipient Org:Location:Geographic Code Type"
+                    "<span class=\"highlight-background-text\">Recipient Org:Postal Code</span> or "
+                    "<span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code</span> combined "
+                    "with <span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code Type"
                     "</span>. Knowing the geographic location of recipient organisations helps users to understand "
                     "your data and allows it to be used in tools that visualise grants geographically.")
     }
@@ -535,7 +535,7 @@ class MoreThanOneFundingOrg(AdditionalTest):
         "heading": "There are {} different funding organisation IDs listed",
         "message": ("If you are expecting to be publishing data for multiple funders then you can ignore this notice. "
                     "If you are only publishing for a single funder then you should review your "
-                    "<span style=\"background-color: #E7EBE8\">Funding Organisation identifier</span> column to see "
+                    "<span class=\"highlight-background-text\">Funding Organisation identifier</span> column to see "
                     "where multiple IDs have occurred.")
     }
 
@@ -592,8 +592,8 @@ class NoGrantProgramme(AdditionalTest):
     """Checks if any grants have no Grant Programme fields"""
 
     check_text = {
-        "heading": "not contain any <span style=\"background-color: #E7EBE8\">Grant Programme</span> fields",
-        "message": ("Providing <span style=\"background-color: #E7EBE8\">Grant Programme</span> data, if available, "
+        "heading": "not contain any <span class=\"highlight-background-text\">Grant Programme</span> fields",
+        "message": ("Providing <span class=\"highlight-background-text\">Grant Programme</span> data, if available, "
                     "helps users to better understand your data.")
     }
 
@@ -709,8 +709,8 @@ class NoLastModified(AdditionalTest):
     """Check if any grants are missing Last Modified dates"""
 
     check_text = {
-        "heading": "not have <span style=\"background-color: #E7EBE8\">Last Modified</span> information",
-        "message": ("<span style=\"background-color: #E7EBE8\">Last Modified</span> shows the date and time when "
+        "heading": "not have <span class=\"highlight-background-text\">Last Modified</span> information",
+        "message": ("<span class=\"highlight-background-text\">Last Modified</span> shows the date and time when "
                     "information about a grant was last updated in your file. Including this information allows data "
                     "users to see when changes have been made and reconcile differences between versions of your data. "
                     "Please note: this is the date when the data was modified in your 360Giving file, "
@@ -732,8 +732,8 @@ class NoDataSource(AdditionalTest):
     """Checks if any grants are missing dataSource"""
 
     check_text = {
-        "heading": "not have <span style=\"background-color: #E7EBE8\">Data Source</span> information",
-        "message": ("<span style=\"background-color: #E7EBE8\">Data Source</span> informs users about where "
+        "heading": "not have <span class=\"highlight-background-text\">Data Source</span> information",
+        "message": ("<span class=\"highlight-background-text\">Data Source</span> informs users about where "
                     "information came from and is an important part of establishing trust in your data. "
                     "This information should be a web link pointing to the source of this data, which may be an "
                     "original 360Giving data file, a file from which the data was converted, or your organisation’s "
