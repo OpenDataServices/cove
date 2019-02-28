@@ -2,6 +2,7 @@ import re
 from collections import defaultdict, OrderedDict
 from decimal import Decimal
 
+from django.utils.html import mark_safe
 import libcove.lib.tools as tools
 from libcove.lib.common import common_checks_context, get_orgids_prefixes
 
@@ -277,7 +278,7 @@ class RecipientOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
         self.message = self.check_text['message']
 
 
@@ -301,7 +302,7 @@ class FundingOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
         self.message = self.check_text['message']
 
 
@@ -335,7 +336,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
         self.message = self.check_text['message']
 
 
@@ -369,7 +370,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
         self.message = self.check_text['message']
 
 
@@ -406,7 +407,7 @@ class RecipientOrgCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
         self.message = self.check_text['message']
 
 
@@ -442,8 +443,8 @@ class RecipientOrgCompanyNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.message = mark_safe(self.check_text['message'])
 
 
 class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
@@ -473,7 +474,7 @@ class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb="do")
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb="do"))
         self.message = self.check_text['message']
 
 
@@ -514,7 +515,7 @@ class IncompleteRecipientOrg(AdditionalTest):
             pass
 
         self.heading = self.format_heading_count(self.check_text['heading'], verb="do")
-        self.message = self.check_text['message']
+        self.message = mark_safe(self.check_text['message'])
 
 
 class MoreThanOneFundingOrg(AdditionalTest):
@@ -544,7 +545,7 @@ class MoreThanOneFundingOrg(AdditionalTest):
             self.failed = True
 
         self.heading = self.check_text["heading"].format(len(self.funding_organization_ids))
-        self.message = self.check_text["message"]
+        self.message = mark_safe(self.check_text["message"])
 
 
 compiled_email_re = re.compile('[\w.-]+@[\w.-]+\.[\w.-]+')
@@ -593,8 +594,8 @@ class NoGrantProgramme(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
+        self.message = mark_safe(self.check_text['message'])
 
 
 class NoBeneficiaryLocation(AdditionalTest):
@@ -713,8 +714,8 @@ class NoLastModified(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
+        self.message = mark_safe(self.check_text['message'])
 
 
 class NoDataSource(AdditionalTest):
@@ -736,8 +737,8 @@ class NoDataSource(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
+        self.message = mark_safe(self.check_text['message'])
 
 
 # class IncompleteBeneficiaryLocation(AdditionalTest):

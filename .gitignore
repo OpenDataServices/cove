@@ -3,8 +3,10 @@
 *.mo
 *~
 .ve
+.ve2
 *.pyc
 __pycache__
+.pytest_cache/
 media
 .coverage
 htmlcov
@@ -15,3 +17,5 @@ geckodriver.log
 ghostdriver.log
 cove/lib/org-ids.json
 cove/lib/org-ids.json.lock
+chromedriver/
+src/
