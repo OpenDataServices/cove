@@ -43,7 +43,7 @@ def server_url(request, live_server):
                                                   'individual awards ranging from £152,505 (lowest) to £178,990 (highest)',
                                                   'Convert to Spreadsheet',
                                                   'Invalid against Schema 15 Errors',
-                                                  'There are some validation errors in your data, please check them in the table below',
+                                                  'There are some validation errors in your data, please check them in the table(s) below',
                                                   'Non-unique ID Values',
                                                   'Grant identifiers:  2',
                                                   'Funder organisation identifiers:  1',
@@ -407,17 +407,17 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
             section.click()
         time.sleep(0.5)
 
-    browser.find_element_by_css_selector('a[data-target=".validation-errors-7"]').click()
+    browser.find_element_by_css_selector('a[data-target=".validation-errors-format-1"]').click()
 
-    modal = browser.find_element_by_css_selector('.validation-errors-7')
+    modal = browser.find_element_by_css_selector('.validation-errors-format-1')
     assert "in" in modal.get_attribute("class").split()
     modal_text = modal.text
     assert "24/07/2014" in modal_text
     assert "grants/0/awardDate" in modal_text
-    table_rows = browser.find_elements_by_css_selector('.validation-errors-7 tbody tr')
+    table_rows = browser.find_elements_by_css_selector('.validation-errors-format-2 tbody tr')
     assert len(table_rows) == 4
 
-    browser.find_element_by_css_selector('div.modal.validation-errors-3 button.close').click()
+    browser.find_element_by_css_selector('div.modal.validation-errors-format-1 button.close').click()
     browser.find_element_by_css_selector('a[data-target=".additional-checks-1"]').click()
 
     modal_additional_checks = browser.find_element_by_css_selector('.additional-checks-1')
