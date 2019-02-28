@@ -293,15 +293,16 @@ SOURCE_MAP = {
 
 
 ADDITIONAL_CHECKS_RESULTS = [
-    ({'heading': "1 grant does not have recipient organisation location information",
+    ({'heading': "33% of grants do not have recipient organisation location information",
       'message': ("Your data is missing information about the geographic location of recipient "
-                  "organisations; either Recipient Org:Postal Code or Recipient Org:Location:Geographic Code "
-                  "combined with Recipient Org:Location:Geographic Code Type. Knowing the geographic "
-                  "location of recipient organisations helps users to understand your data and allows "
-                  "it to be used in tools that visualise grants geographically.")},
+                  "organisations; either <span class=\"highlight-background-text\">Recipient Org:Postal Code</span> "
+                  "or <span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code</span> combined "
+                  "with <span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code Type</span>. "
+                  "Knowing the geographic location of recipient organisations helps users to understand your data and "
+                  "allows it to be used in tools that visualise grants geographically.")},
      ['grants/0/recipientOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'J', 'row_number': 2, 'header': 'Recipient Org:Identifier'}]),
-    ({'heading': "2 grants contain text that looks like an email address",
+    ({'heading': "67% of grants contain text that looks like an email address",
       'message': ("Your data may contain an email address (or something that looks like one), "
                   "which can constitute personal data. The use and distribution of personal data "
                   "is restricted by the Data Protection Act. You should ensure that any personal "
@@ -309,12 +310,13 @@ ADDITIONAL_CHECKS_RESULTS = [
      ['grants/0/Grant type', 'grants/0/title'],
      [{'sheet': 'grants', 'letter': 'G', 'row_number': 2, 'header': 'Grant type'},
       {'sheet': 'grants', 'letter': 'O', 'row_number': 2, 'header': 'Title'}]),
-    ({'heading': "1 grant does not contain any Grant Programme fields",
-     'message': ("Providing Grant Programme data, if available, helps users "
-                 "to better understand your data.")},
+    ({'heading': ("33% of grants do not contain any <span class=\"highlight-background-text\">Grant Programme</span> "
+                  "fields"),
+     'message': ("Providing <span class=\"highlight-background-text\">Grant Programme</span> data, if available, helps "
+                 "users to better understand your data.")},
      ['grants/0/id'],
      [{'sheet': 'grants', 'letter': 'A', 'row_number': 2, 'header': 'Identifier'}]),
-    ({'heading': "1 grant does not contain any beneficiary location fields",
+    ({'heading': "33% of grants do not contain any beneficiary location fields",
       'message': ("Providing beneficiary data, if available, helps users to "
                   "understand which areas ultimately benefitted from the grant.")},
      ['grants/1/id'],
@@ -329,17 +331,17 @@ ADDITIONAL_CHECKS_RESULTS = [
     #               "data as it cannot be inferred.")},
     #  ['grants/0/beneficiaryLocation'],
     #  [{'sheet': 'grants', 'letter': 'AA', 'row_number': 2, 'header': 'Beneficiary Location'}]),
-    ({'heading': "1 grant has a title and a description that are the same",
+    ({'heading': "33% of grants have a title and a description that are the same",
       'message': ("Users may find that the data is less useful as they are unable to "
                   "discover more about the grants. Consider including a more detailed "
                   "description if you have one.")},
      ['grants/2/description'],
      [{'sheet': 'grants', 'letter': 'Z', 'row_number': 4, 'header': 'Description'}]),
-    ({'heading': "1 grant has a title longer than recommended",
+    ({'heading': "33% of grants have a title longer than recommended",
       'message': "Titles for grant activities should be under 140 characters long."},
      ['grants/1/title'],
      [{'sheet': 'grants', 'letter': 'O', 'row_number': 3, 'header': 'Title'}]),
-    ({'heading': "2 grants have funder or recipient organisation IDs that might not be valid",
+    ({'heading': "67% of grants have funder or recipient organisation IDs that might not be valid",
       'message': ("The IDs might not be valid for the registration agency that they refer to "
                   "- for example, a 'GB-CHC' ID that contains an invalid charity number. Common "
                   "causes of this are missing leading digits, typos or incorrect values being "
@@ -351,7 +353,7 @@ ADDITIONAL_CHECKS_RESULTS = [
 
 
 QUALITY_ACCURACY_CHECKS_RESULTS = [
-    ({'heading': "1 grant has a value of £0",
+    ({'heading': "33% of grants have a value of £0",
       'message': ("It’s worth taking a look at these grants and deciding if "
                   "they should be published. It’s unusual to have grants of £0, but "
                   "there may be a reasonable explanation. Additional information "
@@ -359,8 +361,8 @@ QUALITY_ACCURACY_CHECKS_RESULTS = [
                   "so consider adding an explanation to the description of the grant.")},
      ['grants/0/amountAwarded'],
      [{'sheet': 'grants', 'letter': 'Q', 'row_number': 2, 'header': 'Amount Awarded'}]),
-    ({'heading': ("1 grant has a Funding Org:Identifier that does not draw from "
-                  "a recognised register."),
+    ({'heading': ("33% of grants have a <span class=\"highlight-background-text\">Funding Org:Identifier</span> that "
+                  "does not draw from a recognised register."),
       'message': ("Using external identifiers (such as a charity or company number) helps "
                   "people using your data to match it up against other data - for example "
                   "to see who else has given grants to the same recipient, even if they’re "
@@ -369,8 +371,8 @@ QUALITY_ACCURACY_CHECKS_RESULTS = [
                   "then you can ignore this notice.")},
      ['grants/0/fundingOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'V', 'row_number': 2, 'header': 'Funding Org:Identifier'}]),
-    ({'heading': ("1 grant has a Recipient Org:Identifier that does not draw from "
-                  "a recognised register."),
+    ({'heading': ("33% of grants have a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> that "
+                  "does not draw from a recognised register."),
       'message': ("Using external identifiers (such as a charity or company number) helps "
                   "people using your data to match it up against other data - for example "
                   "to see who else has given grants to the same recipient, even if they’re "
@@ -379,22 +381,27 @@ QUALITY_ACCURACY_CHECKS_RESULTS = [
                   "then you can ignore this notice.")},
      ['grants/1/recipientOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'J', 'row_number': 3, 'header': 'Recipient Org:Identifier'}]),
-    ({'heading': ("1 grant has a value provided in the Recipient Org: Charity Number column "
+    ({'heading': ("33% of grants have a value provided in the "
+                  "<span class=\"highlight-background-text\">Recipient Org: Charity Number</span> column "
                   "that doesn’t look like a charity number"),
       'message': ("Common causes of this are missing leading digits, typos or incorrect "
                   "values being entered into this field.")},
      ['grants/0/recipientOrganization/0/charityNumber'],
      [{'sheet': 'grants', 'letter': 'M', 'row_number': 2, 'header': 'Recipient Org:Charity Number'}]),
-    ({'heading': ("1 grant has a value provided in the Recipient Org: Company Number column "
+    ({'heading': ("33% of grants have a value provided in the "
+                  "<span class=\"highlight-background-text\">Recipient Org: Company Number</span> column "
                   "that doesn’t look like a company number"),
       'message': ("Common causes of this are missing leading digits, typos or incorrect "
-                  "values being entered into this field.")},
+                  "values being entered into this field. Company numbers are typically 8 digits, possibly starting SC, "
+                  "for example <span class=\"highlight-background-text\">SC01234569</span> or "
+                  "<span class=\"highlight-background-text\">09876543</span>. You can check company numbers online "
+                  "at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House")},
      ['grants/0/recipientOrganization/0/companyNumber'],
      [{'sheet': 'grants', 'letter': 'L', 'row_number': 2, 'header': 'Recipient Org:Company Number'}]),
     ({'heading': "There are 3 different funding organisation IDs listed",
       'message': ("If you are expecting to be publishing data for multiple funders then "
-                  "you can ignore this notice. If you are only publishing for a "
-                  "single funder then you should review your Funding Organisation identifier "
+                  "you can ignore this notice. If you are only publishing for a single funder then you should review "
+                  "your <span class=\"highlight-background-text\">Funding Organisation identifier</span> "
                   "column to see where multiple IDs have occurred.")},
      ['grants/0/fundingOrganization/0/id', 'grants/1/fundingOrganization/0/id', 'grants/2/fundingOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'V', 'row_number': 2, 'header': 'Funding Org:Identifier'},
@@ -403,7 +410,8 @@ QUALITY_ACCURACY_CHECKS_RESULTS = [
 ]
 
 USEFULNESS_CHECKS_RESULTS = [
-    ({'heading': "1 grant has a Recipient Org:Identifier that starts '360G-'",
+    ({'heading': ("33% of grants have a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> that "
+                  "starts '360G-'"),
       'message': ("If the grant is to a recipient organisation that has an external "
                   "identifier (such as a charity or company number), then this should "
                   "be used instead. Using external identifiers helps people using your "
@@ -413,30 +421,33 @@ USEFULNESS_CHECKS_RESULTS = [
                   "ignore this notice.")},
      ['grants/0/recipientOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'J', 'row_number': 2, 'header': 'Recipient Org:Identifier'}]),
-    ({'heading': "1 grant has a Funding Org:Identifier that starts '360G-'",
+    ({'heading': ("33% of grants have a <span class=\"highlight-background-text\">Funding Org:Identifier</span> that "
+                  "starts '360G-'"),
       'message': ("If the grant is from a funding organisation that has an external identifier "
                   "(such as a charity or company number), then this should be used instead. "
                   "If no other identifier can be used, then you can ignore this notice.")},
      ['grants/1/fundingOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'V', 'row_number': 3, 'header': 'Funding Org:Identifier'}]),
-    ({'heading': "1 grant does not have either a Recipient Org:Company Number or a Recipient Org:Charity Number",
+    ({'heading': ("33% of grants do not have either a "
+                  "<span class=\"highlight-background-text\">Recipient Org:Company Number</span> or a "
+                  "<span class=\"highlight-background-text\">Recipient Org:Charity Number</span>"),
       'message': ("Providing one or both of these, if possible, makes it easier for users "
                   "to join up your data with other data sources to provide better insight "
                   "into grantmaking. If your grants are to organisations that don’t have UK "
                   "Company or UK Charity numbers, then you can ignore this notice.")},
      ['grants/2/recipientOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'J', 'row_number': 4, 'header': 'Recipient Org:Identifier'}]),
-    ({'heading': "1 grant does not have Last Modified information",
-      'message': "Last Modified shows the date and time when information about a grant was "
-                 "last updated in your file. Including this information allows data users to "
-                 "see when changes have been made and reconcile differences between versions "
+    ({'heading': "33% of grants do not have <span class=\"highlight-background-text\">Last Modified</span> information",
+      'message': "<span class=\"highlight-background-text\">Last Modified</span> shows the date and time when "
+                 "information about a grant was last updated in your file. Including this information allows data "
+                 "users to see when changes have been made and reconcile differences between versions "
                  "of your data. Please note: this is the date when the data was modified in "
                  "your 360Giving file, rather than in any of your internal systems."},
      ['grants/1/id'],
      [{'sheet': 'grants', 'letter': 'A', 'row_number': 3, 'header': 'Identifier'}]),
-    ({'heading': "2 grants do not have Data Source information",
-      'message': "Data Source informs users about where information came from and is an "
-                 "important part of establishing trust in your data. This information should "
+    ({'heading': "67% of grants do not have <span class=\"highlight-background-text\">Data Source</span> information",
+      'message': "<span class=\"highlight-background-text\">Data Source</span> informs users about where information "
+                 "came from and is an important part of establishing trust in your data. This information should "
                  "be a web link pointing to the source of this data, which may be an original "
                  "360Giving data file, a file from which the data was converted, or your "
                  "organisation’s website."},
