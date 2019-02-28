@@ -43,7 +43,7 @@ def server_url(request, live_server):
                                                   'individual awards ranging from £152,505 (lowest) to £178,990 (highest)',
                                                   'Convert to Spreadsheet',
                                                   'Invalid against Schema 15 Errors',
-                                                  'There are some validation errors in your data, please check them in the table below',
+                                                  'There are some validation errors in your data, please check them in the table(s) below',
                                                   'Non-unique ID Values',
                                                   'Grant identifiers:  2',
                                                   'Funder organisation identifiers:  1',
