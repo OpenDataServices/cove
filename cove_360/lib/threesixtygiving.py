@@ -1,4 +1,5 @@
 import re
+import json
 from collections import defaultdict, OrderedDict
 from decimal import Decimal
 
@@ -103,6 +104,21 @@ def get_grants_aggregates(json_data):
     }
 
 
+def group_validation_errors(validation_errors):
+    validation_errors_grouped = defaultdict(list)
+    for error_json, values in validation_errors:
+        error = json.loads(error_json)
+        if error['validator'] == 'required':
+            validation_errors_grouped['required'].append((error_json, values))
+        elif error['validator'] in ['format', 'oneOf']:
+            # NOTE: this assumes oneOf is only used for specifying multiple
+            # format types, which is true of the 1.0 schema.
+            validation_errors_grouped['format'].append((error_json, values))
+        else:
+            validation_errors_grouped['other'].append((error_json, values))
+    return validation_errors_grouped
+
+
 def common_checks_360(context, upload_dir, json_data, schema_obj):
     schema_name = schema_obj.release_pkg_schema_name
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
@@ -111,7 +127,8 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
     context.update(common_checks['context'])
     context.update({
         'grants_aggregates': get_grants_aggregates(json_data, ignore_errors=True),
-        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string']
+        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string'],
+        'validation_errors_grouped': group_validation_errors(context['validation_errors'])
     })
 
     for test_classes_type in ['quality_accuracy', 'usefulness', 'additional']:

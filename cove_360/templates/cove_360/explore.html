@@ -149,17 +149,65 @@
         {% endif %}
         <a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas"> 360Giving JSON Package Schema</a>.
         </p>
-        <div class="explore-help">Validation ensures that your data is compliant with the basic requirements of the <a href="http://www.threesixtygiving.org/standard/">360Giving Standard</a>. If your data validates then it can be used by any user or application who knows how to work with 360Giving data.</div>
+        <div class="explore-help">Validation ensures that your data is compliant with the basic requirements of the <a href="http://www.threesixtygiving.org/standard/">360Giving Standard</a>. If your data validates then it can be used by any user or application who knows how to work with 360Giving data.</diV>
         {% if validation_errors %}
           <br>
-          <p class="explanation">&nbsp;{% trans "There are some <strong>validation errors</strong> in your data, please check them in the table below." %}</p>
+          <p class="explanation">&nbsp;{% trans "There are some <strong>validation errors</strong> in your data, please check them in the table(s) below." %}</p>
           <br>
-          {% include "validation_table.html" %}
-          {% for error_json, values in validation_errors %}
-            {% with error=error_json|json_decode %}
-              {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
-            {% endwith %}
-          {% endfor %}
+          {% with validation_errors=validation_errors_grouped.required error_prefix='required-' %}
+            {% if validation_errors %}
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4>Missing Fields</h4>
+                </div>
+                <div>
+                  <p>Some or all of your entries were missing fields which are required by the 360Giving Standard.</p>
+                  {% include "validation_table.html" %}
+                </div>
+              </div>
+              {% for error_json, values in validation_errors %}
+                {% with error=error_json|json_decode %}
+                  {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
+                {% endwith %}
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          {% with validation_errors=validation_errors_grouped.format error_prefix='format-' %}
+            {% if validation_errors %}
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4>Incorrect Formats</h4>
+                </div>
+                <div>
+                  <p>Some or all of your entries have incorrectly formatted data.</p>
+                  {% include "validation_table.html" %}
+                </div>
+              </div>
+              {% for error_json, values in validation_errors %}
+                {% with error=error_json|json_decode %}
+                  {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
+                {% endwith %}
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          {% with validation_errors=validation_errors_grouped.other error_prefix='other-' %}
+            {% if validation_errors %}
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4>Other</h4>
+                </div>
+                <div>
+                  <p>Other validation errrors.</p>
+                  {% include "validation_table.html" %}
+                </div>
+              </div>
+              {% for error_json, values in validation_errors %}
+                {% with error=error_json|json_decode %}
+                  {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
+                {% endwith %}
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
         {% endif %}
       </div>
     </div>
