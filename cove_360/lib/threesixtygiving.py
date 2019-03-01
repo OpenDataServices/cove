@@ -104,12 +104,7 @@ def get_grants_aggregates(json_data):
     }
 
 
-def common_checks_360(context, upload_dir, json_data, schema_obj):
-    schema_name = schema_obj.release_pkg_schema_name
-    common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
-    cell_source_map = common_checks['cell_source_map']
-
-    validation_errors = context['validation_errors']
+def group_validation_errors(validation_errors):
     validation_errors_grouped = defaultdict(list)
     for error_json, values in validation_errors:
         error = json.loads(error_json)
@@ -121,12 +116,19 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
             validation_errors_grouped['format'].append((error_json, values))
         else:
             validation_errors_grouped['other'].append((error_json, values))
+    return validation_errors_grouped
+
+
+def common_checks_360(context, upload_dir, json_data, schema_obj):
+    schema_name = schema_obj.release_pkg_schema_name
+    common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
+    cell_source_map = common_checks['cell_source_map']
 
     context.update(common_checks['context'])
     context.update({
         'grants_aggregates': get_grants_aggregates(json_data, ignore_errors=True),
         'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string'],
-        'validation_errors_grouped': validation_errors_grouped
+        'validation_errors_grouped': group_validation_errors(context['validation_errors'])
     })
 
     for test_classes_type in ['quality_accuracy', 'usefulness', 'additional']:
