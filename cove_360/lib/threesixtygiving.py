@@ -1,11 +1,12 @@
-import re
 import json
+import re
 from collections import defaultdict, OrderedDict
 from decimal import Decimal
 
 import libcove.lib.tools as tools
 from django.utils.html import mark_safe
 from libcove.lib.common import common_checks_context, get_orgids_prefixes
+from rangedict import RangeDict
 
 orgids_prefixes = get_orgids_prefixes()
 orgids_prefixes.append('360G')
@@ -325,37 +326,23 @@ class FundingOrg360GPrefix(AdditionalTest):
         self.message = self.check_text['message']
 
 
-def get_message(grants_percentage, message_dict):
-    if grants_percentage < 30:
-        return message_dict['bad']
-    elif 30 <= grants_percentage < 70:
-        return message_dict['regular']
-    elif 70 <= grants_percentage < 100:
-        return message_dict['good']
-    elif grants_percentage == 100:
-        return message_dict['excellent']
-    else:
-        return 'error'
-
-
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):
     """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
         "heading": ("a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> "
                     "that does not draw from a recognised register."),
-        "message": {
-                        "bad": (
-                            "Using external identifiers (such as a charity or company number) helps people using your data "
-                            "to match it up against other data - for example to see who else has given grants to the same "
-                            "recipient, even if they’re known by a different name. If the data describes lots of grants to "
-                            "organisations that don’t have such identifiers, or grants to individuals, "
-                            "then you can ignore this notice."),
-                        "regular": "regular msg",
-                        "good": "good msg",
-                        "excellent": "excellent msg"
-                    }
+        "message": RangeDict()
     }
+    # ("Using external identifiers (such as a charity or company number) helps people using your data "
+    #  "to match it up against other data - for example to see who else has given grants to the same "
+    #  "recipient, even if they’re known by a different name. If the data describes lots of grants to "
+    #  "organisations that don’t have such identifiers, or grants to individuals, "
+    #  "then you can ignore this notice.")
+    check_text['message'][(0, 29)] = "bad msg"
+    check_text['message'][(30, 69)] = "regular msg"
+    check_text['message'][(70, 99)] = "good msg"
+    check_text['message'][(100, 100)] = "excellent msg"
 
     def process(self, grant, path_prefix):
         try:
@@ -375,7 +362,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
             pass
 
         self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
-        self.message = get_message(self.grants_percentage, self.check_text['message'])
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
