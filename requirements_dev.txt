@@ -51,6 +51,7 @@ contextlib2==0.5.5
 coverage==4.5.3
 docopt==0.6.2
 docutils==0.14
+entrypoints==0.3
 et-xmlfile==1.0.1
 execnet==1.6.0
 future==0.17.1
