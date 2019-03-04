@@ -205,6 +205,7 @@ class AdditionalTest():
     def __init__(self, **kw):
         self.grants = kw['grants']
         self.grants_count = len(self.grants)
+        self.grants_percentage = 0
         self.json_locations = []
         self.failed = False
         self.count = 0
@@ -222,8 +223,11 @@ class AdditionalTest():
 
     def get_heading_count(self):
         if self.grants_count == 1 and self.count == 1:
+            self.grants_percentage = int(100)
             return '1'
-        return '{:.0%} of'.format(self.count / self.grants_count)
+        heading_percentage = '{:.0%} of'.format(self.count / self.grants_count)
+        self.grants_percentage = int(heading_percentage[:-1])
+        return heading_percentage
 
     def format_heading_count(self, message, verb='have'):
         """Build a string with count of grants plus message
@@ -322,17 +326,36 @@ class FundingOrg360GPrefix(AdditionalTest):
         self.message = self.check_text['message']
 
 
+def get_message(grants_percentage, message_dict):
+    if grants_percentage < 30:
+        return message_dict['bad']
+    elif 30 <= grants_percentage < 70:
+        return message_dict['regular']
+    elif 70 <= grants_percentage < 100:
+        return message_dict['good']
+    elif grants_percentage == 100:
+        return message_dict['excellent']
+    else:
+        return 'error'
+
+
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):
     """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
         "heading": ("a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> "
                     "that does not draw from a recognised register."),
-        "message": ("Using external identifiers (such as a charity or company number) helps people using your data "
-                    "to match it up against other data - for example to see who else has given grants to the same "
-                    "recipient, even if they’re known by a different name. If the data describes lots of grants to "
-                    "organisations that don’t have such identifiers, or grants to individuals, "
-                    "then you can ignore this notice.")
+        "message": {
+                        "bad": (
+                            "Using external identifiers (such as a charity or company number) helps people using your data "
+                            "to match it up against other data - for example to see who else has given grants to the same "
+                            "recipient, even if they’re known by a different name. If the data describes lots of grants to "
+                            "organisations that don’t have such identifiers, or grants to individuals, "
+                            "then you can ignore this notice."),
+                        "regular": "regular msg",
+                        "good": "good msg",
+                        "excellent": "excellent msg"
+                    }
     }
 
     def process(self, grant, path_prefix):
@@ -353,7 +376,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
             pass
 
         self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
-        self.message = self.check_text['message']
+        self.message = get_message(self.grants_percentage, self.check_text['message'])
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
