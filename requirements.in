@@ -9,7 +9,7 @@ django-bootstrap3
 django-debug-toolbar
 requests
 cached-property
-dealer
+dealer==2.0.5
 django-environ
 jsonschema
 json-merge-patch
