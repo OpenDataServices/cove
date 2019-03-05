@@ -223,11 +223,11 @@ class AdditionalTest():
 
     def get_heading_count(self):
         if self.grants_count == 1 and self.count == 1:
-            self.grants_percentage = int(100)
+            self.grants_percentage = 100
             return '1'
-        heading_percentage = '{:.0%} of'.format(self.count / self.grants_count)
+        heading_percentage = '{:.0%}'.format(self.count / self.grants_count)
         self.grants_percentage = int(heading_percentage[:-1])
-        return heading_percentage
+        return '{} of'.format(heading_percentage)
 
     def format_heading_count(self, message, verb='have'):
         """Build a string with count of grants plus message
