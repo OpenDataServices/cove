@@ -9,7 +9,6 @@ django-bootstrap3
 django-debug-toolbar
 requests
 cached-property
-# Locking dealer as v2.1 up has some issues with Middleware
 dealer==2.0.5
 django-environ
 jsonschema
