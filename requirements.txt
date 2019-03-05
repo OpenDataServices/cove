@@ -1,4 +1,4 @@
-pip==19.0.3
+pip==9.0.3
 Django==1.11.20 # rq.filter: <1.12
 -e git+https://github.com/OpenDataServices/flatten-tool.git@524f437abe48d7f9b8a2d6a1cf6fa9a49d002b0f#egg=flattentool
 -e git+https://github.com/open-contracting/lib-cove-ocds.git@v0.5.0#egg=libcoveocds
