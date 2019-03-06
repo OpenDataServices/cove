@@ -30,8 +30,8 @@ def step_openag_tag_attribute_expected(context, attribute):
         attrib = xpath.attrib
         required_attrib = attrib.get(attribute)
         if not required_attrib:
-                errors.append({'explanation': fail_msg.format(context.xpath_expression, attribute),
-                               'path': get_child_full_xpath(context.xml, xpath)})
+            errors.append({'explanation': fail_msg.format(context.xpath_expression, attribute),
+                           'path': get_child_full_xpath(context.xml, xpath)})
     return context, errors
 
 
