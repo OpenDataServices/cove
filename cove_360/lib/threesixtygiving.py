@@ -335,15 +335,11 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
                     "that does not draw from a recognised register."),
         "message": RangeDict()
     }
-    # ("Using external identifiers (such as a charity or company number) helps people using your data "
-    #  "to match it up against other data - for example to see who else has given grants to the same "
-    #  "recipient, even if they’re known by a different name. If the data describes lots of grants to "
-    #  "organisations that don’t have such identifiers, or grants to individuals, "
-    #  "then you can ignore this notice.")
-    check_text['message'][(0, 29)] = "bad msg"
-    check_text['message'][(30, 69)] = "regular msg"
-    check_text['message'][(70, 99)] = "good msg"
-    check_text['message'][(100, 100)] = "excellent msg"
+
+    check_text['message'][(0, 100)] = ("Using external identifiers (such as a charity or company number) helps people "
+     "using your data to match it up against other data - for example to see who else has given grants to the same "
+     "recipient, even if they’re known by a different name. If the data describes lots of grants to "
+     "organisations that don’t have such identifiers, or grants to individuals, then you can ignore this notice.")
 
     def process(self, grant, path_prefix):
         try:
