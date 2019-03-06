@@ -1,0 +1,74 @@
+{% load i18n %}
+{% load cove_tags %}
+{% load spreadsheet_style_errors_table %}
+
+<table class="table table-condensed">
+<thead> 
+  <tr> 
+    <th>{% trans 'Error Description' %}</th> 
+    <th>{% trans 'Error Count' %}</th> 
+    <th>{% trans 'First 3 Examples' %}</th> 
+  </tr> 
+</thead>
+<tbody>
+{% for error_json, values in validation_errors %}
+{% with error=error_json|json_decode %}
+<tr>
+  {% if error.message_safe %}
+    <td>
+      <p>
+        <strong>{{ error.message_safe | safe }}</strong>
+        {% if error.message_type in common_error_types %}
+          <a href="{% url 'common_errors' %}#{{error.message_type}}" target="_blank">(more info)</a>
+        {% endif %}
+      </p>
+      {% if 'schema_title' in error %}
+      <div class="well well-sm">
+        <h4>{{ error.schema_title }}</h4>
+        <p>{{ error.schema_description_safe | safe }}</p>
+      </div>
+      {% endif %}
+    </td>
+  {% elif error.message_type in common_error_types %}
+  <td><a href="{% url 'common_errors' %}#{{error.message_type}}"> {{error.message}} </a></td>
+  {% else %}
+    <td>{{error.message}}</td> 
+  {% endif %}
+  <td class="text-center">
+    {% if values|length > 3 %}
+      {% if error_prefix %}
+      <a data-toggle="modal" data-target=".{{"validation-errors-"|concat:error_prefix|concat:forloop.counter}}">
+      {% else %}
+      <a data-toggle="modal" data-target=".{{"validation-errors-"|concat:forloop.counter}}">
+      {% endif %}
+        {{values|length}}
+      </a>
+    {% else %}
+        {{values|length}}
+    {% endif %}
+  </td>
+  <td>
+    {% for sheet, table in values|slice:":3"|spreadsheet_style_errors_table %}
+      Sheet: {{sheet}}
+      <table class="table table-bordered">
+        {% for row in table %}
+          {% with rowcounter=forloop.counter %}
+            <tr>
+              {% for cell in row %}
+                {% if rowcounter == 1 or forloop.counter == 1 %}
+                  <th>{{cell}}</th>
+                {% else %}
+                  <td>{{cell}}</td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+          {% endwith %}
+        {% endfor %}
+      </table>
+    {% endfor %}
+  </td>
+</tr>
+{% endwith %}
+{% endfor %}
+</tbody>
+</table>

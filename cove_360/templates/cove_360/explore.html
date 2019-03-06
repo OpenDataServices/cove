@@ -162,7 +162,7 @@
                 </div>
                 <div>
                   <p>Some or all of your entries were missing fields which are required by the 360Giving Standard.</p>
-                  {% include "validation_table.html" %}
+                  {% include "cove_360/validation_table.html" %}
                 </div>
               </div>
               {% for error_json, values in validation_errors %}
@@ -180,7 +180,7 @@
                 </div>
                 <div>
                   <p>Some or all of your entries have incorrectly formatted data.</p>
-                  {% include "validation_table.html" %}
+                  {% include "cove_360/validation_table.html" %}
                 </div>
               </div>
               {% for error_json, values in validation_errors %}
@@ -198,7 +198,7 @@
                 </div>
                 <div>
                   <p>Other validation errrors.</p>
-                  {% include "validation_table.html" %}
+                  {% include "cove_360/validation_table.html" %}
                 </div>
               </div>
               {% for error_json, values in validation_errors %}
