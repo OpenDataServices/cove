@@ -4,7 +4,7 @@ Django<1.12
 -e git+https://github.com/OpenDataServices/flatten-tool.git@v0.5.0#egg=flattentool
 -e git+https://github.com/open-contracting/lib-cove-ocds.git@v0.2.1#egg=libcoveocds
 -e git+https://github.com/OpenDataServices/lib-cove-web.git@1489d3d60296399d768dcd81b20fec788f792487#egg=libcoveweb
--e git+https://github.com/OpenDataServices/lib-cove.git@2fee8ee2e572d26415c503e05d79b42ad95dc25d#egg=libcove
+-e git+https://github.com/OpenDataServices/lib-cove.git@13b6ecb76a00db6bb0fdbfa28e5672045c6c9eec#egg=libcove
 django-bootstrap3
 django-debug-toolbar
 requests
