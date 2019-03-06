@@ -33,10 +33,7 @@ def test_get_releases_aggregates_dict(json_data):
 @pytest.mark.django_db
 @pytest.mark.parametrize('current_app', ['cove-ocds'])  # , 'cove-360'])
 @given(
-    general_json |
-    st.fixed_dictionaries({'releases': general_json}) |
-    st.fixed_dictionaries({'records': general_json})
-    )
+    general_json | st.fixed_dictionaries({'releases': general_json}) | st.fixed_dictionaries({'records': general_json}))
 def test_explore_page(client, current_app, json_data):
     data = SuppliedData.objects.create()
     data.original_file.save('test.json', ContentFile(json.dumps(json_data)))
