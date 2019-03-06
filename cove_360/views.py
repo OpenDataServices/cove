@@ -99,5 +99,6 @@ def common_errors(request):
 
 def additional_checks(request):
     context = {}
-    context["checks"] = [{**check.check_text, 'desc': check.__doc__} for check in TEST_CLASSES]
+    context["checks"] = [
+        {**check.check_text, 'desc': check.__doc__, 'class_name': check.__name__} for check in TEST_CLASSES]
     return render(request, 'cove_360/additional_checks.html', context)
