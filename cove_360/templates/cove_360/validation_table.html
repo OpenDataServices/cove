@@ -7,7 +7,7 @@
     <th>{% trans 'Error Description' %}</th> 
     <th>{% trans 'Error Count' %}</th> 
     <th>{% trans 'First 3 Examples' %}</th> 
-    {% if not error_extra.spreadsheet_style_errors_table %}
+    {% if file_type != 'xlsx' and file_type != 'csv' %}
       <th>{% trans 'Location of first 3 errors' %}</th> 
     {% endif %}
   </tr> 
@@ -83,7 +83,7 @@
           {% endfor %}
         </ul>
       </td>
-      {% if file_type != 'xslx' and file_type != 'csv' %}
+      {% if file_type != 'xlsx' and file_type != 'csv' %}
         <td>
           <ul class="list-unstyled">
             {% for value in values|slice:":3" %}
@@ -95,15 +95,6 @@
                   {{ value.path }}
                 {% endif %}
               </li>
-            {% endfor %}
-          </ul>
-        </td>
-      {% endif %}
-      {% if file_type == 'xlsx' or file_type == 'csv' %}
-        <td style="white-space: nowrap">
-          <ul class="list-unstyled">
-            {% for value in values|slice:":3" %}
-            <li> <b>Sheet:</b> {{value.sheet}} <b>Row:</b> {{value.row_number}} {% if value.header %} <b>Column:</b> {{value.header}} {% endif %} </li>
             {% endfor %}
           </ul>
         </td>
