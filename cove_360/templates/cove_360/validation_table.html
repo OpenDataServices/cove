@@ -7,10 +7,13 @@
     <th>{% trans 'Error Description' %}</th> 
     <th>{% trans 'Error Count' %}</th> 
     <th>{% trans 'First 3 Examples' %}</th> 
+    {% if not error_extra.spreadsheet_style_errors_table %}
+      <th>{% trans 'Location of first 3 errors' %}</th> 
+    {% endif %}
   </tr> 
 </thead>
 <tbody>
-{% for error_json, values in validation_errors %}
+{% for error_json, error_extra in validation_errors %}
 {% with error=error_json|json_decode %}
 <tr>
   {% if error.message_safe %}
@@ -34,42 +37,79 @@
     <td>{{error.message}}</td> 
   {% endif %}
   <td class="text-center">
-    {% if values|length > 3 %}
+    {% if error_extra.values|length > 3 %}
       {% if error_prefix %}
       <a data-toggle="modal" data-target=".{{"validation-errors-"|concat:error_prefix|concat:forloop.counter}}">
       {% else %}
       <a data-toggle="modal" data-target=".{{"validation-errors-"|concat:forloop.counter}}">
       {% endif %}
-        {{values|length}}
+        {{error_extra.values|length}}
       </a>
     {% else %}
-        {{values|length}}
+        {{error_extra.values|length}}
     {% endif %}
   </td>
-  <td>
-    {% for sheet, table in values.items %}
-      Sheet: {{sheet}}
-      <table class="table table-bordered">
-        {% for row in table %}
-          {% with rowcounter=forloop.counter %}
-            <tr>
-              {% for cell in row %}
-                {% if rowcounter == 1 or forloop.counter == 1 %}
-                  <th>{{cell}}</th>
-                {% else %}
-                  {% if cell.type == 'example' %}
-                    <td style="color: red">{{cell.value}}</td>
+  {% if error_extra.spreadsheet_style_errors_table %}
+    <td>
+      {% for sheet, table in error_extra.spreadsheet_style_errors_table.items %}
+        Sheet: {{sheet}}
+        <table class="table table-bordered">
+          {% for row in table %}
+            {% with rowcounter=forloop.counter %}
+              <tr>
+                {% for cell in row %}
+                  {% if rowcounter == 1 or forloop.counter == 1 %}
+                    <th>{{cell}}</th>
                   {% else %}
-                    <td>{{cell.value}}</td>
+                    {% if cell.type == 'example' %}
+                      <td style="color: red">{{cell.value}}</td>
+                    {% else %}
+                      <td>{{cell.value}}</td>
+                    {% endif %}
                   {% endif %}
+                {% endfor %}
+              </tr>
+            {% endwith %}
+          {% endfor %}
+        </table>
+      {% endfor %}
+    </td>
+  {% else %}
+    {% with values=error_extra.values %}
+      <td>
+        <ul class="list-unstyled">
+          {% for value in values|slice:":3" %}
+            <li> {{value.value}} </li>
+          {% endfor %}
+        </ul>
+      </td>
+      {% if file_type != 'xslx' and file_type != 'csv' %}
+        <td>
+          <ul class="list-unstyled">
+            {% for value in values|slice:":3" %}
+              <li>
+                {% if value.line %}
+                  <b>{% trans 'Path:' %}</b> {{value.path}}
+                  <b>{% trans 'Line:' %}</b> {{value.line}}
+                {% else %}
+                  {{ value.path }}
                 {% endif %}
-              {% endfor %}
-            </tr>
-          {% endwith %}
-        {% endfor %}
-      </table>
-    {% endfor %}
-  </td>
+              </li>
+            {% endfor %}
+          </ul>
+        </td>
+      {% endif %}
+      {% if file_type == 'xlsx' or file_type == 'csv' %}
+        <td style="white-space: nowrap">
+          <ul class="list-unstyled">
+            {% for value in values|slice:":3" %}
+            <li> <b>Sheet:</b> {{value.sheet}} <b>Row:</b> {{value.row_number}} {% if value.header %} <b>Column:</b> {{value.header}} {% endif %} </li>
+            {% endfor %}
+          </ul>
+        </td>
+      {% endif %}
+    {% endwith %}
+  {% endif %}
 </tr>
 {% endwith %}
 {% endfor %}
