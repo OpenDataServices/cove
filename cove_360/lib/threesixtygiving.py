@@ -105,12 +105,12 @@ def get_grants_aggregates(json_data):
     }
 
 
-def group_validation_errors(validation_errors, openpyxl_workbook):
+def group_validation_errors(validation_errors, file_type, openpyxl_workbook):
     validation_errors_grouped = defaultdict(list)
     for error_json, values in validation_errors:
         error_extra = {
             'values': values,
-            'spreadsheet_style_errors_table': spreadsheet_style_errors_table(values[:3], openpyxl_workbook) if openpyxl_workbook else None,
+            'spreadsheet_style_errors_table': spreadsheet_style_errors_table(values[:3], openpyxl_workbook) if file_type in ['xlsx', 'csv'] else None,
         }
         error = json.loads(error_json)
         if error['validator'] == 'required':
@@ -162,7 +162,7 @@ def spreadsheet_style_errors_table(examples, openpyxl_workbook):
         else:
             try:
                 value = openpyxl_workbook[sheet]['{}{}'.format(col_alpha, row_number)].value
-            except (KeyError, AttributeError):
+            except (KeyError, AttributeError, TypeError):
                 value = ''
             if value is None:
                 value = ''
@@ -172,15 +172,16 @@ def spreadsheet_style_errors_table(examples, openpyxl_workbook):
         row_numbers = list(OrderedDict.fromkeys(
             example['row_number'] for example in examples
             if example.get('sheet', '') == sheet and 'row_number' in example))
-        row_numbers = list(extend_numbers(row_numbers))
         col_alphas = list(OrderedDict.fromkeys(
             example['col_alpha'] for example in examples
             if example.get('sheet', '') == sheet and 'col_alpha' in example))
-        col_alphas = list(map(
-            openpyxl.utils.cell.get_column_letter,
-            extend_numbers(map(
-                openpyxl.utils.cell.column_index_from_string,
-                col_alphas))))
+        if openpyxl_workbook:
+            row_numbers = list(extend_numbers(row_numbers))
+            col_alphas = list(map(
+                openpyxl.utils.cell.get_column_letter,
+                extend_numbers(map(
+                    openpyxl.utils.cell.column_index_from_string,
+                    col_alphas))))
         out[sheet] = [
             [''] + col_alphas
         ] + [
@@ -199,7 +200,12 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
     cell_source_map = common_checks['cell_source_map']
 
     if context['file_type'] == 'xlsx':
-        openpyxl_workbook = openpyxl.load_workbook(context['original_file']['path'])
+        try:
+            openpyxl_workbook = openpyxl.load_workbook(context['original_file']['path'])
+        # Catch all exceptions here because the same exceptions should
+        # be thrown and handled appropriately within flatten-tool.
+        except: # noqa
+            openpyxl_workbook = None
     else:
         openpyxl_workbook = None
 
