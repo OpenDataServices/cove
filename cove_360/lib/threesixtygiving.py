@@ -108,16 +108,19 @@ def get_grants_aggregates(json_data):
 def group_validation_errors(validation_errors, openpyxl_workbook):
     validation_errors_grouped = defaultdict(list)
     for error_json, values in validation_errors:
-        values = spreadsheet_style_errors_table(values[:3], openpyxl_workbook)
+        error_extra = {
+            'values': values,
+            'spreadsheet_style_errors_table': spreadsheet_style_errors_table(values[:3], openpyxl_workbook) if openpyxl_workbook else None,
+        }
         error = json.loads(error_json)
         if error['validator'] == 'required':
-            validation_errors_grouped['required'].append((error_json, values))
+            validation_errors_grouped['required'].append((error_json, error_extra))
         elif error['validator'] in ['format', 'oneOf']:
             # NOTE: this assumes oneOf is only used for specifying multiple
             # format types, which is true of the 1.0 schema.
-            validation_errors_grouped['format'].append((error_json, values))
+            validation_errors_grouped['format'].append((error_json, error_extra))
         else:
-            validation_errors_grouped['other'].append((error_json, values))
+            validation_errors_grouped['other'].append((error_json, error_extra))
     return validation_errors_grouped
 
 
