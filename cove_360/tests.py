@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
 
 from . lib.schema import Schema360
-from . lib.threesixtygiving import run_extra_checks, TEST_CLASSES
+from . lib.threesixtygiving import run_extra_checks, extend_numbers, TEST_CLASSES
 from cove.input.models import SuppliedData
 
 # Source is cove_360/fixtures/fundingproviders-grants_fixed_2_grants.json
@@ -563,3 +563,14 @@ def test_quality_accuracy_checks():
 
 def test_usefulness_checks():
     assert run_extra_checks(GRANTS, SOURCE_MAP, TEST_CLASSES['usefulness']) == USEFULNESS_CHECKS_RESULTS
+
+
+def test_extend_numbers():
+    assert list(extend_numbers([2])) == [1, 2, 3]
+    assert list(extend_numbers([4])) == [3, 4, 5]
+    assert list(extend_numbers([4, 6])) == [3, 4, 5, 6, 7]
+    assert list(extend_numbers([4, 7])) == [3, 4, 5, 6, 7, 8]
+    assert list(extend_numbers([4, 8])) == [3, 4, 5, 7, 8, 9]
+    assert list(extend_numbers([1])) == [1, 2]
+    assert list(extend_numbers([4, 5, 6])) == [3, 4, 5, 6, 7]
+    assert list(extend_numbers([4, 5, 7, 2001])) == [3, 4, 5, 6, 7, 8, 2000, 2001, 2002]
