@@ -195,7 +195,10 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
     cell_source_map = common_checks['cell_source_map']
 
-    openpyxl_workbook = openpyxl.load_workbook(context['original_file']['path'])
+    if context['file_type'] == 'xlsx':
+        openpyxl_workbook = openpyxl.load_workbook(context['original_file']['path'])
+    else:
+        openpyxl_workbook = None
 
     context.update(common_checks['context'])
     context.update({
