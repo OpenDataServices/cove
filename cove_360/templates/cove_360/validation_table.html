@@ -1,6 +1,5 @@
 {% load i18n %}
 {% load cove_tags %}
-{% load spreadsheet_style_errors_table %}
 
 <table class="table table-condensed">
 <thead> 
@@ -48,7 +47,7 @@
     {% endif %}
   </td>
   <td>
-    {% for sheet, table in values|slice:":3"|spreadsheet_style_errors_table %}
+    {% for sheet, table in values.items %}
       Sheet: {{sheet}}
       <table class="table table-bordered">
         {% for row in table %}
@@ -58,7 +57,11 @@
                 {% if rowcounter == 1 or forloop.counter == 1 %}
                   <th>{{cell}}</th>
                 {% else %}
-                  <td>{{cell}}</td>
+                  {% if cell.type == 'example' %}
+                    <td style="color: red">{{cell.value}}</td>
+                  {% else %}
+                    <td>{{cell.value}}</td>
+                  {% endif %}
                 {% endif %}
               {% endfor %}
             </tr>
