@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
 
 from . lib.schema import Schema360
-from . lib.threesixtygiving import run_extra_checks, extend_numbers, TEST_CLASSES
+from . lib.threesixtygiving import run_extra_checks, extend_numbers, spreadsheet_style_errors_table, TEST_CLASSES
 from cove.input.models import SuppliedData
 
 # Source is cove_360/fixtures/fundingproviders-grants_fixed_2_grants.json
@@ -574,3 +574,140 @@ def test_extend_numbers():
     assert list(extend_numbers([1])) == [1, 2]
     assert list(extend_numbers([4, 5, 6])) == [3, 4, 5, 6, 7]
     assert list(extend_numbers([4, 5, 7, 2001])) == [3, 4, 5, 6, 7, 8, 2000, 2001, 2002]
+
+
+def ex(value):
+    ''' Shorthand for value metadata with type `example`.'''
+    return {'type': 'example', 'value': value}
+
+
+def con(value):
+    ''' Shorthand for value metadata with type `context`.'''
+    return {'type': 'context', 'value': value}
+
+
+class TestSpreadsheetErrorsTable():
+    # FIXME
+    def test_single(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'a value',
+            }
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C'],
+                [5, {'type': 'example', 'value': 'a value'}],
+            ]
+        }
+
+    def test_required_single(self):
+        '''
+        An example of a `required` validation error is missing the
+        `col_alpha` and `value` keys. (There is no cell to reference,
+        because it is missing.)
+
+        '''
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+            }
+        ], None) == {
+            'Sheet 1': [
+                [''],
+                [5],
+            ]
+        }
+
+    def test_many(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'E',
+                'value': 'value3',
+            },
+            {
+                'sheet': 'Sheet 2',
+                'row_number': 11,
+                'col_alpha': 'Q',
+                'value': 'value4',
+            },
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C', 'E'],
+                [5, ex('value1'), ex('value2')],
+                [7, con(''), ex('value3')],
+            ],
+            'Sheet 2': [
+                ['', 'Q'],
+                [11, ex('value4')],
+            ]
+        }
+
+    def test_single_empty_workbook(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'val',
+            }
+        ], {'Sheet 1': {}}) == {
+            'Sheet 1': [
+                ['', 'B', 'C', 'D'],
+                [4, con(''), con(''), con('')],
+                [5, con(''), ex('val'), con('')],
+                [6, con(''), con(''), con('')],
+            ]
+        }
+
+    def test_single_workbook(self):
+        class FakeCell():
+            def __init__(self, value):
+                self.value = value
+
+            def value(self, value):
+                return self.value
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'val',
+            }
+        ], {'Sheet 1': {
+            'B4': FakeCell('v11'),
+            'B5': FakeCell('v12'),
+            'B6': FakeCell('v13'),
+            'C4': FakeCell('v21'),
+            # This value (C5) will be ignored in favour of the one
+            # fromthe examples array above.
+            'C5': FakeCell('v22'),
+            'C6': FakeCell('v23'),
+            'D4': FakeCell('v31'),
+            'D5': FakeCell('v32'),
+            'D6': FakeCell('v33'),
+        }}) == {
+            'Sheet 1': [
+                ['', 'B', 'C', 'D'],
+                [4, con('v11'), con('v21'), con('v31')],
+                [5, con('v12'), ex('val'), con('v32')],
+                [6, con('v13'), con('v23'), con('v33')],
+            ]
+        }

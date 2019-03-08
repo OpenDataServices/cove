@@ -156,8 +156,8 @@ def spreadsheet_style_errors_table(examples, openpyxl_workbook):
         example_cell_lookup[example.get('sheet', '')][example.get('col_alpha', '')][example.get('row_number', '')] = example.get('value', '')
 
     def get_cell(sheet, col_alpha, row_number):
-        example_value = example_cell_lookup.get(sheet, {}).get(col_alpha, {}).get(row_number, '')
-        if example_value:
+        example_value = example_cell_lookup.get(sheet, {}).get(col_alpha, {}).get(row_number)
+        if example_value is not None:
             return {'type': 'example', 'value': example_value}
         else:
             try:
