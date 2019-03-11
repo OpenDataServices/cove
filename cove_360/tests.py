@@ -587,7 +587,6 @@ def con(value):
 
 
 class TestSpreadsheetErrorsTable():
-    # FIXME
     def test_single(self):
         assert spreadsheet_style_errors_table([
             {
@@ -600,25 +599,6 @@ class TestSpreadsheetErrorsTable():
             'Sheet 1': [
                 ['', 'C'],
                 [5, {'type': 'example', 'value': 'a value'}],
-            ]
-        }
-
-    def test_required_single(self):
-        '''
-        An example of a `required` validation error is missing the
-        `col_alpha` and `value` keys. (There is no cell to reference,
-        because it is missing.)
-
-        '''
-        assert spreadsheet_style_errors_table([
-            {
-                'sheet': 'Sheet 1',
-                'row_number': 5,
-            }
-        ], None) == {
-            'Sheet 1': [
-                [''],
-                [5],
             ]
         }
 
@@ -709,5 +689,39 @@ class TestSpreadsheetErrorsTable():
                 [4, con('v11'), con('v21'), con('v31')],
                 [5, con('v12'), ex('val'), con('v32')],
                 [6, con('v13'), con('v23'), con('v33')],
+            ]
+        }
+
+    @pytest.mark.parametrize('openpyxl_workbook', [None, {'Sheet 1': {}}])
+    def test_required_single(self, openpyxl_workbook):
+        '''
+        An example of a `required` validation error is missing the
+        `col_alpha` and `value` keys. (There is no cell to reference,
+        because it is missing.)
+
+        '''
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+            }
+        ], openpyxl_workbook) == {
+            'Sheet 1': [
+                ['', '???'],
+                [5, ex('')],
+            ]
+        }
+
+    @pytest.mark.parametrize('openpyxl_workbook', [None, {'Sheet 1': {}}])
+    def test_array_too_short_single(self, openpyxl_workbook):
+        '''
+        Validation error that array is too short has no speradsheet information.
+        '''
+        assert spreadsheet_style_errors_table([
+            {
+            }
+        ], openpyxl_workbook) == {
+            '': [
+                ['', '???']
             ]
         }
