@@ -146,15 +146,13 @@ def extend_numbers(numbers):
 
 
 def spreadsheet_style_errors_table(examples, openpyxl_workbook):
-    if not examples:
-        return ''
-    sheets = list(OrderedDict.fromkeys(example.get('sheet', '') for example in examples))
+    sheets = sorted(set(example.get('sheet', '') for example in examples))
 
     out = {}
 
     example_cell_lookup = defaultdict(lambda: defaultdict(dict))
     for example in examples:
-        example_cell_lookup[example.get('sheet', '')][example.get('col_alpha', '')][example.get('row_number', '')] = example.get('value', '')
+        example_cell_lookup[example.get('sheet')][example.get('col_alpha', '???')][example.get('row_number')] = example.get('value', '')
 
     def get_cell(sheet, col_alpha, row_number):
         example_value = example_cell_lookup.get(sheet, {}).get(col_alpha, {}).get(row_number)
@@ -170,13 +168,13 @@ def spreadsheet_style_errors_table(examples, openpyxl_workbook):
             return {'type': 'context', 'value': value}
 
     for sheet in sheets:
-        row_numbers = list(OrderedDict.fromkeys(
+        row_numbers = sorted(set(
             example['row_number'] for example in examples
             if example.get('sheet', '') == sheet and 'row_number' in example))
-        col_alphas = list(OrderedDict.fromkeys(
-            example['col_alpha'] for example in examples
-            if example.get('sheet', '') == sheet and 'col_alpha' in example))
-        if openpyxl_workbook:
+        col_alphas = sorted(set(
+            example.get('col_alpha', '???') for example in examples
+            if example.get('sheet', '') == sheet))
+        if openpyxl_workbook and '???' not in col_alphas:
             row_numbers = list(extend_numbers(row_numbers))
             col_alphas = list(map(
                 openpyxl.utils.cell.get_column_letter,
