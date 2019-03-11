@@ -715,7 +715,7 @@ class TestSpreadsheetErrorsTable():
     @pytest.mark.parametrize('openpyxl_workbook', [None, {'Sheet 1': {}}])
     def test_array_too_short_single(self, openpyxl_workbook):
         '''
-        Validation error that array is too short has no speradsheet information.
+        Validation error that array is too short has no spreadsheet information.
         '''
         assert spreadsheet_style_errors_table([
             {

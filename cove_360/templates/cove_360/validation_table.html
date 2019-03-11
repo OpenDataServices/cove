@@ -52,26 +52,28 @@
   {% if error_extra.spreadsheet_style_errors_table %}
     <td>
       {% for sheet, table in error_extra.spreadsheet_style_errors_table.items %}
-        Sheet: {{sheet}}
-        <table class="table table-bordered">
-          {% for row in table %}
-            {% with rowcounter=forloop.counter %}
-              <tr>
-                {% for cell in row %}
-                  {% if rowcounter == 1 or forloop.counter == 1 %}
-                    <th>{{cell}}</th>
-                  {% else %}
-                    {% if cell.type == 'example' %}
-                      <td style="background-color: #f8d7da; color: #721c24">{{cell.value}}</td>
+        {% if sheet %}
+          Sheet: {{sheet}}
+          <table class="table table-bordered">
+            {% for row in table %}
+              {% with rowcounter=forloop.counter %}
+                <tr>
+                  {% for cell in row %}
+                    {% if rowcounter == 1 or forloop.counter == 1 %}
+                      <th>{{cell}}</th>
                     {% else %}
-                      <td>{{cell.value}}</td>
+                      {% if cell.type == 'example' %}
+                        <td style="background-color: #f8d7da; color: #721c24">{{cell.value}}</td>
+                      {% else %}
+                        <td>{{cell.value}}</td>
+                      {% endif %}
                     {% endif %}
-                  {% endif %}
-                {% endfor %}
-              </tr>
-            {% endwith %}
-          {% endfor %}
-        </table>
+                  {% endfor %}
+                </tr>
+              {% endwith %}
+            {% endfor %}
+          </table>
+        {% endif %}
       {% endfor %}
     </td>
   {% else %}
