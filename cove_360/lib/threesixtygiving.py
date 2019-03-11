@@ -110,7 +110,7 @@ def group_validation_errors(validation_errors, file_type, openpyxl_workbook):
     for error_json, values in validation_errors:
         error_extra = {
             'values': values,
-            'spreadsheet_style_errors_table': spreadsheet_style_errors_table(values[:3], openpyxl_workbook) if file_type in ['xlsx', 'csv'] else None,
+            'spreadsheet_style_errors_table': spreadsheet_style_errors_table(values, openpyxl_workbook) if file_type in ['xlsx', 'csv'] else None,
         }
         error = json.loads(error_json)
         if error['validator'] == 'required':
@@ -145,13 +145,13 @@ def extend_numbers(numbers):
 
 
 def spreadsheet_style_errors_table(examples, openpyxl_workbook):
-    sheets = sorted(set(example.get('sheet', '') for example in examples))
+    first_few_examples = examples[:3]
+
+    sheets = sorted(set(example.get('sheet') for example in first_few_examples))
 
     out = {}
 
     example_cell_lookup = defaultdict(lambda: defaultdict(dict))
-    for example in examples:
-        example_cell_lookup[example.get('sheet')][example.get('col_alpha', '???')][example.get('row_number')] = example.get('value', '')
 
     def get_cell(sheet, col_alpha, row_number):
         example_value = example_cell_lookup.get(sheet, {}).get(col_alpha, {}).get(row_number)
@@ -168,11 +168,11 @@ def spreadsheet_style_errors_table(examples, openpyxl_workbook):
 
     for sheet in sheets:
         row_numbers = sorted(set(
-            example['row_number'] for example in examples
-            if example.get('sheet', '') == sheet and 'row_number' in example))
+            example['row_number'] for example in first_few_examples
+            if example.get('sheet') == sheet and 'row_number' in example))
         col_alphas = sorted(set(
-            example.get('col_alpha', '???') for example in examples
-            if example.get('sheet', '') == sheet))
+            example.get('col_alpha', '???') for example in first_few_examples
+            if example.get('sheet') == sheet))
         if openpyxl_workbook and '???' not in col_alphas:
             row_numbers = list(extend_numbers(row_numbers))
             col_alphas = list(map(
@@ -180,6 +180,13 @@ def spreadsheet_style_errors_table(examples, openpyxl_workbook):
                 extend_numbers(map(
                     openpyxl.utils.cell.column_index_from_string,
                     col_alphas))))
+        # Loop through all of the examples, so we don't display an invalid
+        # context cell as valid
+        for example in examples:
+            if (example.get('sheet') == sheet and
+                    example.get('row_number') in row_numbers and
+                    example.get('col_alpha', '???') in col_alphas):
+                example_cell_lookup[example.get('sheet')][example.get('col_alpha', '???')][example.get('row_number')] = example.get('value', '')
         out[sheet] = [
             [''] + col_alphas
         ] + [
