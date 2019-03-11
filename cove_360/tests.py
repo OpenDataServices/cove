@@ -721,6 +721,7 @@ class TestSpreadsheetErrorsTable():
         ], {'Sheet 1': {}}) == {
             'Sheet 1': [
                 ['', 'B', 'C', 'D'],
+                [1, con(''), con(''), con('')],
                 [4, con(''), con(''), con('')],
                 [5, con(''), ex('val'), con('')],
                 [6, con(''), con(''), con('')],
@@ -736,20 +737,24 @@ class TestSpreadsheetErrorsTable():
                 'value': 'val',
             }
         ], {'Sheet 1': {
+            'B1': FakeCell('v1H'),
             'B4': FakeCell('v11'),
             'B5': FakeCell('v12'),
             'B6': FakeCell('v13'),
+            'C1': FakeCell('v2H'),
             'C4': FakeCell('v21'),
             # This value (C5) will be ignored in favour of the one
             # fromthe examples array above.
             'C5': FakeCell('v22'),
             'C6': FakeCell('v23'),
+            'D1': FakeCell('v3H'),
             'D4': FakeCell('v31'),
             'D5': FakeCell('v32'),
             'D6': FakeCell('v33'),
         }}) == {
             'Sheet 1': [
                 ['', 'B', 'C', 'D'],
+                [1, con('v1H'), con('v2H'), con('v3H')],
                 [4, con('v11'), con('v21'), con('v31')],
                 [5, con('v12'), ex('val'), con('v32')],
                 [6, con('v13'), con('v23'), con('v33')],
@@ -802,26 +807,31 @@ class TestSpreadsheetErrorsTable():
                 'value': 'value7',
             },
         ], {'Sheet 1': {
+            'B1': FakeCell('v1H'),
             'B4': FakeCell('v11'),
             'B5': FakeCell('v12'),
             'B6': FakeCell('v13'),
             'B7': FakeCell('v14'),
             'B8': FakeCell('v15'),
+            'C1': FakeCell('v2H'),
             'C4': FakeCell('v21'),
             'C5': FakeCell('v22'),
             'C6': FakeCell('v23'),
             'C7': FakeCell('v24'),
             'C8': FakeCell('v25'),
+            'D1': FakeCell('v3H'),
             'D4': FakeCell('v31'),
             'D5': FakeCell('v32'),
             'D6': FakeCell('v33'),
             'D7': FakeCell('v34'),
             'D8': FakeCell('v35'),
+            'E1': FakeCell('v4H'),
             'E4': FakeCell('v41'),
             'E5': FakeCell('v42'),
             'E6': FakeCell('v43'),
             'E7': FakeCell('v44'),
             'E8': FakeCell('v45'),
+            'F1': FakeCell('v5H'),
             'F4': FakeCell('v51'),
             'F5': FakeCell('v52'),
             'F6': FakeCell('v53'),
@@ -830,6 +840,7 @@ class TestSpreadsheetErrorsTable():
         }}) == {
             'Sheet 1': [
                 ['', 'B', 'C', 'D', 'E', 'F'],
+                [1, con('v1H'), con('v2H'), con('v3H'), con('v4H'), con('v5H')],
                 [4, con('v11'), ex('value5'), con('v31'), con('v41'), con('v51')],
                 [5, con('v12'), ex('value1'), con('v32'), ex('value2'), con('v52')],
                 [6, con('v13'), ex('value6'), con('v33'), con('v43'), con('v53')],
