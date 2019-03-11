@@ -586,6 +586,14 @@ def con(value):
     return {'type': 'context', 'value': value}
 
 
+class FakeCell():
+    def __init__(self, value):
+        self.value = value
+
+    def value(self, value):
+        return self.value
+
+
 class TestSpreadsheetErrorsTable():
     def test_single(self):
         assert spreadsheet_style_errors_table([
@@ -602,7 +610,7 @@ class TestSpreadsheetErrorsTable():
             ]
         }
 
-    def test_many(self):
+    def test_many1(self):
         assert spreadsheet_style_errors_table([
             {
                 'sheet': 'Sheet 1',
@@ -633,10 +641,72 @@ class TestSpreadsheetErrorsTable():
                 ['', 'C', 'E'],
                 [5, ex('value1'), ex('value2')],
                 [7, con(''), ex('value3')],
+            ]
+        }
+
+    def test_many2(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 2',
+                'row_number': 11,
+                'col_alpha': 'Q',
+                'value': 'value4',
+            },
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C', 'E'],
+                [5, ex('value1'), ex('value2')],
             ],
             'Sheet 2': [
                 ['', 'Q'],
                 [11, ex('value4')],
+            ]
+        }
+
+    def test_extra_examples_visible(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'C',
+                'value': 'value3',
+            },
+        ] + [{}] * 100 + [
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'E',
+                'value': 'value4',
+            },
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C', 'E'],
+                [5, ex('value1'), ex('value2')],
+                [7, ex('value3'), ex('value4')],
             ]
         }
 
@@ -658,12 +728,6 @@ class TestSpreadsheetErrorsTable():
         }
 
     def test_single_workbook(self):
-        class FakeCell():
-            def __init__(self, value):
-                self.value = value
-
-            def value(self, value):
-                return self.value
         assert spreadsheet_style_errors_table([
             {
                 'sheet': 'Sheet 1',
@@ -689,6 +753,88 @@ class TestSpreadsheetErrorsTable():
                 [4, con('v11'), con('v21'), con('v31')],
                 [5, con('v12'), ex('val'), con('v32')],
                 [6, con('v13'), con('v23'), con('v33')],
+            ]
+        }
+
+    def test_extra_examples_visible_workbook(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'C',
+                'value': 'value3',
+            },
+        ] + [{}] * 100 + [
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'E',
+                'value': 'value4',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 4,
+                'col_alpha': 'C',
+                'value': 'value5',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 6,
+                'col_alpha': 'C',
+                'value': 'value6',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 8,
+                'col_alpha': 'C',
+                'value': 'value7',
+            },
+        ], {'Sheet 1': {
+            'B4': FakeCell('v11'),
+            'B5': FakeCell('v12'),
+            'B6': FakeCell('v13'),
+            'B7': FakeCell('v14'),
+            'B8': FakeCell('v15'),
+            'C4': FakeCell('v21'),
+            'C5': FakeCell('v22'),
+            'C6': FakeCell('v23'),
+            'C7': FakeCell('v24'),
+            'C8': FakeCell('v25'),
+            'D4': FakeCell('v31'),
+            'D5': FakeCell('v32'),
+            'D6': FakeCell('v33'),
+            'D7': FakeCell('v34'),
+            'D8': FakeCell('v35'),
+            'E4': FakeCell('v41'),
+            'E5': FakeCell('v42'),
+            'E6': FakeCell('v43'),
+            'E7': FakeCell('v44'),
+            'E8': FakeCell('v45'),
+            'F4': FakeCell('v51'),
+            'F5': FakeCell('v52'),
+            'F6': FakeCell('v53'),
+            'F7': FakeCell('v54'),
+            'F8': FakeCell('v55'),
+        }}) == {
+            'Sheet 1': [
+                ['', 'B', 'C', 'D', 'E', 'F'],
+                [4, con('v11'), ex('value5'), con('v31'), con('v41'), con('v51')],
+                [5, con('v12'), ex('value1'), con('v32'), ex('value2'), con('v52')],
+                [6, con('v13'), ex('value6'), con('v33'), con('v43'), con('v53')],
+                [7, con('v14'), ex('value3'), con('v34'), ex('value4'), con('v54')],
+                [8, con('v15'), ex('value7'), con('v35'), con('v45'), con('v55')],
             ]
         }
 
@@ -721,7 +867,7 @@ class TestSpreadsheetErrorsTable():
             {
             }
         ], openpyxl_workbook) == {
-            '': [
+            None: [
                 ['', '???']
             ]
         }
