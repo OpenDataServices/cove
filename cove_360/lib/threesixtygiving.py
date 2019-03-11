@@ -180,6 +180,8 @@ def spreadsheet_style_errors_table(examples, openpyxl_workbook):
                 extend_numbers(map(
                     openpyxl.utils.cell.column_index_from_string,
                     col_alphas))))
+            if row_numbers and row_numbers[0] != 1:
+                row_numbers = [1] + row_numbers
         # Loop through all of the examples, so we don't display an invalid
         # context cell as valid
         for example in examples:
