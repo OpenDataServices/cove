@@ -376,7 +376,8 @@ class RecipientOrg360GPrefix(AdditionalTest):
     """Check if any grants are using RecipientOrg IDs that start 360G or 360g"""
 
     check_text = {
-        "heading": "a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> that starts '360G-'",
+        "heading": mark_safe(
+            "a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> that starts '360G-'"),
         "message": RangeDict()
     }
     check_text['message'][(0, 100)] = (
@@ -397,7 +398,7 @@ class RecipientOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.heading = self.format_heading_count(self.check_text['heading'])
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -405,7 +406,8 @@ class FundingOrg360GPrefix(AdditionalTest):
     """Check if any grants are using FundingOrg IDs that start 360G or 360g"""
 
     check_text = {
-        "heading": "a <span class=\"highlight-background-text\">Funding Org:Identifier</span> that starts '360G-'",
+        "heading": mark_safe(
+            "a <span class=\"highlight-background-text\">Funding Org:Identifier</span> that starts '360G-'"),
         "message": RangeDict()
     }
     check_text['message'][(0, 100)] = (
@@ -424,7 +426,7 @@ class FundingOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.heading = self.format_heading_count(self.check_text['heading'])
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -432,7 +434,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
     """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
-        "heading": ("a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> "
+        "heading": mark_safe("a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> "
                     "that does not draw from a recognised register."),
         "message": RangeDict()
     }
@@ -460,7 +462,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.heading = self.format_heading_count(self.check_text['heading'])
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -468,7 +470,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
     """Check if any grants have FundingOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
-        "heading": ("a <span class=\"highlight-background-text\">Funding Org:Identifier</span> "
+        "heading": mark_safe("a <span class=\"highlight-background-text\">Funding Org:Identifier</span> "
                     "that does not draw from a recognised register."),
         "message": RangeDict()
     }
@@ -497,7 +499,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.heading = self.format_heading_count(self.check_text['heading'])
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -509,7 +511,7 @@ class RecipientOrgCharityNumber(AdditionalTest):
     """
 
     check_text = {
-        "heading": ("a value provided in the "
+        "heading": mark_safe("a value provided in the "
                     "<span class=\"highlight-background-text\">Recipient Org: Charity Number</span> "
                     "column that doesn’t look like a charity number"),
         "message": RangeDict()
@@ -536,7 +538,7 @@ class RecipientOrgCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.heading = self.format_heading_count(self.check_text['heading'])
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -547,7 +549,7 @@ class RecipientOrgCompanyNumber(AdditionalTest):
     """
 
     check_text = {
-        "heading": ("a value provided in the "
+        "heading": mark_safe("a value provided in the "
                     "<span class=\"highlight-background-text\">Recipient Org: Company Number</span> "
                     "column that doesn’t look like a company number"),
         "message": RangeDict()
@@ -575,7 +577,7 @@ class RecipientOrgCompanyNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.heading = self.format_heading_count(self.check_text['heading'])
         self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
@@ -583,7 +585,7 @@ class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
     """Checks if any grants don't have either a Recipient Org:Company Number or Recipient Org:Charity Number"""
 
     check_text = {
-        "heading": ("not have either a "
+        "heading": mark_safe("not have either a "
                     "<span class=\"highlight-background-text\">Recipient Org:Company Number</span> or a "
                     "<span class=\"highlight-background-text\">Recipient Org:Charity Number</span>"),
         "message": RangeDict()
@@ -609,7 +611,7 @@ class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb="do"))
+        self.heading = self.format_heading_count(self.check_text['heading'], verb="do")
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -726,7 +728,7 @@ class NoGrantProgramme(AdditionalTest):
     """Checks if any grants have no Grant Programme fields"""
 
     check_text = {
-        "heading": "not contain any <span class=\"highlight-background-text\">Grant Programme</span> fields",
+        "heading": mark_safe("not contain any <span class=\"highlight-background-text\">Grant Programme</span> fields"),
         "message": RangeDict()
     }
     check_text['message'][(0, 100)] = (
@@ -741,7 +743,7 @@ class NoGrantProgramme(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
+        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
         self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
@@ -856,7 +858,7 @@ class NoLastModified(AdditionalTest):
     """Check if any grants are missing Last Modified dates"""
 
     check_text = {
-        "heading": "not have <span class=\"highlight-background-text\">Last Modified</span> information",
+        "heading": mark_safe("not have <span class=\"highlight-background-text\">Last Modified</span> information"),
         "message": RangeDict()
     }
     check_text['message'][(0, 100)] = (
@@ -874,7 +876,7 @@ class NoLastModified(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
+        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
         self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
@@ -882,7 +884,7 @@ class NoDataSource(AdditionalTest):
     """Checks if any grants are missing dataSource"""
 
     check_text = {
-        "heading": "not have <span class=\"highlight-background-text\">Data Source</span> information",
+        "heading": mark_safe("not have <span class=\"highlight-background-text\">Data Source</span> information"),
         "message": RangeDict()
     }
     check_text['message'][(0, 100)] = (
@@ -900,7 +902,7 @@ class NoDataSource(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
+        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
         self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
