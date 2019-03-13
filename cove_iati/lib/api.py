@@ -18,14 +18,14 @@ def context_api_transform(context):
     context['validation_errors'] = []
 
     if validation_errors:
-            for error_group in validation_errors:
-                error = json.loads(error_group[0])
-                for path_value in error_group[1]:
-                    context['validation_errors'].append({
-                        'description': error['message'],
-                        'path': path_value.get('path', ''),
-                        'value': path_value.get('value', '')
-                    })
+        for error_group in validation_errors:
+            error = json.loads(error_group[0])
+            for path_value in error_group[1]:
+                context['validation_errors'].append({
+                    'description': error['message'],
+                    'path': path_value.get('path', ''),
+                    'value': path_value.get('value', '')
+                })
 
     return context
 

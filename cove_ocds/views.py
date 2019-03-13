@@ -17,9 +17,9 @@ from . lib import exceptions
 from libcoveocds.common_checks import common_checks_ocds
 from libcoveocds.schema import SchemaOCDS
 from libcoveocds.config import LibCoveOCDSConfig
-from libcoveocds.libcore.common import get_spreadsheet_meta_data
-from libcoveocds.libcore.converters import convert_spreadsheet, convert_json
-from libcoveocds.libcore.exceptions import CoveInputDataError
+from libcove.lib.common import get_spreadsheet_meta_data
+from libcove.lib.converters import convert_spreadsheet, convert_json
+from libcove.lib.exceptions import CoveInputDataError
 from . lib.ocds_show_extra import add_extra_fields
 from cove.views import explore_data_context
 
