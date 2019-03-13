@@ -117,7 +117,7 @@ def test_common_index_elements(server_url, browser):
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
     ('example.xml', ['Valid against Schema'], False),
     ('basic_iati_unordered_valid.xlsx', ['Valid against Schema'], True),
-    ('basic_iati_unordered_invalid_iso_dates.xlsx', ['Invalid against Schema'], True),
+    ('basic_iati_unordered_invalid_iso_dates.xlsx', ['Invalid against Schema', 'Path: iati-activity/0/activity-date/@iso-date Line: 16', 'Path: iati-activity/1/activity-date/@iso-date Line: 53'], True),
     ('basic_iati_org_valid.xlsx', ['Valid against Schema'], True),
     ('bad.xml', ['We think you tried to upload a XML file'], False),
     ('bad_spaces.csv', ['Converted to XML 2 Errors'], True),
