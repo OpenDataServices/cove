@@ -2,14 +2,14 @@ pip
 Django<1.12
 #^^ rq.filter: <1.12
 -e git+https://github.com/OpenDataServices/flatten-tool.git@v0.5.0#egg=flattentool
--e git+https://github.com/open-contracting/lib-cove-ocds.git@v0.2.1#egg=libcoveocds
+-e git+https://github.com/open-contracting/lib-cove-ocds.git@74c459c06136af45db76487f39408664fd2d4854#egg=libcoveocds
 -e git+https://github.com/OpenDataServices/lib-cove-web.git@035a3c1b77e70664f1b0f881e37ef2264e44df45#egg=libcoveweb
--e git+https://github.com/OpenDataServices/lib-cove.git@2fee8ee2e572d26415c503e05d79b42ad95dc25d#egg=libcove
+-e git+https://github.com/OpenDataServices/lib-cove.git@13b6ecb76a00db6bb0fdbfa28e5672045c6c9eec#egg=libcove
 django-bootstrap3
 django-debug-toolbar
 requests
 cached-property
-dealer
+dealer==2.0.5
 django-environ
 jsonschema
 json-merge-patch
@@ -21,3 +21,4 @@ rfc6266
 CommonMark
 bleach
 xmltodict
+rangedict
