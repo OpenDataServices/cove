@@ -96,6 +96,7 @@ def explore_360(request, pk, template='cove_360/explore.html'):
 def common_errors(request):
     return render(request, 'cove_360/common_errors.html')
 
+
 def additional_checks(request):
     context = {}
 
