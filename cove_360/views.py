@@ -103,8 +103,8 @@ def additional_checks(request):
     test_classes = list(itertools.chain(*TEST_CLASSES.values()))
     context["checks"] = [
         {
-            **check.check_text, 'desc': check.__doc__, 'class_name': check.__name__
+            'heading': check.check_text['heading'], 'message': check.check_text['message'].items(),
+            'desc': check.__doc__, 'class_name': check.__name__
         } for check in test_classes
     ]
-
     return render(request, 'cove_360/additional_checks.html', context)
