@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
 
 from . lib.schema import Schema360
-from . lib.threesixtygiving import run_extra_checks, TEST_CLASSES
+from . lib.threesixtygiving import run_extra_checks, extend_numbers, spreadsheet_style_errors_table, TEST_CLASSES
 from cove.input.models import SuppliedData
 
 # Source is cove_360/fixtures/fundingproviders-grants_fixed_2_grants.json
@@ -563,3 +563,322 @@ def test_quality_accuracy_checks():
 
 def test_usefulness_checks():
     assert run_extra_checks(GRANTS, SOURCE_MAP, TEST_CLASSES['usefulness']) == USEFULNESS_CHECKS_RESULTS
+
+
+def test_extend_numbers():
+    assert list(extend_numbers([2])) == [1, 2, 3]
+    assert list(extend_numbers([4])) == [3, 4, 5]
+    assert list(extend_numbers([4, 6])) == [3, 4, 5, 6, 7]
+    assert list(extend_numbers([4, 7])) == [3, 4, 5, 6, 7, 8]
+    assert list(extend_numbers([4, 8])) == [3, 4, 5, 7, 8, 9]
+    assert list(extend_numbers([1])) == [1, 2]
+    assert list(extend_numbers([4, 5, 6])) == [3, 4, 5, 6, 7]
+    assert list(extend_numbers([4, 5, 7, 2001])) == [3, 4, 5, 6, 7, 8, 2000, 2001, 2002]
+
+
+def ex(value):
+    ''' Shorthand for value metadata with type `example`.'''
+    return {'type': 'example', 'value': value}
+
+
+def con(value):
+    ''' Shorthand for value metadata with type `context`.'''
+    return {'type': 'context', 'value': value}
+
+
+class FakeCell():
+    def __init__(self, value):
+        self.value = value
+
+    def value(self, value):
+        return self.value
+
+
+class TestSpreadsheetErrorsTable():
+    def test_single(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'a value',
+            }
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C'],
+                [5, {'type': 'example', 'value': 'a value'}],
+            ]
+        }
+
+    def test_many1(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'E',
+                'value': 'value3',
+            },
+            {
+                'sheet': 'Sheet 2',
+                'row_number': 11,
+                'col_alpha': 'Q',
+                'value': 'value4',
+            },
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C', 'E'],
+                [5, ex('value1'), ex('value2')],
+                [7, con(''), ex('value3')],
+            ]
+        }
+
+    def test_many2(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 2',
+                'row_number': 11,
+                'col_alpha': 'Q',
+                'value': 'value4',
+            },
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C', 'E'],
+                [5, ex('value1'), ex('value2')],
+            ],
+            'Sheet 2': [
+                ['', 'Q'],
+                [11, ex('value4')],
+            ]
+        }
+
+    def test_extra_examples_visible(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'C',
+                'value': 'value3',
+            },
+        ] + [{}] * 100 + [
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'E',
+                'value': 'value4',
+            },
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C', 'E'],
+                [5, ex('value1'), ex('value2')],
+                [7, ex('value3'), ex('value4')],
+            ]
+        }
+
+    def test_single_empty_workbook(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'val',
+            }
+        ], {'Sheet 1': {}}) == {
+            'Sheet 1': [
+                ['', 'B', 'C', 'D'],
+                [1, con(''), con(''), con('')],
+                [4, con(''), con(''), con('')],
+                [5, con(''), ex('val'), con('')],
+                [6, con(''), con(''), con('')],
+            ]
+        }
+
+    def test_single_workbook(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'val',
+            }
+        ], {'Sheet 1': {
+            'B1': FakeCell('v1H'),
+            'B4': FakeCell('v11'),
+            'B5': FakeCell('v12'),
+            'B6': FakeCell('v13'),
+            'C1': FakeCell('v2H'),
+            'C4': FakeCell('v21'),
+            # This value (C5) will be ignored in favour of the one
+            # fromthe examples array above.
+            'C5': FakeCell('v22'),
+            'C6': FakeCell('v23'),
+            'D1': FakeCell('v3H'),
+            'D4': FakeCell('v31'),
+            'D5': FakeCell('v32'),
+            'D6': FakeCell('v33'),
+        }}) == {
+            'Sheet 1': [
+                ['', 'B', 'C', 'D'],
+                [1, con('v1H'), con('v2H'), con('v3H')],
+                [4, con('v11'), con('v21'), con('v31')],
+                [5, con('v12'), ex('val'), con('v32')],
+                [6, con('v13'), con('v23'), con('v33')],
+            ]
+        }
+
+    def test_extra_examples_visible_workbook(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'C',
+                'value': 'value3',
+            },
+        ] + [{}] * 100 + [
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'E',
+                'value': 'value4',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 4,
+                'col_alpha': 'C',
+                'value': 'value5',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 6,
+                'col_alpha': 'C',
+                'value': 'value6',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 8,
+                'col_alpha': 'C',
+                'value': 'value7',
+            },
+        ], {'Sheet 1': {
+            'B1': FakeCell('v1H'),
+            'B4': FakeCell('v11'),
+            'B5': FakeCell('v12'),
+            'B6': FakeCell('v13'),
+            'B7': FakeCell('v14'),
+            'B8': FakeCell('v15'),
+            'C1': FakeCell('v2H'),
+            'C4': FakeCell('v21'),
+            'C5': FakeCell('v22'),
+            'C6': FakeCell('v23'),
+            'C7': FakeCell('v24'),
+            'C8': FakeCell('v25'),
+            'D1': FakeCell('v3H'),
+            'D4': FakeCell('v31'),
+            'D5': FakeCell('v32'),
+            'D6': FakeCell('v33'),
+            'D7': FakeCell('v34'),
+            'D8': FakeCell('v35'),
+            'E1': FakeCell('v4H'),
+            'E4': FakeCell('v41'),
+            'E5': FakeCell('v42'),
+            'E6': FakeCell('v43'),
+            'E7': FakeCell('v44'),
+            'E8': FakeCell('v45'),
+            'F1': FakeCell('v5H'),
+            'F4': FakeCell('v51'),
+            'F5': FakeCell('v52'),
+            'F6': FakeCell('v53'),
+            'F7': FakeCell('v54'),
+            'F8': FakeCell('v55'),
+        }}) == {
+            'Sheet 1': [
+                ['', 'B', 'C', 'D', 'E', 'F'],
+                [1, con('v1H'), con('v2H'), con('v3H'), con('v4H'), con('v5H')],
+                [4, con('v11'), ex('value5'), con('v31'), con('v41'), con('v51')],
+                [5, con('v12'), ex('value1'), con('v32'), ex('value2'), con('v52')],
+                [6, con('v13'), ex('value6'), con('v33'), con('v43'), con('v53')],
+                [7, con('v14'), ex('value3'), con('v34'), ex('value4'), con('v54')],
+                [8, con('v15'), ex('value7'), con('v35'), con('v45'), con('v55')],
+            ]
+        }
+
+    @pytest.mark.parametrize('openpyxl_workbook', [None, {'Sheet 1': {}}])
+    def test_required_single(self, openpyxl_workbook):
+        '''
+        An example of a `required` validation error is missing the
+        `col_alpha` and `value` keys. (There is no cell to reference,
+        because it is missing.)
+
+        '''
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+            }
+        ], openpyxl_workbook) == {
+            'Sheet 1': [
+                ['', '???'],
+                [5, ex('')],
+            ]
+        }
+
+    @pytest.mark.parametrize('openpyxl_workbook', [None, {'Sheet 1': {}}])
+    def test_array_too_short_single(self, openpyxl_workbook):
+        '''
+        Validation error that array is too short has no spreadsheet information.
+        '''
+        assert spreadsheet_style_errors_table([
+            {
+            }
+        ], openpyxl_workbook) == {
+            None: [
+                ['', '???']
+            ]
+        }

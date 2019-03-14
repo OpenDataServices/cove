@@ -1,4 +1,6 @@
 import json
+import itertools
+import openpyxl
 import re
 from collections import defaultdict, OrderedDict
 from decimal import Decimal
@@ -105,19 +107,100 @@ def get_grants_aggregates(json_data):
     }
 
 
-def group_validation_errors(validation_errors):
+def group_validation_errors(validation_errors, file_type, openpyxl_workbook):
     validation_errors_grouped = defaultdict(list)
     for error_json, values in validation_errors:
+        error_extra = {
+            'values': values,
+            'spreadsheet_style_errors_table': spreadsheet_style_errors_table(values, openpyxl_workbook) if file_type in ['xlsx', 'csv'] else None,
+        }
         error = json.loads(error_json)
         if error['validator'] == 'required':
-            validation_errors_grouped['required'].append((error_json, values))
+            validation_errors_grouped['required'].append((error_json, error_extra))
         elif error['validator'] in ['format', 'oneOf']:
             # NOTE: this assumes oneOf is only used for specifying multiple
             # format types, which is true of the 1.0 schema.
-            validation_errors_grouped['format'].append((error_json, values))
+            validation_errors_grouped['format'].append((error_json, error_extra))
         else:
-            validation_errors_grouped['other'].append((error_json, values))
+            validation_errors_grouped['other'].append((error_json, error_extra))
     return validation_errors_grouped
+
+
+def extend_numbers(numbers):
+    """
+        Add the previous/next number for each number, if it doesn't
+        already exist in the list (or is 0).
+        e.g. list(extend_numbers([4, 5, 7, 2001])) == [3, 4, 5, 6, 7, 8, 2000, 2001, 2002]
+
+    """
+    prev_numbers, numbers, next_numbers = itertools.tee(numbers, 3)
+    prev_numbers = itertools.chain([-1], prev_numbers)
+    next(next_numbers)
+    for number in numbers:
+        prev_number = next(prev_numbers, -1)
+        next_number = next(next_numbers, None)
+        if prev_number != number - 1 and prev_number + 1 != number - 1 and number - 1 > 0:
+            yield number - 1
+        yield number
+        if next_number != number + 1:
+            yield number + 1
+
+
+def spreadsheet_style_errors_table(examples, openpyxl_workbook):
+    first_few_examples = examples[:3]
+
+    sheets = sorted(set(example.get('sheet') for example in first_few_examples))
+
+    out = {}
+
+    example_cell_lookup = defaultdict(lambda: defaultdict(dict))
+
+    def get_cell(sheet, col_alpha, row_number):
+        example_value = example_cell_lookup.get(sheet, {}).get(col_alpha, {}).get(row_number)
+        if example_value is not None:
+            return {'type': 'example', 'value': example_value}
+        else:
+            try:
+                value = openpyxl_workbook[sheet]['{}{}'.format(col_alpha, row_number)].value
+            except (KeyError, AttributeError, TypeError):
+                value = ''
+            if value is None:
+                value = ''
+            return {'type': 'context', 'value': value}
+
+    for sheet in sheets:
+        row_numbers = sorted(set(
+            example['row_number'] for example in first_few_examples
+            if example.get('sheet') == sheet and 'row_number' in example))
+        col_alphas = sorted(set(
+            example.get('col_alpha', '???') for example in first_few_examples
+            if example.get('sheet') == sheet))
+        if openpyxl_workbook and '???' not in col_alphas:
+            row_numbers = list(extend_numbers(row_numbers))
+            col_alphas = list(map(
+                openpyxl.utils.cell.get_column_letter,
+                extend_numbers(map(
+                    openpyxl.utils.cell.column_index_from_string,
+                    col_alphas))))
+            if row_numbers and row_numbers[0] != 1:
+                row_numbers = [1] + row_numbers
+        # Loop through all of the examples, so we don't display an invalid
+        # context cell as valid
+        for example in examples:
+            if (example.get('sheet') == sheet and
+                    example.get('row_number') in row_numbers and
+                    example.get('col_alpha', '???') in col_alphas):
+                example_cell_lookup[example.get('sheet')][example.get('col_alpha', '???')][example.get('row_number')] = example.get('value', '')
+        out[sheet] = [
+            [''] + col_alphas
+        ] + [
+            [row_number] + [
+                get_cell(sheet, col_alpha, row_number)
+                for col_alpha in col_alphas
+            ]
+            for row_number in row_numbers
+        ]
+    return out
 
 
 def common_checks_360(context, upload_dir, json_data, schema_obj):
@@ -125,11 +208,21 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
     cell_source_map = common_checks['cell_source_map']
 
+    if context['file_type'] == 'xlsx':
+        try:
+            openpyxl_workbook = openpyxl.load_workbook(context['original_file']['path'])
+        # Catch all exceptions here because the same exceptions should
+        # be thrown and handled appropriately within flatten-tool.
+        except: # noqa
+            openpyxl_workbook = None
+    else:
+        openpyxl_workbook = None
+
     context.update(common_checks['context'])
     context.update({
         'grants_aggregates': get_grants_aggregates(json_data, ignore_errors=True),
         'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string'],
-        'validation_errors_grouped': group_validation_errors(context['validation_errors'])
+        'validation_errors_grouped': group_validation_errors(context['validation_errors'], context['file_type'], openpyxl_workbook)
     })
 
     for test_classes_type in ['quality_accuracy', 'usefulness', 'additional']:

@@ -16,7 +16,7 @@
 
   {% block data_supplied %}
     <div class="panel panel-default">
-      <div class="panel-heading" data-toggle="collapse" data-target="#data-supplied-body" {% if conversion == 'flattenable' %}aria-expanded="true"{% endif %}>
+      <div class="panel-heading" data-toggle="collapse" data-target="#data-supplied-body" {% if conversion == 'flattenable' %}aria-expanded="true"{% endif %} role="button">
         <h3 class="panel-title panel-title-explore"> 
           <span class="font-tick tick" aria-hidden="true"></span>
           Data Summary
@@ -162,12 +162,12 @@
                 </div>
                 <div>
                   <p>Some or all of your entries were missing fields which are required by the 360Giving Standard.</p>
-                  {% include "validation_table.html" %}
+                  {% include "cove_360/validation_table.html" %}
                 </div>
               </div>
-              {% for error_json, values in validation_errors %}
+              {% for error_json, error_extra in validation_errors %}
                 {% with error=error_json|json_decode %}
-                  {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
+                  {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=error_extra.values file_type=file_type full_table=True %}
                 {% endwith %}
               {% endfor %}
             {% endif %}
@@ -180,12 +180,12 @@
                 </div>
                 <div>
                   <p>Some or all of your entries have incorrectly formatted data.</p>
-                  {% include "validation_table.html" %}
+                  {% include "cove_360/validation_table.html" %}
                 </div>
               </div>
-              {% for error_json, values in validation_errors %}
+              {% for error_json, error_extra in validation_errors %}
                 {% with error=error_json|json_decode %}
-                  {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
+                  {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=error_extra.values file_type=file_type full_table=True %}
                 {% endwith %}
               {% endfor %}
             {% endif %}
@@ -198,12 +198,12 @@
                 </div>
                 <div>
                   <p>Other validation errrors.</p>
-                  {% include "validation_table.html" %}
+                  {% include "cove_360/validation_table.html" %}
                 </div>
               </div>
-              {% for error_json, values in validation_errors %}
+              {% for error_json, error_extra in validation_errors %}
                 {% with error=error_json|json_decode %}
-                  {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
+                  {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=error_extra.values file_type=file_type full_table=True %}
                 {% endwith %}
               {% endfor %}
             {% endif %}
