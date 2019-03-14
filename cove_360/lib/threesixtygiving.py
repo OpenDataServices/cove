@@ -407,7 +407,7 @@ class RecipientOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -435,7 +435,7 @@ class FundingOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -481,10 +481,8 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
-        # self.message = self.check_text['message'][self.grants_percentage]
-        self.add_message(self.check_text['message'])
-
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
@@ -520,7 +518,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -559,7 +557,7 @@ class RecipientOrgCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -598,7 +596,7 @@ class RecipientOrgCompanyNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
         self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
@@ -632,7 +630,7 @@ class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb="do")
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb="do"))
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -764,7 +762,7 @@ class NoGrantProgramme(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
         self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
@@ -897,7 +895,7 @@ class NoLastModified(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
         self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
@@ -923,7 +921,7 @@ class NoDataSource(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
         self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
