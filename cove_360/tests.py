@@ -395,7 +395,7 @@ QUALITY_ACCURACY_CHECKS_RESULTS = [
                   "values being entered into this field. Company numbers are typically 8 digits, possibly starting SC, "
                   "for example <span class=\"highlight-background-text\">SC01234569</span> or "
                   "<span class=\"highlight-background-text\">09876543</span>. You can check company numbers online "
-                  "at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House")},
+                  "at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House</a>.")},
      ['grants/0/recipientOrganization/0/companyNumber'],
      [{'sheet': 'grants', 'letter': 'L', 'row_number': 2, 'header': 'Recipient Org:Company Number'}]),
     ({'heading': "There are 3 different funding organisation IDs listed",
