@@ -1,9 +1,9 @@
-pip==9.0.3
+pip==19.0.3
 Django==1.11.20 # rq.filter: <1.12
 -e git+https://github.com/OpenDataServices/flatten-tool.git@4c13ef0b32a59e810919a3de09bc8f64ce8f9392#egg=flattentool
 -e git+https://github.com/open-contracting/lib-cove-ocds.git@74c459c06136af45db76487f39408664fd2d4854#egg=libcoveocds
--e git+https://github.com/OpenDataServices/lib-cove-web.git@v0.4.0#egg=libcoveweb
--e git+https://github.com/OpenDataServices/lib-cove.git@v0.4.0#egg=libcove
+-e git+https://github.com/OpenDataServices/lib-cove-web.git@50e91188cc50ef5daea01a9f71e93299f0e7256c#egg=libcoveweb
+-e git+https://github.com/OpenDataServices/lib-cove.git@5e1d05c291fd90b17f7edb84e6f065c218f2507c#egg=libcove
 django-bootstrap3==11.0.0
 django-debug-toolbar==1.11
 requests==2.21.0
@@ -22,7 +22,7 @@ xmltodict==0.12.0
 rangedict==0.1.6
 ## The following requirements were added by pip freeze:
 attrs==19.1.0
-certifi==2018.11.29
+certifi==2019.3.9
 chardet==3.0.4
 commonmark==0.8.1
 contextlib2==0.5.5
@@ -33,11 +33,11 @@ jdcal==1.4
 jsonref==0.2
 LEPL==5.1.3
 lxml==4.3.2
-openpyxl==2.5.5
+openpyxl==2.6.1
 pyrsistent==0.14.11
 pytz==2018.9
 schema==0.7.0
 six==1.12.0
-sqlparse==0.2.4
+sqlparse==0.3.0
 urllib3==1.24.1
 webencodings==0.5.1
