@@ -19,6 +19,9 @@ currency_html = {
 
 
 class RangeDict(range_dict):
+    """
+    Override RangeDict library to work as an OrderedDict.
+    """
     def __init__(self):
         super(RangeDict, self).__init__()
         self.ordered_dict = OrderedDict()
