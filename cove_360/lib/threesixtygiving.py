@@ -7,7 +7,7 @@ from decimal import Decimal
 import libcove.lib.tools as tools
 from django.utils.html import mark_safe
 from libcove.lib.common import common_checks_context, get_orgids_prefixes
-from rangedict import RangeDict
+from rangedict import RangeDict as range_dict
 
 orgids_prefixes = get_orgids_prefixes()
 orgids_prefixes.append('360G')
@@ -18,6 +18,14 @@ currency_html = {
     "EUR": "&euro;"
 }
 
+class RangeDict(range_dict):
+    def __init__(self):
+        super(RangeDict, self).__init__()
+        self.ordered_dict = OrderedDict()
+
+    def __setitem__(self, r, v):
+        super(RangeDict, self).__setitem__(r, v)
+        self.ordered_dict[r] = v
 
 @tools.ignore_errors
 def get_grants_aggregates(json_data):
@@ -339,15 +347,6 @@ class AdditionalTest():
             verb = verb + 's' if self.grants_count == 1 else verb
         return '{} {} {} {}'.format(self.get_heading_count(), noun, verb, message)
 
-    def add_message(self, messages):
-        range_dict = RangeDict()
-
-        for range_percentage, message in messages.items():
-            percentages = range_percentage.split(',')
-            range_dict[(int(percentages[0]), int(percentages[1]))]: message
-
-        self.message = range_dict[self.grants_percentage]
-
 
 class ZeroAmountTest(AdditionalTest):
     """Check if any grants have an amountAwarded of 0.
@@ -441,28 +440,19 @@ class FundingOrg360GPrefix(AdditionalTest):
 
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):
     """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
-    from collections import OrderedDict
 
     check_text = {
         "heading": mark_safe("a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> "
                     "that does not draw from a recognised register."),
-        "message": OrderedDict([
-            (
-                '0, 100',
-                "Using external identifiers (such as a charity or company number) helps people using your data "
-                "to match it up against other data - for example to see who else has given grants to the same "
-                "recipient, even if they’re known by a different name. If the data describes lots of grants to "
-                "organisations that don’t have such identifiers, or grants to individuals, then you can ignore this notice."
-            )
-        ])
+        "message": RangeDict()
     }
-    # "message": RangeDict()
-    # check_text['message'][(0, 100)] = (
-    #     "Using external identifiers (such as a charity or company number) helps people using your data "
-    #     "to match it up against other data - for example to see who else has given grants to the same "
-    #     "recipient, even if they’re known by a different name. If the data describes lots of grants to "
-    #     "organisations that don’t have such identifiers, or grants to individuals, then you can ignore this notice."
-    # )
+
+    check_text['message'][(0, 100)] = (
+        "Using external identifiers (such as a charity or company number) helps people using your data "
+        "to match it up against other data - for example to see who else has given grants to the same "
+        "recipient, even if they’re known by a different name. If the data describes lots of grants to "
+        "organisations that don’t have such identifiers, or grants to individuals, then you can ignore this notice."
+    )
 
     def process(self, grant, path_prefix):
         try:
@@ -481,8 +471,9 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.heading = self.format_heading_count(self.check_text['heading'])
         self.message = self.check_text['message'][self.grants_percentage]
+
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):

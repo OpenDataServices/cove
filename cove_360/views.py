@@ -103,7 +103,7 @@ def additional_checks(request):
     test_classes = list(itertools.chain(*TEST_CLASSES.values()))
     context["checks"] = [
         {
-            'heading': check.check_text['heading'], 'message': check.check_text['message'].items(),
+            'heading': check.check_text['heading'], 'message': check.check_text['message'].ordered_dict.items(),
             'desc': check.__doc__, 'class_name': check.__name__
         } for check in test_classes
     ]
