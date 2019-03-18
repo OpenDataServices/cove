@@ -446,7 +446,6 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
                     "that does not draw from a recognised register."),
         "message": RangeDict()
     }
-
     check_text['message'][(0, 100)] = (
         "Using external identifiers (such as a charity or company number) helps people using your data "
         "to match it up against other data - for example to see who else has given grants to the same "
@@ -473,7 +472,6 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
 
         self.heading = self.format_heading_count(self.check_text['heading'])
         self.message = self.check_text['message'][self.grants_percentage]
-
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
