@@ -18,6 +18,7 @@ currency_html = {
     "EUR": "&euro;"
 }
 
+
 class RangeDict(range_dict):
     def __init__(self):
         super(RangeDict, self).__init__()
@@ -26,6 +27,7 @@ class RangeDict(range_dict):
     def __setitem__(self, r, v):
         super(RangeDict, self).__setitem__(r, v)
         self.ordered_dict[r] = v
+
 
 @tools.ignore_errors
 def get_grants_aggregates(json_data):
