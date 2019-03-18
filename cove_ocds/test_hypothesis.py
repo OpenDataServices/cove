@@ -1,5 +1,5 @@
 from libcoveocds.lib.common_checks import get_releases_aggregates
-from hypothesis import given, assume, strategies as st, example, settings
+from hypothesis import HealthCheck, given, assume, strategies as st, example, settings
 from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
 import pytest
@@ -24,6 +24,7 @@ def test_get_releases_aggregates(json_data):
 
 
 @given(general_json)
+@settings(suppress_health_check=[HealthCheck.too_slow])
 def test_get_releases_aggregates_dict(json_data):
     assume(type(json_data) is dict)
     get_releases_aggregates(json_data)
