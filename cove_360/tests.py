@@ -292,64 +292,7 @@ SOURCE_MAP = {
 }
 
 
-ADDITIONAL_CHECKS_RESULTS = [
-    ({'heading': "33% of grants do not have recipient organisation location information",
-      'message': ("Your data is missing information about the geographic location of recipient "
-                  "organisations; either <span class=\"highlight-background-text\">Recipient Org:Postal Code</span> "
-                  "or <span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code</span> combined "
-                  "with <span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code Type</span>. "
-                  "Knowing the geographic location of recipient organisations helps users to understand your data and "
-                  "allows it to be used in tools that visualise grants geographically.")},
-     ['grants/0/recipientOrganization/0/id'],
-     [{'sheet': 'grants', 'letter': 'J', 'row_number': 2, 'header': 'Recipient Org:Identifier'}]),
-    ({'heading': "67% of grants contain text that looks like an email address",
-      'message': ("Your data may contain an email address (or something that looks like one), "
-                  "which can constitute personal data. The use and distribution of personal data "
-                  "is restricted by the Data Protection Act. You should ensure that any personal "
-                  "data is only included with the knowledge and consent of the person to whom it refers.")},
-     ['grants/0/Grant type', 'grants/0/title'],
-     [{'sheet': 'grants', 'letter': 'G', 'row_number': 2, 'header': 'Grant type'},
-      {'sheet': 'grants', 'letter': 'O', 'row_number': 2, 'header': 'Title'}]),
-    ({'heading': ("33% of grants do not contain any <span class=\"highlight-background-text\">Grant Programme</span> "
-                  "fields"),
-     'message': ("Providing <span class=\"highlight-background-text\">Grant Programme</span> data, if available, helps "
-                 "users to better understand your data.")},
-     ['grants/0/id'],
-     [{'sheet': 'grants', 'letter': 'A', 'row_number': 2, 'header': 'Identifier'}]),
-    ({'heading': "33% of grants do not contain any beneficiary location fields",
-      'message': ("Providing beneficiary data, if available, helps users to "
-                  "understand which areas ultimately benefitted from the grant.")},
-     ['grants/1/id'],
-     [{'sheet': 'grants', 'letter': 'A', 'row_number': 3, 'header': 'Identifier'}]),
-    # ({'heading': "1 grant has incomplete beneficiary location information",
-    #   'message': ("Your data is missing Beneficiary Location: Name, Beneficiary Location: "
-    #               "Geographical Code and/or Beneficiary Location: Geographical Code Type. "
-    #               "Beneficiary location information allows users of the data to understand who "
-    #               "ultimately benefitted from the grant, not just the location of the organisation "
-    #               "that provided the service. If your beneficiaries are in the same place as the "
-    #               "organisation that the money went to, stating this is useful for anyone using your "
-    #               "data as it cannot be inferred.")},
-    #  ['grants/0/beneficiaryLocation'],
-    #  [{'sheet': 'grants', 'letter': 'AA', 'row_number': 2, 'header': 'Beneficiary Location'}]),
-    ({'heading': "33% of grants have a title and a description that are the same",
-      'message': ("Users may find that the data is less useful as they are unable to "
-                  "discover more about the grants. Consider including a more detailed "
-                  "description if you have one.")},
-     ['grants/2/description'],
-     [{'sheet': 'grants', 'letter': 'Z', 'row_number': 4, 'header': 'Description'}]),
-    ({'heading': "33% of grants have a title longer than recommended",
-      'message': "Titles for grant activities should be under 140 characters long."},
-     ['grants/1/title'],
-     [{'sheet': 'grants', 'letter': 'O', 'row_number': 3, 'header': 'Title'}]),
-    ({'heading': "67% of grants have funder or recipient organisation IDs that might not be valid",
-      'message': ("The IDs might not be valid for the registration agency that they refer to "
-                  "- for example, a 'GB-CHC' ID that contains an invalid charity number. Common "
-                  "causes of this are missing leading digits, typos or incorrect values being "
-                  "entered into this field.")},
-     ['grants/2/fundingOrganization/0/id', 'grants/2/recipientOrganization/0/id'],
-     [{'sheet': 'grants', 'letter': 'V', 'row_number': 4, 'header': 'Funding Org:Identifier'},
-      {'sheet': 'grants', 'letter': 'J', 'row_number': 4, 'header': 'Recipient Org:Identifier'}])
-]
+ADDITIONAL_CHECKS_RESULTS = []
 
 
 QUALITY_ACCURACY_CHECKS_RESULTS = [
@@ -398,6 +341,14 @@ QUALITY_ACCURACY_CHECKS_RESULTS = [
                   "at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House</a>.")},
      ['grants/0/recipientOrganization/0/companyNumber'],
      [{'sheet': 'grants', 'letter': 'L', 'row_number': 2, 'header': 'Recipient Org:Company Number'}]),
+    ({'heading': "67% of grants have funder or recipient organisation IDs that might not be valid",
+      'message': ("The IDs might not be valid for the registration agency that they refer to "
+                  "- for example, a 'GB-CHC' ID that contains an invalid charity number. Common "
+                  "causes of this are missing leading digits, typos or incorrect values being "
+                  "entered into this field.")},
+     ['grants/2/fundingOrganization/0/id', 'grants/2/recipientOrganization/0/id'],
+     [{'sheet': 'grants', 'letter': 'V', 'row_number': 4, 'header': 'Funding Org:Identifier'},
+      {'sheet': 'grants', 'letter': 'J', 'row_number': 4, 'header': 'Recipient Org:Identifier'}]),
     ({'heading': "There are 3 different funding organisation IDs listed",
       'message': ("If you are expecting to be publishing data for multiple funders then "
                   "you can ignore this notice. If you are only publishing for a single funder then you should review "
@@ -406,7 +357,15 @@ QUALITY_ACCURACY_CHECKS_RESULTS = [
      ['grants/0/fundingOrganization/0/id', 'grants/1/fundingOrganization/0/id', 'grants/2/fundingOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'V', 'row_number': 2, 'header': 'Funding Org:Identifier'},
       {'sheet': 'grants', 'letter': 'V', 'row_number': 3, 'header': 'Funding Org:Identifier'},
-      {'sheet': 'grants', 'letter': 'V', 'row_number': 4, 'header': 'Funding Org:Identifier'}])
+      {'sheet': 'grants', 'letter': 'V', 'row_number': 4, 'header': 'Funding Org:Identifier'}]),
+    ({'heading': "67% of grants contain text that looks like an email address",
+      'message': ("Your data may contain an email address (or something that looks like one), "
+                  "which can constitute personal data. The use and distribution of personal data "
+                  "is restricted by the Data Protection Act. You should ensure that any personal "
+                  "data is only included with the knowledge and consent of the person to whom it refers.")},
+     ['grants/0/Grant type', 'grants/0/title'],
+     [{'sheet': 'grants', 'letter': 'G', 'row_number': 2, 'header': 'Grant type'},
+      {'sheet': 'grants', 'letter': 'O', 'row_number': 2, 'header': 'Title'}])
 ]
 
 USEFULNESS_CHECKS_RESULTS = [
@@ -437,6 +396,37 @@ USEFULNESS_CHECKS_RESULTS = [
                   "Company or UK Charity numbers, then you can ignore this notice.")},
      ['grants/2/recipientOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'J', 'row_number': 4, 'header': 'Recipient Org:Identifier'}]),
+    ({'heading': "33% of grants do not have recipient organisation location information",
+      'message': ("Your data is missing information about the geographic location of recipient "
+                  "organisations; either <span class=\"highlight-background-text\">Recipient Org:Postal Code</span> "
+                  "or <span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code</span> combined "
+                  "with <span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code Type</span>. "
+                  "Knowing the geographic location of recipient organisations helps users to understand your data and "
+                  "allows it to be used in tools that visualise grants geographically.")},
+     ['grants/0/recipientOrganization/0/id'],
+     [{'sheet': 'grants', 'letter': 'J', 'row_number': 2, 'header': 'Recipient Org:Identifier'}]),
+    ({'heading': ("33% of grants do not contain any <span class=\"highlight-background-text\">Grant Programme</span> "
+                  "fields"),
+      'message': (
+          "Providing <span class=\"highlight-background-text\">Grant Programme</span> data, if available, helps "
+          "users to better understand your data.")},
+     ['grants/0/id'],
+     [{'sheet': 'grants', 'letter': 'A', 'row_number': 2, 'header': 'Identifier'}]),
+    ({'heading': "33% of grants do not contain any beneficiary location fields",
+      'message': ("Providing beneficiary data, if available, helps users to "
+                  "understand which areas ultimately benefitted from the grant.")},
+     ['grants/1/id'],
+     [{'sheet': 'grants', 'letter': 'A', 'row_number': 3, 'header': 'Identifier'}]),
+    ({'heading': "33% of grants have a title and a description that are the same",
+      'message': ("Users may find that the data is less useful as they are unable to "
+                  "discover more about the grants. Consider including a more detailed "
+                  "description if you have one.")},
+     ['grants/2/description'],
+     [{'sheet': 'grants', 'letter': 'Z', 'row_number': 4, 'header': 'Description'}]),
+    ({'heading': "33% of grants have a title longer than recommended",
+      'message': "Titles for grant activities should be under 140 characters long."},
+     ['grants/1/title'],
+     [{'sheet': 'grants', 'letter': 'O', 'row_number': 3, 'header': 'Title'}]),
     ({'heading': "33% of grants do not have <span class=\"highlight-background-text\">Last Modified</span> information",
       'message': "<span class=\"highlight-background-text\">Last Modified</span> shows the date and time when "
                  "information about a grant was last updated in your file. Including this information allows data "
