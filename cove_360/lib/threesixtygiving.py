@@ -235,7 +235,7 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
         'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string']
     })
 
-    for test_classes_type in ['quality_accuracy', 'usefulness', 'additional']:
+    for test_classes_type in ['quality_accuracy', 'usefulness']:
         extra_checks = run_extra_checks(
             json_data, cell_source_map, TEST_CLASSES[test_classes_type], ignore_errors=True, return_on_error=None)
         context.update({
@@ -918,7 +918,6 @@ class NoDataSource(AdditionalTest):
 
 
 TEST_CLASSES = {
-    'additional': [],
     'quality_accuracy': [
         ZeroAmountTest,
         FundingOrgUnrecognisedPrefix,
