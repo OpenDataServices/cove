@@ -292,9 +292,6 @@ SOURCE_MAP = {
 }
 
 
-ADDITIONAL_CHECKS_RESULTS = []
-
-
 QUALITY_ACCURACY_CHECKS_RESULTS = [
     ({'heading': "33% of grants have a value of £0",
       'message': ("It’s worth taking a look at these grants and deciding if "
@@ -541,10 +538,6 @@ def test_schema_360():
     assert schema.schema_host == settings.COVE_CONFIG['schema_host']
     assert schema.release_schema_url == settings.COVE_CONFIG['schema_host'] + settings.COVE_CONFIG['schema_item_name']
     assert schema.release_pkg_schema_url == settings.COVE_CONFIG['schema_host'] + settings.COVE_CONFIG['schema_name']
-
-
-def test_additional_checks():
-    assert run_extra_checks(GRANTS, SOURCE_MAP, TEST_CLASSES['additional']) == ADDITIONAL_CHECKS_RESULTS
 
 
 def test_quality_accuracy_checks():
