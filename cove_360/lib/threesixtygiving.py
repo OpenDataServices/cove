@@ -918,27 +918,26 @@ class NoDataSource(AdditionalTest):
 
 
 TEST_CLASSES = {
-    'additional': [
-        IncompleteRecipientOrg,
-        LooksLikeEmail,
-        NoGrantProgramme,
-        NoBeneficiaryLocation,
-        TitleDescriptionSame,
-        TitleLength,
-        OrganizationIdLooksInvalid,
-    ],
+    'additional': [],
     'quality_accuracy': [
         ZeroAmountTest,
         FundingOrgUnrecognisedPrefix,
         RecipientOrgUnrecognisedPrefix,
         RecipientOrgCharityNumber,
         RecipientOrgCompanyNumber,
+        OrganizationIdLooksInvalid,
         MoreThanOneFundingOrg,
+        LooksLikeEmail,
     ],
     'usefulness': [
         RecipientOrg360GPrefix,
         FundingOrg360GPrefix,
         NoRecipientOrgCompanyCharityNumber,
+        IncompleteRecipientOrg,
+        NoGrantProgramme,
+        NoBeneficiaryLocation,
+        TitleDescriptionSame,
+        TitleLength,
         NoLastModified,
         NoDataSource,
     ]

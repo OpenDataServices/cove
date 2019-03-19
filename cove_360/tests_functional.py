@@ -134,10 +134,10 @@ def server_url(request, live_server):
         'This should be a number',
         'This should be a uri 1',
         'This should be a uri 2',
-        'This should be a uri 3',
+        # 'This should be a uri 3',
         'This should be a uri 5',
         'This should be a uri 6',
-        'This should be a uri 7',
+        # 'This should be a uri 7',
         'bad currency 1',
         'bad currency 2',
         'bad currency 3',
@@ -448,12 +448,12 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
     browser.find_element_by_css_selector('div.modal.validation-errors-7 button.close').click()
     browser.find_element_by_css_selector('a[data-target=".additional-checks-3"]').click()
 
-    modal_additional_checks = browser.find_element_by_css_selector('.additional-checks-1')
+    modal_additional_checks = browser.find_element_by_css_selector('.usefulness-checks-2')
     assert "in" in modal_additional_checks.get_attribute("class").split()
     modal_additional_checks_text = modal_additional_checks.text
     assert "100% of grants do not have recipient organisation location information" in modal_additional_checks_text
     assert "grants/0/recipientOrganization/0/id" in modal_additional_checks_text
-    table_rows = browser.find_elements_by_css_selector('.additional-checks-1 tbody tr')
+    table_rows = browser.find_elements_by_css_selector('.usefulness-checks-2 tbody tr')
     assert len(table_rows) == 4
 
 
