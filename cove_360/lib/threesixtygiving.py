@@ -8,7 +8,7 @@ from decimal import Decimal
 import libcove.lib.tools as tools
 from django.utils.html import mark_safe
 from libcove.lib.common import common_checks_context, get_orgids_prefixes
-from rangedict import RangeDict
+from rangedict import RangeDict as range_dict
 
 orgids_prefixes = get_orgids_prefixes()
 orgids_prefixes.append('360G')
@@ -18,6 +18,19 @@ currency_html = {
     "USD": "$",
     "EUR": "&euro;"
 }
+
+
+class RangeDict(range_dict):
+    """
+    Override RangeDict library to work as an OrderedDict.
+    """
+    def __init__(self):
+        super(RangeDict, self).__init__()
+        self.ordered_dict = OrderedDict()
+
+    def __setitem__(self, r, v):
+        super(RangeDict, self).__setitem__(r, v)
+        self.ordered_dict[r] = v
 
 
 @tools.ignore_errors
@@ -555,12 +568,12 @@ class RecipientOrgCompanyNumber(AdditionalTest):
                     "column that doesn’t look like a company number"),
         "message": RangeDict()
     }
-    check_text['message'][(0, 100)] = (
+    check_text['message'][(0, 100)] = mark_safe(
         "Common causes of this are missing leading digits, typos or incorrect values "
         "being entered into this field. Company numbers are typically 8 digits, possibly starting SC, "
         "for example <span class=\"highlight-background-text\">SC01234569</span> or "
         "<span class=\"highlight-background-text\">09876543</span>. You can check company numbers online "
-        "at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House"
+        "at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House</a>."
     )
 
     def process(self, grant, path_prefix):
@@ -626,7 +639,7 @@ class IncompleteRecipientOrg(AdditionalTest):
         "heading": "not have recipient organisation location information",
         "message": RangeDict()
     }
-    check_text['message'][(0, 100)] = (
+    check_text['message'][(0, 100)] = mark_safe(
         "Your data is missing information about the geographic location of recipient organisations; either "
         "<span class=\"highlight-background-text\">Recipient Org:Postal Code</span> or "
         "<span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code</span> combined "
@@ -666,7 +679,7 @@ class MoreThanOneFundingOrg(AdditionalTest):
         "heading": "There are {} different funding organisation IDs listed",
         "message": RangeDict()
     }
-    check_text['message'][(0, 100)] = (
+    check_text['message'][(0, 100)] = mark_safe(
         "If you are expecting to be publishing data for multiple funders then you can ignore this notice. "
         "If you are only publishing for a single funder then you should review your "
         "<span class=\"highlight-background-text\">Funding Organisation identifier</span> column to see "
@@ -732,7 +745,7 @@ class NoGrantProgramme(AdditionalTest):
         "heading": mark_safe("not contain any <span class=\"highlight-background-text\">Grant Programme</span> fields"),
         "message": RangeDict()
     }
-    check_text['message'][(0, 100)] = (
+    check_text['message'][(0, 100)] = mark_safe(
         "Providing <span class=\"highlight-background-text\">Grant Programme</span> data, if available, "
         "helps users to better understand your data."
     )
@@ -862,7 +875,7 @@ class NoLastModified(AdditionalTest):
         "heading": mark_safe("not have <span class=\"highlight-background-text\">Last Modified</span> information"),
         "message": RangeDict()
     }
-    check_text['message'][(0, 100)] = (
+    check_text['message'][(0, 100)] = mark_safe(
         "<span class=\"highlight-background-text\">Last Modified</span> shows the date and time when "
         "information about a grant was last updated in your file. Including this information allows data "
         "users to see when changes have been made and reconcile differences between versions of your data. "
@@ -888,7 +901,7 @@ class NoDataSource(AdditionalTest):
         "heading": mark_safe("not have <span class=\"highlight-background-text\">Data Source</span> information"),
         "message": RangeDict()
     }
-    check_text['message'][(0, 100)] = (
+    check_text['message'][(0, 100)] = mark_safe(
         "<span class=\"highlight-background-text\">Data Source</span> informs users about where "
         "information came from and is an important part of establishing trust in your data. "
         "This information should be a web link pointing to the source of this data, which may be an "
