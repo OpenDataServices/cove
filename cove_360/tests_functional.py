@@ -39,35 +39,36 @@ def server_url(request, live_server):
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
     ('fundingproviders-grants_fixed_2_grants.json', ['A file was downloaded from',
                                                   'This file contains 4 grants from 1 funder to 2 recipients awarded on 24/07/2014',
-                                                  'The grants were awarded in GBP with a total value of £662,990',
-                                                  'individual awards ranging from £152,505 (lowest) to £178,990 (highest)',
+                                                  'The grants were awarded in GBP with a total value of £662,990 and individual awards ranging from £152,505 (lowest) to £178,990 (highest)',
                                                   'Convert to Spreadsheet',
-                                                  'Invalid against Schema 15 Errors',
-                                                  'There are some validation errors in your data, please check them in the table(s) below',
+                                                  'Data does not use the 360Giving Standard 15 Errors',
+                                                  'your data is not yet using the 360Giving standard',
+                                                  'Incorrect Formats',
                                                   'Non-unique ID Values',
+                                                  '100% of grants do not contain any beneficiary location fields',
                                                   'Grant identifiers:  2',
                                                   'Funder organisation identifiers:  1',
                                                   '360G-fundingproviders-000002/X/00/X'], True),
-    ('fundingproviders-grants_broken_grants.json', ['Invalid against Schema 15 Errors',
-                                                 'Review 4 Grants',
+    ('fundingproviders-grants_broken_grants.json', ['Data does not use the 360Giving Standard 15 Errors',
+                                                 'Check your data 4 Grants',
                                                  'Funder organisation identifiers:  2',
                                                  'Recipient organisation identifiers:  2',
                                                  '360G-fundingproviders-000002/X/00/X'], True),
     ('fundingproviders-grants_2_grants.xlsx', ['This file contains 2 grants from 1 funder to 1 recipient',
                                             'The grants were awarded in GBP with a total value of £331,495',
                                             # check that there's no errors after the heading
-                                            'Converted to JSON\nIn order',
-                                            'If there are conversion errors, the data may not look as you expect',
-                                            'Invalid against Schema 7 Errors',
+                                            'This data could be read as 360Giving JSON data\nBefore checking',
+                                            'If a file cannot be converted to JSON it',
+                                            'Data does not use the 360Giving Standard 7 Errors',
                                             'description is missing but required',
                                             'Sheet: grants Row: 2',
-                                            'Review 2 Grants',
+                                            'Check your data 2 Grants',
                                             'Funder organisation identifiers:  1',
                                             'Recipient organisation identifiers:  1',
                                             '360G-fundingproviders-000002/X/00/X'], True),
     # Test conversion warnings are shown
-    ('tenders_releases_2_releases.xlsx', ['Converted to JSON 5 Errors',
-                                          'Invalid against Schema 76 Errors',
+    ('tenders_releases_2_releases.xlsx', ['This data could not be read as 360Giving JSON data 5 Errors',
+                                          'Data does not use the 360Giving Standard 76 Errors',
                                           'You may have a duplicate Identifier: We couldn\'t merge these rows with the id "1": field "ocid" in sheet "items": one cell has the value: "PW-14-00627094", the other cell has the value: "PW-14-00629344"'
                                           ], True),
     # Test that titles that aren't in the rollup are converted correctly
@@ -305,9 +306,9 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
     conversion_title = browser.find_element_by_id('conversion-title')
     if iserror:
         if flatten_or_unflatten == 'flatten':
-            assert 'Converted to Spreadsheet 1 Error' in body_text
+            assert 'This data could not be read as 360Giving JSON data 1 Error' in body_text
         else:
-            assert 'Converted to JSON 1 Error' in body_text
+            assert 'This data could not be read as 360Giving JSON data 1 Error' in body_text
         # should be a cross
         assert conversion_title.find_element_by_class_name('font-tick').get_attribute('class') == 'font-tick cross'
         conversion_title.click()
@@ -315,9 +316,9 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
         assert warning_args[0] in browser.find_element_by_id('conversion-body').text
     else:
         if flatten_or_unflatten == 'flatten':
-            assert 'Converted to Spreadsheet 1 Error' not in body_text
+            assert 'This data could not be read as 360Giving JSON data 1 Error' not in body_text
         else:
-            assert 'Converted to JSON 1 Error' not in body_text
+            assert 'This data could not be read as 360Giving JSON data 1 Error' not in body_text
         # should be a tick
         assert conversion_title.find_element_by_class_name('font-tick').get_attribute('class') == 'font-tick tick'
 
@@ -548,7 +549,7 @@ def test_explore_360_sample_data_link(server_url, browser):
     time.sleep(0.5)
     body_text = browser.find_element_by_tag_name('body').text
 
-    assert 'Data Summary' in body_text
+    assert 'Summary: Your data at a glance' in body_text
     assert 'Sorry, we can\'t process that data' not in body_text
     # Show sample data link in the home page only
     with pytest.raises(NoSuchElementException):
