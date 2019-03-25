@@ -19,22 +19,25 @@
       <div class="panel-heading" data-toggle="collapse" data-target="#data-supplied-body" {% if conversion == 'flattenable' %}aria-expanded="true"{% endif %} role="button">
         <h3 class="panel-title panel-title-explore"> 
           <span class="font-tick tick" aria-hidden="true"></span>
-          Data Summary
+          Summary: Your data at a glance
           <span class="pull-right glyphicon glyphicon-collapse-{% if conversion == 'flattenable' %}up{% else %}down{% endif %}"></span>
         </h3>
       </div>
       <div id="data-supplied-body" class="collapse {% if conversion == 'flattenable' %}in{% endif %}">
         <div class="panel-body">
            <p class="explanation">
-             {% trans "A file was " %} 
+	   {% trans "See the contents of this data at a glance. Use this to get an overview of the data and to check this was what you were expecting." %}
+	   </p>
+           <br>
+	   <p>
+	     {% trans "A file was " %}
              {% if source_url %}
                 {% trans "downloaded from " %} <a href="{{source_url}}">{{source_url}}</a>
              {% else %}
-               {% trans "uploaded " %} 
+               {% trans "uploaded " %}
              {% endif %}
              {% trans "on " %} {{created_date}}.
-           </p>
-           <br>
+	   </p>
            <ul class="left-space">
              <li>
                {% blocktrans count n_grants=grants_aggregates.count %} This file contains <strong>{{n_grants}} grant</strong>{% plural %}This file contains <strong>{{n_grants}} grants</strong> {% endblocktrans %}
@@ -69,7 +72,17 @@
               </li>
              {% endif %}
            </ul>
-           <div class="explore-help">{% blocktrans %}If this summary looks incorrect, you can use the <em>Review</em> section alongside any <em>warnings</em> or <em>errors</em> to investigate what happened and make changes to your original data before loading it again for a new check.{% endblocktrans %}</div>
+	   <div class="explore-help">
+		   <p>{% blocktrans %}If this appears incorrect the remainder of this page will help you to investigate what happened. </p>
+		   <p>The feedback is split into several sections</p>
+		   <ul class="list-unstyled">
+			   <li><span class="font-tick cross"></span> indicates <em>warnings</em> or <em>errors</em> which must be resolved prior to publishing 360Giving format data</li>
+			   <li><span class="font-tick tick"></span> indicates that file is valid 360Giving format data.</li>
+			   <li><span class="font-tick question"></span> indicates additional checks where improvements to the quality or usefulness of the data might be made.</li>
+		   </ul>
+		   <p>A maximum of 10 additional checks can be displayed at once.</p>
+		   <p>If you make changes to the data prompted by this feedback, return here to upload the updated file for a new check.</p>
+		   {% endblocktrans %}</div>
         {% if conversion == 'flattenable' %}
           <form method="post">
             <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% trans "Convert to Spreadsheet" %}</button>
@@ -88,10 +101,11 @@
         <h3 class="panel-title panel-title-explore" id="conversion-title"> 
           {% if conversion_warning_messages or conversion_error %}
             <span class="font-tick cross" aria-hidden="true"></span>
+	    {% trans "This data could not be read as 360Giving JSON data" %}
           {% else %}
             <span class="font-tick tick" aria-hidden="true"></span>
+	    {% trans "This data could be read as 360Giving JSON data" %}
           {% endif %}
-          {% trans "Converted to " %}{% if conversion == 'unflatten'%} JSON {% else %} Spreadsheet{% endif %}
           {% if conversion_warning_messages %}
             <small>{% blocktrans count n_warnings=conversion_warning_messages|length %}{{n_warnings}} Error{% plural %}{{n_warnings}} Errors{% endblocktrans %}</small>
           {% endif %}
@@ -101,8 +115,11 @@
       <div id="conversion-body" class="collapse">
         <div class="panel-body">
           {% if conversion == 'unflatten' %}
-            <p class="explanation">{% trans "In order to validate your data we needed to convert it to JSON." %}</p>
-            <div class="explore-help">360Giving uses <a href="http://json-schema.org/">JSON Schema</a> to describe the standard in a technical way. In order to validate the data against the schema we have converted it to JSON and will perform all tests on the converted data. If there are conversion errors, the data may not look as you expect &mdash; check the <em>Review</em> section to see if the data appears as expected</div>
+            <p class="explanation">{% trans "Before checking your data we needed to convert it to JSON." %}</p>
+            <div class="explore-help">This is because 360Giving is an open data standard which uses a <a href="http://json-schema.org/">JSON Schema</a> to describe the standard in a technical way. 
+		    <br/>
+		    If a file cannot be converted to JSON it indicates that it cannot be correctly mapped to the standard and needs to be reviewed. If this is the case you should check the file and re-upload it once you’ve fixed the problem. The conversion errors below will give an indication of where the issue is. 
+            </div>
           {% else %}
             <p class="explanation">We have converted your JSON data into spreadsheet format.</p>
             {% if conversion_error %}
@@ -131,10 +148,10 @@
       <h3 class="panel-title panel-title-explore">
         {% if validation_errors %}
            <span class="font-tick cross" aria-hidden="true"></span>
-           {% trans "Invalid against Schema " %}<small>{% blocktrans count n_errors=validation_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</small>
+           {% trans "Data does not use the 360Giving Standard " %}<small>{% blocktrans count n_errors=validation_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</small>
         {% else %}
            <span class="font-tick tick" aria-hidden="true"></span>
-          {% trans "Valid against Schema" %}
+          {% trans "Data uses the 360Giving Standard" %}
         {% endif %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
@@ -143,16 +160,17 @@
       <div class="panel-body">
         <p class="explanation">
         {% if validation_errors %}
-            {% trans "Sorry your data is invalid against" %}
+            {% trans "Sorry your data is not yet using the 360Giving standard. We used the " %}
         {% else %}
-          {% trans "Congratulations! Your data is valid against" %}
+          {% trans "Congratulations! Your data is using the 360Giving standard. We used the " %}
         {% endif %}
-        <a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas"> 360Giving JSON Package Schema</a>.
+	<a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas"> 360Giving JSON Package Schema</a> {% trans "to check this." %}
         </p>
-        <div class="explore-help">Validation ensures that your data is compliant with the basic requirements of the <a href="http://www.threesixtygiving.org/standard/">360Giving Standard</a>. If your data validates then it can be used by any user or application who knows how to work with 360Giving data.</diV>
+        <div class="explore-help">This means that the data does not meet the requirements of the <a href="http://www.threesixtygiving.org/standard/">360Giving Standard</a>. Making your data use the standard is important because otherwise it cannot be used by other people and applications working with data that uses the 360Giving standard.
+</diV>
         {% if validation_errors %}
           <br>
-          <p class="explanation">&nbsp;{% trans "There are some <strong>validation errors</strong> in your data, please check them in the table(s) below." %}</p>
+          <p class="explanation">&nbsp;{% trans "The following <strong>errors</strong> are preventing your data from being valid. Use the feedback below to find and resolve the issues in your file" %}</p>
           <br>
           {% with validation_errors=validation_errors_grouped.required error_prefix='required-' %}
             {% if validation_errors %}
@@ -219,9 +237,9 @@
     <div class="panel-heading" data-toggle="collapse" data-target="#quality-accuracy-body">
       <h3 class="panel-title panel-title-explore">
         <span class="font-tick question" aria-hidden="true"></span>
-          {% trans "Quality / Accuracy" %}
+          {% trans "Quality" %}
           {% if quality_accuracy_checks_count %}
-            <small>{% blocktrans count n_quality_accuracy_checks=quality_accuracy_checks_count %} Quality / Accuracy checks{% plural %}{{n_quality_accuracy_checks}} Quality / Accuracy checks{% endblocktrans %}</small>
+            <small>{% blocktrans count n_quality_accuracy_checks=quality_accuracy_checks_count %} Quality checks{% plural %}{{n_quality_accuracy_checks}} Quality checks{% endblocktrans %}</small>
           {% endif %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
@@ -231,21 +249,20 @@
         <div class="row"> <!--Start Row (Detail Table)-->
           <div class="col-xs-12">
             <div class="alert alert-danger">
-              {% blocktrans %}Quality / Accuracy checks failed due to an issue with the data. Fix some validation errors first.{% endblocktrans %}
+              {% blocktrans %}Quality checks failed due to an issue with the data. Fix some validation errors first.{% endblocktrans %}
             </div>
           </div>
         </div>
         {% endif %}
         {% if quality_accuracy_checks %}
-        <p class="explanation">{% blocktrans %}Quality / Accuracy checks have been made on your data.{% endblocktrans %}</p>
+        <p class="explanation">{% blocktrans %}Quality checks highlight areas where the source data may be incorrect or need further attention{% endblocktrans %}</p>
         <br>
-        <p>
+        <div>
             {% blocktrans %}
-            Quality / Accuracy checks highlight some specific areas where the source data may be incorrect or require further attention.
-            They can also suggest ways to increase the usefulness of the data.
-            In any case, these checks do not indicate validation errors and can be ignored if they are not relevant.
-            {% endblocktrans %}
-        </p>
+	    <p>For each check we give feedback on the issue and what steps may be taken to resolve it.</p>
+	    <p>This feedback does not mean the data is invalid, and can be ignored when not relevant.</p>
+	    {% endblocktrans %}
+        </div>
         <br>
         <table class="table no-bottom-margin">
         <thead>
@@ -324,15 +341,15 @@
         </div>
         {% endif %}
         {% if usefulness_checks %}
-        <p class="explanation">{% blocktrans %}Usefulness checks have been made on your data.{% endblocktrans %}</p>
+        <p class="explanation">{% blocktrans %}Usefulness checks highlight ways the data could be made more useful.{% endblocktrans %}</p>
         <br>
-        <p>
+        <div>
             {% blocktrans %}
-            Usefulness checks highlight some specific areas where the source data may be incorrect or require further attention.
-            They can also suggest ways to increase the usefulness of the data.
-            In any case, these checks do not indicate validation errors and can be ignored if they are not relevant.
-            {% endblocktrans %}
-        </p>
+	    <p>For each check we highlight areas which contribute to the usefulness of the data and  suggest what changes could be made.</p>
+	    <p>This feedback does not mean the data is invalid and can be ignored when not relevant.</p>
+
+	    {% endblocktrans %}
+        </div>
         <br>
         <table class="table no-bottom-margin">
         <thead>
@@ -393,14 +410,14 @@
     <div class="panel-heading" data-toggle="collapse" data-target="#additional-checks-body">
       <h3 class="panel-title panel-title-explore"> 
         <span class="font-tick question" aria-hidden="true"></span>
-        {% trans "Additional Checks" %}{% if additional_checks_count %} <small>{% blocktrans count n_additional_checks=additional_checks_count %} Additional checks{% plural %}{{n_additional_checks}} Additional checks{% endblocktrans %}</small>{% endif %}
+        {% trans "Additional Fields" %}{% if additional_checks_count %} <small>{% blocktrans count n_additional_checks=additional_checks_count %} Additional fields{% plural %}{{n_additional_checks}} Additional fields{% endblocktrans %}</small>{% endif %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
     <div id="additional-checks-body" class="collapse panel-body">
         {% if data_only %}
           <hr class="heading-in-panel">
-            <p class="left-space"> {% trans "<strong>Additional fields</strong> were found in your data. Please check them to see that they are intended additions and not just the result of spelling mistakes." %}</p>
+            <p class="left-space"> {% trans "<strong>Additional fields</strong> were found in your data. Additional fields not covered by the 360Giving Standard headings may be included in the data. Please check them to see that they are intended additions and not just the result of spelling mistakes." %}</p>
           {% include "additional_fields_table.html" %}
         {% endif %}
     </div>
@@ -420,7 +437,7 @@
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#review-body">
       <h3 class="panel-title panel-title-explore"><span class="glyphicon glyphicon-list-alt"></span>
-        {% trans "Review" %} <small>{% blocktrans count n_grants=grants_aggregates.count %}{{n_grants}} Grant{% plural %}{{n_grants}} Grants{% endblocktrans %}</small>
+        {% trans "Check your data" %} <small>{% blocktrans count n_grants=grants_aggregates.count %}{{n_grants}} Grant{% plural %}{{n_grants}} Grants{% endblocktrans %}</small>
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
@@ -428,9 +445,9 @@
       <div class="panel-body">
         <p class="explanation">{% trans "Review your data." %}</p>
         <div class="explore-help">
-          The table below shows your data after it has been processed
+          We recommend having a look over your data here. This table shows the data after it has been converted.
           {% if conversion_warning_messages or validation_errors or additional_fields_count %}
-            ; if anything looks wrong, it is probably related to the errors and/or warnings shown above
+            If anything seems unexpected you should see if this may be caused by an error we noted in the errors and/or warnings shown above
           {% endif %}.
         </div>
         <ul class="left-space">
@@ -508,14 +525,21 @@
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#save-and-share-body">
       <h3 class="panel-title panel-title-explore"><span class="glyphicon glyphicon-save"></span>
-        {% trans "Download and Share" %}
+        {% trans "Download data and share these results" %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
     <div id="save-and-share-body" class="collapse {% if conversion == 'flatten' %}in{% endif %}">
       <div class="panel-body">
+	<h4><span class="glyphicon glyphicon-share"></span> Share</h4>
+        <p>{% trans "You can share these test results with others by using the following url:" %}</p>
+        <div class="copy-div">
+            <span class="copy-span"> {{ current_url }} <span id="copy-url-button" title="Click to copy." data-clipboard-text={{ current_url }} class="btn copy-button glyphicon glyphicon-copy" aria-hidden="true"></span> </span>
+            <p>{% trans "If your data is not suitable to share publicly then you should treat this url with care. Only share it with people who have permission to access the data." %}</p>
+        </div>
+        <p>{% trans "After 7 days, the link will expire and the data is deleted from our servers - so the results will no longer be available. You can revisit these results until then." %}</p>
         <h4><span class="glyphicon glyphicon-download-alt"></span> Download</h4>
-        <p>{% trans "The following files are available to download:" %}</p>
+        <p>{% trans "You can download a copy of the data that has been tested by this tool. We provide the following formats to download:" %}</p>
         <ul class="left-space">
           <li>
             <a href="{{original_file.url}}">{% trans "Original file" %} ({{file_type}})</a> {{original_file.size|filesizeformat}}
@@ -535,15 +559,6 @@
             {% endif %}
           {% endif %}
         </ul>
-        <h4><span class="glyphicon glyphicon-share"></span> Share</h4>
-        <p>{% trans "Use the following url to share these results:" %}</p>
-        <div class="copy-div">
-            <span class="copy-span"> {{ current_url }} <span id="copy-url-button" title="Click to copy." data-clipboard-text={{ current_url }} class="btn copy-button glyphicon glyphicon-copy" aria-hidden="true"></span> </span>
-        </div>
-        {% comment %}Translators: Paragraph that describes the application{% endcomment %}
-        <br>
-        <p>{% blocktrans %}After 7 days all uploaded data is deleted from our servers, and the results will no longer be available. Anyone using the link to this page after that will be shown a message that tells them the file has been removed.{% endblocktrans %}</p>
-        <p>{% blocktrans %}These results will be available for 7 days from the day the data was first uploaded. You can revisit these results until then.{% endblocktrans %}</p>
       </div>
     </div>
   </div>
