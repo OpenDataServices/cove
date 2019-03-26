@@ -1,28 +1,27 @@
-import logging
-import json
-import tempfile
-import os
 import functools
+import json
+import logging
+import os
+import tempfile
 
-from django.shortcuts import render
-from django import forms
-from django.utils.translation import ugettext_lazy as _
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseBadRequest
-
-from libcove.lib.exceptions import CoveInputDataError
-from libcove.lib.converters import convert_spreadsheet, convert_json
-from libcove.config import LibCoveConfig
 from cove.input.models import SuppliedData
 from cove.input.views import data_input
 from cove.views import explore_data_context
+from django import forms
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.shortcuts import render
+from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from libcove.config import LibCoveConfig
+from libcove.lib.converters import convert_spreadsheet, convert_json
+from libcove.lib.exceptions import CoveInputDataError
+
+from .lib.api import iati_json_output
 from .lib.iati import common_checks_context_iati, get_file_type
 from .lib.process_codelists import aggregate_results
-from .lib.api import iati_json_output
 from .lib.schema import SchemaIATI
-from django.conf import settings
-
 
 logger = logging.getLogger(__name__)
 

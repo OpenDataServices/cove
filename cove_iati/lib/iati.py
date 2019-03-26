@@ -5,14 +5,14 @@ import re
 import defusedxml.lxml as etree
 import lxml.etree
 from bdd_tester import bdd_tester
-from django.utils.translation import ugettext_lazy as _
 from django.utils.html import format_html
-
-from .schema import SchemaIATI
+from django.utils.translation import ugettext_lazy as _
 from libcove.lib.exceptions import CoveInputDataError
-from cove_iati.lib.exceptions import UnrecognisedFileTypeXML
 from libcove.lib.tools import ignore_errors
+
+from cove_iati.lib.exceptions import UnrecognisedFileTypeXML
 from cove_iati.lib.process_codelists import invalid_embedded_codelist_values
+from .schema import SchemaIATI
 
 
 def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
