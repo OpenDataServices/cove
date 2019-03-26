@@ -2,6 +2,8 @@ import json
 import re
 from collections import defaultdict, OrderedDict
 from decimal import Decimal
+import datetime
+import pytz
 
 import libcove.lib.tools as tools
 from django.utils.html import mark_safe
@@ -177,6 +179,8 @@ def spreadsheet_style_errors_table(examples, openpyxl_workbook):
                 value = ''
             if value is None:
                 value = ''
+            elif isinstance(value, datetime.datetime):
+                value = pytz.timezone('UTC').localize(value).isoformat()
             return {'type': 'context', 'value': value}
 
     for sheet in sheets:
