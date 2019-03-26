@@ -15,14 +15,7 @@ from cove_iati.lib.process_codelists import invalid_embedded_codelist_values
 from .schema import SchemaIATI
 
 
-def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
-    '''TODO: this function is trying to do too many things. Separate some
-    of its logic into smaller functions doing one single thing each.
-    '''
-    schema_iati = SchemaIATI()
-    cell_source_map = {}
-    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
-
+def get_tree(data_file):
     with open(data_file, 'rb') as fp:
         try:
             tree = etree.parse(fp)
@@ -46,6 +39,18 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                          '</span> <strong>Error message:</strong> {}', err)),
                 'error': format(err)
             })
+        return tree
+
+
+def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
+    '''TODO: this function is trying to do too many things. Separate some
+    of its logic into smaller functions doing one single thing each.
+    '''
+    schema_iati = SchemaIATI()
+    cell_source_map = {}
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
+
+    tree = get_tree(data_file)
 
     if tree.getroot().tag == 'iati-organisations':
         schema_path = schema_iati.organisation_schema
@@ -421,3 +426,11 @@ def get_file_type(file):
         return 'csv'
     else:
         raise UnrecognisedFileTypeXML
+
+
+def iati_identifier_count(data_file):
+    tree = get_tree(data_file)
+    root = tree.getroot()
+    identifiers = root.xpath('/iati-activities/iati-activity/iati-identifier/text()')
+
+    return len(identifiers)

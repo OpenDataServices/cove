@@ -19,7 +19,7 @@ from libcove.lib.converters import convert_spreadsheet, convert_json
 from libcove.lib.exceptions import CoveInputDataError
 
 from .lib.api import iati_json_output
-from .lib.iati import common_checks_context_iati, get_file_type
+from .lib.iati import common_checks_context_iati, get_file_type, iati_identifier_count
 from .lib.process_codelists import aggregate_results
 from .lib.schema import SchemaIATI
 
@@ -105,6 +105,7 @@ def explore_iati(request, pk):
     context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type)
     context['first_render'] = not db_data.rendered
     context['invalid_embedded_codelist_values'] = aggregate_results(context['invalid_embedded_codelist_values'])
+    context['iati_identifiers_count'] = iati_identifier_count(data_file)
 
     if not db_data.rendered:
         db_data.rendered = True
