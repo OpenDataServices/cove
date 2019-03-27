@@ -574,3 +574,46 @@ def test_codelist_full():
         print('created temporary directory', tmpdirname)
     assert len(context['invalid_embedded_codelist_values']) == 3
     assert set(item['value'] for item in context['invalid_embedded_codelist_values']) == set(["what", "is", "100"])
+
+
+def test_iati_identifier_count():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
+
+    assert iati.iati_identifier_count(file_path) == 2
+
+
+def test_iati_identifier_count_when_non_unique():
+    file_path = os.path.join('cove_iati', 'fixtures', 'iati_openag_tag_repeat_identifiers.xml')
+
+    assert iati.iati_identifier_count(file_path) == 5
+
+
+def test_iati_identifier_count_when_none():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid.xml')
+
+    assert iati.iati_identifier_count(file_path) == 0
+
+
+def test_organisation_identifier_count():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid.xml')
+
+    assert iati.organisation_identifier_count(file_path) == 1
+
+
+def test_organisation_identifier_count():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid.xml')
+
+    assert iati.organisation_identifier_count(file_path) == 1
+
+
+def test_organisation_identifier_count_when_non_unique():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid_repeat_identifiers.xml')
+
+    assert iati.organisation_identifier_count(file_path) == 2
+
+
+def test_organisation_identifier_count_when_none():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
+
+    assert iati.organisation_identifier_count(file_path) == 0
+
