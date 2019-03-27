@@ -37,7 +37,14 @@
            <br>
            <ul class="left-space">
              <li>{% blocktrans %}Name of the file: {{file_name}}{% endblocktrans %}</li>
-             <li>{% blocktrans %}Number of records we found: {{iati_identifiers_count}}{% endblocktrans %}</li>
+             {% if iati_identifiers_count %}
+              <li>{% blocktrans %}Number of activities: {{iati_identifiers_count}}{% endblocktrans %}</li>
+             {% endif %}
+             {% if organisation_identifier_count %}
+              <li>
+                {% blocktrans %}Number of organisations: {{organisation_identifier_count}}{% endblocktrans %}
+              </li>
+             {% endif %}
            </ul>
           {% if conversion == 'flattenable' %}
             <form method="post">
