@@ -432,13 +432,15 @@ def iati_identifier_count(data_file):
     tree = get_tree(data_file)
     root = tree.getroot()
     identifiers = root.xpath('/iati-activities/iati-activity/iati-identifier/text()')
+    unique_identifiers = list(set(identifiers))
 
-    return len(identifiers)
+    return len(unique_identifiers)
 
 
 def organisation_identifier_count(data_file):
     tree = get_tree(data_file)
     root = tree.getroot()
     identifiers = root.xpath('/iati-organisations/iati-organisation/organisation-identifier/text()')
+    unique_identifiers = list(set(identifiers))
 
-    return len(identifiers)
+    return len(unique_identifiers)
