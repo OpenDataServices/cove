@@ -600,12 +600,6 @@ def test_organisation_identifier_count():
     assert iati.organisation_identifier_count(file_path) == 1
 
 
-def test_organisation_identifier_count():
-    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid.xml')
-
-    assert iati.organisation_identifier_count(file_path) == 1
-
-
 def test_organisation_identifier_count_when_non_unique():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid_repeat_identifiers.xml')
 
@@ -616,4 +610,3 @@ def test_organisation_identifier_count_when_none():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
 
     assert iati.organisation_identifier_count(file_path) == 0
-
