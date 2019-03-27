@@ -120,13 +120,15 @@ def server_url(request, live_server):
         'bad currency',
     ], True),
     ('badfile_all_validation_errors_4_times.xlsx', [
-        'description is missing but required (more info)',
+        'Description is missing but required (more info)',
         'id is missing but required within recipientOrganization (more info)',
         'Date is not in the correct format (more info)',
         'Amount Awarded is not a number. Check that the value is not null, and doesn’t contain any characters other than 0-9 and dot (.). Number values should not be in quotes.',
         'Invalid \'uri\' found (more info)',
         'Invalid code found in Currency (more info)',
         '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
+        # Context dates should be ISO formatted
+        '2019-06-01T00:00:00+00:00',
         'bad date 1',
         'bad date 2',
         'bad date 3',
