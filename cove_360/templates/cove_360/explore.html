@@ -233,14 +233,13 @@
   {% endblock validation %}
 
   {% block quality_accuracy %}
+  {% if quality_accuracy_checks_count %}
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#quality-accuracy-body">
       <h3 class="panel-title panel-title-explore">
         <span class="font-tick question" aria-hidden="true"></span>
           {% trans "Quality" %}
-          {% if quality_accuracy_checks_count %}
             <small>{% blocktrans count n_quality_accuracy_checks=quality_accuracy_checks_count %} Quality checks{% plural %}{{n_quality_accuracy_checks}} Quality checks{% endblocktrans %}</small>
-          {% endif %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
@@ -316,17 +315,17 @@
       {% endwith %}
     {% endfor %}
   </div>
+  {% endif %}
   {% endblock quality_accuracy %}
 
   {% block usefulness %}
+  {% if usefulness_checks_count %}
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#usefulness-body">
       <h3 class="panel-title panel-title-explore">
         <span class="font-tick question" aria-hidden="true"></span>
           {% trans "Usefulness" %}
-          {% if usefulness_checks_count %}
             <small>{% blocktrans count n_usefulness_checks=usefulness_checks_count %} Usefulness checks{% plural %}{{n_usefulness_checks}} Usefulness checks{% endblocktrans %}</small>
-          {% endif %}
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
@@ -403,14 +402,16 @@
       {% endwith %}
     {% endfor %}
   </div>
+  {% endif %}
   {% endblock usefulness %}
 
   {% block additional_checks %}
+  {% if additional_checks_count %}
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#additional-checks-body">
       <h3 class="panel-title panel-title-explore"> 
         <span class="font-tick question" aria-hidden="true"></span>
-        {% trans "Additional Fields" %}{% if additional_checks_count %} <small>{% blocktrans count n_additional_checks=additional_checks_count %} Additional fields{% plural %}{{n_additional_checks}} Additional fields{% endblocktrans %}</small>{% endif %}
+        {% trans "Additional Fields" %}<small>{% blocktrans count n_additional_checks=additional_checks_count %} Additional fields{% plural %}{{n_additional_checks}} Additional fields{% endblocktrans %}</small>
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
@@ -431,6 +432,7 @@
       {% endwith %}
     {% endfor %}
   </div>
+  {% endif %}
   {% endblock additional_checks %}
 
   {% block review %}
