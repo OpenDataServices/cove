@@ -405,13 +405,14 @@
   {% endif %}
   {% endblock usefulness %}
 
-  {% block additional_checks %}
-  {% if additional_checks_count %}
+  {% block additional_fields %}
+  {% if additional_fields_count %}
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#additional-checks-body">
       <h3 class="panel-title panel-title-explore"> 
         <span class="font-tick question" aria-hidden="true"></span>
-        {% trans "Additional Fields" %}<small>{% blocktrans count n_additional_checks=additional_checks_count %} Additional fields{% plural %}{{n_additional_checks}} Additional fields{% endblocktrans %}</small>
+        {% trans "Additional Fields" %}
+	<small>{% blocktrans count n_additional_fields=additional_fields_count %} Additional fields{% plural %}{{n_additional_fields}} Additional fields{% endblocktrans %}</small>
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
@@ -433,7 +434,7 @@
     {% endfor %}
   </div>
   {% endif %}
-  {% endblock additional_checks %}
+  {% endblock additional_fields %}
 
   {% block review %}
   <div class="panel panel-default">
