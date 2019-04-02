@@ -95,8 +95,10 @@
   <!--recipient-country ends-->
   <!--recipient-region starts-->
   <recipient-region code="489" vocabulary="1" percentage="25" />
-  <recipient-region code="289" vocabulary="1" percentage="25" />
+  <recipient-region code="289" percentage="25" />
   <recipient-region code="A1" vocabulary="99" vocabulary-uri="http://example.com/vocab.html" percentage="100" />
+  <recipient-region code="A2" vocabulary="1"  percentage="100" />
+  <recipient-region code="A3" percentage="100" />
   <!--recipient-region ends-->
   <!--location-single starts-->
   <location ref="AF-KAN">
@@ -239,6 +241,7 @@
    <!--Note: only a recipient-region OR a recipient-country is expected-->
    <recipient-country code="TM" />
    <recipient-region code="616" vocabulary="1" />   
+   <recipient-region code="mooo"  />   
    <flow-type code="10" />
    <finance-type code="110" />
    <aid-type code="A01" />   

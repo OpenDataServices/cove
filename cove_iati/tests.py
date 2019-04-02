@@ -572,13 +572,25 @@ def test_process_codelist():
     assert set(item['value'] for item in result) == set(["what", "is", "100"])
 
 
-def test_codelist_full():
+def test_embedded_codelist_full():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_bad_codelist.xlsx')
     with tempfile.TemporaryDirectory() as tmpdirname:
         context = api.iati_json_output(tmpdirname, file_path)
         print('created temporary directory', tmpdirname)
     assert len(context['invalid_embedded_codelist_values']) == 3
     assert set(item['value'] for item in context['invalid_embedded_codelist_values']) == set(["what", "is", "100"])
+
+
+def test_non_embedded_codelist_full():
+    file_path = os.path.join('cove_iati', 'fixtures', 'example_codelist.xml')
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        context = api.iati_json_output(tmpdirname, file_path)
+        print('created temporary directory', tmpdirname)
+    assert len(context['invalid_embedded_codelist_values']) == 1
+    assert set(item['value'] for item in context['invalid_embedded_codelist_values']) == set(["100"])
+
+    assert len(context['invalid_non_embedded_codelist_values']) == 3
+    assert set(item['value'] for item in context['invalid_non_embedded_codelist_values']) == set(["616", "A2", "A3"])
 
 
 def test_iati_identifier_count():

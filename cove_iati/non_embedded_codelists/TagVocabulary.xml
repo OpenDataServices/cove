@@ -1,0 +1,28 @@
+<codelist name="TagVocabulary" xml:lang="en" complete="1" embedded="0">
+  <metadata>
+    <name>
+      <narrative>Tag Vocabulary</narrative>
+    </name>
+    <description>
+      <narrative>The Tag Vocabulary codelist defines external codelists which themselves provide codes and descriptions for tag elements.</narrative>
+    </description>
+  </metadata>
+  <codelist-items>
+    <codelist-item>
+      <code>1</code>
+      <name>
+        <narrative>Agrovoc</narrative>
+      </name>
+      <description>
+        <narrative>A controlled vocabulary covering all areas of interest of the Food and Agriculture Organization (FAO) of the United Nations, including food, nutrition, agriculture, fisheries, forestry, environment etc.</narrative>
+      </description>
+      <url>http://agrovoc.uniroma2.it/agrovoc/agrovoc/en/</url>
+    </codelist-item>
+    <codelist-item>
+      <code>99</code>
+      <name>
+        <narrative>Reporting Organisation</narrative>
+      </name>
+    </codelist-item>
+  </codelist-items>
+</codelist>

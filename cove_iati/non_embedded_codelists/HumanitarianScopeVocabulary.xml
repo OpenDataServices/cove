@@ -1,0 +1,34 @@
+<codelist name="HumanitarianScopeVocabulary" xml:lang="en" complete="0" embedded="0">
+    <metadata>
+        <name>
+            <narrative>Humanitarian Scope Vocabulary</narrative>
+        </name>
+        <description>
+            <narrative>
+                The Humanitarian Scope Vocabulary codelist defines a range of external codelists which themselves provide codes and descriptions for humanitarian events and actions.
+            </narrative>
+        </description>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>1-2</code>
+            <name>
+                <narrative>Glide</narrative>
+            </name>
+            <url>http://glidenumber.net/glide/public/search/search.jsp</url>
+        </codelist-item>
+        <codelist-item>
+            <code>2-1</code>
+            <name>
+                <narrative>Humanitarian Plan</narrative>
+            </name>
+            <url>https://fts.unocha.org/plan-code-list-iati</url>
+        </codelist-item>
+        <codelist-item>
+            <code>99</code>
+            <name>
+                <narrative>Reporting Organisation</narrative>
+            </name>
+        </codelist-item>
+    </codelist-items>
+</codelist>

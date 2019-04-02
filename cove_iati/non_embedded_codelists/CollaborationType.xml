@@ -1,0 +1,90 @@
+<codelist name="CollaborationType" xml:lang="en" complete="1" embedded="0">
+    <metadata>
+        <name>
+            <narrative>Collaboration Type</narrative>
+        </name>
+        <description>
+            <narrative>OECD DAC classification used to determine the character of resource flows (bilateral or multilateral).</narrative>
+        </description>
+        <url>http://www.oecd.org/dac/stats/dacandcrscodelists.htm</url>
+    </metadata>
+    <codelist-items>
+        <codelist-item status="active">
+            <code>1</code>
+            <name>
+                <narrative>Bilateral</narrative>
+                <narrative xml:lang="fr">Bilatéral</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>2</code>
+            <name>
+                <narrative>Multilateral (inflows)</narrative>
+                <narrative xml:lang="fr">Multilatéral (contributions des donneurs du CAD)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>3</code>
+            <name>
+                <narrative>Bilateral, core contributions to NGOs and other private bodies / PPPs</narrative>
+                <narrative xml:lang="fr">Contributions bilatérales au budget général d'organisations non gouvernementales, d'autres organisations de la société civile, de partenariats publics-privés et d'instituts de recherches</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>4</code>
+            <name>
+                <narrative>Multilateral outflows</narrative>
+                <narrative xml:lang="fr">Apports des institutions multilatérales</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>6</code>
+            <name>
+                <narrative>Private Sector Outflows</narrative>
+                <narrative xml:lang="fr">Apports du secteur privé</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>7</code>
+            <name>
+                <narrative>Bilateral, ex-post reporting on NGOs’ activities funded through core contributions</narrative>
+                <narrative xml:lang="fr">Contributions bilatérales, notification ex post des activités des ONG financées par des contributions des donneurs au budget général de l'ONG.</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>8</code>
+            <name>
+                <narrative>Bilateral, triangular co-operation.</narrative>
+                <narrative xml:lang="fr">Coopération triangulaire bilatérale.</narrative>
+            </name>
+            <description>
+                <narrative>Activities where one or more bilateral providers of development co-operation or international organisations support South-South co-operation, joining forces with developing countries to facilitate a sharing of knowledge and experience among all partners involved. (Activities that only involve bilateral providers or multilateral agencies without a South-South co-operation element (e.g. joint programming, pooled funding or delegated co-operation) should not be assigned bi_multi 8.)</narrative>
+                <narrative xml:lang="fr">Activités où un ou plusieurs pourvoyeurs bilatéraux de coopération pour le développement ou organisations internationales soutiennent la coopération Sud-Sud, conjointement avec des pays en développement afin de faciliter le partage des connaissances et d'expériences entre tous les partenaires impliqués. (Les activités qui n'impliquent que des pourvoyeurs bilatéraux ou des organismes multilatéraux sans coopération Sud-Sud (programmes conjoints, financements groupés ou coopération déléguée) ne devraient pas être codés bi_multi 8.)</narrative>
+            </description>
+        </codelist-item>
+    </codelist-items>
+</codelist>

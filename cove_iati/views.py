@@ -109,6 +109,7 @@ def explore_iati(request, pk):
     context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type, tree)
     context['first_render'] = not db_data.rendered
     context['invalid_embedded_codelist_values'] = aggregate_results(context['invalid_embedded_codelist_values'])
+    context['invalid_non_embedded_codelist_values'] = aggregate_results(context['invalid_non_embedded_codelist_values'])
     context['iati_identifiers_count'] = iati_identifier_count(tree)
     context['organisation_identifier_count'] = organisation_identifier_count(tree)
 

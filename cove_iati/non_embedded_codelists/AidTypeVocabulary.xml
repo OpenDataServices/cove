@@ -1,0 +1,42 @@
+<codelist name="AidTypeVocabulary" xml:lang="en" complete="1" embedded="0">
+  <metadata>
+    <name>
+      <narrative>Aid Type Vocabulary</narrative>
+    </name>
+    <description>
+      <narrative>The AidTypeVocabulary codelist defines a range of external codelists which themselves provide codes and descriptions for aid type.</narrative>
+    </description>
+  </metadata>
+  <codelist-items>
+    <codelist-item>
+      <code>1</code>
+      <name>
+        <narrative>OECD DAC</narrative>
+      </name>
+      <description>
+        <narrative>List of codes provided by the OECD DAC used to distinguish types of aid</narrative>
+      </description>
+      <url>http://www.oecd.org/dac/stats/dacandcrscodelists.htm</url>
+    </codelist-item>
+    <codelist-item>
+      <code>2</code>
+      <name>
+        <narrative>Earmarking Category</narrative>
+      </name>
+      <description>
+        <narrative>This vocabulary has been created by IATI and is derived from the Grand Bargain Earmarking Modality codelist</narrative>
+      </description>
+      <url>http://iatistandard.org/codelists/EarmarkingCategory</url>
+    </codelist-item>
+    <codelist-item>
+      <code>3</code>
+      <name>
+        <narrative>Earmarking Modality</narrative>
+      </name>
+      <description>
+        <narrative>Codes A to L replicated directly from Grand Bargain document found in Annex 1 (pg.16)</narrative>
+      </description>
+      <url>https://reliefweb.int/sites/reliefweb.int/files/resources/Grand_Bargain_final_22_May_FINAL-2.pdf</url>
+    </codelist-item>
+  </codelist-items>
+</codelist>

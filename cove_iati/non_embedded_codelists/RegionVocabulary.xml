@@ -1,0 +1,38 @@
+<codelist name="RegionVocabulary" xml:lang="en" complete="1" embedded="0">
+    <metadata>
+        <name>
+            <narrative>Region Vocabulary</narrative>
+        </name>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>1</code>
+            <name>
+                <narrative>OECD DAC</narrative>
+            </name>
+            <description>
+                <narrative>Supra-national regions according to OECD DAC CRS recipient codes</narrative>
+            </description>
+            <url>http://reference.iatistandard.org/codelists/Region/</url>
+        </codelist-item>
+        <codelist-item>
+            <code>2</code>
+            <name>
+                <narrative>UN</narrative>
+            </name>
+            <description>
+                <narrative>Supra-national regions maintained by UN Statistics Division (M49 standard)</narrative>
+            </description>
+            <url>https://unstats.un.org/unsd/methodology/m49/</url>
+        </codelist-item>
+        <codelist-item>
+            <code>99</code>
+            <name>
+                <narrative>Reporting Organisation</narrative>
+            </name>
+            <description>
+                <narrative>The region reported corresponds to a region vocabulary maintained by the reporting organisation for this activity.</narrative>
+            </description>
+        </codelist-item>
+    </codelist-items>
+</codelist>

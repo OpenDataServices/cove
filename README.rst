@@ -276,3 +276,15 @@ If the file is in spreadsheet format, the output directory will contain a *unfla
 **OpenaAg** rulesets check that the data contains the XML elements ``<opeang:tag>`` and ``<location>``, and that they include the right attributes expected for OpenAg data. Please read `OpenAg ruleset feature files <cove_iati/rulesets/iati_openag_ruleset/>`_ (written in `Gerkhin <https://github.com/cucumber/cucumber/wiki/Gherkin/>`_ style) for more information.
 
 **Org-ids** rulesets check that all organisation identifiers are prefixed with a registered `org-ids <http://org-id.guide>`_ prefix. Please read `Org-ids ruleset feature file <cove_iati/rulesets/iati_orgids_ruleset/>`_ for more information
+
+
+**Non Embedded Codelists** 
+
+Non embedded codelists need to be periodically downloaded and committed to this repo.  To do this run in the virtualenv:
+
+.. code:: bash
+
+   python get_iati_non_embedded_codelists.py 
+
+
+
