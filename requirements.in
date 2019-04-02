@@ -1,5 +1,4 @@
-# pip 19.0.3 has a bug. While it is not fixed the pip version it is manually set to the current one.
-pip==9.0.3
+pip
 Django<1.12
 #^^ rq.filter: <1.12
 -e git+https://github.com/OpenDataServices/flatten-tool.git@v0.6.0#egg=flattentool
