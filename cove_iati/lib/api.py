@@ -2,7 +2,7 @@ import os
 import json
 import shutil
 
-from .iati import common_checks_context_iati, get_file_type
+from .iati import common_checks_context_iati, get_file_type, get_tree
 from .schema import SchemaIATI
 from libcove.lib.converters import convert_spreadsheet
 from libcove.config import LibCoveConfig
@@ -51,8 +51,9 @@ def iati_json_output(output_dir, file, openag=False, orgids=False):
     else:
         data_file = file
 
+    tree = get_tree(data_file)
     context = context_api_transform(
-        common_checks_context_iati(context, output_dir, data_file, file_type,
+        common_checks_context_iati(context, output_dir, data_file, file_type, tree,
                                    api=True, openag=openag, orgids=orgids)
     )
 

@@ -1,28 +1,30 @@
-import logging
-import json
-import tempfile
-import os
 import functools
+import json
+import logging
+import os
+import tempfile
 
-from django.shortcuts import render
-from django import forms
-from django.utils.translation import ugettext_lazy as _
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseBadRequest
-
-from libcove.lib.exceptions import CoveInputDataError
-from libcove.lib.converters import convert_spreadsheet, convert_json
-from libcove.config import LibCoveConfig
 from cove.input.models import SuppliedData
 from cove.input.views import data_input
 from cove.views import explore_data_context
-from .lib.iati import common_checks_context_iati, get_file_type
-from .lib.process_codelists import aggregate_results
-from .lib.api import iati_json_output
-from .lib.schema import SchemaIATI
+from django import forms
 from django.conf import settings
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.shortcuts import render
+from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from libcove.config import LibCoveConfig
+from libcove.lib.converters import convert_spreadsheet, convert_json
+from libcove.lib.exceptions import CoveInputDataError
 
+from .lib.api import iati_json_output
+from .lib.iati import (
+    get_tree, common_checks_context_iati, get_file_type, iati_identifier_count,
+    organisation_identifier_count
+)
+from .lib.process_codelists import aggregate_results
+from .lib.schema import SchemaIATI
 
 logger = logging.getLogger(__name__)
 
@@ -103,9 +105,12 @@ def explore_iati(request, pk):
         context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
                        request=request, flatten=request.POST.get('flatten'), xml=True, lib_cove_config=lib_cove_config))
 
-    context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type)
+    tree = get_tree(data_file)
+    context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type, tree)
     context['first_render'] = not db_data.rendered
     context['invalid_embedded_codelist_values'] = aggregate_results(context['invalid_embedded_codelist_values'])
+    context['iati_identifiers_count'] = iati_identifier_count(tree)
+    context['organisation_identifier_count'] = organisation_identifier_count(tree)
 
     if not db_data.rendered:
         db_data.rendered = True

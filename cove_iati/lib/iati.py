@@ -5,24 +5,17 @@ import re
 import defusedxml.lxml as etree
 import lxml.etree
 from bdd_tester import bdd_tester
-from django.utils.translation import ugettext_lazy as _
 from django.utils.html import format_html
-
-from .schema import SchemaIATI
+from django.utils.translation import ugettext_lazy as _
 from libcove.lib.exceptions import CoveInputDataError
-from cove_iati.lib.exceptions import UnrecognisedFileTypeXML
 from libcove.lib.tools import ignore_errors
+
+from cove_iati.lib.exceptions import UnrecognisedFileTypeXML
 from cove_iati.lib.process_codelists import invalid_embedded_codelist_values
+from .schema import SchemaIATI
 
 
-def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
-    '''TODO: this function is trying to do too many things. Separate some
-    of its logic into smaller functions doing one single thing each.
-    '''
-    schema_iati = SchemaIATI()
-    cell_source_map = {}
-    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
-
+def get_tree(data_file):
     with open(data_file, 'rb') as fp:
         try:
             tree = etree.parse(fp)
@@ -46,6 +39,16 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                          '</span> <strong>Error message:</strong> {}', err)),
                 'error': format(err)
             })
+        return tree
+
+
+def common_checks_context_iati(context, upload_dir, data_file, file_type, tree, api=False, openag=False, orgids=False):
+    '''TODO: this function is trying to do too many things. Separate some
+    of its logic into smaller functions doing one single thing each.
+    '''
+    schema_iati = SchemaIATI()
+    cell_source_map = {}
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
 
     if tree.getroot().tag == 'iati-organisations':
         schema_path = schema_iati.organisation_schema
@@ -421,3 +424,19 @@ def get_file_type(file):
         return 'csv'
     else:
         raise UnrecognisedFileTypeXML
+
+
+def iati_identifier_count(tree):
+    root = tree.getroot()
+    identifiers = root.xpath('/iati-activities/iati-activity/iati-identifier/text()')
+    unique_identifiers = list(set(identifiers))
+
+    return len(unique_identifiers)
+
+
+def organisation_identifier_count(tree):
+    root = tree.getroot()
+    identifiers = root.xpath('/iati-organisations/iati-organisation/organisation-identifier/text()')
+    unique_identifiers = list(set(identifiers))
+
+    return len(unique_identifiers)
