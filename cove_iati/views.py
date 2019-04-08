@@ -19,7 +19,10 @@ from libcove.lib.converters import convert_spreadsheet, convert_json
 from libcove.lib.exceptions import CoveInputDataError
 
 from .lib.api import iati_json_output
-from .lib.iati import common_checks_context_iati, get_file_type, iati_identifier_count, organisation_identifier_count
+from .lib.iati import (
+    get_tree, common_checks_context_iati, get_file_type, iati_identifier_count,
+    organisation_identifier_count
+)
 from .lib.process_codelists import aggregate_results
 from .lib.schema import SchemaIATI
 
@@ -102,11 +105,12 @@ def explore_iati(request, pk):
         context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
                        request=request, flatten=request.POST.get('flatten'), xml=True, lib_cove_config=lib_cove_config))
 
-    context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type)
+    tree = get_tree(data_file)
+    context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type, tree)
     context['first_render'] = not db_data.rendered
     context['invalid_embedded_codelist_values'] = aggregate_results(context['invalid_embedded_codelist_values'])
-    context['iati_identifiers_count'] = iati_identifier_count(data_file)
-    context['organisation_identifier_count'] = organisation_identifier_count(data_file)
+    context['iati_identifiers_count'] = iati_identifier_count(tree)
+    context['organisation_identifier_count'] = organisation_identifier_count(tree)
 
     if not db_data.rendered:
         db_data.rendered = True

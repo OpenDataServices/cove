@@ -521,19 +521,24 @@ def test_ruleset_error_exceptions_handling(validated_data):
 def test_common_checks_context_iati_ruleset():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
     upload_dir = os.path.join('media', str(uuid.uuid4()))
-    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', api=True)
+    tree = iati.get_tree(file_path)
+    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', tree, api=True)
+
     assert len(context['ruleset_errors']) == 3
 
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
     upload_dir = os.path.join('media', str(uuid.uuid4()))
-    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', api=True)
+    tree = iati.get_tree(file_path)
+    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', tree, api=True)
+
     assert len(context['ruleset_errors']) == 17
 
 
 def test_common_checks_context_iati_org_validation():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid.xml')
     upload_dir = os.path.join('media', str(uuid.uuid4()))
-    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', api=True)
+    tree = iati.get_tree(file_path)
+    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', tree, api=True)
     assert len(context['validation_errors']) == 0
 
 
@@ -578,35 +583,41 @@ def test_codelist_full():
 
 def test_iati_identifier_count():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
+    tree = iati.get_tree(file_path)
 
-    assert iati.iati_identifier_count(file_path) == 2
+    assert iati.iati_identifier_count(tree) == 2
 
 
 def test_iati_identifier_count_when_non_unique():
     file_path = os.path.join('cove_iati', 'fixtures', 'iati_openag_tag_repeat_identifiers.xml')
+    tree = iati.get_tree(file_path)
 
-    assert iati.iati_identifier_count(file_path) == 5
+    assert iati.iati_identifier_count(tree) == 5
 
 
 def test_iati_identifier_count_when_none():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid.xml')
+    tree = iati.get_tree(file_path)
 
-    assert iati.iati_identifier_count(file_path) == 0
+    assert iati.iati_identifier_count(tree) == 0
 
 
 def test_organisation_identifier_count():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid.xml')
+    tree = iati.get_tree(file_path)
 
-    assert iati.organisation_identifier_count(file_path) == 1
+    assert iati.organisation_identifier_count(tree) == 1
 
 
 def test_organisation_identifier_count_when_non_unique():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid_repeat_identifiers.xml')
+    tree = iati.get_tree(file_path)
 
-    assert iati.organisation_identifier_count(file_path) == 2
+    assert iati.organisation_identifier_count(tree) == 2
 
 
 def test_organisation_identifier_count_when_none():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
+    tree = iati.get_tree(file_path)
 
-    assert iati.organisation_identifier_count(file_path) == 0
+    assert iati.organisation_identifier_count(tree) == 0

@@ -42,15 +42,13 @@ def get_tree(data_file):
         return tree
 
 
-def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
+def common_checks_context_iati(context, upload_dir, data_file, file_type, tree, api=False, openag=False, orgids=False):
     '''TODO: this function is trying to do too many things. Separate some
     of its logic into smaller functions doing one single thing each.
     '''
     schema_iati = SchemaIATI()
     cell_source_map = {}
     validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
-
-    tree = get_tree(data_file)
 
     if tree.getroot().tag == 'iati-organisations':
         schema_path = schema_iati.organisation_schema
@@ -428,8 +426,7 @@ def get_file_type(file):
         raise UnrecognisedFileTypeXML
 
 
-def iati_identifier_count(data_file):
-    tree = get_tree(data_file)
+def iati_identifier_count(tree):
     root = tree.getroot()
     identifiers = root.xpath('/iati-activities/iati-activity/iati-identifier/text()')
     unique_identifiers = list(set(identifiers))
@@ -437,8 +434,7 @@ def iati_identifier_count(data_file):
     return len(unique_identifiers)
 
 
-def organisation_identifier_count(data_file):
-    tree = get_tree(data_file)
+def organisation_identifier_count(tree):
     root = tree.getroot()
     identifiers = root.xpath('/iati-organisations/iati-organisation/organisation-identifier/text()')
     unique_identifiers = list(set(identifiers))
