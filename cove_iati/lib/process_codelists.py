@@ -122,7 +122,6 @@ def is_int(value):
 
 
 def invalid_codelist_values(codelist_values, filename, source_map=None):
-    #path_to_codelist = create_path_to_codelists(codelist_values)
 
     parsed = ET.parse(filename)
     root = parsed.getroot()
@@ -152,7 +151,6 @@ def invalid_codelist_values(codelist_values, filename, source_map=None):
                 codelist_selected_path = codelist_path
                 break
 
-        #codelist = path_to_codelist.get(non_number_path)
         if not codelist_data:
             continue
 
