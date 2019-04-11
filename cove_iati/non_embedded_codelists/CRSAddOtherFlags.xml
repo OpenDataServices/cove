@@ -1,0 +1,48 @@
+<codelist name="CRSAddOtherFlags" xml:lang="en" complete="1" embedded="0">
+    <metadata>
+        <name>
+            <narrative>CRS Additional Other Flags</narrative>
+        </name>
+        <description>
+            <narrative>OECD DAC classification used to distinguish aid modalities. </narrative>
+        </description>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>1</code>
+            <name>
+                <narrative>Free standing technical cooperation</narrative>
+            </name>
+            <description>
+                <narrative>Free standing technical cooperation (Col 24 in CRS++ Reporting format)</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>2</code>
+            <name>
+                <narrative>Programme-based approach</narrative>
+            </name>
+            <description>
+                <narrative>Programme-based approach (Col 25 in CRS++ Reporting format)</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>3</code>
+            <name>
+                <narrative>Investment project</narrative>
+            </name>
+            <description>
+                <narrative>Investment project (Col 26 in CRS++ Reporting format)</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>4</code>
+            <name>
+                <narrative>Associated financing</narrative>
+            </name>
+            <description>
+                <narrative>Associated financing (Col 27 in CRS++ Reporting format)</narrative>
+            </description>
+        </codelist-item>
+    </codelist-items>
+</codelist>

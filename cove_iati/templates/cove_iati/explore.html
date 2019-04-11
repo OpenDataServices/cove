@@ -188,6 +188,56 @@
   </div>
   {% endblock embedded_codelists %}
 
+
+  {% block non_embedded_codelists %}
+  <div class="panel panel-default">
+    <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#codelist-non-embedded-body">
+      <h3 class="panel-title panel-title-explore">
+        {% if invalid_non_embedded_codelist_values %}
+           <span class="font-tick cross" aria-hidden="true"></span>
+           {% trans "Invalid Non Embedded Codelist Values" %}
+        {% else %}
+           <span class="font-tick tick" aria-hidden="true"></span>
+           {% trans "Valid Non Embedded Codelist Values" %}
+        {% endif %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="codelist-non-embedded-body" class="collapse">
+      <div class="panel-body">
+        <p class="explanation">
+        {% if invalid_non_embedded_codelist_values %}
+            {% trans "Sorry your data contains values in codelists that do not exist in the standard" %}
+        {% else %}
+          {% trans "Congratulations! Your codelist values are all valid" %}
+        {% endif %}
+        </p>
+        <div class="explore-help"></div>
+        {% for codelist_item in invalid_non_embedded_codelist_values %}
+           {% include "cove_iati/codelist_panel.html" %}
+
+            <div class="modal fade" id="{{codelist_item.codelist_path_slug}}_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Invalid Non Embedded Codelist Values</h4>
+                  </div>
+                  <div class="modal-body">
+                    {% with full_list=True %}
+                      {% include "cove_iati/codelist_panel.html" %}
+                    {% endwith %} 
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endblock non_embedded_codelists %}
+
+
   {% block ruleset %}
   {% if not ruleset_disabled %}
   <div class="panel panel-default">

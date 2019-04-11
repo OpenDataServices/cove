@@ -1,0 +1,472 @@
+<codelist name="SectorCategory" xml:lang="en" complete="1" embedded="0">
+    <metadata>
+        <name>
+            <narrative>DAC 3 Digit Sector</narrative>
+        </name>
+        <url>http://www.oecd.org/dac/stats/dacandcrscodelists.htm</url>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>111</code>
+            <name>
+                <narrative>Education, Level Unspecified</narrative>
+                <narrative xml:lang="fr">Education, Niveau non spécifié</narrative>
+            </name>
+            <description>
+                <narrative>The codes in this category are to be used only when level of education is unspecified or unknown (e.g. training of primary school teachers should be coded under 11220).</narrative>
+                <narrative xml:lang="fr">Les codes de cette catégorie doivent être utilisés seulement si le niveau d’éducation n’est pas spécifié ou connu (par exemple la formation d’enseignants d’écoles primaires devrait être codée sous 11220).</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>112</code>
+            <name>
+                <narrative>Basic Education</narrative>
+                <narrative xml:lang="fr">Education de Base</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>113</code>
+            <name>
+                <narrative>Secondary Education</narrative>
+                <narrative xml:lang="fr">Education Secondaire</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>114</code>
+            <name>
+                <narrative>Post-Secondary Education</narrative>
+                <narrative xml:lang="fr">Education Post Secondaire</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>121</code>
+            <name>
+                <narrative>Health, General</narrative>
+                <narrative xml:lang="fr">Santé, Général</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>122</code>
+            <name>
+                <narrative>Basic Health</narrative>
+                <narrative xml:lang="fr">Santé de Base</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>123</code>
+            <name>
+                <narrative>Non-communicable diseases (NCDs)</narrative>
+                <narrative xml:lang="fr">Maladies non-transmissibles (MNT)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>130</code>
+            <name>
+                <narrative>Population Policies/Programmes &amp; Reproductive Health</narrative>
+                <narrative xml:lang="fr">Politique en Matière de Population/Santé&amp;Fertilité</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>140</code>
+            <name>
+                <narrative>Water Supply &amp; Sanitation</narrative>
+                <narrative xml:lang="fr">Distribution d'Eau et Assainissement</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>151</code>
+            <name>
+                <narrative>Government &amp; Civil Society-general</narrative>
+                <narrative xml:lang="fr">Gouvernement &amp; Société Civile-général</narrative>
+            </name>
+            <description>
+                <narrative>N.B. Use code 51010 for general budget support.</narrative>
+                <narrative xml:lang="fr">N.B. Utiliser le code 51010 pour le soutien budgétaire général.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>152</code>
+            <name>
+                <narrative>Conflict, Peace &amp; Security</narrative>
+                <narrative xml:lang="fr">Conflits, Paix et Sécurité</narrative>
+            </name>
+            <description>
+                <narrative>N.B. Further notes on ODA eligibility (and exclusions) of conflict, peace and security related activities are given in paragraphs 76-81 of the Directives.</narrative>
+                <narrative xml:lang="fr">N.B.  Des notes supplémentaires sur l’éligibilité au titre de l’APD (et les exclusions) des activités liées aux conflits, la paix et la sécurité sont données dans les paragraphes 76-81 des Directives.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>160</code>
+            <name>
+                <narrative>Other Social Infrastructure &amp; Services</narrative>
+                <narrative xml:lang="fr">Infrastructure et Services Sociaux Divers</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>210</code>
+            <name>
+                <narrative>Transport &amp; Storage</narrative>
+                <narrative xml:lang="fr">Transports et Entreposage</narrative>
+            </name>
+            <description>
+                <narrative>Note: Manufacturing of transport equipment should be included under code 32172.</narrative>
+                <narrative xml:lang="fr">Nota bene : La fabrication de matériel de transport devrait être incluse dans le code 32172.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>220</code>
+            <name>
+                <narrative>Communications</narrative>
+                <narrative xml:lang="fr">Communications</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>231</code>
+            <name>
+                <narrative>Energy Policy</narrative>
+                <narrative xml:lang="fr">Politique de l'énergie</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>232</code>
+            <name>
+                <narrative>Energy generation, renewable sources</narrative>
+                <narrative xml:lang="fr">Production d'électricité, sources renouvelables</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>233</code>
+            <name>
+                <narrative>Energy generation, non-renewable sources</narrative>
+                <narrative xml:lang="fr">Production d'électricité, sources non renouvelables</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>234</code>
+            <name>
+                <narrative>Hybrid energy plants</narrative>
+                <narrative xml:lang="fr">Centrales hybrides</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>235</code>
+            <name>
+                <narrative>Nuclear energy plants</narrative>
+                <narrative xml:lang="fr">Centrales nucléaires</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>236</code>
+            <name>
+                <narrative>Energy distribution</narrative>
+                <narrative xml:lang="fr">Distribution de l'énergie</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>240</code>
+            <name>
+                <narrative>Banking &amp; Financial Services</narrative>
+                <narrative xml:lang="fr">Banques et Services Financiers</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>250</code>
+            <name>
+                <narrative>Business &amp; Other Services</narrative>
+                <narrative xml:lang="fr">Entreprises et Autres Services</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>311</code>
+            <name>
+                <narrative>Agriculture</narrative>
+                <narrative xml:lang="fr">Agriculture</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>312</code>
+            <name>
+                <narrative>Forestry</narrative>
+                <narrative xml:lang="fr">Sylviculture</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>313</code>
+            <name>
+                <narrative>Fishing</narrative>
+                <narrative xml:lang="fr">Pêche</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>321</code>
+            <name>
+                <narrative>Industry</narrative>
+                <narrative xml:lang="fr">Industries Manufacturières</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>322</code>
+            <name>
+                <narrative>Mineral Resources &amp; Mining</narrative>
+                <narrative xml:lang="fr">Industries Extractives</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>323</code>
+            <name>
+                <narrative>Construction</narrative>
+                <narrative xml:lang="fr">Construction</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>331</code>
+            <name>
+                <narrative>Trade Policies &amp; Regulations</narrative>
+                <narrative xml:lang="fr">Politique Commerciale et Réglementations</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>332</code>
+            <name>
+                <narrative>Tourism</narrative>
+                <narrative xml:lang="fr">Tourisme</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>410</code>
+            <name>
+                <narrative>General Environment Protection</narrative>
+                <narrative xml:lang="fr">Protection de l'Environnement Général</narrative>
+            </name>
+            <description>
+                <narrative>Covers activities concerned with conservation, protection or amelioration of the physical environment without sector allocation.</narrative>
+                <narrative xml:lang="fr">Secteur non spécifié.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>430</code>
+            <name>
+                <narrative>Other Multisector</narrative>
+                <narrative xml:lang="fr">Autres Multisecteurs</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>510</code>
+            <name>
+                <narrative>General Budget Support</narrative>
+                <narrative xml:lang="fr">Soutien Budgétaire</narrative>
+            </name>
+            <description>
+                <narrative>Budget support in the form of sector-wide approaches (SWAps) should be included in the respective sectors.</narrative>
+                <narrative xml:lang="fr">Les soutiens budgétaires sous la forme d’approches sectorielles devraient être inclus dans les secteurs respectifs.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>520</code>
+            <name>
+                <narrative>Developmental Food Aid/Food Security Assistance</narrative>
+                <narrative xml:lang="fr">Aide Alimentaire Dévelopmentale/Sécurité Alimentaire</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>530</code>
+            <name>
+                <narrative>Other Commodity Assistance</narrative>
+                <narrative xml:lang="fr">Aide sous forme de Produits, Autre</narrative>
+            </name>
+            <description>
+                <narrative>Non-food commodity assistance (when benefiting sector not specified).</narrative>
+                <narrative xml:lang="fr">Aide sous forme de produits non alimentaires (quand le secteur bénéficiaire ne peut être précisé).</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>600</code>
+            <name>
+                <narrative>Action Relating to Debt</narrative>
+                <narrative xml:lang="fr">Actions se Rapportant a la Dette</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>720</code>
+            <name>
+                <narrative>Emergency Response</narrative>
+                <narrative xml:lang="fr">Intervention d'Urgence</narrative>
+            </name>
+            <description>
+                <narrative>An emergency is a situation which results from man made crises and/or natural disasters.</narrative>
+                <narrative xml:lang="fr">Une situation d’urgence a pour origine une crise provoquée par des actions humaines ou par une catastrophe naturelle.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>730</code>
+            <name>
+                <narrative>Reconstruction Relief &amp; Rehabilitation</narrative>
+                <narrative xml:lang="fr">Reconstruction &amp; Réhabilitation</narrative>
+            </name>
+            <description>
+                <narrative>This relates to activities during and in the aftermath of an emergency situation.  Longer-term activities to improve the level of infrastructure or social services should be reported under the relevant economic and social sector codes. See also guideline on distinguishing humanitarian from sector-allocable aid.</narrative>
+                <narrative xml:lang="fr">Activités menées pendant et après une situation d’urgence. Les activités à plus long terme destinées à améliorer le niveau d’infrastructure ou de services sociaux doivent être rapportées sous les codes correspondants des secteurs économiques et sociaux pertinents. Voir également les orientations sur la distinction entre l’aide humanitaire et l’aide ventilable par secteur.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>740</code>
+            <name>
+                <narrative>Disaster Prevention &amp; Preparedness</narrative>
+                <narrative xml:lang="fr">Prévention catastrophes/Préparation à leur survenue</narrative>
+            </name>
+            <description>
+                <narrative>See codes 41050 and 15220 for prevention of floods and conflicts.</narrative>
+                <narrative xml:lang="fr">Voir codes 41050 et 15220 pour la prévention des inondations et des conflits.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>910</code>
+            <name>
+                <narrative>Administrative Costs of Donors</narrative>
+                <narrative xml:lang="fr">Frais Administratifs des Donneurs</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>930</code>
+            <name>
+                <narrative>Refugees in Donor Countries</narrative>
+                <narrative xml:lang="fr">Refugiés dans les Pays Donneurs</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>998</code>
+            <name>
+                <narrative>Unallocated / Unspecified</narrative>
+                <narrative xml:lang="fr">Non Affecté / Non Specifié</narrative>
+            </name>
+            <description>
+                <narrative>Contributions to general development of the recipient should be included under programme assistance (51010).</narrative>
+                <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+    </codelist-items>
+</codelist>
