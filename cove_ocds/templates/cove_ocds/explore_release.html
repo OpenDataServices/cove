@@ -20,8 +20,8 @@
         {% else %} 
           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% trans "Passed " %} 
         {% endif %}
-        {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">OCDS release package schema version {{ version_used_display }}</a>.
-        {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Schema validation Errors</a> below.{% endblocktrans %}{% endif %}
+        {% blocktrans %}structural checks against {% endblocktrans %}<a href="{{ schema_url }}">OCDS release package schema version {{ version_used_display }}</a>.
+        {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Structural Errors</a> below.{% endblocktrans %}{% endif %}
         </div>
         {% if extensions and extensions.invalid_extension %}
         <div class="message">
@@ -318,7 +318,7 @@
 <div class="row"> <!--Start Row (Detail Table)-->
   <div class="col-xs-12">
     <div class="alert alert-danger">
-      {%blocktrans%}Statistics can not produced as data is invalid.{%endblocktrans%}
+      {%blocktrans%}Statistics cannot be produced as data is not structurally correct.{%endblocktrans%}
     </div>
   </div>
 </div>

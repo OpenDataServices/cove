@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-29 07:10+0000\n"
+"POT-Creation-Date: 2019-04-17 10:38+0000\n"
 "PO-Revision-Date: 2017-04-03 14:36+0000\n"
 "Last-Translator: Bibiana Cristòfol <bcristofol@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
@@ -36,8 +36,8 @@ msgid "Try Again"
 msgstr "Inténtelo de nuevo"
 
 #: cove_ocds/lib/exceptions.py:16 cove_ocds/lib/exceptions.py:32
-msgid "{} is not a valid schema version"
-msgstr "{} no es una versión válida del esquema"
+msgid "{} is not a known schema version"
+msgstr "{} no es una versión conocida del esquema"
 
 #: cove_ocds/lib/exceptions.py:22
 msgid "Version format does not comply with the schema"
@@ -190,14 +190,14 @@ msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:131
 msgid ""
-"If your data passes basic schema validation checks, the tool will then "
-"present a report on data quality, and information about the contents of your"
-" file. It will also offer alternative copies of the data for download. "
+"If your data passes basic structural checks, the tool will then present a "
+"report on data quality, and information about the contents of your file. It "
+"will also offer alternative copies of the data for download. "
 msgstr ""
-"Si tus datos pasan las comprobaciones básicas de validación del schema, la "
-"herramienta presentará un informe sobre la calidad de los datos e "
-"información sobre el contenido de su archivo. También ofrecerá copias "
-"alternativas de los datos para su descarga."
+"Si tus datos pasan comprobaciones estructurales básicas, la herramienta "
+"presentará un informe sobre la calidad de los datos e información sobre el "
+"contenido de tu archivo. También ofrecerá copias alternativas de los datos "
+"para descargar."
 
 #: cove_ocds/templates/cove_ocds/base.html:132
 msgid ""
@@ -287,8 +287,8 @@ msgstr "Errores de Conversión (títulos)"
 #: cove_ocds/templates/cove_ocds/explore_base.html:256
 #: cove_ocds/templates/cove_ocds/explore_base.html:412
 #: cove_ocds/templates/cove_ocds/explore_base.html:415
-msgid "Validation Errors"
-msgstr "Errores de validación"
+msgid "Structural Errors"
+msgstr "Errores Estructurales"
 
 #: cove_ocds/templates/cove_ocds/explore_base.html:270
 #: cove_ocds/templates/cove_ocds/explore_base.html:430
@@ -303,8 +303,8 @@ msgid "Conformance (Rules)"
 msgstr "Conformidad (Reglas)"
 
 #: cove_ocds/templates/cove_ocds/explore_base.html:314
-msgid "Codelist Validation Errors"
-msgstr "Errores de Validación de Listas de Códigos"
+msgid "Codelist Errors"
+msgstr "Errores de la Lista de Códigos"
 
 #: cove_ocds/templates/cove_ocds/explore_base.html:336
 msgid "Additional Fields"
@@ -421,12 +421,13 @@ msgstr "Ha pasado "
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:25
 #: cove_ocds/templates/cove_ocds/explore_release.html:23
-msgid "validation against "
-msgstr "validación de acuerdo con "
+msgid "structural checks against "
+msgstr "comprobaciones estructurales contra"
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:26
-msgid "See <a href=\"#validation-errors\">Validation Errors</a> below."
-msgstr "Ver <a href=\"#validation-errors\">errores de validación</a> más abajo."
+#: cove_ocds/templates/cove_ocds/explore_release.html:24
+msgid "See <a href=\"#validation-errors\">Structural Errors</a> below."
+msgstr "Ver <a href=\"#validation-errors\">Errores Estructurales</a> más abajo."
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:33
 #, python-format
@@ -520,8 +521,8 @@ msgid "on "
 msgstr "el "
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:95
-msgid "Validates against the schema?"
-msgstr "¿Valida siguiendo el esquema?"
+msgid "Is structurally correct?"
+msgstr "¿Es estructuralmente correcto?"
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:108
 msgid "Number of records"
@@ -572,12 +573,6 @@ msgstr ""
 "visualización para navegar en el historial de cambios. Los campos nuevos y "
 "modificados están resaltados, use esta función para verificar si alguno de "
 "los campos ha cambiado inesperadamente."
-
-#: cove_ocds/templates/cove_ocds/explore_release.html:24
-msgid "See <a href=\"#validation-errors\">Schema validation Errors</a> below."
-msgstr ""
-"Ver <a href=\"#validation-errors\">errores de validación del Schema</a> más "
-"abajo."
 
 #: cove_ocds/templates/cove_ocds/explore_release.html:28
 msgid "<strong>Failed </strong>to apply "
@@ -836,8 +831,10 @@ msgid "Implementation Milestones"
 msgstr "Hitos de ejecución"
 
 #: cove_ocds/templates/cove_ocds/explore_release.html:321
-msgid "Statistics can not produced as data is invalid."
-msgstr "No se pueden producir estadísticas ya que los datos no son válidos."
+msgid "Statistics cannot be produced as data is not structurally correct."
+msgstr ""
+"No se pueden producir estadísticas porque los datos no son estructuralmente "
+"correctos."
 
 #: cove_ocds/templates/cove_ocds/explore_release.html:335
 msgid "Releases Table:"
