@@ -1,6 +1,7 @@
 -r requirements.in
 
-flake8
+# Lock to 3.5.0 as later versions catch more errors, and we'll need to fix some code to upgrade to them.
+flake8==3.5.0
 pytest
 pytest-django
 pytest-cov
@@ -13,5 +14,6 @@ libsass
 Sphinx
 -e git+https://github.com/rtfd/recommonmark.git@3238b029b6e19b9cbceb9b85d81304f86b12c012#egg=recommonmark
 sphinx_rtd_theme
-hypothesis
+# Lock as later versions have a problem with slow generation of data
+hypothesis==3.52.3
 
