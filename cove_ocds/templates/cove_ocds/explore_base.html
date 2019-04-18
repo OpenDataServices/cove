@@ -262,6 +262,20 @@
   </div>
 {% endif %}
 
+{% if additional_checks %}
+  <a name="additional_checks" class="anchor"></a>
+  <div class="panel panel-danger">
+    <div id="additional-checks-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
+      <h4 class="panel-title">
+        <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Checks' %}
+      </h4>
+    </div>
+    <div id="additionalChecksTable" class="collapse in">
+      {% include "cove_ocds/additional_checks_table.html" %}
+    </div>
+  </div>
+{% endif %}
+
 {% if structure_warnings %}
     <a name="structure-warnings" class="anchor"></a>
     <div class="panel panel-danger">
