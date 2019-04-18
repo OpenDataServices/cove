@@ -1,5 +1,11 @@
 {
   "extensions": {},
+  "additional_checks": {
+    "empty_field": [
+      {"json_location": "releases/0/id"},
+      {"json_location": "releases/0/tag"}
+    ]
+  },
   "additional_closed_codelist_values": {
     "releases/tender/value/currency": {
       "isopen": false,

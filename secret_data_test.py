@@ -18,6 +18,12 @@ protected url, see .travis.yml
 
 """
 
+#
+# Generate ocds_cli output
+#
+
+print("Running OCDS CLI ...")
+
 os.makedirs('secret_data_test/ocds_cli', exist_ok=True)
 os.chdir(os.path.join('secret_data_test/ocds_cli'))
 
@@ -26,6 +32,12 @@ for fname in glob.glob('../../ocds/*'):
 
 
 os.chdir('../..')
+
+#
+# Generate 360 output
+#
+
+print("Running 360 ...")
 
 server_proc = os.fork()
 if not server_proc:
@@ -49,6 +61,11 @@ for original_file in glob.glob('360/*'):
 
 os.kill(server_proc, signal.SIGTERM)
 
+#
+# Generate OCDS output
+#
+
+print("Running OCDS ...")
 
 server_proc = os.fork()
 if not server_proc:
@@ -72,26 +89,71 @@ for original_file in glob.glob('ocds/*'):
 
 os.kill(server_proc, signal.SIGTERM)
 
+#
+# Test OCDS CLI results
+#
+
+print("Testing OCDS CLI ...")
 
 os.chdir(os.path.join('secret_data_test/ocds_cli'))
 
 for dirname in os.listdir('.'):
     print(dirname)
-    with open(os.path.join(dirname, 'results.json')) as fp, open(os.path.join('..', '..', 'secret_data_test_archive', 'ocds_cli', dirname, 'results.json')) as fp_archive:
-        assert json.load(fp) == json.load(fp_archive)
+    expected_path = os.path.join('..', '..', 'secret_data_test_archive', 'ocds_cli', dirname, 'results.json')
+    actual_path = os.path.join(dirname, 'results.json')
+    with open(actual_path) as fp, open(expected_path) as fp_archive:
+        actual_data = json.load(fp)
+        expected_data = json.load(fp_archive)
+        assert actual_data == expected_data
 
 os.chdir('../..')
+
+#
+# Test OCDS results
+#
+
+print("Testing OCDS ...")
+
+
+def make_ocds_validation_errors_comparable(data):
+    out = {}
+    for k, v in data.items():
+        # k is a string that can come out in different orders.
+        # Then compares will fail between runs just because of random order in the output.
+        # To make sure compares work, make sure k is turned into a string value with JSON in the same order
+        # ... and is thus comparable.
+        k_data = json.loads(k)
+        out[json.dumps(k_data, sort_keys=True, indent=2)] = v
+    return out
+
+
 os.chdir(os.path.join('secret_data_test', 'ocds'))
 
 for dirname in os.listdir('.'):
     print(dirname)
-    with open(os.path.join(dirname, 'validation_errors.json')) as fp, open(os.path.join('..', '..', 'secret_data_test_archive', 'ocds', dirname, 'validation_errors.json')) as fp_archive:
-        assert json.load(fp) == json.load(fp_archive)
+    expected_path = os.path.join('..', '..', 'secret_data_test_archive', 'ocds', dirname, 'validation_errors.json')
+    actual_path = os.path.join(dirname, 'validation_errors.json')
+    with open(actual_path) as fp, open(expected_path) as fp_archive:
+        actual_data = make_ocds_validation_errors_comparable(json.load(fp))
+        expected_data = make_ocds_validation_errors_comparable(json.load(fp_archive))
+        assert actual_data == expected_data
+
 
 os.chdir('../..')
+
+#
+# Test 360 results
+#
+
+print("Testing 360 ...")
+
 os.chdir(os.path.join('secret_data_test', '360'))
 
 for dirname in os.listdir('.'):
     print(dirname)
-    with open(os.path.join(dirname, 'validation_errors.json')) as fp, open(os.path.join('..', '..', 'secret_data_test_archive', '360', dirname, 'validation_errors.json')) as fp_archive:
-        assert json.load(fp) == json.load(fp_archive)
+    expected_path = os.path.join('..', '..', 'secret_data_test_archive', '360', dirname, 'validation_errors.json')
+    actual_path = os.path.join(dirname, 'validation_errors.json')
+    with open(actual_path) as fp, open(expected_path) as fp_archive:
+        actual_data = json.load(fp)
+        expected_data = json.load(fp_archive)
+        assert actual_data == expected_data
