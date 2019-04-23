@@ -22,8 +22,8 @@
         {% else %} 
           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% trans "Passed " %} 
         {% endif %}
-        {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">OCDS record package schema version {{ version_used_display }}</a>.
-        {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Validation Errors</a> below.{% endblocktrans %}{% endif %}
+        {% blocktrans %}structural checks against {% endblocktrans %}<a href="{{ schema_url }}">OCDS record package schema version {{ version_used_display }}</a>.
+        {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Structural Errors</a> below.{% endblocktrans %}{% endif %}
         </div>
 
          <div class="key-facts message">
@@ -92,7 +92,7 @@
   <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4 class="panel-title">{% trans 'Validates against the schema?' %}</h4>
+        <h4 class="panel-title">{% trans 'Is structurally correct?' %}</h4>
       </div>
       <div class="panel-body">
         {% if validation_errors %}No{% else %}Yes{% endif %}

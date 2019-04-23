@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-29 07:10+0000\n"
+"POT-Creation-Date: 2019-04-17 10:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,7 +28,7 @@ msgid "Try Again"
 msgstr ""
 
 #: cove_ocds/lib/exceptions.py:16 cove_ocds/lib/exceptions.py:32
-msgid "{} is not a valid schema version"
+msgid "{} is not a known schema version"
 msgstr ""
 
 #: cove_ocds/lib/exceptions.py:22
@@ -153,9 +153,9 @@ msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:131
 msgid ""
-"If your data passes basic schema validation checks, the tool will then "
-"present a report on data quality, and information about the contents of your "
-"file. It will also offer alternative copies of the data for download. "
+"If your data passes basic structural checks, the tool will then present a "
+"report on data quality, and information about the contents of your file. It "
+"will also offer alternative copies of the data for download. "
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:132
@@ -237,7 +237,7 @@ msgstr ""
 #: cove_ocds/templates/cove_ocds/explore_base.html:256
 #: cove_ocds/templates/cove_ocds/explore_base.html:412
 #: cove_ocds/templates/cove_ocds/explore_base.html:415
-msgid "Validation Errors"
+msgid "Structural Errors"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_base.html:270
@@ -253,7 +253,7 @@ msgid "Conformance (Rules)"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_base.html:314
-msgid "Codelist Validation Errors"
+msgid "Codelist Errors"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_base.html:336
@@ -356,11 +356,12 @@ msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:25
 #: cove_ocds/templates/cove_ocds/explore_release.html:23
-msgid "validation against "
+msgid "structural checks against "
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:26
-msgid "See <a href=\"#validation-errors\">Validation Errors</a> below."
+#: cove_ocds/templates/cove_ocds/explore_release.html:24
+msgid "See <a href=\"#validation-errors\">Structural Errors</a> below."
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:33
@@ -447,7 +448,7 @@ msgid "on "
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:95
-msgid "Validates against the schema?"
+msgid "Is structurally correct?"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:108
@@ -488,10 +489,6 @@ msgid ""
 "When viewing an OCDS record, use the numbers at the top of the visualization "
 "to browse the change history. New and changed fields are highlighted, use "
 "this feature to check whether any fields have changed unexpectedly."
-msgstr ""
-
-#: cove_ocds/templates/cove_ocds/explore_release.html:24
-msgid "See <a href=\"#validation-errors\">Schema validation Errors</a> below."
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_release.html:28
@@ -746,7 +743,7 @@ msgid "Implementation Milestones"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_release.html:321
-msgid "Statistics can not produced as data is invalid."
+msgid "Statistics cannot be produced as data is not structurally correct."
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/explore_release.html:335

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-29 07:10+0000\n"
+"POT-Creation-Date: 2019-04-17 10:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,13 +17,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: cove_iati/lib/exceptions.py:8 cove_iati/lib/iati.py:30
-#: cove_iati/lib/iati.py:40
+#: cove_iati/lib/exceptions.py:8 cove_iati/lib/iati.py:24
+#: cove_iati/lib/iati.py:34
 msgid "Sorry, we can't process that data"
 msgstr ""
 
-#: cove_iati/lib/exceptions.py:10 cove_iati/lib/iati.py:32
-#: cove_iati/lib/iati.py:42
+#: cove_iati/lib/exceptions.py:10 cove_iati/lib/iati.py:26
+#: cove_iati/lib/iati.py:36
 msgid "Try Again"
 msgstr ""
 
@@ -49,6 +49,22 @@ msgid ""
 "by Bootswatch"
 msgstr ""
 
+#: cove_iati/templates/cove_iati/codelist_panel.html:12
+msgid "Invalid Value"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/codelist_panel.html:13
+msgid "Identifier"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/codelist_panel.html:14
+msgid "Location of error"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/codelist_panel.html:16
+msgid "Spreadsheet Location"
+msgstr ""
+
 #: cove_iati/templates/cove_iati/explore.html:29
 #, python-format
 msgid "An IATI %(schema_name)s file was"
@@ -67,119 +83,170 @@ msgid "on "
 msgstr ""
 
 #: cove_iati/templates/cove_iati/explore.html:39
+#, python-format
+msgid "Name of the file: %(file_name)s"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:41
+#, python-format
+msgid "Number of activities: %(iati_identifiers_count)s"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:45
+#, python-format
+msgid "Number of organisations: %(organisation_identifier_count)s"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:51
 msgid "Convert to Spreadsheet"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:58
+#: cove_iati/templates/cove_iati/explore.html:70
 msgid "Converted to "
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:60
+#: cove_iati/templates/cove_iati/explore.html:72
 #, python-format
 msgid "%(n_warnings)s Error"
 msgid_plural "%(n_warnings)s Errors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: cove_iati/templates/cove_iati/explore.html:68
+#: cove_iati/templates/cove_iati/explore.html:80
 msgid "In order to validate your data we needed to convert it to XML."
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:77
+#: cove_iati/templates/cove_iati/explore.html:89
 msgid "Conversion <strong>errors:</strong>"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:96
+#: cove_iati/templates/cove_iati/explore.html:108
 msgid "Invalid against Schema "
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:96
-#: cove_iati/templates/cove_iati/explore.html:144
+#: cove_iati/templates/cove_iati/explore.html:108
+#: cove_iati/templates/cove_iati/explore.html:254
 #, python-format
 msgid " %(n_errors)s Error."
 msgid_plural "%(n_errors)s Errors "
 msgstr[0] ""
 msgstr[1] ""
 
-#: cove_iati/templates/cove_iati/explore.html:99
+#: cove_iati/templates/cove_iati/explore.html:111
 msgid "Valid against Schema"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:108
+#: cove_iati/templates/cove_iati/explore.html:120
 msgid "Sorry your data is invalid against"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:110
+#: cove_iati/templates/cove_iati/explore.html:122
 msgid "Congratulations! Your data is valid against"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:117
+#: cove_iati/templates/cove_iati/explore.html:129
 msgid ""
 "There are some <strong>validation errors</strong> in your data, please check "
 "them in the table below."
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:139
-#: cove_iati/templates/cove_iati/explore.html:143
-msgid "Ruleset Errors "
+#: cove_iati/templates/cove_iati/explore.html:149
+msgid "Invalid Embedded Codelist Values"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:140
-msgid "Failed"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:148
-msgid "Ruleset Checks"
-msgstr ""
-
-#: cove_iati/templates/cove_iati/explore.html:158
-msgid "There was a problem running ruleset checks."
+#: cove_iati/templates/cove_iati/explore.html:152
+msgid "Valid Embedded Codelist Values"
 msgstr ""
 
 #: cove_iati/templates/cove_iati/explore.html:161
+msgid ""
+"Sorry your data contains values in embedded codelists that do not exist in "
+"the standard"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:163
+msgid "Congratulations! Your embedded codelist values are all valid"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:198
+msgid "Invalid Non Embedded Codelist Values"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:201
+msgid "Valid Non Embedded Codelist Values"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:210
+msgid ""
+"Sorry your data contains values in codelists that do not exist in the "
+"standard"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:212
+msgid "Congratulations! Your codelist values are all valid"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:249
+#: cove_iati/templates/cove_iati/explore.html:253
+msgid "Ruleset Errors "
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:250
+msgid "Failed"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:258
+msgid "Ruleset Checks"
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:268
+msgid "There was a problem running ruleset checks."
+msgstr ""
+
+#: cove_iati/templates/cove_iati/explore.html:271
 msgid ""
 "This may be due to validation errors in your data, please fix them and try "
 "again."
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:164
+#: cove_iati/templates/cove_iati/explore.html:274
 msgid "Sorry your data contains ruleset errors"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:168
+#: cove_iati/templates/cove_iati/explore.html:278
 msgid "Congratulations! Your data passes all IATI ruleset checks"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:172
+#: cove_iati/templates/cove_iati/explore.html:282
 msgid ""
 "There are some <strong>ruleset errors</strong> in your data, please check "
 "them in the table below."
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:189
+#: cove_iati/templates/cove_iati/explore.html:299
 msgid "Download and Share"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:196
+#: cove_iati/templates/cove_iati/explore.html:306
 msgid "The following files are available to download:"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:199
+#: cove_iati/templates/cove_iati/explore.html:309
 msgid "Original file"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:219
+#: cove_iati/templates/cove_iati/explore.html:329
 msgid "Use the following url to share these results:"
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:225
+#: cove_iati/templates/cove_iati/explore.html:335
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
 "will be shown a message that tells them the file has been removed."
 msgstr ""
 
-#: cove_iati/templates/cove_iati/explore.html:226
+#: cove_iati/templates/cove_iati/explore.html:336
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
@@ -370,14 +437,14 @@ msgstr ""
 msgid "Path"
 msgstr ""
 
-#: cove_iati/views.py:44
+#: cove_iati/views.py:47
 msgid "Upload a file (.csv, .xlsx, .xml)"
 msgstr ""
 
-#: cove_iati/views.py:53
+#: cove_iati/views.py:56
 msgid "Supply a URL"
 msgstr ""
 
-#: cove_iati/views.py:58
+#: cove_iati/views.py:61
 msgid "Paste (XML only)"
 msgstr ""

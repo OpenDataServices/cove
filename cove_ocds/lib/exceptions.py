@@ -13,7 +13,7 @@ def raise_invalid_version_argument(version):
                  'the schema.\n\n<span class="glyphicon glyphicon-exclamation-sign" '
                  'aria-hidden="true"></span> <strong>Error message:</strong> <em>{}</em> is '
                  'not a recognised choice for the schema version', version)),
-        'error': _('{} is not a valid schema version'.format(version))
+        'error': _('{} is not a known schema version'.format(version))
     })
 
 
@@ -25,11 +25,11 @@ def raise_invalid_version_data_with_patch(version):
         'msg': _(format_html('The value for the <em>"version"</em> field in your data follows the '
                  '<em>major.minor.patch</em> pattern but according to the schema the patch digit '
                  'shouldn\'t be included (e.g. <em>"1.1.0"</em> should appear as <em>"1.1"</em> in '
-                 'your data as the validator always uses the latest patch release for a major.minor '
+                 'your data as this tool always uses the latest patch release for a major.minor '
                  'version).\n\nPlease get rid of the patch digit and try again.\n\n<span class="glyphicon '
                  'glyphicon-exclamation-sign" aria-hidden="true"></span> <strong>Error message: '
                  '</strong> <em>{}</em> format does not comply with the schema', version)),
-        'error': _('{} is not a valid schema version'.format(version))
+        'error': _('{} is not a known schema version'.format(version))
     })
 
 
