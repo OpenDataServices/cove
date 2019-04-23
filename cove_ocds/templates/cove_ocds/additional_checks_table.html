@@ -1,4 +1,27 @@
 {% load i18n %}
 {% load cove_tags %}
 
-<div>HELLO</div>
+<table class="table">
+    <thead>
+      <tr>
+        <th>{% trans 'Check Description' %}</th>
+        <th>{% trans 'Location' %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for key, values in additional_checks.items %}
+        {% if key == 'empty_field' %}
+          <tr>
+            <td>{% trans 'There are fields that are empty or contain only whitespaces' %}</td>
+            <td>
+              {% for empty_field in values %}
+                <ul style="list-style: none; padding-left: 0;">
+                  <li>{{ empty_field.json_location }}</li>
+                </ul>
+              {% endfor %}
+            </td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+</table>
