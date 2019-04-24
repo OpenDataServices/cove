@@ -5,23 +5,30 @@
     <thead>
       <tr>
         <th>{% trans 'Check Description' %}</th>
-        <th>{% trans 'Location' %}</th>
+        <th>{% trans 'Location of first 3 errors' %}</th>
       </tr>
     </thead>
     <tbody>
-      {% for key, values in additional_checks.items %}
-        {% if key == 'empty_field' %}
+      {% for type, values in additional_checks.items %}
+        {% if type == 'empty_field' %}
           <tr>
             <td>{% trans 'There are fields that are empty or contain only whitespaces' %}</td>
             <td>
-              {% for empty_field in values %}
-                <ul style="list-style: none; padding-left: 0;">
-                  <li>{{ empty_field.json_location }}</li>
-                </ul>
-              {% endfor %}
+              <ul class="list-unstyled">
+                {% for value in values|slice:":3" %}
+                  <li>{{ value.json_location }}</li>
+                {% endfor %}
+                {% if values|length > 3 %}
+                  <li><a data-toggle="modal" data-target=".{{"additional-checks-"|concat:forloop.counter}}"><sup>see all</sup></a></li>
+                {% endif %}
+              </ul>
             </td>
           </tr>
         {% endif %}
       {% endfor %}
     </tbody>
 </table>
+
+{% for type, values in additional_checks.items %}
+  {% cove_modal_errors className="additional-checks-"|concat:forloop.counter modalTitle="" errorList=values|list_from_attribute:"json_location" file_type=file_type full_table=False %}
+{% endfor %}
