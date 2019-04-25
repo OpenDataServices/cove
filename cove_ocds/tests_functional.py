@@ -6,8 +6,8 @@ import requests
 from django.conf import settings
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import Select
 
 PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/review/')
 
@@ -622,3 +622,51 @@ def test_ocds_show(server_url, url_input_browser, httpserver, source_filename, e
         assert text in body_text
     for text in not_expected:
         assert text not in body_text
+
+
+@pytest.mark.parametrize(('source_filename', 'expected', 'not_expected'), [
+        (
+            'basic_release_empty_fields.json',
+            [
+                'Check Description',
+                'Location of first 3 errors',
+                'There are fields that are empty or contain only whitespaces',
+                'releases/0/buyer/name',
+                'releases/0/parties/0/address',
+                'releases/0/planning/budget/id'
+            ],
+            'releases/0/tender/items/0/additionalClassifications'
+        ),
+    ])
+def test_additional_checks_section(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
+    browser = url_input_browser(source_filename)
+    additional_checks_text = browser.find_element_by_id('additionalChecksTable').text
+
+    for text in expected:
+        assert text in additional_checks_text
+    assert not_expected not in additional_checks_text
+
+
+@pytest.mark.parametrize(('source_filename'), [('full_record.json'),])
+def test_additional_checks_section_not_being_displayed(server_url, url_input_browser, httpserver, source_filename):
+    """Additional checks sections should only be displayed when there are results"""
+
+    browser = url_input_browser(source_filename)
+    additional_checks = browser.find_elements_by_id('additionalChecksTable')
+
+    assert additional_checks == []
+
+
+@pytest.mark.parametrize(('source_filename'), [('basic_release_empty_fields.json')])
+def test_additional_checks_error_modal(server_url, url_input_browser, httpserver, source_filename):
+    browser = url_input_browser(source_filename)
+    browser.find_element_by_css_selector('a[data-target=".additional-checks-1"]').click()
+    modal = browser.find_element_by_css_selector('.additional-checks-1')
+    modal_text = modal.text
+    table_rows = browser.find_elements_by_css_selector('.additional-checks-1 tbody tr')
+
+    assert "Location" in modal_text
+    assert "releases/0/tender/items/0/additionalClassifications" in modal_text
+    assert len(table_rows) == 4
+
+    browser.find_element_by_css_selector('div.modal.additional-checks-1 button.close').click()
