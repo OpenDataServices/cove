@@ -241,26 +241,79 @@
   </div>
 {% endif %}
 
-{% if validation_errors %}
-  {% for error_json, values in validation_errors %}
-    {% with error=error_json|json_decode %}
-      {% cove_modal_errors className="validation-errors-"|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
-    {% endwith %}
-  {% endfor %}
-  
+{% with validation_errors=validation_errors_grouped.required error_prefix='required-' %}
+  {% if validation_errors %}
+    {% for error_json, values in validation_errors %}
+      {% with error=error_json|json_decode %}
+        {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
+      {% endwith %}
+    {% endfor %}
 
-  <a name="validation-errors" class="anchor"></a>
-  <div class="panel panel-danger">
-    <div id="validation-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
-      <h4 class="panel-title">
-        <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Structural Errors' %}
-      </h4>
+    <a name="validation-errors" class="anchor"></a>
+    <div class="panel panel-danger">
+      <div id="validation-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
+        <h4 class="panel-title">
+          <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Structural Errors - Required Fields' %}
+        </h4>
+      </div>
+      <div id="validationTable" class="collapse in panel-body">
+        {% blocktrans %}Some or all of your data is missing fields which are required by the OCDS schema.{% endblocktrans %}
+        {% include "cove_ocds/validation_table.html" %}
+      </div>
     </div>
-    <div id="validationTable" class="collapse in">
-      {% include "validation_table.html" %}
+
+  {% endif %}
+{% endwith %}
+
+{% with validation_errors=validation_errors_grouped.format error_prefix='format-' %}
+  {% if validation_errors %}
+    {% for error_json, values in validation_errors %}
+      {% with error=error_json|json_decode %}
+        {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
+      {% endwith %}
+    {% endfor %}
+
+    <a name="validation-errors" class="anchor"></a>
+    <div class="panel panel-danger">
+      <div id="validation-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
+        <h4 class="panel-title">
+          <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Structural Errors - Format' %}
+        </h4>
+      </div>
+      <div id="validationTable" class="collapse in panel-body">
+        {% blocktrans %}Some or all of your data includes fields which are incorrectly formatted.{% endblocktrans %}
+        {% include "cove_ocds/validation_table.html" %}
+      </div>
     </div>
-  </div>
-{% endif %}
+
+  {% endif %}
+{% endwith %}
+
+{% with validation_errors=validation_errors_grouped.other error_prefix='other-' %}
+  {% if validation_errors %}
+    {% for error_json, values in validation_errors %}
+      {% with error=error_json|json_decode %}
+        {% cove_modal_errors className="validation-errors-"|concat:error_prefix|concat:forloop.counter modalTitle=error.message errorList=values file_type=file_type full_table=True %}
+      {% endwith %}
+    {% endfor %}
+
+    <a name="validation-errors" class="anchor"></a>
+    <div class="panel panel-danger">
+      <div id="validation-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="validationTable" data-toggle="collapse" data-target="#validationTable">
+        <h4 class="panel-title">
+          <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Structural Errors - Other' %}
+        </h4>
+      </div>
+      <div id="validationTable" class="collapse in panel-body">
+        {% blocktrans %}Some or all of your data has validation errors.{% endblocktrans %}
+        {% include "cove_ocds/validation_table.html" %}
+      </div>
+    </div>
+
+  {% endif %}
+{% endwith %}
+
+
 
 {% if additional_checks %}
   <a name="additional_checks" class="anchor"></a>
