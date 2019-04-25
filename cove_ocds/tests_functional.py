@@ -625,19 +625,19 @@ def test_ocds_show(server_url, url_input_browser, httpserver, source_filename, e
 
 
 @pytest.mark.parametrize(('source_filename', 'expected', 'not_expected'), [
-        (
-            'basic_release_empty_fields.json',
-            [
-                'Check Description',
-                'Location of first 3 errors',
-                'There are fields that are empty or contain only whitespaces',
-                'releases/0/buyer/name',
-                'releases/0/parties/0/address',
-                'releases/0/planning/budget/id'
-            ],
-            'releases/0/tender/items/0/additionalClassifications'
-        ),
-    ])
+    (
+        'basic_release_empty_fields.json',
+        [
+            'Check Description',
+            'Location of first 3 errors',
+            'There are fields that are empty or contain only whitespaces',
+            'releases/0/buyer/name',
+            'releases/0/parties/0/address',
+            'releases/0/planning/budget/id'
+        ],
+        'releases/0/tender/items/0/additionalClassifications'
+    ),
+])
 def test_additional_checks_section(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
     browser = url_input_browser(source_filename)
     additional_checks_text = browser.find_element_by_id('additionalChecksTable').text
@@ -647,7 +647,7 @@ def test_additional_checks_section(server_url, url_input_browser, httpserver, so
     assert not_expected not in additional_checks_text
 
 
-@pytest.mark.parametrize(('source_filename'), [('full_record.json'),])
+@pytest.mark.parametrize(('source_filename'), [('full_record.json')])
 def test_additional_checks_section_not_being_displayed(server_url, url_input_browser, httpserver, source_filename):
     """Additional checks sections should only be displayed when there are results"""
 
