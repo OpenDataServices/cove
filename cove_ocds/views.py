@@ -22,6 +22,7 @@ from libcove.lib.converters import convert_spreadsheet, convert_json
 from libcove.lib.exceptions import CoveInputDataError
 from . lib.ocds_show_extra import add_extra_fields
 from cove.views import explore_data_context
+from cove_ocds.lib.views import group_validation_errors
 
 
 logger = logging.getLogger(__name__)
@@ -164,7 +165,8 @@ def explore_ocds(request, pk):
 
     context.update({
         'data_schema_version': db_data.data_schema_version,
-        'first_render': not db_data.rendered
+        'first_render': not db_data.rendered,
+        'validation_errors_grouped': group_validation_errors(context['validation_errors']),
     })
 
     schema_version = getattr(schema_ocds, 'version', None)
