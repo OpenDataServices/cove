@@ -313,8 +313,6 @@
   {% endif %}
 {% endwith %}
 
-
-
 {% if structure_warnings %}
     <a name="structure-warnings" class="anchor"></a>
     <div class="panel panel-danger">
@@ -379,8 +377,6 @@
     </div>
 {% endif %}
 
-
-
 {% if data_only %}
     <a name="additional-fields" class="anchor"></a>
     <div class="panel panel-warning">
@@ -417,6 +413,20 @@
         Make sure you list the definition of any additional codelist values you include within your <a href="http://standard.open-contracting.org/latest/en/implementation/publication_policy/">publication policy</a>, and if you believe they should be added as recommended values in the open codelist, please suggest this via the <a href="https://github.com/open-contracting/standard/issues/new"> OCDS issue tracker.</a>
       </div>
     </div>
+{% endif %}
+
+{% if additional_checks %}
+  <a name="additional_checks" class="anchor"></a>
+  <div class="panel panel-warning">
+    <div id="additional-checks-panel" class="panel-heading pointer" role="region" aria-expanded="true" aria-controls="additionalChecksTable" data-toggle="collapse" data-target="#additionalChecksTable">
+      <h4 class="panel-title">
+        <span class="glyphicon glyphicon-collapse-up"></span>{% trans 'Additional Checks' %}
+      </h4>
+    </div>
+    <div id="additionalChecksTable" class="collapse in">
+      {% include "cove_ocds/additional_checks_table.html" %}
+    </div>
+  </div>
 {% endif %}
 
 {% if deprecated_fields %}

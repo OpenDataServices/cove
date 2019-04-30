@@ -1,0 +1,34 @@
+{% load i18n %}
+{% load cove_tags %}
+
+<table class="table">
+    <thead>
+      <tr>
+        <th>{% trans 'Check Description' %}</th>
+        <th>{% trans 'Location of first 3 errors' %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for type, values in additional_checks.items %}
+        {% if type == 'empty_field' %}
+          <tr>
+            <td>{% trans 'There are fields that are empty or contain only whitespaces' %}</td>
+            <td>
+              <ul class="list-unstyled">
+                {% for value in values|slice:":3" %}
+                  <li>{{ value.json_location }}</li>
+                {% endfor %}
+                {% if values|length > 3 %}
+                  <li><a data-toggle="modal" data-target=".{{"additional-checks-"|concat:forloop.counter}}"><sup>see all</sup></a></li>
+                {% endif %}
+              </ul>
+            </td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+</table>
+
+{% for type, values in additional_checks.items %}
+  {% cove_modal_errors className="additional-checks-"|concat:forloop.counter modalTitle="" errorList=values|list_from_attribute:"json_location" file_type=file_type full_table=False %}
+{% endfor %}
