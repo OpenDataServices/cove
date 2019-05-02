@@ -41,7 +41,7 @@ def server_url(request, live_server):
                                                   'This file contains 4 grants from 1 funder to 2 recipients awarded on 24/07/2014',
                                                   'The grants were awarded in GBP with a total value of £662,990 and individual awards ranging from £152,505 (lowest) to £178,990 (highest)',
                                                   'Convert to Spreadsheet',
-                                                  'Data does not use the 360Giving Standard 15 Errors',
+                                                  'data does not use the 360Giving Standard 15 Errors',
                                                   'your data is not yet using the 360Giving standard',
                                                   'Incorrect Formats',
                                                   'Non-unique ID Values',
@@ -49,7 +49,7 @@ def server_url(request, live_server):
                                                   'Grant identifiers:  2',
                                                   'Funder organisation identifiers:  1',
                                                   '360G-fundingproviders-000002/X/00/X'], True),
-    ('fundingproviders-grants_broken_grants.json', ['Data does not use the 360Giving Standard 15 Errors',
+    ('fundingproviders-grants_broken_grants.json', ['data does not use the 360Giving Standard 15 Errors',
                                                  'Check your data 4 Grants',
                                                  'Funder organisation identifiers:  2',
                                                  'Recipient organisation identifiers:  2',
@@ -58,8 +58,7 @@ def server_url(request, live_server):
                                             'The grants were awarded in GBP with a total value of £331,495',
                                             # check that there's no errors after the heading
                                             'This data could be read as 360Giving JSON data\nBefore checking',
-                                            'If a file cannot be converted to JSON it',
-                                            'Data does not use the 360Giving Standard 7 Errors',
+                                            'data does not use the 360Giving Standard 7 Errors',
                                             'description is missing but required',
                                             'Sheet: grants Row: 2',
                                             'Check your data 2 Grants',
@@ -68,7 +67,7 @@ def server_url(request, live_server):
                                             '360G-fundingproviders-000002/X/00/X'], True),
     # Test conversion warnings are shown
     ('tenders_releases_2_releases.xlsx', ['This data could not be read as 360Giving JSON data 5 Errors',
-                                          'Data does not use the 360Giving Standard 76 Errors',
+                                          'data does not use the 360Giving Standard 76 Errors',
                                           'You may have a duplicate Identifier: We couldn\'t merge these rows with the id "1": field "ocid" in sheet "items": one cell has the value: "PW-14-00627094", the other cell has the value: "PW-14-00629344"'
                                           ], True),
     # Test that titles that aren't in the rollup are converted correctly
