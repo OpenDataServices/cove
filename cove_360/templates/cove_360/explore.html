@@ -119,7 +119,7 @@
             <div class="explore-help">This is because 360Giving is an open data standard which uses a <a href="http://json-schema.org/">JSON Schema</a> to describe the standard in a technical way. 
 		    <br/>
 		    {% if conversion_error %}
-		    If a file cannot be converted to JSON it indicates that it cannot be correctly mapped to the standard and needs to be reviewed. If this is the case you should check the file and re-upload it once you’ve fixed the problem. The conversion errors below will give an indication of where the issue is.
+		    	If a file cannot be converted to JSON it indicates that it cannot be correctly mapped to the standard and needs to be reviewed. If this is the case you should check the file and re-upload it once you’ve fixed the problem. The conversion errors below will give an indication of where the issue is.
 		    {% endif %}
             </div>
           {% else %}
@@ -174,7 +174,7 @@
         {% else %}
           {% trans " meets the " %}
         {% endif %}
-		{% blocktrans %}the requirements of the <a href="http://www.threesixtygiving.org/standard/">360Giving Standard</a>. Making sure your data uses the standard is important. Otherwise it cannot be used by other people and applications working with 360Giving format data. {% endblocktrans %}
+	{% blocktrans %}the requirements of the <a href="http://www.threesixtygiving.org/standard/">360Giving Standard</a>. Making sure your data uses the standard is important. Otherwise it cannot be used by other people and applications working with 360Giving format data. {% endblocktrans %}
 </diV>
         {% if validation_errors %}
           <br>
