@@ -186,7 +186,7 @@ First check the `Transifex lock <https://opendataservices.plan.io/projects/co-op
 
 Make sure you are set up as a maintainer in Transifex. Only maintainers are allowed to update the source file.
 
-Install (gettext)[https://www.gnu.org/software/gettext/] library.
+Install `gettext <https://www.gnu.org/software/gettext/>`_ library. (The following step is for Ubuntu but equivalent packages are available for other distros.)
 
 .. code:: bash
 
