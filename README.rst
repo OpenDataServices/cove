@@ -184,6 +184,14 @@ In order to generate messages and post them on Transifex:
 
 First check the `Transifex lock <https://opendataservices.plan.io/projects/co-op/wiki/CoVE_Transifex_lock>`_, because only one branch can be translated on Transifex at a time.
 
+Make sure you are set up as a maintainer in Transifex. Only maintainers are allowed to update the source file.
+
+Install (gettext)[https://www.gnu.org/software/gettext/] library.
+
+.. code:: bash
+
+    sudo apt-get install gettext
+
 Then:
 
 .. code:: bash
