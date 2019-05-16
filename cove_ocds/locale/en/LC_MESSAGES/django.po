@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-30 10:38+0000\n"
+"POT-Creation-Date: 2019-05-16 12:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,7 +57,10 @@ msgid "Location of first 3 errors"
 msgstr ""
 
 #: cove_ocds/templates/cove_ocds/additional_checks_table.html:15
-msgid "There are fields that are empty or contain only whitespaces"
+msgid ""
+"The data includes fields that are empty or contain only whitespaces. Fields "
+"that are not being used, or that have no value, should be excluded in their "
+"entirety (key and value) from the data"
 msgstr ""
 
 #. Translators: Label of a button that triggers search
@@ -274,31 +277,27 @@ msgstr ""
 msgid "Some or all of your data has validation errors."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:323
-msgid "Additional Checks"
-msgstr ""
-
-#: cove_ocds/templates/cove_ocds/explore_base.html:337
-#: cove_ocds/templates/cove_ocds/explore_base.html:497
-#: cove_ocds/templates/cove_ocds/explore_base.html:500
+#: cove_ocds/templates/cove_ocds/explore_base.html:321
+#: cove_ocds/templates/cove_ocds/explore_base.html:493
+#: cove_ocds/templates/cove_ocds/explore_base.html:496
 msgid "Structure Warnings"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:359
-#: cove_ocds/templates/cove_ocds/explore_base.html:485
-#: cove_ocds/templates/cove_ocds/explore_base.html:488
+#: cove_ocds/templates/cove_ocds/explore_base.html:343
+#: cove_ocds/templates/cove_ocds/explore_base.html:481
+#: cove_ocds/templates/cove_ocds/explore_base.html:484
 msgid "Conformance (Rules)"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:381
+#: cove_ocds/templates/cove_ocds/explore_base.html:365
 msgid "Codelist Errors"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:403
+#: cove_ocds/templates/cove_ocds/explore_base.html:385
 msgid "Additional Fields"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:407
+#: cove_ocds/templates/cove_ocds/explore_base.html:389
 msgid ""
 "This data includes the following fields which are not part of the OCDS "
 "schema. You should check whether the data in these fields could be provided "
@@ -307,71 +306,75 @@ msgid ""
 "schema."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:421
+#: cove_ocds/templates/cove_ocds/explore_base.html:403
 msgid "Additional Codelist Values"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:441
-#: cove_ocds/templates/cove_ocds/explore_base.html:521
-#: cove_ocds/templates/cove_ocds/explore_base.html:524
+#: cove_ocds/templates/cove_ocds/explore_base.html:423
+msgid "Additional Checks"
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/explore_base.html:437
+#: cove_ocds/templates/cove_ocds/explore_base.html:517
+#: cove_ocds/templates/cove_ocds/explore_base.html:520
 msgid "Deprecated Fields"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:441
+#: cove_ocds/templates/cove_ocds/explore_base.html:437
 msgid ""
 "Fields flagged as 'deprecated' will be either replaced or removed in future "
 "versions of the schema."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:457
+#: cove_ocds/templates/cove_ocds/explore_base.html:453
 msgid "Save or Share these results"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:458
+#: cove_ocds/templates/cove_ocds/explore_base.html:454
 msgid "Use the following url to share these results:"
 msgstr ""
 
 #. Translators: Paragraph that describes the application
-#: cove_ocds/templates/cove_ocds/explore_base.html:463
+#: cove_ocds/templates/cove_ocds/explore_base.html:459
 msgid ""
 "These results will be available for 7 days from the day the data was first "
 "uploaded. You can revisit these results until then."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:464
+#: cove_ocds/templates/cove_ocds/explore_base.html:460
 msgid ""
 "After 7 days all uploaded data is deleted from our servers, and the results "
 "will no longer be available. Anyone using the link to this page after that "
 "will be shown a message that tells them the file has been removed."
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:479
-#: cove_ocds/templates/cove_ocds/explore_base.html:482
+#: cove_ocds/templates/cove_ocds/explore_base.html:475
+#: cove_ocds/templates/cove_ocds/explore_base.html:478
 msgid "Structural Errors"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:491
+#: cove_ocds/templates/cove_ocds/explore_base.html:487
 msgid "view all errors &#9660;"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:494
-#: cove_ocds/templates/cove_ocds/explore_base.html:506
-#: cove_ocds/templates/cove_ocds/explore_base.html:512
+#: cove_ocds/templates/cove_ocds/explore_base.html:490
+#: cove_ocds/templates/cove_ocds/explore_base.html:502
+#: cove_ocds/templates/cove_ocds/explore_base.html:508
 msgid "View all errors &#9650;"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:503
+#: cove_ocds/templates/cove_ocds/explore_base.html:499
 #: cove_ocds/templates/cove_ocds/ocds_missing_ids_table.html:6
 #: cove_ocds/templates/cove_ocds/ocid_prefixes_table.html:5
 msgid "View all errors &#9660;"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:509
+#: cove_ocds/templates/cove_ocds/explore_base.html:505
 msgid "Quality Warnings"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/explore_base.html:515
-#: cove_ocds/templates/cove_ocds/explore_base.html:518
+#: cove_ocds/templates/cove_ocds/explore_base.html:511
+#: cove_ocds/templates/cove_ocds/explore_base.html:514
 msgid "Additional Fields (fields in data not in schema)"
 msgstr ""
 
