@@ -630,7 +630,9 @@ def test_ocds_show(server_url, url_input_browser, httpserver, source_filename, e
         [
             'Check Description',
             'Location of first 3 errors',
-            'There are fields that are empty or contain only whitespaces',
+            'The data includes fields that are empty or contain only whitespaces. '
+                'Fields that are not being used, or that have no value, '
+                'should be excluded in their entirety (key and value) from the data',
             'releases/0/buyer/name',
             'releases/0/parties/0/address',
             'releases/0/planning/budget/id'
