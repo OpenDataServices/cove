@@ -12,7 +12,7 @@
       {% for type, values in additional_checks.items %}
         {% if type == 'empty_field' %}
           <tr>
-            <td>{% trans 'There are fields that are empty or contain only whitespaces' %}</td>
+            <td>{% trans 'The data includes fields that are empty or contain only whitespaces. Fields that are not being used, or that have no value, should be excluded in their entirety (key and value) from the data' %}</td>
             <td>
               <ul class="list-unstyled">
                 {% for value in values|slice:":3" %}
