@@ -13,6 +13,7 @@ from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from django.utils import translation
 from django.utils.html import format_html
+from django.conf import settings
 
 from . lib import exceptions
 from libcoveocds.common_checks import common_checks_ocds
@@ -47,6 +48,8 @@ def explore_ocds(request, pk):
 
     lib_cove_ocds_config = LibCoveOCDSConfig()
     lib_cove_ocds_config.config['current_language'] = translation.get_language()
+    lib_cove_ocds_config.config['schema_version_choices'] = settings.COVE_CONFIG['schema_version_choices']
+    lib_cove_ocds_config.config['schema_codelists'] = settings.COVE_CONFIG['schema_codelists']
 
     upload_dir = db_data.upload_dir()
     upload_url = db_data.upload_url()
