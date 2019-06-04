@@ -64,7 +64,7 @@ def url_input_browser(request, server_url, browser, httpserver):
 
 
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
-    ('Open Contracting', 'We connect governments', 'h1', 'http://www.open-contracting.org/'),
+    ('Open Contracting', 'Transforming public contracting', 'h1', 'http://www.open-contracting.org/'),
     ('Open Contracting Data Standard', 'Open Contracting Data Standard: Documentation', '#open-contracting-data-standard-documentation', 'http://standard.open-contracting.org/'),
     ])
 def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector, url):
