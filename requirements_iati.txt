@@ -1,0 +1,4 @@
+-r requirements.txt
+-e git+https://github.com/pwyf/bdd-tester.git@b30f9fd3e32d72a5e84492f7f336776006bc45e8#egg=bdd-tester
+defusedxml==0.5.0
+-e git+https://github.com/OpenDataServices/defusedexpat@362a55a5f41ec2044e90ac54dc2fc52d5f979da3#egg=defusedexpat
