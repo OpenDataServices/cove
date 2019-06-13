@@ -22,8 +22,7 @@ xmltodict==0.12.0
 rangedict==0.1.6
 
 
-# Lock to 3.5.0 as later versions catch more errors, and we'll need to fix some code to upgrade to them.
-flake8==3.5.0
+flake8==3.7.7
 pytest==4.6.3
 pytest-django==3.5.0
 pytest-cov==2.7.1
@@ -51,6 +50,7 @@ contextlib2==0.5.5
 coverage==4.5.3
 docopt==0.6.2
 docutils==0.14
+entrypoints==0.3
 et-xmlfile==1.0.1
 execnet==1.6.0
 future==0.17.1
@@ -70,8 +70,8 @@ packaging==19.0
 
 pluggy==0.12.0
 py==1.8.0
-pycodestyle==2.3.1
-pyflakes==1.6.0
+pycodestyle==2.5.0
+pyflakes==2.1.1
 Pygments==2.4.2
 pyparsing==2.4.0
 pyrsistent==0.15.2
