@@ -1,7 +1,7 @@
 import json
 import itertools
 import openpyxl
-from collections import defaultdict, OrderedDict, Callable
+from collections import OrderedDict, Callable
 from decimal import Decimal
 import datetime
 import pytz
