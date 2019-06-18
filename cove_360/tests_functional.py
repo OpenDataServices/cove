@@ -441,7 +441,6 @@ def test_error_modal(server_url, browser, httpserver, source_filename):
     table_rows = browser.find_elements_by_css_selector('.validation-errors-format-1 tbody tr')
     assert len(table_rows) == 4
 
-
     browser.find_element_by_css_selector('a[data-target=".validation-errors-format-2"]').click()
 
     modal = browser.find_element_by_css_selector('.validation-errors-format-2')
