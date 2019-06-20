@@ -87,3 +87,6 @@ COVE_CONFIG['schema_version'] = list(COVE_CONFIG['schema_version_choices'].keys(
 
 # https://github.com/OpenDataServices/cove/issues/1098
 FILE_UPLOAD_PERMISSIONS = 0o644
+
+# Because of how the standard site proxies traffic, we want to use this
+USE_X_FORWARDED_HOST = True
