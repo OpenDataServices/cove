@@ -7,6 +7,7 @@ import copy
 from dateutil import parser
 from strict_rfc3339 import validate_rfc3339
 from decimal import Decimal
+from collections import OrderedDict
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
@@ -60,7 +61,7 @@ def explore_ocds(request, pk):
         # open the data first so we can inspect for record package
         with open(file_name, encoding='utf-8') as fp:
             try:
-                json_data = json.load(fp, parse_float=Decimal)
+                json_data = json.load(fp, parse_float=Decimal, object_pairs_hook=OrderedDict)
             except ValueError as err:
                 raise CoveInputDataError(context={
                     'sub_title': _("Sorry, we can't process that data"),
@@ -152,7 +153,7 @@ def explore_ocds(request, pk):
                                            pkg_schema_url=pkg_url, replace=replace))
 
         with open(context['converted_path'], encoding='utf-8') as fp:
-            json_data = json.load(fp, parse_float=Decimal)
+            json_data = json.load(fp, parse_float=Decimal, object_pairs_hook=OrderedDict)
 
     if replace:
         if os.path.exists(validation_errors_path):

@@ -124,6 +124,7 @@
   "file_type": "json",
   "releases_aggregates": {},
   "additional_fields": [],
+  "all_additional_fields": [],
   "additional_open_codelist_values": {},
   "deprecated_fields": [],
   "common_error_types": [],
