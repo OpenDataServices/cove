@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 # This follows broadly the approach from
 # http://www.kennethreitz.org/essays/a-better-pip-workflow but with the
 # addition of requirements_dev

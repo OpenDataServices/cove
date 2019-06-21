@@ -43,11 +43,6 @@ CoVE currently supports conversion from:
 
 If a JSON schema is supplied, CoVE can use either field names or user-friendly column titles.
 
-User Flows
-==========
-
-Overviews of how users flow through the application are maintained at https://docs.google.com/drawings/d/1pVbEu6dJaVk8t3NctjYuE5irsqltc9Th0gVQ_zeJyFA/edit and https://docs.google.com/drawings/d/1wFH4lZlBZWso7Tj_g7CyTF3YaFfnly59sVufpztmEg8/edit
-
 Release Cycle
 =============
 
@@ -56,11 +51,7 @@ There are public instances in use at:
 https://dataquality.threesixtygiving.org/
 http://standard.open-contracting.org/review/
 
-We deploy the latest version of CoVE at the end of each calendar month (usually the last Thursday of the month).
-We make a development version ready for user testing (mainly internally) two weeks before deployment. Our cut off date for new features to be considered in that cycle is the week before that.
-
 Feature requests, bugs, questions and answers etc are all handled via GitHub.
-We use release cycle milestones to organise those issues.
 We also use GitHub projects as a way to prioritise issues and indicate what is being worked on.
 
 Serious Bug fixes and 'priority' features, that need to make it into a release at short notice can be included by negotiation.
@@ -75,7 +66,7 @@ Steps to installation:
 
 * Clone the repository
 * Change into the cloned repository
-* Create a virtual environment (note this application uses python3)
+* Create a virtual environment (note this application uses python3. For development, it's recommended to use virtualenv)
 * Activate the virtual environment
 * Install dependencies
 * Set up the database (sqlite3) (you need to pass the django settings for the module (ie. ocds, 360, iati) you want to run)
