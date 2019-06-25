@@ -331,11 +331,11 @@ QUALITY_ACCURACY_CHECKS_RESULTS = [
     ({'heading': ("33% of grants have a value provided in the "
                   "<span class=\"highlight-background-text\">Recipient Org: Company Number</span> column "
                   "that doesn’t look like a company number"),
-      'message': ("Common causes of this are missing leading digits, typos or incorrect "
-                  "values being entered into this field. Company numbers are typically 8 digits, possibly starting SC, "
-                  "for example <span class=\"highlight-background-text\">SC01234569</span> or "
-                  "<span class=\"highlight-background-text\">09876543</span>. You can check company numbers online "
-                  "at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House</a>.")},
+      'message': ("Common causes of this are missing leading digits, typos or incorrect values "
+                  "being entered into this field. Company numbers are typically 8 digits, "
+                  "for example <span class=\"highlight-background-text\">09876543</span> or sometimes start with a "
+                  "2 letter prefix, <span class=\"highlight-background-text\">SC123459</span>. You can check "
+                  "company numbers online at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House</a>.")},
      ['grants/0/recipientOrganization/0/companyNumber'],
      [{'sheet': 'grants', 'letter': 'L', 'row_number': 2, 'header': 'Recipient Org:Company Number'}]),
     ({'heading': "67% of grants have funder or recipient organisation IDs that might not be valid",
