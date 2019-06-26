@@ -1027,7 +1027,7 @@ def test_cove_ocds_cli_schema_cache():
         results = json.load(fp)
 
     assert results['version_used'] == '1.0'
-    assert results['schema_url'] == 'http://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
+    assert results['schema_url'] == 'https://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
     assert sorted(results['validation_errors'], key=lambda k: k['description'])[0]['description'].startswith("'id' is missing but required within 'buyer'")
     assert sorted(results['extensions']['extensions'], key=lambda k: k['name'])[2]['description'] == "For classifying organizations as micro, sme or large."
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[0][0] == 'badprotocol://example.com'
@@ -1049,7 +1049,7 @@ def test_cove_ocds_cli_schema_cache():
         results = json.load(fp)
 
     assert results['version_used'] == '1.0'
-    assert results['schema_url'] == 'http://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
+    assert results['schema_url'] == 'https://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
     assert sorted(results['validation_errors'], key=lambda k: k['description'])[0]['description'].startswith("'id' is missing but required within 'buyer'")
     assert sorted(results['extensions']['extensions'], key=lambda k: k['name'])[2]['description'] == "For classifying organizations as micro, sme or large."
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[0][0] == 'badprotocol://example.com'
