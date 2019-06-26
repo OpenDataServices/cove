@@ -1,21 +1,21 @@
+import functools
+import itertools
 import json
 import logging
 from decimal import Decimal
-import functools
-
-from django.shortcuts import render
-from django.utils.translation import ugettext_lazy as _
-from django.utils.html import format_html
-
-from . lib.schema import Schema360
-from . lib.threesixtygiving import common_checks_360
-from . lib.threesixtygiving import TEST_CLASSES
-from libcove.lib.converters import convert_spreadsheet, convert_json
-from libcove.lib.exceptions import CoveInputDataError
-from libcove.config import LibCoveConfig
-from django.conf import settings
 
 from cove.views import explore_data_context
+from django.conf import settings
+from django.shortcuts import render
+from django.utils.html import format_html
+from django.utils.translation import ugettext_lazy as _
+from libcove.config import LibCoveConfig
+from libcove.lib.converters import convert_spreadsheet, convert_json
+from libcove.lib.exceptions import CoveInputDataError
+
+from .lib.schema import Schema360
+from .lib.threesixtygiving import TEST_CLASSES
+from .lib.threesixtygiving import common_checks_360
 
 logger = logging.getLogger(__name__)
 
@@ -99,6 +99,12 @@ def common_errors(request):
 
 def additional_checks(request):
     context = {}
+
+    test_classes = list(itertools.chain(*TEST_CLASSES.values()))
     context["checks"] = [
-        {**check.check_text, 'desc': check.__doc__, 'class_name': check.__name__} for check in TEST_CLASSES]
+        {
+            'heading': check.check_text['heading'], 'message': check.check_text['message'].ordered_dict.items(),
+            'desc': check.__doc__, 'class_name': check.__name__
+        } for check in test_classes
+    ]
     return render(request, 'cove_360/additional_checks.html', context)

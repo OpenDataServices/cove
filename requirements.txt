@@ -2,13 +2,12 @@ pip==19.1.1
 Django==1.11.21 # rq.filter: <1.12
 -e git+https://github.com/OpenDataServices/flatten-tool.git@524f437abe48d7f9b8a2d6a1cf6fa9a49d002b0f#egg=flattentool
 -e git+https://github.com/open-contracting/lib-cove-ocds.git@beefa6eefa3190cf9f89fa1fdb2c605d92589cee#egg=libcoveocds
--e git+https://github.com/OpenDataServices/lib-cove-web.git@1c7f5e0f310b7f0f90460d032823499e99dbb05e#egg=libcoveweb
+-e git+https://github.com/OpenDataServices/lib-cove-web.git@a0609d0f7b6b410c928454e6aa7eb0234ca47da4#egg=libcoveweb
 -e git+https://github.com/OpenDataServices/lib-cove.git@213e5fe3145ab186e34db325d4f40fe051755b84#egg=libcove
 django-bootstrap3==11.0.0
-django-debug-toolbar==1.11
+django-debug-toolbar==2.0
 requests==2.22.0
 cached-property==1.5.1
-# Locking dealer as v2.1 up has some issues with Middleware
 dealer==2.0.5
 django-environ==0.4.5
 jsonschema==3.0.1
@@ -20,9 +19,10 @@ rfc3987==1.3.8
 rfc6266==0.0.4
 bleach==3.1.0
 xmltodict==0.12.0
+rangedict==0.1.6
 ## The following requirements were added by pip freeze:
 attrs==19.1.0
-certifi==2019.3.9
+certifi==2019.6.16
 chardet==3.0.4
 commonmark==0.9.0
 contextlib2==0.5.5
@@ -34,6 +34,7 @@ jsonref==0.2
 LEPL==5.1.3
 lxml==4.3.4
 openpyxl==2.6.2
+
 pyrsistent==0.15.2
 pytz==2019.1
 schema==0.7.0

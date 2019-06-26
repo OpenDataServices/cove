@@ -1,10 +1,15 @@
-import re
-from collections import defaultdict, OrderedDict
+import json
+import itertools
+import openpyxl
+from collections import OrderedDict, Callable
 from decimal import Decimal
-
+import datetime
+import pytz
+import re
 import libcove.lib.tools as tools
+from django.utils.html import mark_safe
 from libcove.lib.common import common_checks_context, get_orgids_prefixes
-
+from rangedict import RangeDict as range_dict
 
 orgids_prefixes = get_orgids_prefixes()
 orgids_prefixes.append('360G')
@@ -14,6 +19,63 @@ currency_html = {
     "USD": "$",
     "EUR": "&euro;"
 }
+
+
+class RangeDict(range_dict):
+    """
+    Override RangeDict library to work as an OrderedDict.
+    """
+    def __init__(self):
+        super(RangeDict, self).__init__()
+        self.ordered_dict = OrderedDict()
+
+    def __setitem__(self, r, v):
+        super(RangeDict, self).__setitem__(r, v)
+        self.ordered_dict[r] = v
+
+
+class DefaultOrderedDict(OrderedDict):
+    # Source: http://stackoverflow.com/a/6190500/562769
+    def __init__(self, default_factory=None, *a, **kw):
+        if (default_factory is not None and
+           not isinstance(default_factory, Callable)):
+            raise TypeError('first argument must be callable')
+        OrderedDict.__init__(self, *a, **kw)
+        self.default_factory = default_factory
+
+    def __getitem__(self, key):
+        try:
+            return OrderedDict.__getitem__(self, key)
+        except KeyError:
+            return self.__missing__(key)
+
+    def __missing__(self, key):
+        if self.default_factory is None:
+            raise KeyError(key)
+        self[key] = value = self.default_factory()
+        return value
+
+    def __reduce__(self):
+        if self.default_factory is None:
+            args = tuple()
+        else:
+            args = self.default_factory,
+        return type(self), args, None, None, self.items()
+
+    def copy(self):
+        return self.__copy__()
+
+    def __copy__(self):
+        return type(self)(self.default_factory, self)
+
+    def __deepcopy__(self, memo):
+        import copy
+        return type(self)(self.default_factory,
+                          copy.deepcopy(self.items()))
+
+    def __repr__(self):
+        return 'OrderedDefaultDict(%s, %s)' % (self.default_factory,
+                                               OrderedDict.__repr__(self))
 
 
 @tools.ignore_errors
@@ -103,28 +165,142 @@ def get_grants_aggregates(json_data):
     }
 
 
+def group_validation_errors(validation_errors, file_type, openpyxl_workbook):
+    validation_errors_grouped = DefaultOrderedDict(list)
+    for error_json, values in validation_errors:
+        error_extra = {
+            'values': values,
+            'spreadsheet_style_errors_table': spreadsheet_style_errors_table(values, openpyxl_workbook) if file_type in ['xlsx', 'csv'] else None,
+        }
+        error = json.loads(error_json)
+        if error['validator'] == 'required':
+            validation_errors_grouped['required'].append((error_json, error_extra))
+        elif error['validator'] in ['format', 'oneOf']:
+            # NOTE: this assumes oneOf is only used for specifying multiple
+            # format types, which is true of the 1.0 schema.
+            validation_errors_grouped['format'].append((error_json, error_extra))
+        else:
+            validation_errors_grouped['other'].append((error_json, error_extra))
+    return validation_errors_grouped
+
+
+def extend_numbers(numbers):
+    """
+        Add the previous/next number for each number, if it doesn't
+        already exist in the list (or is 0).
+        e.g. list(extend_numbers([4, 5, 7, 2001])) == [3, 4, 5, 6, 7, 8, 2000, 2001, 2002]
+
+    """
+    prev_numbers, numbers, next_numbers = itertools.tee(numbers, 3)
+    prev_numbers = itertools.chain([-1], prev_numbers)
+    next(next_numbers)
+    for number in numbers:
+        prev_number = next(prev_numbers, -1)
+        next_number = next(next_numbers, None)
+        if prev_number != number - 1 and prev_number + 1 != number - 1 and number - 1 > 0:
+            yield number - 1
+        yield number
+        if next_number != number + 1:
+            yield number + 1
+
+
+def spreadsheet_style_errors_table(examples, openpyxl_workbook):
+    first_few_examples = examples[:3]
+
+    sheets = sorted(set(example.get('sheet') for example in first_few_examples))
+
+    out = {}
+
+    example_cell_lookup = DefaultOrderedDict(lambda: DefaultOrderedDict(dict))
+
+    def get_cell(sheet, col_alpha, row_number):
+        example_value = example_cell_lookup.get(sheet, {}).get(col_alpha, {}).get(row_number)
+        if example_value is not None:
+            return {'type': 'example', 'value': example_value}
+        else:
+            try:
+                value = openpyxl_workbook[sheet]['{}{}'.format(col_alpha, row_number)].value
+            except (KeyError, AttributeError, TypeError):
+                value = ''
+            if value is None:
+                value = ''
+            elif isinstance(value, datetime.datetime):
+                value = pytz.timezone('UTC').localize(value).isoformat()
+            return {'type': 'context', 'value': value}
+
+    for sheet in sheets:
+        row_numbers = sorted(set(
+            example['row_number'] for example in first_few_examples
+            if example.get('sheet') == sheet and 'row_number' in example))
+        col_alphas = sorted(set(
+            example.get('col_alpha', '???') for example in first_few_examples
+            if example.get('sheet') == sheet))
+        if openpyxl_workbook and '???' not in col_alphas:
+            row_numbers = list(extend_numbers(row_numbers))
+            col_alphas = list(map(
+                openpyxl.utils.cell.get_column_letter,
+                extend_numbers(map(
+                    openpyxl.utils.cell.column_index_from_string,
+                    col_alphas))))
+            if row_numbers and row_numbers[0] != 1:
+                row_numbers = [1] + row_numbers
+        # Loop through all of the examples, so we don't display an invalid
+        # context cell as valid
+        for example in examples:
+            if (example.get('sheet') == sheet and
+                    example.get('row_number') in row_numbers and
+                    example.get('col_alpha', '???') in col_alphas):
+                example_cell_lookup[example.get('sheet')][example.get('col_alpha', '???')][example.get('row_number')] = example.get('value', '')
+        out[sheet] = [
+            [''] + col_alphas
+        ] + [
+            [row_number] + [
+                get_cell(sheet, col_alpha, row_number)
+                for col_alpha in col_alphas
+            ]
+            for row_number in row_numbers
+        ]
+    return out
+
+
 def common_checks_360(context, upload_dir, json_data, schema_obj):
     schema_name = schema_obj.release_pkg_schema_name
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
     cell_source_map = common_checks['cell_source_map']
-    additional_checks = run_additional_checks(json_data, cell_source_map, ignore_errors=True, return_on_error=None)
+
+    if context['file_type'] == 'xlsx':
+        try:
+            openpyxl_workbook = openpyxl.load_workbook(context['original_file']['path'])
+        # Catch all exceptions here because the same exceptions should
+        # be thrown and handled appropriately within flatten-tool.
+        except: # noqa
+            openpyxl_workbook = None
+    else:
+        openpyxl_workbook = None
 
     context.update(common_checks['context'])
     context.update({
         'grants_aggregates': get_grants_aggregates(json_data, ignore_errors=True),
-        'additional_checks_errored': additional_checks is None,
-        'additional_checks': additional_checks,
-        'additional_checks_count': (len(additional_checks) if additional_checks else 0) + (1 if context['data_only'] else 0),
-        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string']
+        'common_error_types': ['uri', 'date-time', 'required', 'enum', 'number', 'string'],
+        'validation_errors_grouped': group_validation_errors(context['validation_errors'], context['file_type'], openpyxl_workbook)
     })
+
+    for test_classes_type in ['quality_accuracy', 'usefulness']:
+        extra_checks = run_extra_checks(
+            json_data, cell_source_map, TEST_CLASSES[test_classes_type], ignore_errors=True, return_on_error=None)
+        context.update({
+            '{}_errored'.format(test_classes_type): extra_checks is None,
+            '{}_checks'.format(test_classes_type): extra_checks,
+            '{}_checks_count'.format(test_classes_type): (len(extra_checks) if extra_checks else 0) + (1 if context['data_only'] else 0)
+        })
 
     return context
 
 
 def get_prefixes(distinct_identifiers):
 
-    org_identifier_prefixes = defaultdict(int)
-    org_identifiers_unrecognised_prefixes = defaultdict(int)
+    org_identifier_prefixes = DefaultOrderedDict(int)
+    org_identifiers_unrecognised_prefixes = DefaultOrderedDict(int)
 
     for org_identifier in distinct_identifiers:
         for prefix in orgids_prefixes:
@@ -182,6 +358,8 @@ def flatten_dict(grant, path=""):
 class AdditionalTest():
     def __init__(self, **kw):
         self.grants = kw['grants']
+        self.grants_count = len(self.grants)
+        self.grants_percentage = 0
         self.json_locations = []
         self.failed = False
         self.count = 0
@@ -197,22 +375,30 @@ class AdditionalTest():
             'message': self.message
         }
 
+    def get_heading_count(self):
+        if self.grants_count == 1 and self.count == 1:
+            self.grants_percentage = 100
+            return '1'
+        heading_percentage = '{:.0%}'.format(self.count / self.grants_count)
+        self.grants_percentage = int(heading_percentage[:-1])
+        return '{} of'.format(heading_percentage)
+
     def format_heading_count(self, message, verb='have'):
-        '''Build a string with count of grants plus message
+        """Build a string with count of grants plus message
         
         The grant count phrase for the test is pluralized and
         prepended to message, eg: 1 grant has + message,
         2 grants have + message or 3 grants contain + message.
-        '''
-        noun = 'grant' if self.count == 1 else 'grants'
+        """
+        noun = 'grant' if self.grants_count == 1 else 'grants'
         if verb == 'have':
-            verb = 'has' if self.count == 1 else verb
+            verb = 'has' if self.grants_count == 1 else verb
         elif verb == 'do':
-            verb = 'does' if self.count == 1 else verb
+            verb = 'does' if self.grants_count == 1 else verb
         else:
             # Naively!
-            verb = verb + 's' if self.count == 1 else verb
-        return '{} {} {} {}'.format(self.count, noun, verb, message)
+            verb = verb + 's' if self.grants_count == 1 else verb
+        return '{} {} {} {}'.format(self.get_heading_count(), noun, verb, message)
 
 
 class ZeroAmountTest(AdditionalTest):
@@ -221,9 +407,15 @@ class ZeroAmountTest(AdditionalTest):
     Checks explicitly for a number with a value of 0"""
 
     check_text = {
-        "heading": 'a value of £0',
-        "message": "It’s worth taking a look at these grants and deciding if they should be published. It’s unusual to have grants of £0, but there may be a reasonable explanation. Additional information on why these grants are £0 might be useful to anyone using the data, so consider adding an explanation to the description of the grant."
+        "heading": "a value of £0",
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = (
+        "It’s worth taking a look at these grants and deciding if they should be published. "
+        "It’s unusual to have grants of £0, but there may be a reasonable explanation. "
+        "Additional information on why these grants are £0 might be useful to anyone using the data, "
+        "so consider adding an explanation to the description of the grant."
+    )
 
     def process(self, grant, path_prefix):
         try:
@@ -237,17 +429,25 @@ class ZeroAmountTest(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class RecipientOrg360GPrefix(AdditionalTest):
     """Check if any grants are using RecipientOrg IDs that start 360G or 360g"""
 
     check_text = {
-        "heading": "a Recipient Org:Identifier that starts '360G-'",
-        "message": "If the grant is to a recipient organisation that has an external identifier (such as a charity or company number), then this should be used instead. Using external identifiers helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If no external identifier can be used, then you can ignore this notice."
+        "heading": mark_safe(
+            "a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> that starts '360G-'"),
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = (
+        "If the grant is to a recipient organisation that has an external identifier "
+        "(such as a charity or company number), then this should be used instead. Using external "
+        "identifiers helps people using your data to match it up against other data - for example to see "
+        "who else has given grants to the same recipient, even if they’re known by a different name. "
+        "If no external identifier can be used, then you can ignore this notice."
+    )
 
     def process(self, grant, path_prefix):
         try:
@@ -259,17 +459,23 @@ class RecipientOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class FundingOrg360GPrefix(AdditionalTest):
     """Check if any grants are using FundingOrg IDs that start 360G or 360g"""
 
     check_text = {
-        "heading": "a Funding Org:Identifier that starts '360G-'",
-        "message": "If the grant is from a funding organisation that has an external identifier (such as a charity or company number), then this should be used instead. If no other identifier can be used, then you can ignore this notice."
+        "heading": mark_safe(
+            "a <span class=\"highlight-background-text\">Funding Org:Identifier</span> that starts '360G-'"),
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = (
+        "If the grant is from a funding organisation that has an external identifier "
+        "(such as a charity or company number), then this should be used instead. "
+        "If no other identifier can be used, then you can ignore this notice."
+    )
 
     def process(self, grant, path_prefix):
         try:
@@ -281,17 +487,24 @@ class FundingOrg360GPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class RecipientOrgUnrecognisedPrefix(AdditionalTest):
     """Check if any grants have RecipientOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
-        "heading": "a Recipient Org:Identifier that does not draw from a recognised register.",
-        "message": "Using external identifiers (such as a charity or company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers, or grants to individuals, then you can ignore this notice."
+        "heading": mark_safe("a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> "
+                    "that does not draw from a recognised register."),
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = (
+        "Using external identifiers (such as a charity or company number) helps people using your data "
+        "to match it up against other data - for example to see who else has given grants to the same "
+        "recipient, even if they’re known by a different name. If the data describes lots of grants to "
+        "organisations that don’t have such identifiers, or grants to individuals, then you can ignore this notice."
+    )
 
     def process(self, grant, path_prefix):
         try:
@@ -311,16 +524,24 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
             pass
 
         self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text['message']
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class FundingOrgUnrecognisedPrefix(AdditionalTest):
     """Check if any grants have FundingOrg IDs that use a prefix that isn't on the Org ID prefix codelist"""
 
     check_text = {
-        "heading": "a Funding Org:Identifier that does not draw from a recognised register.",
-        "message": "Using external identifiers (such as a charity or company number) helps people using your data to match it up against other data - for example to see who else has given grants to the same recipient, even if they’re known by a different name. If the data describes lots of grants to organisations that don’t have such identifiers, or grants to individuals, then you can ignore this notice."
+        "heading": mark_safe("a <span class=\"highlight-background-text\">Funding Org:Identifier</span> "
+                    "that does not draw from a recognised register."),
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = (
+        "Using external identifiers (such as a charity or company number) helps people using your data to "
+        "match it up against other data - for example to see who else has given grants to the same "
+        "recipient, even if they’re known by a different name. If the data describes lots of grants to "
+        "organisations that don’t have such identifiers, or grants to individuals, then you can ignore "
+        "this notice."
+    )
 
     def process(self, grant, path_prefix):
         try:
@@ -339,20 +560,26 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class RecipientOrgCharityNumber(AdditionalTest):
     """Check if any grants have RecipientOrg charity numbers that don't look like charity numbers
 
-    Checks if the first two characters are letters, then checks that the remainder of the value is a number 6 or 7 digits long.
+    Checks if the first two characters are letters, then checks that the remainder of the value is a number
+    6 or 7 digits long.
     """
 
     check_text = {
-        "heading": "a value provided in the Recipient Org: Charity Number column that doesn’t look like a charity number",
-        "message": "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
+        "heading": mark_safe("a value provided in the "
+                    "<span class=\"highlight-background-text\">Recipient Org: Charity Number</span> "
+                    "column that doesn’t look like a charity number"),
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = (
+        "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
+    )
 
     def process(self, grant, path_prefix):
         try:
@@ -372,8 +599,8 @@ class RecipientOrgCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class RecipientOrgCompanyNumber(AdditionalTest):
@@ -383,9 +610,18 @@ class RecipientOrgCompanyNumber(AdditionalTest):
     """
 
     check_text = {
-        "heading": "a value provided in the Recipient Org: Company Number column that doesn’t look like a company number",
-        "message": "Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
+        "heading": mark_safe("a value provided in the "
+                    "<span class=\"highlight-background-text\">Recipient Org: Company Number</span> "
+                    "column that doesn’t look like a company number"),
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = mark_safe(
+        "Common causes of this are missing leading digits, typos or incorrect values "
+        "being entered into this field. Company numbers are typically 8 digits, "
+        "for example <span class=\"highlight-background-text\">09876543</span> or sometimes start with a "
+        "2 letter prefix, <span class=\"highlight-background-text\">SC123459</span>. You can check "
+        "company numbers online at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House</a>."
+    )
 
     def process(self, grant, path_prefix):
         try:
@@ -402,17 +638,24 @@ class RecipientOrgCompanyNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
 class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
     """Checks if any grants don't have either a Recipient Org:Company Number or Recipient Org:Charity Number"""
 
     check_text = {
-        "heading": "not have either a Recipient Org:Company Number or a Recipient Org:Charity Number",
-        "message": "Providing one or both of these, if possible, makes it easier for users to join up your data with other data sources to provide better insight into grantmaking. If your grants are to organisations that don’t have UK Company or UK Charity numbers, then you can ignore this notice."
+        "heading": mark_safe("not have either a "
+                    "<span class=\"highlight-background-text\">Recipient Org:Company Number</span> or a "
+                    "<span class=\"highlight-background-text\">Recipient Org:Charity Number</span>"),
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = (
+        "Providing one or both of these, if possible, makes it easier for users to join up your data with "
+        "other data sources to provide better insight into grantmaking. If your grants are to "
+        "organisations that don’t have UK Company or UK Charity numbers, then you can ignore this notice."
+    )
 
     def process(self, grant, path_prefix):
         try:
@@ -429,17 +672,28 @@ class NoRecipientOrgCompanyCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb="do")
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb="do"))
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class IncompleteRecipientOrg(AdditionalTest):
-    """Checks if any grants lack one of either Recipient Org:Postal Code or both of Recipient Org:Location:Geographic Code and Recipient Org:Location:Geographic Code Type"""
+    """
+    Checks if any grants lack one of either Recipient Org:Postal Code or both of Recipient Org:Location:Geographic Code
+    and Recipient Org:Location:Geographic Code Type
+    """
 
     check_text = {
         "heading": "not have recipient organisation location information",
-        "message": "Your data is missing information about the geographic location of recipient organisations; either Recipient Org:Postal Code or Recipient Org:Location:Geographic Code combined with Recipient Org:Location:Geographic Code Type. Knowing the geographic location of recipient organisations helps users to understand your data and allows it to be used in tools that visualise grants geographically."
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = mark_safe(
+        "Your data is missing information about the geographic location of recipient organisations; either "
+        "<span class=\"highlight-background-text\">Recipient Org:Postal Code</span> or "
+        "<span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code</span> combined "
+        "with <span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code Type"
+        "</span>. Knowing the geographic location of recipient organisations helps users to understand "
+        "your data and allows it to be used in tools that visualise grants geographically."
+    )
 
     def process(self, grant, path_prefix):
         try:
@@ -462,7 +716,7 @@ class IncompleteRecipientOrg(AdditionalTest):
             pass
 
         self.heading = self.format_heading_count(self.check_text['heading'], verb="do")
-        self.message = self.check_text['message']
+        self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
 class MoreThanOneFundingOrg(AdditionalTest):
@@ -470,8 +724,14 @@ class MoreThanOneFundingOrg(AdditionalTest):
 
     check_text = {
         "heading": "There are {} different funding organisation IDs listed",
-        "message": "If you are expecting to be publishing data for multiple funders then you can ignore this notice. If you are only publishing for a single funder then you should review your Funding Organisation identifier column to see where multiple IDs have occurred."
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = mark_safe(
+        "If you are expecting to be publishing data for multiple funders then you can ignore this notice. "
+        "If you are only publishing for a single funder then you should review your "
+        "<span class=\"highlight-background-text\">Funding Organisation identifier</span> column to see "
+        "where multiple IDs have occurred."
+    )
 
     def __init__(self, **kw):
         super().__init__(**kw)
@@ -489,7 +749,7 @@ class MoreThanOneFundingOrg(AdditionalTest):
             self.failed = True
 
         self.heading = self.check_text["heading"].format(len(self.funding_organization_ids))
-        self.message = self.check_text["message"]
+        self.message = mark_safe(self.check_text["message"][self.grants_percentage])
 
 
 compiled_email_re = re.compile('[\w.-]+@[\w.-]+\.[\w.-]+')
@@ -498,13 +758,20 @@ compiled_email_re = re.compile('[\w.-]+@[\w.-]+\.[\w.-]+')
 class LooksLikeEmail(AdditionalTest):
     """Checks if any grants contain text that looks like an email address
 
-    The check looks for any number of alphanumerics, dots or hyphens, followed by an @ sign, followed by any number of alphanumerics, dots or hyphens, with a minimum of one dot after the @
+    The check looks for any number of alphanumerics, dots or hyphens, followed by an @ sign, followed by any number of
+    alphanumerics, dots or hyphens, with a minimum of one dot after the @
     """
 
     check_text = {
         "heading": "text that looks like an email address",
-        "message": "Your data may contain an email address (or something that looks like one), which can constitute personal data. The use and distribution of personal data is restricted by the Data Protection Act. You should ensure that any personal data is only included with the knowledge and consent of the person to whom it refers."
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = (
+        "Your data may contain an email address (or something that looks like one), which can constitute "
+        "personal data. The use and distribution of personal data is restricted by the Data Protection "
+        "Act. You should ensure that any personal data is only included with the knowledge and consent of "
+        "the person to whom it refers."
+    )
 
     def process(self, grant, path_prefix):
         flattened_grant = OrderedDict(flatten_dict(grant))
@@ -515,16 +782,20 @@ class LooksLikeEmail(AdditionalTest):
                 self.count += 1
 
         self.heading = self.format_heading_count(self.check_text['heading'], verb='contain')
-        self.message = self.check_text['message']
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class NoGrantProgramme(AdditionalTest):
     """Checks if any grants have no Grant Programme fields"""
 
     check_text = {
-        "heading": "not contain any Grant Programme fields",
-        "message": "Providing Grant Programme data, if available, helps users to better understand your data."
+        "heading": mark_safe("not contain any <span class=\"highlight-background-text\">Grant Programme</span> fields"),
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = mark_safe(
+        "Providing <span class=\"highlight-background-text\">Grant Programme</span> data, if available, "
+        "helps users to better understand your data."
+    )
 
     def process(self, grant, path_prefix):
         grant_programme = grant.get("grantProgramme")
@@ -533,8 +804,8 @@ class NoGrantProgramme(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
+        self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
 class NoBeneficiaryLocation(AdditionalTest):
@@ -542,8 +813,12 @@ class NoBeneficiaryLocation(AdditionalTest):
 
     check_text = {
         "heading": "not contain any beneficiary location fields",
-        "message": "Providing beneficiary data, if available, helps users to understand which areas ultimately benefitted from the grant."
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = (
+        "Providing beneficiary data, if available, helps users to understand which "
+        "areas ultimately benefitted from the grant."
+    )
 
     def process(self, grant, path_prefix):
         beneficiary_location = grant.get("beneficiaryLocation")
@@ -553,7 +828,7 @@ class NoBeneficiaryLocation(AdditionalTest):
             self.json_locations.append(path_prefix + '/id')
 
         self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
-        self.message = self.check_text['message']
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class TitleDescriptionSame(AdditionalTest):
@@ -561,8 +836,12 @@ class TitleDescriptionSame(AdditionalTest):
 
     check_text = {
         "heading": "a title and a description that are the same",
-        "message": "Users may find that the data is less useful as they are unable to discover more about the grants. Consider including a more detailed description if you have one."
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = (
+        "Users may find that the data is less useful as they are unable to discover more about the grants. "
+        "Consider including a more detailed description if you have one."
+    )
 
     def process(self, grant, path_prefix):
         title = grant.get("title")
@@ -573,7 +852,7 @@ class TitleDescriptionSame(AdditionalTest):
             self.json_locations.append(path_prefix + '/description')
 
         self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text['message']
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class TitleLength(AdditionalTest):
@@ -581,8 +860,9 @@ class TitleLength(AdditionalTest):
 
     check_text = {
         "heading": "a title longer than recommended",
-        "message": "Titles for grant activities should be under 140 characters long."
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = "Titles for grant activities should be under 140 characters long."
 
     def process(self, grant, path_prefix):
         title = grant.get("title", '')
@@ -592,19 +872,25 @@ class TitleLength(AdditionalTest):
             self.json_locations.append(path_prefix + '/title')
 
         self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text['message']
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class OrganizationIdLooksInvalid(AdditionalTest):
-    """Checks if any grants have org IDs for fundingOrg or recipientOrg that don't look correctly formatted for their respective registration agency (eg GB-CHC- not looking like a valid company number)
+    """Checks if any grants have org IDs for fundingOrg or recipientOrg that don't look correctly formatted for their
+    respective registration agency (eg GB-CHC- not looking like a valid company number)
 
     Looks at the start of the ID - if it's GB-CHC- or GB-COH-, performs the relevant format check
     """
  
     check_text = {
         "heading": "funder or recipient organisation IDs that might not be valid",
-        "message": "The IDs might not be valid for the registration agency that they refer to - for example, a 'GB-CHC' ID that contains an invalid charity number. Common causes of this are missing leading digits, typos or incorrect values being entered into this field."
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = (
+        "The IDs might not be valid for the registration agency that they refer to - for example, "
+        "a 'GB-CHC' ID that contains an invalid charity number. Common causes of this are missing leading "
+        "digits, typos or incorrect values being entered into this field."
+    )
 
     def process(self, grant, path_prefix):
         for org_type in ("fundingOrganization", "recipientOrganization"):
@@ -626,16 +912,23 @@ class OrganizationIdLooksInvalid(AdditionalTest):
                         self.count += 1
 
         self.heading = self.format_heading_count(self.check_text['heading'])
-        self.message = self.check_text['message']
+        self.message = self.check_text['message'][self.grants_percentage]
 
 
 class NoLastModified(AdditionalTest):
     """Check if any grants are missing Last Modified dates"""
 
     check_text = {
-        "heading": "not have Last Modified information",
-        "message": "Last Modified shows the date and time when information about a grant was last updated in your file. Including this information allows data users to see when changes have been made and reconcile differences between versions of your data. Please note: this is the date when the data was modified in your 360Giving file, rather than in any of your internal systems."
+        "heading": mark_safe("not have <span class=\"highlight-background-text\">Last Modified</span> information"),
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = mark_safe(
+        "<span class=\"highlight-background-text\">Last Modified</span> shows the date and time when "
+        "information about a grant was last updated in your file. Including this information allows data "
+        "users to see when changes have been made and reconcile differences between versions of your data. "
+        "Please note: this is the date when the data was modified in your 360Giving file, "
+        "rather than in any of your internal systems."
+    )
 
     def process(self, grant, path_prefix):
         last_modified = grant.get("dateModified")
@@ -644,17 +937,24 @@ class NoLastModified(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
+        self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
 class NoDataSource(AdditionalTest):
     """Checks if any grants are missing dataSource"""
 
     check_text = {
-        "heading": "not have Data Source information",
-        "message": "Data Source informs users about where information came from and is an important part of establishing trust in your data. This information should be a web link pointing to the source of this data, which may be an original 360Giving data file, a file from which the data was converted, or your organisation’s website."
+        "heading": mark_safe("not have <span class=\"highlight-background-text\">Data Source</span> information"),
+        "message": RangeDict()
     }
+    check_text['message'][(0, 100)] = mark_safe(
+        "<span class=\"highlight-background-text\">Data Source</span> informs users about where "
+        "information came from and is an important part of establishing trust in your data. "
+        "This information should be a web link pointing to the source of this data, which may be an "
+        "original 360Giving data file, a file from which the data was converted, or your organisation’s "
+        "website."
+    )
 
     def process(self, grant, path_prefix):
         data_source = grant.get("dataSource")
@@ -663,61 +963,41 @@ class NoDataSource(AdditionalTest):
             self.count += 1
             self.json_locations.append(path_prefix + '/id')
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='do')
-        self.message = self.check_text['message']
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], verb='do'))
+        self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
-# class IncompleteBeneficiaryLocation(AdditionalTest):
-#     """Checks if any grants that do have Beneficiary Location fields are missing any of the details"""
-
-#     check_text = {
-#         "heading": "incomplete beneficiary location information",
-#         "message": "Your data is missing Beneficiary Location: Name, Beneficiary Location: Geographical Code and/or Beneficiary Location: Geographical Code Type. Beneficiary location information allows users of the data to understand who ultimately benefitted from the grant, not just the location of the organisation that provided the service. If your beneficiaries are in the same place as the organisation that the money went to, stating this is useful for anyone using your data as it cannot be inferred."
-#     }
-
-#     def process(self, grant, path_prefix):
-#         beneficiary_location = grant.get("beneficiaryLocation")
-#         if beneficiary_location:
-#             for location_item in beneficiary_location:
-#                 complete_beneficiary_data = location_item.get('name') and location_item.get('geoCode') and location_item.get('geoCodeType')
-#                 if not complete_beneficiary_data:
-#                     self.failed = True
-#                     self.count += 1
-#                     self.json_locations.append(path_prefix + '/beneficiaryLocation')
-#                     break
-
-#         self.heading = self.format_heading_count(self.check_text['heading'])
-#         self.message = self.check_text["message"]
-
-
-TEST_CLASSES = [
-    ZeroAmountTest,
-    RecipientOrg360GPrefix,
-    FundingOrg360GPrefix,
-    RecipientOrgUnrecognisedPrefix,
-    FundingOrgUnrecognisedPrefix,
-    RecipientOrgCharityNumber,
-    RecipientOrgCompanyNumber,
-    NoRecipientOrgCompanyCharityNumber,
-    IncompleteRecipientOrg,
-    MoreThanOneFundingOrg,
-    LooksLikeEmail,
-    NoGrantProgramme,
-    NoBeneficiaryLocation,
-    TitleDescriptionSame,
-    TitleLength,
-    OrganizationIdLooksInvalid,
-    NoLastModified,
-    NoDataSource,
-    # IncompleteBeneficiaryLocation
-]
+TEST_CLASSES = {
+    'quality_accuracy': [
+        ZeroAmountTest,
+        FundingOrgUnrecognisedPrefix,
+        RecipientOrgUnrecognisedPrefix,
+        RecipientOrgCharityNumber,
+        RecipientOrgCompanyNumber,
+        OrganizationIdLooksInvalid,
+        MoreThanOneFundingOrg,
+        LooksLikeEmail,
+    ],
+    'usefulness': [
+        RecipientOrg360GPrefix,
+        FundingOrg360GPrefix,
+        NoRecipientOrgCompanyCharityNumber,
+        IncompleteRecipientOrg,
+        NoGrantProgramme,
+        NoBeneficiaryLocation,
+        TitleDescriptionSame,
+        TitleLength,
+        NoLastModified,
+        NoDataSource,
+    ]
+}
 
 
 @tools.ignore_errors
-def run_additional_checks(json_data, cell_source_map):
+def run_extra_checks(json_data, cell_source_map, test_classes):
     if 'grants' not in json_data:
         return []
-    test_instances = [test_cls(grants=json_data['grants']) for test_cls in TEST_CLASSES]
+    test_instances = [test_cls(grants=json_data['grants']) for test_cls in test_classes]
 
     for num, grant in enumerate(json_data['grants']):
         for test_instance in test_instances:

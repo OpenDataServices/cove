@@ -220,7 +220,7 @@ def test_cove_iati_cli_delete_option():
     call_command('iati_cli', file_path, output_dir=output_dir)
 
     with pytest.raises(SystemExit):
-            call_command('iati_cli', file_path, output_dir=output_dir)
+        call_command('iati_cli', file_path, output_dir=output_dir)
 
 
 def test_cove_iati_cli_output():
