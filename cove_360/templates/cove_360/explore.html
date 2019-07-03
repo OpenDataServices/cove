@@ -16,13 +16,8 @@
 
   {% block data_supplied %}
     <div class="panel panel-default">
-<<<<<<< HEAD
       <div class="panel-heading" data-toggle="collapse" data-target="#data-supplied-body" {% if conversion == 'flattenable' %}aria-expanded="true"{% endif %} role="button">
         <h3 class="panel-title panel-title-explore"> 
-=======
-      <div class="panel-heading" data-toggle="collapse" data-target="#data-supplied-body" {% if conversion == 'flattenable' %}aria-expanded="true"{% endif %}>
-        <h3 class="panel-title panel-title-explore">
->>>>>>> Add metadata information to explore.
           <span class="font-tick tick" aria-hidden="true"></span>
           Summary: Your data at a glance
           <span class="pull-right glyphicon glyphicon-collapse-{% if conversion == 'flattenable' %}up{% else %}down{% endif %}"></span>
@@ -30,7 +25,6 @@
       </div>
       <div id="data-supplied-body" class="collapse {% if conversion == 'flattenable' %}in{% endif %}">
         <div class="panel-body">
-<<<<<<< HEAD
            <p class="explanation">
 	   {% trans "See the contents of this data at a glance. Use this to get an overview of the data and to check this was what you were expecting." %}
 	   </p>
@@ -44,7 +38,6 @@
              {% endif %}
              {% trans "on " %} {{created_date}}.
 	   </p>
-=======
 
           {% if metadata %}
           <div class="row"> <!--Start Row (Detail Table)-->
@@ -91,7 +84,6 @@
            {% endif %}
 
            <br>
->>>>>>> Add metadata information to explore.
            <ul class="left-space">
              <li>
                {% blocktrans count n_grants=grants_aggregates.count %} This file contains <strong>{{n_grants}} grant</strong>{% plural %}This file contains <strong>{{n_grants}} grants</strong> {% endblocktrans %}
