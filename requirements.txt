@@ -1,7 +1,7 @@
-pip==19.1.1
-Django==1.11.22 # rq.filter: <1.12
+pip==19.2.3
+Django==1.11.23 # rq.filter: <1.12
 -e git+https://github.com/OpenDataServices/flatten-tool.git@524f437abe48d7f9b8a2d6a1cf6fa9a49d002b0f#egg=flattentool
--e git+https://github.com/open-contracting/lib-cove-ocds.git@e2f14a5dc389ac5c46cc58e90f30ea902d0768fc#egg=libcoveocds
+-e git+https://github.com/open-contracting/lib-cove-ocds.git@4fbdd620f40698e1566deae159e356250ed869cf#egg=libcoveocds
 -e git+https://github.com/OpenDataServices/lib-cove-web.git@62663c3dd6f71c57d53dc5ea7a285210b140f4ab#egg=libcoveweb
 -e git+https://github.com/OpenDataServices/lib-cove.git@213e5fe3145ab186e34db325d4f40fe051755b84#egg=libcove
 django-bootstrap3==11.1.0
@@ -10,7 +10,7 @@ requests==2.22.0
 cached-property==1.5.1
 dealer==2.0.5
 django-environ==0.4.5
-jsonschema==3.0.1
+jsonschema==3.0.2
 json-merge-patch==0.2
 python-dateutil==2.8.0
 raven==6.10.0
@@ -32,11 +32,10 @@ idna==2.8
 jdcal==1.4.1
 jsonref==0.2
 LEPL==5.1.3
-lxml==4.3.4
-openpyxl==2.6.2
-
-pyrsistent==0.15.3
-pytz==2019.1
+lxml==4.4.1
+openpyxl==2.6.3
+pyrsistent==0.15.4
+pytz==2019.2
 schema==0.7.0
 six==1.12.0
 sqlparse==0.3.0
