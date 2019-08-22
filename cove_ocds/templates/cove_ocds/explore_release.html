@@ -53,6 +53,11 @@
                   {% trans "The license is" %} <a href="{{json_data.license}}">{{json_data.license}}</a>.
                 </li>
              {% endif %}
+             {% if json_data.publicationPolicy %}
+                <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                  {% trans "Publication policy is" %} <a href="{{json_data.publicationPolicy}}">{{json_data.publicationPolicy}}</a>.
+                </li>
+             {% endif %}
              {% if extensions and extensions.is_extended_schema %}
                 <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                   {% with n_invalid=extensions.invalid_extension.keys|length %}
