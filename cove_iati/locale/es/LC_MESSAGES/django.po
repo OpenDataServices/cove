@@ -2,24 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Ben Webb <ben.webb@opendataservices.coop>, 2018
 # Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-17 10:38+0000\n"
+"POT-Creation-Date: 2019-08-22 14:56+0000\n"
 "PO-Revision-Date: 2018-01-16 13:05+0000\n"
 "Last-Translator: Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2019\n"
-"Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
+"Language-Team: Spanish (https://www.transifex.com/OpenDataServices/"
+"teams/59127/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: cove_iati/lib/exceptions.py:8 cove_iati/lib/iati.py:24
@@ -156,11 +157,11 @@ msgstr "Enhorabuena! Sus datos son válidos de acuerdo con el Esquema"
 
 #: cove_iati/templates/cove_iati/explore.html:129
 msgid ""
-"There are some <strong>validation errors</strong> in your data, please check"
-" them in the table below."
+"There are some <strong>validation errors</strong> in your data, please check "
+"them in the table below."
 msgstr ""
-"Hay algunos errores de validación es sus datos, por favor compruébelos en la"
-" tabla más abajo."
+"Hay algunos errores de validación es sus datos, por favor compruébelos en la "
+"tabla más abajo."
 
 #: cove_iati/templates/cove_iati/explore.html:149
 msgid "Invalid Embedded Codelist Values"
@@ -263,8 +264,8 @@ msgid ""
 msgstr ""
 "Después de 7 días todos los datos subidos son borrados de nuestros "
 "servidores y los resultados dejan de estar disponibles. Cualquiera que use "
-"el enlace a esta página después de ese periodo verá un mensaje informando de"
-" que el archivo ha sido borrado."
+"el enlace a esta página después de ese periodo verá un mensaje informando de "
+"que el archivo ha sido borrado."
 
 #: cove_iati/templates/cove_iati/explore.html:336
 msgid ""
@@ -287,8 +288,8 @@ msgid ""
 "You will also be able to inspect key information from the data that the "
 "application is able to find, so that you can check the data."
 msgstr ""
-"También podrás inspeccionar información clave de los datos que la aplicación"
-" es capaz de encontrar, para que puedas comprobar los datos."
+"También podrás inspeccionar información clave de los datos que la aplicación "
+"es capaz de encontrar, para que puedas comprobar los datos."
 
 #: cove_iati/templates/cove_iati/how_to.html:8
 msgid "This tool will:"
@@ -296,8 +297,8 @@ msgstr "Esta herramienta:"
 
 #: cove_iati/templates/cove_iati/how_to.html:9
 msgid ""
-"Check your data is valid. When it passes these checks, you will know that it"
-" is formatted for re-use."
+"Check your data is valid. When it passes these checks, you will know that it "
+"is formatted for re-use."
 msgstr ""
 
 #: cove_iati/templates/cove_iati/how_to.html:10
@@ -328,8 +329,8 @@ msgstr ""
 
 #: cove_iati/templates/cove_iati/how_to.html:20
 msgid ""
-"XML - according to version 2.03 of the <a "
-"href=\"http://reference.iatistandard.org/203/schema/\">IATI schema</a>"
+"XML - according to version 2.03 of the <a href=\"http://reference."
+"iatistandard.org/203/schema/\">IATI schema</a>"
 msgstr ""
 
 #: cove_iati/templates/cove_iati/how_to.html:21
@@ -382,8 +383,8 @@ msgid ""
 "understand how people are using this application, what types of data are "
 "being supplied, what common errors exist and so on."
 msgstr ""
-"Mientras los datos están en nuestros servidores podemos acceder a ellos para"
-" ayudarnos a entender cómo las personas usan esta aplicación, los tipos de "
+"Mientras los datos están en nuestros servidores podemos acceder a ellos para "
+"ayudarnos a entender cómo las personas usan esta aplicación, los tipos de "
 "datos suministrados, los errores  más comunes que existen, etc."
 
 #: cove_iati/templates/cove_iati/more_info.html:15
@@ -400,8 +401,8 @@ msgstr ""
 #: cove_iati/templates/cove_iati/more_info.html:16
 msgid ""
 "We do retain some metadata about data supplied to this site. Details can be "
-"found in the code, but may include information about whether or not the file"
-" was uploaded, linked or pasted, the size of the file, the date/time it was "
+"found in the code, but may include information about whether or not the file "
+"was uploaded, linked or pasted, the size of the file, the date/time it was "
 "supplied and so on. "
 msgstr ""
 "Guardamos algunos metadatos sobre los datos suministrados a este sitio. Los "
@@ -442,9 +443,9 @@ msgstr "Datos sobre Mejores Prácticas en la Web"
 
 #: cove_iati/templates/cove_iati/more_info.html:29
 msgid ""
-"recommend making open data available in a range of formats to meet the needs"
-" of different users, for example, developers may want JSON, researchers "
-"might prefer a spreadsheet format."
+"recommend making open data available in a range of formats to meet the needs "
+"of different users, for example, developers may want JSON, researchers might "
+"prefer a spreadsheet format."
 msgstr ""
 "recomienda ofrecer los datos abiertos en una variedad de formatos para "
 "satisfacer las necesidades de los distintos usuarios. Por ejemplo, los "
