@@ -5,6 +5,7 @@ import time
 import signal
 import subprocess
 from urllib.parse import urlparse, urlunparse
+import pprint
 
 import requests
 
@@ -63,4 +64,10 @@ for dirname in os.listdir('.'):
     with open(actual_path) as fp, open(expected_path) as fp_archive:
         actual_data = json.load(fp)
         expected_data = json.load(fp_archive)
+        if actual_data != expected_data:
+            print("actual_data")
+            print(json.dumps(actual_data, indent=2))
+            print("expected_data")
+            print(json.dumps(actual_data, indent=2))
+
         assert actual_data == expected_data
