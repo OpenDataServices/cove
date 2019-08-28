@@ -2,14 +2,15 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Maria Esther Cervantes <mariaesther@idatosabiertos.org>, 2018
 # Tim Davies <tim.davies@opendataservices.coop>, 2018
 # Ben Webb <ben.webb@opendataservices.coop>, 2019
 # Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2019
 # Bibiana Cristòfol <bcristofol@gmail.com>, 2019
-#
+# Amy Guy <amy.guy@opendataservices.coop>, 2019
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -17,13 +18,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-22 14:56+0000\n"
 "PO-Revision-Date: 2017-04-03 14:36+0000\n"
-"Last-Translator: Bibiana Cristòfol <bcristofol@gmail.com>, 2019\n"
-"Language-Team: Spanish (https://www.transifex.com/OpenDataServices/"
-"teams/59127/es/)\n"
-"Language: es\n"
+"Last-Translator: Amy Guy <amy.guy@opendataservices.coop>, 2019\n"
+"Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: cove_ocds/lib/exceptions.py:9
@@ -140,9 +140,9 @@ msgid ""
 "Check that your OCDS data complies with the <a href=\"http://standard.open-"
 "contracting.org/latest/en/schema/\">schema</a>"
 msgstr ""
-"<a href=\"http://standard.open-contracting.org/latest/en/schema/\">Comprobar "
-"que sus datos OCDS cumplen los requisitos del <a href=\"http://standard.open-"
-"contracting.org/latest/es/schema/\"> esquema</a>"
+"<a href=\"http://standard.open-contracting.org/latest/en/schema/\">Comprobar"
+" que sus datos OCDS cumplen los requisitos del <a href=\"http://standard"
+".open-contracting.org/latest/es/schema/\"> esquema</a>"
 
 #: cove_ocds/templates/cove_ocds/base.html:110
 msgid "Inspect key contents of your data to review data quality"
@@ -162,9 +162,9 @@ msgstr "Uso de la herramienta de revisión de datos"
 
 #: cove_ocds/templates/cove_ocds/base.html:127
 msgid ""
-"You can upload, paste or provide a link to data published using the <a href="
-"\"http://standard.open-contracting.org/\">Open Contracting Data Standard</"
-"a>. This can be:"
+"You can upload, paste or provide a link to data published using the <a "
+"href=\"http://standard.open-contracting.org/\">Open Contracting Data "
+"Standard</a>. This can be:"
 msgstr ""
 "Puede subir, pegar o proporcionar un enlace a los datos publicados que usan "
 "el <a href=\"http://standard.open-contracting.org/latest/es/\">Estándar de "
@@ -176,13 +176,15 @@ msgstr "<b>JSON</b> - siguiendo el esquema de OCDS;"
 
 #: cove_ocds/templates/cove_ocds/base.html:131
 msgid ""
-"<b> A CSV file or Excel Spreadsheet </b> - using the <a href=\"http://"
-"standard.open-contracting.org/latest/en/implementation/serialization/"
-"\">flattened serialization of OCDS</a>; "
+"<b> A CSV file or Excel Spreadsheet </b> - using the <a "
+"href=\"http://standard.open-"
+"contracting.org/latest/en/implementation/serialization/\">flattened "
+"serialization of OCDS</a>; "
 msgstr ""
-"<b>Un archivo CSV o hoja de cálculo Excel</b> - utilizando la <a href="
-"\"http://standard.open-contracting.org/latest/es/implementation/"
-"serialization/\">seriación plana de OCDS</a>;"
+"<b>Un archivo CSV o hoja de cálculo Excel</b> - utilizando la <a "
+"href=\"http://standard.open-"
+"contracting.org/latest/es/implementation/serialization/\">seriación plana de"
+" OCDS</a>;"
 
 #: cove_ocds/templates/cove_ocds/base.html:133
 msgid ""
@@ -194,15 +196,17 @@ msgstr ""
 
 #: cove_ocds/templates/cove_ocds/base.html:134
 msgid ""
-"The application works with both <a href=\"http://standard.open-contracting."
-"org/latest/en/getting_started/releases_and_records/\">'release' and "
-"'record'</a> OCDS documents that conform to the <a href=\"http://standard."
-"open-contracting.org/\">Open Data Contracting Standard</a> "
+"The application works with both <a href=\"http://standard.open-"
+"contracting.org/latest/en/getting_started/releases_and_records/\">'release' "
+"and 'record'</a> OCDS documents that conform to the <a "
+"href=\"http://standard.open-contracting.org/\">Open Data Contracting "
+"Standard</a> "
 msgstr ""
-"La aplicación funciona con <a href=\"http://standard.open-contracting.org/"
-"latest/es/getting_started/releases_and_records/\">'entregas' y 'registros'</"
-"a> de OCDS que cumplen con los requisitos del <a href=\"http://standard.open-"
-"contracting.org/latest/es/\">Estándar de Datos de Contrataciones Abiertas</a>"
+"La aplicación funciona con <a href=\"http://standard.open-"
+"contracting.org/latest/es/getting_started/releases_and_records/\">'entregas'"
+" y 'registros'</a> de OCDS que cumplen con los requisitos del <a "
+"href=\"http://standard.open-contracting.org/latest/es/\">Estándar de Datos "
+"de Contrataciones Abiertas</a>"
 
 #: cove_ocds/templates/cove_ocds/base.html:135
 msgid ""
@@ -221,20 +225,20 @@ msgid ""
 "link with others to support discussion of data quality.  "
 msgstr ""
 "Los datos se almacenan durante 7 días en una URL generada aleatoriamente. "
-"Este enlace puede ser compartido con otros para discutir sobre la calidad de "
-"los datos."
+"Este enlace puede ser compartido con otros para discutir sobre la calidad de"
+" los datos."
 
 #: cove_ocds/templates/cove_ocds/base.html:137
 msgid ""
-"To preview how the data review tool works, try <a href=\"/review/?"
-"source_url=https://raw.githubusercontent.com/open-contracting/sample-data/"
-"master/fictional-example/1.1/ocds-213czf-000-00001-02-tender.json\"> loading "
-"some sample data. </a>"
+"To preview how the data review tool works, try <a "
+"href=\"/review/?source_url=https://raw.githubusercontent.com/open-"
+"contracting/sample-data/master/fictional-example/1.1/ocds-"
+"213czf-000-00001-02-tender.json\"> loading some sample data. </a>"
 msgstr ""
-"Para ver cómo funciona la herramienta de revisión de datos,  intenta <a href="
-"\"/review/?source_url=https://raw.githubusercontent.com/open-contracting/"
-"sample-data/master/fictional-example/1.1/ocds-213czf-000-00001-02-tender.json"
-"\"> subir algunos datos de muestra.</a>"
+"Para ver cómo funciona la herramienta de revisión de datos,  intenta <a "
+"href=\"/review/?source_url=https://raw.githubusercontent.com/open-"
+"contracting/sample-data/master/fictional-example/1.1/ocds-"
+"213czf-000-00001-02-tender.json\"> subir algunos datos de muestra.</a>"
 
 #: cove_ocds/templates/cove_ocds/deprecated_fields_table.html:7
 msgid "Field"
@@ -354,15 +358,15 @@ msgstr "Campos adicionales"
 msgid ""
 "This data includes the following fields which are not part of the OCDS "
 "schema. You should check whether the data in these fields could be provided "
-"by using a field in the OCDS schema or by using an existing <a href=\"http://"
-"standard.open-contracting.org/latest/en/extensions/\">extension</a> to the "
-"schema."
+"by using a field in the OCDS schema or by using an existing <a "
+"href=\"http://standard.open-"
+"contracting.org/latest/en/extensions/\">extension</a> to the schema."
 msgstr ""
 "Estos datos incluyen los siguientes campos que no son parte del esquema de "
 "OCDS. Debe verificar si los datos en estos campos podrían proporcionarse "
-"utilizando un campo del esquema de OCDS o utilizando una <a href=\"http://"
-"standard.open-contracting.org/latest/en/extensions/\">extensión</a> "
-"existente del esquema."
+"utilizando un campo del esquema de OCDS o utilizando una <a "
+"href=\"http://standard.open-"
+"contracting.org/latest/en/extensions/\">extensión</a> existente del esquema."
 
 #: cove_ocds/templates/cove_ocds/explore_base.html:403
 msgid "Additional Codelist Values"
@@ -476,8 +480,7 @@ msgstr "comprobaciones estructurales contra"
 #: cove_ocds/templates/cove_ocds/explore_record.html:26
 #: cove_ocds/templates/cove_ocds/explore_release.html:24
 msgid "See <a href=\"#validation-errors\">Structural Errors</a> below."
-msgstr ""
-"Ver <a href=\"#validation-errors\">Errores Estructurales</a> más abajo."
+msgstr "Ver <a href=\"#validation-errors\">Errores Estructurales</a> más abajo."
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:33
 #, python-format
@@ -511,7 +514,7 @@ msgstr "La licencia es "
 #: cove_ocds/templates/cove_ocds/explore_record.html:55
 #: cove_ocds/templates/cove_ocds/explore_release.html:58
 msgid "Publication policy is"
-msgstr ""
+msgstr "Una política de publicación es"
 
 #: cove_ocds/templates/cove_ocds/explore_record.html:61
 #: cove_ocds/templates/cove_ocds/explore_release.html:70
@@ -520,8 +523,8 @@ msgid ""
 "There is %(count)s <a href=\"#key-field-info\">duplicate release ID</a> in "
 "this package."
 msgid_plural ""
-"There are %(count)s <a href=\"#key-field-info\">duplicate release IDs</a> in "
-"this package."
+"There are %(count)s <a href=\"#key-field-info\">duplicate release IDs</a> in"
+" this package."
 msgstr[0] ""
 "Hay una<a href=\"#key-field-info\">ID de versión duplicada</a> en este "
 "paquete."
@@ -533,11 +536,11 @@ msgstr[1] ""
 #: cove_ocds/templates/cove_ocds/explore_release.html:75
 #, python-format
 msgid ""
-"This file uses %(count)s <a href=\"#additional-fields\">additional field</a> "
-"not used in the standard."
+"This file uses %(count)s <a href=\"#additional-fields\">additional field</a>"
+" not used in the standard."
 msgid_plural ""
-"This file uses %(count)s <a href=\"#additional-fields\">additional fields</"
-"a> not used in the standard."
+"This file uses %(count)s <a href=\"#additional-fields\">additional "
+"fields</a> not used in the standard."
 msgstr[0] ""
 "Este archivo utiliza un <a href=\"#additional-fields\">campo adicional</a> "
 "no incluido en el estándar."
@@ -600,8 +603,8 @@ msgstr "Explora tus datos:"
 #: cove_ocds/templates/cove_ocds/explore_release.html:427
 msgid ""
 "This section provides a visual representation of the data, use it to check "
-"whether the data makes sense in the type of tool a user might use to explore "
-"it."
+"whether the data makes sense in the type of tool a user might use to explore"
+" it."
 msgstr ""
 "Esta sección proporciona una representación visual de los datos, utilícela "
 "para verificar si tienen sentido en el tipo de herramienta que un usuario "
@@ -620,8 +623,8 @@ msgstr ""
 #: cove_ocds/templates/cove_ocds/explore_record.html:181
 #: cove_ocds/templates/cove_ocds/explore_release.html:433
 msgid ""
-"When viewing an OCDS record, use the numbers at the top of the visualization "
-"to browse the change history. New and changed fields are highlighted, use "
+"When viewing an OCDS record, use the numbers at the top of the visualization"
+" to browse the change history. New and changed fields are highlighted, use "
 "this feature to check whether any fields have changed unexpectedly."
 msgstr ""
 "Al ver un registro de OCDS, use los números en la parte superior de la "
@@ -679,15 +682,15 @@ msgstr "al esquema"
 #: cove_ocds/templates/cove_ocds/explore_release.html:85
 #, python-format
 msgid ""
-"This file uses %(count)s <a href=\"#deprecated-fields\">deprecated field</a>."
+"This file uses %(count)s <a href=\"#deprecated-fields\">deprecated "
+"field</a>."
 msgid_plural ""
-" This file uses %(count)s <a href=\"#deprecated-fields\">deprecated fields</"
-"a>."
-msgstr[0] ""
-"Este archivo usa un<a href=\"#deprecated-fields\">campo obsoleto</a>."
+" This file uses %(count)s <a href=\"#deprecated-fields\">deprecated "
+"fields</a>."
+msgstr[0] "Este archivo usa un<a href=\"#deprecated-fields\">campo obsoleto</a>."
 msgstr[1] ""
-"Este archivo usa %(count)s <a href=\"#deprecated-fields\">campos obsoletos</"
-"a>."
+"Este archivo usa %(count)s <a href=\"#deprecated-fields\">campos "
+"obsoletos</a>."
 
 #: cove_ocds/templates/cove_ocds/explore_release.html:114
 msgid "Key Field Information"
@@ -972,8 +975,8 @@ msgid ""
 "If you supply a link, we fetch the data from that link and store it on our "
 "server for 7 days."
 msgstr ""
-"Si proporciona un enlace, buscamos los datos de ese enlace y los almacenamos "
-"en nuestro servidor durante 7 días."
+"Si proporciona un enlace, buscamos los datos de ese enlace y los almacenamos"
+" en nuestro servidor durante 7 días."
 
 #: cove_ocds/templates/cove_ocds/more_info.html:13
 msgid ""
@@ -989,8 +992,8 @@ msgid ""
 "understand how people are using this application, what types of data are "
 "being supplied, what common errors exist and so on."
 msgstr ""
-"Mientras los datos están en nuestros servidores podemos acceder a ellos para "
-"ayudarnos a entender cómo las personas usan esta aplicación, los tipos de "
+"Mientras los datos están en nuestros servidores podemos acceder a ellos para"
+" ayudarnos a entender cómo las personas usan esta aplicación, los tipos de "
 "datos suministrados, los errores  más comunes que existen, etc."
 
 #: cove_ocds/templates/cove_ocds/more_info.html:15
@@ -1007,8 +1010,8 @@ msgstr ""
 #: cove_ocds/templates/cove_ocds/more_info.html:16
 msgid ""
 "We do retain some metadata about data supplied to this site. Details can be "
-"found in the code, but may include information about whether or not the file "
-"was uploaded, linked or pasted, the size of the file, the date/time it was "
+"found in the code, but may include information about whether or not the file"
+" was uploaded, linked or pasted, the size of the file, the date/time it was "
 "supplied and so on. "
 msgstr ""
 "Guardamos algunos metadatos sobre los datos suministrados a este sitio. Los "
@@ -1022,8 +1025,8 @@ msgstr "¿Por qué eliminan los datos después de 7 días?"
 
 #: cove_ocds/templates/cove_ocds/more_info.html:19
 msgid ""
-"This is service to allow people to explore machine readable data. As such we "
-"see no need to store and gather everything people submit to the site "
+"This is service to allow people to explore machine readable data. As such we"
+" see no need to store and gather everything people submit to the site "
 "forever. We have chosen 7 days as a practical time frame that allows people "
 "to share results with colleagues, but also allows data to disappear over "
 "time to save people having to clean up after themselves."
@@ -1031,9 +1034,9 @@ msgstr ""
 "Este es un servicio que permite a la gente a explorar datos legibles por "
 "computadora. Como tal no vemos la necesidad de almacenar y reunir todo lo "
 "que la gente subre al sitio por siempre. Hemos optado por 7 días como un "
-"tiempo práctico que permite a la gente compartir los resultados con colegas, "
-"pero también permite que los datos desaparezcan a su debido tiempo para así "
-"ahorrar a las personas tener que hacer una limpieza ellos mismos."
+"tiempo práctico que permite a la gente compartir los resultados con colegas,"
+" pero también permite que los datos desaparezcan a su debido tiempo para así"
+" ahorrar a las personas tener que hacer una limpieza ellos mismos."
 
 #: cove_ocds/templates/cove_ocds/more_info.html:20
 msgid ""
@@ -1057,9 +1060,9 @@ msgstr "Datos sobre Mejores Prácticas en la Web"
 
 #: cove_ocds/templates/cove_ocds/more_info.html:25
 msgid ""
-"recommend making open data available in a range of formats to meet the needs "
-"of different users, for example, developers may want JSON, researchers might "
-"prefer a spreadsheet format."
+"recommend making open data available in a range of formats to meet the needs"
+" of different users, for example, developers may want JSON, researchers "
+"might prefer a spreadsheet format."
 msgstr ""
 "recomienda ofrecer los datos abiertos en una variedad de formatos para "
 "satisfacer las necesidades de los distintos usuarios. Por ejemplo, los "
@@ -1069,18 +1072,17 @@ msgstr ""
 #: cove_ocds/templates/cove_ocds/ocds_missing_ids_table.html:3
 #, python-format
 msgid ""
-" We found <strong>%(n_missing)s</strong> object within an array in your data "
-"without an <code>id</code> property.\n"
+" We found <strong>%(n_missing)s</strong> object within an array in your data without an <code>id</code> property.\n"
 "   "
 msgid_plural ""
 "We found <strong>%(n_missing)s</strong> objects within arrays in your data "
 "without an <code>id</code> property."
 msgstr[0] ""
-"Encontramos <strong>%(n_missing)s</strong> objetos dentro de la lista de sus "
-"datos sin una propiedad <code>id</code>."
+"Encontramos <strong>%(n_missing)s</strong> objetos dentro de la lista de sus"
+" datos sin una propiedad <code>id</code>."
 msgstr[1] ""
-"Encontramos <strong>%(n_missing)s</strong> objetos dentro de la lista de sus "
-"datos sin una propiedad <code>id</code>."
+"Encontramos <strong>%(n_missing)s</strong> objetos dentro de la lista de sus"
+" datos sin una propiedad <code>id</code>."
 
 #: cove_ocds/templates/cove_ocds/ocds_missing_ids_table.html:5
 msgid ""
@@ -1166,8 +1168,8 @@ msgstr "Lo sentimos, no podemos procesar esos datos"
 
 #: cove_ocds/views.py:84
 msgid ""
-"OCDS JSON should have an object as the top level, the JSON you supplied does "
-"not."
+"OCDS JSON should have an object as the top level, the JSON you supplied does"
+" not."
 msgstr ""
 "OCDS JSON debe ser un objeto al nivel más alto pero el JSON que usted ha "
 "aportado no lo es."
