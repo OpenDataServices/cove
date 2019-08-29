@@ -89,6 +89,16 @@ def explore_iati(request, pk):
     lib_cove_config.config.update(settings.COVE_CONFIG)
 
     file_type = context['file_type']
+    data_file = db_data.original_file.file.name if file_type == 'xml' else context['converted_path']
+
+    tree = get_tree(data_file)
+    context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type, tree)
+    context['first_render'] = not db_data.rendered
+    context['invalid_embedded_codelist_values'] = aggregate_results(context['invalid_embedded_codelist_values'])
+    context['invalid_non_embedded_codelist_values'] = aggregate_results(context['invalid_non_embedded_codelist_values'])
+    context['iati_identifiers_count'] = iati_identifier_count(tree)
+    context['organisation_identifier_count'] = organisation_identifier_count(tree)
+   
     if file_type != 'xml':
         schema_iati = SchemaIATI()
         context.update(convert_spreadsheet(
@@ -99,20 +109,11 @@ def explore_iati(request, pk):
                 schema_iati.organisation_schema,
                 schema_iati.common_schema,
             ]))
-        data_file = context['converted_path']
     else:
-        data_file = db_data.original_file.file.name
-        context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
+        root_list_path = 'iati-organisation' if context['organisation_identifier_count'] else 'iati-activity'
+        context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name, root_list_path=root_list_path,
                        request=request, flatten=request.POST.get('flatten'), xml=True, lib_cove_config=lib_cove_config))
-
-    tree = get_tree(data_file)
-    context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type, tree)
-    context['first_render'] = not db_data.rendered
-    context['invalid_embedded_codelist_values'] = aggregate_results(context['invalid_embedded_codelist_values'])
-    context['invalid_non_embedded_codelist_values'] = aggregate_results(context['invalid_non_embedded_codelist_values'])
-    context['iati_identifiers_count'] = iati_identifier_count(tree)
-    context['organisation_identifier_count'] = organisation_identifier_count(tree)
-
+    
     if not db_data.rendered:
         db_data.rendered = True
 
