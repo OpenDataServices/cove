@@ -50,6 +50,11 @@
                   {% trans "The license is" %} <a href="{{json_data.license}}">{{json_data.license}}</a>.
                 </li>
              {% endif %}
+             {% if json_data.publicationPolicy %}
+                <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                  {% trans "Publication policy is" %} <a href="{{json_data.publicationPolicy}}">{{json_data.publicationPolicy}}</a>.
+                </li>
+             {% endif %}
               
              {% if ra.duplicate_release_ids %} 
                 <li><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
