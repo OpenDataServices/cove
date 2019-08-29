@@ -79,7 +79,6 @@ COVE_CONFIG = {
     'schema_host': 'https://raw.githubusercontent.com/IATI/IATI-Schemas/',
     'schema_version': '2.03',
     'schema_directory': 'iati_schemas',
-    'root_list_path': 'iati-activity',
     'root_id': None,
     'id_name': 'iati-identifier',
     'convert_titles': False,
