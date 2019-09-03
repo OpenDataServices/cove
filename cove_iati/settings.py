@@ -81,6 +81,7 @@ COVE_CONFIG = {
     'schema_directory': 'iati_schemas',
     'root_id': None,
     'id_name': 'iati-identifier',
+    'root_list_path': 'iati-activity',
     'convert_titles': False,
     'input_methods': ['upload', 'url', 'text'],
     'support_email': None,
