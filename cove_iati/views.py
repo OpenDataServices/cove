@@ -112,9 +112,15 @@ def explore_iati(request, pk):
     context['organisation_identifier_count'] = organisation_identifier_count(tree)
 
     if file_type == 'xml':
-        root_list_path = 'iati-organisation' if context['organisation_identifier_count'] else 'iati-activity'
+        if context['organisation_identifier_count']:
+            root_list_path = 'iati-organisation'
+            root_id = 'organisation-identifier'
+        else:
+            root_list_path = 'iati-activity'
+            root_id = None
+            
         context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name, root_list_path=root_list_path,
-                       request=request, flatten=request.POST.get('flatten'), xml=True, lib_cove_config=lib_cove_config))
+                       root_id=root_id, request=request, flatten=request.POST.get('flatten'), xml=True, lib_cove_config=lib_cove_config))
 
     if not db_data.rendered:
         db_data.rendered = True
