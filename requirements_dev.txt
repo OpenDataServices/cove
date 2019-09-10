@@ -1,9 +1,9 @@
-pip==19.2.3
-Django==1.11.23 # rq.filter: <1.12
+pip==18.1
+Django==1.11.24 # rq.filter: <1.12
 -e git+https://github.com/OpenDataServices/flatten-tool.git@79e609b067b6f9b66d2de628046eaa6d4d6ab4e1#egg=flattentool
 -e git+https://github.com/open-contracting/lib-cove-ocds.git@4fbdd620f40698e1566deae159e356250ed869cf#egg=libcoveocds
 -e git+https://github.com/OpenDataServices/lib-cove-web.git@62663c3dd6f71c57d53dc5ea7a285210b140f4ab#egg=libcoveweb
--e git+https://github.com/OpenDataServices/lib-cove.git@a538caba751820242d8638050b821bd00d16e435#egg=libcove
+-e git+https://github.com/OpenDataServices/lib-cove.git@0fe3dc2a4b40c89380a6504d08dabe445dfc2faa#egg=libcove
 django-bootstrap3==11.1.0
 django-debug-toolbar==2.0
 requests==2.22.0
@@ -52,11 +52,11 @@ docopt==0.6.2
 docutils==0.15.2
 entrypoints==0.3
 et-xmlfile==1.0.1
-execnet==1.7.0
+execnet==1.7.1
 future==0.17.1
 idna==2.8
 imagesize==1.1.0
-importlib-metadata==0.19
+importlib-metadata==0.20
 jdcal==1.4.1
 Jinja2==2.10.1
 jsonref==0.2
@@ -67,8 +67,6 @@ mccabe==0.6.1
 more-itertools==7.2.0
 openpyxl==2.6.3
 packaging==19.1
-pathlib2==2.3.4
-
 pluggy==0.12.0
 py==1.8.0
 pycodestyle==2.5.0
@@ -79,9 +77,9 @@ pyrsistent==0.15.4
 pytest-forked==1.0.2
 python-slugify==1.2.6
 pytz==2019.2
-schema==0.7.0
+schema==0.7.1
 six==1.12.0
-snowballstemmer==1.9.0
+snowballstemmer==1.9.1
 sphinxcontrib-applehelp==1.0.1
 sphinxcontrib-devhelp==1.0.1
 sphinxcontrib-htmlhelp==1.0.2
@@ -93,5 +91,5 @@ Unidecode==1.1.1
 urllib3==1.25.3
 wcwidth==0.1.7
 webencodings==0.5.1
-Werkzeug==0.15.5
+Werkzeug==0.15.6
 zipp==0.6.0
