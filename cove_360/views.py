@@ -1,3 +1,4 @@
+import csv
 import functools
 import itertools
 import json
@@ -6,6 +7,7 @@ from decimal import Decimal
 
 from cove.views import explore_data_context
 from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
@@ -101,10 +103,26 @@ def additional_checks(request):
     context = {}
 
     test_classes = list(itertools.chain(*TEST_CLASSES.values()))
-    context["checks"] = [
+    context['checks'] = [
         {
-            'heading': check.check_text['heading'], 'message': check.check_text['message'].ordered_dict.items(),
-            'desc': check.__doc__, 'class_name': check.__name__
+            'heading': check.check_text['heading'],
+            'messages': (check.check_text['message'].ordered_dict.items()),
+            'desc': check.__doc__,
+            'class_name': check.__name__
         } for check in test_classes
     ]
-    return render(request, 'cove_360/additional_checks.html', context)
+
+    if request.path.endswith('.csv'):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(['Class Name', 'Methodology', 'Heading', '%', 'Message'])
+        for check in context['checks']:
+            for message in check['messages']:
+                writer.writerow([check['class_name'], check['desc'], check['heading'], message[0], message[1]])
+
+        return response
+
+    else:
+        return render(request, 'cove_360/additional_checks.html', context)
