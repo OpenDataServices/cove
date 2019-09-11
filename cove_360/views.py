@@ -1,3 +1,4 @@
+import codecs
 import csv
 import functools
 import itertools
@@ -114,7 +115,9 @@ def additional_checks(request):
 
     if request.path.endswith('.csv'):
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+        response['Content-Disposition'] = 'attachment; filename="additional_checks.csv"'
+
+        response.write(codecs.BOM_UTF8)
 
         writer = csv.writer(response)
         writer.writerow(['Class Name', 'Methodology', 'Heading', '%', 'Message'])
