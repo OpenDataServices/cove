@@ -10,7 +10,7 @@ Travis tests will fail if a branch isn't ready to be merged and deployed. This i
 
 ### OCDS
 
-1. Do the actual deploy. From the [opendataservices-deploy directory](https://github.com/OpenDataServices/opendataservices-deploy):
+1. Do the actual deploy. From the [open-contracting-deploy directory](https://github.com/open-contracting/deploy):
 
 ```
 salt-ssh --state-output=mixed -L 'cove-live-ocds-2' state.highstate
