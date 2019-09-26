@@ -196,7 +196,6 @@ def test_500_error(server_url, browser):
                                                                'Get a copy of the schema with extension patches applied',
                                                                'The following extensions failed',
                                                                "Invalid code found in scale",
-                                                               'is not valid under any of the given schemas',
                                                                '/records/compiledRelease/tender/targets',
                                                                'The schema version specified in the file is 1.1',
                                                                '/records/releases/tender/targets'], ['checked against a schema with no extensions'], True),
