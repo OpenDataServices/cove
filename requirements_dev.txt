@@ -1,9 +1,5 @@
 pip==19.2.3
-<<<<<<< HEAD
 Django==1.11.24 # rq.filter: <1.12
-=======
-Django==1.11.23 # rq.filter: <1.12
->>>>>>> master
 -e git+https://github.com/OpenDataServices/flatten-tool.git@511cc6d1ee83d77aa7a1efe965eb3dd7e4940c1b#egg=flattentool
 -e git+https://github.com/open-contracting/lib-cove-ocds.git@4fbdd620f40698e1566deae159e356250ed869cf#egg=libcoveocds
 -e git+https://github.com/OpenDataServices/lib-cove-web.git@62663c3dd6f71c57d53dc5ea7a285210b140f4ab#egg=libcoveweb
