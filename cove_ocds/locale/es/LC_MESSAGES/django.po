@@ -10,15 +10,16 @@
 # Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2019
 # Bibiana Cristòfol <bcristofol@gmail.com>, 2019
 # Amy Guy <amy.guy@opendataservices.coop>, 2019
+# Romina Fernandez <rfernandez@cds.com.py>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-22 14:56+0000\n"
+"POT-Creation-Date: 2019-10-11 11:39+0000\n"
 "PO-Revision-Date: 2017-04-03 14:36+0000\n"
-"Last-Translator: Amy Guy <amy.guy@opendataservices.coop>, 2019\n"
+"Last-Translator: Romina Fernandez <rfernandez@cds.com.py>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1154,11 +1155,26 @@ msgstr "3 primeros ejemplos"
 msgid "Spreadsheet Location of first 3 errors"
 msgstr " Ubicación de los 3 primeros errores en la hoja de cálculo"
 
-#: cove_ocds/templates/cove_ocds/validation_table.html:65
+#: cove_ocds/templates/cove_ocds/validation_table.html:28
+msgid ""
+"(Assuming these are embedded releases, because they have an "
+"<code>id</code>)."
+msgstr ""
+"(Asumiendo que estas son entregas ('releases') embebidas, porque tienen un "
+"<code>id</code>)."
+
+#: cove_ocds/templates/cove_ocds/validation_table.html:30
+msgid ""
+"(Assuming these are linked releases, because they lack an <code>id</code>)."
+msgstr ""
+"(Asumiendo que estas son entregas ('releases') enlazadas, porque no tienen "
+"un <code>id</code>)."
+
+#: cove_ocds/templates/cove_ocds/validation_table.html:70
 msgid "Path:"
 msgstr "Ruta:"
 
-#: cove_ocds/templates/cove_ocds/validation_table.html:66
+#: cove_ocds/templates/cove_ocds/validation_table.html:71
 msgid "Line:"
 msgstr "Línea:"
 
