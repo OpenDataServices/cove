@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-29 07:16+0000\n"
+"POT-Creation-Date: 2019-10-11 11:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1018,11 +1018,21 @@ msgstr ""
 msgid "Spreadsheet Location of first 3 errors"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/validation_table.html:65
+#: cove_ocds/templates/cove_ocds/validation_table.html:28
+msgid ""
+"(Assuming these are embedded releases, because they have an <code>id</code>)."
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/validation_table.html:30
+msgid ""
+"(Assuming these are linked releases, because they lack an <code>id</code>)."
+msgstr ""
+
+#: cove_ocds/templates/cove_ocds/validation_table.html:70
 msgid "Path:"
 msgstr ""
 
-#: cove_ocds/templates/cove_ocds/validation_table.html:66
+#: cove_ocds/templates/cove_ocds/validation_table.html:71
 msgid "Line:"
 msgstr ""
 
