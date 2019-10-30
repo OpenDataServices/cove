@@ -44,7 +44,7 @@ def server_url(request, live_server):
                                                   'Data does not use the 360Giving Standard 15 Errors',
                                                   'your data is not yet using the 360Giving standard',
                                                   'Incorrect Formats',
-                                                  'Non-unique ID Values',
+                                                  'Non-unique id values',
                                                   '100% of grants do not contain any beneficiary location fields',
                                                   'Grant identifiers:  2',
                                                   'Funder organisation identifiers:  1',
