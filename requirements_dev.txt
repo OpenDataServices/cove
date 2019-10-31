@@ -3,7 +3,7 @@ Django==1.11.24 # rq.filter: <1.12
 -e git+https://github.com/OpenDataServices/flatten-tool.git@511cc6d1ee83d77aa7a1efe965eb3dd7e4940c1b#egg=flattentool
 -e git+https://github.com/open-contracting/lib-cove-ocds.git@2ca41563d8d293955c86ea6e8a9b059d6f8a138d#egg=libcoveocds
 -e git+https://github.com/OpenDataServices/lib-cove-web.git@62663c3dd6f71c57d53dc5ea7a285210b140f4ab#egg=libcoveweb
--e git+https://github.com/OpenDataServices/lib-cove.git@558fe20caf3ad8da94cf079a78ffc579d7915db5#egg=libcove
+-e git+https://github.com/OpenDataServices/lib-cove.git@b4b0cceecf644c2e8cd48f9eaa03eea9825d36bd#egg=libcove
 django-bootstrap3==11.1.0
 django-debug-toolbar==2.0
 requests==2.22.0
@@ -67,7 +67,7 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 more-itertools==7.2.0
 packaging==19.2
-
+pathlib2==2.3.5
 pluggy==0.13.0
 py==1.8.0
 pycodestyle==2.5.0
