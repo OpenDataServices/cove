@@ -48,22 +48,17 @@ User Flows
 
 Overviews of how users flow through the application are maintained at https://docs.google.com/drawings/d/1pVbEu6dJaVk8t3NctjYuE5irsqltc9Th0gVQ_zeJyFA/edit and https://docs.google.com/drawings/d/1wFH4lZlBZWso7Tj_g7CyTF3YaFfnly59sVufpztmEg8/edit
 
-Release Cycle
-=============
+Putting code live
+=================
 
-CoVE is in constant development.
-There are public instances in use at:
+There are live instances at:
 https://dataquality.threesixtygiving.org/
 http://standard.open-contracting.org/review/
+https://iati.cove.opendataservices.coop/
 
-We deploy the latest version of CoVE at the end of each calendar month (usually the last Thursday of the month).
-We make a development version ready for user testing (mainly internally) two weeks before deployment. Our cut off date for new features to be considered in that cycle is the week before that.
+Code is deployed to live when it is merged into the master branch. (Instructions on how to do this at https://cove.readthedocs.io/en/latest/deployment/).
 
 Feature requests, bugs, questions and answers etc are all handled via GitHub.
-We use release cycle milestones to organise those issues.
-We also use GitHub projects as a way to prioritise issues and indicate what is being worked on.
-
-Serious Bug fixes and 'priority' features, that need to make it into a release at short notice can be included by negotiation.
 
 Requirements
 ============
