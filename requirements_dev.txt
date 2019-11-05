@@ -34,7 +34,7 @@ selenium==3.141.0
 transifex-client==0.13.6
 libsass==0.19.2
 Sphinx==2.2.0
--e git+https://github.com/rtfd/recommonmark.git@3238b029b6e19b9cbceb9b85d81304f86b12c012#egg=recommonmark
+recommonmark==0.6.0
 sphinx-rtd-theme==0.4.3
 # Lock as later versions have a problem with slow generation of data
 hypothesis==3.52.3
