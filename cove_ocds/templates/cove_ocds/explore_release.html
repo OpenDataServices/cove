@@ -61,7 +61,7 @@
              {% if extensions and extensions.is_extended_schema %}
                 <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                   {% with n_invalid=extensions.invalid_extension.keys|length %}
-                    {% trans "This file applies" %}{% blocktrans count count=extensions.extensions.keys|length|subtract:n_invalid %}{{count}} valid <a href="#schema-extensions">extension</a>{% plural %} {{count}} valid <a href="#schema-extensions">extensions</a> {% endblocktrans %} {% trans "to the schema" %}.
+                    {% trans "This file applies" %} {% blocktrans count count=extensions.extensions.keys|length|subtract:n_invalid %}{{count}} valid <a href="#schema-extensions">extension</a>{% plural %} {{count}} valid <a href="#schema-extensions">extensions</a> {% endblocktrans %} {% trans "to the schema" %}.
                   {% endwith %}
                 </li>
              {% endif %}
