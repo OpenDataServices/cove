@@ -1,18 +1,18 @@
-pip==19.2.3
-Django==1.11.24 # rq.filter: <1.12
--e git+https://github.com/OpenDataServices/flatten-tool.git@511cc6d1ee83d77aa7a1efe965eb3dd7e4940c1b#egg=flattentool
--e git+https://github.com/open-contracting/lib-cove-ocds.git@56bbc1b75c86330536885c2ea4f03432c69c2579#egg=libcoveocds
+pip==19.3.1
+Django==1.11.26 # rq.filter: <1.12
+flattentool==0.9.0
+libcoveocds==0.7.4
 -e git+https://github.com/OpenDataServices/lib-cove-web.git@62663c3dd6f71c57d53dc5ea7a285210b140f4ab#egg=libcoveweb
--e git+https://github.com/OpenDataServices/lib-cove.git@b4b0cceecf644c2e8cd48f9eaa03eea9825d36bd#egg=libcove
+libcove==0.12.0
 django-bootstrap3==11.1.0
-django-debug-toolbar==2.0
+django-debug-toolbar==2.1
 requests==2.22.0
 cached-property==1.5.1
 dealer==2.0.5
 django-environ==0.4.5
-jsonschema==3.0.2
+jsonschema==3.1.1
 json-merge-patch==0.2
-python-dateutil==2.8.0
+python-dateutil==2.8.1
 raven==6.10.0
 strict-rfc3339==0.7
 rfc3987==1.3.8
@@ -23,17 +23,17 @@ rangedict==0.1.6
 openpyxl==2.6.4
 
 
-flake8==3.7.8
-pytest==5.2.0
-pytest-django==3.5.1
-pytest-cov==2.7.1
+flake8==3.7.9
+pytest==5.2.2
+pytest-django==3.7.0
+pytest-cov==2.8.1
 pytest-localserver==0.5.0
-pytest-xdist==1.29.0
+pytest-xdist==1.30.0
 coveralls==1.8.2
 selenium==3.141.0
 transifex-client==0.13.6
-libsass==0.19.2
-Sphinx==2.2.0
+libsass==0.19.4
+Sphinx==2.2.1
 recommonmark==0.6.0
 sphinx-rtd-theme==0.4.3
 # Lock as later versions have a problem with slow generation of data
@@ -42,11 +42,11 @@ hypothesis==3.52.3
 alabaster==0.7.12
 apipkg==1.5
 atomicwrites==1.3.0
-attrs==19.1.0
+attrs==19.3.0
 Babel==2.7.0
 certifi==2019.9.11
 chardet==3.0.4
-commonmark==0.9.0
+commonmark==0.9.1
 contextlib2==0.5.5
 coverage==4.5.4
 docopt==0.6.2
@@ -54,12 +54,11 @@ docutils==0.15.2
 entrypoints==0.3
 et-xmlfile==1.0.1
 execnet==1.7.1
-future==0.17.1
 idna==2.8
 imagesize==1.1.0
 importlib-metadata==0.23
 jdcal==1.4.1
-Jinja2==2.10.1
+Jinja2==2.10.3
 jsonref==0.2
 LEPL==5.1.3
 lxml==4.4.1
@@ -67,20 +66,19 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 more-itertools==7.2.0
 packaging==19.2
-pathlib2==2.3.5
 pluggy==0.13.0
 py==1.8.0
 pycodestyle==2.5.0
 pyflakes==2.1.1
 Pygments==2.4.2
-pyparsing==2.4.2
-pyrsistent==0.15.4
-pytest-forked==1.0.2
+pyparsing==2.4.5
+pyrsistent==0.15.5
+pytest-forked==1.1.3
 python-slugify==1.2.6
-pytz==2019.2
+pytz==2019.3
 schema==0.7.1
-six==1.12.0
-snowballstemmer==1.9.1
+six==1.13.0
+snowballstemmer==2.0.0
 sphinxcontrib-applehelp==1.0.1
 sphinxcontrib-devhelp==1.0.1
 sphinxcontrib-htmlhelp==1.0.2
@@ -89,7 +87,7 @@ sphinxcontrib-qthelp==1.0.2
 sphinxcontrib-serializinghtml==1.1.3
 sqlparse==0.3.0
 Unidecode==1.1.1
-urllib3==1.25.6
+urllib3==1.25.7
 wcwidth==0.1.7
 webencodings==0.5.1
 Werkzeug==0.16.0
