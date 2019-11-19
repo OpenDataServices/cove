@@ -1,5 +1,11 @@
 {
   "extensions": {},
+  "additional_checks": {
+    "empty_field": [
+      {"json_location": "releases/0/id"},
+      {"json_location": "releases/0/tag"}
+    ]
+  },
   "additional_closed_codelist_values": {
     "releases/tender/value/currency": {
       "isopen": false,
@@ -86,6 +92,13 @@
       "type": "string"
     },
     {
+      "description": "Array has non-unique elements",
+      "field": "releases",
+      "path": "releases",
+      "type": "uniqueItems",
+      "value": ""
+    },
+    {
       "value": "Last Tuesday",
       "description": "Date is not in the correct format",
       "path": "releases/0/date",
@@ -118,9 +131,10 @@
   "file_type": "json",
   "releases_aggregates": {},
   "additional_fields": [],
+  "all_additional_fields": [],
   "additional_open_codelist_values": {},
   "deprecated_fields": [],
   "common_error_types": [],
-  "schema_url": "http://standard.open-contracting.org/schema/1__1__3/release-package-schema.json",
+  "schema_url": "https://standard.open-contracting.org/schema/1__1__4/release-package-schema.json",
   "ocds_prefixes_bad_format": []
 }

@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
 
 from . lib.schema import Schema360
-from . lib.threesixtygiving import run_additional_checks
+from . lib.threesixtygiving import run_extra_checks, extend_numbers, spreadsheet_style_errors_table, TEST_CLASSES
 from cove.input.models import SuppliedData
 
 # Source is cove_360/fixtures/fundingproviders-grants_fixed_2_grants.json
@@ -292,8 +292,8 @@ SOURCE_MAP = {
 }
 
 
-RESULTS = [
-    ({'heading': "1 grant has a value of £0",
+QUALITY_ACCURACY_CHECKS_RESULTS = [
+    ({'heading': "33% of grants have a value of £0",
       'message': ("It’s worth taking a look at these grants and deciding if "
                   "they should be published. It’s unusual to have grants of £0, but "
                   "there may be a reasonable explanation. Additional information "
@@ -301,7 +301,73 @@ RESULTS = [
                   "so consider adding an explanation to the description of the grant.")},
      ['grants/0/amountAwarded'],
      [{'sheet': 'grants', 'letter': 'Q', 'row_number': 2, 'header': 'Amount Awarded'}]),
-    ({'heading': "1 grant has a Recipient Org:Identifier that starts '360G-'",
+    ({'heading': ("33% of grants have a <span class=\"highlight-background-text\">Funding Org:Identifier</span> that "
+                  "does not draw from a recognised register."),
+      'message': ("Using external identifiers (such as a charity or company number) helps "
+                  "people using your data to match it up against other data - for example "
+                  "to see who else has given grants to the same recipient, even if they’re "
+                  "known by a different name. If the data describes lots of grants to "
+                  "organisations that don’t have such identifiers, or grants to individuals, "
+                  "then you can ignore this notice.")},
+     ['grants/0/fundingOrganization/0/id'],
+     [{'sheet': 'grants', 'letter': 'V', 'row_number': 2, 'header': 'Funding Org:Identifier'}]),
+    ({'heading': ("33% of grants have a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> that "
+                  "does not draw from a recognised register."),
+      'message': ("Using external identifiers (such as a charity or company number) helps "
+                  "people using your data to match it up against other data - for example "
+                  "to see who else has given grants to the same recipient, even if they’re "
+                  "known by a different name. If the data describes lots of grants to "
+                  "organisations that don’t have such identifiers, or grants to individuals, "
+                  "then you can ignore this notice.")},
+     ['grants/1/recipientOrganization/0/id'],
+     [{'sheet': 'grants', 'letter': 'J', 'row_number': 3, 'header': 'Recipient Org:Identifier'}]),
+    ({'heading': ("33% of grants have a value provided in the "
+                  "<span class=\"highlight-background-text\">Recipient Org: Charity Number</span> column "
+                  "that doesn’t look like a charity number"),
+      'message': ("Common causes of this are missing leading digits, typos or incorrect "
+                  "values being entered into this field.")},
+     ['grants/0/recipientOrganization/0/charityNumber'],
+     [{'sheet': 'grants', 'letter': 'M', 'row_number': 2, 'header': 'Recipient Org:Charity Number'}]),
+    ({'heading': ("33% of grants have a value provided in the "
+                  "<span class=\"highlight-background-text\">Recipient Org: Company Number</span> column "
+                  "that doesn’t look like a company number"),
+      'message': ("Common causes of this are missing leading digits, typos or incorrect values "
+                  "being entered into this field. Company numbers are typically 8 digits, "
+                  "for example <span class=\"highlight-background-text\">09876543</span> or sometimes start with a "
+                  "2 letter prefix, <span class=\"highlight-background-text\">SC123459</span>. You can check "
+                  "company numbers online at <a href=\"https://beta.companieshouse.gov.uk/\">Companies House</a>.")},
+     ['grants/0/recipientOrganization/0/companyNumber'],
+     [{'sheet': 'grants', 'letter': 'L', 'row_number': 2, 'header': 'Recipient Org:Company Number'}]),
+    ({'heading': "67% of grants have funder or recipient organisation IDs that might not be valid",
+      'message': ("The IDs might not be valid for the registration agency that they refer to "
+                  "- for example, a 'GB-CHC' ID that contains an invalid charity number. Common "
+                  "causes of this are missing leading digits, typos or incorrect values being "
+                  "entered into this field.")},
+     ['grants/2/fundingOrganization/0/id', 'grants/2/recipientOrganization/0/id'],
+     [{'sheet': 'grants', 'letter': 'V', 'row_number': 4, 'header': 'Funding Org:Identifier'},
+      {'sheet': 'grants', 'letter': 'J', 'row_number': 4, 'header': 'Recipient Org:Identifier'}]),
+    ({'heading': "There are 3 different funding organisation IDs listed",
+      'message': ("If you are expecting to be publishing data for multiple funders then "
+                  "you can ignore this notice. If you are only publishing for a single funder then you should review "
+                  "your <span class=\"highlight-background-text\">Funding Organisation identifier</span> "
+                  "column to see where multiple IDs have occurred.")},
+     ['grants/0/fundingOrganization/0/id', 'grants/1/fundingOrganization/0/id', 'grants/2/fundingOrganization/0/id'],
+     [{'sheet': 'grants', 'letter': 'V', 'row_number': 2, 'header': 'Funding Org:Identifier'},
+      {'sheet': 'grants', 'letter': 'V', 'row_number': 3, 'header': 'Funding Org:Identifier'},
+      {'sheet': 'grants', 'letter': 'V', 'row_number': 4, 'header': 'Funding Org:Identifier'}]),
+    ({'heading': "67% of grants contain text that looks like an email address",
+      'message': ("Your data may contain an email address (or something that looks like one), "
+                  "which can constitute personal data. The use and distribution of personal data "
+                  "is restricted by the Data Protection Act. You should ensure that any personal "
+                  "data is only included with the knowledge and consent of the person to whom it refers.")},
+     ['grants/0/Grant type', 'grants/0/title'],
+     [{'sheet': 'grants', 'letter': 'G', 'row_number': 2, 'header': 'Grant type'},
+      {'sheet': 'grants', 'letter': 'O', 'row_number': 2, 'header': 'Title'}])
+]
+
+USEFULNESS_CHECKS_RESULTS = [
+    ({'heading': ("33% of grants have a <span class=\"highlight-background-text\">Recipient Org:Identifier</span> that "
+                  "starts '360G-'"),
       'message': ("If the grant is to a recipient organisation that has an external "
                   "identifier (such as a charity or company number), then this should "
                   "be used instead. Using external identifiers helps people using your "
@@ -311,125 +377,64 @@ RESULTS = [
                   "ignore this notice.")},
      ['grants/0/recipientOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'J', 'row_number': 2, 'header': 'Recipient Org:Identifier'}]),
-    ({'heading': "1 grant has a Funding Org:Identifier that starts '360G-'",
+    ({'heading': ("33% of grants have a <span class=\"highlight-background-text\">Funding Org:Identifier</span> that "
+                  "starts '360G-'"),
       'message': ("If the grant is from a funding organisation that has an external identifier "
                   "(such as a charity or company number), then this should be used instead. "
                   "If no other identifier can be used, then you can ignore this notice.")},
      ['grants/1/fundingOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'V', 'row_number': 3, 'header': 'Funding Org:Identifier'}]),
-    ({'heading': ("1 grant has a Recipient Org:Identifier that does not draw from "
-                  "a recognised register."),
-      'message': ("Using external identifiers (such as a charity or company number) helps "
-                  "people using your data to match it up against other data - for example "
-                  "to see who else has given grants to the same recipient, even if they’re "
-                  "known by a different name. If the data describes lots of grants to "
-                  "organisations that don’t have such identifiers, or grants to individuals, "
-                  "then you can ignore this notice.")},
-     ['grants/1/recipientOrganization/0/id'],
-     [{'sheet': 'grants', 'letter': 'J', 'row_number': 3, 'header': 'Recipient Org:Identifier'}]),
-    ({'heading': ("1 grant has a Funding Org:Identifier that does not draw from "
-                  "a recognised register."),
-      'message': ("Using external identifiers (such as a charity or company number) helps "
-                  "people using your data to match it up against other data - for example "
-                  "to see who else has given grants to the same recipient, even if they’re "
-                  "known by a different name. If the data describes lots of grants to "
-                  "organisations that don’t have such identifiers, or grants to individuals, "
-                  "then you can ignore this notice.")},
-     ['grants/0/fundingOrganization/0/id'],
-     [{'sheet': 'grants', 'letter': 'V', 'row_number': 2, 'header': 'Funding Org:Identifier'}]),
-    ({'heading': ("1 grant has a value provided in the Recipient Org: Charity Number column "
-                 "that doesn’t look like a charity number"),
-      'message': ("Common causes of this are missing leading digits, typos or incorrect "
-                  "values being entered into this field.")},
-     ['grants/0/recipientOrganization/0/charityNumber'],
-     [{'sheet': 'grants', 'letter': 'M', 'row_number': 2, 'header': 'Recipient Org:Charity Number'}]),
-    ({'heading': ("1 grant has a value provided in the Recipient Org: Company Number column "
-                  "that doesn’t look like a company number"),
-      'message': ("Common causes of this are missing leading digits, typos or incorrect "
-                  "values being entered into this field.")},
-     ['grants/0/recipientOrganization/0/companyNumber'],
-     [{'sheet': 'grants', 'letter': 'L', 'row_number': 2, 'header': 'Recipient Org:Company Number'}]),
-    ({'heading': "1 grant does not have either a Recipient Org:Company Number or a Recipient Org:Charity Number",
+    ({'heading': ("33% of grants do not have either a "
+                  "<span class=\"highlight-background-text\">Recipient Org:Company Number</span> or a "
+                  "<span class=\"highlight-background-text\">Recipient Org:Charity Number</span>"),
       'message': ("Providing one or both of these, if possible, makes it easier for users "
                   "to join up your data with other data sources to provide better insight "
                   "into grantmaking. If your grants are to organisations that don’t have UK "
                   "Company or UK Charity numbers, then you can ignore this notice.")},
      ['grants/2/recipientOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'J', 'row_number': 4, 'header': 'Recipient Org:Identifier'}]),
-    ({'heading': "1 grant does not have recipient organisation location information",
+    ({'heading': "33% of grants do not have recipient organisation location information",
       'message': ("Your data is missing information about the geographic location of recipient "
-                  "organisations; either Recipient Org:Postal Code or Recipient Org:Location:Geographic Code "
-                  "combined with Recipient Org:Location:Geographic Code Type. Knowing the geographic "
-                  "location of recipient organisations helps users to understand your data and allows "
-                  "it to be used in tools that visualise grants geographically.")},
+                  "organisations; either <span class=\"highlight-background-text\">Recipient Org:Postal Code</span> "
+                  "or <span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code</span> combined "
+                  "with <span class=\"highlight-background-text\">Recipient Org:Location:Geographic Code Type</span>. "
+                  "Knowing the geographic location of recipient organisations helps users to understand your data and "
+                  "allows it to be used in tools that visualise grants geographically.")},
      ['grants/0/recipientOrganization/0/id'],
      [{'sheet': 'grants', 'letter': 'J', 'row_number': 2, 'header': 'Recipient Org:Identifier'}]),
-    ({'heading': "There are 3 different funding organisation IDs listed",
-      'message': ("If you are expecting to be publishing data for multiple funders then "
-                  "you can ignore this notice. If you are only publishing for a "
-                  "single funder then you should review your Funding Organisation identifier "
-                  "column to see where multiple IDs have occurred.")},
-     ['grants/0/fundingOrganization/0/id', 'grants/1/fundingOrganization/0/id', 'grants/2/fundingOrganization/0/id'],
-     [{'sheet': 'grants', 'letter': 'V', 'row_number': 2, 'header': 'Funding Org:Identifier'},
-      {'sheet': 'grants', 'letter': 'V', 'row_number': 3, 'header': 'Funding Org:Identifier'},
-      {'sheet': 'grants', 'letter': 'V', 'row_number': 4, 'header': 'Funding Org:Identifier'}]),
-    ({'heading': "2 grants contain text that looks like an email address",
-      'message': ("Your data may contain an email address (or something that looks like one), "
-                  "which can constitute personal data. The use and distribution of personal data "
-                  "is restricted by the Data Protection Act. You should ensure that any personal "
-                  "data is only included with the knowledge and consent of the person to whom it refers.")},
-     ['grants/0/Grant type', 'grants/0/title'],
-     [{'sheet': 'grants', 'letter': 'G', 'row_number': 2, 'header': 'Grant type'},
-      {'sheet': 'grants', 'letter': 'O', 'row_number': 2, 'header': 'Title'}]),
-    ({'heading': "1 grant does not contain any Grant Programme fields",
-     'message': ("Providing Grant Programme data, if available, helps users "
-                 "to better understand your data.")},
+    ({'heading': ("33% of grants do not contain any <span class=\"highlight-background-text\">Grant Programme</span> "
+                  "fields"),
+      'message': (
+          "Providing <span class=\"highlight-background-text\">Grant Programme</span> data, if available, helps "
+          "users to better understand your data.")},
      ['grants/0/id'],
      [{'sheet': 'grants', 'letter': 'A', 'row_number': 2, 'header': 'Identifier'}]),
-    ({'heading': "1 grant does not contain any beneficiary location fields",
+    ({'heading': "33% of grants do not contain any beneficiary location fields",
       'message': ("Providing beneficiary data, if available, helps users to "
                   "understand which areas ultimately benefitted from the grant.")},
      ['grants/1/id'],
      [{'sheet': 'grants', 'letter': 'A', 'row_number': 3, 'header': 'Identifier'}]),
-    # ({'heading': "1 grant has incomplete beneficiary location information",
-    #   'message': ("Your data is missing Beneficiary Location: Name, Beneficiary Location: "
-    #               "Geographical Code and/or Beneficiary Location: Geographical Code Type. "
-    #               "Beneficiary location information allows users of the data to understand who "
-    #               "ultimately benefitted from the grant, not just the location of the organisation "
-    #               "that provided the service. If your beneficiaries are in the same place as the "
-    #               "organisation that the money went to, stating this is useful for anyone using your "
-    #               "data as it cannot be inferred.")},
-    #  ['grants/0/beneficiaryLocation'],
-    #  [{'sheet': 'grants', 'letter': 'AA', 'row_number': 2, 'header': 'Beneficiary Location'}]),
-    ({'heading': "1 grant has a title and a description that are the same",
+    ({'heading': "33% of grants have a title and a description that are the same",
       'message': ("Users may find that the data is less useful as they are unable to "
                   "discover more about the grants. Consider including a more detailed "
                   "description if you have one.")},
      ['grants/2/description'],
      [{'sheet': 'grants', 'letter': 'Z', 'row_number': 4, 'header': 'Description'}]),
-    ({'heading': "1 grant has a title longer than recommended",
+    ({'heading': "33% of grants have a title longer than recommended",
       'message': "Titles for grant activities should be under 140 characters long."},
      ['grants/1/title'],
      [{'sheet': 'grants', 'letter': 'O', 'row_number': 3, 'header': 'Title'}]),
-    ({'heading': "2 grants have funder or recipient organisation IDs that might not be valid",
-      'message': ("The IDs might not be valid for the registration agency that they refer to "
-                  "- for example, a 'GB-CHC' ID that contains an invalid charity number. Common "
-                  "causes of this are missing leading digits, typos or incorrect values being "
-                  "entered into this field.")},
-     ['grants/2/fundingOrganization/0/id', 'grants/2/recipientOrganization/0/id'],
-     [{'sheet': 'grants', 'letter': 'V', 'row_number': 4, 'header': 'Funding Org:Identifier'},
-      {'sheet': 'grants', 'letter': 'J', 'row_number': 4, 'header': 'Recipient Org:Identifier'}]),
-    ({'heading': "1 grant does not have Last Modified information",
-      'message': "Last Modified shows the date and time when information about a grant was "
-                 "last updated in your file. Including this information allows data users to "
-                 "see when changes have been made and reconcile differences between versions "
+    ({'heading': "33% of grants do not have <span class=\"highlight-background-text\">Last Modified</span> information",
+      'message': "<span class=\"highlight-background-text\">Last Modified</span> shows the date and time when "
+                 "information about a grant was last updated in your file. Including this information allows data "
+                 "users to see when changes have been made and reconcile differences between versions "
                  "of your data. Please note: this is the date when the data was modified in "
                  "your 360Giving file, rather than in any of your internal systems."},
      ['grants/1/id'],
      [{'sheet': 'grants', 'letter': 'A', 'row_number': 3, 'header': 'Identifier'}]),
-    ({'heading': "2 grants do not have Data Source information",
-      'message': "Data Source informs users about where information came from and is an "
-                 "important part of establishing trust in your data. This information should "
+    ({'heading': "67% of grants do not have <span class=\"highlight-background-text\">Data Source</span> information",
+      'message': "<span class=\"highlight-background-text\">Data Source</span> informs users about where information "
+                 "came from and is an important part of establishing trust in your data. This information should "
                  "be a web link pointing to the source of this data, which may be an original "
                  "360Giving data file, a file from which the data was converted, or your "
                  "organisation’s website."},
@@ -509,7 +514,7 @@ def test_explore_not_json(client):
 @pytest.mark.django_db
 def test_explore_unconvertable_spreadsheet(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove', 'fixtures', 'bad.xlsx'), 'rb') as fp:
+    with open(os.path.join('cove_360', 'fixtures', 'bad.xlsx'), 'rb') as fp:
         data.original_file.save('basic.xlsx', UploadedFile(fp))
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
@@ -535,5 +540,328 @@ def test_schema_360():
     assert schema.release_pkg_schema_url == settings.COVE_CONFIG['schema_host'] + settings.COVE_CONFIG['schema_name']
 
 
-def test_additional_checks():
-    assert run_additional_checks(GRANTS, SOURCE_MAP) == RESULTS
+def test_quality_accuracy_checks():
+    assert run_extra_checks(GRANTS, SOURCE_MAP, TEST_CLASSES['quality_accuracy']) == QUALITY_ACCURACY_CHECKS_RESULTS
+
+
+def test_usefulness_checks():
+    assert run_extra_checks(GRANTS, SOURCE_MAP, TEST_CLASSES['usefulness']) == USEFULNESS_CHECKS_RESULTS
+
+
+def test_extend_numbers():
+    assert list(extend_numbers([2])) == [1, 2, 3]
+    assert list(extend_numbers([4])) == [3, 4, 5]
+    assert list(extend_numbers([4, 6])) == [3, 4, 5, 6, 7]
+    assert list(extend_numbers([4, 7])) == [3, 4, 5, 6, 7, 8]
+    assert list(extend_numbers([4, 8])) == [3, 4, 5, 7, 8, 9]
+    assert list(extend_numbers([1])) == [1, 2]
+    assert list(extend_numbers([4, 5, 6])) == [3, 4, 5, 6, 7]
+    assert list(extend_numbers([4, 5, 7, 2001])) == [3, 4, 5, 6, 7, 8, 2000, 2001, 2002]
+
+
+def ex(value):
+    ''' Shorthand for value metadata with type `example`.'''
+    return {'type': 'example', 'value': value}
+
+
+def con(value):
+    ''' Shorthand for value metadata with type `context`.'''
+    return {'type': 'context', 'value': value}
+
+
+class FakeCell():
+    def __init__(self, value):
+        self.value = value
+
+    def value(self, value):
+        return self.value
+
+
+class TestSpreadsheetErrorsTable():
+    def test_single(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'a value',
+            }
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C'],
+                [5, {'type': 'example', 'value': 'a value'}],
+            ]
+        }
+
+    def test_many1(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'E',
+                'value': 'value3',
+            },
+            {
+                'sheet': 'Sheet 2',
+                'row_number': 11,
+                'col_alpha': 'Q',
+                'value': 'value4',
+            },
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C', 'E'],
+                [5, ex('value1'), ex('value2')],
+                [7, con(''), ex('value3')],
+            ]
+        }
+
+    def test_many2(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 2',
+                'row_number': 11,
+                'col_alpha': 'Q',
+                'value': 'value4',
+            },
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C', 'E'],
+                [5, ex('value1'), ex('value2')],
+            ],
+            'Sheet 2': [
+                ['', 'Q'],
+                [11, ex('value4')],
+            ]
+        }
+
+    def test_extra_examples_visible(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'C',
+                'value': 'value3',
+            },
+        ] + [{}] * 100 + [
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'E',
+                'value': 'value4',
+            },
+        ], None) == {
+            'Sheet 1': [
+                ['', 'C', 'E'],
+                [5, ex('value1'), ex('value2')],
+                [7, ex('value3'), ex('value4')],
+            ]
+        }
+
+    def test_single_empty_workbook(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'val',
+            }
+        ], {'Sheet 1': {}}) == {
+            'Sheet 1': [
+                ['', 'B', 'C', 'D'],
+                [1, con(''), con(''), con('')],
+                [4, con(''), con(''), con('')],
+                [5, con(''), ex('val'), con('')],
+                [6, con(''), con(''), con('')],
+            ]
+        }
+
+    def test_single_workbook(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'val',
+            }
+        ], {'Sheet 1': {
+            'B1': FakeCell('v1H'),
+            'B4': FakeCell('v11'),
+            'B5': FakeCell('v12'),
+            'B6': FakeCell('v13'),
+            'C1': FakeCell('v2H'),
+            'C4': FakeCell('v21'),
+            # This value (C5) will be ignored in favour of the one
+            # fromthe examples array above.
+            'C5': FakeCell('v22'),
+            'C6': FakeCell('v23'),
+            'D1': FakeCell('v3H'),
+            'D4': FakeCell('v31'),
+            'D5': FakeCell('v32'),
+            'D6': FakeCell('v33'),
+        }}) == {
+            'Sheet 1': [
+                ['', 'B', 'C', 'D'],
+                [1, con('v1H'), con('v2H'), con('v3H')],
+                [4, con('v11'), con('v21'), con('v31')],
+                [5, con('v12'), ex('val'), con('v32')],
+                [6, con('v13'), con('v23'), con('v33')],
+            ]
+        }
+
+    def test_extra_examples_visible_workbook(self):
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'C',
+                'value': 'value1',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+                'col_alpha': 'E',
+                'value': 'value2',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'C',
+                'value': 'value3',
+            },
+        ] + [{}] * 100 + [
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 7,
+                'col_alpha': 'E',
+                'value': 'value4',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 4,
+                'col_alpha': 'C',
+                'value': 'value5',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 6,
+                'col_alpha': 'C',
+                'value': 'value6',
+            },
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 8,
+                'col_alpha': 'C',
+                'value': 'value7',
+            },
+        ], {'Sheet 1': {
+            'B1': FakeCell('v1H'),
+            'B4': FakeCell('v11'),
+            'B5': FakeCell('v12'),
+            'B6': FakeCell('v13'),
+            'B7': FakeCell('v14'),
+            'B8': FakeCell('v15'),
+            'C1': FakeCell('v2H'),
+            'C4': FakeCell('v21'),
+            'C5': FakeCell('v22'),
+            'C6': FakeCell('v23'),
+            'C7': FakeCell('v24'),
+            'C8': FakeCell('v25'),
+            'D1': FakeCell('v3H'),
+            'D4': FakeCell('v31'),
+            'D5': FakeCell('v32'),
+            'D6': FakeCell('v33'),
+            'D7': FakeCell('v34'),
+            'D8': FakeCell('v35'),
+            'E1': FakeCell('v4H'),
+            'E4': FakeCell('v41'),
+            'E5': FakeCell('v42'),
+            'E6': FakeCell('v43'),
+            'E7': FakeCell('v44'),
+            'E8': FakeCell('v45'),
+            'F1': FakeCell('v5H'),
+            'F4': FakeCell('v51'),
+            'F5': FakeCell('v52'),
+            'F6': FakeCell('v53'),
+            'F7': FakeCell('v54'),
+            'F8': FakeCell('v55'),
+        }}) == {
+            'Sheet 1': [
+                ['', 'B', 'C', 'D', 'E', 'F'],
+                [1, con('v1H'), con('v2H'), con('v3H'), con('v4H'), con('v5H')],
+                [4, con('v11'), ex('value5'), con('v31'), con('v41'), con('v51')],
+                [5, con('v12'), ex('value1'), con('v32'), ex('value2'), con('v52')],
+                [6, con('v13'), ex('value6'), con('v33'), con('v43'), con('v53')],
+                [7, con('v14'), ex('value3'), con('v34'), ex('value4'), con('v54')],
+                [8, con('v15'), ex('value7'), con('v35'), con('v45'), con('v55')],
+            ]
+        }
+
+    @pytest.mark.parametrize('openpyxl_workbook', [None, {'Sheet 1': {}}])
+    def test_required_single(self, openpyxl_workbook):
+        '''
+        An example of a `required` validation error is missing the
+        `col_alpha` and `value` keys. (There is no cell to reference,
+        because it is missing.)
+
+        '''
+        assert spreadsheet_style_errors_table([
+            {
+                'sheet': 'Sheet 1',
+                'row_number': 5,
+            }
+        ], openpyxl_workbook) == {
+            'Sheet 1': [
+                ['', '???'],
+                [5, ex('')],
+            ]
+        }
+
+    @pytest.mark.parametrize('openpyxl_workbook', [None, {'Sheet 1': {}}])
+    def test_array_too_short_single(self, openpyxl_workbook):
+        '''
+        Validation error that array is too short has no spreadsheet information.
+        '''
+        assert spreadsheet_style_errors_table([
+            {
+            }
+        ], openpyxl_workbook) == {
+            None: [
+                ['', '???']
+            ]
+        }

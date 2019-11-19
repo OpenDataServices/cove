@@ -1,27 +1,42 @@
-import logging
+import functools
 import json
-import tempfile
+import logging
 import os
+import tempfile
 
-from django.shortcuts import render
-from django import forms
-from django.utils.translation import ugettext_lazy as _
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseBadRequest
-
-from cove.lib.converters import convert_spreadsheet, convert_json
-from cove.lib.exceptions import cove_web_input_error
 from cove.input.models import SuppliedData
 from cove.input.views import data_input
 from cove.views import explore_data_context
-from .lib.iati import common_checks_context_iati, get_file_type
+from django import forms
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.shortcuts import render
+from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from libcove.config import LibCoveConfig
+from libcove.lib.converters import convert_spreadsheet, convert_json
+from libcove.lib.exceptions import CoveInputDataError
+
 from .lib.api import iati_json_output
-from .lib.iati_utils import sort_iati_xml_file
+from .lib.iati import (
+    get_tree, common_checks_context_iati, get_file_type, iati_identifier_count,
+    organisation_identifier_count
+)
+from .lib.process_codelists import aggregate_results
 from .lib.schema import SchemaIATI
 
-
 logger = logging.getLogger(__name__)
+
+
+def cove_web_input_error(func):
+    @functools.wraps(func)
+    def wrapper(request, *args, **kwargs):
+        try:
+            return func(request, *args, **kwargs)
+        except CoveInputDataError as err:
+            return render(request, 'error.html', context=err.context)
+    return wrapper
 
 
 class UploadForm(forms.ModelForm):
@@ -70,21 +85,33 @@ def explore_iati(request, pk):
     if error:
         return error
 
+    lib_cove_config = LibCoveConfig()
+    lib_cove_config.config.update(settings.COVE_CONFIG)
+
     file_type = context['file_type']
     if file_type != 'xml':
         schema_iati = SchemaIATI()
-        context.update(convert_spreadsheet(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
-                       file_type, schema_iati.activity_schema, xml=True))
+        context.update(convert_spreadsheet(
+            db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
+            file_type, lib_cove_config, xml=True,
+            xml_schemas=[
+                schema_iati.activity_schema,
+                schema_iati.organisation_schema,
+                schema_iati.common_schema,
+            ]))
         data_file = context['converted_path']
-        # sort converted xml
-        sort_iati_xml_file(context['converted_path'], context['converted_path'])
     else:
         data_file = db_data.original_file.file.name
         context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
-                       request=request, flatten=request.POST.get('flatten'), xml=True))
+                       request=request, flatten=request.POST.get('flatten'), xml=True, lib_cove_config=lib_cove_config))
 
-    context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type)
+    tree = get_tree(data_file)
+    context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type, tree)
     context['first_render'] = not db_data.rendered
+    context['invalid_embedded_codelist_values'] = aggregate_results(context['invalid_embedded_codelist_values'])
+    context['invalid_non_embedded_codelist_values'] = aggregate_results(context['invalid_non_embedded_codelist_values'])
+    context['iati_identifiers_count'] = iati_identifier_count(tree)
+    context['organisation_identifier_count'] = organisation_identifier_count(tree)
 
     if not db_data.rendered:
         db_data.rendered = True

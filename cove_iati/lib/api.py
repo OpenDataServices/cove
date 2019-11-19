@@ -2,10 +2,11 @@ import os
 import json
 import shutil
 
-from .iati import common_checks_context_iati, get_file_type
-from .iati_utils import sort_iati_xml_file
+from .iati import common_checks_context_iati, get_file_type, get_tree
 from .schema import SchemaIATI
-from cove.lib.converters import convert_spreadsheet
+from libcove.lib.converters import convert_spreadsheet
+from libcove.config import LibCoveConfig
+from cove_iati.settings import COVE_CONFIG
 
 
 class APIException(Exception):
@@ -17,14 +18,14 @@ def context_api_transform(context):
     context['validation_errors'] = []
 
     if validation_errors:
-            for error_group in validation_errors:
-                error = json.loads(error_group[0])
-                for path_value in error_group[1]:
-                    context['validation_errors'].append({
-                        'description': error['message'],
-                        'path': path_value.get('path', ''),
-                        'value': path_value.get('value', '')
-                    })
+        for error_group in validation_errors:
+            error = json.loads(error_group[0])
+            for path_value in error_group[1]:
+                context['validation_errors'].append({
+                    'description': error['message'],
+                    'path': path_value.get('path', ''),
+                    'value': path_value.get('value', '')
+                })
 
     return context
 
@@ -35,18 +36,24 @@ def iati_json_output(output_dir, file, openag=False, orgids=False):
     context = {"file_type": file_type}
     file_type = context['file_type']
 
+    lib_cove_config = LibCoveConfig()
+    lib_cove_config.config.update(COVE_CONFIG)
+
     if file_type != 'xml':
         schema_iati = SchemaIATI()
-        context.update(convert_spreadsheet(output_dir, '', file, file_type,
-                       schema_iati.activity_schema, xml=True, cache=False))
+        context.update(convert_spreadsheet(output_dir, '', file, file_type, lib_cove_config,
+            cache=False, xml=True, xml_schemas=[
+                schema_iati.activity_schema,
+                schema_iati.organisation_schema,
+                schema_iati.common_schema,
+            ]))
         data_file = context['converted_path']
-        # sort converted xml
-        sort_iati_xml_file(context['converted_path'], context['converted_path'])
     else:
         data_file = file
 
+    tree = get_tree(data_file)
     context = context_api_transform(
-        common_checks_context_iati(context, output_dir, data_file, file_type,
+        common_checks_context_iati(context, output_dir, data_file, file_type, tree,
                                    api=True, openag=openag, orgids=orgids)
     )
 

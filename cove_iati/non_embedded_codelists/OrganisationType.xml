@@ -1,0 +1,130 @@
+<codelist name="OrganisationType" xml:lang="en" complete="1" embedded="0">
+    <metadata>
+        <name>
+            <narrative>Organisation Type</narrative>
+        </name>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>10</code>
+            <name>
+                <narrative>Government</narrative>
+                <narrative xml:lang="fr">Gouvernement</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>11</code>
+            <name>
+                <narrative>Local Government</narrative>
+            </name>
+            <description>
+                <narrative>Any local (sub national) government organisation in either donor or recipient country.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>15</code>
+            <name>
+                <narrative>Other Public Sector</narrative>
+                <narrative xml:lang="fr">Autre secteur public</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>21</code>
+            <name>
+                <narrative>International NGO</narrative>
+                <narrative xml:lang="fr">ONG internationale</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>22</code>
+            <name>
+                <narrative>National NGO</narrative>
+                <narrative xml:lang="fr">ONG nationale</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>23</code>
+            <name>
+                <narrative>Regional NGO</narrative>
+                <narrative xml:lang="fr">ONG regionale</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>24</code>
+            <name>
+                <narrative>Partner Country based NGO</narrative>
+            </name>
+            <description>
+                <narrative>Partner country based NGO- NGOs not based in an aid recipient country and carrying out operations in one or more aid recipient countries.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>30</code>
+            <name>
+                <narrative>Public Private Partnership</narrative>
+                <narrative xml:lang="fr">Partenariat public-privé</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>40</code>
+            <name>
+                <narrative>Multilateral</narrative>
+                <narrative xml:lang="fr">Multilatéral</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>60</code>
+            <name>
+                <narrative>Foundation</narrative>
+                <narrative xml:lang="fr">Fondation</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>70</code>
+            <name>
+                <narrative>Private Sector</narrative>
+                <narrative xml:lang="fr">Secteur privé</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>71</code>
+            <name>
+                <narrative>Private Sector in Provider Country</narrative>
+            </name>
+            <description>
+                <narrative>Is in provider / donor country.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>72</code>
+            <name>
+                <narrative>Private Sector in Aid Recipient Country</narrative>
+            </name>
+            <description>
+                <narrative>Is in aid recipient country.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>73</code>
+            <name>
+                <narrative>Private Sector in Third Country</narrative>
+            </name>
+            <description>
+                <narrative>Is not in either a donor or aid recipient country.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>80</code>
+            <name>
+                <narrative>Academic, Training and Research</narrative>
+                <narrative xml:lang="fr">Universitaire, formation et recherche</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item>
+            <code>90</code>
+            <name>
+                <narrative>Other</narrative>
+            </name>
+        </codelist-item>
+    </codelist-items>
+</codelist>

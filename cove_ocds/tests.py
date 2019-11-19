@@ -13,13 +13,14 @@ from django.core.files.uploadedfile import UploadedFile
 from django.core.management import call_command
 from django.core.management.base import CommandError
 
-import cove.lib.common as cove_common
-from .lib.api import APIException, context_api_transform, ocds_json_output
-from .lib.ocds import get_releases_aggregates, get_bad_ocds_prefixes
-from .lib.schema import SchemaOCDS
+import libcove.lib.common as cove_common
+from libcoveocds.api import APIException, ocds_json_output
+from libcoveocds.lib.api import context_api_transform
+from libcoveocds.lib.common_checks import get_releases_aggregates, get_bad_ocds_prefixes
+from libcoveocds.schema import SchemaOCDS
 from cove.input.models import SuppliedData
-from cove.lib.converters import convert_json, convert_spreadsheet
-from cove.lib.tools import cached_get_request
+from libcove.lib.converters import convert_json, convert_spreadsheet
+from libcove.lib.tools import cached_get_request
 
 
 OCDS_DEFAULT_SCHEMA_VERSION = settings.COVE_CONFIG['schema_version']
@@ -209,7 +210,7 @@ DEFAULT_OCDS_VERSION = settings.COVE_CONFIG['schema_version']
 METRICS_EXT = 'https://raw.githubusercontent.com/open-contracting/ocds_metrics_extension/master/extension.json'
 CODELIST_EXT = 'https://raw.githubusercontent.com/INAImexico/ocds_extendedProcurementCategory_extension/0ed54770c85500cf21f46e88fb06a30a5a2132b1/extension.json'
 UNKNOWN_URL_EXT = 'http://bad-url-for-extensions.com/extension.json'
-NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
+NOT_FOUND_URL_EXT = 'https://standard.open-contracting.org/latest/en/404.json'
 
 
 def test_get_releases_aggregates():
@@ -245,7 +246,7 @@ def test_get_releases_aggregates():
 
     assert actual_cleaned == EXPECTED_RELEASE_AGGREGATE_RANDOM
 
-    with open(os.path.join('cove', 'fixtures', 'badfile.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'badfile.json')) as fp:
         data = json.load(fp)
 
     actual = get_releases_aggregates(data, ignore_errors=True)
@@ -278,7 +279,7 @@ def test_get_json_data_generic_paths():
 
 
 def test_get_json_data_deprecated_fields():
-    with open(os.path.join('cove', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'tenders_releases_2_releases_with_deprecated_fields.json')) as fp:
         json_data_w_deprecations = json.load(fp)
 
     schema_obj = SchemaOCDS()
@@ -409,7 +410,7 @@ def test_explore_not_json(client):
 @pytest.mark.django_db
 def test_explore_unconvertable_spreadsheet(client):
     data = SuppliedData.objects.create()
-    with open(os.path.join('cove', 'fixtures', 'bad.xlsx'), 'rb') as fp:
+    with open(os.path.join('cove_ocds', 'fixtures', 'bad.xlsx'), 'rb') as fp:
         data.original_file.save('basic.xlsx', UploadedFile(fp))
     resp = client.get(data.get_absolute_url())
     assert resp.status_code == 200
@@ -787,6 +788,7 @@ def test_context_api_transform_validation_additional_fields():
         'data_only': [['path_to_d', 'field_d', 1],
                       ['path_to_e', 'field_e', 2],
                       ['path_to_f', 'field_f', 3]],
+        'additional_fields': {},
         'additional_fields_count': 6,
         'validation_errors_count': 3
     }
@@ -796,6 +798,7 @@ def test_context_api_transform_validation_additional_fields():
                               {'field': 'field_f', 'path': 'path_to_f', 'usage_count': 3}],
         'deprecated_fields': [],
         'extensions': {},
+        'all_additional_fields': {},
         'validation_errors': [{'description': 'description_a', 'field': 'field_a', 'path': 'path_to_a', 'type': 'type_a', 'value': 'a_value'},
                               {'description': 'description_b', 'field': 'field_b', 'path': 'path_to_b', 'type': 'type_b', 'value': ''},
                               {'description': 'description_c', 'field': 'field_c', 'path': 'path_to_c', 'type': 'type_c', 'value': ''}]
@@ -856,6 +859,7 @@ def test_context_api_transform_extensions():
         'validation_errors_count': 0,
         'additional_fields_count': 0,
         'data_only': [],
+        'additional_fields': {},
         'deprecated_fields': []
     }
 
@@ -893,6 +897,7 @@ def test_context_api_transform_deprecations():
         'validation_errors_count': 0,
         'data_only': [],
         'additional_fields_count': 0,
+        'additional_fields': {},
         'extensions': {},
     }
 
@@ -1022,7 +1027,7 @@ def test_cove_ocds_cli_schema_cache():
         results = json.load(fp)
 
     assert results['version_used'] == '1.0'
-    assert results['schema_url'] == 'http://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
+    assert results['schema_url'] == 'https://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
     assert sorted(results['validation_errors'], key=lambda k: k['description'])[0]['description'].startswith("'id' is missing but required within 'buyer'")
     assert sorted(results['extensions']['extensions'], key=lambda k: k['name'])[2]['description'] == "For classifying organizations as micro, sme or large."
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[0][0] == 'badprotocol://example.com'
@@ -1044,7 +1049,7 @@ def test_cove_ocds_cli_schema_cache():
         results = json.load(fp)
 
     assert results['version_used'] == '1.0'
-    assert results['schema_url'] == 'http://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
+    assert results['schema_url'] == 'https://standard.open-contracting.org/schema/1__0__3/release-package-schema.json'
     assert sorted(results['validation_errors'], key=lambda k: k['description'])[0]['description'].startswith("'id' is missing but required within 'buyer'")
     assert sorted(results['extensions']['extensions'], key=lambda k: k['name'])[2]['description'] == "For classifying organizations as micro, sme or large."
     assert sorted(results['extensions']['invalid_extensions'], key=lambda k: k[0])[0][0] == 'badprotocol://example.com'

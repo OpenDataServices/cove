@@ -5,24 +5,18 @@ import re
 import defusedxml.lxml as etree
 import lxml.etree
 from bdd_tester import bdd_tester
-from django.utils.translation import ugettext_lazy as _
 from django.utils.html import format_html
+from django.utils.translation import ugettext_lazy as _
+from libcove.lib.exceptions import CoveInputDataError
+from libcove.lib.tools import ignore_errors
 
+from cove_iati.lib.exceptions import UnrecognisedFileTypeXML
+from cove_iati.lib.process_codelists import invalid_embedded_codelist_values, invalid_non_embedded_codelist_values
 from .schema import SchemaIATI
-from cove.lib.exceptions import CoveInputDataError, UnrecognisedFileTypeXML
-from cove.lib.tools import ignore_errors
 
 
-def common_checks_context_iati(context, upload_dir, data_file, file_type, api=False, openag=False, orgids=False):
-    '''TODO: this function is trying to do too many things. Separate some
-    of its logic into smaller functions doing one single thing each.
-    '''
-    schema_aiti = SchemaIATI()
-    lxml_errors = {}
-    cell_source_map = {}
-    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
-
-    with open(data_file, 'rb') as fp, open(schema_aiti.activity_schema) as schema_fp:
+def get_tree(data_file):
+    with open(data_file, 'rb') as fp:
         try:
             tree = etree.parse(fp)
         except lxml.etree.XMLSyntaxError as err:
@@ -45,13 +39,29 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                          '</span> <strong>Error message:</strong> {}', err)),
                 'error': format(err)
             })
-        schema_tree = etree.parse(schema_fp)
+        return tree
 
-    schema = lxml.etree.XMLSchema(schema_tree)
-    schema.validate(tree)
-    lxml_errors = lxml_errors_generator(schema.error_log)
-    errors_all = format_lxml_errors(lxml_errors)
-    invalid_data = bool(schema.error_log)
+
+def common_checks_context_iati(context, upload_dir, data_file, file_type, tree, api=False, openag=False, orgids=False):
+    '''TODO: this function is trying to do too many things. Separate some
+    of its logic into smaller functions doing one single thing each.
+    '''
+    schema_iati = SchemaIATI()
+    cell_source_map = {}
+    validation_errors_path = os.path.join(upload_dir, 'validation_errors-3.json')
+
+    if tree.getroot().tag == 'iati-organisations':
+        schema_path = schema_iati.organisation_schema
+        schema_name = 'Organisation'
+        # rulesets don't support orgnisation files properly yet
+        # so disable rather than give partial information
+        ruleset_disabled = True
+    else:
+        schema_path = schema_iati.activity_schema
+        schema_name = 'Activity'
+        ruleset_disabled = False
+    errors_all, invalid_data = validate_against_schema(schema_path, tree)
+
     return_on_error = [{'message': 'There was a problem running ruleset checks',
                         'exception': True}]
 
@@ -69,13 +79,16 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
                 validation_error_fp.write(json.dumps(validation_errors))
 
     # Ruleset errors
-    ruleset_errors = get_iati_ruleset_errors(
-        tree,
-        os.path.join(upload_dir, 'ruleset'),
-        api=api,
-        ignore_errors=invalid_data,
-        return_on_error=return_on_error
-    )
+    if ruleset_disabled:
+        ruleset_errors = None
+    else:
+        ruleset_errors = get_iati_ruleset_errors(
+            tree,
+            os.path.join(upload_dir, 'ruleset'),
+            api=api,
+            ignore_errors=invalid_data,
+            return_on_error=return_on_error
+        )
 
     if openag:
         ruleset_errors_ag = get_openag_ruleset_errors(
@@ -96,14 +109,27 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
 
     context.update({
         'validation_errors': sorted(validation_errors.items()),
-        'ruleset_errors': ruleset_errors
+        'ruleset_errors': ruleset_errors,
+        'file_type': file_type,
+        'invalid_embedded_codelist_values': invalid_embedded_codelist_values(
+            schema_iati.schema_directory,
+            data_file,
+            os.path.join(upload_dir, 'cell_source_map.json') if file_type != 'xml' else None
+        ),
+        'invalid_non_embedded_codelist_values': invalid_non_embedded_codelist_values(
+            schema_iati.schema_directory,
+            data_file,
+            os.path.join(upload_dir, 'cell_source_map.json') if file_type != 'xml' else None
+        )
     })
 
     if not api:
         context.update({
             'validation_errors_count': sum(len(value) for value in validation_errors.values()),
             'cell_source_map': cell_source_map,
-            'first_render': False
+            'first_render': False,
+            'schema_name': schema_name,
+            'ruleset_disabled': ruleset_disabled
         })
         if ruleset_errors:
             ruleset_errors_by_activity = get_iati_ruleset_errors(
@@ -125,6 +151,18 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, api=Fa
     return context
 
 
+def validate_against_schema(schema_path, tree):
+    with open(schema_path) as schema_fp:
+        schema_tree = etree.parse(schema_fp)
+
+    schema = lxml.etree.XMLSchema(schema_tree)
+    schema.validate(tree)
+    lxml_errors = lxml_errors_generator(schema.error_log)
+    errors_all = format_lxml_errors(lxml_errors)
+    invalid_data = bool(schema.error_log)
+    return errors_all, invalid_data
+
+
 def lxml_errors_generator(schema_error_log):
     '''Yield dict with lxml error path and message
 
@@ -141,7 +179,11 @@ def lxml_errors_generator(schema_error_log):
     as the latter does include an index position for sequences with a single array.
     '''
     for error in schema_error_log:
-        yield {'path': error.path, 'message': error.message}
+        yield {
+            'path': error.path,
+            'message': error.message,
+            'line': error.line,
+        }
 
 
 def format_lxml_errors(lxml_errors):
@@ -176,7 +218,12 @@ def format_lxml_errors(lxml_errors):
             value = value[:val_end]
         message = message.replace('Element ', '').replace(": '{}'".format(value), '')
 
-        yield {'path': path, 'message': message, 'value': value}
+        yield {
+            'path': path,
+            'message': message,
+            'value': value,
+            'line': error['line'],
+        }
 
 
 def get_zero_paths_list(cell_path):
@@ -270,13 +317,13 @@ def get_xml_validation_errors(errors, file_type, cell_source_map):
             generic_error_path = re.sub(r'/\d+', '', error['path'])
             cell_paths = cell_source_map_paths.get(generic_error_path, [])
             source = error_path_source(error, cell_paths, cell_source_map)
-            if source:
-                validation_errors[validation_key].append(source)
-            else:
+            if not source:
                 source = error_path_source(error, cell_paths, cell_source_map, missing_zeros=True)
-                validation_errors[validation_key].append(source)
         else:
-            validation_errors[validation_key].append({'path': error['path'], 'value': error['value']})
+            source = {'path': error['path'], 'value': error['value']}
+
+        source.update({'line': error['line']})
+        validation_errors[validation_key].append(source)
 
     return validation_errors
 
@@ -382,3 +429,19 @@ def get_file_type(file):
         return 'csv'
     else:
         raise UnrecognisedFileTypeXML
+
+
+def iati_identifier_count(tree):
+    root = tree.getroot()
+    identifiers = root.xpath('/iati-activities/iati-activity/iati-identifier/text()')
+    unique_identifiers = list(set(identifiers))
+
+    return len(unique_identifiers)
+
+
+def organisation_identifier_count(tree):
+    root = tree.getroot()
+    identifiers = root.xpath('/iati-organisations/iati-organisation/organisation-identifier/text()')
+    unique_identifiers = list(set(identifiers))
+
+    return len(unique_identifiers)

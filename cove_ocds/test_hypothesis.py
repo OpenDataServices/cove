@@ -1,5 +1,5 @@
-from cove_ocds.lib.ocds import get_releases_aggregates
-from hypothesis import given, assume, strategies as st, example, settings
+from libcoveocds.lib.common_checks import get_releases_aggregates
+from hypothesis import HealthCheck, given, assume, strategies as st, example, settings
 from cove.input.models import SuppliedData
 from django.core.files.base import ContentFile
 import pytest
@@ -24,6 +24,7 @@ def test_get_releases_aggregates(json_data):
 
 
 @given(general_json)
+@settings(suppress_health_check=[HealthCheck.too_slow])
 def test_get_releases_aggregates_dict(json_data):
     assume(type(json_data) is dict)
     get_releases_aggregates(json_data)
@@ -33,10 +34,7 @@ def test_get_releases_aggregates_dict(json_data):
 @pytest.mark.django_db
 @pytest.mark.parametrize('current_app', ['cove-ocds'])  # , 'cove-360'])
 @given(
-    general_json |
-    st.fixed_dictionaries({'releases': general_json}) |
-    st.fixed_dictionaries({'records': general_json})
-    )
+    general_json | st.fixed_dictionaries({'releases': general_json}) | st.fixed_dictionaries({'records': general_json}))
 def test_explore_page(client, current_app, json_data):
     data = SuppliedData.objects.create()
     data.original_file.save('test.json', ContentFile(json.dumps(json_data)))
@@ -49,7 +47,7 @@ def test_explore_page(client, current_app, json_data):
 @pytest.mark.parametrize('current_app', ['cove-ocds'])  # , 'cove-360'])
 @given(general_json)
 @example(1)
-@settings(max_examples=50)
+@settings(max_examples=50, deadline=None)
 def test_explore_page_duplicate_ids(client, current_app, json_data):
     duplicate_id_releases = {
         'releases': [

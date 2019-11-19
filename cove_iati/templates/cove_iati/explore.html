@@ -26,14 +26,26 @@
       <div id="data-supplied-body" class="collapse in">
         <div class="panel-body">
            <p class="explanation">
-             {% trans "A file was " %} 
+             {% blocktrans %}An IATI {{ schema_name }} file was{% endblocktrans %}
              {% if source_url %}
                 {% trans "downloaded from " %} <a href="{{source_url}}">{{source_url}}</a>
              {% else %}
                {% trans "uploaded " %} 
              {% endif %}
-             {% trans "on " %} {{created_date}}.
+             {% trans "on " %} {{created_date}} at {{created_time}}.
            </p>
+           <br>
+           <ul class="left-space">
+             <li>{% blocktrans %}Name of the file: {{file_name}}{% endblocktrans %}</li>
+             {% if iati_identifiers_count %}
+              <li>{% blocktrans %}Number of activities: {{iati_identifiers_count}}{% endblocktrans %}</li>
+             {% endif %}
+             {% if organisation_identifier_count %}
+              <li>
+                {% blocktrans %}Number of organisations: {{organisation_identifier_count}}{% endblocktrans %}
+              </li>
+             {% endif %}
+           </ul>
           {% if conversion == 'flattenable' %}
             <form method="post">
               <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% trans "Convert to Spreadsheet" %}</button>
@@ -109,7 +121,7 @@
         {% else %}
           {% trans "Congratulations! Your data is valid against" %}
         {% endif %}
-          <a href="http://iatistandard.org/203/schema/">IATI Schema version 2.03</a>.
+          <a href="http://iatistandard.org/203/schema/">IATI {{ schema_name}} Schema version 2.03</a>.
         </p>
         <div class="explore-help"></div>
         {% if validation_errors %}
@@ -128,7 +140,106 @@
   </div>
   {% endblock validation %}
 
+  {% block embedded_codelists %}
+  <div class="panel panel-default">
+    <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#codelist-embedded-body">
+      <h3 class="panel-title panel-title-explore">
+        {% if invalid_embedded_codelist_values %}
+           <span class="font-tick cross" aria-hidden="true"></span>
+           {% trans "Invalid Embedded Codelist Values" %}
+        {% else %}
+           <span class="font-tick tick" aria-hidden="true"></span>
+           {% trans "Valid Embedded Codelist Values" %}
+        {% endif %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="codelist-embedded-body" class="collapse">
+      <div class="panel-body">
+        <p class="explanation">
+        {% if invalid_embedded_codelist_values %}
+            {% trans "Sorry your data contains values in embedded codelists that do not exist in the standard" %}
+        {% else %}
+          {% trans "Congratulations! Your embedded codelist values are all valid" %}
+        {% endif %}
+        </p>
+        <div class="explore-help"></div>
+        {% for codelist_item in invalid_embedded_codelist_values %}
+           {% include "cove_iati/codelist_panel.html" %}
+
+            <div class="modal fade" id="{{codelist_item.codelist_path_slug}}_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Invalid Embedded Codelist Values</h4>
+                  </div>
+                  <div class="modal-body">
+                    {% with full_list=True %}
+                      {% include "cove_iati/codelist_panel.html" %}
+                    {% endwith %} 
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endblock embedded_codelists %}
+
+
+  {% block non_embedded_codelists %}
+  <div class="panel panel-default">
+    <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#codelist-non-embedded-body">
+      <h3 class="panel-title panel-title-explore">
+        {% if invalid_non_embedded_codelist_values %}
+           <span class="font-tick cross" aria-hidden="true"></span>
+           {% trans "Invalid Non Embedded Codelist Values" %}
+        {% else %}
+           <span class="font-tick tick" aria-hidden="true"></span>
+           {% trans "Valid Non Embedded Codelist Values" %}
+        {% endif %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="codelist-non-embedded-body" class="collapse">
+      <div class="panel-body">
+        <p class="explanation">
+        {% if invalid_non_embedded_codelist_values %}
+            {% trans "Sorry your data contains values in codelists that do not exist in the standard" %}
+        {% else %}
+          {% trans "Congratulations! Your codelist values are all valid" %}
+        {% endif %}
+        </p>
+        <div class="explore-help"></div>
+        {% for codelist_item in invalid_non_embedded_codelist_values %}
+           {% include "cove_iati/codelist_panel.html" %}
+
+            <div class="modal fade" id="{{codelist_item.codelist_path_slug}}_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Invalid Non Embedded Codelist Values</h4>
+                  </div>
+                  <div class="modal-body">
+                    {% with full_list=True %}
+                      {% include "cove_iati/codelist_panel.html" %}
+                    {% endwith %} 
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endblock non_embedded_codelists %}
+
+
   {% block ruleset %}
+  {% if not ruleset_disabled %}
   <div class="panel panel-default">
     <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#rulesets-body">
       <h3 class="panel-title panel-title-explore">
@@ -178,6 +289,7 @@
       </div>
     </div>
   </div>
+  {% endif %}
   {% endblock ruleset %}
 
   {% block download_and_share %}

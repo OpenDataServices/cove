@@ -22,8 +22,8 @@
         {% else %} 
           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% trans "Passed " %} 
         {% endif %}
-        {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">OCDS record package schema version {{ version_used_display }}</a>.
-        {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Validation Errors</a> below.{% endblocktrans %}{% endif %}
+        {% blocktrans %}structural checks against {% endblocktrans %}<a href="{{ schema_url }}">OCDS record package schema version {{ version_used_display }}</a>.
+        {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Structural Errors</a> below.{% endblocktrans %}{% endif %}
         </div>
 
          <div class="key-facts message">
@@ -48,6 +48,11 @@
              {% if json_data.license %}
                 <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                   {% trans "The license is" %} <a href="{{json_data.license}}">{{json_data.license}}</a>.
+                </li>
+             {% endif %}
+             {% if json_data.publicationPolicy %}
+                <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                  {% trans "Publication policy is" %} <a href="{{json_data.publicationPolicy}}">{{json_data.publicationPolicy}}</a>.
                 </li>
              {% endif %}
               
@@ -92,7 +97,7 @@
   <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4 class="panel-title">{% trans 'Validates against the schema?' %}</h4>
+        <h4 class="panel-title">{% trans 'Is structurally correct?' %}</h4>
       </div>
       <div class="panel-body">
         {% if validation_errors %}No{% else %}Yes{% endif %}
@@ -154,4 +159,38 @@
     </table>
   </div>
 </div><!--End Row -->
+
+
+{% if ocds_show_data %}
+  <div class="row"> 
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+             {% trans "Explore your data:" %}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <p>
+            {% blocktrans %}This section provides a visual representation of the data, use it to check whether the data makes sense in the type of tool a user might use to explore it.{% endblocktrans %}
+          </p>
+          <p>
+            {% blocktrans %}Extensions and additional fields are hidden by default, click the 'Extra fields' buttons or open the 'Extra fields' section to view them.{% endblocktrans %}
+          </p>
+          <p>
+            {% blocktrans %}When viewing an OCDS record, use the numbers at the top of the visualization to browse the change history. New and changed fields are highlighted, use this feature to check whether any fields have changed unexpectedly.{% endblocktrans %}
+          </p>
+            <div id="input-json-container" class="hide">
+              <input id="input-json" name="input-json" value="{{ocds_show_data}}">
+            </div>
+
+            <div id="container">
+            </div>
+          <div id="graph"></div>  
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
 {% endblock %}

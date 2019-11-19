@@ -48,22 +48,17 @@ User Flows
 
 Overviews of how users flow through the application are maintained at https://docs.google.com/drawings/d/1pVbEu6dJaVk8t3NctjYuE5irsqltc9Th0gVQ_zeJyFA/edit and https://docs.google.com/drawings/d/1wFH4lZlBZWso7Tj_g7CyTF3YaFfnly59sVufpztmEg8/edit
 
-Release Cycle
-=============
+Putting code live
+=================
 
-CoVE is in constant development.
-There are public instances in use at:
+There are live instances at:
 https://dataquality.threesixtygiving.org/
-http://standard.open-contracting.org/validator/
+http://standard.open-contracting.org/review/
+https://iati.cove.opendataservices.coop/
 
-We deploy the latest version of CoVE at the end of each calendar month (usually the last Thursday of the month).
-We make a development version ready for user testing (mainly internally) two weeks before deployment. Our cut off date for new features to be considered in that cycle is the week before that.
+Code is deployed to live when it is merged into the master branch. (Instructions on how to do this at https://cove.readthedocs.io/en/latest/deployment/).
 
 Feature requests, bugs, questions and answers etc are all handled via GitHub.
-We use release cycle milestones to organise those issues.
-We also use GitHub projects as a way to prioritise issues and indicate what is being worked on.
-
-Serious Bug fixes and 'priority' features, that need to make it into a release at short notice can be included by negotiation.
 
 Requirements
 ============
@@ -78,7 +73,7 @@ Steps to installation:
 * Create a virtual environment (note this application uses python3)
 * Activate the virtual environment
 * Install dependencies
-* Set up the database (sqlite3)
+* Set up the database (sqlite3) (you need to pass the django settings for the module (ie. ocds, 360, iati) you want to run)
 * Compile the translations
 * Run the development server
 
@@ -89,7 +84,7 @@ Steps to installation:
     virtualenv .ve --python=/usr/bin/python3
     source .ve/bin/activate
     pip install -r requirements_dev.txt
-    python manage.py migrate
+    DJANGO_SETTINGS_MODULE={cove_MODULENAME}.settings python manage.py migrate
     python manage.py compilemessages
 
 Then, for 360Giving run:
@@ -184,6 +179,14 @@ In order to generate messages and post them on Transifex:
 
 First check the `Transifex lock <https://opendataservices.plan.io/projects/co-op/wiki/CoVE_Transifex_lock>`_, because only one branch can be translated on Transifex at a time.
 
+Make sure you are set up as a maintainer in Transifex. Only maintainers are allowed to update the source file.
+
+Install `gettext <https://www.gnu.org/software/gettext/>`_ library. (The following step is for Ubuntu but equivalent packages are available for other distros.)
+
+.. code:: bash
+
+    sudo apt-get install gettext
+
 Then:
 
 .. code:: bash
@@ -276,3 +279,15 @@ If the file is in spreadsheet format, the output directory will contain a *unfla
 **OpenaAg** rulesets check that the data contains the XML elements ``<opeang:tag>`` and ``<location>``, and that they include the right attributes expected for OpenAg data. Please read `OpenAg ruleset feature files <cove_iati/rulesets/iati_openag_ruleset/>`_ (written in `Gerkhin <https://github.com/cucumber/cucumber/wiki/Gherkin/>`_ style) for more information.
 
 **Org-ids** rulesets check that all organisation identifiers are prefixed with a registered `org-ids <http://org-id.guide>`_ prefix. Please read `Org-ids ruleset feature file <cove_iati/rulesets/iati_orgids_ruleset/>`_ for more information
+
+
+**Non Embedded Codelists** 
+
+Non embedded codelists need to be periodically downloaded and committed to this repo.  To do this run in the virtualenv:
+
+.. code:: bash
+
+   python get_iati_non_embedded_codelists.py 
+
+
+

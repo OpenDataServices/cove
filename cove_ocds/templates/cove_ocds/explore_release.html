@@ -1,7 +1,7 @@
 {% extends 'cove_ocds/explore_base.html' %}
 {% load i18n %}
 {% load cove_tags %}
-
+{% load staticfiles %}
 
 {% block key_facts %}
 {% with releases_aggregates as ra %}
@@ -20,8 +20,8 @@
         {% else %} 
           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% trans "Passed " %} 
         {% endif %}
-        {% blocktrans %}validation against {% endblocktrans %}<a href="{{ schema_url }}">OCDS release package schema version {{ version_used_display }}</a>.
-        {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Validation Errors</a> below.{% endblocktrans %}{% endif %}
+        {% blocktrans %}structural checks against {% endblocktrans %}<a href="{{ schema_url }}">OCDS release package schema version {{ version_used_display }}</a>.
+        {% if validation_errors %}<br/>{% blocktrans %}See <a href="#validation-errors">Structural Errors</a> below.{% endblocktrans %}{% endif %}
         </div>
         {% if extensions and extensions.invalid_extension %}
         <div class="message">
@@ -53,10 +53,15 @@
                   {% trans "The license is" %} <a href="{{json_data.license}}">{{json_data.license}}</a>.
                 </li>
              {% endif %}
+             {% if json_data.publicationPolicy %}
+                <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                  {% trans "Publication policy is" %} <a href="{{json_data.publicationPolicy}}">{{json_data.publicationPolicy}}</a>.
+                </li>
+             {% endif %}
              {% if extensions and extensions.is_extended_schema %}
                 <li><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                   {% with n_invalid=extensions.invalid_extension.keys|length %}
-                    {% trans "This file applies" %}{% blocktrans count count=extensions.extensions.keys|length|subtract:n_invalid %}{{count}} valid <a href="#schema-extensions">extension</a>{% plural %} {{count}} valid <a href="#schema-extensions">extensions</a> {% endblocktrans %} {% trans "to the schema" %}.
+                    {% trans "This file applies" %} {% blocktrans count count=extensions.extensions.keys|length|subtract:n_invalid %}{{count}} valid <a href="#schema-extensions">extension</a>{% plural %} {{count}} valid <a href="#schema-extensions">extensions</a> {% endblocktrans %} {% trans "to the schema" %}.
                   {% endwith %}
                 </li>
              {% endif %}
@@ -318,7 +323,7 @@
 <div class="row"> <!--Start Row (Detail Table)-->
   <div class="col-xs-12">
     <div class="alert alert-danger">
-      {%blocktrans%}Statistics can not produced as data is invalid.{%endblocktrans%}
+      {%blocktrans%}Statistics cannot be produced as data is not structurally correct.{%endblocktrans%}
     </div>
   </div>
 </div>
@@ -407,5 +412,39 @@
     </div>
   </div>
 </div><!--End Row-->
+
+{% if ocds_show_data %}
+  <div class="row"> 
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+             {% trans "Explore your data:" %}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <p>
+            {% blocktrans %}This section provides a visual representation of the data, use it to check whether the data makes sense in the type of tool a user might use to explore it.{% endblocktrans %}
+          </p>
+          <p>
+            {% blocktrans %}Extensions and additional fields are hidden by default, click the 'Extra fields' buttons or open the 'Extra fields' section to view them.{% endblocktrans %}
+          </p>
+          <p>
+            {% blocktrans %}When viewing an OCDS record, use the numbers at the top of the visualization to browse the change history. New and changed fields are highlighted, use this feature to check whether any fields have changed unexpectedly.{% endblocktrans %}
+          </p>
+            <div id="input-json-container" class="hide">
+              <input id="input-json" name="input-json" value="{{ocds_show_data}}">
+            </div>
+
+            <div id="container">
+            </div>
+          <div id="graph"></div>  
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+
 
 {% endblock %}

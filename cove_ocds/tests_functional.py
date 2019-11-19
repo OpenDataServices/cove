@@ -6,10 +6,10 @@ import requests
 from django.conf import settings
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import Select
 
-PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/validator/')
+PREFIX_OCDS = os.environ.get('PREFIX_OCDS', '/review/')
 
 BROWSER = os.environ.get('BROWSER', 'ChromeHeadless')
 
@@ -64,7 +64,7 @@ def url_input_browser(request, server_url, browser, httpserver):
 
 
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
-    ('Open Contracting', 'We connect governments', 'h1', 'http://www.open-contracting.org/'),
+    ('Open Contracting', 'Transforming public contracting', 'h1', 'http://www.open-contracting.org/'),
     ('Open Contracting Data Standard', 'Open Contracting Data Standard: Documentation', '#open-contracting-data-standard-documentation', 'http://standard.open-contracting.org/'),
     ])
 def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector, url):
@@ -80,8 +80,8 @@ def test_footer_ocds(server_url, browser, link_text, expected_text, css_selector
 
 def test_index_page_ocds(server_url, browser):
     browser.get(server_url)
-    assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
-    assert 'Using the validator' in browser.find_element_by_tag_name('body').text
+    assert 'Data Review Tool' in browser.find_element_by_tag_name('body').text
+    assert 'Using the data review tool' in browser.find_element_by_tag_name('body').text
     assert "'release'" in browser.find_element_by_tag_name('body').text
     assert "'record'" in browser.find_element_by_tag_name('body').text
 
@@ -170,7 +170,7 @@ def test_500_error(server_url, browser):
                                                              'Contract Parties (Organization structure)',
                                                              'All the extensions above were applied',
                                                              'copy of the schema with extension',
-                                                             'Validation Errors',
+                                                             'Structural Errors',
                                                              'name is missing but required within buyer',
                                                              'The schema version specified in the file is 1.1',
                                                              'Party Scale'], ['scale', '/releases/parties/details', 'fetching failed'], True),
@@ -182,7 +182,7 @@ def test_500_error(server_url, browser):
                                                                     'Lots',
                                                                     'A tender process may be divided into lots',
                                                                     'copy of the schema with extension',
-                                                                    'Validation Errors',
+                                                                    'Structural Errors',
                                                                     'id is missing but required within items'], ['fetching failed'], True),
     ('tenders_releases_1_release_with_invalid_extensions.json', ['Schema Extensions',
                                                                  'https://raw.githubusercontent.com/open-contracting/',
@@ -190,16 +190,15 @@ def test_500_error(server_url, browser):
                                                                  '400: bad request',
                                                                  'Only those extensions successfully fetched',
                                                                  'copy of the schema with extension',
-                                                                 'Validation Errors'], ['All the extensions above were applied'], True),
+                                                                 'Structural Errors'], ['All the extensions above were applied'], True),
     ('tenders_records_1_record_with_invalid_extensions.json', ['Party Scale',
                                                                'The metrics extension supports publication of forecasts',
                                                                'Get a copy of the schema with extension patches applied',
                                                                'The following extensions failed',
                                                                "Invalid code found in scale",
-                                                               'is not valid under any of the given schemas',
                                                                '/records/compiledRelease/tender/targets',
                                                                'The schema version specified in the file is 1.1',
-                                                               '/records/releases/tender/targets'], ['validated against a schema with no extensions'], True),
+                                                               '/records/releases/tender/targets'], ['checked against a schema with no extensions'], True),
     ('tenders_releases_deprecated_fields_against_1_1_live.json', ['Deprecated Fields',
                                                                   'The single amendment object has been deprecated',
                                                                   'documents at the milestone level is now deprecated',
@@ -226,13 +225,13 @@ def test_500_error(server_url, browser):
                                             'Invalid \'uri\' found',
                                             'The URI of this package that identifies it uniquely in the world.',
                                             'Invalid code found in currency',
-                                            'The currency for each amount should always be specified using the uppercase 3-letter currency code from ISO4217.',
+                                            'The currency of the amount, from the closed currency codelist.',
                                             'numberOfTenderers is not a integer. Check that the value doesn’t contain decimal points or any characters other than 0-9. Integer values should not be in quotes.',
                                             'The number of parties who submit a bid.',
                                             'amount is not a number. Check that the value doesn’t contain any characters other than 0-9 and dot (.). Number values should not be in quotes',
                                             'Amount as a number.',
                                             'ocid is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with \\',
-                                            'A globally unique identifier for this Open Contracting Process. Composed of a publisher prefix and an identifier for the contracting process. For more information see the Open Contracting Identifier guidance',
+                                            'A globally unique identifier for this Open Contracting Process. Composed of an ocid prefix and an identifier for the contracting process. For more information see the Open Contracting Identifier guidance',
                                             'title is not a string. Check that the value has quotes at the start and end. Escape any quotes in the value with \\',
                                             'A title for this tender. This will often be used by applications as a headline to attract interest, and to help analysts understand the nature of this procurement',
                                             'parties is not a JSON array',
@@ -240,7 +239,7 @@ def test_500_error(server_url, browser):
                                             'buyer is not a JSON object',
                                             'The id and name of the party being referenced. Used to cross-reference to the parties section',
                                             '[] is too short. You must supply at least one value, or remove the item entirely (unless it’s required).',
-                                            'One or more values from the releaseTag codelist. Tags may be used to filter release and to understand the kind of information that a release might contain.',
+                                            'One or more values from the closed releaseTag codelist. Tags can be used to filter releases and to understand the kind of information that releases might contain',
                                             ], [], True),
     ('badfile_extension_validation_errors.json', ['Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z.',
                                                   'The date when this bid was received.',
@@ -248,7 +247,7 @@ def test_500_error(server_url, browser):
                                                   'Summary statistics on the number and nature of bids received.'], ['Reference Docs'], True),
     # Conversion should still work for files that don't validate against the schema
     ('tenders_releases_2_releases_invalid.json', ['Convert',
-                                                  'Validation Errors',
+                                                  'Structural Errors',
                                                   "id is missing but required",
                                                   "Invalid 'uri' found"], [], True),
     ('tenders_releases_2_releases_codelists.json', ['oh no',
@@ -258,14 +257,14 @@ def test_500_error(server_url, browser):
     # But we expect to see an error message if a file is not well formed JSON at all
     ('tenders_releases_2_releases_not_json.json', 'not well formed JSON', [], False),
     ('tenders_releases_2_releases.xlsx', ['Convert', 'Schema'] + OCDS_SCHEMA_VERSIONS_DISPLAY, ['Missing OCDS package'], True),
-    ('badfile.json', 'Statistics can not produced', [], True),
+    ('badfile.json', 'Statistics cannot be produced', [], True),
     # Test unconvertable JSON (main sheet "releases" is missing)
     ('unconvertable_json.json', 'could not be converted', [], False),
-    ('full_record.json', ['Number of records', 'Validation Errors', 'compiledRelease', 'versionedRelease'], [], True),
+    ('full_record.json', ['Number of records', 'Structural Errors', 'compiledRelease', 'versionedRelease'], [], True),
     # Test "version" value in data
     ('tenders_releases_1_release_with_unrecognized_version.json', ['Your data specifies a version 123.123 which is not recognised',
                                                                    'checked against OCDS release package schema version {}. You can'.format(OCDS_DEFAULT_SCHEMA_VERSION),
-                                                                   'validated against the current default version.',
+                                                                   'checked against the current default version.',
                                                                    'Convert to Spreadsheet'],
                                                                   ['Additional Fields (fields in data not in schema)', 'Error message'], False),
     ('tenders_releases_1_release_with_wrong_version_type.json', ['Your data specifies a version 1000 (it must be a string) which is not recognised',
@@ -281,7 +280,7 @@ def test_500_error(server_url, browser):
                                                                        '/definitions/OrganizationReference'], ['Convert to Spreadsheet'], False),
     ('tenders_releases_1_release_unpackaged.json', ['Missing OCDS package',
                                                     'Error message: Missing OCDS package'], ['Convert to Spreadsheet'], False),
-    ('tenders_releases_1_release_with_closed_codelist.json', ['Failed validation'], ['Passed validation'], True),
+    ('tenders_releases_1_release_with_closed_codelist.json', ['Failed structural checks'], ['Passed structural checks'], True),
     ('tenders_releases_1_release_with_tariff_codelist.json', ['releases/contracts/tariffs',
                                                               'chargePaidBy.csv',
                                                               'notADocumentType',
@@ -329,7 +328,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
     for text in not_expected_text:
         assert text not in body_text
 
-    assert 'Data Standard Validator' in browser.find_element_by_tag_name('body').text
+    assert 'Data Review Tool' in browser.find_element_by_tag_name('body').text
     # assert 'Release Table' in browser.find_element_by_tag_name('body').text
 
     if conversion_successful:
@@ -376,17 +375,17 @@ def test_validation_error_messages(url_input_browser):
         '<code>version</code> does not match the regex <code>^(\d+\.)(\d+)$</code>',
         '<code>id</code> is missing but required within <code>tender</code>',
         '<code>initiationType</code> is missing but required',
-        'Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z. Learn more about <a href="http://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.',
+        'Incorrect date format. Dates should use the form YYYY-MM-DDT00:00:00Z. Learn more about <a href="https://standard.open-contracting.org/latest/en/schema/reference/#date">dates in OCDS</a>.',
         'Invalid code found in <code>currency</code>',
         '<code>numberOfTenderers</code> is not a integer',
         '<code>amount</code> is not a number. Check that the value  doesn’t contain any characters other than 0-9 and dot (<code>.</code>).',
         '<code>ocid</code> is not a string. Check that the value is not null, and has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
-        'For more information see the <a href="http://standard.open-contracting.org/1.1/en/schema/identifiers/">Open Contracting Identifier guidance</a>',
+        'For more information see the <a href="https://standard.open-contracting.org/1.1/en/schema/identifiers/">Open Contracting Identifier guidance</a>',
         '<code>title</code> is not a string. Check that the value  has quotes at the start and end. Escape any quotes in the value with <code>\</code>',
         '<code>parties</code> is not a JSON array',
         '<code>buyer</code> is not a JSON object',
         '<code>[]</code> is too short.',
-        'One or more values from the <a href="http://standard.open-contracting.org/1.1/en/schema/codelists/#release-tag">releaseTag codelist</a>.',
+        'One or more values from the closed <a href="https://standard.open-contracting.org/1.1/en/schema/codelists/#release-tag">releaseTag</a> codelist',
     ]:
         assert html in browser.page_source
 
@@ -486,11 +485,11 @@ def test_url_invalid_dataset_request(server_url, browser, data_url):
 
 
 @pytest.mark.parametrize(('source_filename', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_1_1.json', 'validation against OCDS release package schema version 1.1',
+    ('tenders_releases_1_release_with_extensions_1_1.json', 'structural checks against OCDS release package schema version 1.1',
      'version is missing but required', 'methodRationale', 'version'),
-    ('tenders_releases_1_release_with_invalid_extensions.json', 'validation against OCDS release package schema version 1.0',
+    ('tenders_releases_1_release_with_invalid_extensions.json', 'structural checks against OCDS release package schema version 1.0',
      'version is missing but required', 'methodRationale', 'version'),
-    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'validation against OCDS release package schema version 1.1',
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', 'structural checks against OCDS release package schema version 1.1',
      'version is missing but required', 'methodRationale', 'version')
 ])
 def test_url_input_with_version(server_url, url_input_browser, httpserver, source_filename, expected, not_expected,
@@ -514,11 +513,11 @@ def test_url_input_with_version(server_url, url_input_browser, httpserver, sourc
 
 
 @pytest.mark.parametrize(('source_filename', 'select_version', 'expected', 'not_expected', 'expected_additional_field', 'not_expected_additional_field'), [
-    ('tenders_releases_1_release_with_extensions_1_1.json', '1.0', 'validation against OCDS release package schema version 1.0',
+    ('tenders_releases_1_release_with_extensions_1_1.json', '1.0', 'structural checks against OCDS release package schema version 1.0',
      'version is missing but required', 'version', 'publisher'),
     ('tenders_releases_1_release_with_invalid_extensions.json', '1.1', 'version is missing but required',
-     'validation against OCDS release package schema version 1.0', 'methodRationale', 'version'),
-    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'validation against OCDS release package schema version 1.0',
+     'structural checks against OCDS release package schema version 1.0', 'methodRationale', 'version'),
+    ('tenders_releases_2_releases_with_metatab_version_1_1_extensions.xlsx', '1.0', 'structural checks against OCDS release package schema version 1.0',
      'version is missing but required', 'version', 'publisher')
 ])
 def test_url_input_with_version_change(server_url, url_input_browser, httpserver, select_version, source_filename, expected,
@@ -558,7 +557,7 @@ def test_url_input_with_version_change(server_url, url_input_browser, httpserver
                                                                  'Get a copy of the schema with extension patches applied',
                                                                  'The following extensions failed',
                                                                  'extensions were not introduced in the schema until version 1.1.'],
-                                                                ['validated against a schema with no extensions']),
+                                                                ['checked against a schema with no extensions']),
     ('tenders_releases_1_release_with_all_invalid_extensions.json', ['None of the extensions above could be applied',
                                                                      'extensions were not introduced in the schema until version 1.1.'],
                                                                     ['Party Scale',
@@ -606,3 +605,69 @@ def test_url_input_extension_headlines(server_url, url_input_browser, httpserver
         assert text in headlines_box_text
     for text in not_expected:
         assert text not in headlines_box_text
+
+
+@pytest.mark.parametrize(('source_filename', 'expected', 'not_expected'), [
+    ('tenders_releases_extra_data.json', ['uniquedata'], []),
+])
+def test_ocds_show(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
+    browser = url_input_browser(source_filename)
+
+    browser.find_element_by_css_selector("a[href='#extra']").click()
+
+    body_text = browser.find_element_by_tag_name('body').text
+
+    for text in expected:
+        assert text in body_text
+    for text in not_expected:
+        assert text not in body_text
+
+
+@pytest.mark.parametrize(('source_filename', 'expected', 'not_expected'), [
+    (
+        'basic_release_empty_fields.json',
+        [
+            'Check Description',
+            'Location of first 3 errors',
+            'The data includes fields that are empty or contain only whitespaces. '
+            'Fields that are not being used, or that have no value, '
+            'should be excluded in their entirety (key and value) from the data',
+            'releases/0/buyer/name',
+            'releases/0/parties/0/address',
+            'releases/0/planning/budget/id'
+        ],
+        'releases/0/tender/items/0/additionalClassifications'
+    ),
+])
+def test_additional_checks_section(server_url, url_input_browser, httpserver, source_filename, expected, not_expected):
+    browser = url_input_browser(source_filename)
+    additional_checks_text = browser.find_element_by_id('additionalChecksTable').text
+
+    for text in expected:
+        assert text in additional_checks_text
+    assert not_expected not in additional_checks_text
+
+
+@pytest.mark.parametrize(('source_filename'), [('full_record.json')])
+def test_additional_checks_section_not_being_displayed(server_url, url_input_browser, httpserver, source_filename):
+    """Additional checks sections should only be displayed when there are results"""
+
+    browser = url_input_browser(source_filename)
+    additional_checks = browser.find_elements_by_id('additionalChecksTable')
+
+    assert additional_checks == []
+
+
+@pytest.mark.parametrize(('source_filename'), [('basic_release_empty_fields.json')])
+def test_additional_checks_error_modal(server_url, url_input_browser, httpserver, source_filename):
+    browser = url_input_browser(source_filename)
+    browser.find_element_by_css_selector('a[data-target=".additional-checks-1"]').click()
+    modal = browser.find_element_by_css_selector('.additional-checks-1')
+    modal_text = modal.text
+    table_rows = browser.find_elements_by_css_selector('.additional-checks-1 tbody tr')
+
+    assert "Location" in modal_text
+    assert "releases/0/tender/items/0/additionalClassifications" in modal_text
+    assert len(table_rows) == 4
+
+    browser.find_element_by_css_selector('div.modal.additional-checks-1 button.close').click()

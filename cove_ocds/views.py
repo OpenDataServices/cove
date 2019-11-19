@@ -2,24 +2,42 @@ import json
 import logging
 import os
 import re
+import functools
+import copy
 from dateutil import parser
 from strict_rfc3339 import validate_rfc3339
 from decimal import Decimal
+from collections import OrderedDict
 
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
+from django.utils import translation
 from django.utils.html import format_html
+from django.conf import settings
 
 from . lib import exceptions
-from . lib.ocds import common_checks_ocds
-from . lib.schema import SchemaOCDS
-from cove.lib.common import get_spreadsheet_meta_data
-from cove.lib.converters import convert_spreadsheet, convert_json
-from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
+from libcoveocds.common_checks import common_checks_ocds
+from libcoveocds.schema import SchemaOCDS
+from libcoveocds.config import LibCoveOCDSConfig
+from libcove.lib.common import get_spreadsheet_meta_data
+from libcove.lib.converters import convert_spreadsheet, convert_json
+from libcove.lib.exceptions import CoveInputDataError
+from . lib.ocds_show_extra import add_extra_fields
 from cove.views import explore_data_context
+from cove_ocds.lib.views import group_validation_errors
 
 
 logger = logging.getLogger(__name__)
+
+
+def cove_web_input_error(func):
+    @functools.wraps(func)
+    def wrapper(request, *args, **kwargs):
+        try:
+            return func(request, *args, **kwargs)
+        except CoveInputDataError as err:
+            return render(request, 'error.html', context=err.context)
+    return wrapper
 
 
 @cove_web_input_error
@@ -27,6 +45,11 @@ def explore_ocds(request, pk):
     context, db_data, error = explore_data_context(request, pk)
     if error:
         return error
+
+    lib_cove_ocds_config = LibCoveOCDSConfig()
+    lib_cove_ocds_config.config['current_language'] = translation.get_language()
+    lib_cove_ocds_config.config['schema_version_choices'] = settings.COVE_CONFIG['schema_version_choices']
+    lib_cove_ocds_config.config['schema_codelists'] = settings.COVE_CONFIG['schema_codelists']
 
     upload_dir = db_data.upload_dir()
     upload_url = db_data.upload_url()
@@ -41,7 +64,7 @@ def explore_ocds(request, pk):
         # open the data first so we can inspect for record package
         with open(file_name, encoding='utf-8') as fp:
             try:
-                json_data = json.load(fp, parse_float=Decimal)
+                json_data = json.load(fp, parse_float=Decimal, object_pairs_hook=OrderedDict)
             except ValueError as err:
                 raise CoveInputDataError(context={
                     'sub_title': _("Sorry, we can't process that data"),
@@ -64,7 +87,7 @@ def explore_ocds(request, pk):
             version_in_data = json_data.get('version', '')
             db_data.data_schema_version = version_in_data
             select_version = post_version_choice or db_data.schema_version
-            schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data)
+            schema_ocds = SchemaOCDS(select_version=select_version, release_data=json_data, lib_cove_ocds_config=lib_cove_ocds_config)
 
             if schema_ocds.missing_package:
                 exceptions.raise_missing_package_error()
@@ -92,12 +115,13 @@ def explore_ocds(request, pk):
                 # Replace the spreadsheet conversion only if it exists already.
                 converted_path = os.path.join(upload_dir, 'flattened')
                 replace_converted = replace and os.path.exists(converted_path + '.xlsx')
-                context.update(convert_json(upload_dir, upload_url, file_name, schema_url=url, replace=replace_converted,
+                context.update(convert_json(upload_dir, upload_url, file_name, lib_cove_ocds_config,
+                                            schema_url=url, replace=replace_converted,
                                             request=request, flatten=request.POST.get('flatten')))
 
     else:
         # Use the lowest release pkg schema version accepting 'version' field
-        metatab_schema_url = SchemaOCDS(select_version='1.1').release_pkg_schema_url
+        metatab_schema_url = SchemaOCDS(select_version='1.1', lib_cove_ocds_config=lib_cove_ocds_config).release_pkg_schema_url
         metatab_data = get_spreadsheet_meta_data(upload_dir, file_name, metatab_schema_url, file_type)
         if 'version' not in metatab_data:
             metatab_data['version'] = '1.0'
@@ -105,7 +129,7 @@ def explore_ocds(request, pk):
             db_data.data_schema_version = metatab_data['version']
 
         select_version = post_version_choice or db_data.schema_version
-        schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data)
+        schema_ocds = SchemaOCDS(select_version=select_version, release_data=metatab_data, lib_cove_ocds_config=lib_cove_ocds_config)
 
         # Unlike for JSON data case above, do not check for missing data package
         if schema_ocds.invalid_version_argument:
@@ -127,11 +151,12 @@ def explore_ocds(request, pk):
         url = schema_ocds.extended_schema_file or schema_ocds.release_schema_url
         pkg_url = schema_ocds.release_pkg_schema_url
 
-        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_url=url,
+        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, lib_cove_ocds_config,
+                                           schema_url=url,
                                            pkg_schema_url=pkg_url, replace=replace))
 
         with open(context['converted_path'], encoding='utf-8') as fp:
-            json_data = json.load(fp, parse_float=Decimal)
+            json_data = json.load(fp, parse_float=Decimal, object_pairs_hook=OrderedDict)
 
     if replace:
         if os.path.exists(validation_errors_path):
@@ -144,7 +169,8 @@ def explore_ocds(request, pk):
 
     context.update({
         'data_schema_version': db_data.data_schema_version,
-        'first_render': not db_data.rendered
+        'first_render': not db_data.rendered,
+        'validation_errors_grouped': group_validation_errors(context['validation_errors']),
     })
 
     schema_version = getattr(schema_ocds, 'version', None)
@@ -155,16 +181,23 @@ def explore_ocds(request, pk):
 
     db_data.save()
 
+    ocds_show_schema = SchemaOCDS()
+    ocds_show_deref_schema = ocds_show_schema.get_release_schema_obj(deref=True)
+
     if 'records' in json_data:
         template = 'cove_ocds/explore_record.html'
         if hasattr(json_data, 'get') and hasattr(json_data.get('records'), '__iter__'):
             context['records'] = json_data['records']
         else:
             context['records'] = []
+        if isinstance(json_data['records'], list) and len(json_data['records']) < 100:
+            context['ocds_show_data'] = ocds_show_data(json_data, ocds_show_deref_schema)
     else:
         template = 'cove_ocds/explore_release.html'
         if hasattr(json_data, 'get') and hasattr(json_data.get('releases'), '__iter__'):
             context['releases'] = json_data['releases']
+            if isinstance(json_data['releases'], list) and len(json_data['releases']) < 100:
+                context['ocds_show_data'] = ocds_show_data(json_data, ocds_show_deref_schema)
 
             # Parse release dates into objects so the template can format them.
             for release in context['releases']:
@@ -185,3 +218,18 @@ def explore_ocds(request, pk):
             context['releases'] = []
 
     return render(request, template, context)
+
+
+# This should only be run when data is small.
+def ocds_show_data(json_data, ocds_show_deref_schema):
+    new_json_data = copy.deepcopy(json_data)
+    add_extra_fields(new_json_data, ocds_show_deref_schema)
+    return json.dumps(new_json_data, cls=DecimalEncoder)
+
+
+# From stackoverflow:  https://stackoverflow.com/questions/1960516/python-json-serialize-a-decimal-object
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, Decimal):
+            return float(o)
+        return super(DecimalEncoder, self).default(o)

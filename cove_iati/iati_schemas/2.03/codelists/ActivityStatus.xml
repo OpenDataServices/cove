@@ -1,0 +1,72 @@
+<codelist name="ActivityStatus" xml:lang="en" complete="1">
+    <metadata>
+        <name>
+            <narrative>Activity Status</narrative>
+        </name>
+        <description>
+            <narrative>Lifecycle status of the activity from pipeline to completion</narrative>
+        </description>
+    </metadata>
+    <codelist-items>
+        <codelist-item>
+            <code>1</code>
+            <name>
+                <narrative>Pipeline/identification</narrative>
+                <narrative xml:lang="fr">Planification</narrative>
+            </name>
+            <description>
+                <narrative>The activity is being scoped or planned </narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>2</code>
+            <name>
+                <narrative>Implementation</narrative>
+                <narrative xml:lang="fr">Actif</narrative>
+            </name>
+            <description>
+                <narrative>The activity is currently being implemented</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>3</code>
+            <name>
+                <narrative>Completion</narrative>
+                <narrative xml:lang="fr">Finalisation</narrative>
+            </name>
+            <description>
+                <narrative>Physical activity is complete or the final disbursement has been made.</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>4</code>
+            <name>
+                <narrative>Post-completion</narrative>
+                <narrative xml:lang="fr">Fermé</narrative>
+            </name>
+            <description>
+                <narrative>Physical activity is complete or the final disbursement has been made, but the activity remains open pending financial sign off or M&amp;E</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>5</code>
+            <name>
+                <narrative>Cancelled</narrative>
+                <narrative xml:lang="fr">Annulé</narrative>
+            </name>
+            <description>
+                <narrative>The activity has been cancelled</narrative>
+            </description>
+        </codelist-item>
+        <codelist-item>
+            <code>6</code>
+            <name>
+                <narrative>Suspended</narrative>
+                <narrative xml:lang="fr">Suspendu</narrative>
+            </name>
+            <description>
+                <narrative>The activity has been temporarily suspended</narrative>
+            </description>
+        </codelist-item>
+    </codelist-items>
+</codelist>

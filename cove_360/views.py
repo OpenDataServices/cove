@@ -1,19 +1,36 @@
+import codecs
+import csv
+import functools
+import itertools
 import json
 import logging
 from decimal import Decimal
 
-from django.shortcuts import render
-from django.utils.translation import ugettext_lazy as _
-from django.utils.html import format_html
-
-from . lib.schema import Schema360
-from . lib.threesixtygiving import common_checks_360
-from . lib.threesixtygiving import TEST_CLASSES
-from cove.lib.converters import convert_spreadsheet, convert_json
-from cove.lib.exceptions import CoveInputDataError, cove_web_input_error
 from cove.views import explore_data_context
+from django.conf import settings
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.utils.html import format_html
+from django.utils.translation import ugettext_lazy as _
+from libcove.config import LibCoveConfig
+from libcove.lib.converters import convert_spreadsheet, convert_json
+from libcove.lib.exceptions import CoveInputDataError
+
+from .lib.schema import Schema360
+from .lib.threesixtygiving import TEST_CLASSES
+from .lib.threesixtygiving import common_checks_360
 
 logger = logging.getLogger(__name__)
+
+
+def cove_web_input_error(func):
+    @functools.wraps(func)
+    def wrapper(request, *args, **kwargs):
+        try:
+            return func(request, *args, **kwargs)
+        except CoveInputDataError as err:
+            return render(request, 'error.html', context=err.context)
+    return wrapper
 
 
 @cove_web_input_error
@@ -22,6 +39,9 @@ def explore_360(request, pk, template='cove_360/explore.html'):
     context, db_data, error = explore_data_context(request, pk)
     if error:
         return error
+
+    lib_cove_config = LibCoveConfig()
+    lib_cove_config.config.update(settings.COVE_CONFIG)
 
     upload_dir = db_data.upload_dir()
     upload_url = db_data.upload_url()
@@ -52,10 +72,12 @@ def explore_360(request, pk, template='cove_360/explore.html'):
                 })
 
             context.update(convert_json(upload_dir, upload_url, file_name, schema_url=schema_360.release_schema_url,
-                                        request=request, flatten=request.POST.get('flatten')))
+                                        request=request, flatten=request.POST.get('flatten'),
+                                        lib_cove_config=lib_cove_config))
 
     else:
-        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, schema_360.release_schema_url, schema_360.release_pkg_schema_url))
+        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, lib_cove_config, schema_360.release_schema_url,
+                                           schema_360.release_pkg_schema_url))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp, parse_float=Decimal)
 
@@ -63,8 +85,10 @@ def explore_360(request, pk, template='cove_360/explore.html'):
 
     if hasattr(json_data, 'get') and hasattr(json_data.get('grants'), '__iter__'):
         context['grants'] = json_data['grants']
+        context['metadata'] = {key: value for key, value in json_data.items() if key != 'grants'}
     else:
         context['grants'] = []
+        context['metadata'] = {}
 
     context['first_render'] = not db_data.rendered
     if not db_data.rendered:
@@ -80,5 +104,30 @@ def common_errors(request):
 
 def additional_checks(request):
     context = {}
-    context["checks"] = [{**check.check_text, 'desc': check.__doc__} for check in TEST_CLASSES]
-    return render(request, 'cove_360/additional_checks.html', context)
+
+    test_classes = list(itertools.chain(*TEST_CLASSES.values()))
+    context['checks'] = [
+        {
+            'heading': check.check_text['heading'],
+            'messages': (check.check_text['message'].ordered_dict.items()),
+            'desc': check.__doc__,
+            'class_name': check.__name__
+        } for check in test_classes
+    ]
+
+    if request.path.endswith('.csv'):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="additional_checks.csv"'
+
+        response.write(codecs.BOM_UTF8)
+
+        writer = csv.writer(response)
+        writer.writerow(['Class Name', 'Methodology', 'Heading', '%', 'Message'])
+        for check in context['checks']:
+            for message in check['messages']:
+                writer.writerow([check['class_name'], check['desc'], check['heading'], message[0], message[1]])
+
+        return response
+
+    else:
+        return render(request, 'cove_360/additional_checks.html', context)

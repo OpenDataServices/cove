@@ -17,7 +17,6 @@ setup(
     version='0.0.0',
     author='Open Data Services',
     author_email='code@opendataservices.coop',
-    packages=['cove', 'cove.input', 'cove.dataload', 'cove.lib'],
     scripts=['manage.py'],
     url='https://github.com/OpenDataServices/cove',
     description='',

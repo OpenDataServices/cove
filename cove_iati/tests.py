@@ -4,10 +4,13 @@ import json
 import lxml.etree
 import os
 import uuid
+import tempfile
 
 from django.core.management import call_command
 
 from .lib import iati
+from .lib import api
+from .lib.process_codelists import invalid_embedded_codelist_values
 from .lib.exceptions import RuleSetStepException
 from .rulesets.utils import invalid_date_format, get_child_full_xpath, get_xobjects, register_ruleset_errors
 
@@ -217,7 +220,7 @@ def test_cove_iati_cli_delete_option():
     call_command('iati_cli', file_path, output_dir=output_dir)
 
     with pytest.raises(SystemExit):
-            call_command('iati_cli', file_path, output_dir=output_dir)
+        call_command('iati_cli', file_path, output_dir=output_dir)
 
 
 def test_cove_iati_cli_output():
@@ -263,7 +266,10 @@ def test_cove_iati_cli_output():
                        'value': ''},
                       {'description': "'activity-date': The attribute 'type' is required but missing.",
                        'path': "iati-activity/4/activity-date/@type' is required but missing",
-                       'value': ''}]
+                       'value': ''},
+                      {'description': "'recipient-country', attribute 'percentage' is not a valid value of the atomic type 'xs:decimal'.",
+                       'path': "iati-activity/4/recipient-country/@percentage",
+                       'value': 'bad number'}]
 
     exp_rulesets = [{'id': 'TZ-BRLA-1-AAA-123123-AA123',
                      'explanation': '2200-01-01 must be on or before today (2017-10-04)',
@@ -326,7 +332,7 @@ def test_cove_iati_cli_output():
                     'path': '/iati-activities/iati-activity[5]',
                     'rule': 'activity-date[date @type="1"] or activity-date[@type="2"] must be present'},
                    {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                    'explanation': 'recipient-country|recipient-region/@percentage adds up to 30%',
+                    'explanation': 'recipient-country|recipient-region/@percentage adds up to 0%',
                     'path': '/iati-activities/iati-activity[5]/recipient-country',
                     'rule': 'recipient-country/@percentage and recipient-region/@percentage must sum to 100%'},
                    {'id': 'TZ-BRLA-9-EEE-123123-EE123',
@@ -515,13 +521,25 @@ def test_ruleset_error_exceptions_handling(validated_data):
 def test_common_checks_context_iati_ruleset():
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
     upload_dir = os.path.join('media', str(uuid.uuid4()))
-    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', api=True)
+    tree = iati.get_tree(file_path)
+    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', tree, api=True)
+
     assert len(context['ruleset_errors']) == 3
 
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
     upload_dir = os.path.join('media', str(uuid.uuid4()))
-    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', api=True)
+    tree = iati.get_tree(file_path)
+    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', tree, api=True)
+
     assert len(context['ruleset_errors']) == 17
+
+
+def test_common_checks_context_iati_org_validation():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid.xml')
+    upload_dir = os.path.join('media', str(uuid.uuid4()))
+    tree = iati.get_tree(file_path)
+    context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', tree, api=True)
+    assert len(context['validation_errors']) == 0
 
 
 def test_post_api(client):
@@ -543,3 +561,75 @@ def test_post_api(client):
     resp = client.post('/api_test', {'file': open(file_path, 'rb')})
     assert resp.status_code == 400
     assert resp.json() == {'name': ['This field is required.']}
+
+
+def test_process_codelist():
+    file_path = os.path.join('cove_iati', 'fixtures', 'unflattened_bad_codelist_xlsx.xml')
+    source_map_path = os.path.join('cove_iati', 'fixtures', 'cell_source_map_bad_codelist_xlsx.json')
+    schema_directory = os.path.join('cove_iati', 'iati_schemas', '2.03')
+    result = invalid_embedded_codelist_values(schema_directory, file_path, source_map_path)
+    assert len(result) == 3
+    assert set(item['value'] for item in result) == set(["what", "is", "100"])
+
+
+def test_embedded_codelist_full():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_bad_codelist.xlsx')
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        context = api.iati_json_output(tmpdirname, file_path)
+        print('created temporary directory', tmpdirname)
+    assert len(context['invalid_embedded_codelist_values']) == 3
+    assert set(item['value'] for item in context['invalid_embedded_codelist_values']) == set(["what", "is", "100"])
+
+
+def test_non_embedded_codelist_full():
+    file_path = os.path.join('cove_iati', 'fixtures', 'example_codelist.xml')
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        context = api.iati_json_output(tmpdirname, file_path)
+        print('created temporary directory', tmpdirname)
+    assert len(context['invalid_embedded_codelist_values']) == 1
+    assert set(item['value'] for item in context['invalid_embedded_codelist_values']) == set(["100"])
+
+    assert len(context['invalid_non_embedded_codelist_values']) == 3
+    assert set(item['value'] for item in context['invalid_non_embedded_codelist_values']) == set(["616", "A2", "A3"])
+
+
+def test_iati_identifier_count():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
+    tree = iati.get_tree(file_path)
+
+    assert iati.iati_identifier_count(tree) == 2
+
+
+def test_iati_identifier_count_when_non_unique():
+    file_path = os.path.join('cove_iati', 'fixtures', 'iati_openag_tag_repeat_identifiers.xml')
+    tree = iati.get_tree(file_path)
+
+    assert iati.iati_identifier_count(tree) == 5
+
+
+def test_iati_identifier_count_when_none():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid.xml')
+    tree = iati.get_tree(file_path)
+
+    assert iati.iati_identifier_count(tree) == 0
+
+
+def test_organisation_identifier_count():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid.xml')
+    tree = iati.get_tree(file_path)
+
+    assert iati.organisation_identifier_count(tree) == 1
+
+
+def test_organisation_identifier_count_when_non_unique():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_org_valid_repeat_identifiers.xml')
+    tree = iati.get_tree(file_path)
+
+    assert iati.organisation_identifier_count(tree) == 2
+
+
+def test_organisation_identifier_count_when_none():
+    file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_unordered_valid.xml')
+    tree = iati.get_tree(file_path)
+
+    assert iati.organisation_identifier_count(tree) == 0

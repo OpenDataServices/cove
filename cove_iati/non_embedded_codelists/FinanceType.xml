@@ -1,0 +1,829 @@
+<codelist name="FinanceType" xml:lang="en" category-codelist="FinanceType-category" complete="1" embedded="0">
+    <metadata>
+        <name>
+            <narrative>Finance Type</narrative>
+        </name>
+        <description>
+            <narrative>DAC/CRS transaction classification used to distinguish financial instruments,  e.g. grants or loans.</narrative>
+        </description>
+        <url>http://www.oecd.org/dac/stats/dacandcrscodelists.htm</url>
+    </metadata>
+    <codelist-items>
+        <codelist-item status="active">
+            <code>1</code>
+            <name>
+                <narrative>GNI: Gross National Income</narrative>
+                <narrative xml:lang="fr">RNB : Revenu national brut</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>0</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>110</code>
+            <name>
+                <narrative>Standard grant</narrative>
+                <narrative xml:lang="fr">Dons ordinaires</narrative>
+            </name>
+            <description>
+                <narrative>Grants are transfers in cash or in kind for which no legal debt is incurred by the recipient.</narrative>
+                <narrative xml:lang="fr">Transferts en espèces ou en nature qui n'entraînent pas d'obligation juridique de remboursement pour le bénéficiaire.</narrative>
+            </description>
+            <category>100</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>1100</code>
+            <name>
+                <narrative>Guarantees/insurance</narrative>
+                <narrative xml:lang="fr">Garanties/assurances</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>1000</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>111</code>
+            <name>
+                <narrative>Subsidies to national private investors</narrative>
+                <narrative xml:lang="fr">Don hors réorganisation de la dette (y compris quasi-dons)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>100</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>2</code>
+            <name>
+                <narrative>ODA % GNI</narrative>
+                <narrative xml:lang="fr">APD en % du RNB</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>0</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>210</code>
+            <name>
+                <narrative>Interest subsidy</narrative>
+                <narrative xml:lang="fr">Bonification d'intérêt</narrative>
+            </name>
+            <description>
+                <narrative>A payment to soften the terms of private export credits, or loans or credits by the banking sector.</narrative>
+                <narrative xml:lang="fr">Subventions visant à assouplir les conditions des crédits à l’exportation ou des prêts/crédits du secteur bancaire.</narrative>
+            </description>
+            <category>100</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>211</code>
+            <name>
+                <narrative>Interest subsidy to national private exporters</narrative>
+                <narrative xml:lang="fr">Bonification d’intérêt octroyée aux exportateurs privés nationaux</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>100</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>3</code>
+            <name>
+                <narrative>Total Flows % GNI</narrative>
+                <narrative xml:lang="fr">Apports totaux en % du RNB</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>0</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>310</code>
+            <name>
+                <narrative>Capital subscription on deposit basis</narrative>
+                <narrative xml:lang="fr">Souscriptions au capital sur la base des dépôt</narrative>
+            </name>
+            <description>
+                <narrative>Payments to multilateral agencies in the form of notes and similar instruments, unconditionally encashable at sight by the recipient institutions.</narrative>
+                <narrative xml:lang="fr">Versements aux agences multilatérales sous forme de billets à ordre et effets similaires encaissables à vue sans condition par l'institution bénéficiaire.</narrative>
+            </description>
+            <category>100</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>311</code>
+            <name>
+                <narrative>Capital subscription on encashment basis</narrative>
+                <narrative xml:lang="fr">Souscriptions au capital sur la base des encaissements</narrative>
+            </name>
+            <description>
+                <narrative>Payments to multilateral agencies in the form of notes and similar instruments, unconditionally encashable at sight by the recipient institutions.</narrative>
+                <narrative xml:lang="fr">Versements aux agences multilatérales sous forme de billets à ordre et effets similaires encaissables à vue sans condition par l'institution bénéficiaire.</narrative>
+            </description>
+            <category>100</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>4</code>
+            <name>
+                <narrative>Population</narrative>
+                <narrative xml:lang="fr">Population</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>0</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>410</code>
+            <name>
+                <narrative>Aid loan excluding debt reorganisation</narrative>
+                <narrative xml:lang="fr">Prêt d’aide hors réorganisation de la dette</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>400</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>411</code>
+            <name>
+                <narrative>Investment-related loan to developing countries</narrative>
+                <narrative xml:lang="fr">Prêt lié à un investissement dans les pays en développement</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>400</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>412</code>
+            <name>
+                <narrative>Loan in a joint venture with the recipient</narrative>
+                <narrative xml:lang="fr">Prêt dans une coentreprise avec le pays bénéficiaire</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>400</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>413</code>
+            <name>
+                <narrative>Loan to national private investor</narrative>
+                <narrative xml:lang="fr">Prêt à un investisseur privé national</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>400</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>414</code>
+            <name>
+                <narrative>Loan to national private exporter</narrative>
+                <narrative xml:lang="fr">Prêt à un exportateur privé national</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>400</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>421</code>
+            <name>
+                <narrative>Standard loan</narrative>
+                <narrative xml:lang="fr">Prêt ordinaire</narrative>
+            </name>
+            <description>
+                <narrative>Transfers in cash or in kind for which the recipient incurs legal debt (and the resulting claim is not intended to be traded).  Since payment obligations on standard loan are senior obligations, i.e. creditors are entitled to receive payments against their claims before anyone else, they are also referred to as senior loans.</narrative>
+                <narrative xml:lang="fr">Transferts en espèce ou en nature qui entraînent une obligation juridique de remboursement pour le bénéficiaire (dont la créance n'est pas échangeable.) Lorsque les obligations de remboursement sur les prêts ordinaires sont senior, càd que le créditeur est éligible à percevoir le remboursement de sa créance avant quiconque, on parle de prêt senior.</narrative>
+            </description>
+            <category>420</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>422</code>
+            <name>
+                <narrative>Reimbursable grant</narrative>
+                <narrative xml:lang="fr">Don remboursable</narrative>
+            </name>
+            <description>
+                <narrative>A contribution provided to a recipient institution for investment purposes, with the expectation of long-term reflows at conditions specified in the financing agreement. The provider assumes the risk of total or partial failure of the investment; it can also decide if and when to reclaim its investment.</narrative>
+                <narrative xml:lang="fr">Contribution fournie à une institution bénéficiaire à des fins d'investissement, dans une perspective de remboursement à long-terme à des conditions spécifiées dans l'accord de financement. Le fournisseur assume le risque partiel ou total de faillite de l'investissement ; il peut aussi décider si et quand il récupère son investissement.</narrative>
+            </description>
+            <category>420</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>423</code>
+            <name>
+                <narrative>Bonds</narrative>
+                <narrative xml:lang="fr">Obligations</narrative>
+            </name>
+            <description>
+                <narrative>Fixed-interest debt instruments, issued by governments, public utilities, banks or companies, tradable in financial markets.</narrative>
+                <narrative xml:lang="fr">Instruments de dette à intérêts fixes émis par des gouvernements, entités publiques, banques ou sociétés, échangeables sur les marchés financiers.</narrative>
+            </description>
+            <category>420</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>424</code>
+            <name>
+                <narrative>Asset-backed securities</narrative>
+                <narrative xml:lang="fr">Titres adossés à des actifs</narrative>
+            </name>
+            <description>
+                <narrative>Securities whose value and income payments are derived from and backed by a specific pool of underlying assets.</narrative>
+                <narrative xml:lang="fr">Actifs dont la valeur et les revenus sont dérivés de et adossés à un panier d'actifs sous-jacents.</narrative>
+            </description>
+            <category>420</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>425</code>
+            <name>
+                <narrative>Other debt securities</narrative>
+                <narrative xml:lang="fr">Autres actifs de dette</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>420</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>431</code>
+            <name>
+                <narrative>Subordinated loan</narrative>
+                <narrative xml:lang="fr">Prêt subordonné</narrative>
+            </name>
+            <description>
+                <narrative>A loan that, in the event of default, will only be repaid after all senior obligations have been satisfied.  In compensation for the increased risk, mezzanine debt holders require a higher return for their investment than secured or more senior lenders.</narrative>
+                <narrative xml:lang="fr">Prêt qui, en cas de défaut, ne sera remboursé qu'après que les obligations senior soient satisfaites.  En compensation du risque accru, les détenteurs de dette mezzanine exigent un retour sur investissement plus élevé que les prêteurs garantis ou senior.</narrative>
+            </description>
+            <category>430</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>432</code>
+            <name>
+                <narrative>Preferred equity</narrative>
+                <narrative xml:lang="fr">Action privilégiée</narrative>
+            </name>
+            <description>
+                <narrative>Equity that, in the event of default, will be repaid after all senior obligations and subordinated loans have been satisfied; and will be paid before common equity holders. It is a more expensive source of finance than senior debt, a less expensive source than equity.</narrative>
+                <narrative xml:lang="fr">Action qui, en cas de défaut, ne sera remboursé qu'après que les obligations senior soient satisfaites ; mais avant les détenteurs d'actions ordinaires.  Il s'agit d'une source de financement plus onéreuse que la dette senior mais moins coûteuse que les actions.</narrative>
+            </description>
+            <category>430</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>433</code>
+            <name>
+                <narrative>Other hybrid instruments</narrative>
+                <narrative xml:lang="fr">Autres instruments hybrides</narrative>
+            </name>
+            <description>
+                <narrative>Including convertible debt or equity.</narrative>
+                <narrative xml:lang="fr">Incluant les dettes convertibles et les actions.</narrative>
+            </description>
+            <category>430</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>451</code>
+            <name>
+                <narrative>Non-banks guaranteed export credits</narrative>
+                <narrative xml:lang="fr">Crédits à l'exportation garantis du secteur non bancaire</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>450</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>452</code>
+            <name>
+                <narrative>Non-banks non-guaranteed portions of guaranteed export credits</narrative>
+                <narrative xml:lang="fr">Fraction non garantie des crédits à l'exportation garantis du secteur bancaire</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>400</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>453</code>
+            <name>
+                <narrative>Bank export credits</narrative>
+                <narrative xml:lang="fr">Crédits à l'exportation du secteur bancaire</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>400</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>510</code>
+            <name>
+                <narrative>Common equity</narrative>
+                <narrative xml:lang="fr">Action ordinaire</narrative>
+            </name>
+            <description>
+                <narrative>A share in the ownership of a corporation that gives the owner claims on the residual value of the corporation after creditors’ claims have been met.</narrative>
+                <narrative xml:lang="fr">Part de propriété dans une société donnant à son détenteur une créance sur la valeurs résiduelle de la société une fois que les créances de ses créditeurs ont été satisfaites.</narrative>
+            </description>
+            <category>500</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>511</code>
+            <name>
+                <narrative>Acquisition of equity not part of joint venture in developing countries</narrative>
+                <narrative xml:lang="fr">Acquisition de prises de participation en dehors des coentreprises avec les pays en développement</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>500</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>512</code>
+            <name>
+                <narrative>Other acquisition of equity</narrative>
+                <narrative xml:lang="fr">Autre acquisition de prises de participation</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>500</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>520</code>
+            <name>
+                <narrative>Shares in collective investment vehicles</narrative>
+                <narrative xml:lang="fr">Parts dans des organismes collectifs d'investissement</narrative>
+            </name>
+            <description>
+                <narrative>Collective undertakings through which investors pool funds for investment in financial or nonfinancial assets or both. These vehicles issue shares (if a corporate structure is used) or units (if a trust structure is used).</narrative>
+                <narrative xml:lang="fr">Placement collectif par lequel un groupe d'investisseurs abonde un fond d'actifs financiers ou non financiers ou les deux. Ces véhicules émettent des parts (en cas de structure d'entreprise) ou des unités de compte (en cas de structure fiduciaire.)</narrative>
+            </description>
+            <category>500</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>530</code>
+            <name>
+                <narrative>Reinvested earnings</narrative>
+                <narrative xml:lang="fr">Bénéfices réinvestis</narrative>
+            </name>
+            <description>
+                <narrative>This item is only applicable to Foreign Direct Investment (FDI). Reinvested earnings on FDI consist of the retained earnings of a direct foreign investment enterprise which are treated as if they were distributed and remitted to foreign direct investors in proportion to their ownership of the equity of the enterprise and then reinvested by them in the enterprise.</narrative>
+                <narrative xml:lang="fr">Cet item n'est applicable qu'aux investissement direct étrangers (IDE). Les bénéfices réinvestis sur des IDE consistent en des bénéfices retenus d'un investissement direct à l'étranger qui sont traités comme s'ils étaient redistribués et versés aux investisseurs en proportion de leur part dans l'actionnariat puis réinvestis par eux dans l'entreprise.</narrative>
+            </description>
+            <category>500</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>610</code>
+            <name>
+                <narrative>Debt forgiveness:  ODA claims (P)</narrative>
+                <narrative xml:lang="fr">Annulation/conversion de la dette : créance APD (P)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>611</code>
+            <name>
+                <narrative>Debt forgiveness: ODA claims (I)</narrative>
+                <narrative xml:lang="fr">Annulation/conversion de la dette : créance APD (I)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>612</code>
+            <name>
+                <narrative>Debt forgiveness: OOF claims (P)</narrative>
+                <narrative xml:lang="fr">Annulation/conversion de la dette : créance AASP (P)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>613</code>
+            <name>
+                <narrative>Debt forgiveness: OOF claims (I)</narrative>
+                <narrative xml:lang="fr">Annulation/conversion de la dette : créance AASP (I)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>614</code>
+            <name>
+                <narrative>Debt forgiveness:  Private claims (P)</narrative>
+                <narrative xml:lang="fr">Annulation/conversion de la dette : créance du secteur privé (P)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>615</code>
+            <name>
+                <narrative>Debt forgiveness:  Private claims (I)</narrative>
+                <narrative xml:lang="fr">Annulation/conversion de la dette : créance du secteur privé (I)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>616</code>
+            <name>
+                <narrative>Debt forgiveness: OOF claims (DSR)</narrative>
+                <narrative xml:lang="fr">Annulation/conversion de la dette : créance AASP (DSR)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>617</code>
+            <name>
+                <narrative>Debt forgiveness:  Private claims (DSR)</narrative>
+                <narrative xml:lang="fr">Annulation/conversion de la dette : créance du secteur privé (DSR)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>618</code>
+            <name>
+                <narrative>Debt forgiveness: Other</narrative>
+                <narrative xml:lang="fr">Annulation/conversion de la dette : autre</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>620</code>
+            <name>
+                <narrative>Debt rescheduling: ODA claims (P)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance APD (P)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>621</code>
+            <name>
+                <narrative>Debt rescheduling: ODA claims (I)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance APD (I)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>622</code>
+            <name>
+                <narrative>Debt rescheduling: OOF claims (P)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance AASP (P)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>623</code>
+            <name>
+                <narrative>Debt rescheduling: OOF claims (I)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance AASP (I)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>624</code>
+            <name>
+                <narrative>Debt rescheduling:  Private claims (P)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance du secteur privé (P)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>625</code>
+            <name>
+                <narrative>Debt rescheduling:  Private claims (I)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance du secteur privé (I)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>626</code>
+            <name>
+                <narrative>Debt rescheduling: OOF claims (DSR)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance AASP (RSD)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>627</code>
+            <name>
+                <narrative>Debt rescheduling:  Private claims (DSR)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance du secteur privé (RSD)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>630</code>
+            <name>
+                <narrative>Debt rescheduling: OOF claim (DSR – original loan principal)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance AASP (RSD – principal du prêt d’origine)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>631</code>
+            <name>
+                <narrative>Debt rescheduling: OOF claim (DSR – original loan interest)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance AASP (RSD – intérêts du prêt d’origine)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active">
+            <code>632</code>
+            <name>
+                <narrative>Debt rescheduling: Private claim (DSR – original loan principal)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance du secteur privé (RSD – principal du prêt d’origine)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>633</code>
+            <name>
+                <narrative>Debt forgiveness/conversion: export credit claims (P)</narrative>
+                <narrative xml:lang="fr">Annulation/conversion de la dette : créance de crédit à l'exportation (P)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>634</code>
+            <name>
+                <narrative>Debt forgiveness/conversion:  export credit claims (I)</narrative>
+                <narrative xml:lang="fr">Annulation/conversion de la dette : créance de crédit à l'exportation (I)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>635</code>
+            <name>
+                <narrative>Debt forgiveness:  export credit claims (DSR)</narrative>
+                <narrative xml:lang="fr">Annulation de la dette : créance de crédit à l'exportation (DSR)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>636</code>
+            <name>
+                <narrative>Debt rescheduling:  export credit claims (P)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance de crédit à  l'exportation (P)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>637</code>
+            <name>
+                <narrative>Debt rescheduling:  export credit claims (I)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance de crédit à  l'exportation (I)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>638</code>
+            <name>
+                <narrative>Debt rescheduling:  export credit claims (DSR)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance de crédit à  l'exportation (DSR)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2016-01-01">
+            <code>639</code>
+            <name>
+                <narrative>Debt rescheduling:  export credit claim (DSR – original loan principal)</narrative>
+                <narrative xml:lang="fr">Rééchelonnement de la dette : créance de crédit à  l'exportation (DSR - principal du prêt originel)</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>600</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>710</code>
+            <name>
+                <narrative>Foreign direct investment, new capital outflow (includes reinvested earnings if separate identification not available)</narrative>
+                <narrative xml:lang="fr">Investissement direct international</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>700</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>711</code>
+            <name>
+                <narrative>Other foreign direct investment, including reinvested earnings</narrative>
+                <narrative xml:lang="fr">Autre investissement direct international , y compris les bénéfices réinvestis</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>700</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>712</code>
+            <name>
+                <narrative>Foreign direct investment, reinvested earnings</narrative>
+                <narrative xml:lang="fr"/>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>700</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>810</code>
+            <name>
+                <narrative>Bank bonds</narrative>
+                <narrative xml:lang="fr">Obligations du secteur bancaire</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>800</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>811</code>
+            <name>
+                <narrative>Non-bank  bonds</narrative>
+                <narrative xml:lang="fr">Obligations du secteur non bancaire</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>800</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>910</code>
+            <name>
+                <narrative>Other bank securities/claims</narrative>
+                <narrative xml:lang="fr">Autres titres/créances du secteur bancaire</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>900</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>911</code>
+            <name>
+                <narrative>Other non-bank securities/claims</narrative>
+                <narrative xml:lang="fr">Autres titres/créances du secteur non bancaire</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>900</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>912</code>
+            <name>
+                <narrative>Purchase of securities from issuing agencies</narrative>
+                <narrative xml:lang="fr">Titres et autres instruments émis par les agences multilatérales</narrative>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>900</category>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2015-12-31">
+            <code>913</code>
+            <name>
+                <narrative>Securities and other instruments originally issued by multilateral agencies</narrative>
+                <narrative xml:lang="fr"/>
+            </name>
+            <description>
+                <narrative/>
+                <narrative xml:lang="fr"/>
+            </description>
+            <category>900</category>
+        </codelist-item>
+    </codelist-items>
+</codelist>
