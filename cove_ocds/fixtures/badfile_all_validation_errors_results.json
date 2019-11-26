@@ -92,13 +92,6 @@
       "type": "string"
     },
     {
-      "description": "Array has non-unique elements",
-      "field": "releases",
-      "path": "releases",
-      "type": "uniqueItems",
-      "value": ""
-    },
-    {
       "value": "Last Tuesday",
       "description": "Date is not in the correct format",
       "path": "releases/0/date",
