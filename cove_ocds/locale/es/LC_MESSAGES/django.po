@@ -6,20 +6,20 @@
 # Translators:
 # Maria Esther Cervantes <mariaesther@idatosabiertos.org>, 2018
 # Tim Davies <tim.davies@opendataservices.coop>, 2018
-# Ben Webb <ben.webb@opendataservices.coop>, 2019
 # Eduardo Gomez <eduardo.gomez@hotmail.co.uk>, 2019
 # Bibiana Cristòfol <bcristofol@gmail.com>, 2019
 # Amy Guy <amy.guy@opendataservices.coop>, 2019
 # Romina Fernandez <rfernandez@cds.com.py>, 2019
+# Ben Webb <ben.webb@opendataservices.coop>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-11 11:39+0000\n"
+"POT-Creation-Date: 2019-12-04 16:41+0000\n"
 "PO-Revision-Date: 2017-04-03 14:36+0000\n"
-"Last-Translator: Romina Fernandez <rfernandez@cds.com.py>, 2019\n"
+"Last-Translator: Ben Webb <ben.webb@opendataservices.coop>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -950,6 +950,24 @@ msgstr "Comprador:"
 #: cove_ocds/templates/cove_ocds/explore_release.html:400
 msgid "Procuring Entity:"
 msgstr "Entidad Contratante:"
+
+#: cove_ocds/templates/cove_ocds/input.html:13
+msgid "Link"
+msgstr "Enlazar"
+
+#: cove_ocds/templates/cove_ocds/input.html:23
+#: cove_ocds/templates/cove_ocds/input.html:46
+#: cove_ocds/templates/cove_ocds/input.html:69
+msgid "Submit"
+msgstr "Enviar"
+
+#: cove_ocds/templates/cove_ocds/input.html:36
+msgid "Upload"
+msgstr "Subir"
+
+#: cove_ocds/templates/cove_ocds/input.html:59
+msgid "Paste"
+msgstr "Pegar"
 
 #: cove_ocds/templates/cove_ocds/more_info.html:4
 msgid "More Information "

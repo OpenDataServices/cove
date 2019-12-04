@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-11 11:39+0000\n"
+"POT-Creation-Date: 2019-12-04 16:41+0000\n"
 "PO-Revision-Date: 2017-04-03 14:37+0000\n"
 "Last-Translator: Bibiana Cristòfol <bcristofol@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/59127/es/)\n"
@@ -487,8 +487,8 @@ msgstr ""
 
 #: cove_360/templates/cove_360/explore.html:29
 msgid ""
-"See the contents of this data at a glance. Use this to get an overview of "
-"the data and to check this was what you were expecting."
+"Use this section to get an overview of the data and check this was what you "
+"were expecting to see."
 msgstr ""
 
 #: cove_360/templates/cove_360/explore.html:33
@@ -603,7 +603,7 @@ msgid ""
 "\t\t   <p>The feedback is split into several sections</p>\n"
 "\t\t   <ul class=\"list-unstyled\">\n"
 "\t\t\t   <li><span class=\"font-tick cross\"></span> indicates <em>warnings</em> or <em>errors</em> which must be resolved prior to publishing 360Giving format data</li>\n"
-"\t\t\t   <li><span class=\"font-tick tick\"></span> indicates that file is valid 360Giving format data.</li>\n"
+"\t\t\t   <li><span class=\"font-tick tick\"></span> indicates that the file is valid 360Giving format data.</li>\n"
 "\t\t\t   <li><span class=\"font-tick question\"></span> indicates additional checks where improvements to the quality or usefulness of the data might be made.</li>\n"
 "\t\t   </ul>\n"
 "\t\t   <p>A maximum of 10 additional checks can be displayed at once.</p>\n"
@@ -634,7 +634,7 @@ msgstr[1] "%(n_warnings)s Errores"
 msgid "Before checking your data we needed to convert it to JSON."
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:192
+#: cove_360/templates/cove_360/explore.html:194
 #, python-format
 msgid ""
 "The JSON data could not be converted to spreadsheet due to the following "
@@ -643,68 +643,88 @@ msgstr ""
 "El archivo JSON no pudo ser convertido a hoja de cálculo debido al siguiente"
 " error error: %(conversion_error)s"
 
-#: cove_360/templates/cove_360/explore.html:198
+#: cove_360/templates/cove_360/explore.html:200
 msgid "Conversion <strong>errors:</strong>"
 msgstr "<strong>Errores</strong> de conversión:"
 
-#: cove_360/templates/cove_360/explore.html:217
-msgid "Data does not use the 360Giving Standard "
+#: cove_360/templates/cove_360/explore.html:219
+msgid "This data does not use the 360Giving Standard "
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:217
+#: cove_360/templates/cove_360/explore.html:219
 #, python-format
 msgid " %(n_errors)s Error."
 msgid_plural "%(n_errors)s Errors "
 msgstr[0] "%(n_errors)s Error."
 msgstr[1] "%(n_errors)s Errores."
 
-#: cove_360/templates/cove_360/explore.html:220
-msgid "Data uses the 360Giving Standard"
-msgstr ""
-
-#: cove_360/templates/cove_360/explore.html:229
-msgid "Sorry your data is not yet using the 360Giving standard. We used the "
+#: cove_360/templates/cove_360/explore.html:222
+msgid "This data uses the 360Giving Standard"
 msgstr ""
 
 #: cove_360/templates/cove_360/explore.html:231
+msgid "Sorry your data is not yet using the 360Giving standard. We used the "
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:233
 msgid ""
 "Congratulations! Your data is using the 360Giving standard. We used the "
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:233
+#: cove_360/templates/cove_360/explore.html:235
 msgid "to check this."
 msgstr ""
 
+#: cove_360/templates/cove_360/explore.html:237
+msgid "This means that the data"
+msgstr ""
+
 #: cove_360/templates/cove_360/explore.html:239
+msgid " does not meet "
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:241
+msgid " meets the "
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:243
+msgid ""
+"the requirements of the <a "
+"href=\"http://www.threesixtygiving.org/standard/\">360Giving Standard</a>. "
+"Making sure your data uses the standard is important. Otherwise it cannot be"
+" used by other people and applications working with 360Giving format data. "
+msgstr ""
+
+#: cove_360/templates/cove_360/explore.html:247
 msgid ""
 "The following <strong>errors</strong> are preventing your data from being "
 "valid. Use the feedback below to find and resolve the issues in your file"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:307
+#: cove_360/templates/cove_360/explore.html:315
 msgid "Quality"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:308
+#: cove_360/templates/cove_360/explore.html:316
 #, python-format
 msgid " Quality checks"
 msgid_plural "%(n_quality_accuracy_checks)s Quality checks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: cove_360/templates/cove_360/explore.html:317
+#: cove_360/templates/cove_360/explore.html:325
 msgid ""
 "Quality checks failed due to an issue with the data. Fix some validation "
 "errors first."
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:323
+#: cove_360/templates/cove_360/explore.html:331
 msgid ""
 "Quality checks highlight areas where the source data may be incorrect or "
 "need further attention"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:326
+#: cove_360/templates/cove_360/explore.html:334
 msgid ""
 "\n"
 "\t    <p>For each check we give feedback on the issue and what steps may be taken to resolve it.</p>\n"
@@ -712,38 +732,38 @@ msgid ""
 "\t    "
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:335
-#: cove_360/templates/cove_360/explore.html:422
+#: cove_360/templates/cove_360/explore.html:343
+#: cove_360/templates/cove_360/explore.html:430
 msgid "Check Description"
 msgstr "Compruebe la Descripción"
 
-#: cove_360/templates/cove_360/explore.html:336
-#: cove_360/templates/cove_360/explore.html:423
+#: cove_360/templates/cove_360/explore.html:344
+#: cove_360/templates/cove_360/explore.html:431
 msgid "First 3 Locations"
 msgstr "Primeras 3 localizaciones"
 
-#: cove_360/templates/cove_360/explore.html:393
+#: cove_360/templates/cove_360/explore.html:401
 msgid "Usefulness"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:394
+#: cove_360/templates/cove_360/explore.html:402
 #, python-format
 msgid " Usefulness checks"
 msgid_plural "%(n_usefulness_checks)s Usefulness checks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: cove_360/templates/cove_360/explore.html:403
+#: cove_360/templates/cove_360/explore.html:411
 msgid ""
 "Usefulness checks failed due to an issue with the data. Fix some validation "
 "errors first."
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:409
+#: cove_360/templates/cove_360/explore.html:417
 msgid "Usefulness checks highlight ways the data could be made more useful."
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:412
+#: cove_360/templates/cove_360/explore.html:420
 msgid ""
 "\n"
 "\t    <p>For each check we highlight areas which contribute to the usefulness of the data and  suggest what changes could be made.</p>\n"
@@ -752,18 +772,18 @@ msgid ""
 "\t    "
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:480
+#: cove_360/templates/cove_360/explore.html:488
 msgid "Additional Fields"
 msgstr "Campos adicionales"
 
-#: cove_360/templates/cove_360/explore.html:481
+#: cove_360/templates/cove_360/explore.html:489
 #, python-format
 msgid " Additional fields"
 msgid_plural "%(n_additional_fields)s Additional fields"
 msgstr[0] ""
 msgstr[1] ""
 
-#: cove_360/templates/cove_360/explore.html:488
+#: cove_360/templates/cove_360/explore.html:496
 msgid ""
 "<strong>Additional fields</strong> were found in your data. Additional "
 "fields not covered by the 360Giving Standard headings may be included in the"
@@ -771,79 +791,79 @@ msgid ""
 "just the result of spelling mistakes."
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:509
+#: cove_360/templates/cove_360/explore.html:517
 msgid "Check your data"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:509
+#: cove_360/templates/cove_360/explore.html:517
 #, python-format
 msgid "%(n_grants)s Grant"
 msgid_plural "%(n_grants)s Grants"
 msgstr[0] "%(n_grants)s Subvención"
 msgstr[1] "%(n_grants)s Subvenciones"
 
-#: cove_360/templates/cove_360/explore.html:515
+#: cove_360/templates/cove_360/explore.html:523
 msgid "Review your data."
 msgstr "Revise sus datos."
 
-#: cove_360/templates/cove_360/explore.html:524
+#: cove_360/templates/cove_360/explore.html:532
 msgid "Grant identifiers:"
 msgstr "Identificadores de subvenciones"
 
-#: cove_360/templates/cove_360/explore.html:532
+#: cove_360/templates/cove_360/explore.html:540
 msgid "Funder organisation identifiers:"
 msgstr "Identificadores de organizaciones financiadoras:"
 
-#: cove_360/templates/cove_360/explore.html:541
+#: cove_360/templates/cove_360/explore.html:549
 msgid "Recipient organisation identifiers:"
 msgstr "Identificadores de organizaciones receptoras:"
 
-#: cove_360/templates/cove_360/explore.html:555
+#: cove_360/templates/cove_360/explore.html:563
 msgid "Grants Table"
 msgstr "Tabla de Subvenciones"
 
-#: cove_360/templates/cove_360/explore.html:597
+#: cove_360/templates/cove_360/explore.html:605
 msgid "Download data and share these results"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:604
+#: cove_360/templates/cove_360/explore.html:612
 msgid ""
 "You can share these test results with others by using the following url:"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:607
+#: cove_360/templates/cove_360/explore.html:615
 msgid ""
-"If your data is not suitable to share publicly then you should treat this "
-"url with care. Only share it with people who have permission to access the "
+"If your data is not suitable for sharing publicly then you should treat this"
+" url with care. Only share it with people who have permission to access the "
 "data."
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:609
+#: cove_360/templates/cove_360/explore.html:617
 msgid ""
 "After 7 days, the link will expire and the data is deleted from our servers "
 "- so the results will no longer be available. You can revisit these results "
 "until then."
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:611
+#: cove_360/templates/cove_360/explore.html:619
 msgid ""
 "You can download a copy of the data that has been tested by this tool. We "
 "provide the following formats to download:"
 msgstr ""
 
-#: cove_360/templates/cove_360/explore.html:614
+#: cove_360/templates/cove_360/explore.html:622
 msgid "Original file"
 msgstr "Archivo original"
 
-#: cove_360/templates/cove_360/explore.html:626
+#: cove_360/templates/cove_360/explore.html:634
 msgid "You can also download an"
 msgstr "Puede también descargar una"
 
-#: cove_360/templates/cove_360/explore.html:626
+#: cove_360/templates/cove_360/explore.html:634
 msgid "Excel Spreadsheet (.xlsx) with JSON field names"
 msgstr "Hoja de cálculo de Excel (.xlsx) con los nombres de los campos JSON"
 
-#: cove_360/templates/cove_360/explore.html:626
+#: cove_360/templates/cove_360/explore.html:634
 msgid "instead of titles as column headers"
 msgstr "en lugar de títulos como encabezamientos de columnas"
 
