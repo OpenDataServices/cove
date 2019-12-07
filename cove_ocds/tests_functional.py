@@ -51,7 +51,6 @@ def url_input_browser(request, server_url, browser, httpserver):
             source_url = httpserver.url + '/' + source_filename
 
         browser.get(server_url)
-        browser.find_element_by_partial_link_text('Link').click()
         time.sleep(0.5)
         browser.find_element_by_id('id_source_url').send_keys(source_url)
         browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
@@ -129,8 +128,8 @@ def test_accordion(server_url, browser):
 
     time.sleep(0.5)
     assert buttons() == [True, False, False]
-    assert 'Upload a file (.json, .csv, .xlsx)' in browser.find_elements_by_tag_name('label')[0].text
-    browser.find_element_by_partial_link_text('Link').click()
+    assert 'Supply a URL' in browser.find_elements_by_tag_name('label')[0].text
+    browser.find_element_by_partial_link_text('Upload').click()
     browser.implicitly_wait(1)
     time.sleep(0.5)
     assert buttons() == [False, True, False]
