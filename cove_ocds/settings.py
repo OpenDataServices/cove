@@ -78,6 +78,7 @@ COVE_CONFIG = {
     'root_list_path': 'releases',
     'root_id': 'ocid',
     'convert_titles': False,
+    'input_template': 'cove_ocds/input.html',
     'input_methods': ['upload', 'url', 'text'],
     'support_email': 'data@open-contracting.org'
 }

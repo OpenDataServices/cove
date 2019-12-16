@@ -12,14 +12,17 @@
 
   <h2> Checks </h2>
   {% for check in checks %}
-    <p>
+    <div>
       <label>Class name</label> {{check.class_name}}<br/>
       <label>Heading</label> {{check.heading}}<br/>
-      <label>Message</label>
-      {% for percentage_range, message in check.message %}
-         {{message}}<br/>
+      <label>Messages</label>
+      <table class=additional_checks_messages>
+	<tr><th> % range </th><th> Message </th></tr>
+      {% for percentage_range, message in check.messages %}
+      	<tr><td>{{percentage_range}} </td> <td> {{message}} </td></tr>
       {% endfor %}
+      </table>
       <label>Method</label> {{check.desc}}
-    </p>
+    </div>
   {% endfor %}
 {% endblock %} 

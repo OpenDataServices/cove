@@ -168,11 +168,11 @@ def get_grants_aggregates(json_data):
 def group_validation_errors(validation_errors, file_type, openpyxl_workbook):
     validation_errors_grouped = DefaultOrderedDict(list)
     for error_json, values in validation_errors:
+        error = json.loads(error_json)
         error_extra = {
             'values': values,
-            'spreadsheet_style_errors_table': spreadsheet_style_errors_table(values, openpyxl_workbook) if file_type in ['xlsx', 'csv'] else None,
+            'spreadsheet_style_errors_table': spreadsheet_style_errors_table(values, openpyxl_workbook) if (file_type in ['xlsx', 'csv'] and 'grants/' in error['path_no_number']) else None,
         }
-        error = json.loads(error_json)
         if error['validator'] == 'required':
             validation_errors_grouped['required'].append((error_json, error_extra))
         elif error['validator'] in ['format', 'oneOf']:

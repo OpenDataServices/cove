@@ -210,7 +210,7 @@ DEFAULT_OCDS_VERSION = settings.COVE_CONFIG['schema_version']
 METRICS_EXT = 'https://raw.githubusercontent.com/open-contracting/ocds_metrics_extension/master/extension.json'
 CODELIST_EXT = 'https://raw.githubusercontent.com/INAImexico/ocds_extendedProcurementCategory_extension/0ed54770c85500cf21f46e88fb06a30a5a2132b1/extension.json'
 UNKNOWN_URL_EXT = 'http://bad-url-for-extensions.com/extension.json'
-NOT_FOUND_URL_EXT = 'http://example.com/extension.json'
+NOT_FOUND_URL_EXT = 'https://standard.open-contracting.org/latest/en/404.json'
 
 
 def test_get_releases_aggregates():
