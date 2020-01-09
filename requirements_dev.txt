@@ -1,10 +1,10 @@
 pip==19.3.1
-Django==1.11.26 # rq.filter: <1.12
--e git+https://github.com/OpenDataServices/flatten-tool.git@511cc6d1ee83d77aa7a1efe965eb3dd7e4940c1b#egg=flattentool
--e git+https://github.com/open-contracting/lib-cove-ocds.git@56bbc1b75c86330536885c2ea4f03432c69c2579#egg=libcoveocds
+Django==1.11.27 # rq.filter: <1.12
+flattentool==0.9.0
+libcoveocds==0.7.4
+libcove==0.13.0
 -e git+https://github.com/OpenDataServices/lib-cove-web.git@55dad570493c9429a4821760c599b4a84f099304#egg=libcoveweb
--e git+https://github.com/OpenDataServices/lib-cove.git@269934219a1b20f1334518d3514493c48da309df#egg=libcove
-django-bootstrap3==12.0.0
+django-bootstrap3==12.0.3
 django-debug-toolbar==2.1
 requests==2.22.0
 cached-property==1.5.1
@@ -24,16 +24,16 @@ openpyxl==2.6.4
 
 
 flake8==3.7.9
-pytest==5.3.1
+pytest==5.3.2
 pytest-django==3.7.0
 pytest-cov==2.8.1
 pytest-localserver==0.5.0
-pytest-xdist==1.30.0
-coveralls==1.9.2
+pytest-xdist==1.31.0
+coveralls==1.10.0
 selenium==3.141.0
-transifex-client==0.13.6
+transifex-client==0.13.7
 libsass==0.19.4
-Sphinx==2.2.2
+Sphinx==2.3.1
 recommonmark==0.6.0
 sphinx-rtd-theme==0.4.3
 # Lock as later versions have a problem with slow generation of data
@@ -42,20 +42,20 @@ hypothesis==3.52.3
 alabaster==0.7.12
 apipkg==1.5
 attrs==19.3.0
-Babel==2.7.0
+Babel==2.8.0
 certifi==2019.11.28
 chardet==3.0.4
 commonmark==0.9.1
 contextlib2==0.5.5
-coverage==4.5.4
+coverage==5.0.2
 docopt==0.6.2
 docutils==0.15.2
 entrypoints==0.3
 et-xmlfile==1.0.1
 execnet==1.7.1
 idna==2.8
-imagesize==1.1.0
-importlib-metadata==1.1.0
+imagesize==1.2.0
+importlib-metadata==1.3.0
 jdcal==1.4.1
 Jinja2==2.10.3
 jsonref==0.2
@@ -63,15 +63,15 @@ LEPL==5.1.3
 lxml==4.4.2
 MarkupSafe==1.1.1
 mccabe==0.6.1
-more-itertools==8.0.0
-packaging==19.2
+more-itertools==8.0.2
+packaging==20.0
 pluggy==0.13.1
-py==1.8.0
+py==1.8.1
 pycodestyle==2.5.0
 pyflakes==2.1.1
 Pygments==2.5.2
-pyparsing==2.4.5
-pyrsistent==0.15.6
+pyparsing==2.4.6
+pyrsistent==0.15.7
 pytest-forked==1.1.3
 python-slugify==1.2.6
 pytz==2019.3
@@ -87,7 +87,7 @@ sphinxcontrib-serializinghtml==1.1.3
 sqlparse==0.3.0
 Unidecode==1.1.1
 urllib3==1.25.7
-wcwidth==0.1.7
+wcwidth==0.1.8
 webencodings==0.5.1
 Werkzeug==0.16.0
 zipp==0.6.0
