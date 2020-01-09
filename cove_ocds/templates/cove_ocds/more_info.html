@@ -27,3 +27,18 @@
     </div>
     </div>
   </div>
+
+  <div id="user-tracking" class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" data-target="#user-tracking-body">
+      <h3 class="panel-title"> {% blocktrans %}User Tracking{% endblocktrans %}</h3>
+    </div>
+
+    <div id="user-tracking-body" class="panel-body">
+      <h2 class="heading-in-panel"><small>{% trans "What information does the tool collect about website visitors?" %}</small></h2>
+      <p>{% blocktrans %}In order to understand who is using the Data Review Tool and how they use it, we collect basic analytics data about users. For more information and to learn how to opt out of this, see the {% endblocktrans %}<a href="{% url 'terms' %}#privacy_notice">{% trans "Privacy Notice" %}</a>.</p>
+      <p>{% blocktrans %}We also collect server logs, which we analyse from time to time to understand traffic to the site. Users cannot opt out of this data collection, and data is treated with respect. For more information, see the {% endblocktrans %}<a href="{% url 'terms' %}#privacy_notice">{% trans "Privacy Notice" %}</a>.</p>
+      {% if hotjar.id %}
+        <p>{% blocktrans %}In order to understand the behaviour of website visitors, to help us understand the most popular features and understand potential sources of frustration for website users, we are currently running a time-limited experiment using HotJar behaviour tracking. For more information and to learn how to opt out of this, see the {% endblocktrans %}<a href="{% url 'terms' %}#privacy_notice">{% trans "Privacy Notice" %}</a>.</p>
+      {% endif %}
+    </div>
+  </div>
