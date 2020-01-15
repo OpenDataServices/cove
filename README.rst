@@ -81,7 +81,7 @@ Steps to installation:
 
     git clone https://github.com/OpenDataServices/cove.git
     cd cove
-    virtualenv .ve --python=/usr/bin/python3
+    python3 -m venv .ve
     source .ve/bin/activate
     pip install -r requirements_dev.txt
     DJANGO_SETTINGS_MODULE={cove_MODULENAME}.settings python manage.py migrate

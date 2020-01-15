@@ -102,8 +102,6 @@ def explore_iati(request, pk):
         data_file = context['converted_path']
     else:
         data_file = db_data.original_file.file.name
-        context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name,
-                       request=request, flatten=request.POST.get('flatten'), xml=True, lib_cove_config=lib_cove_config))
 
     tree = get_tree(data_file)
     context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type, tree)
@@ -112,6 +110,17 @@ def explore_iati(request, pk):
     context['invalid_non_embedded_codelist_values'] = aggregate_results(context['invalid_non_embedded_codelist_values'])
     context['iati_identifiers_count'] = iati_identifier_count(tree)
     context['organisation_identifier_count'] = organisation_identifier_count(tree)
+
+    if file_type == 'xml':
+        if context['organisation_identifier_count']:
+            root_list_path = 'iati-organisation'
+            root_id = 'organisation-identifier'
+        else:
+            root_list_path = 'iati-activity'
+            root_id = None
+            
+        context.update(convert_json(db_data.upload_dir(), db_data.upload_url(), db_data.original_file.file.name, root_list_path=root_list_path,
+                       root_id=root_id, request=request, flatten=request.POST.get('flatten'), xml=True, lib_cove_config=lib_cove_config))
 
     if not db_data.rendered:
         db_data.rendered = True

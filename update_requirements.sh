@@ -6,7 +6,7 @@
 # Delete and recreate a virtualenv to ensure that we don't have any extra
 # packages installed in it
 rm -rf .ve
-virtualenv --python=python3 .ve
+python3 -m venv .ve
 source .ve/bin/activate
 
 if [[ "$1" == "--new-only" ]]; then
