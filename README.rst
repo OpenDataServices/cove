@@ -93,12 +93,6 @@ Then, for 360Giving run:
 
     DJANGO_SETTINGS_MODULE=cove_360.settings python manage.py runserver
 
-Or for OCDS run:
-
-.. code:: bash
-
-    DJANGO_SETTINGS_MODULE=cove_ocds.settings python manage.py runserver
-
 Follow the instructions in your terminal to open the application in your browser.
 
 Extra installation steps for IATI
@@ -230,28 +224,6 @@ WARNING: The ``./update_requirements`` script will delete and recreate your curr
 
 Command Line Interface
 ======================
-CoVE for OCDS and IATI can be run from the command line. To get a JSON file with validation errors plus other key information, use the following command:
-
-**OCDS**
-
-.. code:: bash
-
-    ./ocds-cli --options file-name
-
-``file-name`` can be a JSON or an Excel file.
-
-Options:
-
-``--output-dir -o``  Directory where the output will be created, defaults to the name of the file.
-
-``--exclude-file -e``  Do not include the file in the output directory.
-
-``--delete -d`` Delete the output directory if it already exists.
-
-``--schema-version -s``  Version of the schema to validate the data.
-
-``--convert -c``  Convert data from nested (JSON) to flat format (Excel and CSV). This option is redundant for spreadsheets as they are always converted to JSON format.
-
 
 **IATI**
 
