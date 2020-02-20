@@ -73,7 +73,7 @@ Steps to installation:
 * Create a virtual environment (note this application uses python3)
 * Activate the virtual environment
 * Install dependencies
-* Set up the database (sqlite3) (you need to pass the django settings for the module (ie. ocds, 360, iati) you want to run)
+* Set up the database (sqlite3) (you need to pass the django settings for the module (ie. 360, iati) you want to run)
 * Compile the translations
 * Run the development server
 

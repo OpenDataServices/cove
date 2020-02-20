@@ -29,7 +29,7 @@ Compared to the old way of running instances in this shared repository, the bene
 * Allows each standard to set their own repository policies - access, protected branches, etc.
 * Easier to use as there is no need to set a special `DJANGO_SETTINGS_MODULE` variable when running commands.
 
-For example, see [Cove for BODS](https://github.com/openownership/cove-bods).
+For example, see [Cove for BODS](https://github.com/openownership/cove-bods) or [Cove for OCDS](https://github.com/open-contracting/cove-ocds).
 
 
 Running a Cove instance in this shared Cove repository

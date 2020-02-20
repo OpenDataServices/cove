@@ -446,7 +446,7 @@ USEFULNESS_CHECKS_RESULTS = [
 
 @pytest.mark.parametrize('json_data', [
     # A selection of JSON strings we expect to give a 200 status code, even
-    # though some of them aren't valid OCDS
+    # though some of them aren't valid 360
     'true',
     'null',
     '1',
