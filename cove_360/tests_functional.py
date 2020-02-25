@@ -78,7 +78,7 @@ def server_url(request, live_server):
                                                   'The grants were awarded in GBP with a total value of £331,495',
                                                   'This file is not \'utf-8\' encoded (it is cp1252 encoded)'], True),
     # Test a non-valid file.
-    ('fundingtrust-grants_dc.txt', 'We can only process json, csv and xlsx files', False),
+    ('fundingtrust-grants_dc.txt', 'We can only process json, csv, ods and xlsx files', False),
     # Test a unconvertable spreadsheet (blank file)
     ('bad.xlsx', 'We think you tried to supply a spreadsheet, but we failed to convert it.', False),
     # Check that a file with a UTF-8 BOM converts correctly

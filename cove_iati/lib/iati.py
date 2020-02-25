@@ -425,6 +425,8 @@ def get_file_type(file):
         return 'xml'
     elif name.endswith('.xlsx'):
         return 'xlsx'
+    elif name.endswith('.ods'):
+        return 'ods'
     elif name.endswith('.csv'):
         return 'csv'
     else:
