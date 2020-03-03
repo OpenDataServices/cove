@@ -226,22 +226,22 @@
     <div id="validation-body" class="collapse">
       <div class="panel-body">
         <p class="explanation">
-        {% if validation_errors %}
-          {% trans "Sorry your data is not yet using the 360Giving standard. We used the " %}
-        {% else %}
-          {% trans "Congratulations! Your data is using the 360Giving standard. We used the " %}
-        {% endif %}
-	<a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas"> 360Giving JSON Package Schema</a> {% trans "to check this." %}
+          {% if validation_errors %}
+            {% trans "Sorry your data is not yet using the 360Giving standard. We used the " %}
+          {% else %}
+            {% trans "Congratulations! Your data is using the 360Giving standard. We used the " %}
+          {% endif %}
+          <a href="http://www.threesixtygiving.org/standard/reference/#toc-360giving-json-schemas"> 360Giving JSON Package Schema</a> {% trans "to check this." %}
         </p>
-	<div class="explore-help">{% trans "This means that the data" %}
-	  {% if validation_errors %}
-      {% trans " does not meet " %}
-    {% else %}
-      {% trans " meets the " %}
-    {% endif %}
-	
-	  {% blocktrans %}the requirements of the <a href="http://www.threesixtygiving.org/standard/">360Giving Standard</a>. Making sure your data uses the standard is important. Otherwise it cannot be used by other people and applications working with 360Giving format data. {% endblocktrans %}
-  </diV>
+        <div class="explore-help">{% trans "This means that the data" %}
+          {% if validation_errors %}
+            {% trans " does not meet " %}
+          {% else %}
+            {% trans " meets the " %}
+          {% endif %}
+
+          {% blocktrans %}the requirements of the <a href="http://www.threesixtygiving.org/standard/">360Giving Standard</a>. Making sure your data uses the standard is important. Otherwise it cannot be used by other people and applications working with 360Giving format data. {% endblocktrans %}
+        </diV>
         {% if validation_errors %}
           <br>
           <p class="explanation">&nbsp;{% trans "The following <strong>errors</strong> are preventing your data from being valid. Use the feedback below to find and resolve the issues in your file" %}</p>
