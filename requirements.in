@@ -1,4 +1,3 @@
-pip
 Django<1.12
 #^^ rq.filter: <1.12
 flattentool>=0.11.0
@@ -10,6 +9,7 @@ requests
 cached-property
 dealer==2.0.5
 django-environ
+zipp==1.2.0
 jsonschema
 json-merge-patch
 python-dateutil

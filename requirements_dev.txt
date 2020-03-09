@@ -1,5 +1,4 @@
-pip==20.0.2
-Django==1.11.28 # rq.filter: <1.12
+Django==1.11.29 # rq.filter: <1.12
 flattentool==0.11.0
 libcove==0.15.0
 -e git+https://github.com/OpenDataServices/lib-cove-web.git@55dad570493c9429a4821760c599b4a84f099304#egg=libcoveweb
@@ -9,6 +8,7 @@ requests==2.23.0
 cached-property==1.5.1
 dealer==2.0.5
 django-environ==0.4.5
+zipp==1.2.0
 jsonschema==3.2.0
 json-merge-patch==0.2
 python-dateutil==2.8.1
@@ -33,7 +33,7 @@ coveralls==1.11.1
 selenium==3.141.0
 transifex-client==0.13.7
 libsass==0.19.4
-Sphinx==2.4.3
+Sphinx==2.4.4
 recommonmark==0.6.0
 sphinx-rtd-theme==0.4.3
 # Lock as later versions have a problem with slow generation of data
@@ -66,13 +66,14 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 more-itertools==8.2.0
 odfpy==1.4.1
-packaging==20.1
+packaging==20.3
 pathlib2==2.3.5
+
 pluggy==0.13.1
 py==1.8.1
 pycodestyle==2.5.0
 pyflakes==2.1.1
-Pygments==2.5.2
+Pygments==2.6.1
 pyparsing==2.4.6
 pyrsistent==0.15.7
 pytest-forked==1.1.3
@@ -81,16 +82,15 @@ pytz==2019.3
 schema==0.7.1
 six==1.14.0
 snowballstemmer==2.0.0
-sphinxcontrib-applehelp==1.0.1
-sphinxcontrib-devhelp==1.0.1
+sphinxcontrib-applehelp==1.0.2
+sphinxcontrib-devhelp==1.0.2
 sphinxcontrib-htmlhelp==1.0.3
 sphinxcontrib-jsmath==1.0.1
-sphinxcontrib-qthelp==1.0.2
-sphinxcontrib-serializinghtml==1.1.3
-sqlparse==0.3.0
+sphinxcontrib-qthelp==1.0.3
+sphinxcontrib-serializinghtml==1.1.4
+sqlparse==0.3.1
 Unidecode==1.1.1
 urllib3==1.25.8
 wcwidth==0.1.8
 webencodings==0.5.1
 Werkzeug==1.0.0
-zipp==1.2.0
