@@ -342,7 +342,7 @@ def test_index_page_360(server_url, browser):
     browser.get(server_url)
     assert 'Data Quality Tool' in browser.find_element_by_class_name('title360').text
     assert 'How to use the 360Giving Data Quality Tool' in browser.find_element_by_tag_name('body').text
-    assert 'Summary Spreadsheet - Excel' in browser.find_element_by_tag_name('body').text
+    assert 'Summary Spreadsheet - ' in browser.find_element_by_tag_name('body').text
     assert 'JSON built to the 360Giving JSON schema' in browser.find_element_by_tag_name('body').text
     assert 'Multi-table data package - Excel' in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
@@ -390,7 +390,7 @@ def test_accordion(server_url, browser):
 
     time.sleep(0.5)
     assert buttons() == [True, False, False]
-    assert 'Upload a file (.json, .csv, .xlsx)' in browser.find_elements_by_tag_name('label')[0].text
+    assert 'Upload a file' in browser.find_elements_by_tag_name('label')[0].text
     browser.find_element_by_partial_link_text('Link').click()
     browser.implicitly_wait(1)
     time.sleep(0.5)
