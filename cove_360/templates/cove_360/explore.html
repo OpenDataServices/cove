@@ -25,19 +25,19 @@
       </div>
       <div id="data-supplied-body" class="collapse {% if conversion == 'flattenable' %}in{% endif %}">
         <div class="panel-body">
-           <p class="explanation">
-	   {% trans "Use this section to get an overview of the data and check this was what you were expecting to see." %}
-	   </p>
+          <p class="explanation">
+	          {% trans "Use this section to get an overview of the data and check this was what you were expecting to see." %}
+	        </p>
            <br>
-	   <p>
-	     {% trans "A file was " %}
+           <p>
+             {% trans "A file was " %}
              {% if source_url %}
-                {% trans "downloaded from " %} <a href="{{source_url}}">{{source_url}}</a>
+              {% trans "downloaded from " %} <a href="{{source_url}}">{{source_url}}</a>
              {% else %}
-               {% trans "uploaded " %}
+              {% trans "uploaded " %}
              {% endif %}
              {% trans "on " %} {{created_date}}.
-	   </p>
+           </p>
 
           {% if metadata %}
           <div class="row"> <!--Start Row (Detail Table)-->
@@ -94,14 +94,14 @@
                {% endif %}
               </li>
               {% if metadata.description %}
-              <li>
-                The file was issued on <strong> {{metadata.issued|slice:":10"}} </strong>
-              </li>
+                <li>
+                  The file was issued on <strong> {{metadata.issued|slice:":10"}} </strong>
+                </li>
               {% endif %}
               {% if metadata.modified %}
-              <li>
-                The file was modified on <strong> {{metadata.modified|slice:":10"}} </strong>
-              </li>
+                <li>
+                  The file was modified on <strong> {{metadata.modified|slice:":10"}} </strong>
+                </li>
               {% endif %}
               <li>
                {% trans "The file was " %}
@@ -113,48 +113,48 @@
                {% trans "on " %} {{created_date}}.
               </li>
               {% for currency_code, currency_aggregates in grants_aggregates.currencies.items %}
-              <li>
-
-                {% if currency_aggregates.count == 1 %}
-                  {% if currency_aggregates.count == grants_aggregates.count %}
-                    {% trans "The grant" %}
+                <li>
+                  {% if currency_aggregates.count == 1 %}
+                    {% if currency_aggregates.count == grants_aggregates.count %}
+                      {% trans "The grant" %}
+                    {% else %}
+                      {% trans "<strong>1 grant</strong>" %}
+                    {% endif %}
+                    {% blocktrans with amount_awarded=currency_aggregates.total_amount|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} was awarded in <strong>{{currency_code}}</strong> with a value of <strong>{{currency_symbol}}{{amount_awarded}}</strong>.{% endblocktrans %}
                   {% else %}
-                    {% trans "<strong>1 grant</strong>" %}
+                    {% if currency_aggregates.count == grants_aggregates.count %}
+                      {% trans "The grants" %}
+                    {% else %}
+                      <strong>{{currency_aggregates.count}}</strong> {% trans "<strong>grants</strong>" %}
+                    {% endif %}
+                    {% blocktrans with n_grants=currency_aggregates.count total_amount=currency_aggregates.total_amount|intcomma max_amount=currency_aggregates.max_amount|intcomma min_amount=currency_aggregates.min_amount|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} were awarded in <strong>{{currency_code}}</strong> with a total value of <strong>{{currency_symbol}}{{total_amount}}</strong> and individual awards ranging from <strong>{{currency_symbol}}{{min_amount}}</strong> (lowest) to <strong>{{currency_symbol}}{{max_amount}}</strong> (highest).{% endblocktrans %}
                   {% endif %}
-                  {% blocktrans with amount_awarded=currency_aggregates.total_amount|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} was awarded in <strong>{{currency_code}}</strong> with a value of <strong>{{currency_symbol}}{{amount_awarded}}</strong>.{% endblocktrans %}
-                {% else %}
-                  {% if currency_aggregates.count == grants_aggregates.count %}
-                    {% trans "The grants" %}
-                  {% else %}
-                    <strong>{{currency_aggregates.count}}</strong> {% trans "<strong>grants</strong>" %}
-                  {% endif %}
-                  {% blocktrans with n_grants=currency_aggregates.count total_amount=currency_aggregates.total_amount|intcomma max_amount=currency_aggregates.max_amount|intcomma min_amount=currency_aggregates.min_amount|intcomma currency_symbol=currency_aggregates.currency_symbol|safe %} were awarded in <strong>{{currency_code}}</strong> with a total value of <strong>{{currency_symbol}}{{total_amount}}</strong> and individual awards ranging from <strong>{{currency_symbol}}{{min_amount}}</strong> (lowest) to <strong>{{currency_symbol}}{{max_amount}}</strong> (highest).{% endblocktrans %}
-                {% endif %}
-              </li>
+                </li>
               {% endfor %}
               {% if csv_encoding and csv_encoding != "utf-8-sig" %}
-              <li>
-              {% blocktrans %} This file is <strong>not 'utf-8'</strong> encoded (it is <em>{{csv_encoding}}</em> encoded).{% endblocktrans %}
-              </li>
+                <li>
+                {% blocktrans %} This file is <strong>not 'utf-8'</strong> encoded (it is <em>{{csv_encoding}}</em> encoded).{% endblocktrans %}
+                </li>
              {% endif %}
            </ul>
-	   <div class="explore-help">
-		   <p>{% blocktrans %}If this appears incorrect the remainder of this page will help you to investigate what happened. </p>
-		   <p>The feedback is split into several sections</p>
-		   <ul class="list-unstyled">
-			   <li><span class="font-tick cross"></span> indicates <em>warnings</em> or <em>errors</em> which must be resolved prior to publishing 360Giving format data</li>
-			   <li><span class="font-tick tick"></span> indicates that the file is valid 360Giving format data.</li>
-			   <li><span class="font-tick question"></span> indicates additional checks where improvements to the quality or usefulness of the data might be made.</li>
-		   </ul>
-		   <p>A maximum of 10 additional checks can be displayed at once.</p>
-		   <p>If you make changes to the data prompted by this feedback, return here to upload the updated file for a new check.</p>
-		   {% endblocktrans %}</div>
-        {% if conversion == 'flattenable' %}
-          <form method="post">
-            <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% trans "Convert to Spreadsheet" %}</button>
-            {% csrf_token %}
-          </form>
-        {% endif %}
+          <div class="explore-help">
+            <p>{% blocktrans %}If this appears incorrect the remainder of this page will help you to investigate what happened. </p>
+            <p>The feedback is split into several sections</p>
+            <ul class="list-unstyled">
+              <li><span class="font-tick cross"></span> indicates <em>warnings</em> or <em>errors</em> which must be resolved prior to publishing 360Giving format data</li>
+              <li><span class="font-tick tick"></span> indicates that the file is valid 360Giving format data.</li>
+              <li><span class="font-tick question"></span> indicates additional checks where improvements to the quality or usefulness of the data might be made.</li>
+            </ul>
+            <p>A maximum of 10 additional checks can be displayed at once.</p>
+            <p>If you make changes to the data prompted by this feedback, return here to upload the updated file for a new check.</p>
+            {% endblocktrans %}
+          </div>
+          {% if conversion == 'flattenable' %}
+            <form method="post">
+              <button name="flatten" value="true" type="submit" class="btn btn-success btn-sm pull-right">{% trans "Convert to Spreadsheet" %}</button>
+              {% csrf_token %}
+            </form>
+          {% endif %}
         </div>
       </div>
     </div>
