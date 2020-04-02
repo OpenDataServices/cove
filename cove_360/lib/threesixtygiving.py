@@ -387,6 +387,9 @@ class AdditionalTest():
         heading_percentage = '{:.0%}'.format(self.count / self.grants_count)
         self.grants_percentage = int(heading_percentage[:-1])
 
+        if self.grants_percentage < 5:
+            return self.count
+
         return '{} of'.format(heading_percentage)
 
     def format_heading_count(self, message, test_class_type=None, verb='have'):
