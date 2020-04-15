@@ -11,6 +11,9 @@ from django.utils.html import mark_safe
 from libcove.lib.common import common_checks_context, get_orgids_prefixes
 from rangedict import RangeDict as range_dict
 
+QUALITY_TEST_CLASS = 'quality_accuracy'
+USEFULNESS_TEST_CLASS = 'usefulness'
+
 orgids_prefixes = get_orgids_prefixes()
 orgids_prefixes.append('360G')
 
@@ -285,13 +288,14 @@ def common_checks_360(context, upload_dir, json_data, schema_obj):
         'validation_errors_grouped': group_validation_errors(context['validation_errors'], context['file_type'], openpyxl_workbook)
     })
 
-    for test_classes_type in ['quality_accuracy', 'usefulness']:
+    for test_class_type in [QUALITY_TEST_CLASS, USEFULNESS_TEST_CLASS]:
         extra_checks = run_extra_checks(
-            json_data, cell_source_map, TEST_CLASSES[test_classes_type], ignore_errors=True, return_on_error=None)
+            json_data, cell_source_map, TEST_CLASSES[test_class_type], ignore_errors=True, return_on_error=None)
+
         context.update({
-            '{}_errored'.format(test_classes_type): extra_checks is None,
-            '{}_checks'.format(test_classes_type): extra_checks,
-            '{}_checks_count'.format(test_classes_type): (len(extra_checks) if extra_checks else 0) + (1 if context['data_only'] else 0)
+            '{}_errored'.format(test_class_type): extra_checks is None,
+            '{}_checks'.format(test_class_type): extra_checks,
+            '{}_checks_count'.format(test_class_type): (len(extra_checks) if extra_checks else 0) + (1 if context['data_only'] else 0)
         })
 
     return context
@@ -375,30 +379,39 @@ class AdditionalTest():
             'message': self.message
         }
 
-    def get_heading_count(self):
+    def get_heading_count(self, test_class_type):
+        if test_class_type == QUALITY_TEST_CLASS:
+            return self.count
+
         if self.grants_count == 1 and self.count == 1:
             self.grants_percentage = 100
             return '1'
+
         heading_percentage = '{:.0%}'.format(self.count / self.grants_count)
         self.grants_percentage = int(heading_percentage[:-1])
+
+        if self.grants_percentage < 5:
+            return self.count
+
         return '{} of'.format(heading_percentage)
 
-    def format_heading_count(self, message, verb='have'):
+    def format_heading_count(self, message, test_class_type=None, verb='have'):
         """Build a string with count of grants plus message
         
         The grant count phrase for the test is pluralized and
         prepended to message, eg: 1 grant has + message,
         2 grants have + message or 3 grants contain + message.
         """
-        noun = 'grant' if self.grants_count == 1 else 'grants'
+        count = self.count if test_class_type == QUALITY_TEST_CLASS else self.grants_count
+        noun = 'grant' if count == 1 else 'grants'
         if verb == 'have':
-            verb = 'has' if self.grants_count == 1 else verb
+            verb = 'has' if count == 1 else verb
         elif verb == 'do':
-            verb = 'does' if self.grants_count == 1 else verb
+            verb = 'does' if count == 1 else verb
         else:
             # Naively!
-            verb = verb + 's' if self.grants_count == 1 else verb
-        return '{} {} {} {}'.format(self.get_heading_count(), noun, verb, message)
+            verb = verb + 's' if self.count == 1 else verb
+        return '{} {} {} {}'.format(self.get_heading_count(test_class_type), noun, verb, message)
 
 
 class ZeroAmountTest(AdditionalTest):
@@ -429,7 +442,7 @@ class ZeroAmountTest(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], test_class_type=QUALITY_TEST_CLASS))
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -523,7 +536,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = self.format_heading_count(self.check_text['heading'], test_class_type=QUALITY_TEST_CLASS)
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -560,7 +573,7 @@ class FundingOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], test_class_type=QUALITY_TEST_CLASS))
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -599,7 +612,7 @@ class RecipientOrgCharityNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], test_class_type=QUALITY_TEST_CLASS))
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -638,7 +651,7 @@ class RecipientOrgCompanyNumber(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = mark_safe(self.format_heading_count(self.check_text['heading']))
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], test_class_type=QUALITY_TEST_CLASS))
         self.message = mark_safe(self.check_text['message'][self.grants_percentage])
 
 
@@ -781,7 +794,7 @@ class LooksLikeEmail(AdditionalTest):
                 self.json_locations.append(path_prefix + key)
                 self.count += 1
 
-        self.heading = self.format_heading_count(self.check_text['heading'], verb='contain')
+        self.heading = self.format_heading_count(self.check_text['heading'], test_class_type=QUALITY_TEST_CLASS, verb='contain')
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -911,7 +924,7 @@ class OrganizationIdLooksInvalid(AdditionalTest):
                         self.json_locations.append(id_location)
                         self.count += 1
 
-        self.heading = self.format_heading_count(self.check_text['heading'])
+        self.heading = self.format_heading_count(self.check_text['heading'], test_class_type=QUALITY_TEST_CLASS)
         self.message = self.check_text['message'][self.grants_percentage]
 
 
@@ -968,7 +981,7 @@ class NoDataSource(AdditionalTest):
 
 
 TEST_CLASSES = {
-    'quality_accuracy': [
+    QUALITY_TEST_CLASS: [
         ZeroAmountTest,
         FundingOrgUnrecognisedPrefix,
         RecipientOrgUnrecognisedPrefix,
@@ -978,7 +991,7 @@ TEST_CLASSES = {
         MoreThanOneFundingOrg,
         LooksLikeEmail,
     ],
-    'usefulness': [
+    USEFULNESS_TEST_CLASS: [
         RecipientOrg360GPrefix,
         FundingOrg360GPrefix,
         NoRecipientOrgCompanyCharityNumber,
