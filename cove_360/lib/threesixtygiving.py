@@ -536,7 +536,7 @@ class RecipientOrgUnrecognisedPrefix(AdditionalTest):
         except KeyError:
             pass
 
-        self.heading = self.format_heading_count(self.check_text['heading'], test_class_type=QUALITY_TEST_CLASS)
+        self.heading = mark_safe(self.format_heading_count(self.check_text['heading'], test_class_type=QUALITY_TEST_CLASS))
         self.message = self.check_text['message'][self.grants_percentage]
 
 
