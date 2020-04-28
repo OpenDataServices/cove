@@ -1,13 +1,13 @@
-Django<1.12
+Django>2.2<2.3
 #^^ rq.filter: <1.12
 flattentool>=0.11.0
-libcove>=0.16.1
--e git+https://github.com/OpenDataServices/lib-cove-web.git@v0.12.0#egg=libcoveweb
+libcove>=0.17.0
+-e git+https://github.com/OpenDataServices/lib-cove-web.git@v0.14.0#egg=libcoveweb
 django-bootstrap3
 django-debug-toolbar
 requests
 cached-property
-dealer==2.0.5
+dealer
 django-environ
 zipp==1.2.0
 jsonschema
