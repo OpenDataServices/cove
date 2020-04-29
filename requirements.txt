@@ -1,12 +1,12 @@
-Django==1.11.29 # rq.filter: <1.12
+Django==2.2.12 # rq.filter: <1.12
 flattentool==0.11.0
-libcove==0.16.1
--e git+https://github.com/OpenDataServices/lib-cove-web.git@36ad4df14916d7be28b2c1332427ad5140b35ed5#egg=libcoveweb
+libcove==0.17.0
+-e git+https://github.com/OpenDataServices/lib-cove-web.git@73654b76161dabe1d406cd28f8aca7fd94dceafb#egg=libcoveweb
 django-bootstrap3==12.0.3
 django-debug-toolbar==2.2
 requests==2.23.0
 cached-property==1.5.1
-dealer==2.0.5
+dealer==2.1.0
 django-environ==0.4.5
 zipp==1.2.0
 jsonschema==3.2.0
@@ -25,7 +25,7 @@ attrs==19.3.0
 certifi==2020.4.5.1
 chardet==3.0.4
 commonmark==0.9.1
-contextlib2==0.5.5
+contextlib2==0.6.0.post1
 defusedxml==0.6.0
 et-xmlfile==1.0.1
 idna==2.9
@@ -35,11 +35,11 @@ jsonref==0.2
 LEPL==5.1.3
 lxml==4.5.0
 odfpy==1.4.1
-
 pyrsistent==0.16.0
-pytz==2019.3
-schema==0.7.1
+pytz==2020.1
+schema==0.7.2
+sentry-sdk==0.14.3
 six==1.14.0
 sqlparse==0.3.1
-urllib3==1.25.8
+urllib3==1.25.9
 webencodings==0.5.1
