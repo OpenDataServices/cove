@@ -7,15 +7,16 @@
 
 {% block heading %}
   <div class="row">
-    <div class="col-md-2">
-        <a href="{% url 'index' %}"><img src="{% static 'dataexplore/360-giving-logo.svg' %}" alt="360Giving Logo" width=270 height=270 class="logo360"/></a>
+    <div class="col-md-5">
+      <a href="{% url 'index' %}"><img src="{% static 'dataexplore/360-giving-logo.svg' %}" alt="360Giving Logo" width="270"/></a>
     </div>
-    <div class="col-md-5 col-md-offset-2">
+    <div class="col-md-5">
       <div class="title360"><a href="{% url 'index' %}">Data Quality Tool</a></div>
       <div>Convert, Validate, Explore <a class="underline"  title="Go to 360Giving home page" href="http://www.threesixtygiving.org/">360Giving</a> Data</div>
     </div>
   </div>
 {% endblock %}
+
 
 {% block language_select %}{% endblock %}
 
