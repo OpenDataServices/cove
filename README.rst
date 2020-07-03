@@ -120,6 +120,8 @@ See https://cove.readthedocs.io/en/latest/deployment/
 Run tests
 =========
 
+`Set up chromedriver <https://chromedriver.chromium.org/getting-started>`_, then run:
+
 .. code:: bash
 
    ./run_tests.sh
