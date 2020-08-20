@@ -334,15 +334,12 @@ def check_charity_number(charity_number):
     return False
 
 
-def check_company_number(company_number):
-    if len(str(company_number)) != 8:
-        return False
-    try:
-        int(str(company_number)[2:])
-    except ValueError:
-        return False
+company_pattern_re = re.compile('^\w{8}$')
 
-    return True
+
+def check_company_number(company_number):
+    """ Company numbers must be 8 chars long and alpha numeric """
+    return company_pattern_re.match(company_number) is not None
 
 
 def flatten_dict(grant, path=""):
