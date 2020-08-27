@@ -267,7 +267,7 @@ def spreadsheet_style_errors_table(examples, openpyxl_workbook):
 
 
 def common_checks_360(context, upload_dir, json_data, schema_obj):
-    schema_name = schema_obj.release_pkg_schema_name
+    schema_name = schema_obj.pkg_schema_name
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, schema_name, context)
     cell_source_map = common_checks['cell_source_map']
 

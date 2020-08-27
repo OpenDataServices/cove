@@ -1,6 +1,6 @@
 Django==2.2.15 # rq.filter: <1.12
 flattentool==0.11.0
-libcove==0.17.0
+libcove==0.18.0
 -e git+https://github.com/OpenDataServices/lib-cove-web.git@73654b76161dabe1d406cd28f8aca7fd94dceafb#egg=libcoveweb
 django-bootstrap3==12.1.0
 django-debug-toolbar==2.2

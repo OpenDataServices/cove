@@ -533,11 +533,11 @@ def test_explore_unconvertable_json(client):
 
 def test_schema_360():
     schema = Schema360()
-    assert schema.release_schema_name == settings.COVE_CONFIG['schema_item_name']
-    assert schema.release_pkg_schema_name == settings.COVE_CONFIG['schema_name']
+    assert schema.schema_name == settings.COVE_CONFIG['schema_item_name']
+    assert schema.pkg_schema_name == settings.COVE_CONFIG['schema_name']
     assert schema.schema_host == settings.COVE_CONFIG['schema_host']
-    assert schema.release_schema_url == settings.COVE_CONFIG['schema_host'] + settings.COVE_CONFIG['schema_item_name']
-    assert schema.release_pkg_schema_url == settings.COVE_CONFIG['schema_host'] + settings.COVE_CONFIG['schema_name']
+    assert schema.schema_url == settings.COVE_CONFIG['schema_host'] + settings.COVE_CONFIG['schema_item_name']
+    assert schema.pkg_schema_url == settings.COVE_CONFIG['schema_host'] + settings.COVE_CONFIG['schema_name']
 
 
 def test_quality_accuracy_checks():
