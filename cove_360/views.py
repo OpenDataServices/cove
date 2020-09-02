@@ -71,13 +71,13 @@ def explore_360(request, pk, template='cove_360/explore.html'):
                     'msg': _('360Giving JSON should have an object as the top level, the JSON you supplied does not.'),
                 })
 
-            context.update(convert_json(upload_dir, upload_url, file_name, schema_url=schema_360.release_schema_url,
+            context.update(convert_json(upload_dir, upload_url, file_name, schema_url=schema_360.schema_url,
                                         request=request, flatten=request.POST.get('flatten'),
                                         lib_cove_config=lib_cove_config))
 
     else:
-        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, lib_cove_config, schema_360.release_schema_url,
-                                           schema_360.release_pkg_schema_url))
+        context.update(convert_spreadsheet(upload_dir, upload_url, file_name, file_type, lib_cove_config, schema_360.schema_url,
+                                           schema_360.pkg_schema_url))
         with open(context['converted_path'], encoding='utf-8') as fp:
             json_data = json.load(fp, parse_float=Decimal)
 
