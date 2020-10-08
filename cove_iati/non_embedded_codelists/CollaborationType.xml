@@ -7,6 +7,9 @@
             <narrative>OECD DAC classification used to determine the character of resource flows (bilateral or multilateral).</narrative>
         </description>
         <url>http://www.oecd.org/dac/stats/dacandcrscodelists.htm</url>
+        <category>
+            <narrative>Replicated</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item status="active">

@@ -7,6 +7,9 @@
             <narrative>This category is equivalent to US NGA's "Feature Class"</narrative>
         </description>
         <url>http://geonames.nga.mil/ggmagaz/</url>
+        <category>
+            <narrative>Replicated</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>

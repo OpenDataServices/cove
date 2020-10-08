@@ -6,6 +6,9 @@
     <description>
       <narrative>The Tag Vocabulary codelist defines external codelists which themselves provide codes and descriptions for tag elements.</narrative>
     </description>
+    <category>
+      <narrative>Non-Core</narrative>
+    </category>
   </metadata>
   <codelist-items>
     <codelist-item>
@@ -18,6 +21,26 @@
       </description>
       <url>http://agrovoc.uniroma2.it/agrovoc/agrovoc/en/</url>
     </codelist-item>
+    <codelist-item>
+      <code>2</code>
+      <name>
+        <narrative>UN Sustainable Development Goals (SDG)</narrative>
+      </name>
+      <description>
+        <narrative>A value from the top-level list of UN sustainable development goals (SDGs) (e.g. ‘1’)</narrative>
+      </description>
+      <url>http://reference.iatistandard.org/codelists/UNSDG-Goals/</url>
+    </codelist-item>
+    <codelist-item>
+      <code>3</code>
+      <name>
+        <narrative>UN Sustainable Development Goals (SDG) Targets</narrative>
+      </name>
+      <description>
+        <narrative>A value from the second-level list of UN sustainable development goals (SDGs) (e.g. ‘1.1’)</narrative>
+      </description>
+      <url>http://reference.iatistandard.org/codelists/UNSDG-Targets/</url>
+    </codelist-item>    
     <codelist-item>
       <code>99</code>
       <name>

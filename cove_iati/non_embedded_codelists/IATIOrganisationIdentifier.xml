@@ -15,6 +15,9 @@
             For general guidance about constructing Organisation Identifiers, please see http://iatistandard.org/organisation-identifiers/
             </narrative>
         </description>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>
@@ -46,7 +49,7 @@
                 <narrative>ACATBA is a charity that exists to promote local language development, Bible translation, literacy and community development in the Central African Republic. They also provide training in basic business skills; this allows beneficiaries to begin income-generating activities and small businesses.</narrative>
             </description>
             <url>http://www.wycliffe.net/organizations?entity=CXN&amp;continent=AFR&amp;country=CT</url>
-        </codelist-item>        
+        </codelist-item>
         <codelist-item>
             <code>XI-IATI-ADVZ</code>
             <name>
@@ -80,6 +83,16 @@
             <url>http://www.aias.gov.mz/</url>
         </codelist-item>
         <codelist-item>
+            <code>XI-IATI-AJS</code>
+            <name>
+                <narrative>Associations des Juristes Sénégalaises (AJS)</narrative>
+            </name>
+            <description>
+                <narrative>The Association des Juristes Sénégalaises (AJS) is an association of women lawyers who promote and contribute to the protection of the rights of individuals, particularly women and children.</narrative>
+            </description>
+            <url>http://www.femmesjuristes.org</url>
+        </codelist-item>        
+        <codelist-item>
             <code>XI-IATI-ATTIC</code>
             <name>
                 <narrative>Association of Technicians in Information Technology and Communication (ATTIC)</narrative>
@@ -88,6 +101,16 @@
                 <narrative>ATTIC, a non-political non-profit association in Republic of Chad, aims to help develop and integrate the promotion of information and communication technologies in the development policy of the formal and non-formal sectors, to fight against food insecurity and poverty, by strengthening the means of vulnerable households, refugees, returnees and internally displaced persons, and by providing socio-professional training and integration for vulnerable groups.</narrative>
             </description>
             <url>Website is still in progress</url>
+        </codelist-item>
+        <codelist-item>
+            <code>XI-IATI-BBDN</code>
+            <name>
+                <narrative>Bangladesh Business &amp; Disability Network</narrative>
+            </name>
+            <description>
+                <narrative>The Bangladesh Business and Disability Network (BBDN) is a voluntary group of representatives from business, industry, employers’ organizations and selected non-governmental and disabled peoples’ organizations. BBDN has a primary purpose of facilitating disability and work place diversity in Bangladesh from the perspective of the business and human rights cases.</narrative>
+            </description>
+            <url>https://www.bbdn.com.bd/</url>
         </codelist-item>
         <codelist-item>
             <code>XI-IATI-EBRD</code>
@@ -110,7 +133,7 @@
                 <narrative>Benedictine Eye Hospital (BEH) is a Private Not-For-Profit specialised hospital established by the Benedictine Fathers of Uganda for providing Eye Care and Community Based Rehabilitation (CBR) services to Persons with Disabilities (PWDs), with special emphasis on children. The hospital is registered by the Ministry of Health and serves the people of Eastern Uganda but is increasingly receiving clients from the rest of the country and neighbouring countries.</narrative>
             </description>
             <url>http://www.benedictineeyehospital.org</url>
-        </codelist-item>    
+        </codelist-item>
         <codelist-item>
             <code>XI-IATI-CABI</code>
             <name>
@@ -162,6 +185,16 @@
             <url>http://ec.europa.eu/echo/</url>
         </codelist-item>
         <codelist-item>
+            <code>XI-IATI-ESFD</code>
+            <name>
+                <narrative>Economic and Social Fund for Development</narrative>
+            </name>
+            <description>
+                <narrative>The Economic and Social Fund for Development (ESFD) is a governmental body dedicated to alleviate poverty in Lebanon through the creation of employment opportunities and through the improvement of living conditions in disadvantaged communities.</narrative>
+            </description>
+            <url>http://www.esfd.cdr.gov.lb/</url>
+        </codelist-item>
+        <codelist-item>
             <code>XI-IATI-EC_FPI</code>
             <name>
                 <narrative>European Commission – Service for Foreign Policy Instruments</narrative>
@@ -202,6 +235,16 @@
             <url>https://www.fiabel.be/nl</url>
         </codelist-item>
         <codelist-item>
+            <code>XI-IATI-GREDO</code>
+            <name>
+                <narrative>Gargaar Relief and Development Organization</narrative>
+            </name>
+            <description>
+                <narrative>GREDO is a national NGO that is based in Baidoa which is the capital city of South West Administration of Somalia. It exists to support and reach the most affected grass-root communities in those regions and in Somalia at large. Our support focuses on Emergency and Development programs with a key thematic sectors of Integrated Health, Nutrition and Wash, Education and FSL.</narrative>
+            </description>
+            <url>https://www.gredosom.org/</url>
+        </codelist-item>
+        <codelist-item>
             <code>XI-IATI-IADB</code>
             <name>
                 <narrative>Inter-American Development Bank</narrative>
@@ -230,6 +273,16 @@
                 <narrative>Since 2008, the International Climate Initiative (IKI) of the Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety (BMUB) has been financing climate and biodiversity projects in developing and newly industrialising countries, as well as in countries in transition.</narrative>
             </description>
             <url>https://www.international-climate-initiative.com/</url>
+        </codelist-item>
+        <codelist-item>
+            <code>XI-IATI-KHF</code>
+            <name>
+                <narrative>The King Hussein Foundation (KHF)</narrative>
+            </name>
+            <description>
+                <narrative>Their mission is to build upon King Hussein’s lifelong commitment to peace, sustainable community development and cross-cultural understanding through national and regional programs that promote education and leadership, economic empowerment and participatory decision-making.</narrative>
+            </description>
+            <url>http://www.kinghusseinfoundation.org/</url>
         </codelist-item>
         <codelist-item>
             <code>XI-IATI-LPI</code>
@@ -282,6 +335,26 @@
             <url>https://www.facebook.com/SomaliGenderJustice/</url>
         </codelist-item>
         <codelist-item>
+            <code>XI-IATI-SWSC</code>
+            <name>
+                <narrative>Somali Women Study Centre</narrative>
+            </name>
+            <description>
+                <narrative>SWSC is a women led NGO, founded in 2011 and based in Mogadishu and Kismayo, Somalia. SWSC seeks to achieve gender equality and social inclusion by empowering Somali women to exert their agency and improve their socio- economic status through strengthening their leadership, mentoring, capacity building, advocacy, and research to enable them articulate their specific needs in post- conflict Somalia.</narrative>
+            </description>
+            <url>https://www.somaliwomenstudiescentre.org/</url>
+        </codelist-item>
+        <codelist-item>
+            <code>XI-IATI-UCES</code>
+            <name>
+                <narrative>Umbrella for Community Education in Somalia</narrative>
+            </name>
+            <description>
+                <narrative>UCES is a national NGO that exists to work for advancement of Somalia Education by delivering formal and non-formal, alternative Education system to improve the knowledge of the Community through active advocacy and networking to deliver quality Education.</narrative>
+            </description>
+            <url>www.UCES.org</url>
+        </codelist-item>
+        <codelist-item>
             <code>XI-IATI-UDC</code>
             <name>
                 <narrative>United Darfur Committees</narrative>
@@ -301,6 +374,16 @@
             </description>
             <url>https://undg.org/</url>
         </codelist-item>
+        <codelist-item>
+            <code>XI-IATI-WARDI</code>
+            <name>
+                <narrative>Wardi Relief and Development Initiative</narrative>
+            </name>
+            <description>
+                <narrative>WARDI is a national NGO that exists to collaborate and provide assistance in all relevant sectors to the Somali communities. The key thematic intervention areas are Emergency relief, Food security and livelihood, Wash, Health and Nutrition, Education and Peace building and governance.</narrative>
+            </description>
+            <url>https://wardirelief.org/</url>
+        </codelist-item>
         <codelist-item activation-date="2016-12-15">
             <code>XI-IATI-WAI</code>
             <name>
@@ -310,6 +393,26 @@
                 <narrative>The WASH Alliance International is a consortium of member organisations in the Netherlands and partner organisations worldwide, working on sustainable WASH for everyone.</narrative>
             </description>
             <url>http://wash-alliance.org/</url>
+        </codelist-item>
+        <codelist-item activation-date="2020-05-12">
+            <code>XI-IATI-WBTF</code>
+            <name>
+                <narrative>World Bank Trust Funds (WBTF)</narrative>
+            </name>
+            <description>
+                <narrative>A trust fund (TF) is a financing arrangement established with contributions from one or more external development partner(s)/partners, and in some cases, from the World Bank Group, to support development-related activities. The World Bank acts as a trustee/administrator for development partners (donors) funds and implements the activities financed through trust funds in accordance with the signed agreements with donors. As part of fiduciary obligations, the World Bank as Trustee/administrator of trust funds maintains the records for trust funds activities distinct and separate from the activities of IBRD and IDA. The Bank also provides periodic report on the financial situation and results of the individual trust funds to donors.</narrative>
+            </description>
+            <url>https://www.worldbank.org/en/publication/trust-fund-annual-report-2019</url>
+        </codelist-item>
+        <codelist-item>
+            <code>XI-IATI-WVDRC</code>
+            <name>
+                <narrative>World Vision DRC</narrative>
+            </name>
+            <description>
+                <narrative>Our teams have been working in the DRC since 1984. Today, we are working to contribute to the measurable and sustainable improvement of well-being for 5,311,208 children and their communities through transformational development and humanitarian relief programmes focused on: health and nutrition, education, water and sanitation, protecting children, livelihoods and resilience, food aid, psychosocial support and the reintegration if displaced people.</narrative>
+            </description>
+            <url>https://www.wvi.org/congo-drc/about-us</url>
         </codelist-item>
     </codelist-items>
 </codelist>

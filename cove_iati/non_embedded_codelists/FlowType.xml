@@ -7,6 +7,9 @@
             <narrative>DAC/CRS distinction between ODA (official development assistance) and other types of resource flow.</narrative>
         </description>
         <url>http://www.oecd.org/dac/stats/dacandcrscodelists.htm</url>
+        <category>
+            <narrative>Replicated</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item status="active">

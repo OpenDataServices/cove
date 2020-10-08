@@ -10,6 +10,9 @@
             For general guidance about constructing Organisation Identifiers, please see http://iatistandard.org/organisation-identifiers/
         </narrative>
         </description>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>

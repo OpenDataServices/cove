@@ -4,6 +4,9 @@
             <narrative>Region</narrative>
         </name>
         <url>http://www.oecd.org/dac/stats/dacandcrscodelists.htm</url>
+        <category>
+            <narrative>Replicated</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>
@@ -41,7 +44,7 @@
                 <narrative xml:lang="fr">Afrique, régional</narrative>
             </name>
         </codelist-item>
-        <codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2020-05-04">
             <code>380</code>
             <name>
                 <narrative>West Indies, regional</narrative>
@@ -123,6 +126,69 @@
             <name>
                 <narrative>Developing countries, unspecified</narrative>
                 <narrative xml:lang="fr">Pays en développement, non spécifié</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2020-05-04">
+            <code>1027</code>
+            <name>
+                <narrative>Eastern Africa, regional</narrative>
+                <narrative xml:lang="fr">Afrique de l'est, régional</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2020-05-04">
+            <code>1028</code>
+            <name>
+                <narrative>Middle Africa, regional</narrative>
+                <narrative xml:lang="fr">Afrique centrale, régional</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2020-05-04">
+            <code>1029</code>
+            <name>
+                <narrative>Southern Africa, regional</narrative>
+                <narrative xml:lang="fr">Afrique australe, régional</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2020-05-04">
+            <code>1030</code>
+            <name>
+                <narrative>Western Africa, regional</narrative>
+                <narrative xml:lang="fr">Afrique occidentale, régional</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2020-05-04">
+            <code>1031</code>
+            <name>
+                <narrative>Caribbean, regional</narrative>
+                <narrative xml:lang="fr">Caraïbes, régional</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2020-05-04">
+            <code>1032</code>
+            <name>
+                <narrative>Central America, regional</narrative>
+                <narrative xml:lang="fr">Amérique centrale, régional</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2020-05-04">
+            <code>1033</code>
+            <name>
+                <narrative>Melanesia, regional</narrative>
+                <narrative xml:lang="fr">Mélanésie, régional</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2020-05-04">
+            <code>1034</code>
+            <name>
+                <narrative>Micronesia, regional</narrative>
+                <narrative xml:lang="fr">Micronésie, régional</narrative>
+            </name>
+        </codelist-item>
+        <codelist-item status="active" activation-date="2020-05-04">
+            <code>1035</code>
+            <name>
+                <narrative>Polynesia, regional</narrative>
+                <narrative xml:lang="fr">Polynésie, régional</narrative>
             </name>
         </codelist-item>
     </codelist-items>

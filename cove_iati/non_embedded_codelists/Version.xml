@@ -8,6 +8,9 @@
        Version of the IATI Standard 
     </narrative>
         </description>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>

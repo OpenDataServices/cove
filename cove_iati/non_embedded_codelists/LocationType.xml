@@ -11,6 +11,9 @@
         </narrative>
         </description>
         <url>http://geonames.nga.mil/namesgaz/</url>
+        <category>
+            <narrative>Replicated</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>

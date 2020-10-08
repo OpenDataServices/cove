@@ -3,6 +3,9 @@
         <name>
             <narrative>Organisation Type</narrative>
         </name>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>
@@ -55,7 +58,7 @@
                 <narrative>Partner Country based NGO</narrative>
             </name>
             <description>
-                <narrative>Partner country based NGO- NGOs not based in an aid recipient country and carrying out operations in one or more aid recipient countries.</narrative>
+                <narrative>Local and National NGO / CSO based in aid/assistance recipient country</narrative>
             </description>
         </codelist-item>
         <codelist-item>

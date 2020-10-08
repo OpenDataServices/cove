@@ -7,6 +7,9 @@
             <narrative>File format of published documents.</narrative>
         </description>
         <url>http://www.iana.org/assignments/media-types</url>
+        <category>
+            <narrative>Replicated</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>

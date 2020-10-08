@@ -3,6 +3,9 @@
         <name>
             <narrative>Verification Status</narrative>
         </name>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>
