@@ -6,6 +6,9 @@
         <description>
             <narrative>Geographic scope of activity</narrative>
         </description>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>
@@ -16,6 +19,7 @@
             </name>
             <description>
                 <narrative>The activity scope is global</narrative>
+                <narrative xml:lang="fr">L'activité est de portée mondiale</narrative>
             </description>
         </codelist-item>
         <codelist-item>
@@ -26,6 +30,7 @@
             </name>
             <description>
                 <narrative>The activity scope is a supranational region</narrative>
+                <narrative xml:lang="fr">La portée de l'activité concerne une région supranationale</narrative>
             </description>
         </codelist-item>
         <codelist-item>
@@ -36,6 +41,7 @@
             </name>
             <description>
                 <narrative>The activity scope covers multiple countries, that don't constitute a region</narrative>
+                <narrative xml:lang="fr">La portée de l'activité concerne de multiples pays qui ne constituent pas une région</narrative>
             </description>
         </codelist-item>
         <codelist-item>
@@ -46,36 +52,40 @@
             </name>
             <description>
                 <narrative>The activity scope covers one country</narrative>
+                <narrative xml:lang="fr">La portée de l'activité correspond à un pays</narrative>
             </description>
         </codelist-item>
         <codelist-item>
             <code>5</code>
             <name>
                 <narrative>Sub-national: Multi-first-level administrative areas</narrative>
-                <narrative xml:lang="fr">Infranational : multiples régions administratives de premier niveau</narrative>
+                <narrative xml:lang="fr">Infranational: multiples régions administratives de premier niveau</narrative>
             </name>
             <description>
                 <narrative>The activity scope covers more than one first-level subnational administrative areas (e.g. counties, provinces, states)</narrative>
+                <narrative xml:lang="fr">La portée de l'activité concerne plus d'une région administrative infranationale de premier niveau (p. ex. comtés, provinces, états)</narrative>
             </description>
         </codelist-item>
         <codelist-item>
             <code>6</code>
             <name>
                 <narrative>Sub-national: Single first-level administrative area</narrative>
-                <narrative xml:lang="fr">Infranational : Région administrative unique de premier niveau</narrative>
+                <narrative xml:lang="fr">Infranational: région administrative de premier niveau unique</narrative>
             </name>
             <description>
                 <narrative>The activity scope covers one first-level subnational administrative area (e.g. country, province, state)</narrative>
+                <narrative xml:lang="fr">La portée de l'activité concerne une seule région administrative infranationale de premier niveau (p. ex. comté, province, état)</narrative>
             </description>
         </codelist-item>
         <codelist-item>
             <code>7</code>
             <name>
                 <narrative>Sub-national: Single second-level administrative area</narrative>
-                <narrative xml:lang="fr">Infranational : Région administrative unique de deuxième niveau</narrative>
+                <narrative xml:lang="fr">Infranational: région administrative de second niveau unique</narrative>
             </name>
             <description>
                 <narrative>The activity scope covers one second-level subnational administrative area (e.g. municipality or district)</narrative>
+                <narrative xml:lang="fr">La portée de l'activité concerne une seule région administrative infranationale de deuxième niveau  (p. ex. municipalité ou district)</narrative>
             </description>
         </codelist-item>
         <codelist-item>
@@ -86,6 +96,7 @@
             </name>
             <description>
                 <narrative>The activity scope covers one single location (e.g. town, village, farm)</narrative>
+                <narrative xml:lang="fr">La portée de l'activité concerne un seul endroit (p. ex. ville, village, ferme)</narrative>
             </description>
         </codelist-item>
     </codelist-items>

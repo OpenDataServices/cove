@@ -4,53 +4,66 @@
             <narrative>Indicator Measure</narrative>
         </name>
         <description>
-            <narrative>To specify the language of titles, descriptions and documents</narrative>
+            <narrative>To specify how an indicator is being measured. This includes qualitative and quantitative values.</narrative>
         </description>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>
             <code>1</code>
             <name>
                 <narrative>Unit</narrative>
+                <narrative xml:lang="fr">Unité</narrative>
             </name>
             <description>
                 <narrative>The indicator is measured in units.</narrative>
+                <narrative xml:lang="fr">L'indicateur est mesuré à l'aide d'unités.</narrative>
             </description>
         </codelist-item>
         <codelist-item>
             <code>2</code>
             <name>
                 <narrative>Percentage</narrative>
+                <narrative xml:lang="fr">Pourcentage</narrative>
             </name>
             <description>
                 <narrative>The indicator is measured in percentages</narrative>
+                <narrative xml:lang="fr">L'indicateur est mesuré en pourcentage.</narrative>
             </description>
         </codelist-item>
         <codelist-item>
             <code>3</code>
             <name>
                 <narrative>Nominal</narrative>
+                <narrative xml:lang="fr">Nominal</narrative>
             </name>
             <description>
                 <narrative>The indicator is measured as a quantitative nominal scale.</narrative>
+                <narrative xml:lang="fr">L'indicateur est mesuré selon une échelle nominale quantitative.</narrative>
             </description>
         </codelist-item>
         <codelist-item>
             <code>4</code>
             <name>
                 <narrative>Ordinal</narrative>
+                <narrative xml:lang="fr">Ordinal</narrative>
             </name>
             <description>
                 <narrative>The indicator is measured as a quantitative ordinal scale.</narrative>
+                <narrative xml:lang="fr">L'indicateur est mesurée selon une échelle ordinale quantitative.</narrative>
             </description>
         </codelist-item>
         <codelist-item>
             <code>5</code>
             <name>
                 <narrative>Qualitative</narrative>
+                <narrative xml:lang="fr">Qualitatif</narrative>
             </name>
             <description>
                 <narrative>The indicator is qualitative.</narrative>
+                <narrative xml:lang="fr">L'indicateur est qualitatif.</narrative>
             </description>
         </codelist-item>
     </codelist-items>

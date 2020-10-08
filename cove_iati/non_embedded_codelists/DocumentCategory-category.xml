@@ -6,6 +6,9 @@
         <description>
             <narrative>This codelists exists to group the Document Category codelist into categories. It is not used as a codelist in its own right.</narrative>
         </description>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>

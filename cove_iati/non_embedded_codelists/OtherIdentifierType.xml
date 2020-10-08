@@ -4,6 +4,9 @@
             <narrative>Other Identifier Type</narrative>
             <narrative xml:lang="fr">Autre critère d’identification</narrative>
         </name>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>

@@ -4,6 +4,9 @@
             <narrative>Tied Status</narrative>
             <narrative xml:lang="fr">Condition de l’aide</narrative>
         </name>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>

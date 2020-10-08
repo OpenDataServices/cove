@@ -4,6 +4,9 @@
             <narrative>DAC 3 Digit Sector</narrative>
         </name>
         <url>http://www.oecd.org/dac/stats/dacandcrscodelists.htm</url>
+        <category>
+            <narrative>Replicated</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>
@@ -158,6 +161,15 @@
             <description>
                 <narrative/>
                 <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2014-12-31">
+            <code>230</code>
+            <name>
+                <narrative>ENERGY GENERATION AND SUPPLY</narrative>
+            </name>
+            <description>
+                <narrative>Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation.</narrative>
             </description>
         </codelist-item>
         <codelist-item>
@@ -372,8 +384,8 @@
         <codelist-item>
             <code>520</code>
             <name>
-                <narrative>Developmental Food Aid/Food Security Assistance</narrative>
-                <narrative xml:lang="fr">Aide Alimentaire Dévelopmentale/Sécurité Alimentaire</narrative>
+                <narrative>Development Food Assistance</narrative>
+                <narrative xml:lang="fr">Aide Alimentaire Dévelopmentale</narrative>
             </name>
             <description>
                 <narrative/>
@@ -431,8 +443,8 @@
                 <narrative xml:lang="fr">Prévention catastrophes/Préparation à leur survenue</narrative>
             </name>
             <description>
-                <narrative>See codes 41050 and 15220 for prevention of floods and conflicts.</narrative>
-                <narrative xml:lang="fr">Voir codes 41050 et 15220 pour la prévention des inondations et des conflits.</narrative>
+                <narrative>See code 43060 for disaster risk reduction.</narrative>
+                <narrative xml:lang="fr">Voir code 43060 pour la réduction des risques de catastrophes.</narrative>
             </description>
         </codelist-item>
         <codelist-item>
@@ -444,6 +456,15 @@
             <description>
                 <narrative/>
                 <narrative xml:lang="fr"/>
+            </description>
+        </codelist-item>
+        <codelist-item status="withdrawn" withdrawal-date="2012-12-31">
+            <code>920</code>
+            <name>
+                <narrative>SUPPORT TO NON- GOVERNMENTAL ORGANISATIONS (NGOs)</narrative>
+            </name>
+            <description>
+                <narrative>In the donor country.</narrative>
             </description>
         </codelist-item>
         <codelist-item>

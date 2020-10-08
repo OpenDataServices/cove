@@ -7,6 +7,9 @@
             <narrative>ISO 4217 Currency used for all transactions and budgets</narrative>
         </description>
         <url>http://www.iso.org/iso/home/standards/currency_codes.htm</url>
+        <category>
+            <narrative>Replicated</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>
@@ -850,7 +853,7 @@
             </description>
         </codelist-item>
         <codelist-item>
-          <code>STN</code>
+            <code>STN</code>
             <name>
                 <narrative>Dobra</narrative>
             </name>

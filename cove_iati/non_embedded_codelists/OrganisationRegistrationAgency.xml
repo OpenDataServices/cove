@@ -14,6 +14,9 @@
                 If org-id.guide does not contain an entry for the kind of organisation you need to identify, you can make a request a new list is included in the register following the `guidance <http://docs.org-id.guide/en/latest/contribute/>`__ or by getting in touch with org-id.guide at: contact@org-id.guide.
             ]]></narrative>
         </description>
+        <category>
+            <narrative>Replicated</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item public-database="0" status="active">

@@ -1,11 +1,15 @@
 <codelist name="EarmarkingCategory" xml:lang="en" complete="1" embedded="0">
     <metadata>
         <name>
-            <narrative>EarmarkingCategory</narrative>
+            <narrative>Earmarking Category</narrative>
         </name>
         <description>
             <narrative>This codelist has been created by IATI and is derived from the Grand Bargain Earmarking Modality codelist.</narrative>
         </description>
+        <url>https://reliefweb.int/sites/reliefweb.int/files/resources/Grand_Bargain_final_22_May_FINAL-2.pdf</url>
+        <category>
+            <narrative>Replicated</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>
@@ -43,6 +47,6 @@
             <description>
                 <narrative>Any or all of the Earmarking Modality codes I,J or K.</narrative>
             </description>
-        </codelist-item> 
+        </codelist-item>
     </codelist-items>
 </codelist>

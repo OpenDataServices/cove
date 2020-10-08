@@ -3,38 +3,44 @@
         <name>
             <narrative>Sector Vocabulary</narrative>
         </name>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>
             <code>1</code>
             <name>
                 <narrative>OECD DAC CRS Purpose Codes (5 digit)</narrative>
-                <narrative xml:lang="fr">Codes-objet à cinq chiffres du Système de notification des pays créanciers du Comité d'aide au développement de l'OCDE</narrative>
+                <narrative xml:lang="fr">Codes-secteurs OCDE CAD SNPC (5 chiffres)</narrative>
             </name>
             <description>
                 <narrative>The sector reported corresponds to an OECD DAC CRS 5-digit purpose code</narrative>
+                <narrative xml:lang="fr">Le secteur déclaré correspond à un code de secteur OCDE CAD SNPC à cinq chiffres</narrative>
             </description>
-            <url>http://www.oecd.org/dac/stats/dacandcrscodelists.htm</url>
+            <url>http://reference.iatistandard.org/codelists/Sector/</url>
         </codelist-item>
         <codelist-item>
             <code>2</code>
             <name>
                 <narrative>OECD DAC CRS Purpose Codes (3 digit)</narrative>
-                <narrative xml:lang="fr">Codes-objet à trois chiffres du Système de notification des pays créanciers du Comité d’aide au développement de l'OCDE</narrative>
+                <narrative xml:lang="fr">Codes-secteurs OCDE CAD SNPC (3 chiffres)</narrative>
             </name>
             <description>
                 <narrative>The sector reported corresponds to an OECD DAC CRS 3-digit purpose code</narrative>
+                <narrative xml:lang="fr">Le secteur déclaré correspond à un code de secteur OCDE CAD SNPC à trois chiffres</narrative>
             </description>
-            <url>http://www.oecd.org/dac/stats/dacandcrscodelists.htm</url>
+            <url>http://reference.iatistandard.org/codelists/SectorCategory/</url>
         </codelist-item>
         <codelist-item>
             <code>3</code>
             <name>
                 <narrative>Classification of the Functions of Government (UN)</narrative>
-                <narrative xml:lang="fr">Classification des fonctions des administrations publiques (ONU)</narrative>
+                <narrative xml:lang="fr">Classification des fonctions gouvernementales (ONU)</narrative>
             </name>
             <description>
                 <narrative>The sector reported corresponds to the UN Classification of the Functions of Government (CoFoG)</narrative>
+                <narrative xml:lang="fr">Le secteur déclaré correspond à la Classification des fonctions gouvernementales (COFOG) de l'ONU</narrative>
             </description>
             <url>http://unstats.un.org/unsd/cr/registry/regcst.asp?Cl=4</url>
         </codelist-item>
@@ -42,10 +48,11 @@
             <code>4</code>
             <name>
                 <narrative>Statistical classification of economic activities in the European Community</narrative>
-                <narrative xml:lang="fr">Nomenclature statistique des activités économiques dans la Communauté européenne</narrative>
+                <narrative xml:lang="fr">Classification statistique sur les activités économiques dans l'Union européenne</narrative>
             </name>
             <description>
                 <narrative>The sector reported corresponds to the statistical classifications of economic activities in the European Community</narrative>
+                <narrative xml:lang="fr">Le secteur déclaré correspond aux classifications statistiques des activités économiques dans l'Union européenne</narrative>
             </description>
             <url>http://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&amp;StrNom=NACE_REV2&amp;StrLanguageCode=EN</url>
         </codelist-item>
@@ -53,10 +60,11 @@
             <code>5</code>
             <name>
                 <narrative>National Taxonomy for Exempt Entities (USA)</narrative>
-                <narrative xml:lang="fr">Taxonomie nationale des entités exonérées (É.-U.)</narrative>
+                <narrative xml:lang="fr">Taxonomie nationale des entités exemptes (États-Unis)</narrative>
             </name>
             <description>
                 <narrative>The sector reported corresponds to the National Taxonomy for Exempt Entities (NTEE) - USA</narrative>
+                <narrative xml:lang="fr">Le secteur déclaré correspond à la taxonomie nationale des entités exonérées (NTEE) - États-Unis</narrative>
             </description>
             <url>http://nccs.urban.org/classification/NTEE.cfm</url>
         </codelist-item>
@@ -68,15 +76,18 @@
             </name>
             <description>
                 <narrative>The sector reported corresponds to AidData classifications</narrative>
+                <narrative xml:lang="fr">Le secteur déclaré  correspond aux classifications AidData</narrative>
             </description>
         </codelist-item>
         <codelist-item>
             <code>7</code>
             <name>
                 <narrative>SDG Goal</narrative>
+                <narrative xml:lang="fr">ODD (objectif)</narrative>
             </name>
             <description>
                 <narrative>A value from the top-level list of UN sustainable development goals (SDGs) (e.g. ‘1’)</narrative>
+                <narrative xml:lang="fr">Valeur tirée de la liste des principaux objectifs de développement durable (ODD) de l'ONU (p. ex. '1')</narrative>
             </description>
             <url>https://sustainabledevelopment.un.org/?menu=1300</url>
         </codelist-item>
@@ -84,9 +95,11 @@
             <code>8</code>
             <name>
                 <narrative>SDG Target</narrative>
+                <narrative xml:lang="fr">ODD (cible)</narrative>
             </name>
             <description>
                 <narrative>A value from the second-level list of UN sustainable development goals (SDGs) (e.g. ‘1.1’)</narrative>
+                <narrative xml:lang="fr">Valeur tirée de la liste des sous-objectifs de développement durable (ODD) de l'ONU (p. ex. '1.1')</narrative>
             </description>
             <url>http://unstats.un.org/sdgs/indicators/indicators-list/</url>
         </codelist-item>
@@ -94,9 +107,11 @@
             <code>9</code>
             <name>
                 <narrative>SDG Indicator</narrative>
+                <narrative xml:lang="fr">ODD (indicateur)</narrative>
             </name>
             <description>
                 <narrative>A value from the second-level list of UN sustainable development (SDG) indicators</narrative>
+                <narrative xml:lang="fr">Valeur tirée de la liste des indicateurs de développement durable (ODD) de deuxième niveau de l'ONU</narrative>
             </description>
             <url>http://unstats.un.org/sdgs/indicators/indicators-list/</url>
         </codelist-item>
@@ -104,9 +119,11 @@
             <code>10</code>
             <name>
                 <narrative>Humanitarian Global Clusters (Inter-Agency Standing Committee)</narrative>
+                <narrative xml:lang="fr">Groupes sectoriels d'aide humanitaire (Comité permanent interorganisations)</narrative>
             </name>
             <description>
                 <narrative>The sector reported corresponds to an Inter-Agency Standard Committee Humanitarian Global Cluster code</narrative>
+                <narrative xml:lang="fr">Le secteur déclaré correspond à un code de groupe sectoriel du Comité permanent interorganisations</narrative>
             </description>
             <url>https://data.humdata.org/dataset/global-coordination-groups-beta</url>
         </codelist-item>
@@ -128,6 +145,7 @@
             </name>
             <description>
                 <narrative>The sector reported corresponds to a sector vocabulary maintained by the reporting organisation for this activity</narrative>
+                <narrative xml:lang="fr">Le secteur déclaré correspond à un vocabulaire sectoriel maintenu par l'organisation déclarante aux fins de l'activité</narrative>
             </description>
         </codelist-item>
         <codelist-item>
@@ -138,7 +156,7 @@
             </name>
             <description>
                 <narrative>The sector reported corresponds to a sector vocabulary maintained by the reporting organisation for this activity (if they are referencing more than one)</narrative>
-                <narrative xml:lang="fr">Si plus d’un secteur est mentionné, le secteur indiqué correspond au vocabulaire utilisé par l’organisation déclarante en référence à cette activité</narrative>
+                <narrative xml:lang="fr">Le secteur déclaré correspond à un vocabulaire sectoriel maintenu par l'organisation déclarante aux fins de l'activité (si l'organisation en indique plus d'un)</narrative>
             </description>
         </codelist-item>
     </codelist-items>

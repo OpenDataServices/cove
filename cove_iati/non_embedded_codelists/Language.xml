@@ -4,6 +4,9 @@
             <narrative>Language</narrative>
         </name>
         <url>http://www.iso.org/iso/home/standards/language_codes.htm</url>
+        <category>
+            <narrative>Replicated</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>

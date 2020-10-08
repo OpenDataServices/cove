@@ -8,6 +8,9 @@
             <narrative>Condition type – e.g. policy, performance.</narrative>
             <narrative xml:lang="fr">Type de condition – p. ex., politique, performance</narrative>
         </description>
+        <category>
+            <narrative>Non-Core</narrative>
+        </category>
     </metadata>
     <codelist-items>
         <codelist-item>
