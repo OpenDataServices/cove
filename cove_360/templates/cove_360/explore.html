@@ -93,7 +93,7 @@
                  {% blocktrans with start_date=grants_aggregates.min_award_date %} awarded on <strong>{{start_date}}</strong>.{% endblocktrans %}{% else %}{% blocktrans with start_date=grants_aggregates.min_award_date end_date=grants_aggregates.max_award_date %}awarded between <strong>{{start_date}}</strong> and <strong>{{end_date}}</strong>.{% endblocktrans %}
                {% endif %}
               </li>
-              {% if metadata.description %}
+              {% if metadata.issued %}
                 <li>
                   The file was issued on <strong> {{metadata.issued|slice:":10"}} </strong>
                 </li>
