@@ -786,6 +786,8 @@ class LooksLikeEmail(AdditionalTest):
     def process(self, grant, path_prefix):
         flattened_grant = OrderedDict(flatten_dict(grant))
         for key, value in flattened_grant.items():
+            if 'email' in key:
+                continue
             if isinstance(value, str) and compiled_email_re.search(value):
                 self.failed = True
                 self.json_locations.append(path_prefix + key)

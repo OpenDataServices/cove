@@ -569,6 +569,20 @@ def con(value):
     return {'type': 'context', 'value': value}
 
 
+@pytest.mark.django_db
+def test_quality_check_email(client):
+    '''
+    Email fields (eg. Funding Org:Email or Recipient Org:Email) should not appear in `LooksLikeEmail` check.
+    'fundingproviders-grants-email.json' contains three emails, two of them in emails fields.
+    '''
+    data = SuppliedData.objects.create()
+    with open(os.path.join('cove_360', 'fixtures', 'fundingproviders-grants-email.json')) as fp:
+        data.original_file.save('fundingproviders-grants-email.json', UploadedFile(fp))
+    response = client.post(data.get_absolute_url(), {'flatten': 'true'})
+
+    assert b'1 grant contains text that looks like an email address' in response.content
+
+
 class FakeCell():
     def __init__(self, value):
         self.value = value
