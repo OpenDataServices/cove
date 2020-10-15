@@ -85,7 +85,13 @@ def explore_360(request, pk, template='cove_360/explore.html'):
 
     if hasattr(json_data, 'get') and hasattr(json_data.get('grants'), '__iter__'):
         context['grants'] = json_data['grants']
-        context['metadata'] = {key: value for key, value in json_data.items() if key != 'grants'}
+
+        context['metadata'] = {}
+        for key, value in json_data.items():
+            if key != 'grants':
+                if isinstance(value, dict):
+                    value = {k.lower(): v for k, v in value.items()}
+                context['metadata'][key.lower()] = value
     else:
         context['grants'] = []
         context['metadata'] = {}
