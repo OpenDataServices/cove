@@ -310,18 +310,21 @@
           </li>
           {% if not conversion_error %}
             {% if conversion == 'unflatten' %}
-            <li>
-              <a href="{{converted_url}}">{{XML}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
-            </li>
-            {% elif conversion == 'flatten' %}
-            <li>
-              <a href="{{converted_url}}.xlsx">{{xlsx}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
-            </li>
-              {% if request.cove_config.convert_titles %}
               <li>
-                <a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({% trans converted %})</a> {{converted_file_size_titles|filesizeformat}}
+                <a href="{{converted_url}}">{{XML}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
               </li>
+            {% elif conversion == 'flatten' %}
+              <li>
+                <a href="{{converted_url}}.xlsx">{{xlsx}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
+              </li>
+              {% if request.cove_config.convert_titles %}
+                <li>
+                  <a href="{{converted_url}}-titles.xlsx">{{xlsx_titles}} ({% trans converted %})</a> {{converted_file_size_titles|filesizeformat}}
+                </li>
               {% endif %}
+              <li>
+                <a href="{{converted_url}}.ods">{{ods}} ({% trans converted %})</a> {{converted_file_size|filesizeformat}}
+              </li>
             {% endif %}
           {% endif %}
         </ul>
