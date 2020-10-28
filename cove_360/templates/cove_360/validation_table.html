@@ -16,26 +16,20 @@
 {% for error_json, error_extra in validation_errors %}
 {% with error=error_json|json_decode %}
 <tr>
-  {% if error.message_safe %}
-    <td>
-      <p>
-        <strong>{{ error.message_safe | safe }}</strong>
-        {% if error.message_type in common_error_types %}
-          <a href="{% url 'common_errors' %}#{{error.message_type}}" target="_blank">(more info)</a>
-        {% endif %}
-      </p>
-      {% if 'schema_title' in error %}
-      <div class="well well-sm">
-        <h4>{{ error.schema_title }}</h4>
-        <p>{{ error.schema_description_safe | safe }}</p>
-      </div>
+  <td>
+    <p>
+      <strong>{{ error | html_error_msg }}</strong>
+      {% if error.message_type in common_error_types %}
+        <a href="{% url 'common_errors' %}#{{error.message_type}}" target="_blank">(more info)</a>
       {% endif %}
-    </td>
-  {% elif error.message_type in common_error_types %}
-  <td><a href="{% url 'common_errors' %}#{{error.message_type}}"> {{error.message}} </a></td>
-  {% else %}
-    <td>{{error.message}}</td> 
-  {% endif %}
+    </p>
+    {% if 'schema_title' in error %}
+    <div class="well well-sm">
+      <h4>{{ error.schema_title }}</h4>
+      <p>{{ error.schema_description_safe | safe }}</p>
+    </div>
+    {% endif %}
+  </td>
   <td class="text-center">
     {% if error_extra.values|length > 3 %}
       {% if error_prefix %}
