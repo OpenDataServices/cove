@@ -378,8 +378,7 @@ def test_common_index_elements(server_url, browser):
     assert 'Why do you delete data after seven days?' in browser.find_element_by_tag_name('body').text
     assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
     assert 'Terms & Conditions' in browser.find_element_by_tag_name('body').text
-    assert 'Open Data Services' in browser.find_element_by_tag_name('body').text
-    assert 'Open Data Services Co-operative' not in browser.find_element_by_tag_name('body').text
+    assert 'Open Data Services Co-operative' in browser.find_element_by_tag_name('body').text
     assert '360 Giving' not in browser.find_element_by_tag_name('body').text
 
 

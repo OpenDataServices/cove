@@ -1,12 +1,11 @@
 import codecs
 import csv
-import functools
 import itertools
 import json
 import logging
 from decimal import Decimal
 
-from cove.views import explore_data_context
+from cove.views import explore_data_context, cove_web_input_error
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -21,16 +20,6 @@ from .lib.threesixtygiving import TEST_CLASSES
 from .lib.threesixtygiving import common_checks_360
 
 logger = logging.getLogger(__name__)
-
-
-def cove_web_input_error(func):
-    @functools.wraps(func)
-    def wrapper(request, *args, **kwargs):
-        try:
-            return func(request, *args, **kwargs)
-        except CoveInputDataError as err:
-            return render(request, 'error.html', context=err.context)
-    return wrapper
 
 
 @cove_web_input_error
