@@ -1,0 +1,48 @@
+name: Test
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ '3.5']
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture: x64
+    - uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements_dev.txt') }}-${{ matrix.python-version }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install requirements_dev.txt
+      run: pip install -r requirements_dev.txt
+    - name: Install requirements_iati.txt
+      run: pip install -r requirements_iati.txt
+    - name: Install Ubuntu Translation Libraries
+      run: sudo apt install gettext
+    - name: Install vnu
+      run: wget "https://github.com/validator/validator/releases/download/16.3.3/vnu.jar_16.3.3.zip"; unzip vnu.jar_16.3.3.zip
+    - name: Test 360
+      run: DJANGO_SETTINGS_MODULE=cove_360.settings py.test -n 2 cove_360 --cov-append --cov --cov-report=
+    - name: Test IATI
+      run: DJANGO_SETTINGS_MODULE=cove_iati.settings py.test -n 2 cove_iati --cov-append --cov
+    - name: Migrate Database
+      run: DJANGO_SETTINGS_MODULE=cove_360.settings python manage.py migrate
+    - name: Compile Messages
+      run: DJANGO_SETTINGS_MODULE=cove_360.settings python manage.py compilemessages
+    - name: VNU tests
+      run: "DJANGO_SETTINGS_MODULE=cove_360.settings DEBUG=false ALLOWED_HOSTS=localhost python manage.py runserver & (sleep 10s; java -jar dist/vnu.jar 'http://localhost:8000/' 'http://localhost:8000/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_360/fixtures/fundingproviders_grants_2_grants.csv
+        ' 'http://localhost:8000/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_360/fixtures/badfile_all_validation_errors.xlsx
+        ' 'http://localhost:8000/?source_url=https://github.com/OpenDataServices/cove/raw/master/cove_360/fixtures/badfile_all_validation_errors.json
+        ' 'http://localhost:8000/common_errors/' 'http://localhost:8000/additional_checks/')"
+    - name: Report to coveralls
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: coveralls
