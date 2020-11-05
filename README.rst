@@ -1,9 +1,6 @@
 CoVE - Convert Validate & Explore
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://travis-ci.org/OpenDataServices/cove.svg?branch=master
-    :target: https://travis-ci.org/OpenDataServices/cove
-
 .. image:: https://requires.io/github/OpenDataServices/cove/requirements.svg?branch=master
      :target: https://requires.io/github/OpenDataServices/cove/requirements/?branch=master
      :alt: Requirements Status
