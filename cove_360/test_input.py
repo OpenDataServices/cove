@@ -19,7 +19,7 @@ def test_input(rf):
 @pytest.mark.django_db
 def test_input_post(rf):
     resp = v.data_input(fake_cove_middleware(rf.post('/', {
-        'source_url': 'https://raw.githubusercontent.com/OpenDataServices/flatten-tool/master/flattentool/tests/fixtures/tenders_releases_2_releases.json'
+        'source_url': 'https://raw.githubusercontent.com/OpenDataServices/flatten-tool/main/flattentool/tests/fixtures/tenders_releases_2_releases.json'
     })))
     assert resp.status_code == 302
     assert SuppliedData.objects.count() == 1
