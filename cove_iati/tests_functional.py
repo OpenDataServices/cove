@@ -141,7 +141,7 @@ def test_explore_iati_url_input(server_url, browser, httpserver, source_filename
         httpserver.serve_content(fp.read())
     if 'CUSTOM_SERVER_URL' in os.environ:
         # Use urls pointing to GitHub if we have a custom (probably non local) server URL
-        source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/master/cove_iati/fixtures/' + source_filename
+        source_url = 'https://raw.githubusercontent.com/OpenDataServices/cove/live/cove_iati/fixtures/' + source_filename
     else:
         source_url = httpserver.url + '/' + source_filename
 
