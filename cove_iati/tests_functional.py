@@ -243,7 +243,7 @@ def test_rulesets_table_toggle(server_url, browser, httpserver):
     if 'CUSTOM_SERVER_URL' in os.environ:
         # Use urls pointing to GitHub if we have a custom (probably non local) server URL
         source_url = ('https://raw.githubusercontent.com/OpenDataServices/cove/'
-                      'master/cove_iati/fixtures/basic_iati_ruleset_errors.xml')
+                      'live/cove_iati/fixtures/basic_iati_ruleset_errors.xml')
     else:
         source_url = httpserver.url + '/basic_iati_ruleset_errors.xml'
 
