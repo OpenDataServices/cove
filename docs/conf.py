@@ -21,8 +21,6 @@ import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 from recommonmark.transform import AutoStructify
-from recommonmark.parser import CommonMarkParser
-
 
 # -- General configuration ------------------------------------------------
 
@@ -36,6 +34,7 @@ from recommonmark.parser import CommonMarkParser
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
+    'recommonmark'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -45,11 +44,7 @@ templates_path = ['_templates']
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_parsers = {
-    '.md': CommonMarkParser,
-    }
 
-source_suffix = ['.rst', '.md']
 
 # The encoding of source files.
 #
