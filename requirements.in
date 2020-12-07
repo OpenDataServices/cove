@@ -1,5 +1,4 @@
 Django>2.2<2.3
-#^^ rq.filter: <1.12
 flattentool>=0.15.2
 libcove>=0.20.1
 libcoveweb>=0.18.1
