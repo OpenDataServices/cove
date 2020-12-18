@@ -1,4 +1,3 @@
-import functools
 import json
 import logging
 import os
@@ -6,7 +5,7 @@ import tempfile
 
 from cove.input.models import SuppliedData
 from cove.input.views import data_input
-from cove.views import explore_data_context
+from cove.views import cove_web_input_error, explore_data_context
 from django import forms
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
@@ -16,7 +15,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from libcove.config import LibCoveConfig
 from libcove.lib.converters import convert_spreadsheet, convert_json
-from libcove.lib.exceptions import CoveInputDataError
 
 from .lib.api import iati_json_output
 from .lib.iati import (
@@ -27,16 +25,6 @@ from .lib.process_codelists import aggregate_results
 from .lib.schema import SchemaIATI
 
 logger = logging.getLogger(__name__)
-
-
-def cove_web_input_error(func):
-    @functools.wraps(func)
-    def wrapper(request, *args, **kwargs):
-        try:
-            return func(request, *args, **kwargs)
-        except CoveInputDataError as err:
-            return render(request, 'error.html', context=err.context)
-    return wrapper
 
 
 class UploadForm(forms.ModelForm):
