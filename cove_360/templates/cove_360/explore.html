@@ -86,9 +86,9 @@
            <br>
            <ul class="left-space">
              <li>
-               {% blocktrans count n_grants=grants_aggregates.count %} This file contains <strong>{{n_grants}} grant</strong>{% plural %}This file contains <strong>{{n_grants}} grants</strong> {% endblocktrans %}
-               {% blocktrans count n_funders=grants_aggregates.distinct_funding_org_identifier|length %}from <strong>{{n_funders}} funder</strong>{% plural %}from <strong>{{n_funders}} funders</strong>{% endblocktrans %}
-               {% blocktrans count n_recipients=grants_aggregates.distinct_recipient_org_identifier|length %}to <strong>{{n_recipients}} recipient</strong>{% plural %}to <strong>{{n_recipients}} recipients</strong>{% endblocktrans %}
+               {% blocktrans count n_grants=grants_aggregates.count|default:0 %} This file contains <strong>{{n_grants}} grant</strong>{% plural %}This file contains <strong>{{n_grants}} grants</strong> {% endblocktrans %}
+               {% blocktrans count n_funders=grants_aggregates.distinct_funding_org_identifier|length|default:0 %}from <strong>{{n_funders}} funder</strong>{% plural %}from <strong>{{n_funders}} funders</strong>{% endblocktrans %}
+               {% blocktrans count n_recipients=grants_aggregates.distinct_recipient_org_identifier|length|default:0 %}to <strong>{{n_recipients}} recipient</strong>{% plural %}to <strong>{{n_recipients}} recipients</strong>{% endblocktrans %}
                {% if grants_aggregates.min_award_date == grants_aggregates.max_award_date %}
                  {% blocktrans with start_date=grants_aggregates.min_award_date %} awarded on <strong>{{start_date}}</strong>.{% endblocktrans %}{% else %}{% blocktrans with start_date=grants_aggregates.min_award_date end_date=grants_aggregates.max_award_date %}awarded between <strong>{{start_date}}</strong> and <strong>{{end_date}}</strong>.{% endblocktrans %}
                {% endif %}
@@ -514,7 +514,7 @@
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" data-target="#review-body">
       <h3 class="panel-title panel-title-explore"><span class="glyphicon glyphicon-list-alt"></span>
-        {% trans "Check your data" %} <small>{% blocktrans count n_grants=grants_aggregates.count %}{{n_grants}} Grant{% plural %}{{n_grants}} Grants{% endblocktrans %}</small>
+        {% trans "Check your data" %} <small>{% blocktrans count n_grants=grants_aggregates.count|default:0 %}{{n_grants}} Grant{% plural %}{{n_grants}} Grants{% endblocktrans %}</small>
         <span class="glyphicon glyphicon-collapse-down pull-right"></span>
       </h3>
     </div>
