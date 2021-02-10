@@ -82,7 +82,7 @@ def test_index_page_iati_links(server_url, browser, link_text, url):
     ('convert to spreadsheet', '?source_url=https://raw.githubusercontent.com/OpenDataServices/iati-sample-data/master/IATI-CoVE-sample-activity-standard.xml?raw=true'),
     ('xml', 'https://github.com/OpenDataServices/iati-sample-data/blob/master/IATI-CoVE-sample-activity-standard.xml'),
     ('convert to xml', '?source_url=https://docs.google.com/spreadsheets/d/1WkCin68arZkAIhjxmKkml0MAskLcw9mkHctNmB_gH2I/export?format=xlsx'),
-    ('google doc', 'https://docs.google.com/spreadsheets/d/1V8Cs4rivr6HDiDsne2bVECJiAXHcHBDiy_JEU9oPgRQ//edit?usp=sharing'),
+    ('google doc', 'https://docs.google.com/spreadsheets/d/1V8Cs4rivr6HDiDsne2bVECJiAXHcHBDiy_JEU9oPgRQ/edit?usp=sharing'),
     ])
 def test_activity_file_iait_links(server_url, browser, link_text, url):
     browser.get(server_url)
