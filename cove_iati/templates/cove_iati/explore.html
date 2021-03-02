@@ -330,6 +330,9 @@
         <div class="copy-div">
             <span class="copy-span"> {{ current_url }} <span id="copy-url-button" title="Click to copy." data-clipboard-text={{ current_url }} class="btn copy-button glyphicon glyphicon-copy" aria-hidden="true"></span> </span>
         </div>
+        <h4><span class="glyphicon glyphicon-new-window"></span> Preview</h4>
+        <p>Generate a private d-preview site with the IATI xml. For preview purposes only. Data will not be uploaded to the main live d-portal website.</p>
+        <p><a target="_blank" href="http://d-preview.codeforiati.org/upload?xmlurl={{ request.scheme }}://{{ request.get_host }}{% if conversion == 'unflatten' %}{{ converted_url }}{% else %}{{ original_file.url }}{% endif %}" class="btn btn-success btn-sm">Generate a d-preview</a></p>
         {% comment %}Translators: Paragraph that describes the application{% endcomment %}
         <br>
         <p>{% blocktrans %}After 7 days all uploaded data is deleted from our servers, and the results will no longer be available. Anyone using the link to this page after that will be shown a message that tells them the file has been removed.{% endblocktrans %}</p>
