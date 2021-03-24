@@ -521,16 +521,6 @@ def test_explore_unconvertable_spreadsheet(client):
     assert b'We think you tried to supply a spreadsheet, but we failed to convert it.' in resp.content
 
 
-@pytest.mark.django_db
-def test_explore_unconvertable_json(client):
-    data = SuppliedData.objects.create()
-    with open(os.path.join('cove_360', 'fixtures', 'unconvertable_json.json')) as fp:
-        data.original_file.save('unconvertable_json.json', UploadedFile(fp))
-    resp = client.post(data.get_absolute_url(), {'flatten': 'true'})
-    assert resp.status_code == 200
-    assert b'could not be converted' in resp.content
-
-
 def test_schema_360():
     schema = Schema360()
     assert schema.schema_name == settings.COVE_CONFIG['schema_item_name']
