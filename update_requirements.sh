@@ -6,8 +6,10 @@
 # Delete and recreate a virtualenv to ensure that we don't have any extra
 # packages installed in it
 rm -rf .ve
-python3.5 -m venv .ve
+python3.6 -m venv .ve
 source .ve/bin/activate
+
+pip install --upgrade pip
 
 if [[ "$1" == "--new-only" ]]; then
     # If --new-only is supplied then we install the current versions of
