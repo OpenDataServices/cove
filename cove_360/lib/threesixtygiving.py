@@ -1,4 +1,5 @@
 import datetime
+import functools
 import itertools
 import json
 import re
@@ -16,7 +17,6 @@ from rangedict import RangeDict as range_dict
 QUALITY_TEST_CLASS = 'quality_accuracy'
 USEFULNESS_TEST_CLASS = 'usefulness'
 
-GRANT_DATES = {}
 DATES_JSON_LOCATION = {
     'award_date': '/id',
     'planned_start_date': '/plannedDates/0/startDate',
@@ -1006,8 +1006,7 @@ class ImpossibleDates(AdditionalTest):
     )
 
     def process(self, grant, path_prefix):
-        id = grant.get('id')
-        grant_dates = GRANT_DATES.get(id)
+        grant_dates = create_grant_dates_dict(Grant(grant))
 
         if grant_dates:
             for date_type, date_format_error in (
@@ -1047,8 +1046,7 @@ class PlannedStartDateBeforeEndDate(AdditionalTest):
     )
 
     def process(self, grant, path_prefix):
-        id = grant.get('id')
-        grant_dates = GRANT_DATES.get(id)
+        grant_dates = create_grant_dates_dict(Grant(grant))
 
         if grant_dates:
             planned_start_date = grant_dates.get('planned_start_date', {}).get('datetime_date')
@@ -1079,8 +1077,7 @@ class ActualStartDateBeforeEndDate(AdditionalTest):
     )
 
     def process(self, grant, path_prefix):
-        id = grant.get('id')
-        grant_dates = GRANT_DATES.get(id)
+        grant_dates = create_grant_dates_dict(Grant(grant))
 
         if grant_dates:
             actual_start_date = grant_dates.get('actual_start_date', {}).get('datetime_date')
@@ -1110,8 +1107,7 @@ class FarFuturePlannedDates(AdditionalTest):
     )
 
     def process(self, grant, path_prefix):
-        id = grant.get('id')
-        grant_dates = GRANT_DATES.get(id)
+        grant_dates = create_grant_dates_dict(Grant(grant))
 
         if grant_dates:
             for date_type, input_date in (
@@ -1143,8 +1139,7 @@ class FarFutureActualDates(AdditionalTest):
     )
 
     def process(self, grant, path_prefix):
-        id = grant.get('id')
-        grant_dates = GRANT_DATES.get(id)
+        grant_dates = create_grant_dates_dict(Grant(grant))
 
         if grant_dates:
             for date_type, input_date in (
@@ -1175,8 +1170,7 @@ class FarPastDates(AdditionalTest):
     )
 
     def process(self, grant, path_prefix):
-        id = grant.get('id')
-        grant_dates = GRANT_DATES.get(id)
+        grant_dates = create_grant_dates_dict(Grant(grant))
 
         if grant_dates:
             for date_type, input_date in (
@@ -1212,8 +1206,7 @@ class PostDatedAwardDates(AdditionalTest):
     )
 
     def process(self, grant, path_prefix):
-        id = grant.get('id')
-        grant_dates = GRANT_DATES.get(id)
+        grant_dates = create_grant_dates_dict(Grant(grant))
 
         if grant_dates:
             award_date = grant_dates.get('award_date', {}).get('datetime_date')
@@ -1282,20 +1275,28 @@ def convert_string_date_to_datetime(input_date):
     return datetime_date, error_msg
 
 
+class Grant:
+    def __init__(self, grant):
+        self.grant = grant
+
+    def __hash__(self):
+        return hash(self.grant.get("id"))
+
+
+@functools.lru_cache(maxsize=None)
 def create_grant_dates_dict(grant):
     """
     Creates the following dict:
 
-    GRANT_DATES: {'id': { 'date_type': {'datetime_date': datetime_date, 'date_format_error': error_msg}}}
-
-    Dates are needed in several additional checks. With this dict, dates are converted just once.
+    grant_dates: { 'date_type': {'datetime_date': datetime_date, 'date_format_error': error_msg}}
     """
-    id = grant.get("id")
-    award_date = grant.get("awardDate")
-    planned_start_date = grant.get("plannedDates", [{}])[0].get('startDate')
-    planned_end_date = grant.get("plannedDates", [{}])[0].get('endDate')
-    actual_start_date = grant.get("actualDates", [{}])[0].get('startDate')
-    actual_end_date = grant.get("actualDates", [{}])[0].get('endDate')
+    grant_dates = {}
+
+    award_date = grant.grant.get("awardDate")
+    planned_start_date = grant.grant.get("plannedDates", [{}])[0].get('startDate')
+    planned_end_date = grant.grant.get("plannedDates", [{}])[0].get('endDate')
+    actual_start_date = grant.grant.get("actualDates", [{}])[0].get('startDate')
+    actual_end_date = grant.grant.get("actualDates", [{}])[0].get('endDate')
 
     for date_type, input_date in [
         ["award_date", award_date],
@@ -1305,7 +1306,9 @@ def create_grant_dates_dict(grant):
         if input_date:
             datetime_date, error_msg = convert_string_date_to_datetime(input_date)
 
-            GRANT_DATES.setdefault(id, {})[date_type] = {'datetime_date': datetime_date, 'date_format_error': error_msg}
+            grant_dates[date_type] = {'datetime_date': datetime_date, 'date_format_error': error_msg}
+
+    return grant_dates
 
 
 @tools.ignore_errors
@@ -1315,8 +1318,6 @@ def run_extra_checks(json_data, cell_source_map, test_classes):
     test_instances = [test_cls(grants=json_data['grants']) for test_cls in test_classes]
 
     for num, grant in enumerate(json_data['grants']):
-        create_grant_dates_dict(grant)
-
         for test_instance in test_instances:
             test_instance.process(grant, 'grants/{}'.format(num))
 
