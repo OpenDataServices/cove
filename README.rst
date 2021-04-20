@@ -16,7 +16,13 @@ Development work on CoVE by Open Data Services is carried out in sprints. The is
 Introduction
 ============
 
-CoVE is an web application to Convert, Validate and Explore data following certain open data standards - currently 360Giving and the Open Contracting Data standard. http://cove.opendataservices.coop
+CoVE is an web application to Convert, Validate and Explore data following certain open data standards:
+
+* 360Giving Data Standard - https://dataquality.threesixtygiving.org/
+* Open Contracting Data Standard (OCDS) - https://standard.open-contracting.org/review/
+* Open Contracting for Infrastructure Data Standard (OC4IDS) - https://standard.open-contracting.org/infrastructure/review/
+* IATI Standard - https://iati.cove.opendataservices.coop/
+* Beneficial Ownership Data Standard (BODS) - https://datareview.openownership.org/
 
 Why convert data?
 +++++++++++++++++
