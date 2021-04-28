@@ -1,5 +1,5 @@
 Django==2.2.20 # rq.filter: <1.12
-flattentool==0.16.0
+flattentool==0.17.0
 libcove==0.22.1
 libcoveweb==0.21.1
 django-bootstrap3==14.2.0
