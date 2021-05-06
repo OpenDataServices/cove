@@ -325,8 +325,8 @@ def test_flattentool_warnings(server_url, browser, httpserver, monkeypatch, warn
 
 
 @pytest.mark.parametrize(('link_text', 'expected_text', 'css_selector', 'url'), [
-    ('360Giving', 'Open data for grantmaking', 'h2.hero__title', 'http://www.threesixtygiving.org/'),
-    ('360Giving Data Standard', 'The 360Giving Data Standard', 'h2', 'http://www.threesixtygiving.org/standard/'),
+    ('360Giving', 'Open data for grantmaking', '.hero__title', 'http://www.threesixtygiving.org/'),
+    ('360Giving Data Standard', 'The 360Giving Data Standard', 'h1', 'http://www.threesixtygiving.org/standard/'),
     ])
 def test_footer_360(server_url, browser, link_text, expected_text, css_selector, url):
     browser.get(server_url)
