@@ -104,8 +104,6 @@ importlib-metadata==1.7.0
     #   pytest
 iniconfig==1.1.1
     # via pytest
-jdcal==1.4.1
-    # via openpyxl
 jinja2==2.11.3
     # via sphinx
 json-merge-patch==0.2
@@ -136,7 +134,7 @@ mccabe==0.6.1
     # via flake8
 odfpy==1.4.1
     # via flattentool
-openpyxl==2.6.4
+openpyxl==3.0.7
     # via
     #   -r requirements.in
     #   flattentool

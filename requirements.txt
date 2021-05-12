@@ -63,8 +63,6 @@ importlib-metadata==1.7.0
     # via
     #   django-bootstrap3
     #   jsonschema
-jdcal==1.4.1
-    # via openpyxl
 json-merge-patch==0.2
     # via -r requirements.in
 jsonref==0.2
@@ -87,7 +85,7 @@ lxml==4.6.3
     # via flattentool
 odfpy==1.4.1
     # via flattentool
-openpyxl==2.6.4
+openpyxl==3.0.7
     # via
     #   -r requirements.in
     #   flattentool
