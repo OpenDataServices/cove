@@ -62,4 +62,6 @@ by Bootswatch{% endblocktrans %}</p>
   {% include "cove_iati/more_info.html" %}
 {% endblock %}
 
-
+{% block version_link %}
+<p class="text-muted">{% blocktrans %}Running version {% endblocktrans %}<a href="https://github.com/OpenDataServices/cove/tree/{{ request.tag }}">{{ request.tag }}</a></p>
+{% endblock %}

@@ -9,7 +9,25 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 env = environ.Env(  # set default values and casting
     DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
+    SENTRY_DSN=(str, ''),
 )
+
+# We use the setting to choose whether to show the section about Sentry in the
+# terms and conditions
+SENTRY_DSN = env('SENTRY_DSN')
+
+if SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+    from sentry_sdk.integrations.logging import ignore_logger
+
+    ignore_logger('django.security.DisallowedHost')
+    sentry_sdk.init(
+        dsn=env('SENTRY_DSN'),
+        integrations=[DjangoIntegration()]
+    )
+
+DEALER_TYPE = 'git'
 
 PIWIK = settings.PIWIK
 GOOGLE_ANALYTICS_ID = settings.GOOGLE_ANALYTICS_ID
@@ -20,11 +38,11 @@ GOOGLE_ANALYTICS_ID = settings.GOOGLE_ANALYTICS_ID
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-DEALER_TYPE = settings.DEALER_TYPE
 SECRET_KEY = settings.SECRET_KEY
 DEBUG = settings.DEBUG
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 MIDDLEWARE = settings.MIDDLEWARE
+MIDDLEWARE += ('dealer.contrib.django.Middleware',)
 ROOT_URLCONF = settings.ROOT_URLCONF
 TEMPLATES = settings.TEMPLATES
 WSGI_APPLICATION = settings.WSGI_APPLICATION

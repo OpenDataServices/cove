@@ -26,7 +26,9 @@ cached-property==1.5.2
     #   -r requirements.in
     #   libcove
 certifi==2020.12.5
-    # via requests
+    # via
+    #   requests
+    #   sentry-sdk
 cffi==1.14.5
     # via persistent
 chardet==4.0.0
@@ -193,8 +195,6 @@ pytz==2021.1
     #   flattentool
 rangedict==0.1.6
     # via -r requirements.in
-raven==6.10.0
-    # via -r requirements.in
 recommonmark==0.7.1
     # via -r requirements_dev.in
 requests==2.25.1
@@ -215,6 +215,8 @@ schema==0.7.4
     # via flattentool
 selenium==3.141.0
     # via -r requirements_dev.in
+sentry-sdk==1.1.0
+    # via -r requirements.in
 six==1.15.0
     # via
     #   bleach
@@ -270,6 +272,7 @@ urllib3==1.26.4
     # via
     #   requests
     #   selenium
+    #   sentry-sdk
     #   transifex-client
 webencodings==0.5.1
     # via bleach

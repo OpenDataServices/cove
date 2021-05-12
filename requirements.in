@@ -13,7 +13,7 @@ zipp==1.2.0
 jsonschema
 json-merge-patch
 python-dateutil
-raven
+sentry-sdk
 strict-rfc3339
 rfc3987
 rfc6266
