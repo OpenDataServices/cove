@@ -1,18 +1,22 @@
 import os
+from datetime import datetime
 
 import pytest
+from cove.input.models import SuppliedData
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
 
-from . lib.schema import Schema360
-from . lib.threesixtygiving import run_extra_checks, extend_numbers, spreadsheet_style_errors_table, TEST_CLASSES
-from cove.input.models import SuppliedData
+from .lib.schema import Schema360
+from .lib.threesixtygiving import run_extra_checks, extend_numbers, spreadsheet_style_errors_table, TEST_CLASSES
 
 # Source is cove_360/fixtures/fundingproviders-grants_fixed_2_grants.json
 # see cove_360/fixtures/SOURCES for more info.
 # Data has been edited to increase test coverage, so should not be used for
 # anything besides testing.
+
+current_year = datetime.now().year
+current_month = datetime.now().month
 
 GRANTS = {
     'grants': [{'Co-applicant(s)': 'Miss Hypatia Alexandria, Mr Thomas Aquinas',
@@ -22,7 +26,7 @@ GRANTS = {
                 'Sponsor(s)': ' ',
                 'Surname of applicant': 'Roe',
                 'amountAwarded': 0,
-                'awardDate': '24/07/2014',
+                'awardDate': '{}-07-24'.format(current_year + 1),
                 'currency': 'GBP',
                 "beneficiaryLocation": [{
                     "name": "Bloomsbury",
@@ -32,7 +36,11 @@ GRANTS = {
                 'fundingOrganization': [{'id': 'XSFAFA',
                                          'name': 'Funding Providers UK'}],
                 'id': '360G-fundingproviders-000001/X/00/X',
-                'plannedDates': [{'duration': '30'}],
+                'plannedDates': [{
+                    'startDate': '{}-10-01'.format(current_year),
+                    'endDate': '{}-07-15T15:00:00Z'.format(current_year),
+                    'duration': '30'
+                }],
                 'recipientOrganization': [{'addressLocality': 'London',
                                            'location': [{
                                                'name': 'Somewhere in London',
@@ -52,7 +60,7 @@ GRANTS = {
                 'Sponsor(s)': ' ',
                 'Surname of applicant': 'Doe',
                 'amountAwarded': 178990,
-                'awardDate': '24/07/2014',
+                'awardDate': '{}-07-24'.format(current_year + 1),
                 'currency': 'GBP',
                 'dataSource': 'http://www.fundingproviders.co.uk/grants/',
 
@@ -62,7 +70,15 @@ GRANTS = {
                 'grantProgramme': [{'code': 'AAC',
                                     'title': 'Awards Funding Committee'}],
                 'id': '360G-fundingproviders-000002/X/00/X',
-                'plannedDates': [{'duration': '25'}],
+                'plannedDates': [{
+                    'startDate': '{}-04-01'.format(current_year),
+                    'endDate': '{}-10-23'.format(current_year + 13),
+                    'duration': '25'
+                }],
+                'actualDates': [{
+                    'startDate': '{}-10-01'.format(current_year + 1),
+                    'endDate': '{}-04-23'.format(current_year),
+                }],
                 'recipientOrganization': [{'addressLocality': 'Leicester ',
                                            'location': [{
                                                'geoCodeType': 'UA',
@@ -83,7 +99,7 @@ GRANTS = {
                 'Sponsor(s)': ' ',
                 'Surname of applicant': 'Doe',
                 'amountAwarded': 178990,
-                'awardDate': '24/07/2014',
+                'awardDate': '{}-{}-01'.format(current_year, current_month),
                 'currency': 'GBP',
                 "beneficiaryLocation": [{
                     "name": "Gateshed",
@@ -99,7 +115,15 @@ GRANTS = {
                 'grantProgramme': [{'code': 'AAC',
                                     'title': 'Arts Awards Funding Committee'}],
                 'id': '360G-fundingproviders-000003/X/00/X',
-                'plannedDates': [{'duration': '25'}],
+                'plannedDates': [{
+                    'startDate': '{}-02-30'.format(current_year + 1),
+                    'endDate': '{}-03-29'.format(current_year + 2),
+                    'duration': '25'
+                }],
+                'actualDates': [{
+                    'startDate': '{}-03-29'.format(current_year - 26),
+                    'endDate': '{}-04-29'.format(current_year + 6),
+                }],
                 'recipientOrganization': [{'addressLocality': 'Leicester ',
                                            'id': 'GB-CHC-00001',
                                            'name': 'University of UK',
@@ -137,6 +161,14 @@ SOURCE_MAP = {
                                              'Funding Org:Name']],
     'grants/0/id': [['grants', 'A', 2, 'Identifier']],
     'grants/0/plannedDates/0': [['grants', 2]],
+    'grants/0/plannedDates/0/startDate': [['grants',
+                                          '',
+                                          2,
+                                          'Planned Dates:Start Date']],
+    'grants/0/plannedDates/0/endDate': [['grants',
+                                         '',
+                                         2,
+                                         'Planned Dates:End Date']],
     'grants/0/plannedDates/0/duration': [['grants',
                                           'P',
                                           2,
@@ -199,10 +231,26 @@ SOURCE_MAP = {
                                          'Grant Programme:Title']],
     'grants/1/id': [['grants', 'A', 3, 'Identifier']],
     'grants/1/plannedDates/0': [['grants', 3]],
+    'grants/1/plannedDates/0/startDate': [['grants',
+                                           '',
+                                           3,
+                                           'Planned Dates:Start Date']],
+    'grants/1/plannedDates/0/endDate': [['grants',
+                                         '',
+                                         3,
+                                         'Planned Dates:End Date']],
     'grants/1/plannedDates/0/duration': [['grants',
                                           'P',
                                           3,
                                           'Planned Dates:Duration (months)']],
+    'grants/1/actualDates/0/startDate': [['grants',
+                                          '',
+                                          3,
+                                          'Planned Dates:Start Date']],
+    'grants/1/actualDates/0/endDate': [['grants',
+                                        '',
+                                        3,
+                                        'Planned Dates:End Date']],
     'grants/1/recipientOrganization/0': [['grants', 3]],
     'grants/1/recipientOrganization/0/addressLocality': [['grants',
                                                           'N',
@@ -261,10 +309,26 @@ SOURCE_MAP = {
                                          'Grant Programme:Title']],
     'grants/2/id': [['grants', 'A', 4, 'Identifier']],
     'grants/2/plannedDates/0': [['grants', 4]],
+    'grants/2/plannedDates/0/startDate': [['grants',
+                                          '',
+                                          4,
+                                          'Planned Dates:Start Date']],
+    'grants/2/plannedDates/0/endDate': [['grants',
+                                         '',
+                                         4,
+                                         'Planned Dates:End Date']],
     'grants/2/plannedDates/0/duration': [['grants',
                                           'P',
                                           4,
                                           'Planned Dates:Duration (months)']],
+    'grants/2/actualDates/0/startDate': [['grants',
+                                          '',
+                                          4,
+                                          'Actual Dates:Start Date']],
+    'grants/2/actualDates/0/endDate': [['grants',
+                                        '',
+                                        4,
+                                        'Actual Dates:End Date']],
     'grants/2/recipientOrganization/0': [['grants', 4]],
     'grants/2/recipientOrganization/0/addressLocality': [['grants',
                                                           'N',
@@ -362,7 +426,63 @@ QUALITY_ACCURACY_CHECKS_RESULTS = [
                   "data is only included with the knowledge and consent of the person to whom it refers.")},
      ['grants/0/Grant type', 'grants/0/title'],
      [{'sheet': 'grants', 'letter': 'G', 'row_number': 2, 'header': 'Grant type'},
-      {'sheet': 'grants', 'letter': 'O', 'row_number': 2, 'header': 'Title'}])
+      {'sheet': 'grants', 'letter': 'O', 'row_number': 2, 'header': 'Title'}]),
+    ({'heading': "33% of grants have dates that didn't, or won't, exist",
+      'message': (
+          "Your data contains dates that didn't, or won't, exist - such as the 31st of September, "
+          "or the 29th of February in a year that's not a leap year. "
+          "This is commonly caused by typos during data entry."
+      )},
+     ['grants/2/plannedDates/0/startDate'],
+     [{'header': 'Planned Dates:Start Date', 'letter': '', 'row_number': 4, 'sheet': 'grants'}]),
+    ({'heading': (
+        "33% of grants have <span class=\"highlight-background-text\">Planned Dates: Start Date</span> entries that "
+        "are after the corresponding <span class=\"highlight-background-text\">Planned Dates: End Date</span>"),
+      'message': (
+          "This can happen when the fields are accidentally reversed, or if there is a typo in the data. "
+          "This can also be caused by inconsistent date formatting when data was prepared using spreadsheet software."
+      )},
+     ['grants/0/plannedDates/0/startDate'],
+     [{'header': 'Planned Dates:Start Date', 'letter': '', 'row_number': 2, 'sheet': 'grants'}]),
+    ({'heading': (
+        '33% of grants have <span class="highlight-background-text">Actual Dates: Start Date</span> entries '
+        'that are after the corresponding <span class="highlight-background-text">Actual Dates: End Date</span>'),
+      'message': (
+          "This can happen when the fields are accidentally reversed, or if there is a typo in the data. "
+          "This can also be caused by inconsistent date formatting when data was prepared using spreadsheet software."
+      )},
+     ['grants/1/actualDates/0/startDate'],
+     [{'header': 'Planned Dates:Start Date', 'letter': '', 'row_number': 3, 'sheet': 'grants'}]),
+    ({'heading': "33% of grants have Planned Dates that are over 12 years in the future",
+      'message': "Your data contains Planned Dates that are more than 12 years into the future. You can disregard "
+                 "this check if your data is about activities that run a long time into the future, but you should "
+                 "check for data entry errors if this isn't expected."},
+     ['grants/1/plannedDates/0/endDate'],
+     [{'header': 'Planned Dates:End Date', 'letter': '', 'row_number': 3, 'sheet': 'grants'}]),
+    ({'heading': '33% of grants have Actual Date entries that are over 5 years in the future',
+      'message': (
+          "Your data contains Actual Date entries that are more than 5 years into the future. You can disregard this "
+          "check if your data is about activities in the future, but you should check for data entry errors "
+          "if this isn't expected."
+        )},
+     ['grants/2/actualDates/0/endDate'],
+     [{'header': 'Actual Dates:End Date', 'letter': '', 'row_number': 4, 'sheet': 'grants'}]),
+    ({'heading': '33% of grants have dates that are over 25 years ago',
+      'message': (
+          "Your data contains dates that are more than 25 years ago. You can disregard this check if your data is "
+          "about activities in the past, but you should check for data entry errors if this isn't expected."
+      )},
+     ['grants/2/actualDates/0/startDate'],
+     [{'header': 'Actual Dates:Start Date', 'letter': '', 'row_number': 4, 'sheet': 'grants'}]),
+    ({'heading': "67% of grants have Award Dates that are in the future",
+      'message': "Your data contains grant Award Dates in the future. This field is for when was the decision to award "
+                 "this grant made so the date would normally be in the past. This can happen when there is a typo "
+                 "in the date, or the data includes grants that are not yet fully committed."},
+     ['grants/0/id', 'grants/1/id'],
+     [
+         {'header': 'Identifier', 'letter': 'A', 'row_number': 2, 'sheet': 'grants'},
+         {'header': 'Identifier', 'letter': 'A', 'row_number': 3, 'sheet': 'grants'}
+     ]),
 ]
 
 USEFULNESS_CHECKS_RESULTS = [
