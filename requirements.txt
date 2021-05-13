@@ -4,13 +4,13 @@
 #
 #    pip-compile requirements.in
 #
-attrs==20.3.0
+attrs==21.2.0
     # via jsonschema
 backports-datetime-fromisoformat==1.0.0
     # via flattentool
 bleach==3.3.0
     # via -r requirements.in
-btrees==4.7.2
+btrees==4.8.0
     # via zodb
 cached-property==1.5.2
     # via
@@ -32,23 +32,23 @@ dealer==2.1.0
     # via -r requirements.in
 defusedxml==0.7.1
     # via odfpy
-django-bootstrap3==14.2.0
+django-bootstrap3==15.0.0
     # via
     #   -r requirements.in
     #   libcoveweb
-django-debug-toolbar==3.2
+django-debug-toolbar==3.2.1
     # via -r requirements.in
 django-environ==0.4.5
     # via
     #   -r requirements.in
     #   libcoveweb
-django==2.2.21
+django==2.2.23
     # via
     #   -r requirements.in
     #   django-bootstrap3
     #   django-debug-toolbar
     #   libcoveweb
-et-xmlfile==1.0.1
+et-xmlfile==1.1.0
     # via openpyxl
 flattentool==0.17.0
     # via
@@ -59,7 +59,7 @@ idna==2.10
     # via requests
 ijson==3.1.4
     # via flattentool
-importlib-metadata==1.7.0
+importlib-metadata==2.1.1
     # via
     #   django-bootstrap3
     #   jsonschema
@@ -91,7 +91,7 @@ openpyxl==3.0.7
     #   flattentool
 packaging==20.9
     # via bleach
-persistent==4.6.4
+persistent==4.7.0
     # via
     #   btrees
     #   zodb
@@ -124,7 +124,7 @@ schema==0.7.4
     # via flattentool
 sentry-sdk==1.1.0
     # via -r requirements.in
-six==1.15.0
+six==1.16.0
     # via
     #   bleach
     #   jsonschema
@@ -170,7 +170,7 @@ zodb==5.6.0
     #   zc.zlibstorage
 zodbpickle==2.0.0
     # via zodb
-zope.interface==5.3.0
+zope.interface==5.4.0
     # via
     #   btrees
     #   persistent
