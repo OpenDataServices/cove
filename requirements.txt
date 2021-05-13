@@ -36,7 +36,7 @@ django-bootstrap3==14.2.0
     # via
     #   -r requirements.in
     #   libcoveweb
-django-debug-toolbar==3.2
+django-debug-toolbar==3.2.1
     # via -r requirements.in
 django-environ==0.4.5
     # via
@@ -59,10 +59,6 @@ idna==2.10
     # via requests
 ijson==3.1.4
     # via flattentool
-importlib-metadata==1.7.0
-    # via
-    #   django-bootstrap3
-    #   jsonschema
 jdcal==1.4.1
     # via openpyxl
 json-merge-patch==0.2
@@ -163,9 +159,7 @@ zc.zlibstorage==1.2.0
 zconfig==3.5.0
     # via zodb
 zipp==1.2.0
-    # via
-    #   -r requirements.in
-    #   importlib-metadata
+    # via -r requirements.in
 zodb==5.6.0
     # via
     #   flattentool
