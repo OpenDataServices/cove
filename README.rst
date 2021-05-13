@@ -1,10 +1,6 @@
 CoVE - Convert Validate & Explore
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://requires.io/github/OpenDataServices/cove/requirements.svg?branch=master
-     :target: https://requires.io/github/OpenDataServices/cove/requirements/?branch=master
-     :alt: Requirements Status
-
 .. image:: https://coveralls.io/repos/OpenDataServices/cove/badge.png?branch=master
     :target: https://coveralls.io/r/OpenDataServices/cove?branch=master
 
