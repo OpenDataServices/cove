@@ -35,6 +35,6 @@ For example, see [Cove for BODS](https://github.com/openownership/cove-bods) or 
 Running a Cove instance in this shared Cove repository
 ------------------------------------------------------
 
-Some standards are still run in this shared repository, in packages like `cove_360` or `cove_iati`.
+Some standards are still run in this shared repository, in packages like `cove_iati`.
 
 They use the Lib-Cove-Web and the Lib-Cove libraries mentioned above.

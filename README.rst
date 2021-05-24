@@ -72,7 +72,7 @@ Steps to installation:
 * Create a virtual environment (note this application uses python3)
 * Activate the virtual environment
 * Install dependencies
-* Set up the database (sqlite3) (you need to pass the django settings for the module (ie. 360, iati) you want to run)
+* Set up the database (sqlite3) (you need to pass the django settings for the module (ie. iati) you want to run)
 * Compile the translations
 * Run the development server
 
@@ -86,16 +86,6 @@ Steps to installation:
     DJANGO_SETTINGS_MODULE={cove_MODULENAME}.settings python manage.py migrate
     python manage.py compilemessages
 
-Then, for 360Giving run:
-
-.. code:: bash
-
-    DJANGO_SETTINGS_MODULE=cove_360.settings python manage.py runserver
-
-Follow the instructions in your terminal to open the application in your browser.
-
-Extra installation steps for IATI
-+++++++++++++++++++++++++++++++++
 
 The following steps are for Ubuntu but equivalent packages are available for other distros.
 
