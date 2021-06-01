@@ -59,10 +59,6 @@ idna==2.10
     # via requests
 ijson==3.1.4
     # via flattentool
-importlib-metadata==2.1.1
-    # via
-    #   django-bootstrap3
-    #   jsonschema
 json-merge-patch==0.2
     # via -r requirements.in
 jsonref==0.2
@@ -142,7 +138,7 @@ transaction==3.0.1
     # via zodb
 uc-rfc6266-parser==0.1.0
     # via libcoveweb
-urllib3==1.26.4
+urllib3==1.26.5
     # via
     #   requests
     #   sentry-sdk
@@ -161,9 +157,7 @@ zc.zlibstorage==1.2.0
 zconfig==3.5.0
     # via zodb
 zipp==1.2.0
-    # via
-    #   -r requirements.in
-    #   importlib-metadata
+    # via -r requirements.in
 zodb==5.6.0
     # via
     #   flattentool
