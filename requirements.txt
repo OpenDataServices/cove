@@ -42,7 +42,7 @@ django-environ==0.4.5
     # via
     #   -r requirements.in
     #   libcoveweb
-django==2.2.23
+django==2.2.24
     # via
     #   -r requirements.in
     #   django-bootstrap3
@@ -59,10 +59,6 @@ idna==2.10
     # via requests
 ijson==3.1.4
     # via flattentool
-importlib-metadata==2.1.1
-    # via
-    #   django-bootstrap3
-    #   jsonschema
 json-merge-patch==0.2
     # via -r requirements.in
 jsonref==0.2
@@ -161,9 +157,7 @@ zc.zlibstorage==1.2.0
 zconfig==3.5.0
     # via zodb
 zipp==1.2.0
-    # via
-    #   -r requirements.in
-    #   importlib-metadata
+    # via -r requirements.in
 zodb==5.6.0
     # via
     #   flattentool

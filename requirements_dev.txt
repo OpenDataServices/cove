@@ -59,7 +59,7 @@ django-environ==0.4.5
     # via
     #   -r requirements.in
     #   libcoveweb
-django==2.2.23
+django==2.2.24
     # via
     #   -r requirements.in
     #   django-bootstrap3
@@ -95,13 +95,6 @@ ijson==3.1.4
     # via flattentool
 imagesize==1.2.0
     # via sphinx
-importlib-metadata==2.1.1
-    # via
-    #   django-bootstrap3
-    #   flake8
-    #   jsonschema
-    #   pluggy
-    #   pytest
 iniconfig==1.1.1
     # via pytest
 jinja2==2.11.3
@@ -266,8 +259,6 @@ transaction==3.0.1
     # via zodb
 transifex-client==0.14.2
     # via -r requirements_dev.in
-typing-extensions==3.10.0.0
-    # via gitpython
 uc-rfc6266-parser==0.1.0
     # via libcoveweb
 urllib3==1.26.4
@@ -293,9 +284,7 @@ zc.zlibstorage==1.2.0
 zconfig==3.5.0
     # via zodb
 zipp==1.2.0
-    # via
-    #   -r requirements.in
-    #   importlib-metadata
+    # via -r requirements.in
 zodb==5.6.0
     # via
     #   flattentool
