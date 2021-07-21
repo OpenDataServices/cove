@@ -1,0 +1,38 @@
+{% load i18n %}
+
+<table class="table table-condensed table-striped" id="{{ruleset_table_id}}">
+<thead> 
+  <tr>
+    <th>{% trans 'Used Publisher Ref' %}</th>
+    <th>{% trans 'Total Count' %}</th>
+    <th>{% trans 'Publisher Name' %}</th>
+    <th>{% trans 'Count by Location' %}</th>
+    <th>{% trans 'Activities (max 5 shown)' %}</th>
+  </tr> 
+</thead>
+<tbody>
+  {% for org, org_detail in org_refs.publisher_org_list %}
+    <tr>
+      <td> <strong>{{org}}</strong></td>
+      <td> {{org_detail.count}}</td>
+      <td> {{org_detail.name}}</td>
+
+      <td> 
+        {% for type, count in org_detail.type_count.items %}
+           {% if count %}
+             {{type}}: {{count}} <br/>
+           {% endif  %}
+        {% endfor %}
+      </td>
+
+      <td>  
+        {% for activity_id in org_detail.activity_ids %}
+            {% if forloop.counter < 6 %}
+               {{activity_id}} <br/>
+            {% endif %}
+        {% endfor%}
+      </td>
+    </tr>
+  {% endfor %}
+</tbody>
+</table>

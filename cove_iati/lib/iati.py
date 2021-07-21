@@ -4,6 +4,7 @@ import re
 
 import defusedxml.lxml as etree
 import lxml.etree
+import requests
 from bdd_tester import bdd_tester
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
@@ -81,6 +82,7 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, tree, 
     # Ruleset errors
     if ruleset_disabled:
         ruleset_errors = None
+        org_ruleset_errors = None
     else:
         ruleset_errors = get_iati_ruleset_errors(
             tree,
@@ -88,6 +90,14 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, tree, 
             api=api,
             ignore_errors=invalid_data,
             return_on_error=return_on_error
+        )
+        org_ruleset_errors = get_iati_ruleset_errors(
+            tree,
+            os.path.join(upload_dir, 'ruleset_org_regex'),
+            api=api,
+            ignore_errors=invalid_data,
+            return_on_error=return_on_error,
+            feature_dir='cove_iati/rulesets/iati_org_regex_ruleset/'
         )
 
     if openag:
@@ -110,6 +120,7 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, tree, 
     context.update({
         'validation_errors': sorted(validation_errors.items()),
         'ruleset_errors': ruleset_errors,
+        'org_ruleset_errors': org_ruleset_errors,
         'file_type': file_type,
         'invalid_embedded_codelist_values': invalid_embedded_codelist_values(
             schema_iati.schema_directory,
@@ -141,6 +152,17 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, tree, 
             )
             context['ruleset_errors'] = [ruleset_errors, ruleset_errors_by_activity]
 
+        if org_ruleset_errors:
+            org_ruleset_errors_by_activity = get_iati_ruleset_errors(
+                tree,
+                os.path.join(upload_dir, 'ruleset_org_regex'),
+                group_by='activity',
+                ignore_errors=invalid_data,
+                return_on_error=return_on_error,
+                feature_dir='cove_iati/rulesets/iati_org_regex_ruleset/'
+            )
+            context['org_ruleset_errors'] = [org_ruleset_errors, org_ruleset_errors_by_activity]
+
         count_ruleset_errors = 0
         if isinstance(ruleset_errors, dict):
             for rules in ruleset_errors.values():
@@ -148,6 +170,15 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, tree, 
                     count_ruleset_errors += len(errors)
 
         context['ruleset_errors_count'] = count_ruleset_errors
+
+        count_org_ruleset_errors = 0
+        if isinstance(org_ruleset_errors, dict):
+            for rules in org_ruleset_errors.values():
+                for errors in rules.values():
+                    count_org_ruleset_errors += len(errors)
+
+        context['org_ruleset_errors_count'] = count_org_ruleset_errors
+
     return context
 
 
@@ -379,11 +410,12 @@ def _ruleset_errors_by_activity(flat_errors):
 
 
 @ignore_errors
-def get_iati_ruleset_errors(lxml_etree, output_dir, group_by='rule', api=False):
+def get_iati_ruleset_errors(lxml_etree, output_dir, group_by='rule', api=False,
+                            feature_dir='cove_iati/rulesets/iati_standard_v2_ruleset/'):
     if group_by not in ['rule', 'activity']:
         raise ValueError('Only `rule` or `activity` are valid values for group_by argument')
 
-    bdd_tester(etree=lxml_etree, features=['cove_iati/rulesets/iati_standard_v2_ruleset/'],
+    bdd_tester(etree=lxml_etree, features=[feature_dir],
                output_path=output_dir)
 
     if not os.path.isdir(output_dir):
@@ -447,3 +479,93 @@ def organisation_identifier_count(tree):
     unique_identifiers = list(set(identifiers))
 
     return len(unique_identifiers)
+
+
+ACTIVITY_PREFIX = '/iati-activities/iati-activity'
+
+
+def check_activity_org_refs(tree):
+    root = tree.getroot()
+    
+    publishers = requests.get("https://codelists.codeforiati.org/api/json/en/ReportingOrganisation.json").json()
+    registration_agency = requests.get("https://codelists.codeforiati.org/api/json/en/OrganisationRegistrationAgency.json").json()
+
+    publisher_codes = {publisher['code']: publisher for publisher in publishers['data']}
+
+    org_prefixes = {prefix['code']: prefix for prefix in registration_agency['data']}
+
+    found_publisher_orgs = {}
+    found_org_prefix = {}
+    not_found_orgs = {}
+
+    regex = re.compile('^[^\/\&\|\?]+$')
+
+    for activity in root.xpath(ACTIVITY_PREFIX):
+        reporting_org = activity.xpath('reporting-org/@ref')
+        iati_identifiers = activity.xpath('iati-identifier/text()')
+        iati_identifier = iati_identifiers[0] if len(iati_identifiers) else None
+
+        orgs_in_data = {
+            "Participating Org": activity.xpath('participating-org/@ref'),
+            "Transaction Provider": activity.xpath('transaction/provider-org/@ref'),
+            "Transaction Receiver": activity.xpath('transaction/receiver-org/@ref')
+        }
+        org_type_template = {key: 0 for key in orgs_in_data}
+
+        for org_type, orgs in orgs_in_data.items():
+            for org in orgs:
+                if org in reporting_org:
+                    continue
+
+                # get possible prefixes by initial substrings of ref. This is faster than checking ref
+                # against all prefixes in registry.
+                found_prefix = None
+                for possible_prefix in set(org[0:n] for n in range(4, len(org)+1)):  # no prefix shorther than 4
+                    if possible_prefix in org_prefixes:
+                        found_prefix = possible_prefix
+                        break
+
+                if org in publisher_codes:
+                    if org not in found_publisher_orgs:
+                        found_publisher_orgs[org] = publisher_codes[org]
+                        found_publisher_orgs[org]["count"] = 0
+                        found_publisher_orgs[org]["type_count"] = org_type_template.copy()
+                        found_publisher_orgs[org]["activity_ids"] = set()
+                    found_publisher_orgs[org]["count"] += 1
+                    found_publisher_orgs[org]["type_count"][org_type] += 1
+                    if iati_identifier:
+                        found_publisher_orgs[org]["activity_ids"].add(iati_identifier)
+
+                elif found_prefix:
+                    if found_prefix not in found_org_prefix:
+                        found_org_prefix[found_prefix] = org_prefixes[found_prefix]
+                        found_org_prefix[found_prefix]["orgs"] = set()
+                        found_org_prefix[found_prefix]["count"] = 0
+                        found_org_prefix[found_prefix]["type_count"] = org_type_template.copy()
+                        found_org_prefix[found_prefix]["activity_ids"] = set()
+                    found_org_prefix[found_prefix]["count"] += 1
+                    found_org_prefix[found_prefix]["type_count"][org_type] += 1
+                    found_org_prefix[found_prefix]["orgs"].add(org)
+                    if iati_identifier:
+                        found_org_prefix[found_prefix]["activity_ids"].add(iati_identifier)
+
+                else:
+                    if regex.match(org):
+                        if org not in not_found_orgs:
+                            not_found_orgs[org] = {}
+                            not_found_orgs[org]["count"] = 0
+                            not_found_orgs[org]["type_count"] = org_type_template.copy()
+                            not_found_orgs[org]["activity_ids"] = set()
+                        not_found_orgs[org]["count"] += 1
+                        not_found_orgs[org]["type_count"][org_type] += 1
+                        if iati_identifier:
+                            not_found_orgs[org]["activity_ids"].add(iati_identifier)
+
+    organisation_ref_stats = {"publisher_count": len(found_publisher_orgs),
+                              "publisher_org_list": sorted(list(found_publisher_orgs.items()), key=lambda x: x[1]["count"], reverse=True),
+                              "org_prefix_count": len(found_org_prefix),
+                              "org_prefix_list": sorted(list(found_org_prefix.items()), key=lambda x: x[1]["count"], reverse=True),
+                              "not_found_orgs_count": len(not_found_orgs),
+                              "not_found_orgs_list": sorted(list(not_found_orgs.items()), key=lambda x: x[1]["count"], reverse=True)}
+
+    return organisation_ref_stats

@@ -249,7 +249,7 @@
             {% trans "Ruleset Errors " %}
             <small><strong>{% trans "Failed" %}</strong></small>
           {% else %}
-            <span class="font-tick cross" aria-hidden="true"></span>
+            <span class="font-tick question" aria-hidden="true"></span>
             {% trans "Ruleset Errors " %}
             <small><strong>{% blocktrans count n_errors=ruleset_errors_count %} {{n_errors}} Error.{% plural %}{{n_errors}} Errors {% endblocktrans %}</strong></small>
           {% endif %}
@@ -282,15 +282,77 @@
           <p class="explanation">&nbsp;{% trans "There are some <strong>ruleset errors</strong> in your data, please check them in the table below." %}</p>
           <br>
           <h4 class="noscript-notice">Results group by Ruleset</h2>
-          {% include "cove_iati/ruleset_table_by_rule.html" %}
+          {% include "cove_iati/ruleset_table_by_rule.html" with used_ruleset_errors=ruleset_errors ruleset_table_id="ruleset-by-rule" %}
           <h4 class="noscript-notice">Results group by Activity</h2>
-          {% include "cove_iati/ruleset_table_by_activity.html" %}
+          {% include "cove_iati/ruleset_table_by_activity.html" with used_ruleset_errors=ruleset_errors ruleset_table_id="ruleset-by-activity"%}
         {% endif %}
       </div>
     </div>
   </div>
   {% endif %}
   {% endblock ruleset %}
+
+
+  {% block org_ref %}
+  {% if not ruleset_disabled %}
+  <div class="panel panel-default">
+    <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#org-ref-body">
+      <h3 class="panel-title panel-title-explore">
+        {% if total_org_error_count %}
+          <span class="font-tick question" aria-hidden="true"></span>
+          {% trans "Organisaton References" %}
+          <small><strong>{% blocktrans count n_errors=total_org_error_count %} {{n_errors}} Warning.{% plural %}{{n_errors}} Warnings {% endblocktrans %}</strong></small>
+        {% else %}
+          {% trans "Organisaton References" %}
+           <span class="font-tick tick" aria-hidden="true"></span>
+        {% endif %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="org-ref-body" class="collapse">
+      <div class="panel-body">
+        <p class="explanation">
+        {% if org_ruleset_errors and not org_ruleset_errors.0.exception %}
+        <p class="explanation"><span class="font-tick question" aria-hidden="true"></span> {% trans "There is" %} {{org_ruleset_errors_count}} {% trans "organisation ref(s) that are incorrectly formatted:" %}</p>
+          <br>
+          <h4 class="noscript-notice">Incorrectly Formatted Organization Refs </h2>
+          {% include "cove_iati/ruleset_table_by_rule.html" with used_ruleset_errors=org_ruleset_errors ruleset_table_id="org-ruleset-by-rule" %}
+          <br>
+        {% endif %}
+
+        {% if org_refs.not_found_orgs_count %}
+           <br>
+           <p class="explanation"><span class="font-tick question" aria-hidden="true"></span> {% trans "There is" %} {{org_refs.not_found_orgs_count}} {% trans "organisation ref(s) that can not be found in the publisher list or has a recognised prefix:" %}</p>
+           <br>
+           {% include "cove_iati/org_refs_not_found.html" with used_ruleset_errors=org_ruleset_errors ruleset_table_id="org-ruleset-by-rule" %}
+
+        {% endif %}
+
+
+        {% if org_refs.publisher_count  %}
+          <br>
+          <p class="explanation"><span class="font-tick tick" aria-hidden="true"></span>There are {% blocktrans count n_errors=org_refs.publisher_count %} {{n_errors}} publisher {% plural %}{{n_errors}} publishers {% endblocktrans %}
+          {% blocktrans%} from the iati register used in this dataset: {% endblocktrans %}</p>
+          <br>
+          {% include "cove_iati/org_refs_publisher.html" with used_ruleset_errors=org_ruleset_errors ruleset_table_id="org-ruleset-by-rule" %}
+          </p>
+        {% endif %}
+
+        {% if org_refs.org_prefix_count  %}
+          <br>
+          <p class="explanation"><span class="font-tick tick" aria-hidden="true"></span>{% blocktrans%}There are {% endblocktrans %} {{org_refs.org_prefix_count}} {% blocktrans%} matched organization prefix(es) in this dataset: {% endblocktrans %}</p>
+          <br>
+          {% include "cove_iati/org_ref_with_org_id.html" with used_ruleset_errors=org_ruleset_errors ruleset_table_id="org-ruleset-by-rule" %}
+          </p>
+        {% endif %}
+
+
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endblock org_ref %}
+
 
   {% block download_and_share %}
   <div class="panel panel-default">

@@ -296,10 +296,10 @@ def test_cove_iati_cli_output():
                     'explanation': 'Text does not match the regex ?TZ-BRLA-5-CCC-123123-CC123',
                     'path': '/iati-activities/iati-activity[3]/iati-identifier/text()',
                     'rule': 'identifier/text() should match the regex [^\\:\\&\\|\\?]+'},
-                   {'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                    'explanation': '?TZ-BRLA-5 does not match the regex ^[^\\/\\&\\|\\?]+$',
-                    'path': '/iati-activities/iati-activity[3]/reporting-org/@ref',
-                    'rule': 'reporting-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
+                   #{'id': '?TZ-BRLA-5-CCC-123123-CC123',
+                    #'explanation': '?TZ-BRLA-5 does not match the regex ^[^\\/\\&\\|\\?]+$',
+                    #'path': '/iati-activities/iati-activity[3]/reporting-org/@ref',
+                    #'rule': 'reporting-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
                    {'id': '?TZ-BRLA-5-CCC-123123-CC123',
                     'explanation': 'Either sector or transaction/sector are expected (not both)',
                     'path': '/iati-activities/iati-activity[3]/sector & /iati-activities/iati-activity[3]'
@@ -318,10 +318,6 @@ def test_cove_iati_cli_output():
                     'explanation': '2400-01-01 must be on or before today (2017-10-04)',
                     'path': '/iati-activities/iati-activity[4]/activity-date/@iso-date',
                     'rule': "activity-date[@type='4']/@iso-date must be today or in the past"},
-                   {'id': 'TZ-BRLA-5-DDD-123123-DD123',
-                    'explanation': '?TZ-BRLA-8 does not match the regex ^[^\\/\\&\\|\\?]+$',
-                    'path': '/iati-activities/iati-activity[4]/participating-org/@ref',
-                    'rule': 'participating-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
                    {
                     'id': 'TZ-BRLA-5-DDD-123123-DD123',
                     'explanation': 'recipient-country|recipient-region/@percentage adds up to 30%',
@@ -335,14 +331,26 @@ def test_cove_iati_cli_output():
                     'explanation': 'recipient-country|recipient-region/@percentage adds up to 0%',
                     'path': '/iati-activities/iati-activity[5]/recipient-country',
                     'rule': 'recipient-country/@percentage and recipient-region/@percentage must sum to 100%'},
-                   {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                    'explanation': '?TZ-BRLA-101 does not match the regex ^[^\\/\\&\\|\\?]+$',
-                    'path': '/iati-activities/iati-activity[5]/transaction[1]/provider-org/@ref',
-                    'rule': 'transaction/provider-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'},
-                   {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                    'explanation': '?TZ-BRLA-102 does not match the regex ^[^\\/\\&\\|\\?]+$',
-                    'path': '/iati-activities/iati-activity[5]/transaction[2]/receiver-org/@ref',
-                    'rule': 'transaction/receiver-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'}]
+                    ]
+
+    exp_org_rulesets = [
+       {'id': '?TZ-BRLA-5-CCC-123123-CC123',
+        'explanation': '?TZ-BRLA-5 does not match the regex ^[^\\/\\&\\|\\?]+$',
+        'path': '/iati-activities/iati-activity[3]/reporting-org/@ref',
+        'rule': 'reporting-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
+       {'id': 'TZ-BRLA-5-DDD-123123-DD123',
+        'explanation': '?TZ-BRLA-8 does not match the regex ^[^\\/\\&\\|\\?]+$',
+        'path': '/iati-activities/iati-activity[4]/participating-org/@ref',
+        'rule': 'participating-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
+       {'id': 'TZ-BRLA-9-EEE-123123-EE123',
+        'explanation': '?TZ-BRLA-101 does not match the regex ^[^\\/\\&\\|\\?]+$',
+        'path': '/iati-activities/iati-activity[5]/transaction[1]/provider-org/@ref',
+        'rule': 'transaction/provider-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'},
+       {'id': 'TZ-BRLA-9-EEE-123123-EE123',
+        'explanation': '?TZ-BRLA-102 does not match the regex ^[^\\/\\&\\|\\?]+$',
+        'path': '/iati-activities/iati-activity[5]/transaction[2]/receiver-org/@ref',
+        'rule': 'transaction/receiver-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'}
+    ]
 
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
     output_dir = os.path.join('media', str(uuid.uuid4()))
@@ -375,6 +383,15 @@ def test_cove_iati_cli_output():
             assert expected['explanation'][:-13] == actual['explanation'][:-13]
         else:
             assert expected['explanation'] == actual['explanation']
+
+    org_ruleset_errors = results.get('org_ruleset_errors')
+    org_ruleset_errors.sort(key=lambda i: i['path'])
+    zipped_org_ruleset_results = zip(exp_org_rulesets, org_ruleset_errors)
+
+    for expected, actual in zipped_org_ruleset_results:
+        assert expected['id'] == actual['id']
+        assert expected['path'] == actual['path']
+        assert expected['rule'] == actual['rule']
 
 
 def test_cove_iati_cli_orgids_output():
@@ -531,7 +548,8 @@ def test_common_checks_context_iati_ruleset():
     tree = iati.get_tree(file_path)
     context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', tree, api=True)
 
-    assert len(context['ruleset_errors']) == 17
+    assert len(context['ruleset_errors']) == 13
+    assert len(context['org_ruleset_errors']) == 4
 
 
 def test_common_checks_context_iati_org_validation():

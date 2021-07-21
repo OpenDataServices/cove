@@ -67,6 +67,7 @@ def iati_json_output(output_dir, file, openag=False, orgids=False):
             shutil.rmtree(os.path.join(output_dir, 'csv_dir'))
 
     ruleset_dirs = [os.path.join(output_dir, 'ruleset'),
+                    os.path.join(output_dir, 'ruleset_org_regex'),
                     os.path.join(output_dir, 'ruleset_openag'),
                     os.path.join(output_dir, 'ruleset_orgids')]
     for directory in ruleset_dirs:

@@ -19,7 +19,7 @@ from libcove.lib.converters import convert_spreadsheet, convert_json
 from .lib.api import iati_json_output
 from .lib.iati import (
     get_tree, common_checks_context_iati, get_file_type, iati_identifier_count,
-    organisation_identifier_count
+    organisation_identifier_count, check_activity_org_refs
 )
 from .lib.process_codelists import aggregate_results
 from .lib.schema import SchemaIATI
@@ -98,6 +98,11 @@ def explore_iati(request, pk):
     context['invalid_non_embedded_codelist_values'] = aggregate_results(context['invalid_non_embedded_codelist_values'])
     context['iati_identifiers_count'] = iati_identifier_count(tree)
     context['organisation_identifier_count'] = organisation_identifier_count(tree)
+
+    context['org_refs'] = {}
+    if not context['organisation_identifier_count']:
+        context['org_refs'] = check_activity_org_refs(tree)
+        context['total_org_error_count'] = context['org_refs']['not_found_orgs_count'] + context['org_ruleset_errors_count']
 
     if file_type == 'xml':
         if context['organisation_identifier_count']:
