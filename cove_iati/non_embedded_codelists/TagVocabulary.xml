@@ -19,7 +19,7 @@
       <description>
         <narrative>A controlled vocabulary covering all areas of interest of the Food and Agriculture Organization (FAO) of the United Nations, including food, nutrition, agriculture, fisheries, forestry, environment etc.</narrative>
       </description>
-      <url>http://agrovoc.uniroma2.it/agrovoc/agrovoc/en/</url>
+      <url>https://agrovoc.fao.org/browse/agrovoc/en/</url>
     </codelist-item>
     <codelist-item>
       <code>2</code>

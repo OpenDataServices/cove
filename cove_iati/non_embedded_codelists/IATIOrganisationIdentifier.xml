@@ -335,6 +335,16 @@
             <url>https://www.facebook.com/SomaliGenderJustice/</url>
         </codelist-item>
         <codelist-item>
+            <code>XI-IATI-SPR</code>
+            <name>
+                <narrative>Synergie des Femmes pour la Paix et la Réconciliation des Peuples des Grands Lacs d'Afrique (SPR)</narrative>
+            </name>
+            <description>
+                <narrative>Synergie des Femmes pour la Paix et la Reconciliation des Peuples des Grands Lacs d’Afrique is a network of 37 human rights organisations in the Great Lakes region of Africa (Eastern DR Congo, Rwanda, and Burundi). The network was created in 2005 as a sub-regional initiative of the Pax Christi Great Lakes Network to use the potential of women in the region to build peace and promote of women's rights, leadership, and empowerment.</narrative>
+            </description>
+            <url>https://www.sprgrandslacs.org/</url>
+        </codelist-item>
+        <codelist-item>
             <code>XI-IATI-SWSC</code>
             <name>
                 <narrative>Somali Women Study Centre</narrative>
