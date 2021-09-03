@@ -66,7 +66,7 @@
                 <narrative>The sector reported corresponds to the National Taxonomy for Exempt Entities (NTEE) - USA</narrative>
                 <narrative xml:lang="fr">Le secteur déclaré correspond à la taxonomie nationale des entités exonérées (NTEE) - États-Unis</narrative>
             </description>
-            <url>http://nccs.urban.org/classification/NTEE.cfm</url>
+            <url>https://nccs.urban.org/publication/irs-activity-codes</url>
         </codelist-item>
         <codelist-item>
             <code>6</code>
@@ -89,7 +89,7 @@
                 <narrative>A value from the top-level list of UN sustainable development goals (SDGs) (e.g. ‘1’)</narrative>
                 <narrative xml:lang="fr">Valeur tirée de la liste des principaux objectifs de développement durable (ODD) de l'ONU (p. ex. '1')</narrative>
             </description>
-            <url>https://sustainabledevelopment.un.org/?menu=1300</url>
+            <url>http://reference.iatistandard.org/codelists/unsdg-goals</url>
         </codelist-item>
         <codelist-item>
             <code>8</code>
@@ -101,7 +101,7 @@
                 <narrative>A value from the second-level list of UN sustainable development goals (SDGs) (e.g. ‘1.1’)</narrative>
                 <narrative xml:lang="fr">Valeur tirée de la liste des sous-objectifs de développement durable (ODD) de l'ONU (p. ex. '1.1')</narrative>
             </description>
-            <url>http://unstats.un.org/sdgs/indicators/indicators-list/</url>
+            <url>http://reference.iatistandard.org/codelists/unsdg-targets</url>
         </codelist-item>
         <codelist-item>
             <code>9</code>
@@ -136,6 +136,16 @@
                 <narrative>The sector reported corresponds to the NAICS codelist</narrative>
             </description>
             <url>https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2017</url>
+        </codelist-item>
+        <codelist-item>
+            <code>12</code>
+            <name>
+                <narrative>UN System Function</narrative>
+            </name>
+            <description>
+                <narrative>The sector reported corresponds to the UN System Function codelist</narrative>
+            </description>
+            <url>https://unsceb.org/sites/default/files/2021-04/UN_DataStandards_Digital_20210420.pdf</url>
         </codelist-item>
         <codelist-item>
             <code>99</code>

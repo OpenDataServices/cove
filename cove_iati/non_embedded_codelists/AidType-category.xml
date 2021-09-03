@@ -62,10 +62,6 @@
                 <narrative>Scholarships and student costs in donor countries</narrative>
                 <narrative xml:lang="fr">Bourses et autres frais d’étude dans les pays donneurs</narrative>
             </name>
-            <description>
-                <narrative/>
-                <narrative xml:lang="fr"/>
-            </description>
         </codelist-item>
         <codelist-item status="active" activation-date="2010-01-01">
             <code>F</code>
@@ -73,10 +69,6 @@
                 <narrative>Debt relief</narrative>
                 <narrative xml:lang="fr">Allégement de la dette</narrative>
             </name>
-            <description>
-                <narrative/>
-                <narrative xml:lang="fr"/>
-            </description>
         </codelist-item>
         <codelist-item status="active" activation-date="2010-01-01">
             <code>G</code>
@@ -84,10 +76,6 @@
                 <narrative>Administrative costs not included elsewhere</narrative>
                 <narrative xml:lang="fr">Frais administratifs non inclus ailleurs</narrative>
             </name>
-            <description>
-                <narrative/>
-                <narrative xml:lang="fr"/>
-            </description>
         </codelist-item>
         <codelist-item status="active" activation-date="2010-01-01">
             <code>H</code>

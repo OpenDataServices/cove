@@ -18,10 +18,6 @@
                 <narrative>Bilateral</narrative>
                 <narrative xml:lang="fr">Bilatéral</narrative>
             </name>
-            <description>
-                <narrative/>
-                <narrative xml:lang="fr"/>
-            </description>
         </codelist-item>
         <codelist-item status="active">
             <code>2</code>
@@ -29,10 +25,6 @@
                 <narrative>Multilateral (inflows)</narrative>
                 <narrative xml:lang="fr">Multilatéral (contributions des donneurs du CAD)</narrative>
             </name>
-            <description>
-                <narrative/>
-                <narrative xml:lang="fr"/>
-            </description>
         </codelist-item>
         <codelist-item status="active">
             <code>3</code>
@@ -40,10 +32,6 @@
                 <narrative>Bilateral, core contributions to NGOs and other private bodies / PPPs</narrative>
                 <narrative xml:lang="fr">Contributions bilatérales au budget général d'organisations non gouvernementales, d'autres organisations de la société civile, de partenariats publics-privés et d'instituts de recherches</narrative>
             </name>
-            <description>
-                <narrative/>
-                <narrative xml:lang="fr"/>
-            </description>
         </codelist-item>
         <codelist-item status="active">
             <code>4</code>
@@ -51,10 +39,6 @@
                 <narrative>Multilateral outflows</narrative>
                 <narrative xml:lang="fr">Apports des institutions multilatérales</narrative>
             </name>
-            <description>
-                <narrative/>
-                <narrative xml:lang="fr"/>
-            </description>
         </codelist-item>
         <codelist-item status="active">
             <code>6</code>
@@ -62,10 +46,6 @@
                 <narrative>Private Sector Outflows</narrative>
                 <narrative xml:lang="fr">Apports du secteur privé</narrative>
             </name>
-            <description>
-                <narrative/>
-                <narrative xml:lang="fr"/>
-            </description>
         </codelist-item>
         <codelist-item status="active">
             <code>7</code>
@@ -73,10 +53,6 @@
                 <narrative>Bilateral, ex-post reporting on NGOs’ activities funded through core contributions</narrative>
                 <narrative xml:lang="fr">Contributions bilatérales, notification ex post des activités des ONG financées par des contributions des donneurs au budget général de l'ONG.</narrative>
             </name>
-            <description>
-                <narrative/>
-                <narrative xml:lang="fr"/>
-            </description>
         </codelist-item>
         <codelist-item status="active">
             <code>8</code>
