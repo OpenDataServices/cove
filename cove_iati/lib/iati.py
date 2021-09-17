@@ -117,6 +117,11 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, tree, 
         )
         context.update({'ruleset_errors_orgids': ruleset_errors_orgids})
 
+    # Org Ref analysis.
+    context['org_refs'] = {}
+    if tree.getroot().tag != 'iati-organisations':
+        context['org_refs'] = check_activity_org_refs(tree)
+
     context.update({
         'validation_errors': sorted(validation_errors.items()),
         'ruleset_errors': ruleset_errors,
@@ -178,6 +183,9 @@ def common_checks_context_iati(context, upload_dir, data_file, file_type, tree, 
                     count_org_ruleset_errors += len(errors)
 
         context['org_ruleset_errors_count'] = count_org_ruleset_errors
+
+        if context['org_refs']:
+            context['total_org_error_count'] = context['org_refs']['not_found_orgs_count'] + context['org_ruleset_errors_count']
 
     return context
 
@@ -486,9 +494,15 @@ ACTIVITY_PREFIX = '/iati-activities/iati-activity'
 
 def check_activity_org_refs(tree):
     root = tree.getroot()
-    
-    publishers = requests.get("https://codelists.codeforiati.org/api/json/en/ReportingOrganisation.json").json()
-    registration_agency = requests.get("https://codelists.codeforiati.org/api/json/en/OrganisationRegistrationAgency.json").json()
+
+    publisher_request = requests.get("https://codelists.codeforiati.org/api/json/en/ReportingOrganisation.json")
+    registration_agency_request = requests.get("https://codelists.codeforiati.org/api/json/en/OrganisationRegistrationAgency.json")
+
+    if publisher_request.status_code != 200 or registration_agency_request.status_code != 200:
+        return {"error": "Unable to fetch data to do organisation checks", 'not_found_orgs_count': 0}
+
+    publishers = publisher_request.json()
+    registration_agency = registration_agency_request.json()
 
     publisher_codes = {publisher['code']: publisher for publisher in publishers['data']}
 
@@ -520,7 +534,7 @@ def check_activity_org_refs(tree):
                 # get possible prefixes by initial substrings of ref. This is faster than checking ref
                 # against all prefixes in registry.
                 found_prefix = None
-                for possible_prefix in set(org[0:n] for n in range(4, len(org)+1)):  # no prefix shorther than 4
+                for possible_prefix in set(org[0:n] for n in range(4, len(org)+1)):  # no prefix shorter than 4
                     if possible_prefix in org_prefixes:
                         found_prefix = possible_prefix
                         break
@@ -535,8 +549,15 @@ def check_activity_org_refs(tree):
                     found_publisher_orgs[org]["type_count"][org_type] += 1
                     if iati_identifier:
                         found_publisher_orgs[org]["activity_ids"].add(iati_identifier)
+                    continue
 
-                elif found_prefix:
+                found_prefix = None
+                for possible_prefix in set(org[0:n] for n in range(4, len(org)+1)):  # no prefix shorter than 4
+                    if possible_prefix in org_prefixes:
+                        found_prefix = possible_prefix
+                        break
+
+                if found_prefix:
                     if found_prefix not in found_org_prefix:
                         found_org_prefix[found_prefix] = org_prefixes[found_prefix]
                         found_org_prefix[found_prefix]["orgs"] = set()
@@ -548,24 +569,36 @@ def check_activity_org_refs(tree):
                     found_org_prefix[found_prefix]["orgs"].add(org)
                     if iati_identifier:
                         found_org_prefix[found_prefix]["activity_ids"].add(iati_identifier)
+                    continue
 
-                else:
-                    if regex.match(org):
-                        if org not in not_found_orgs:
-                            not_found_orgs[org] = {}
-                            not_found_orgs[org]["count"] = 0
-                            not_found_orgs[org]["type_count"] = org_type_template.copy()
-                            not_found_orgs[org]["activity_ids"] = set()
-                        not_found_orgs[org]["count"] += 1
-                        not_found_orgs[org]["type_count"][org_type] += 1
-                        if iati_identifier:
-                            not_found_orgs[org]["activity_ids"].add(iati_identifier)
+                # We already catch non matching orgs in the ruleset tests.
+                if regex.match(org):
+                    if org not in not_found_orgs:
+                        not_found_orgs[org] = {}
+                        not_found_orgs[org]["count"] = 0
+                        not_found_orgs[org]["type_count"] = org_type_template.copy()
+                        not_found_orgs[org]["activity_ids"] = set()
+                    not_found_orgs[org]["count"] += 1
+                    not_found_orgs[org]["type_count"][org_type] += 1
+                    if iati_identifier:
+                        not_found_orgs[org]["activity_ids"].add(iati_identifier)
 
-    organisation_ref_stats = {"publisher_count": len(found_publisher_orgs),
-                              "publisher_org_list": sorted(list(found_publisher_orgs.items()), key=lambda x: x[1]["count"], reverse=True),
+    for org in found_publisher_orgs.values():
+        org["activity_ids"] = sorted(list(org["activity_ids"]))
+
+    for prefix in not_found_orgs.values():
+        prefix["activity_ids"] = sorted(list(prefix["activity_ids"]))
+
+    for prefix in found_org_prefix.values():
+        prefix["activity_ids"] = sorted(list(prefix["activity_ids"]))
+        prefix["orgs"] = sorted(list(prefix["orgs"]))
+
+    organisation_ref_stats = {"error": False,
+                              "publisher_count": len(found_publisher_orgs),
+                              "publisher_org_list": sorted([list(item) for item in found_publisher_orgs.items()], key=lambda x: x[1]["count"], reverse=True),
                               "org_prefix_count": len(found_org_prefix),
-                              "org_prefix_list": sorted(list(found_org_prefix.items()), key=lambda x: x[1]["count"], reverse=True),
+                              "org_prefix_list": sorted([list(item) for item in found_org_prefix.items()], key=lambda x: x[1]["count"], reverse=True),
                               "not_found_orgs_count": len(not_found_orgs),
-                              "not_found_orgs_list": sorted(list(not_found_orgs.items()), key=lambda x: x[1]["count"], reverse=True)}
+                              "not_found_orgs_list": sorted([list(item) for item in not_found_orgs.items()], key=lambda x: x[1]["count"], reverse=True)}
 
     return organisation_ref_stats
