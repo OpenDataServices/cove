@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<table class="table table-condensed table-striped" id="ruleset-by-rule">
+<table class="table table-condensed table-striped" id="{{ruleset_table_id}}">
 <thead> 
   <tr>
     <th>{% trans 'Ruleset' %}</th>
@@ -11,7 +11,7 @@
   </tr> 
 </thead>
 <tbody>
-{% for ruleset, result in ruleset_errors.0.items %}
+{% for ruleset, result in used_ruleset_errors.0.items %}
   <tr>
     <td class="white-background"><strong>{{ruleset}}</strong></td>
     {% for rule, violations in result.items %}

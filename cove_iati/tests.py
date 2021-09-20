@@ -297,10 +297,6 @@ def test_cove_iati_cli_output():
                     'path': '/iati-activities/iati-activity[3]/iati-identifier/text()',
                     'rule': 'identifier/text() should match the regex [^\\:\\&\\|\\?]+'},
                    {'id': '?TZ-BRLA-5-CCC-123123-CC123',
-                    'explanation': '?TZ-BRLA-5 does not match the regex ^[^\\/\\&\\|\\?]+$',
-                    'path': '/iati-activities/iati-activity[3]/reporting-org/@ref',
-                    'rule': 'reporting-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
-                   {'id': '?TZ-BRLA-5-CCC-123123-CC123',
                     'explanation': 'Either sector or transaction/sector are expected (not both)',
                     'path': '/iati-activities/iati-activity[3]/sector & /iati-activities/iati-activity[3]'
                             '/transaction[1]/sector',
@@ -318,10 +314,6 @@ def test_cove_iati_cli_output():
                     'explanation': '2400-01-01 must be on or before today (2017-10-04)',
                     'path': '/iati-activities/iati-activity[4]/activity-date/@iso-date',
                     'rule': "activity-date[@type='4']/@iso-date must be today or in the past"},
-                   {'id': 'TZ-BRLA-5-DDD-123123-DD123',
-                    'explanation': '?TZ-BRLA-8 does not match the regex ^[^\\/\\&\\|\\?]+$',
-                    'path': '/iati-activities/iati-activity[4]/participating-org/@ref',
-                    'rule': 'participating-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
                    {
                     'id': 'TZ-BRLA-5-DDD-123123-DD123',
                     'explanation': 'recipient-country|recipient-region/@percentage adds up to 30%',
@@ -335,14 +327,26 @@ def test_cove_iati_cli_output():
                     'explanation': 'recipient-country|recipient-region/@percentage adds up to 0%',
                     'path': '/iati-activities/iati-activity[5]/recipient-country',
                     'rule': 'recipient-country/@percentage and recipient-region/@percentage must sum to 100%'},
-                   {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                    'explanation': '?TZ-BRLA-101 does not match the regex ^[^\\/\\&\\|\\?]+$',
-                    'path': '/iati-activities/iati-activity[5]/transaction[1]/provider-org/@ref',
-                    'rule': 'transaction/provider-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'},
-                   {'id': 'TZ-BRLA-9-EEE-123123-EE123',
-                    'explanation': '?TZ-BRLA-102 does not match the regex ^[^\\/\\&\\|\\?]+$',
-                    'path': '/iati-activities/iati-activity[5]/transaction[2]/receiver-org/@ref',
-                    'rule': 'transaction/receiver-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'}]
+                    ]
+
+    exp_org_rulesets = [
+       {'id': '?TZ-BRLA-5-CCC-123123-CC123',
+        'explanation': '?TZ-BRLA-5 does not match the regex ^[^\\/\\&\\|\\?]+$',
+        'path': '/iati-activities/iati-activity[3]/reporting-org/@ref',
+        'rule': 'reporting-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
+       {'id': 'TZ-BRLA-5-DDD-123123-DD123',
+        'explanation': '?TZ-BRLA-8 does not match the regex ^[^\\/\\&\\|\\?]+$',
+        'path': '/iati-activities/iati-activity[4]/participating-org/@ref',
+        'rule': 'participating-org/@ref should match the regex [^\\:\\&\\|\\?]+'},
+       {'id': 'TZ-BRLA-9-EEE-123123-EE123',
+        'explanation': '?TZ-BRLA-101 does not match the regex ^[^\\/\\&\\|\\?]+$',
+        'path': '/iati-activities/iati-activity[5]/transaction[1]/provider-org/@ref',
+        'rule': 'transaction/provider-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'},
+       {'id': 'TZ-BRLA-9-EEE-123123-EE123',
+        'explanation': '?TZ-BRLA-102 does not match the regex ^[^\\/\\&\\|\\?]+$',
+        'path': '/iati-activities/iati-activity[5]/transaction[2]/receiver-org/@ref',
+        'rule': 'transaction/receiver-organisation/@ref should match the regex [^\\:\\&\\|\\?]+'}
+    ]
 
     file_path = os.path.join('cove_iati', 'fixtures', 'basic_iati_ruleset_errors.xml')
     output_dir = os.path.join('media', str(uuid.uuid4()))
@@ -375,6 +379,15 @@ def test_cove_iati_cli_output():
             assert expected['explanation'][:-13] == actual['explanation'][:-13]
         else:
             assert expected['explanation'] == actual['explanation']
+
+    org_ruleset_errors = results.get('org_ruleset_errors')
+    org_ruleset_errors.sort(key=lambda i: i['path'])
+    zipped_org_ruleset_results = zip(exp_org_rulesets, org_ruleset_errors)
+
+    for expected, actual in zipped_org_ruleset_results:
+        assert expected['id'] == actual['id']
+        assert expected['path'] == actual['path']
+        assert expected['rule'] == actual['rule']
 
 
 def test_cove_iati_cli_orgids_output():
@@ -531,7 +544,8 @@ def test_common_checks_context_iati_ruleset():
     tree = iati.get_tree(file_path)
     context = iati.common_checks_context_iati({}, upload_dir, file_path, 'xml', tree, api=True)
 
-    assert len(context['ruleset_errors']) == 17
+    assert len(context['ruleset_errors']) == 13
+    assert len(context['org_ruleset_errors']) == 4
 
 
 def test_common_checks_context_iati_org_validation():
@@ -591,6 +605,191 @@ def test_non_embedded_codelist_full():
 
     assert len(context['invalid_non_embedded_codelist_values']) == 3
     assert set(item['value'] for item in context['invalid_non_embedded_codelist_values']) == set(["616", "A2", "A3"])
+
+
+def test_participating_org():
+    file_path = os.path.join("cove_iati", "fixtures", "example-org-analysis.xml")
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        context = api.iati_json_output(tmpdirname, file_path)
+        print("created temporary directory", tmpdirname)
+
+    assert context["org_refs"] == {
+        "error": False,
+        "not_found_orgs_count": 3,
+        "not_found_orgs_list": [
+            [
+                "AA-AAA-123456789",
+                {
+                    "activity_ids": [
+                        "AA-AAA-123456789-ABC123",
+                        "AA-AAA-123456789-ABC321",
+                    ],
+                    "count": 6,
+                    "type_count": {
+                        "Participating Org": 2,
+                        "Transaction Provider": 2,
+                        "Transaction Receiver": 2,
+                    },
+                },
+            ],
+            [
+                "Moon",
+                {
+                    "activity_ids": ["AA-AAA-123456789-ABC123"],
+                    "count": 3,
+                    "type_count": {
+                        "Participating Org": 2,
+                        "Transaction Provider": 1,
+                        "Transaction Receiver": 0,
+                    },
+                },
+            ],
+            [
+                "Foo",
+                {
+                    "activity_ids": ["AA-AAA-123456789-ABC123"],
+                    "count": 1,
+                    "type_count": {
+                        "Participating Org": 1,
+                        "Transaction Provider": 0,
+                        "Transaction Receiver": 0,
+                    },
+                },
+            ],
+        ],
+        "org_prefix_count": 1,
+        "org_prefix_list": [
+            [
+                "GB-COH",
+                {
+                    "activity_ids": ["AA-AAA-123456789-ABC321"],
+                    "category": "GB",
+                    "code": "GB-COH",
+                    "count": 2,
+                    "description": "Companies House is the "
+                    "United Kingdom's register "
+                    "of companies. It contains "
+                    "entries for many kinds of "
+                    "companies, including: * "
+                    "Public limited company "
+                    "(PLC) * Private company "
+                    "limited by shares (Ltd, "
+                    "Limited) * Private company "
+                    "limited by guarantee, "
+                    "typically a non-commercial "
+                    "membership body such as a "
+                    "charity * Private "
+                    "unlimited company (either "
+                    "with or without a share "
+                    "capital) * Limited "
+                    "liability partnership "
+                    "(LLP) * Limited "
+                    "partnership (LP) * "
+                    "Societas Europaea (SE): "
+                    "European Union-wide "
+                    "company structure * "
+                    "Companies incorporated by "
+                    "Royal Charter (RC) * "
+                    "Community interest company",
+                    "name": "Companies House",
+                    "orgs": ["GB-COH-1-1", "GB-COH-2"],
+                    "public-database": True,
+                    "status": "active",
+                    "type_count": {
+                        "Participating Org": 2,
+                        "Transaction Provider": 0,
+                        "Transaction Receiver": 0,
+                    },
+                    "url": "http://www.companieshouse.gov.uk/",
+                },
+            ]
+        ],
+        "publisher_count": 4,
+        "publisher_org_list": [
+            [
+                "US-EIN-941655673",
+                {
+                    "activity_ids": [
+                        "AA-AAA-123456789-ABC123",
+                        "AA-AAA-123456789-ABC321",
+                    ],
+                    "code": "US-EIN-941655673",
+                    "codeforiati:hq-country-or-region": "United " "States",
+                    "codeforiati:organisation-type": "Foundation",
+                    "codeforiati:organisation-type-code": "60",
+                    "codeforiati:registry-identifier": "hewlett-foundation",
+                    "count": 3,
+                    "name": "The William and Flora Hewlett " "Foundation",
+                    "status": "active",
+                    "type_count": {
+                        "Participating Org": 3,
+                        "Transaction Provider": 0,
+                        "Transaction Receiver": 0,
+                    },
+                },
+            ],
+            [
+                "21032",
+                {
+                    "activity_ids": [
+                        "AA-AAA-123456789-ABC123",
+                        "AA-AAA-123456789-ABC321",
+                    ],
+                    "code": "21032",
+                    "codeforiati:hq-country-or-region": "United " "States",
+                    "codeforiati:organisation-type": "International " "NGO",
+                    "codeforiati:organisation-type-code": "21",
+                    "codeforiati:registry-identifier": "psi",
+                    "count": 2,
+                    "name": "Population Service " "International",
+                    "status": "active",
+                    "type_count": {
+                        "Participating Org": 0,
+                        "Transaction Provider": 0,
+                        "Transaction Receiver": 2,
+                    },
+                },
+            ],
+            [
+                "AU-5",
+                {
+                    "activity_ids": ["AA-AAA-123456789-ABC321"],
+                    "code": "AU-5",
+                    "codeforiati:hq-country-or-region": "Australia",
+                    "codeforiati:organisation-type": "Government",
+                    "codeforiati:organisation-type-code": "10",
+                    "codeforiati:registry-identifier": "ausgov",
+                    "count": 1,
+                    "name": "Australia - Department of " "Foreign Affairs and Trade",
+                    "status": "active",
+                    "type_count": {
+                        "Participating Org": 1,
+                        "Transaction Provider": 0,
+                        "Transaction Receiver": 0,
+                    },
+                },
+            ],
+            [
+                "GB-CHC-1115482",
+                {
+                    "activity_ids": ["AA-AAA-123456789-ABC321"],
+                    "code": "GB-CHC-1115482",
+                    "codeforiati:hq-country-or-region": "United " "Kingdom",
+                    "codeforiati:organisation-type": "International " "NGO",
+                    "codeforiati:organisation-type-code": "21",
+                    "codeforiati:registry-identifier": "bracuk",
+                    "count": 1,
+                    "name": "BRAC UK",
+                    "status": "active",
+                    "type_count": {
+                        "Participating Org": 0,
+                        "Transaction Provider": 1,
+                        "Transaction Receiver": 0,
+                    },
+                },
+            ],
+        ],
+    }
 
 
 def test_iati_identifier_count():

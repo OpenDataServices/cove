@@ -95,7 +95,7 @@ def test_common_index_elements(server_url, browser):
     ('bad_spaces.csv', ['Converted to XML 2 Errors'], True),
     ('basic_iati_ruleset_errors.xml', ['Invalid against Schema 13 Errors', '20140101',
                                        '\'budget\': Missing child element(s), expected is value',
-                                       'Ruleset Errors 17 Errors',
+                                       'Ruleset Errors 13 Errors',
                                        'Start date (2010-01-01) must be before end date (2009-01-01)',
                                        'Start dates must be chronologically before end dates',
                                        'Percentages must sum to 100%',
