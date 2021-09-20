@@ -495,10 +495,12 @@ ACTIVITY_PREFIX = '/iati-activities/iati-activity'
 def check_activity_org_refs(tree):
     root = tree.getroot()
 
-    publisher_request = requests.get("https://codelists.codeforiati.org/api/json/en/ReportingOrganisation.json")
-    registration_agency_request = requests.get("https://codelists.codeforiati.org/api/json/en/OrganisationRegistrationAgency.json")
-
-    if publisher_request.status_code != 200 or registration_agency_request.status_code != 200:
+    try:
+        publisher_request = requests.get("https://codelists.codeforiati.org/api/json/en/ReportingOrganisation.json")
+        publisher_request.raise_for_status()
+        registration_agency_request = requests.get("https://codelists.codeforiati.org/api/json/en/OrganisationRegistrationAgency.json")
+        registration_agency_request.raise_for_status()
+    except requests.RequestException:
         return {"error": "Unable to fetch data to do organisation checks", 'not_found_orgs_count': 0}
 
     publishers = publisher_request.json()
@@ -531,14 +533,6 @@ def check_activity_org_refs(tree):
                 if org in reporting_org:
                     continue
 
-                # get possible prefixes by initial substrings of ref. This is faster than checking ref
-                # against all prefixes in registry.
-                found_prefix = None
-                for possible_prefix in set(org[0:n] for n in range(4, len(org)+1)):  # no prefix shorter than 4
-                    if possible_prefix in org_prefixes:
-                        found_prefix = possible_prefix
-                        break
-
                 if org in publisher_codes:
                     if org not in found_publisher_orgs:
                         found_publisher_orgs[org] = publisher_codes[org]
@@ -551,6 +545,8 @@ def check_activity_org_refs(tree):
                         found_publisher_orgs[org]["activity_ids"].add(iati_identifier)
                     continue
 
+                # get possible prefixes by initial substrings of ref. This is faster than checking ref
+                # against all prefixes in registry.
                 found_prefix = None
                 for possible_prefix in set(org[0:n] for n in range(4, len(org)+1)):  # no prefix shorter than 4
                     if possible_prefix in org_prefixes:
