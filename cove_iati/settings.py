@@ -1,15 +1,18 @@
 import os
 import environ
+from datetime import timedelta
 
 # Needs a noqa comment to come after the above import
 from cove import settings  # noqa: E408
 
+from requests_cache import FileCache, CachedSession
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 env = environ.Env(  # set default values and casting
     DB_NAME=(str, os.path.join(BASE_DIR, 'db.sqlite3')),
     SENTRY_DSN=(str, ''),
+    REQUESTS_CACHE_DIR=(str, os.path.join(BASE_DIR, 'requests_cache_dir'))
 )
 
 # We use the setting to choose whether to show the section about Sentry in the
@@ -107,3 +110,18 @@ COVE_CONFIG = {
 
 # https://github.com/OpenDataServices/cove/issues/1098
 FILE_UPLOAD_PERMISSIONS = 0o644
+
+
+# Note on deploying new versions of this app the cache directory should be cleared
+# as new versions of requests & requests_cache libraries may use different versions
+# https://requests-cache.readthedocs.io/en/latest/user_guide/troubleshooting.html#potential-issues
+REQUESTS_SESSION_WITH_CACHING = CachedSession(
+    'iati_cove_cache',
+    backend=FileCache(
+        cache_name=env('REQUESTS_CACHE_DIR')
+    ),
+    expire_after=timedelta(days=1),  # Expire responses after one day
+    allowable_methods=['GET'],       # All our requests we want to cache are GET requests
+    allowable_codes=[200, 400],      # Cache 400 responses as a solemn reminder of your failures
+    stale_if_error=True,             # In case of request errors, use stale cache data if possible
+)

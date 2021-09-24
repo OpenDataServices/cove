@@ -14,6 +14,7 @@ from libcove.lib.tools import ignore_errors
 from cove_iati.lib.exceptions import UnrecognisedFileTypeXML
 from cove_iati.lib.process_codelists import invalid_embedded_codelist_values, invalid_non_embedded_codelist_values
 from .schema import SchemaIATI
+from django.conf import settings
 
 
 def get_tree(data_file):
@@ -496,9 +497,9 @@ def check_activity_org_refs(tree):
     root = tree.getroot()
 
     try:
-        publisher_request = requests.get("https://codelists.codeforiati.org/api/json/en/ReportingOrganisation.json")
+        publisher_request = settings.REQUESTS_SESSION_WITH_CACHING.get("https://codelists.codeforiati.org/api/json/en/ReportingOrganisation.json")
         publisher_request.raise_for_status()
-        registration_agency_request = requests.get("https://codelists.codeforiati.org/api/json/en/OrganisationRegistrationAgency.json")
+        registration_agency_request = settings.REQUESTS_SESSION_WITH_CACHING.get("https://codelists.codeforiati.org/api/json/en/OrganisationRegistrationAgency.json")
         registration_agency_request.raise_for_status()
     except requests.RequestException:
         return {"error": "Unable to fetch data to do organisation checks", 'not_found_orgs_count': 0}
