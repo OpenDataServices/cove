@@ -6,6 +6,7 @@ libcoveweb
 django-bootstrap3
 django-debug-toolbar
 requests
+requests-cache
 cached-property
 dealer
 django-environ

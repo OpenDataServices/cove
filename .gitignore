@@ -20,3 +20,5 @@ cove/lib/org-ids.json
 cove/lib/org-ids.json.lock
 chromedriver/
 src/
+/requests_cache_dir/*.pkl
+/requests_cache_dir/*.sqlite
