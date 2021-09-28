@@ -48,6 +48,12 @@ dealer==2.1.0
     # via -r requirements.in
 defusedxml==0.7.1
     # via odfpy
+django==2.2.24
+    # via
+    #   -r requirements.in
+    #   django-bootstrap3
+    #   django-debug-toolbar
+    #   libcoveweb
 django-bootstrap3==15.0.0
     # via
     #   -r requirements.in
@@ -57,12 +63,6 @@ django-debug-toolbar==3.2.1
 django-environ==0.4.5
     # via
     #   -r requirements.in
-    #   libcoveweb
-django==2.2.24
-    # via
-    #   -r requirements.in
-    #   django-bootstrap3
-    #   django-debug-toolbar
     #   libcoveweb
 docopt==0.6.2
     # via coveralls
@@ -94,13 +94,6 @@ ijson==3.1.4
     # via flattentool
 imagesize==1.2.0
     # via sphinx
-importlib-metadata==2.1.1
-    # via
-    #   django-bootstrap3
-    #   flake8
-    #   jsonschema
-    #   pluggy
-    #   pytest
 iniconfig==1.1.1
     # via pytest
 itsdangerous==2.0.1
@@ -166,6 +159,13 @@ pyparsing==2.4.7
     # via packaging
 pyrsistent==0.18.0
     # via jsonschema
+pytest==6.2.4
+    # via
+    #   -r requirements_dev.in
+    #   pytest-cov
+    #   pytest-django
+    #   pytest-forked
+    #   pytest-xdist
 pytest-cov==2.12.1
     # via -r requirements_dev.in
 pytest-django==4.4.0
@@ -176,13 +176,6 @@ pytest-localserver==0.5.0
     # via -r requirements_dev.in
 pytest-xdist==2.3.0
     # via -r requirements_dev.in
-pytest==6.2.4
-    # via
-    #   -r requirements_dev.in
-    #   pytest-cov
-    #   pytest-django
-    #   pytest-forked
-    #   pytest-xdist
 python-dateutil==2.8.1
     # via -r requirements.in
 python-slugify==4.0.1
@@ -198,8 +191,6 @@ rangedict==0.1.6
     # via -r requirements.in
 recommonmark==0.7.1
     # via -r requirements_dev.in
-requests-cache==0.7.5
-    # via -r requirements.in
 requests==2.25.1
     # via
     #   -r requirements.in
@@ -209,6 +200,8 @@ requests==2.25.1
     #   requests-cache
     #   sphinx
     #   transifex-client
+requests-cache==0.7.5
+    # via -r requirements.in
 rfc3987==1.3.8
     # via
     #   -r requirements.in
@@ -236,13 +229,13 @@ snowballstemmer==2.1.0
     # via sphinx
 sortedcontainers==2.4.0
     # via hypothesis
-sphinx-rtd-theme==0.5.2
-    # via -r requirements_dev.in
 sphinx==4.0.2
     # via
     #   -r requirements_dev.in
     #   recommonmark
     #   sphinx-rtd-theme
+sphinx-rtd-theme==0.5.2
+    # via -r requirements_dev.in
 sphinxcontrib-applehelp==1.0.2
     # via sphinx
 sphinxcontrib-devhelp==1.0.2
@@ -255,7 +248,7 @@ sphinxcontrib-qthelp==1.0.3
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via
     #   django
     #   django-debug-toolbar
@@ -273,8 +266,6 @@ transaction==3.0.1
     # via zodb
 transifex-client==0.14.3
     # via -r requirements_dev.in
-typing-extensions==3.10.0.0
-    # via gitpython
 uc-rfc6266-parser==0.1.0
     # via libcoveweb
 url-normalize==1.4.3
@@ -302,9 +293,7 @@ zc.zlibstorage==1.2.0
 zconfig==3.6.0
     # via zodb
 zipp==1.2.0
-    # via
-    #   -r requirements.in
-    #   importlib-metadata
+    # via -r requirements.in
 zodb==5.6.0
     # via
     #   flattentool

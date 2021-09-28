@@ -34,6 +34,12 @@ dealer==2.1.0
     # via -r requirements.in
 defusedxml==0.7.1
     # via odfpy
+django==2.2.24
+    # via
+    #   -r requirements.in
+    #   django-bootstrap3
+    #   django-debug-toolbar
+    #   libcoveweb
 django-bootstrap3==15.0.0
     # via
     #   -r requirements.in
@@ -43,12 +49,6 @@ django-debug-toolbar==3.2.1
 django-environ==0.4.5
     # via
     #   -r requirements.in
-    #   libcoveweb
-django==2.2.24
-    # via
-    #   -r requirements.in
-    #   django-bootstrap3
-    #   django-debug-toolbar
     #   libcoveweb
 et-xmlfile==1.1.0
     # via openpyxl
@@ -61,10 +61,6 @@ idna==2.10
     # via requests
 ijson==3.1.4
     # via flattentool
-importlib-metadata==2.1.1
-    # via
-    #   django-bootstrap3
-    #   jsonschema
 itsdangerous==2.0.1
     # via requests-cache
 json-merge-patch==0.2
@@ -115,14 +111,14 @@ pyyaml==5.4.1
     # via requests-cache
 rangedict==0.1.6
     # via -r requirements.in
-requests-cache==0.7.5
-    # via -r requirements.in
 requests==2.25.1
     # via
     #   -r requirements.in
     #   libcove
     #   libcoveweb
     #   requests-cache
+requests-cache==0.7.5
+    # via -r requirements.in
 rfc3987==1.3.8
     # via
     #   -r requirements.in
@@ -140,7 +136,7 @@ six==1.16.0
     #   python-dateutil
     #   url-normalize
     #   zodb
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via
     #   django
     #   django-debug-toolbar
@@ -173,9 +169,7 @@ zc.zlibstorage==1.2.0
 zconfig==3.6.0
     # via zodb
 zipp==1.2.0
-    # via
-    #   -r requirements.in
-    #   importlib-metadata
+    # via -r requirements.in
 zodb==5.6.0
     # via
     #   flattentool
