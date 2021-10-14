@@ -6,6 +6,7 @@ import json
 
 from lxml import etree as ET
 from lxml.etree import Element
+from django.conf import settings
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -26,9 +27,15 @@ def process_mapping(schema_directory):
     return all_mappings
 
 
-def parse_codelist(filename):
-    codelist = ET.parse(filename)
-    codelist_root = codelist.getroot()
+def parse_codelist_filename(filename):
+    return _parse_codelist_etree(ET.parse(filename).getroot())
+
+
+def parse_codelist_content(content):
+    return _parse_codelist_etree(ET.fromstring(content))
+
+
+def _parse_codelist_etree(codelist_root):
     metadata = codelist_root.find('metadata')
 
     codelist_data = {}
@@ -66,7 +73,7 @@ def embedded_codelists(schema_directory):
         for path, mapping in mappings.items():
             if codelist_name == mapping['codelist_name']:
                 embedded_codelists[path] = mappings[path]
-                embedded_codelists[path].update(parse_codelist(filename))
+                embedded_codelists[path].update(parse_codelist_filename(filename))
                 embedded_codelists[path]["filename"] = filename
 
     return embedded_codelists
@@ -76,13 +83,13 @@ def embedded_codelists(schema_directory):
 def non_embedded_codelists(schema_directory):
     mappings = process_mapping(schema_directory)
     non_embedded_codelists = {}
-    for filename in glob.glob(os.path.join(dir_path, '..', 'non_embedded_codelists') + '/' + '*.xml'):
-        codelist_name = filename.split('/')[-1].split('.')[0]
-        for path, mapping in mappings.items():
-            if codelist_name == mapping['codelist_name']:
-                non_embedded_codelists[path] = mappings[path]
-                non_embedded_codelists[path].update(parse_codelist(filename))
-                non_embedded_codelists[path]["filename"] = filename
+    for path, mapping in mappings.items():
+        if mapping['codelist_name'] in settings.NON_EMBEDDED_CODELISTS_URLS:
+            url = settings.NON_EMBEDDED_CODELISTS_URLS[mapping['codelist_name']]
+            request = settings.REQUESTS_SESSION_WITH_CACHING.get(url)
+            request.raise_for_status()
+            non_embedded_codelists[path] = mappings[path]
+            non_embedded_codelists[path].update(parse_codelist_content(request.content))
 
     return non_embedded_codelists
 
@@ -172,7 +179,7 @@ def invalid_codelist_values(codelist_values, filename, source_map=None):
             "value": value,
             "current_identifier": current_identifier,
             "codelist_name": codelist_data['name'],
-            "filename": codelist_data['filename'],
+            "filename": codelist_data.get('filename'),
             "codelist_path": codelist_selected_path
         }
 
