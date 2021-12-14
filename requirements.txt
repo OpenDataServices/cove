@@ -85,7 +85,7 @@ libcove==0.24.0
     #   libcoveweb
 libcoveweb==0.24.1
     # via -r requirements.in
-lxml==4.6.3
+lxml==4.6.5
     # via flattentool
 odfpy==1.4.1
     # via flattentool

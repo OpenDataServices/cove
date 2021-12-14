@@ -127,7 +127,7 @@ libcoveweb==0.24.1
     # via -r requirements.in
 libsass==0.21.0
     # via -r requirements_dev.in
-lxml==4.6.3
+lxml==4.6.5
     # via flattentool
 markupsafe==2.0.1
     # via jinja2
