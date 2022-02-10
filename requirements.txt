@@ -44,7 +44,7 @@ django-environ==0.4.5
     # via
     #   -r requirements.in
     #   libcoveweb
-django==2.2.24
+django==2.2.27
     # via
     #   -r requirements.in
     #   django-bootstrap3
@@ -140,7 +140,7 @@ six==1.16.0
     #   python-dateutil
     #   url-normalize
     #   zodb
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via
     #   django
     #   django-debug-toolbar

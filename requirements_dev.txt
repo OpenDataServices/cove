@@ -58,7 +58,7 @@ django-environ==0.4.5
     # via
     #   -r requirements.in
     #   libcoveweb
-django==2.2.24
+django==2.2.27
     # via
     #   -r requirements.in
     #   django-bootstrap3
@@ -255,7 +255,7 @@ sphinxcontrib-qthelp==1.0.3
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via
     #   django
     #   django-debug-toolbar
