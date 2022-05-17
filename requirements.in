@@ -1,4 +1,4 @@
-Django>2.2,<2.3
+Django>3.2,<3.3
 #^^ rq.filter: <1.12
 flattentool>=0.17.0
 libcove
@@ -10,7 +10,7 @@ requests-cache
 cached-property
 dealer
 django-environ
-zipp==1.2.0
+zipp
 jsonschema
 json-merge-patch
 python-dateutil

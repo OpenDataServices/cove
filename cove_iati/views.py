@@ -67,12 +67,7 @@ def data_input_iati(request):
     return data_input(request, form_classes=iati_form_classes, text_file_name='text.xml')
 
 
-@cove_web_input_error
-def explore_iati(request, pk):
-    context, db_data, error = explore_data_context(request, pk, get_file_type)
-    if error:
-        return error
-
+def explore_data_context_iati(request, context, db_data, error):
     lib_cove_config = LibCoveConfig()
     lib_cove_config.config.update(settings.COVE_CONFIG)
 
@@ -113,6 +108,35 @@ def explore_iati(request, pk):
     if not db_data.rendered:
         db_data.rendered = True
 
+    return context, db_data, error
+
+
+@cove_web_input_error
+def explore_iati(request, pk):
+    context, db_data, error = explore_data_context(request, pk, get_file_type)
+    if error:
+        return error
+    # The cached path is inside the media directory for this data, so will be
+    # removed along with that after the expiry
+    cached_context_path = os.path.join(db_data.upload_dir(), "cached_context.json")
+    if cached_context_path == db_data.original_file.file.name:
+        raise PermissionError('You are not allowed to upload a file with this name.')
+    if request.POST:
+        cached = False
+    else:
+        try:
+            with open(cached_context_path) as fp:
+                context = json.load(fp)
+            cached = True
+        except (json.decoder.JSONDecodeError, FileNotFoundError):
+            cached = False
+    if not cached:
+        context, db_data, error = explore_data_context_iati(request, context, db_data, error)
+        if error:
+            return error
+        else:
+            with open(cached_context_path, 'w') as fp:
+                json.dump(context, fp)
     return render(request, 'cove_iati/explore.html', context)
 
 
