@@ -408,6 +408,30 @@
   </div>
   {% endblock download_and_share %}
 
+  {% block transforms %}
+  <div class="panel panel-default">
+    <div class="panel-heading panel-heading-explore" data-toggle="collapse" data-target="#transform-body">
+      <h3 class="panel-title panel-title-explore"><span class="glyphicon glyphicon-wrench"></span>
+        {% trans "Transform" %}
+        <span class="glyphicon glyphicon-collapse-down pull-right"></span>
+      </h3>
+    </div>
+    <div id="transform-body" class="collapse {% if suffix %}in{% endif %}">
+      <div class="panel-body">
+        <p>
+          Merge indicators by title:
+          {% if merge_indicator_output %}
+          <a href="{{ merge_indicator_output }}">Output (xml)</a> {{ merge_indicator_output_file_size|filesizeformat }}.
+          <a target="_blank" href="http://d-preview.codeforiati.org/upload?xmlurl={{ request.scheme }}://{{ request.get_host }}{{ merge_indicator_output }}" class="btn btn-success btn-sm">Generate a d-preview</a>
+          {% else %}
+          <a href="{% url 'explore_suffix' data_uuid 'merge_indicator' %}" class="btn btn-success btn-sm">Run</a>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
 {% endblock explore_content %}
 
 {% block extrafooterscript %}
