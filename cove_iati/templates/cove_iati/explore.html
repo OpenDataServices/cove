@@ -419,12 +419,13 @@
     <div id="transform-body" class="collapse {% if suffix %}in{% endif %}">
       <div class="panel-body">
         <p>
-          Merge indicators by title:
+          <h4>Merge indicators by title</h4>
+          <p>This function will merge together any indicators in the result block, that share the same title. No other data will be altered or changed. This function is designed for instances where multiple periods exist within the same result/indicator, but are not uniquely referenced in the IATI standard or CoVE spreadsheet.<p/>
           {% if merge_indicator_output %}
-          <a href="{{ merge_indicator_output }}">Output (xml)</a> {{ merge_indicator_output_file_size|filesizeformat }}.
-          <a target="_blank" href="http://d-preview.codeforiati.org/upload?xmlurl={{ request.scheme }}://{{ request.get_host }}{{ merge_indicator_output }}" class="btn btn-success btn-sm">Generate a d-preview</a>
+          <p><a href="{{ merge_indicator_output }}">Output (xml)</a> {{ merge_indicator_output_file_size|filesizeformat }}</p>
+          <p><a target="_blank" href="http://d-preview.codeforiati.org/upload?xmlurl={{ request.scheme }}://{{ request.get_host }}{{ merge_indicator_output }}" class="btn btn-success btn-sm">Generate a d-preview</a></p>
           {% else %}
-          <a href="{% url 'explore_suffix' data_uuid 'merge_indicator' %}" class="btn btn-success btn-sm">Run</a>
+          <p><a href="{% url 'explore_suffix' data_uuid 'merge_indicator' %}" class="btn btn-success btn-sm">Run</a></p>
           {% endif %}
         </p>
       </div>
