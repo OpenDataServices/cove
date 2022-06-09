@@ -13,6 +13,7 @@ from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+import iatiutils.merge_indicator
 from libcove.config import LibCoveConfig
 from libcove.lib.converters import convert_spreadsheet, convert_json
 
@@ -86,6 +87,8 @@ def explore_data_context_iati(request, context, db_data, error):
     else:
         data_file = db_data.original_file.file.name
 
+    context['data_file'] = data_file
+
     tree = get_tree(data_file)
     context = common_checks_context_iati(context, db_data.upload_dir(), data_file, file_type, tree)
     context['first_render'] = not db_data.rendered
@@ -112,7 +115,7 @@ def explore_data_context_iati(request, context, db_data, error):
 
 
 @cove_web_input_error
-def explore_iati(request, pk):
+def explore_iati(request, pk, suffix=None):
     context, db_data, error = explore_data_context(request, pk, get_file_type)
     if error:
         return error
@@ -137,6 +140,19 @@ def explore_iati(request, pk):
         else:
             with open(cached_context_path, 'w') as fp:
                 json.dump(context, fp)
+
+    merge_indicator_output_file_path = os.path.join(db_data.upload_dir(), "merged.xml")
+    if suffix == 'merge_indicator':
+        if not os.path.exists(merge_indicator_output_file_path):
+            with open(context["data_file"]) as input_file, open(merge_indicator_output_file_path, "wb") as output_file:
+                iatiutils.merge_indicator.merge_indicator(input_file, output_file)
+            with open(cached_context_path, 'w') as fp:
+                json.dump(context, fp)
+    if os.path.exists(merge_indicator_output_file_path):
+        upload_url = db_data.upload_url()
+        context["merge_indicator_output_file_size"] = os.path.getsize(merge_indicator_output_file_path)
+        context["merge_indicator_output"] = "{}{}{}".format(upload_url, "" if upload_url.endswith("/") else "/", "merged.xml")
+    context['suffix'] = suffix
     return render(request, 'cove_iati/explore.html', context)
 
 

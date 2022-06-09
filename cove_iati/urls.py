@@ -8,6 +8,7 @@ import cove_iati.views
 
 urlpatterns = [
     url(r'^$', cove_iati.views.data_input_iati, name='index'),
+    url(r'^data/(.+)/(.+)$', cove_iati.views.explore_iati, name='explore_suffix'),
     url(r'^data/(.+)$', cove_iati.views.explore_iati, name='explore'),
     url(r'^api_test', cove_iati.views.api_test, name='api_test'),
 ] + urlpatterns
