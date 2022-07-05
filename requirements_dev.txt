@@ -97,7 +97,7 @@ execnet==1.9.0
     # via pytest-xdist
 flake8==4.0.1
     # via -r requirements_dev.in
-flattentool==0.17.1
+flattentool==0.17.2
     # via
     #   -r requirements.in
     #   libcove
