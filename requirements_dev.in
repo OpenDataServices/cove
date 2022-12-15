@@ -7,7 +7,10 @@ pytest-cov
 pytest-localserver
 pytest-xdist
 coveralls
-selenium
+# Selenium 4.3.0 changes the API, so install a version before that.
+# We did the same thing for 360 cove:
+# https://github.com/ThreeSixtyGiving/dataquality/commit/bfbc1cbab2b40368ab2c37472fc2e02d5d833b97
+selenium<4.3.0
 transifex-client
 libsass
 Sphinx

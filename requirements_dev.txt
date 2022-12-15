@@ -40,10 +40,12 @@ cattrs==22.2.0
 certifi==2022.12.7
     # via
     #   requests
-    #   selenium
     #   sentry-sdk
+    #   urllib3
 cffi==1.15.1
-    # via persistent
+    # via
+    #   cryptography
+    #   persistent
 charset-normalizer==2.1.1
     # via requests
 commonmark==0.9.1
@@ -58,6 +60,10 @@ coverage[toml]==6.5.0
     #   pytest-cov
 coveralls==3.3.1
     # via -r requirements_dev.in
+cryptography==38.0.4
+    # via
+    #   pyopenssl
+    #   urllib3
 dealer==2.1.0
     # via -r requirements.in
 defusedxml==0.7.1
@@ -114,6 +120,7 @@ idna==3.4
     # via
     #   requests
     #   trio
+    #   urllib3
 ijson==3.1.4
     # via flattentool
 imagesize==1.4.1
@@ -176,6 +183,8 @@ pyflakes==3.0.1
     # via flake8
 pygments==2.13.0
     # via sphinx
+pyopenssl==22.1.0
+    # via urllib3
 pyrsistent==0.19.2
     # via jsonschema
 pysocks==1.7.1
@@ -228,7 +237,7 @@ rfc6266==0.0.4
     # via -r requirements.in
 schema==0.7.5
     # via flattentool
-selenium==4.7.2
+selenium==4.2.0
     # via -r requirements_dev.in
 sentry-sdk==1.12.0
     # via -r requirements.in
@@ -296,13 +305,15 @@ uc-rfc6266-parser==0.1.0
     # via libcoveweb
 url-normalize==1.4.3
     # via requests-cache
-urllib3[socks]==1.26.13
+urllib3[secure,socks]==1.26.13
     # via
     #   requests
     #   requests-cache
     #   selenium
     #   sentry-sdk
     #   transifex-client
+urllib3-secure-extra==0.1.0
+    # via urllib3
 webencodings==0.5.1
     # via bleach
 werkzeug==1.0.1
