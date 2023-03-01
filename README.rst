@@ -76,6 +76,14 @@ Steps to installation:
 * Compile the translations
 * Run the development server
 
+The following steps are for Ubuntu but equivalent packages are available for other distros.
+
+.. code:: bash
+
+   sudo apt-get install build-essential libxml2-dev libxslt1-dev python3-dev
+
+Run:
+
 .. code:: bash
 
     git clone https://github.com/OpenDataServices/cove.git
@@ -83,22 +91,14 @@ Steps to installation:
     python3 -m venv .ve
     source .ve/bin/activate
     pip install -r requirements_dev.txt
-    DJANGO_SETTINGS_MODULE={cove_MODULENAME}.settings python manage.py migrate
+    python manage.py migrate
     python manage.py compilemessages
-
-
-The following steps are for Ubuntu but equivalent packages are available for other distros.
-
-.. code:: bash
-
-   sudo apt-get install build-essential libxml2-dev libxslt1-dev python3-dev
-   pip install -r requirements_iati.txt
 
 Then run the development server:
 
 .. code:: bash
 
-    DJANGO_SETTINGS_MODULE=cove_iati.settings python manage.py runserver
+    python manage.py runserver
 
 
 Deployment
