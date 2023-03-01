@@ -141,8 +141,6 @@ jsonschema==3.2.0
     # via
     #   -r requirements.in
     #   libcove
-lepl==5.1.3
-    # via rfc6266
 libcove==0.29.0
     # via
     #   -r requirements.in
@@ -233,8 +231,6 @@ rfc3987==1.3.8
     # via
     #   -r requirements.in
     #   libcove
-rfc6266==0.0.4
-    # via -r requirements.in
 schema==0.7.5
     # via flattentool
 selenium==4.2.0
