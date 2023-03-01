@@ -24,8 +24,6 @@ jobs:
 
     - name: Install requirements_dev.txt
       run: pip install -r requirements_dev.txt
-    - name: Install requirements_iati.txt
-      run: pip install -r requirements_iati.txt
     - name: Install Ubuntu Translation Libraries
       run: sudo apt install gettext
     - name: Test IATI
