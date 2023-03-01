@@ -1,0 +1,15 @@
+version: "3.5"
+
+services:
+
+  iati-cove-app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    environment:
+      DEBUG: "True"
+      ALLOWED_HOSTS: "localhost"
+    volumes:
+      - ".:/app"

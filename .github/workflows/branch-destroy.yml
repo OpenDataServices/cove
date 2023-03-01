@@ -1,0 +1,26 @@
+name: Branch Destroy
+on: delete
+
+jobs:
+  branch-destroy:
+    if: github.event.ref_type == 'branch' && github.event.ref != 'live'
+    environment: iati-cove-branch-deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
+        name: id_rsa # optional
+        known_hosts: ${{ vars.DOKKU_SSH_KEYSCAN }}
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+        architecture: x64
+    - run: pip install dokkusd
+    - run: python -m dokkusd.cli destroy --appname ${{ vars.DOKKU_APP_NAME_PREFIX }}-${{ github.event.ref }}
+      env:
+        DOKKUSD_REMOTE_HOST: ${{ vars.DOKKU_REMOTE_HOST }}
+        DOKKUSD_REMOTE_PORT: ${{ vars.DOKKU_REMOTE_PORT }}
+        DOKKUSD_REMOTE_USER: ${{ vars.DOKKU_REMOTE_USER }}
