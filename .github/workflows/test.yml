@@ -29,11 +29,11 @@ jobs:
     - name: Install Ubuntu Translation Libraries
       run: sudo apt install gettext
     - name: Test IATI
-      run: DJANGO_SETTINGS_MODULE=cove_iati.settings py.test -n 2 cove_iati --cov-append --cov
+      run: py.test -n 2 cove_iati --cov-append --cov
     - name: Migrate Database
-      run: DJANGO_SETTINGS_MODULE=cove_iati.settings python manage.py migrate
+      run: python manage.py migrate
     - name: Compile Messages
-      run: DJANGO_SETTINGS_MODULE=cove_iati.settings python manage.py compilemessages
+      run: python manage.py compilemessages
     - name: Report to coveralls
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
