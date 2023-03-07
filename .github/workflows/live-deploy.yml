@@ -1,0 +1,38 @@
+name: Live Deploy
+on: [push]
+
+jobs:
+  live-deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/live'
+    environment: iati-cove-live-deploy
+    steps:
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
+        name: id_rsa # optional
+        known_hosts: ${{ vars.DOKKU_SSH_KEYSCAN }}
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+        fetch-depth: 0
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+        architecture: x64
+    - run: pip install dokkusd
+    - uses: oNaiPs/secrets-to-env-action@v1
+      with:
+        secrets: ${{ toJSON(secrets) }}
+        prefix: ALLSECRETSANDVARS_
+    - uses: oNaiPs/secrets-to-env-action@v1
+      with:
+        secrets: ${{ toJSON(vars) }}
+        prefix: ALLSECRETSANDVARS_
+    - run: python -m dokkusd.cli deploy --appname ${{ vars.DOKKU_APP_NAME }} --environmentvariablesprefixedby ALLSECRETSANDVARS_DOKKU_ENVIRONMENT_VARIABLE_
+      env:
+        DOKKUSD_REMOTE_HOST: ${{ vars.DOKKU_REMOTE_HOST }}
+        DOKKUSD_REMOTE_PORT: ${{ vars.DOKKU_REMOTE_PORT }}
+        DOKKUSD_REMOTE_USER: ${{ vars.DOKKU_REMOTE_USER }}

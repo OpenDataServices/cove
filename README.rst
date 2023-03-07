@@ -101,10 +101,26 @@ Then run the development server:
     python manage.py runserver
 
 
+Installation with Docker
+========================
+
+Docker is used in production, so sometimes you may want to run locally with Docker to debug issues:
+
+    docker compose -f docker-compose.dev.yml down # (if running)
+    docker compose -f docker-compose.dev.yml build --no-cache
+    docker compose -f docker-compose.dev.yml up # (to restart)
+
+Run commands:
+
+    docker compose -f docker-compose.dev.yml run iati-cove-app-dev python manage.py migrate
+    docker compose -f docker-compose.dev.yml run iati-cove-app-dev python manage.py collectstatic --noinput
+
+
 Deployment
 ==========
 
 See https://cove.readthedocs.io/en/latest/deployment/
+
 
 Run tests
 =========
