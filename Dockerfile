@@ -25,12 +25,9 @@ RUN pip install --no-binary lxml -r requirements.txt
 RUN python manage.py collectstatic --noinput
 RUN python manage.py compilemessages
 
-# Webserver
-
-COPY docker/nginx.conf /etc/nginx/sites-available/default
-
 # Run
 
 EXPOSE 80
 
-CMD /bin/bash -c "/etc/init.d/nginx start && gunicorn --bind 0.0.0.0:8000 --timeout 900 cove_iati.wsgi:application"
+CMD /app/docker/start.sh
+

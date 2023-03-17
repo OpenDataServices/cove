@@ -19,9 +19,6 @@
       "DB_NAME": "/app/database/db.sqlite",
       "DEBUG": "False"
     },
-    "nginx": {
-      "client_max_body_size": "100m"
-    },
     "keep_git_dir": true
   }
 }
