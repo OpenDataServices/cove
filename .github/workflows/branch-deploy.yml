@@ -4,7 +4,6 @@ on: [push]
 jobs:
   branch-deploy:
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/live'
     environment: iati-cove-branch-deploy
     steps:
     - name: Install SSH key
