@@ -160,7 +160,7 @@ six==1.16.0
     #   rfc3339-validator
     #   url-normalize
     #   zodb
-sqlparse==0.4.3
+sqlparse==0.4.4
     # via
     #   django
     #   django-debug-toolbar
