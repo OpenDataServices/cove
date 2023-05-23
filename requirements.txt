@@ -129,7 +129,7 @@ pytz==2022.7.1
     #   flattentool
 rangedict==0.1.7
     # via -r requirements.in
-requests==2.28.2
+requests==2.31.0
     # via
     #   -r requirements.in
     #   bdd-tester

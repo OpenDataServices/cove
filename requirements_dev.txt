@@ -220,7 +220,7 @@ rangedict==0.1.7
     # via -r requirements.in
 recommonmark==0.7.1
     # via -r requirements_dev.in
-requests==2.28.2
+requests==2.31.0
     # via
     #   -r requirements.in
     #   bdd-tester
