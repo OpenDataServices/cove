@@ -49,7 +49,7 @@ dealer==2.1.0
     # via -r requirements.in
 defusedxml==0.7.1
     # via odfpy
-django==3.2.18
+django==3.2.20
     # via
     #   -r requirements.in
     #   django-bootstrap3
