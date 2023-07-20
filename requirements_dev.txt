@@ -188,7 +188,7 @@ pycparser==2.21
     # via cffi
 pyflakes==3.0.1
     # via flake8
-pygments==2.14.0
+pygments==2.15.0
     # via sphinx
 pyopenssl==23.0.0
     # via urllib3
