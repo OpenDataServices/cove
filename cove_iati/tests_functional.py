@@ -4,17 +4,21 @@ import pytest
 import requests
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 
 BROWSER = os.environ.get('BROWSER', 'ChromeHeadless')
+CHROME_SNAP = bool(os.environ.get('CHROME_SNAP', False))
 
 
 @pytest.fixture(scope="module")
 def browser(request):
     if BROWSER == 'ChromeHeadless':
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        browser = webdriver.Chrome(chrome_options=chrome_options)
+        options = Options()
+        options.add_argument("--headless")
+        if CHROME_SNAP:
+            options.add_argument("--remote-debugging-port=9222")
+        browser = webdriver.Chrome(options=options)
     else:
         browser = getattr(webdriver, BROWSER)()
     browser.implicitly_wait(3)
@@ -34,37 +38,37 @@ def test_accordion(server_url, browser):
     browser.get(server_url)
 
     def buttons():
-        return [b.is_displayed() for b in browser.find_elements_by_tag_name('button')]
+        return [b.is_displayed() for b in browser.find_elements(By.TAG_NAME, 'button')]
 
     time.sleep(0.5)
     assert buttons() == [True, False, False]
-    assert 'Upload a file (.csv, .xlsx, .xml)' in browser.find_elements_by_tag_name('label')[0].text
-    browser.find_element_by_partial_link_text('Link').click()
+    assert 'Upload a file (.csv, .xlsx, .xml)' in browser.find_elements(By.TAG_NAME, 'label')[0].text
+    browser.find_element(By.PARTIAL_LINK_TEXT, 'Link').click()
     browser.implicitly_wait(1)
     time.sleep(0.5)
     assert buttons() == [False, True, False]
-    browser.find_element_by_partial_link_text('Paste').click()
+    browser.find_element(By.PARTIAL_LINK_TEXT, 'Paste').click()
     time.sleep(0.5)
     assert buttons() == [False, False, True]
-    assert 'Paste (XML only)' in browser.find_elements_by_tag_name('label')[2].text
+    assert 'Paste (XML only)' in browser.find_elements(By.TAG_NAME, 'label')[2].text
 
     # Now test that the whole banner is clickable
-    browser.find_element_by_id('headingOne').click()
+    browser.find_element(By.ID, 'headingOne').click()
     time.sleep(0.5)
     assert buttons() == [True, False, False]
-    browser.find_element_by_id('headingTwo').click()
+    browser.find_element(By.ID, 'headingTwo').click()
     time.sleep(0.5)
     assert buttons() == [False, True, False]
-    browser.find_element_by_id('headingThree').click()
+    browser.find_element(By.ID, 'headingThree').click()
     time.sleep(0.5)
     assert buttons() == [False, False, True]
 
 
 def test_index_page_iati(server_url, browser):
     browser.get(server_url)
-    assert 'How to use IATI CoVE' in browser.find_element_by_tag_name('body').text
-    assert 'XML - according to version 2.03 of the IATI schema' in browser.find_element_by_tag_name('body').text
-    assert 'Spreadsheet - Excel, CSV (UTF-8, Windows-1252 and ISO-8859-1 encodings supported) - see sample data' in browser.find_element_by_tag_name('body').text
+    assert 'How to use IATI CoVE' in browser.find_element(By.TAG_NAME, 'body').text
+    assert 'XML - according to version 2.03 of the IATI schema' in browser.find_element(By.TAG_NAME, 'body').text
+    assert 'Spreadsheet - Excel, CSV (UTF-8, Windows-1252 and ISO-8859-1 encodings supported) - see sample data' in browser.find_element(By.TAG_NAME, 'body').text
 
 
 @pytest.mark.parametrize(('link_text', 'url'), [
@@ -72,18 +76,18 @@ def test_index_page_iati(server_url, browser):
     ])
 def test_index_page_iati_links(server_url, browser, link_text, url):
     browser.get(server_url)
-    link = browser.find_element_by_link_text(link_text)
+    link = browser.find_element(By.LINK_TEXT, link_text)
     href = link.get_attribute("href")
     assert url in href
 
 
 def test_common_index_elements(server_url, browser):
     browser.get(server_url)
-    browser.find_element_by_css_selector('#more-information .panel-title').click()
+    browser.find_element(By.CSS_SELECTOR, '#more-information .panel-title').click()
     time.sleep(0.5)
-    assert 'What happens to the data I provide to this site?' in browser.find_element_by_tag_name('body').text
-    assert 'Why do you delete data after seven days?' in browser.find_element_by_tag_name('body').text
-    assert 'Why provide converted versions?' in browser.find_element_by_tag_name('body').text
+    assert 'What happens to the data I provide to this site?' in browser.find_element(By.TAG_NAME, 'body').text
+    assert 'Why do you delete data after seven days?' in browser.find_element(By.TAG_NAME, 'body').text
+    assert 'Why provide converted versions?' in browser.find_element(By.TAG_NAME, 'body').text
 
 
 @pytest.mark.parametrize(('source_filename', 'expected_text', 'conversion_successful'), [
@@ -118,15 +122,15 @@ def test_explore_iati_url_input(server_url, browser, httpserver, source_filename
         source_url = httpserver.url + '/' + source_filename
 
     browser.get(server_url)
-    browser.find_element_by_partial_link_text('Link').click()
+    browser.find_element(By.PARTIAL_LINK_TEXT, 'Link').click()
     time.sleep(0.5)
-    browser.find_element_by_id('id_source_url').send_keys(source_url)
-    browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+    browser.find_element(By.ID, 'id_source_url').send_keys(source_url)
+    browser.find_element(By.CSS_SELECTOR, "#fetchURL > div.form-group > button.btn.btn-primary").click()
 
     data_url = browser.current_url
 
     # Click and un-collapse all explore sections
-    all_sections = browser.find_elements_by_class_name('panel-heading')
+    all_sections = browser.find_elements(By.CLASS_NAME, 'panel-heading')
     for section in all_sections:
         if section.get_attribute('data-toggle') == "collapse" and section.get_attribute('aria-expanded') != 'true':
             browser.execute_script("arguments[0].scrollIntoView();", section)
@@ -141,7 +145,7 @@ def test_explore_iati_url_input(server_url, browser, httpserver, source_filename
 
     # Expand all sections with the expand all button this time
     try:
-        browser.find_element_by_link_text('Expand all').click()
+        browser.find_element(By.LINK_TEXT, 'Expand all').click()
         time.sleep(0.5)
     except NoSuchElementException:
         pass
@@ -151,7 +155,7 @@ def test_explore_iati_url_input(server_url, browser, httpserver, source_filename
 
 
 def check_url_input_result_page(server_url, browser, httpserver, source_filename, expected_text, conversion_successful):
-    body_text = browser.find_element_by_tag_name('body').text
+    body_text = browser.find_element(By.TAG_NAME, 'body').text
     if isinstance(expected_text, str):
         expected_text = [expected_text]
 
@@ -162,7 +166,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
         assert 'Converted to XML' in body_text
 
     if source_filename == 'namespace_good.xlsx':
-        converted_file = browser.find_element_by_link_text("XML (Converted from Original)").get_attribute("href")
+        converted_file = browser.find_element(By.LINK_TEXT, "XML (Converted from Original)").get_attribute("href")
         assert requests.get(converted_file).text == '''<?xml version='1.0' encoding='utf-8'?>
 <iati-activities>
   <!--Data generated by IATI CoVE. Built by Open Data Services Co-operative: http://iati.cove.opendataservices.coop/-->
@@ -174,7 +178,7 @@ def check_url_input_result_page(server_url, browser, httpserver, source_filename
 '''
 
     if source_filename == 'basic_iati_org_valid.xlsx':
-        converted_file = browser.find_element_by_link_text("XML (Converted from Original)").get_attribute("href")
+        converted_file = browser.find_element(By.LINK_TEXT, "XML (Converted from Original)").get_attribute("href")
         assert requests.get(converted_file).text == '''<?xml version='1.0' encoding='utf-8'?>
 <iati-organisations version="2.03">
   <!--Data generated by IATI CoVE. Built by Open Data Services Co-operative: http://iati.cove.opendataservices.coop/-->
@@ -220,13 +224,13 @@ def test_rulesets_table_toggle(server_url, browser, httpserver):
         source_url = httpserver.url + '/basic_iati_ruleset_errors.xml'
 
     browser.get(server_url)
-    browser.find_element_by_partial_link_text('Link').click()
+    browser.find_element(By.PARTIAL_LINK_TEXT, 'Link').click()
     time.sleep(0.5)
-    browser.find_element_by_id('id_source_url').send_keys(source_url)
-    browser.find_element_by_css_selector('#fetchURL > div.form-group > button.btn.btn-primary').click()
+    browser.find_element(By.ID, 'id_source_url').send_keys(source_url)
+    browser.find_element(By.CSS_SELECTOR, '#fetchURL > div.form-group > button.btn.btn-primary').click()
 
     # Click and un-collapse all explore sections
-    all_sections = browser.find_elements_by_class_name('panel-heading')
+    all_sections = browser.find_elements(By.CLASS_NAME, 'panel-heading')
     for section in all_sections:
         if section.get_attribute('data-toggle') == 'collapse':
             if section.get_attribute('aria-expanded') != 'true':
@@ -234,22 +238,22 @@ def test_rulesets_table_toggle(server_url, browser, httpserver):
                 section.click()
         time.sleep(0.5)
 
-    toggle_button = browser.find_element_by_name('ruleset-table-toggle')
-    table_header = browser.find_element_by_css_selector('table#ruleset-by-rule thead tr')
+    toggle_button = browser.find_element(By.NAME, 'ruleset-table-toggle')
+    table_header = browser.find_element(By.CSS_SELECTOR, 'table#ruleset-by-rule thead tr')
     header_html = ''.join(table_header.get_attribute('innerHTML').strip().split())
 
     assert toggle_button.text == 'See same results by activity'
-    assert browser.find_element_by_id('ruleset-by-rule').is_displayed()
-    assert not browser.find_element_by_id('ruleset-by-activity').is_displayed()
+    assert browser.find_element(By.ID, 'ruleset-by-rule').is_displayed()
+    assert not browser.find_element(By.ID, 'ruleset-by-activity').is_displayed()
     assert header_html == '<th>Ruleset</th><th>Rule</th><th>Activity</th><th>Explanation</th><th>Path</th>'
 
     toggle_button.click()
     time.sleep(0.5)
-    toggle_button = browser.find_element_by_name('ruleset-table-toggle')
-    table_header = browser.find_element_by_css_selector('table#ruleset-by-activity thead tr')
+    toggle_button = browser.find_element(By.NAME, 'ruleset-table-toggle')
+    table_header = browser.find_element(By.CSS_SELECTOR, 'table#ruleset-by-activity thead tr')
     header_html = ''.join(table_header.get_attribute('innerHTML').strip().split())
 
     assert toggle_button.text == 'See same results by ruleset'
-    assert browser.find_element_by_id('ruleset-by-activity').is_displayed()
-    assert not browser.find_element_by_id('ruleset-by-rule').is_displayed()
+    assert browser.find_element(By.ID, 'ruleset-by-activity').is_displayed()
+    assert not browser.find_element(By.ID, 'ruleset-by-rule').is_displayed()
     assert header_html == '<th>Activity</th><th>Ruleset</th><th>Rule</th><th>Explanation</th><th>Path</th>'
