@@ -23,6 +23,7 @@ xmltodict
 rangedict
 openpyxl
 gunicorn
+lxml<5
 
 # We have a fork of the bdd-tester repo, in order to add a single commit that
 # fixes the previous commit we were using, to work with the new pip resolver.
