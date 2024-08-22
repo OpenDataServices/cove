@@ -1,4 +1,4 @@
-Django>3.2,<3.3
+Django>4.2,<4.3
 #^^ rq.filter: <1.12
 flattentool>=0.17.2
 libcove

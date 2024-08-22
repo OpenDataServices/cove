@@ -44,17 +44,17 @@ dealer==2.1.0
     # via -r requirements.in
 defusedxml==0.7.1
     # via odfpy
-django==3.2.25
+django==4.2.15
     # via
     #   -r requirements.in
     #   django-bootstrap3
     #   django-debug-toolbar
     #   libcoveweb
-django-bootstrap3==23.6
+django-bootstrap3==24.2
     # via
     #   -r requirements.in
     #   libcoveweb
-django-debug-toolbar==4.3.0
+django-debug-toolbar==4.4.6
     # via -r requirements.in
 django-environ==0.11.2
     # via -r requirements.in
@@ -122,9 +122,7 @@ pycparser==2.22
 python-dateutil==2.9.0.post0
     # via -r requirements.in
 pytz==2024.1
-    # via
-    #   django
-    #   flattentool
+    # via flattentool
 rangedict==0.1.7
     # via -r requirements.in
 referencing==0.35.1
@@ -182,7 +180,7 @@ urllib3==2.2.2
     #   sentry-sdk
 webencodings==0.5.1
     # via bleach
-werkzeug==3.0.3
+werkzeug==3.0.4
     # via libcoveweb
 xmltodict==0.13.0
     # via
