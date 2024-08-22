@@ -5,224 +5,253 @@
 #    pip-compile requirements_dev.in
 #
 -e git+https://github.com/OpenDataServices/bdd-tester.git@e1a1a578e28222904f3f1567409b068222ec02e6#egg=bdd-tester
-    # via -r requirements.in
+    # via -r requirements.txt
 -e git+https://github.com/OpenDataServices/iati-utils.git@704fa589ad2d3743d3928dcbeeeb06a5e73f8437#egg=iatiutils
-    # via -r requirements.in
-alabaster==0.7.13
+    # via -r requirements.txt
+alabaster==0.7.16
     # via sphinx
-appdirs==1.4.4
-    # via requests-cache
-asgiref==3.6.0
-    # via django
-async-generator==1.10
+asgiref==3.8.1
     # via
-    #   trio
-    #   trio-websocket
-attrs==22.2.0
+    #   -r requirements.txt
+    #   django
+attrs==24.2.0
     # via
+    #   -r requirements.txt
     #   cattrs
     #   hypothesis
     #   jsonschema
     #   outcome
-    #   pytest
+    #   referencing
     #   requests-cache
     #   trio
-babel==2.12.1
+babel==2.16.0
     # via sphinx
-backports-datetime-fromisoformat==2.0.0
-    # via flattentool
+backports-datetime-fromisoformat==2.0.1
+    # via
+    #   -r requirements.txt
+    #   flattentool
 behave==1.2.5
-    # via bdd-tester
-bleach==6.0.0
-    # via -r requirements.in
-btrees==5.0
-    # via zodb
+    # via
+    #   -r requirements.txt
+    #   bdd-tester
+bleach==6.1.0
+    # via -r requirements.txt
+btrees==6.0
+    # via
+    #   -r requirements.txt
+    #   zodb
 cached-property==1.5.2
+    # via -r requirements.txt
+cattrs==23.2.3
     # via
-    #   -r requirements.in
-    #   libcove
-cattrs==22.2.0
-    # via requests-cache
-certifi==2022.12.7
+    #   -r requirements.txt
+    #   requests-cache
+certifi==2024.7.4
     # via
+    #   -r requirements.txt
     #   requests
+    #   selenium
     #   sentry-sdk
-    #   urllib3
-cffi==1.15.1
+cffi==1.17.0
     # via
-    #   cryptography
+    #   -r requirements.txt
     #   persistent
-charset-normalizer==3.0.1
-    # via requests
-click==8.1.3
-    # via iatiutils
+charset-normalizer==3.3.2
+    # via
+    #   -r requirements.txt
+    #   requests
+click==8.1.7
+    # via
+    #   -r requirements.txt
+    #   iatiutils
 commonmark==0.9.1
     # via
-    #   -r requirements.in
+    #   -r requirements.txt
     #   recommonmark
-contextlib2==21.6.0
-    # via schema
-coverage[toml]==6.5.0
+coverage[toml]==7.6.1
     # via
     #   coveralls
     #   pytest-cov
-coveralls==3.3.1
+coveralls==4.0.1
     # via -r requirements_dev.in
-cryptography==39.0.1
-    # via
-    #   pyopenssl
-    #   urllib3
 dealer==2.1.0
-    # via -r requirements.in
+    # via -r requirements.txt
 defusedxml==0.7.1
-    # via odfpy
-django==3.2.18
     # via
-    #   -r requirements.in
+    #   -r requirements.txt
+    #   odfpy
+django==4.2.15
+    # via
+    #   -r requirements.txt
     #   django-bootstrap3
     #   django-debug-toolbar
     #   libcoveweb
-django-bootstrap3==22.2
+django-bootstrap3==24.2
     # via
-    #   -r requirements.in
+    #   -r requirements.txt
     #   libcoveweb
-django-debug-toolbar==3.8.1
-    # via -r requirements.in
-django-environ==0.9.0
-    # via
-    #   -r requirements.in
-    #   libcoveweb
+django-debug-toolbar==4.4.6
+    # via -r requirements.txt
+django-environ==0.11.2
+    # via -r requirements.txt
 docopt==0.6.2
     # via coveralls
-docutils==0.18.1
+docutils==0.20.1
     # via
     #   recommonmark
     #   sphinx
     #   sphinx-rtd-theme
 et-xmlfile==1.1.0
-    # via openpyxl
-execnet==1.9.0
-    # via pytest-xdist
-flake8==6.0.0
-    # via -r requirements_dev.in
-flattentool==0.20.1
     # via
-    #   -r requirements.in
+    #   -r requirements.txt
+    #   openpyxl
+execnet==2.1.1
+    # via pytest-xdist
+flake8==7.1.1
+    # via -r requirements_dev.in
+flattentool==0.25.0
+    # via
+    #   -r requirements.txt
     #   libcove
     #   libcoveweb
-gunicorn==20.1.0
-    # via -r requirements.in
+gunicorn==23.0.0
+    # via -r requirements.txt
 h11==0.14.0
     # via wsproto
-hypothesis==6.68.2
+hypothesis==6.111.1
     # via -r requirements_dev.in
-idna==3.4
+idna==3.7
     # via
+    #   -r requirements.txt
     #   requests
     #   trio
-    #   urllib3
-ijson==3.2.0.post0
-    # via flattentool
+ijson==3.3.0
+    # via
+    #   -r requirements.txt
+    #   flattentool
 imagesize==1.4.1
     # via sphinx
 iniconfig==2.0.0
     # via pytest
-jinja2==3.1.2
+jinja2==3.1.4
     # via sphinx
 json-merge-patch==0.2
-    # via -r requirements.in
+    # via -r requirements.txt
 jsonref==1.1.0
     # via
+    #   -r requirements.txt
     #   flattentool
     #   libcove
-jsonschema==3.2.0
+jsonschema==4.23.0
     # via
-    #   -r requirements.in
+    #   -r requirements.txt
     #   libcove
-libcove==0.29.0
+jsonschema-specifications==2023.12.1
     # via
-    #   -r requirements.in
+    #   -r requirements.txt
+    #   jsonschema
+libcove==0.32.1
+    # via
+    #   -r requirements.txt
     #   libcoveweb
-libcoveweb==0.26.0
-    # via -r requirements.in
-libsass==0.22.0
+libcoveweb==0.30.4
+    # via -r requirements.txt
+libsass==0.23.0
     # via -r requirements_dev.in
-lxml==4.9.2
+lxml==4.9.4
     # via
+    #   -r requirements.txt
     #   bdd-tester
     #   flattentool
     #   iatiutils
-markupsafe==2.1.2
+markupsafe==2.1.5
     # via
+    #   -r requirements.txt
     #   jinja2
     #   werkzeug
 mccabe==0.7.0
     # via flake8
 odfpy==1.4.1
-    # via flattentool
-openpyxl==3.1.1
     # via
-    #   -r requirements.in
+    #   -r requirements.txt
     #   flattentool
-outcome==1.2.0
-    # via trio
-packaging==23.0
+openpyxl==3.1.5
     # via
+    #   -r requirements.txt
+    #   flattentool
+outcome==1.3.0.post0
+    # via trio
+packaging==24.1
+    # via
+    #   -r requirements.txt
+    #   gunicorn
     #   pytest
     #   sphinx
-parse==1.19.0
+parse==1.20.2
     # via
+    #   -r requirements.txt
     #   behave
     #   parse-type
-parse-type==0.6.0
-    # via behave
-persistent==5.0
+parse-type==0.6.2
     # via
+    #   -r requirements.txt
+    #   behave
+persistent==6.0
+    # via
+    #   -r requirements.txt
     #   btrees
     #   zodb
-pluggy==1.0.0
+platformdirs==4.2.2
+    # via
+    #   -r requirements.txt
+    #   requests-cache
+pluggy==1.5.0
     # via pytest
-pycodestyle==2.10.0
+pycodestyle==2.12.1
     # via flake8
-pycparser==2.21
-    # via cffi
-pyflakes==3.0.1
+pycparser==2.22
+    # via
+    #   -r requirements.txt
+    #   cffi
+pyflakes==3.2.0
     # via flake8
-pygments==2.14.0
+pygments==2.18.0
     # via sphinx
-pyopenssl==23.0.0
-    # via urllib3
-pyrsistent==0.19.3
-    # via jsonschema
 pysocks==1.7.1
     # via urllib3
-pytest==7.2.1
+pytest==8.3.2
     # via
     #   -r requirements_dev.in
     #   pytest-cov
     #   pytest-django
     #   pytest-xdist
-pytest-cov==4.0.0
+pytest-cov==5.0.0
     # via -r requirements_dev.in
-pytest-django==4.5.2
+pytest-django==4.8.0
     # via -r requirements_dev.in
-pytest-localserver==0.7.1
+pytest-localserver==0.9.0
     # via -r requirements_dev.in
-pytest-xdist==3.2.0
+pytest-xdist==3.6.1
     # via -r requirements_dev.in
-python-dateutil==2.8.2
-    # via -r requirements.in
-pytz==2022.7.1
+python-dateutil==2.9.0.post0
+    # via -r requirements.txt
+pytz==2024.1
     # via
-    #   django
+    #   -r requirements.txt
     #   flattentool
 rangedict==0.1.7
-    # via -r requirements.in
+    # via -r requirements.txt
 recommonmark==0.7.1
     # via -r requirements_dev.in
-requests==2.28.2
+referencing==0.35.1
     # via
-    #   -r requirements.in
+    #   -r requirements.txt
+    #   jsonschema
+    #   jsonschema-specifications
+    #   libcove
+requests==2.32.3
+    # via
+    #   -r requirements.txt
     #   bdd-tester
     #   coveralls
     #   iatiutils
@@ -230,33 +259,41 @@ requests==2.28.2
     #   libcoveweb
     #   requests-cache
     #   sphinx
-requests-cache==0.9.8
-    # via -r requirements.in
+requests-cache==1.2.1
+    # via -r requirements.txt
 rfc3339-validator==0.1.4
-    # via libcove
+    # via
+    #   -r requirements.txt
+    #   libcove
 rfc3987==1.3.8
     # via
-    #   -r requirements.in
+    #   -r requirements.txt
     #   libcove
-schema==0.7.5
-    # via flattentool
-selenium==4.2.0
+rpds-py==0.20.0
+    # via
+    #   -r requirements.txt
+    #   jsonschema
+    #   referencing
+schema==0.7.7
+    # via
+    #   -r requirements.txt
+    #   flattentool
+selenium==4.23.1
     # via -r requirements_dev.in
-sentry-sdk==1.16.0
-    # via -r requirements.in
+sentry-sdk==2.13.0
+    # via -r requirements.txt
 six==1.16.0
     # via
+    #   -r requirements.txt
     #   bdd-tester
     #   behave
     #   bleach
-    #   jsonschema
     #   parse-type
     #   python-dateutil
     #   rfc3339-validator
     #   transifex-client
     #   url-normalize
-    #   zodb
-sniffio==1.3.0
+sniffio==1.3.1
     # via trio
 snowballstemmer==2.2.0
     # via sphinx
@@ -264,87 +301,118 @@ sortedcontainers==2.4.0
     # via
     #   hypothesis
     #   trio
-sphinx==6.1.3
+sphinx==7.4.7
     # via
     #   -r requirements_dev.in
     #   recommonmark
     #   sphinx-rtd-theme
-sphinx-rtd-theme==1.2.0
+    #   sphinxcontrib-jquery
+sphinx-rtd-theme==2.0.0
     # via -r requirements_dev.in
-sphinxcontrib-applehelp==1.0.4
+sphinxcontrib-applehelp==2.0.0
     # via sphinx
-sphinxcontrib-devhelp==1.0.2
+sphinxcontrib-devhelp==2.0.0
     # via sphinx
-sphinxcontrib-htmlhelp==2.0.1
+sphinxcontrib-htmlhelp==2.1.0
     # via sphinx
-sphinxcontrib-jquery==2.0.0
+sphinxcontrib-jquery==4.1
     # via sphinx-rtd-theme
 sphinxcontrib-jsmath==1.0.1
     # via sphinx
-sphinxcontrib-qthelp==1.0.3
+sphinxcontrib-qthelp==2.0.0
     # via sphinx
-sphinxcontrib-serializinghtml==1.1.5
+sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
-sqlparse==0.4.3
+sqlparse==0.5.1
     # via
+    #   -r requirements.txt
     #   django
     #   django-debug-toolbar
 strict-rfc3339==0.7
-    # via -r requirements.in
-transaction==3.0.1
-    # via zodb
+    # via -r requirements.txt
+transaction==4.0
+    # via
+    #   -r requirements.txt
+    #   zodb
 transifex-client==0.12.5
     # via -r requirements_dev.in
-trio==0.22.0
+trio==0.26.2
     # via
     #   selenium
     #   trio-websocket
-trio-websocket==0.9.2
+trio-websocket==0.11.1
+    # via selenium
+typing-extensions==4.12.2
     # via selenium
 url-normalize==1.4.3
-    # via requests-cache
-urllib3[secure,socks]==1.26.14
     # via
+    #   -r requirements.txt
+    #   requests-cache
+urllib3[socks]==2.2.2
+    # via
+    #   -r requirements.txt
     #   requests
     #   requests-cache
     #   selenium
     #   sentry-sdk
     #   transifex-client
-urllib3-secure-extra==0.1.0
-    # via urllib3
 webencodings==0.5.1
-    # via bleach
-werkzeug==2.2.3
     # via
+    #   -r requirements.txt
+    #   bleach
+websocket-client==1.8.0
+    # via selenium
+werkzeug==3.0.4
+    # via
+    #   -r requirements.txt
     #   libcoveweb
     #   pytest-localserver
 wsproto==1.2.0
     # via trio-websocket
 xmltodict==0.13.0
     # via
-    #   -r requirements.in
+    #   -r requirements.txt
     #   flattentool
 zc-lockfile==3.0.post1
-    # via zodb
-zc-zlibstorage==1.2.0
-    # via flattentool
-zconfig==3.6.1
-    # via zodb
-zipp==3.15.0
-    # via -r requirements.in
-zodb==5.8.0
     # via
+    #   -r requirements.txt
+    #   zodb
+zc-zlibstorage==1.2.0
+    # via
+    #   -r requirements.txt
+    #   flattentool
+zconfig==4.1
+    # via
+    #   -r requirements.txt
+    #   zodb
+zipp==3.20.0
+    # via -r requirements.txt
+zodb==6.0
+    # via
+    #   -r requirements.txt
     #   flattentool
     #   zc-zlibstorage
-zodbpickle==2.6
-    # via zodb
-zope-interface==5.5.2
+zodbpickle==4.0
     # via
+    #   -r requirements.txt
+    #   zodb
+zope-deferredimport==5.0
+    # via
+    #   -r requirements.txt
+    #   persistent
+zope-interface==7.0.1
+    # via
+    #   -r requirements.txt
     #   btrees
     #   persistent
     #   transaction
     #   zc-zlibstorage
     #   zodb
+    #   zope-proxy
+zope-proxy==5.3
+    # via
+    #   -r requirements.txt
+    #   zope-deferredimport
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

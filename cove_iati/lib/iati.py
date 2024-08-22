@@ -7,7 +7,7 @@ import lxml.etree
 import requests
 from bdd_tester import bdd_tester
 from django.utils.html import format_html
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from libcove.lib.exceptions import CoveInputDataError
 from libcove.lib.tools import ignore_errors
 

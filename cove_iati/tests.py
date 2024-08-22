@@ -742,7 +742,7 @@ def test_participating_org():
                     "codeforiati:registry-identifier": "psi",
                     "count": 2,
                     "name": "Population Service " "International",
-                    "status": "active",
+                    "status": "withdrawn",
                     "type_count": {
                         "Participating Org": 0,
                         "Transaction Provider": 0,
