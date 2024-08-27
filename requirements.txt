@@ -60,7 +60,7 @@ django-environ==0.11.2
     # via -r requirements.in
 et-xmlfile==1.1.0
     # via openpyxl
-flattentool==0.25.0
+flattentool==0.26.0
     # via
     #   -r requirements.in
     #   libcove
