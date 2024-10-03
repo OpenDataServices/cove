@@ -12,5 +12,5 @@ transifex-client
 libsass
 Sphinx
 recommonmark
-sphinx_rtd_theme
+odsc-default-sphinx-theme
 hypothesis
