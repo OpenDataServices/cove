@@ -21,7 +21,7 @@ CommonMark
 bleach
 xmltodict
 rangedict
-openpyxl
+openpyxl==3.1.2
 gunicorn
 lxml<5
 
