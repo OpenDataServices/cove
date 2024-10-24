@@ -99,7 +99,7 @@ markupsafe==2.1.5
     # via werkzeug
 odfpy==1.4.1
     # via flattentool
-openpyxl==3.1.5
+openpyxl==3.1.2
     # via
     #   -r requirements.in
     #   flattentool
