@@ -12,14 +12,14 @@ jobs:
         key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
         name: id_rsa # optional
         known_hosts: ${{ vars.DOKKU_SSH_KEYSCAN }}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
         fetch-depth: 0
     - name: Setup python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
-        python-version: 3.7
+        python-version: 3.11
         architecture: x64
     - run: pip install dokkusd
     - uses: oNaiPs/secrets-to-env-action@v1
