@@ -4,9 +4,6 @@ CoVE - Convert Validate & Explore
 .. image:: https://coveralls.io/repos/OpenDataServices/cove/badge.png?branch=master
     :target: https://coveralls.io/r/OpenDataServices/cove?branch=master
 
-.. image:: https://img.shields.io/badge/license-AGPLv3-blue.svg
-    :target: https://github.com/OpenDataServices/cove/blob/master/AGPLv3.txt
-
 Development work on CoVE by Open Data Services is carried out in sprints. The issues for each sprint can be found at https://github.com/OpenDataServices/cove/projects . Other work is carried out from time to time, and contributions from the community are welcome. Outstanding issues for CoVE can be found at https://github.com/OpenDataServices/cove/issues . Please report any bugs!
 
 Introduction

@@ -20,8 +20,6 @@ setup(
     scripts=['manage.py'],
     url='https://github.com/OpenDataServices/cove',
     description='',
-    classifiers=[
-        'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
-    ],
+    classifiers=["License :: OSI Approved :: BSD License"],
     install_requires=install_requires,
 )
