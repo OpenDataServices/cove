@@ -6,6 +6,8 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 BROWSER = os.environ.get('BROWSER', 'ChromeHeadless')
 CHROME_SNAP = bool(os.environ.get('CHROME_SNAP', False))
@@ -129,6 +131,9 @@ def test_explore_iati_url_input(server_url, browser, httpserver, source_filename
 
     data_url = browser.current_url
 
+    WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.ID, "data-supplied"))
+    )
     # Click and un-collapse all explore sections
     all_sections = browser.find_elements(By.CLASS_NAME, 'panel-heading')
     for section in all_sections:
