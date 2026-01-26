@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 BROWSER = os.environ.get('BROWSER', 'ChromeHeadless')
 CHROME_SNAP = bool(os.environ.get('CHROME_SNAP', False))
@@ -19,6 +20,10 @@ def browser(request):
         if CHROME_SNAP:
             options.add_argument("--remote-debugging-port=9222")
         browser = webdriver.Chrome(options=options)
+    elif BROWSER == 'FirefoxHeadless':
+        options = FirefoxOptions()
+        options.add_argument("-headless")
+        browser = webdriver.Firefox(options=options)
     else:
         browser = getattr(webdriver, BROWSER)()
     browser.implicitly_wait(3)
