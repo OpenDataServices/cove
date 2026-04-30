@@ -19,6 +19,8 @@ jobs:
     - name: Install Ubuntu Translation Libraries
       run: sudo apt install gettext
     - name: Test IATI
+      env:
+        BROWSER: FirefoxHeadless
       run: py.test -n 2 cove_iati --cov-append --cov
     - name: Migrate Database
       run: python manage.py migrate
